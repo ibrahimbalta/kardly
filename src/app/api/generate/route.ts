@@ -17,24 +17,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Eksik bilgi" }, { status: 400 })
         }
 
-        // OpenAI API key check
-        if (!process.env.OPENAI_API_KEY) {
-            console.warn("OPENAI_API_KEY is missing, returning mock data...")
-            // Mock data for development
-            const mockData = {
-                slogan: `${occupation} Alanında Fark Yaratın`,
-                bio: `${occupation} olarak ${targetAudience} kitlesine özel profesyonel çözümler sunuyorum. Modern ve yenilikçi yaklaşımımla hizmetinizdeyim.`,
-                services: [
-                    { title: "Danışmanlık", description: "İhtiyaçlarınıza özel stratejik planlama." },
-                    { title: "Tam Servis", description: "Baştan sona profesyonel destek." },
-                    { title: "Özel Tasarım", description: "Size özel özgün dokunuşlar." }
-                ],
-                themeColor: "#6366f1",
-                recommendations: "Modern ve minimalist bir şablon önerilir."
-            }
-            return NextResponse.json(mockData)
-        }
-
         const aiResult = await generateProfileData({ occupation, targetAudience, tone })
 
         // If user is logged in, we can save/update their profile
