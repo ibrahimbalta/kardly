@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, QrCode, Smartphone } from "lucide-react"
 
@@ -47,9 +48,9 @@ export function Hero() {
                     transition={{ delay: 0.4 }}
                     className="flex flex-col sm:flex-row gap-4"
                 >
-                    <button className="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                    <Link href="/register" className="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
                         Hemen Ücretsiz Dene <ArrowRight className="w-5 h-5" />
-                    </button>
+                    </Link>
                     <button className="glass px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all flex items-center gap-2 border-white/10">
                         Örnekleri İncele
                     </button>
