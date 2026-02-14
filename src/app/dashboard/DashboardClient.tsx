@@ -53,7 +53,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
     })
     const [isProductSaving, setIsProductSaving] = useState(false)
 
-    const handleSave = async () => {
+    // Services Management
+    const [showServiceModal, setShowServiceModal] = useState(false)
+    const [serviceList, setServiceList] = useState(profile?.services || [])
+    const [newService, setNewService] = useState({
+        title: "",
+        description: ""
+    })
+
+    const handleSave = async (updatedServices?: any) => {
         setIsSaving(true)
         try {
             const res = await fetch("/api/profile/update", {
@@ -65,7 +73,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     phone: profileData.phone,
                     socialLinks: profileData.socialLinks,
                     themeColor: profileData.themeColor,
-                    templateId: profileData.templateId
+                    templateId: profileData.templateId,
+                    services: updatedServices || serviceList // Updated to save services
                 })
             })
             if (res.ok) {
@@ -77,6 +86,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
         } finally {
             setIsSaving(false)
         }
+    }
+
+    const handleAddService = () => {
+        const newList = [...serviceList, newService]
+        setServiceList(newList)
+        setShowServiceModal(false)
+        setNewService({ title: "", description: "" })
+        handleSave(newList) // Automatically save profile with new service
+    }
+
+    const handleDeleteService = (index: number) => {
+        const newList = serviceList.filter((_: any, i: number) => i !== index)
+        setServiceList(newList)
+        handleSave(newList) // Automatically save profile after delete
     }
 
     const handleAddProduct = async (e: React.FormEvent) => {
@@ -202,6 +225,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         label="Ürünler"
                         active={activeTab === "products"}
                         onClick={() => setActiveTab("products")}
+                    />
+                    <NavItem
+                        icon={<Layout className="w-5 h-5" />}
+                        label="Hizmetler"
+                        active={activeTab === "services"}
+                        onClick={() => setActiveTab("services")}
                     />
                     <NavItem
                         icon={<Palette className="w-5 h-5" />}
@@ -469,6 +498,46 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-white/10" />
                                     <p className="text-lg font-bold">Henüz Ürün Eklememişsin</p>
                                     <p className="text-sm text-foreground/40 mt-2">İlk ürününü ekleyerek satış yapmaya veya hizmetlerini tanıtmaya başla.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ) : activeTab === "services" ? (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold">Hizmetler</h2>
+                                <p className="text-sm text-foreground/50">Profilinizde liste halinde görünecek ana hizmetleriniz.</p>
+                            </div>
+                            <button
+                                onClick={() => setShowServiceModal(true)}
+                                className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
+                            >
+                                <Plus className="w-5 h-5" /> Yeni Hizmet Ekle
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4">
+                            {serviceList.map((service: any, index: number) => (
+                                <div key={index} className="glass p-8 rounded-[2rem] border-white/5 flex justify-between items-center group hover:border-white/20 transition-all">
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-lg mb-1">{service.title}</h3>
+                                        <p className="text-sm text-foreground/50">{service.description}</p>
+                                    </div>
+                                    <button
+                                        onClick={() => handleDeleteService(index)}
+                                        className="flex items-center gap-2 p-3 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            ))}
+
+                            {serviceList.length === 0 && (
+                                <div className="py-20 text-center glass rounded-[2.5rem] border-white/5">
+                                    <Layout className="w-16 h-16 mx-auto mb-4 text-white/10" />
+                                    <p className="text-lg font-bold">Henüz Hizmet Eklememişsin</p>
+                                    <p className="text-sm text-foreground/40 mt-2">Neler yaptığını anlatmak için hizmetlerini ekle.</p>
                                 </div>
                             )}
                         </div>
@@ -911,6 +980,63 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </button>
                                 </div>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Service Add Modal */}
+                {showServiceModal && (
+                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                        >
+                            <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
+                                <X className="w-6 h-6" />
+                            </button>
+
+                            <div className="mb-8">
+                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
+                                    <Layout className="w-6 h-6 text-primary" />
+                                </div>
+                                <h2 className="text-2xl font-black text-white">Yeni Hizmet</h2>
+                                <p className="text-white/40 text-sm mt-1">Neler sunduğunuzu kısaca özetleyin.</p>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Hizmet Başlığı</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Örn: Profesyonel Fotoğraf Çekimi"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                        value={newService.title}
+                                        onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
+                                    <textarea
+                                        rows={3}
+                                        placeholder="Hizmetiniz hakkında kısa bir bilgi..."
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
+                                        value={newService.description}
+                                        onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="pt-2">
+                                    <button
+                                        onClick={handleAddService}
+                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        Hizmeti Ekle
+                                    </button>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 )}
