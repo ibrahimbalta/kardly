@@ -1,25 +1,57 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma) as any,
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            clientId: process.env.GOOGLE_CLIENT_ID || "dummy",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy",
         }),
+        // TEST İÇİN: Herhangi bir email ile giriş yapmayı sağlar
+        CredentialsProvider({
+            name: "Test Girişi",
+            credentials: {
+                email: { label: "Email", type: "text", placeholder: "test@example.com" }
+            },
+            async authorize(credentials) {
+                if (!credentials?.email) return null
+
+                // Kullanıcıyı bul veya oluştur
+                const user = await prisma.user.upsert({
+                    where: { email: credentials.email },
+                    update: {},
+                    create: {
+                        email: credentials.email,
+                        name: credentials.email.split('@')[0],
+                    }
+                })
+                return user
+            }
+        })
     ],
     callbacks: {
-        session: async ({ session, user }) => {
+        session: async ({ session, user, token }: any) => {
             if (session.user) {
-                session.user.id = user.id
+                session.user.id = user?.id || token?.sub
             }
             return session
         },
+        jwt: async ({ token, user }: any) => {
+            if (user) {
+                token.id = user.id
+            }
+            return token
+        }
+    },
+    session: {
+        strategy: "jwt", // Credentials provider için JWT şart
     },
     pages: {
         signIn: "/login",
     },
+    secret: process.env.NEXTAUTH_SECRET,
 }
