@@ -24,7 +24,10 @@ import {
     Github,
     Link as LinkIcon,
     Smartphone,
-    Download
+    Download,
+    Palette,
+    X,
+    Upload
 } from "lucide-react"
 import Link from "next/link"
 import { QRCodeCard } from "@/components/QRCodeCard"
@@ -35,6 +38,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [activeTab, setActiveTab] = useState("edit")
     const [profileData, setProfileData] = useState(profile)
     const [isSaving, setIsSaving] = useState(false)
+    const [showProductModal, setShowProductModal] = useState(false)
+    const [productList, setProductList] = useState(products || [])
+    const [newProduct, setNewProduct] = useState({
+        name: "",
+        description: "",
+        price: "",
+        link: "",
+        image: ""
+    })
+    const [isProductSaving, setIsProductSaving] = useState(false)
 
     const handleSave = async () => {
         setIsSaving(true)
@@ -47,7 +60,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     bio: profileData.bio,
                     phone: profileData.phone,
                     socialLinks: profileData.socialLinks,
-                    themeColor: profileData.themeColor
+                    themeColor: profileData.themeColor,
+                    templateId: profileData.templateId
                 })
             })
             if (res.ok) {
@@ -58,6 +72,44 @@ export default function DashboardClient({ session, profile, subscription, appoin
             console.error(err)
         } finally {
             setIsSaving(false)
+        }
+    }
+
+    const handleAddProduct = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsProductSaving(true)
+        try {
+            const res = await fetch("/api/products", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newProduct)
+            })
+            if (res.ok) {
+                const added = await res.json()
+                setProductList([added, ...productList])
+                setShowProductModal(false)
+                setNewProduct({ name: "", description: "", price: "", link: "", image: "" })
+                setShowToast("Ürün eklendi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setIsProductSaving(false)
+        }
+    }
+
+    const handleDeleteProduct = async (id: string) => {
+        if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" })
+            if (res.ok) {
+                setProductList(productList.filter((p: any) => p.id !== id))
+                setShowToast("Ürün silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
         }
     }
 
@@ -138,6 +190,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         label="Ürünler"
                         active={activeTab === "products"}
                         onClick={() => setActiveTab("products")}
+                    />
+                    <NavItem
+                        icon={<Palette className="w-5 h-5" />}
+                        label="Şablonlar"
+                        active={activeTab === "templates"}
+                        onClick={() => setActiveTab("templates")}
                     />
                     <NavItem
                         icon={<Calendar className="w-5 h-5" />}
@@ -347,13 +405,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h2 className="text-xl font-bold">Ürünler ve Hizmetler</h2>
                                 <p className="text-sm text-foreground/50">Burada listelediğiniz ürünler profilinizde şık birer kart olarak görünecektir.</p>
                             </div>
-                            <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                            <button
+                                onClick={() => setShowProductModal(true)}
+                                className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
+                            >
                                 <Plus className="w-5 h-5" /> Yeni Ürün Ekle
                             </button>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {products.map((product: any) => (
+                            {productList.map((product: any) => (
                                 <div key={product.id} className="glass rounded-[2rem] border-white/5 overflow-hidden group">
                                     <div className="aspect-video bg-white/5 relative">
                                         {product.image ? (
@@ -364,7 +425,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         )}
                                         <div className="absolute top-4 right-4">
-                                            <button className="p-2 bg-rose-500/20 text-rose-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                onClick={() => handleDeleteProduct(product.id)}
+                                                className="p-2 bg-rose-500/20 text-rose-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
@@ -380,7 +444,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                             ))}
 
-                            {products.length === 0 && (
+                            {productList.length === 0 && (
                                 <div className="col-span-full py-20 text-center glass rounded-[2.5rem] border-white/5">
                                     <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-white/10" />
                                     <p className="text-lg font-bold">Henüz Ürün Eklememişsin</p>
@@ -675,7 +739,131 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
                     </div>
+                ) : activeTab === "templates" ? (
+                    <div className="space-y-8">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold">Tasarım Şablonları</h2>
+                                <p className="text-sm text-foreground/50">Sayfanızın görünümünü değiştirmek için farklı şablonlar seçin.</p>
+                            </div>
+                            {currentPlan === "free" && (
+                                <div className="bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-bold border border-primary/20">
+                                    Pro sürümde tüm şablonlar açılır
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {[
+                                { id: "modern", name: "Modern Minimal", description: "Hızlı, şık ve sade tasarım.", image: "/templates/modern.jpg", premium: false },
+                                { id: "luxury", name: "Luxury Dark", description: "Vurgulu altın sarısı ve gece siyahı.", image: "/templates/luxury.jpg", premium: true },
+                                { id: "creative", name: "Creative Glass", description: "Fütüristik cam efekti ve canlı renkler.", image: "/templates/creative.jpg", premium: true },
+                                { id: "business", name: "Corporate Blue", description: "Profesyonel ve güven veren iş tasarımı.", image: "/templates/business.jpg", premium: true },
+                            ].map((tpl) => (
+                                <div
+                                    key={tpl.id}
+                                    className={cn(
+                                        "glass rounded-3xl border border-white/5 overflow-hidden group cursor-pointer transition-all",
+                                        profileData.templateId === tpl.id ? "ring-2 ring-primary" : "hover:border-white/20",
+                                        tpl.premium && currentPlan === "free" ? "grayscale opacity-50" : ""
+                                    )}
+                                    onClick={() => {
+                                        if (tpl.premium && currentPlan === "free") {
+                                            setShowToast("Bu şablon için Pro üyelik gerekiyor!");
+                                            setTimeout(() => setShowToast(null), 3000);
+                                            return;
+                                        }
+                                        setProfileData({ ...profileData, templateId: tpl.id });
+                                        handleSave();
+                                    }}
+                                >
+                                    <div className="aspect-[4/5] bg-white/5 relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 group-hover:scale-110 transition-transform duration-500" />
+                                        {tpl.premium && (
+                                            <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-10">PRO</div>
+                                        )}
+                                        {profileData.templateId === tpl.id && (
+                                            <div className="absolute top-4 right-4 bg-emerald-500 text-white p-1 rounded-full z-10">
+                                                <CheckCircle2 className="w-4 h-4" />
+                                            </div>
+                                        )}
+                                        <div className="absolute bottom-6 left-6 right-6">
+                                            <h3 className="font-bold text-lg mb-1">{tpl.name}</h3>
+                                            <p className="text-xs opacity-70">{tpl.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 ) : null}
+
+                {/* Product Add Modal */}
+                {showProductModal && (
+                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                        >
+                            <button onClick={() => setShowProductModal(false)} className="absolute top-6 right-6 text-white/40 hover:text-white">
+                                <X className="w-6 h-6" />
+                            </button>
+                            <h2 className="text-2xl font-bold mb-6">Yeni Ürün/Hizmet Ekle</h2>
+                            <form onSubmit={handleAddProduct} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Ürün Adı</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                        value={newProduct.name}
+                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Fiyat (₺)</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                            value={newProduct.price}
+                                            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Link (Opsiyonel)</label>
+                                        <input
+                                            type="text"
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                            value={newProduct.link}
+                                            onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Açıklama</label>
+                                    <textarea
+                                        rows={3}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                        value={newProduct.description}
+                                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                    />
+                                </div>
+                                <div className="pt-4">
+                                    <button
+                                        disabled={isProductSaving}
+                                        className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                    >
+                                        {isProductSaving ? "Ekleniyor..." : "Ürünü Ekle"}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
             </main>
         </div>
     )
