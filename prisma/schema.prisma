@@ -78,6 +78,7 @@ model Profile {
   phone       String?
   services    Json?    // Array of { title: string, description: string, price?: number }
   socialLinks Json?    // Array of { platform: string, url: string }
+  workingHours Json?   // Array of time strings e.g. ["09:00", "10:00", "14:00"]
   
   themeColor  String?  @default("#6366f1")
   templateId  String   @default("modern")

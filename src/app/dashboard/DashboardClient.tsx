@@ -28,7 +28,8 @@ import {
     Palette,
     X,
     Upload,
-    LogOut
+    LogOut,
+    Clock
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -61,6 +62,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
         description: ""
     })
 
+    // Working Hours Management
+    const defaultHours = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
+    const [workingHours, setWorkingHours] = useState<string[]>(profile?.workingHours || defaultHours)
+    const [newHour, setNewHour] = useState("")
+
     const handleSave = async (updatedServices?: any) => {
         setIsSaving(true)
         try {
@@ -74,7 +80,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     socialLinks: profileData.socialLinks,
                     themeColor: profileData.themeColor,
                     templateId: profileData.templateId,
-                    services: updatedServices || serviceList // Updated to save services
+                    services: updatedServices || serviceList,
+                    workingHours
                 })
             })
             if (res.ok) {
@@ -665,15 +672,71 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
                             </div>
 
+                            {/* Working Hours */}
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                                <h3 className="font-bold flex items-center gap-2 text-rose-500">
-                                    <Trash2 className="w-5 h-5" /> Tehlikeli Bölge
+                                <h3 className="font-bold flex items-center gap-2">
+                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri
                                 </h3>
-                                <p className="text-xs text-foreground/40">Profilinizi silmek tüm verilerinizi, ürünlerinizi ve randevu geçmişinizi kalıcı olarak kaldıracaktır.</p>
-                                <button className="w-full py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-sm font-bold hover:bg-rose-500/20 transition-all">
-                                    Profili Tamamen Sil
+                                <p className="text-xs text-foreground/40">Randevu alınabilecek saat dilimlerini buradan yönetin. Müşterileriniz sadece bu saatleri görecektir.</p>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {workingHours.sort().map((hour: string) => (
+                                        <div key={hour} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl group hover:border-rose-500/30 transition-all">
+                                            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                                            <span className="text-sm font-bold">{hour}</span>
+                                            <button
+                                                onClick={() => {
+                                                    const updated = workingHours.filter((h: string) => h !== hour)
+                                                    setWorkingHours(updated)
+                                                }}
+                                                className="text-white/20 hover:text-rose-500 transition-colors"
+                                            >
+                                                <X className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {workingHours.length === 0 && (
+                                        <p className="text-sm text-white/20 italic">Henüz saat eklenmemiş.</p>
+                                    )}
+                                </div>
+
+                                <div className="flex gap-2">
+                                    <input
+                                        type="time"
+                                        value={newHour}
+                                        onChange={(e) => setNewHour(e.target.value)}
+                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white text-sm"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            if (newHour && !workingHours.includes(newHour)) {
+                                                setWorkingHours([...workingHours, newHour])
+                                                setNewHour("")
+                                            }
+                                        }}
+                                        className="px-5 py-3 bg-primary text-white rounded-xl text-sm font-bold hover:scale-[1.02] transition-all"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={handleSave}
+                                    className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all"
+                                >
+                                    Saatleri Kaydet
                                 </button>
                             </div>
+                        </div>
+
+                        <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                            <h3 className="font-bold flex items-center gap-2 text-rose-500">
+                                <Trash2 className="w-5 h-5" /> Tehlikeli Bölge
+                            </h3>
+                            <p className="text-xs text-foreground/40">Profilinizi silmek tüm verilerinizi, ürünlerinizi ve randevu geçmişinizi kalıcı olarak kaldıracaktır.</p>
+                            <button className="w-full py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-sm font-bold hover:bg-rose-500/20 transition-all">
+                                Profili Tamamen Sil
+                            </button>
                         </div>
                     </div>
                 ) : activeTab === "subscription" ? (

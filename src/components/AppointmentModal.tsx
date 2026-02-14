@@ -107,13 +107,16 @@ export function AppointmentModal({ profile, isOpen, onClose, t }: any) {
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">Saat</label>
                                         <div className="grid grid-cols-3 gap-2">
-                                            {["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map(t_val => (
+                                            {(profile.workingHours && (profile.workingHours as string[]).length > 0
+                                                ? (profile.workingHours as string[]).sort()
+                                                : ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
+                                            ).map(t_val => (
                                                 <button
                                                     key={t_val}
                                                     onClick={() => setFormData({ ...formData, time: t_val })}
                                                     className={`py-2 rounded-lg text-sm font-bold border transition-all ${formData.time === t_val
-                                                            ? "text-white"
-                                                            : "bg-white/5 border-white/5 hover:border-white/20"
+                                                        ? "text-white"
+                                                        : "bg-white/5 border-white/5 hover:border-white/20"
                                                         }`}
                                                     style={formData.time === t_val ? {
                                                         backgroundColor: profile.themeColor || '#6366f1',
