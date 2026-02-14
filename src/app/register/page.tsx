@@ -1,10 +1,22 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import { Layout } from "lucide-react"
+import { Layout, Mail } from "lucide-react"
 import { motion } from "framer-motion"
+import { useState } from "react"
 
 export default function RegisterPage() {
+    const [email, setEmail] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleEmailRegister = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!email) return
+        setIsLoading(true)
+        await signIn("credentials", { email, callbackUrl: "/onboarding" })
+        setIsLoading(false)
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-background">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full" />
@@ -22,9 +34,35 @@ export default function RegisterPage() {
                 <h1 className="text-3xl font-bold mb-2">Hesap Oluştur</h1>
                 <p className="text-foreground/50 mb-10">Kardly dünyasına katılmak için ilk adımı at.</p>
 
+                <form onSubmit={handleEmailRegister} className="space-y-4 mb-8">
+                    <div className="relative text-left">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/30" />
+                        <input
+                            type="email"
+                            placeholder="Email adresiniz"
+                            required
+                            className="w-full glass bg-white/5 border-white/10 rounded-xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-primary text-white px-6 py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-lg disabled:opacity-50"
+                    >
+                        {isLoading ? "Hesap Oluşturuluyor..." : "Email ile Kayıt Ol"}
+                    </button>
+                </form>
+
+                <div className="relative mb-8">
+                    <hr className="border-white/5" />
+                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#020617] px-4 text-xs font-bold text-foreground/30">VEYA</span>
+                </div>
+
                 <button
                     onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
-                    className="w-full flex items-center justify-center gap-3 bg-white text-black px-6 py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-lg"
+                    className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white px-6 py-4 rounded-xl font-bold hover:bg-white/10 transition-all"
                 >
                     <svg className="w-6 h-6" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -35,7 +73,7 @@ export default function RegisterPage() {
                     Google ile Hızlı Kayıt
                 </button>
 
-                <p className="mt-8 text-sm text-foreground/40">
+                <p className="mt-8 text-sm text-foreground/40 text-center">
                     Hesabın var mı? <a href="/login" className="text-primary hover:underline">Giriş Yap</a>
                 </p>
             </motion.div>
