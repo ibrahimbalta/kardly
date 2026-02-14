@@ -8,7 +8,7 @@ export default async function AdminPage() {
     const session = await getServerSession(authOptions)
 
     // Admin email check (Strict check for the assigned email)
-    const allowedEmail = process.env.ADMIN_EMAIL || "crmanaliz@gmail.com"
+    const allowedEmail = process.env.ADMIN_EMAIL || "yanimdaki74@gmail.com"
 
     if (!session || session.user?.email !== allowedEmail) {
         redirect("/dashboard")

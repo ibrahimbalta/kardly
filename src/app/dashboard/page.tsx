@@ -48,7 +48,7 @@ export default async function DashboardPage() {
     }
 
     // If no profile, handle redirects (Admin goes to /admin, others to /onboarding)
-    const isAdmin = session.user?.email === (process.env.ADMIN_EMAIL || "crmanaliz@gmail.com")
+    const isAdmin = session.user?.email === (process.env.ADMIN_EMAIL || "yanimdaki74@gmail.com")
 
     if (!profile) {
         if (isAdmin) {

@@ -35,7 +35,7 @@ import { useSession } from "next-auth/react"
 
 export default function OnboardingPage() {
     const { data: session } = useSession()
-    const isAdmin = session?.user?.email === "crmanaliz@gmail.com"
+    const isAdmin = session?.user?.email === "yanimdaki74@gmail.com"
     const router = useRouter()
 
     useEffect(() => {
