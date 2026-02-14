@@ -27,10 +27,12 @@ import {
     Download,
     Palette,
     X,
-    Upload
+    Upload,
+    LogOut
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import { signOut } from "next-auth/react"
 import { QRCodeCard } from "@/components/QRCodeCard"
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, stats }: any) {
@@ -238,6 +240,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "settings"}
                         onClick={() => setActiveTab("settings")}
                     />
+                    <div className="mt-auto pt-4 border-t border-white/5 uppercase tracking-widest">
+                        <button
+                            onClick={() => signOut({ callbackUrl: "/" })}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-rose-500 hover:bg-rose-500/10 transition-all text-xs"
+                        >
+                            <LogOut className="w-4 h-4" /> Çıkış Yap
+                        </button>
+                    </div>
                 </nav>
             </aside>
 

@@ -12,10 +12,12 @@ import {
     ExternalLink,
     Mail,
     Calendar,
-    BadgeCheck
+    BadgeCheck,
+    LogOut
 } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { signOut } from "next-auth/react"
 
 export default function AdminDashboardClient({ users, payments, stats }: any) {
     const [activeTab, setActiveTab] = useState("overview")
@@ -63,6 +65,13 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                     <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-sm text-white/40 hover:text-white transition-all">
                         <ArrowLeft className="w-4 h-4" /> Kullanıcı Paneline Dön
                     </Link>
+                    <hr className="border-white/5 my-4" />
+                    <button
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
+                    >
+                        <LogOut className="w-4 h-4" /> Çıkış Yap
+                    </button>
                 </nav>
             </aside>
 
