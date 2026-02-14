@@ -7,8 +7,10 @@ import AdminDashboardClient from "./AdminDashboardClient"
 export default async function AdminPage() {
     const session = await getServerSession(authOptions)
 
-    // Admin email check
-    if (!session || session.user?.email !== process.env.ADMIN_EMAIL) {
+    // Admin email check (Strict check for the assigned email)
+    const allowedEmail = process.env.ADMIN_EMAIL || "crmanaliz@gmail.com"
+
+    if (!session || session.user?.email !== allowedEmail) {
         redirect("/dashboard")
     }
 
@@ -36,9 +38,9 @@ export default async function AdminPage() {
 
     const stats = {
         totalUsers: users.length,
-        totalRevenue: payments.filter(p => p.status === 'success').reduce((acc, p) => acc + p.amount, 0),
+        totalRevenue: payments.filter((p: any) => p.status === 'success').reduce((acc: number, p: any) => acc + p.amount, 0),
         totalViews: analyticsSummary._count.id,
-        activeSubscriptions: users.filter(u => u.subscription?.status === 'active' && u.subscription?.plan !== 'free').length
+        activeSubscriptions: users.filter((u: any) => u.subscription?.status === 'active' && u.subscription?.plan !== 'free').length
     }
 
     return (
