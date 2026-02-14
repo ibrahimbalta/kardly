@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  
+  // App specific
+  profile       Profile?
+  appointments  Appointment[]
+  subscription  Subscription?
+  payments      Payment[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Kardly Core Models
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  username    String   @unique
+  occupation  String?
+  targetAudience String?
+  tone        String?
+  
+  bio         String?
+  slogan      String?
+  phone       String?
+  services    Json?    // Array of { title: string, description: string, price?: number }
+  socialLinks Json?    // Array of { platform: string, url: string }
+  
+  themeColor  String?  @default("#6366f1")
+  templateId  String   @default("modern")
+  
+  slug        String   @unique
+  qrCodeUrl   String?
+  vCardUrl    String?
+  
+  blocks      Block[]
+  products    Product[]
+  analytics   Analytics[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  type      String   // hero, about, services, gallery, contact, social, whatsapp, map
+  content   Json     // Specific content for each block type
+  order     Int
+  isActive  Boolean  @default(true)
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  type      String   @default("view") // view, click_vcard, click_whatsapp, click_social, etc
+  value     String?  // Optional extra info (e.g. which social link)
+  
+  ip        String?
+  userAgent String?
+  referrer  String?
+  device    String?
+  country   String?
+  
+  createdAt DateTime @default(now())
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  clientName  String
+  clientEmail String
+  clientPhone String?
+  
+  date      DateTime
+  status    String   @default("pending") // pending, confirmed, cancelled
+  note      String?
+  
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  plan      String   @default("free") // free, pro, business
+  status    String   @default("active")
+  
+  startDate DateTime @default(now())
+  endDate   DateTime?
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  amount      Float
+  currency    String   @default("TRY")
+  status      String   // success, failed, pending
+  provider    String   @default("iyzico")
+  
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String?
+  price       Float
+  image       String?
+  link        String?  // Direct purchase link (WhatsApp, iyzico, etc)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
