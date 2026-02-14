@@ -821,63 +821,93 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 {/* Product Add Modal */}
                 {showProductModal && (
                     <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowProductModal(false)} />
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
                             className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
                         >
-                            <button onClick={() => setShowProductModal(false)} className="absolute top-6 right-6 text-white/40 hover:text-white">
+                            <button onClick={() => setShowProductModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
                                 <X className="w-6 h-6" />
                             </button>
-                            <h2 className="text-2xl font-bold mb-6">Yeni Ürün/Hizmet Ekle</h2>
-                            <form onSubmit={handleAddProduct} className="space-y-4">
+
+                            <div className="mb-8">
+                                <h2 className="text-2xl font-black">Yeni Ürün/Hizmet</h2>
+                                <p className="text-white/40 text-sm mt-1">Takipçilerinize sunmak istediğiniz ürünü detaylandırın.</p>
+                            </div>
+
+                            <form onSubmit={handleAddProduct} className="space-y-6">
                                 <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Ürün Adı</label>
+                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Ürün Adı</label>
                                     <input
                                         type="text"
                                         required
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                        placeholder="Örn: Özel Danışmanlık Seansı"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
                                         value={newProduct.name}
                                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                     />
                                 </div>
+
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Fiyat (₺)</label>
+                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Fiyat (₺)</label>
                                         <input
                                             type="number"
                                             required
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                            placeholder="0.00"
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
                                             value={newProduct.price}
                                             onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Link (Opsiyonel)</label>
+                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Link</label>
                                         <input
                                             type="text"
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                            placeholder="https://..."
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
                                             value={newProduct.link}
                                             onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
                                         />
                                     </div>
                                 </div>
+
                                 <div>
-                                    <label className="block text-xs font-bold uppercase tracking-widest opacity-40 mb-2">Açıklama</label>
+                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Görsel URL (Opsiyonel)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="https://gorsel-adresi.com/resim.jpg"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                        value={newProduct.image}
+                                        onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
                                     <textarea
                                         rows={3}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/50"
+                                        placeholder="Ürününüz hakkında kısa bir açıklama yazın..."
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
                                         value={newProduct.description}
                                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                                     />
                                 </div>
-                                <div className="pt-4">
+
+                                <div className="pt-2">
                                     <button
                                         disabled={isProductSaving}
-                                        className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                     >
-                                        {isProductSaving ? "Ekleniyor..." : "Ürünü Ekle"}
+                                        {isProductSaving ? (
+                                            <>
+                                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                                Kaydediliyor...
+                                            </>
+                                        ) : (
+                                            "Ürünü Yayınla"
+                                        )}
                                     </button>
                                 </div>
                             </form>
