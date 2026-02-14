@@ -1,6 +1,6 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import {
     Layout,
@@ -34,6 +34,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { QRCodeCard } from "@/components/QRCodeCard"
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, stats }: any) {
+    const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState("edit")
@@ -135,12 +136,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
         const payment = searchParams.get("payment")
         if (payment === "success") {
             setShowToast("success")
-            setTimeout(() => setShowToast(null), 5000)
+            setTimeout(() => {
+                setShowToast(null)
+                router.replace("/dashboard")
+            }, 5000)
         } else if (payment === "failed") {
             setShowToast("failed")
-            setTimeout(() => setShowToast(null), 5000)
+            setTimeout(() => {
+                setShowToast(null)
+                router.replace("/dashboard")
+            }, 5000)
         }
-    }, [searchParams])
+    }, [searchParams, router])
 
     const currentPlan = subscription?.plan || "free"
 
@@ -149,11 +156,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
-                    <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${showToast === "success" ? "bg-emerald-500 border-emerald-400 text-white" : "bg-rose-500 border-rose-400 text-white"
+                    <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${showToast === "success" ? "bg-emerald-500 border-emerald-400 text-white" :
+                        showToast === "failed" ? "bg-rose-500 border-rose-400 text-white" : "bg-primary border-primary/20 text-white"
                         }`}>
                         {showToast === "success" ? <CheckCircle2 /> : <XCircle />}
                         <span className="font-bold">
-                            {showToast === "success" ? "Ödeme Başarılı! Planınız güncellendi." : "Ödeme Başarısız. Lütfen tekrar deneyin."}
+                            {showToast === "success" ? "Ödeme Başarılı! Planınız güncellendi." :
+                                showToast === "failed" ? "Ödeme Başarısız. Lütfen tekrar deneyin." : showToast}
                         </span>
                     </div>
                 </div>
