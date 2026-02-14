@@ -30,6 +30,7 @@ import {
     Upload
 } from "lucide-react"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 import { QRCodeCard } from "@/components/QRCodeCard"
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, stats }: any) {
