@@ -31,8 +31,18 @@ const steps = [
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
+import { useSession } from "next-auth/react"
+
 export default function OnboardingPage() {
+    const { data: session } = useSession()
+    const isAdmin = session?.user?.email === "crmanaliz@gmail.com"
     const router = useRouter()
+
+    useEffect(() => {
+        if (isAdmin) {
+            router.push("/admin")
+        }
+    }, [isAdmin, router])
     const [currentStep, setCurrentStep] = useState(0)
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedData, setGeneratedData] = useState<any>(null)

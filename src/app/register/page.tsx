@@ -13,7 +13,7 @@ export default function RegisterPage() {
         e.preventDefault()
         if (!email) return
         setIsLoading(true)
-        await signIn("credentials", { email, callbackUrl: "/onboarding" })
+        await signIn("credentials", { email, callbackUrl: "/dashboard" })
         setIsLoading(false)
     }
 
@@ -61,7 +61,7 @@ export default function RegisterPage() {
                 </div>
 
                 <button
-                    onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
+                    onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                     className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white px-6 py-4 rounded-xl font-bold hover:bg-white/10 transition-all"
                 >
                     <svg className="w-6 h-6" viewBox="0 0 24 24">

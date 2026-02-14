@@ -47,9 +47,15 @@ export default async function DashboardPage() {
         recentAnalytics: analytics.slice(0, 10)
     }
 
-    // If no profile, send to onboarding
-    if (!profile && process.env.NODE_ENV !== 'development') {
-        redirect("/onboarding")
+    // If no profile, handle redirects (Admin goes to /admin, others to /onboarding)
+    const isAdmin = session.user?.email === (process.env.ADMIN_EMAIL || "crmanaliz@gmail.com")
+
+    if (!profile) {
+        if (isAdmin) {
+            redirect("/admin")
+        } else if (process.env.NODE_ENV !== 'development') {
+            redirect("/onboarding")
+        }
     }
 
     return (
