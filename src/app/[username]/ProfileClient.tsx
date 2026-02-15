@@ -62,6 +62,41 @@ interface Profile {
         subscription?: { plan: string };
     };
     products: { id: string; name: string; description: string; price: number; image: string; link: string }[];
+    blocks: { id: string; type: string; content: any; order: number; isActive: boolean }[];
+}
+
+// ─── BLOCK RENDERER ──────────────────────────────────────────────
+
+function DynamicBlocks({ profile, setIsAppointmentOpen }: any) {
+    const blocks = (profile.blocks as any[]) || []
+    if (blocks.length === 0) return null;
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mt-10">
+            {blocks.map((block, i) => {
+                switch (block.type) {
+                    case 'skill_radar': return <BlockSkillRadar key={i} profile={profile} />;
+                    case 'portfolio_gallery': return <div key={i} className="col-span-1 md:col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
+                    case 'trust_score': return <BlockTrustScore key={i} profile={profile} />;
+                    case 'timeline_process': return <div key={i} className="col-span-1 md:col-span-2"><BlockTimelineMock profile={profile} /></div>;
+                    case 'social_feed': return <BlockSocialFeed key={i} profile={profile} />;
+                    case 'document_vault': return <BlockDocumentVault key={i} profile={profile} />;
+                    case 'appointment_calendar': return (
+                        <RevealSection key={i} className="col-span-1 md:col-span-2 glass-card p-8 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex items-center justify-between">
+                            <div>
+                                <h3 className="text-xl font-black">Randevu Al</h3>
+                                <p className="text-[10px] font-bold opacity-60">Müsaitlik durumunu kontrol et.</p>
+                            </div>
+                            <button onClick={() => setIsAppointmentOpen(true)} className="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl active:scale-95 transition-all">
+                                TAKVİMİ AÇ
+                            </button>
+                        </RevealSection>
+                    );
+                    default: return null;
+                }
+            })}
+        </div>
+    )
 }
 
 // ─── SHARED COMPONENTS ───────────────────────────────────────────
@@ -385,29 +420,7 @@ function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: 
 
         return (
             <div className="grid grid-cols-2 gap-5">
-                {blocks.map((block, i) => {
-                    switch (block.type) {
-                        case 'skill_radar': return <BlockSkillRadar key={i} profile={profile} />;
-                        case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
-                        case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
-                        case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
-                        case 'product_catalog': return <BlockProjectPortfolio key={i} profile={profile} />;
-                        case 'social_feed': return <BlockSocialFeed key={i} profile={profile} />;
-                        case 'document_vault': return <BlockDocumentVault key={i} profile={profile} />;
-                        case 'appointment_calendar': return (
-                            <RevealSection key={i} className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex items-center justify-between">
-                                <div>
-                                    <h3 className="text-xl font-black">Randevu Al</h3>
-                                    <p className="text-[10px] font-bold opacity-60">Müsaitlik durumunu kontrol et.</p>
-                                </div>
-                                <button onClick={() => setIsAppointmentOpen(true)} className="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl active:scale-95 transition-all">
-                                    TAKVİMİ AÇ
-                                </button>
-                            </RevealSection>
-                        );
-                        default: return null;
-                    }
-                })}
+                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
             </div>
         )
     }
@@ -528,6 +541,8 @@ function BusinessTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare 
                         </div>
                     </div>
 
+                    <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
+
                     {/* Right Column: Office Contacts */}
                     <div className="space-y-6">
                         <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-2xl shadow-blue-200">
@@ -579,6 +594,8 @@ function LuxuryTemplate({ profile, handleShare }: any) {
                     <Mail size={24} />
                 </div>
                 <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mt-12" />
+                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
+
                 <p className="text-[10px] uppercase tracking-widest opacity-20 font-sans font-black">Private Selection by Kardly</p>
             </div>
         </div>
@@ -618,6 +635,8 @@ function MinimalIOSTemplate({ profile, handleShare }: any) {
                     <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest mb-4">About Me</h3>
                     <p className="text-slate-600 font-medium leading-relaxed">{profile.bio}</p>
                 </div>
+
+                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
             </div>
         </div>
     )
@@ -700,23 +719,9 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                         </RevealSection>
 
                         {/* Dynamic Blocks Layer */}
-                        {blocks.length > 0 ? blocks.map((block, i) => {
-                            switch (block.type) {
-                                case 'skill_radar': return <div key={i} className="col-span-1"><BlockSkillRadar profile={profile} /></div>;
-                                case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
-                                case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
-                                case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
-                                case 'document_vault': return <div key={i} className="col-span-1"><BlockDocumentVault profile={profile} /></div>;
-                                case 'social_feed': return <div key={i} className="col-span-1"><BlockSocialFeed profile={profile} /></div>;
-                                default: return null;
-                            }
-                        }) : (
-                            <>
-                                <div className="col-span-1"><BlockSkillRadar profile={profile} /></div>
-                                <div className="col-span-1"><BlockTrustScore profile={profile} /></div>
-                                <div className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>
-                            </>
-                        )}
+                        <div className="col-span-2">
+                            <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
+                        </div>
                     </div>
 
                     {/* Expertise Tag Cloud */}
@@ -899,10 +904,13 @@ function NebulaTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                     </RevealSection>
                 </div>
 
-                <footer className="pt-20 pb-12 text-center text-[10px] font-black text-white/10 tracking-[0.5em] uppercase">
-                    Nebula Series by Kardly PRO
-                </footer>
+                <div className="mt-10">
+                    <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
+                </div>
             </div>
+            <footer className="pt-20 pb-12 text-center text-[10px] font-black text-white/10 tracking-[0.5em] uppercase">
+                Nebula Series by Kardly PRO
+            </footer>
         </div>
     )
 }
