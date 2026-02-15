@@ -68,7 +68,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento
-    const [profileData, setProfileData] = useState(profile)
+    const [profileData, setProfileData] = useState({
+        ...profile,
+        name: profile?.user?.name || session?.user?.name || "",
+        image: profile?.user?.image || session?.user?.image || ""
+    })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
     const [productList, setProductList] = useState(products || [])
@@ -138,7 +142,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     services: updatedServices || serviceList,
                     workingHours,
                     occupation: profileData.occupation,
-                    displayName: profileData.name || session?.user?.name
+                    displayName: profileData.name || session?.user?.name,
+                    image: profileData.image
                 })
             })
             if (res.ok) {
@@ -358,6 +363,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h3 className="text-lg font-bold">Profil Bilgilerini Düzenle</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Fotoğrafı URL</label>
+                                        <div className="flex gap-4">
+                                            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
+                                                <img
+                                                    src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
+                                                    className="w-full h-full object-cover"
+                                                    alt="Preview"
+                                                />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                value={profileData?.image || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
+                                                placeholder="Resim linkini buraya yapıştırın (Örn: https://...)"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="md:col-span-2">
                                         <label className="block text-sm font-medium mb-2 opacity-60">Görünen İsim (Kartvizit Üzerinde)</label>
                                         <input
                                             type="text"
@@ -482,8 +506,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="relative glass rounded-[3rem] p-4 border-white/10 shadow-2xl h-[600px] overflow-hidden">
                                     <div className="w-full h-full bg-[#020617] rounded-[2.5rem] overflow-hidden flex flex-col p-8 pointer-events-none">
                                         <div className="w-20 h-20 bg-primary/20 rounded-[1.5rem] mx-auto mb-6 flex items-center justify-center overflow-hidden">
-                                            {session?.user?.image ? (
-                                                <img src={session.user.image} className="w-full h-full object-cover" />
+                                            {(profileData?.image || session?.user?.image) ? (
+                                                <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" />
                                             ) : (
                                                 <Layout className="text-primary w-8 h-8" />
                                             )}
