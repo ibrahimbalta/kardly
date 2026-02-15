@@ -40,7 +40,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
-    const [activeTab, setActiveTab] = useState("edit")
+    const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento
     const [profileData, setProfileData] = useState(profile)
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -249,9 +249,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Palette className="w-5 h-5" />}
-                        label="Şablonlar"
+                        label="Şablon Değiştir"
                         active={activeTab === "templates"}
                         onClick={() => setActiveTab("templates")}
+                    />
+                    <NavItem
+                        icon={<Zap className="w-5 h-5" />}
+                        label="Bento Ayarları"
+                        active={activeTab === "bento"}
+                        onClick={() => setActiveTab("bento")}
                     />
                     <NavItem
                         icon={<Calendar className="w-5 h-5" />}
@@ -567,7 +573,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
-                        <div className="glass rounded-[2rem] border-white/5 overflow-hidden">
+                        <div className="glass rounded-[2.5rem] border-white/5 overflow-hidden">
                             <table className="w-full text-left">
                                 <thead className="bg-white/5 border-b border-white/5">
                                     <tr>
@@ -609,6 +615,105 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                ) : activeTab === "bento" ? (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
+                                    <Zap className="text-primary w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-black text-white">Bento Şablonu Özel Ayarları</h2>
+                                    <p className="text-sm text-white/40">Görsel öğeleri ve interaktif widgetları bu alandan yönetebilirsiniz.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Category Buttons Editor */}
+                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                                <h3 className="font-extrabold text-lg flex items-center gap-3">
+                                    <Layout className="text-orange-400 w-6 h-6" /> Kategori Butonları
+                                </h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {[0, 1, 2, 3].map((idx) => (
+                                        <div key={idx} className="space-y-2">
+                                            <label className="text-[10px] font-black text-white/30 uppercase tracking-widest">BUTON {idx + 1}</label>
+                                            <input
+                                                type="text"
+                                                placeholder={['Strateji', 'Design', 'Coding', 'Logo'][idx]}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary/50 transition-all"
+                                                value={serviceList[idx]?.title || ""}
+                                                onChange={(e) => {
+                                                    const newList = [...serviceList];
+                                                    if (!newList[idx]) newList[idx] = { title: "", description: "" };
+                                                    newList[idx].title = e.target.value;
+                                                    setServiceList(newList);
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-white/30 italic">Not: Bu butonlar ana hizmetler listenizdeki ilk 4 öğeyi kullanır.</p>
+                            </div>
+
+                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                                <h3 className="font-extrabold text-lg flex items-center gap-3">
+                                    <Activity className="text-primary w-6 h-6" /> Yetenek Analizi (Radar)
+                                </h3>
+                                <div className="space-y-5">
+                                    {[
+                                        { label: "Yaratıcılık", idx: 4 },
+                                        { label: "Teknik", idx: 5 },
+                                        { label: "Hız", idx: 6 },
+                                        { label: "İletişim", idx: 7 },
+                                        { label: "Kalite", idx: 8 }
+                                    ].map((skill) => (
+                                        <div key={skill.idx} className="space-y-2">
+                                            <div className="flex justify-between items-center px-1">
+                                                <input
+                                                    type="text"
+                                                    className="bg-transparent border-none p-0 text-xs font-bold text-white/60 focus:outline-none w-24"
+                                                    value={serviceList[skill.idx]?.title || skill.label}
+                                                    onChange={(e) => {
+                                                        const newList = [...serviceList];
+                                                        if (!newList[skill.idx]) newList[skill.idx] = { title: "", description: "85" };
+                                                        newList[skill.idx].title = e.target.value;
+                                                        setServiceList(newList);
+                                                    }}
+                                                />
+                                                <span className="text-[10px] font-black text-primary">{serviceList[skill.idx]?.description || "85"}%</span>
+                                            </div>
+                                            <input
+                                                type="range"
+                                                min="0"
+                                                max="100"
+                                                className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-primary"
+                                                value={serviceList[skill.idx]?.description || "85"}
+                                                onChange={(e) => {
+                                                    const newList = [...serviceList];
+                                                    if (!newList[skill.idx]) newList[skill.idx] = { title: skill.label, description: "" };
+                                                    newList[skill.idx].description = e.target.value;
+                                                    setServiceList(newList);
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end pt-4">
+                            <button
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                className="px-10 py-5 bg-primary text-white rounded-[1.8rem] font-black shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                            >
+                                {isSaving ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
+                                DEĞİŞİKLİKLERİ YAYINLA
+                            </button>
                         </div>
                     </div>
                 ) : activeTab === "qrcode" ? (
@@ -963,216 +1068,221 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             ))}
                         </div>
                     </div>
-                ) : null}
+                ) : null
+                }
 
                 {/* Product Add Modal */}
-                {showProductModal && (
-                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
-                        >
-                            <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
-                                <X className="w-5 h-5" />
-                            </button>
+                {
+                    showProductModal && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
+                            >
+                                <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                                    <X className="w-5 h-5" />
+                                </button>
 
-                            <div className="mb-5">
-                                <h2 className="text-xl font-bold text-gray-900">Yeni Ürün/Hizmet</h2>
-                                <p className="text-gray-400 text-sm mt-1">Ürün bilgilerini girin ve görseli yükleyin.</p>
-                            </div>
-
-                            <form onSubmit={handleAddProduct} className="space-y-4">
-                                {/* Image Upload Area */}
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Görseli</label>
-                                    <div
-                                        className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
-                                        onClick={() => document.getElementById('product-image-upload')?.click()}
-                                        onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary', 'bg-primary/5'); }}
-                                        onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('border-primary', 'bg-primary/5'); }}
-                                        onDrop={async (e) => {
-                                            e.preventDefault();
-                                            e.currentTarget.classList.remove('border-primary', 'bg-primary/5');
-                                            const file = e.dataTransfer.files?.[0];
-                                            if (!file) return;
-                                            const formDataUpload = new FormData();
-                                            formDataUpload.append('file', file);
-                                            try {
-                                                const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
-                                                const data = await res.json();
-                                                if (data.url) setNewProduct({ ...newProduct, image: data.url });
-                                                else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
-                                            } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
-                                        }}
-                                    >
-                                        {newProduct.image ? (
-                                            <div className="relative aspect-video">
-                                                <img src={newProduct.image} alt="Ürün" className="w-full h-full object-cover" />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                    <span className="text-white text-sm font-bold">Değiştir</span>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
-                                                    className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                                                >
-                                                    <X className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
-                                                <Upload className="w-8 h-8" />
-                                                <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
-                                                <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 5MB</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <input
-                                        id="product-image-upload"
-                                        type="file"
-                                        accept="image/jpeg,image/png,image/webp,image/gif"
-                                        className="hidden"
-                                        onChange={async (e) => {
-                                            const file = e.target.files?.[0];
-                                            if (!file) return;
-                                            const formDataUpload = new FormData();
-                                            formDataUpload.append('file', file);
-                                            try {
-                                                const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
-                                                const data = await res.json();
-                                                if (data.url) setNewProduct({ ...newProduct, image: data.url });
-                                                else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
-                                            } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
-                                            e.target.value = '';
-                                        }}
-                                    />
+                                <div className="mb-5">
+                                    <h2 className="text-xl font-bold text-gray-900">Yeni Ürün/Hizmet</h2>
+                                    <p className="text-gray-400 text-sm mt-1">Ürün bilgilerini girin ve görseli yükleyin.</p>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Adı</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Örn: Özel Danışmanlık Seansı"
-                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                        value={newProduct.name}
-                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-3">
+                                <form onSubmit={handleAddProduct} className="space-y-4">
+                                    {/* Image Upload Area */}
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Fiyat (₺)</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Görseli</label>
+                                        <div
+                                            className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
+                                            onClick={() => document.getElementById('product-image-upload')?.click()}
+                                            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary', 'bg-primary/5'); }}
+                                            onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('border-primary', 'bg-primary/5'); }}
+                                            onDrop={async (e) => {
+                                                e.preventDefault();
+                                                e.currentTarget.classList.remove('border-primary', 'bg-primary/5');
+                                                const file = e.dataTransfer.files?.[0];
+                                                if (!file) return;
+                                                const formDataUpload = new FormData();
+                                                formDataUpload.append('file', file);
+                                                try {
+                                                    const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
+                                                    const data = await res.json();
+                                                    if (data.url) setNewProduct({ ...newProduct, image: data.url });
+                                                    else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
+                                                } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+                                            }}
+                                        >
+                                            {newProduct.image ? (
+                                                <div className="relative aspect-video">
+                                                    <img src={newProduct.image} alt="Ürün" className="w-full h-full object-cover" />
+                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                        <span className="text-white text-sm font-bold">Değiştir</span>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
+                                                        className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+                                                    <Upload className="w-8 h-8" />
+                                                    <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
+                                                    <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 5MB</span>
+                                                </div>
+                                            )}
+                                        </div>
                                         <input
-                                            type="number"
-                                            required
-                                            placeholder="0.00"
-                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                            value={newProduct.price}
-                                            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                            id="product-image-upload"
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp,image/gif"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const formDataUpload = new FormData();
+                                                formDataUpload.append('file', file);
+                                                try {
+                                                    const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
+                                                    const data = await res.json();
+                                                    if (data.url) setNewProduct({ ...newProduct, image: data.url });
+                                                    else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
+                                                } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+                                                e.target.value = '';
+                                            }}
                                         />
                                     </div>
+
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Link</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Adı</label>
                                         <input
                                             type="text"
-                                            placeholder="https://..."
+                                            required
+                                            placeholder="Örn: Özel Danışmanlık Seansı"
                                             className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                            value={newProduct.link}
-                                            onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                            value={newProduct.name}
+                                            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                         />
                                     </div>
-                                </div>
 
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Açıklama</label>
-                                    <textarea
-                                        rows={2}
-                                        placeholder="Ürününüz hakkında kısa bir açıklama yazın..."
-                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium resize-none"
-                                        value={newProduct.description}
-                                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                    />
-                                </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Fiyat (₺)</label>
+                                            <input
+                                                type="number"
+                                                required
+                                                placeholder="0.00"
+                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
+                                                value={newProduct.price}
+                                                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Link</label>
+                                            <input
+                                                type="text"
+                                                placeholder="https://..."
+                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
+                                                value={newProduct.link}
+                                                onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
 
-                                <button
-                                    disabled={isProductSaving}
-                                    className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
-                                >
-                                    {isProductSaving ? (
-                                        <>
-                                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                            Kaydediliyor...
-                                        </>
-                                    ) : (
-                                        "Ürünü Yayınla"
-                                    )}
-                                </button>
-                            </form>
-                        </motion.div>
-                    </div>
-                )}
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Açıklama</label>
+                                        <textarea
+                                            rows={2}
+                                            placeholder="Ürününüz hakkında kısa bir açıklama yazın..."
+                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium resize-none"
+                                            value={newProduct.description}
+                                            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <button
+                                        disabled={isProductSaving}
+                                        className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        {isProductSaving ? (
+                                            <>
+                                                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                                Kaydediliyor...
+                                            </>
+                                        ) : (
+                                            "Ürünü Yayınla"
+                                        )}
+                                    </button>
+                                </form>
+                            </motion.div>
+                        </div>
+                    )
+                }
 
                 {/* Service Add Modal */}
-                {showServiceModal && (
-                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
-                        >
-                            <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
-                                <X className="w-6 h-6" />
-                            </button>
+                {
+                    showServiceModal && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
+                            <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                            >
+                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
+                                    <X className="w-6 h-6" />
+                                </button>
 
-                            <div className="mb-8">
-                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
-                                    <Layout className="w-6 h-6 text-primary" />
-                                </div>
-                                <h2 className="text-2xl font-black text-white">Yeni Hizmet</h2>
-                                <p className="text-white/40 text-sm mt-1">Neler sunduğunuzu kısaca özetleyin.</p>
-                            </div>
-
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Hizmet Başlığı</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Örn: Profesyonel Fotoğraf Çekimi"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
-                                        value={newService.title}
-                                        onChange={(e) => setNewService({ ...newService, title: e.target.value })}
-                                    />
+                                <div className="mb-8">
+                                    <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
+                                        <Layout className="w-6 h-6 text-primary" />
+                                    </div>
+                                    <h2 className="text-2xl font-black text-white">Yeni Hizmet</h2>
+                                    <p className="text-white/40 text-sm mt-1">Neler sunduğunuzu kısaca özetleyin.</p>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
-                                    <textarea
-                                        rows={3}
-                                        placeholder="Hizmetiniz hakkında kısa bir bilgi..."
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
-                                        value={newService.description}
-                                        onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-                                    />
-                                </div>
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Hizmet Başlığı</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Örn: Profesyonel Fotoğraf Çekimi"
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                            value={newService.title}
+                                            onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                                        />
+                                    </div>
 
-                                <div className="pt-2">
-                                    <button
-                                        onClick={handleAddService}
-                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        Hizmeti Ekle
-                                    </button>
+                                    <div>
+                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
+                                        <textarea
+                                            rows={3}
+                                            placeholder="Hizmetiniz hakkında kısa bir bilgi..."
+                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
+                                            value={newService.description}
+                                            onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="pt-2">
+                                        <button
+                                            onClick={handleAddService}
+                                            className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            Hizmeti Ekle
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </main>
-        </div>
+                            </motion.div>
+                        </div>
+                    )
+                }
+            </main >
+        </div >
     )
 }
 
