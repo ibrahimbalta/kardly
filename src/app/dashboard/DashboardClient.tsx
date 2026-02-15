@@ -1199,7 +1199,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "bento", name: "Bento AI Grid", description: "Gelişmiş bento tasarımı ve akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
                                 { id: "minimal_ios", name: "Minimal iOS", description: "Apple tarzı sade ve temiz görünüm.", image: "/templates/minimal.jpg", premium: true },
                                 { id: "luxury", name: "Luxury Dark", description: "Vurgulu altın sarısı ve gece siyahı.", image: "/templates/luxury.jpg", premium: true },
-                                { id: "creative", name: "Creative Glass", description: "Fütüristik cam efekti ve canlı renkler.", image: "/templates/creative.jpg", premium: true },
+                                { id: "creative", name: "Visionary / Pro Studio", description: "En üst segment, interaktif ve modüler showroom.", image: "/templates/creative.jpg", premium: true },
                                 { id: "business", name: "Corporate Blue", description: "Profesyonel ve güven veren iş tasarımı.", image: "/templates/business.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div

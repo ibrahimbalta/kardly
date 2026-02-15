@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
 import {
     MessageCircle,
     Phone,
@@ -620,12 +621,205 @@ function MinimalIOSTemplate({ profile, handleShare }: any) {
     )
 }
 
-function CreativeTemplate({ profile }: any) {
-    return <div className="min-h-screen bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-fuchsia-600 text-white flex items-center justify-center font-black italic text-4xl p-10 leading-tight">
-        UNDER CONSTRUCTION: CREATIVE GLASS THEME
-        <br />
-        <span className="text-2xl mt-4 opacity-50">{profile.user.name}</span>
-    </div>
+function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
+    const [activeMode, setActiveMode] = useState('portfolio') // portfolio | store
+    const blocks = (profile.blocks as any[]) || []
+    const products = profile.products || []
+    const services = (profile.services as any[]) || []
+
+    return (
+        <div className="min-h-screen bg-[#020617] text-white selection:bg-indigo-500/30 font-sans overflow-x-hidden">
+            {/* Top-Tier Immersive Background */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute top-[-10%] left-[-10%] w-[120vw] h-[120vw] rounded-full bg-indigo-600/10 blur-[150px] animate-pulse pointer-events-none" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[100vw] h-[100vw] rounded-full bg-purple-600/10 blur-[150px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-100 pointer-events-none mix-blend-overlay" />
+            </div>
+
+            {/* Dynamic Glass Navigation */}
+            <motion.header
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-[420px]"
+            >
+                <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-full px-5 py-2.5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-2xl border-2 border-indigo-500/50 p-0.5 overflow-hidden rotate-3">
+                            <img src={profile.user.image} className="w-full h-full object-cover rounded-xl" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-[11px] font-black uppercase tracking-tight truncate max-w-[80px]">{profile.user.name}</span>
+                            <div className="flex items-center gap-1">
+                                <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
+                                <span className="text-[7px] font-bold opacity-40 uppercase tracking-widest">Live Portfolio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
+                        <button
+                            onClick={() => setActiveMode('portfolio')}
+                            className={cn("px-5 py-2 rounded-full text-[10px] font-black transition-all", activeMode === 'portfolio' ? "bg-white text-black shadow-xl" : "text-white/40 hover:text-white")}
+                        >
+                            WORK
+                        </button>
+                        <button
+                            onClick={() => setActiveMode('store')}
+                            className={cn("px-5 py-2 rounded-full text-[10px] font-black transition-all", activeMode === 'store' ? "bg-white text-black shadow-xl" : "text-white/40 hover:text-white")}
+                        >
+                            STORE
+                        </button>
+                    </div>
+                </div>
+            </motion.header>
+
+            <main className="relative z-10 pt-40 pb-32 px-6 max-w-xl mx-auto">
+                <AnimatePresence mode="wait">
+                    {activeMode === 'portfolio' ? (
+                        <motion.div
+                            key="portfolio"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                            className="space-y-10"
+                        >
+                            {/* Visual Intro Area */}
+                            <section className="text-center space-y-6">
+                                <div className="space-y-3">
+                                    <motion.h1
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="text-6xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent leading-[0.9]"
+                                    >
+                                        Digital <br /> Visionary.
+                                    </motion.h1>
+                                    <p className="text-indigo-400 font-black uppercase tracking-[0.4em] text-[10px]">{profile.occupation || "MODERN CREATIVE"}</p>
+                                </div>
+                                <p className="text-white/50 text-sm font-medium leading-relaxed max-w-[340px] mx-auto italic">
+                                    "{profile.slogan || "Yenilikçi dijital çözümler ve benzersiz vizyon."}"
+                                </p>
+                            </section>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Bio Card - High Intensity Glass */}
+                                <RevealSection className="col-span-2 bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-10 rounded-[4rem] relative overflow-hidden group">
+                                    <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] group-hover:bg-indigo-500/40 transition-all duration-1000" />
+                                    <div className="relative z-10 space-y-6">
+                                        <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
+                                            <Sparkles size={24} className="text-indigo-400" />
+                                        </div>
+                                        <h2 className="text-3xl font-black">Story.</h2>
+                                        <p className="text-white/60 text-base leading-relaxed font-medium">{profile.bio || "Crafting digital experiences that matter."}</p>
+                                        <div className="flex gap-4 pt-4">
+                                            <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">LET'S TALK</button>
+                                            <button onClick={handleShare} className="w-14 h-14 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-white/5 transition-all"><Share2 size={20} /></button>
+                                        </div>
+                                    </div>
+                                </RevealSection>
+
+                                {/* Dynamic Blocks Layer */}
+                                {blocks.length > 0 ? blocks.map((block, i) => {
+                                    const delay = 0.1 * i;
+                                    switch (block.type) {
+                                        case 'skill_radar': return <div key={i} className="col-span-1"><BlockSkillRadar profile={profile} /></div>;
+                                        case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
+                                        case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
+                                        case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
+                                        case 'document_vault': return <div key={i} className="col-span-1"><BlockDocumentVault profile={profile} /></div>;
+                                        case 'social_feed': return <div key={i} className="col-span-1"><BlockSocialFeed profile={profile} /></div>;
+                                        default: return null;
+                                    }
+                                }) : (
+                                    <>
+                                        <div className="col-span-1"><BlockSkillRadar profile={profile} /></div>
+                                        <div className="col-span-1"><BlockTrustScore profile={profile} /></div>
+                                        <div className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Skills Tag Cloud */}
+                            <section className="pt-10 space-y-4">
+                                <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Core Competencies</h3>
+                                <div className="flex flex-wrap justify-center gap-3">
+                                    {services.map((s, i) => (
+                                        <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default">
+                                            {s.title}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="store"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                            className="space-y-12"
+                        >
+                            <div className="text-center space-y-4 pt-10">
+                                <div className="w-20 h-20 bg-indigo-600/20 rounded-[2rem] flex items-center justify-center mx-auto border border-indigo-500/20 shadow-2xl shadow-indigo-500/10">
+                                    <ShoppingBag size={40} className="text-indigo-400" />
+                                </div>
+                                <h1 className="text-5xl font-black italic tracking-tighter">Boutique.</h1>
+                                <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.5em]">Selected Digital & Physical Goods</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                                {products.length > 0 ? products.map((p: any, i: number) => (
+                                    <RevealSection key={i} delay={0.05 * i} className="group bg-gradient-to-r from-white/5 to-transparent border border-white/5 p-5 rounded-[3rem] flex gap-8 items-center hover:bg-white/10 transition-all duration-500">
+                                        <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden shadow-2xl shrink-0 group-hover:scale-105 transition-transform duration-700">
+                                            <img src={p.image} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="flex items-start justify-between">
+                                                <h3 className="text-xl font-bold tracking-tight">{p.name}</h3>
+                                                <div className="px-3 py-1 bg-indigo-600/20 text-indigo-400 text-[9px] font-black rounded-lg">NEW</div>
+                                            </div>
+                                            <p className="text-[11px] text-white/40 font-medium leading-relaxed line-clamp-2">{p.description}</p>
+                                            <div className="flex items-center justify-between pt-4">
+                                                <span className="text-2xl font-black tracking-tight">₺{p.price}</span>
+                                                <a href={p.link} target="_blank" className="w-14 h-14 bg-white text-black rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl">
+                                                    <ShoppingBag size={20} />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </RevealSection>
+                                )) : (
+                                    <div className="py-32 text-center glass-card border-white/5 rounded-[4rem] bg-white/2">
+                                        <ShoppingBag size={64} className="mx-auto text-white/5 mb-6" />
+                                        <h4 className="text-lg font-black opacity-20 italic">No inventory found.</h4>
+                                        <p className="text-[9px] font-black opacity-10 uppercase tracking-widest mt-2">Check back later for exclusive drops</p>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Footer Social Dock */}
+                <section className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-[440px] flex gap-3">
+                    <button
+                        onClick={() => setIsAppointmentOpen(true)}
+                        className="flex-1 bg-white text-black h-16 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-indigo-600 hover:text-white transition-all active:scale-95"
+                    >
+                        RESERVE NOW
+                    </button>
+                    <div className="flex bg-black/40 backdrop-blur-3xl p-2 rounded-[2rem] border border-white/10 shadow-2xl">
+                        {profile.socialLinks?.slice(0, 3).map((l: any, i: number) => (
+                            <a key={i} href={l.url} className="w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all text-white/60 hover:text-white">
+                                {l.platform === 'instagram' && <Instagram size={18} />}
+                                {l.platform === 'linkedin' && <Linkedin size={18} />}
+                                {l.platform === 'twitter' && <Twitter size={18} />}
+                            </a>
+                        ))}
+                    </div>
+                </section>
+            </main>
+        </div>
+    )
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -635,7 +829,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [lang, setLang] = useState("tr")
     const [mounted, setMounted] = useState(false)
     const [copied, setCopied] = useState(false)
-    const t = translations[lang] || translations.tr
+    const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => { setMounted(true) }, [])
 
@@ -649,7 +843,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
         }
     }
 
-    if (!mounted) return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>
+    if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
     const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare }
 
@@ -661,7 +855,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
             case "luxury": return <LuxuryTemplate {...props} />;
             case "creative": return <CreativeTemplate {...props} />;
             case "minimal_ios": return <MinimalIOSTemplate {...props} />;
-            case "modern": return <BentoTemplate {...props} />; // Fallback for now
+            case "modern": return <BentoTemplate {...props} />;
             default: return <BentoTemplate {...props} />;
         }
     }
@@ -671,16 +865,15 @@ export default function ProfileClient({ profile }: { profile: any }) {
             <AppointmentModal profile={profile} isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} t={t} />
             {renderTemplate()}
 
-            {/* Success Toast */}
             <AnimatePresence>
                 {copied && (
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-white/20"
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-white text-black px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-indigo-100"
                     >
-                        <CheckCircle2 size={20} className="text-green-500" /> Link Kopyalandı!
+                        <CheckCircle2 size={20} className="text-indigo-600" /> Link Kopyalandı!
                     </motion.div>
                 )}
             </AnimatePresence>
