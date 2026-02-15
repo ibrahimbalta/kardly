@@ -139,7 +139,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     templateId: profileData.templateId,
                     services: updatedServices || serviceList,
                     workingHours,
-                    occupation: profileData.occupation
+                    occupation: profileData.occupation,
+                    displayName: profileData.name || session?.user?.name
                 })
             })
             if (res.ok) {
@@ -378,7 +379,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 </header>
 
                 {activeTab === "edit" ? (
-                    <>
+                    <div className="space-y-10">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                             <StatCard icon={<Eye />} label="Toplam Görüntülenme" value={stats?.totalViews?.toString() || "0"} trend="+0%" />
@@ -394,120 +395,127 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Simple Editor Controls */}
                             <div className="space-y-6">
-                                <h3 className="text-lg font-bold">Hızlı Düzenleme</h3>
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2 opacity-60">Meslek / Ünvan</label>
-                                            <input
-                                                type="text"
-                                                value={profileData?.occupation || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
-                                                placeholder="Örn: Kıdemli Yazılım Geliştirici"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2 opacity-60">Bölge / Ofis Şubesi</label>
-                                            <input
-                                                type="text"
-                                                value={profileData?.phone || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                                placeholder="+90 5xx xxx xx xx"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Slogan (Kurumsal Motto)</label>
+                                <h3 className="text-lg font-bold">Profil Bilgilerini Düzenle</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Görünen İsim (Kartvizit Üzerinde)</label>
                                         <input
                                             type="text"
-                                            value={profileData?.slogan || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
-                                            placeholder="Örn: Geleceği Tasarlıyoruz"
+                                            value={profileData?.name || session?.user?.name || ""}
+                                            onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                                            placeholder="Örn: İbrahim Balta"
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
-
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Hakkımızda / Tanıtım Yazısı</label>
-                                        <textarea
-                                            rows={3}
-                                            value={profileData?.bio || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                                            placeholder="Ofisiniz veya kendiniz hakkında kısa bir bilgi..."
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Meslek / Unvan</label>
+                                        <input
+                                            type="text"
+                                            value={profileData?.occupation || ""}
+                                            onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
+                                            placeholder="Örn: Kıdemli Yazılım Mimarı"
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
-
-                                    <div className="pt-4 border-t border-white/5">
-                                        <label className="block text-sm font-medium mb-4 opacity-60">İletişim & Kurumsal Bağlantılar</label>
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
-                                                    <Instagram className="w-5 h-5" />
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Instagram URL"
-                                                    value={getSocialUrl("instagram")}
-                                                    onChange={(e) => updateSocialLink("instagram", e.target.value)}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                                />
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-400">
-                                                    <Twitter className="w-5 h-5" />
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Twitter URL"
-                                                    value={getSocialUrl("twitter")}
-                                                    onChange={(e) => updateSocialLink("twitter", e.target.value)}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                                />
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-blue-500">
-                                                    <Linkedin className="w-5 h-5" />
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder="LinkedIn URL"
-                                                    value={getSocialUrl("linkedin")}
-                                                    onChange={(e) => updateSocialLink("linkedin", e.target.value)}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            onClick={() => setShowToast("AI Stil Sihirbazı yakında aktif olacak!")}
-                                            className="w-full py-4 mt-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 animate-gradient shadow-xl"
-                                        >
-                                            <Sparkles size={18} /> AI STİL SİHİRBAZINI BAŞLAT
-                                        </button>
-                                    </div>
-
-                                    <div className="pt-6">
-                                        <button
-                                            onClick={() => handleSave()}
-                                            disabled={isSaving}
-                                            className="w-full flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-[1.2rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                                        >
-                                            {isSaving ? (
-                                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                            ) : (
-                                                <>
-                                                    <CheckCircle2 className="w-5 h-5" /> DEĞİŞİKLİKLERİ YAYINLA
-                                                </>
-                                            )}
-                                        </button>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Lokasyon / Şehir</label>
+                                        <input
+                                            type="text"
+                                            value={profileData?.phone || ""}
+                                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                            placeholder="Örn: İstanbul, Türkiye"
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                        />
                                     </div>
                                 </div>
-                            </div>
 
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">Kısa Tanıtım / Kişisel Motto</label>
+                                    <input
+                                        type="text"
+                                        value={profileData?.slogan || ""}
+                                        onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
+                                        placeholder="Örn: Geleceği kodluyor, dijital deneyimler inşa ediyorum."
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">Hakkımda / Kariyer Özeti</label>
+                                    <textarea
+                                        rows={3}
+                                        value={profileData?.bio || ""}
+                                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                                        placeholder="Profesyonel geçmişiniz, yetkinlikleriniz ve hedeflerinizden bahsedin..."
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                    />
+                                </div>
+
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">Sosyal Medya Bağlantıları</label>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
+                                                <Instagram className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Instagram URL"
+                                                value={getSocialUrl("instagram")}
+                                                onChange={(e) => updateSocialLink("instagram", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-400">
+                                                <Twitter className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Twitter URL"
+                                                value={getSocialUrl("twitter")}
+                                                onChange={(e) => updateSocialLink("twitter", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-blue-500">
+                                                <Linkedin className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="LinkedIn URL"
+                                                value={getSocialUrl("linkedin")}
+                                                onChange={(e) => updateSocialLink("linkedin", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => setShowToast("AI Stil Sihirbazı yakında aktif olacak!")}
+                                        className="w-full py-4 mt-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 animate-gradient shadow-xl"
+                                    >
+                                        <Sparkles size={18} /> AI STİL SİHİRBAZINI BAŞLAT
+                                    </button>
+                                </div>
+
+                                <div className="pt-6">
+                                    <button
+                                        onClick={() => handleSave()}
+                                        disabled={isSaving}
+                                        className="w-full flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-[1.2rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                    >
+                                        {isSaving ? (
+                                            <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            <>
+                                                <CheckCircle2 className="w-5 h-5" /> DEĞİŞİKLİKLERİ YAYINLA
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                             {/* Preview Mockup */}
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -551,12 +559,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-[3rem]">
-                                        <p className="font-bold text-lg">Önizleme</p>
+                                        <p className="font-bold text-lg text-white">Canlı Önizleme</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </>
+                    </div>
                 ) : activeTab === "products" ? (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
@@ -595,10 +603,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="p-6">
                                         <div className="flex justify-between items-start mb-2">
                                             <h3 className="font-bold">{product.name}</h3>
-                                            <span className="font-black text-primary">₺{product.price}</span>
+                                            <span className="font-black text-primary text-xs uppercase tracking-widest">{product.price}</span>
                                         </div>
                                         <p className="text-sm text-foreground/50 mb-4 line-clamp-2">{product.description}</p>
-                                        <button className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">Düzenle</button>
+                                        <div className="flex gap-2">
+                                            <button className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all">Düzenle</button>
+                                            {product.link && (
+                                                <a href={product.link} target="_blank" className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-xl hover:scale-105 transition-all">
+                                                    <ExternalLink size={18} />
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -616,14 +631,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Hizmetler</h2>
-                                <p className="text-sm text-foreground/50">Profilinizde liste halinde görünecek ana hizmetleriniz.</p>
+                                <h2 className="text-xl font-bold">Uzmanlık Alanları</h2>
+                                <p className="text-sm text-foreground/50">Mesleki yetkinliklerinizi ve odak noktalarınıza listeleyin.</p>
                             </div>
                             <button
                                 onClick={() => setShowServiceModal(true)}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
-                                <Plus className="w-5 h-5" /> Yeni Hizmet Ekle
+                                <Plus className="w-5 h-5" /> Yeni Uzmanlık Ekle
                             </button>
                         </div>
 
@@ -1250,7 +1265,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 ) : null
                 }
 
-                {/* Product Add Modal */}
+                {/* Project Add Modal */}
                 {
                     showProductModal && (
                         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
@@ -1265,14 +1280,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
 
                                 <div className="mb-5">
-                                    <h2 className="text-xl font-bold text-gray-900">Yeni Ürün/Hizmet</h2>
-                                    <p className="text-gray-400 text-sm mt-1">Ürün bilgilerini girin ve görseli yükleyin.</p>
+                                    <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
+                                    <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
                                 </div>
 
                                 <form onSubmit={handleAddProduct} className="space-y-4">
                                     {/* Image Upload Area */}
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Görseli</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
                                         <div
                                             className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
                                             onClick={() => document.getElementById('product-image-upload')?.click()}
@@ -1299,7 +1314,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         >
                                             {newProduct.image ? (
                                                 <div className="relative aspect-video">
-                                                    <img src={newProduct.image} alt="Ürün" className="w-full h-full object-cover" />
+                                                    <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
                                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                         <span className="text-white text-sm font-bold">Değiştir</span>
                                                     </div>
@@ -1315,7 +1330,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
                                                     <Upload className="w-8 h-8" />
                                                     <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
-                                                    <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 5MB</span>
+                                                    <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 2MB</span>
                                                 </div>
                                             )}
                                         </div>
@@ -1328,7 +1343,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
 
-                                                // Check file size (max 2MB for base64 to avoid DB bloat)
                                                 if (file.size > 2 * 1024 * 1024) {
                                                     setShowToast('Dosya boyutu çok büyük (Maks 2MB)');
                                                     setTimeout(() => setShowToast(null), 3000);
@@ -1346,46 +1360,33 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Adı</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Başlığı</label>
                                         <input
                                             type="text"
                                             required
-                                            placeholder="Örn: Özel Danışmanlık Seansı"
+                                            placeholder="Örn: Mobil Uygulama Geliştirme"
                                             className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
                                             value={newProduct.name}
                                             onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Fiyat (₺)</label>
-                                            <input
-                                                type="number"
-                                                required
-                                                placeholder="0.00"
-                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                                value={newProduct.price}
-                                                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Link</label>
-                                            <input
-                                                type="text"
-                                                placeholder="https://..."
-                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                                value={newProduct.link}
-                                                onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
-                                            />
-                                        </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Canlı Link / GitHub</label>
+                                        <input
+                                            type="text"
+                                            placeholder="https://..."
+                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
+                                            value={newProduct.link}
+                                            onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                        />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Açıklama</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Açıklaması</label>
                                         <textarea
                                             rows={2}
-                                            placeholder="Ürününüz hakkında kısa bir açıklama yazın..."
+                                            placeholder="Projede hangi teknolojileri kullandınız ve neler başardınız?"
                                             className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium resize-none"
                                             value={newProduct.description}
                                             onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
@@ -1402,7 +1403,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 Kaydediliyor...
                                             </>
                                         ) : (
-                                            "Ürünü Yayınla"
+                                            "Projeyi Kaydet"
                                         )}
                                     </button>
                                 </form>
@@ -1427,15 +1428,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 <div className="mb-8">
                                     <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
-                                        <Layout className="w-6 h-6 text-primary" />
+                                        <Zap className="w-6 h-6 text-primary" />
                                     </div>
-                                    <h2 className="text-2xl font-black text-white">Yeni Hizmet</h2>
-                                    <p className="text-white/40 text-sm mt-1">Neler sunduğunuzu kısaca özetleyin.</p>
+                                    <h2 className="text-2xl font-black text-white">Yeni Uzmanlık Alanı</h2>
+                                    <p className="text-white/40 text-sm mt-1">Hangi alanlarda derin uzmanlığa sahipsiniz?</p>
                                 </div>
 
                                 <div className="space-y-6">
                                     <div>
-                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Hizmet Başlığı</label>
+                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Uzmanlık Başlığı</label>
                                         <input
                                             type="text"
                                             placeholder="Örn: Profesyonel Fotoğraf Çekimi"

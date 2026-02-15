@@ -26,7 +26,7 @@ export async function POST(req: Request) {
                 profileId: profile.id,
                 name,
                 description,
-                price: parseFloat(price),
+                price: price ? parseFloat(price) || 0 : 0,
                 image,
                 link
             }

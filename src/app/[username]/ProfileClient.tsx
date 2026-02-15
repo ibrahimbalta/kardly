@@ -269,27 +269,29 @@ function BlockTimelineMock({ profile }: any) {
     )
 }
 
-function BlockProductCatalog({ profile }: any) {
+function BlockProjectPortfolio({ profile }: any) {
     const products = profile.products || []
     return (
         <RevealSection className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-white/60 space-y-4">
             <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Mini Mağaza</h3>
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Proje Portfolyosu</h3>
                 <span className="text-[10px] font-bold text-indigo-500">Tümünü Gör</span>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
                 {(products.length > 0 ? products : [
-                    { name: 'Digital Service A', price: 299, image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80' },
-                    { name: 'Expert Consult', price: 499, image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80' }
+                    { name: 'Kurye Yönetim Paneli', price: 'Full Stack', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80' },
+                    { name: 'AI Destekli CRM', price: 'Technical Lead', image: 'https://images.unsplash.com/photo-1551288049-bbbda5366a7a?auto=format&fit=crop&q=80' }
                 ]).map((p: any, i: number) => (
                     <div key={i} className="min-w-[160px] bg-white rounded-2xl p-3 shadow-sm border border-slate-100">
                         <img src={p.image} className="w-full h-24 object-cover rounded-xl mb-3" />
                         <h4 className="text-[11px] font-black text-slate-800 line-clamp-1">{p.name}</h4>
                         <div className="flex items-center justify-between mt-2">
-                            <span className="text-xs font-black text-indigo-600">₺{p.price}</span>
-                            <button className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
-                                <Plus size={12} />
-                            </button>
+                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter opacity-70">{p.price}</span>
+                            {p.link && (
+                                <a href={p.link} target="_blank" className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
+                                    <ExternalLink size={12} />
+                                </a>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -386,10 +388,10 @@ function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: 
                 {blocks.map((block, i) => {
                     switch (block.type) {
                         case 'skill_radar': return <BlockSkillRadar key={i} profile={profile} />;
-                        case 'portfolio_gallery': return <BlockPortfolioGallery key={i} profile={profile} />;
-                        case 'trust_score': return <BlockTrustScore key={i} profile={profile} />;
-                        case 'timeline_process': return <BlockTimelineMock key={i} profile={profile} />;
-                        case 'product_catalog': return <BlockProductCatalog key={i} profile={profile} />;
+                        case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
+                        case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
+                        case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
+                        case 'product_catalog': return <BlockProjectPortfolio key={i} profile={profile} />;
                         case 'social_feed': return <BlockSocialFeed key={i} profile={profile} />;
                         case 'document_vault': return <BlockDocumentVault key={i} profile={profile} />;
                         case 'appointment_calendar': return (
@@ -688,10 +690,10 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                                 <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
                                     <Sparkles size={24} className="text-indigo-400" />
                                 </div>
-                                <h2 className="text-3xl font-black italic">Expertise.</h2>
-                                <p className="text-white/60 text-base leading-relaxed font-medium">{profile.bio || "Crafting digital experiences that matter."}</p>
+                                <h2 className="text-3xl font-black italic">Hakkımda.</h2>
+                                <p className="text-white/60 text-base leading-relaxed font-bold">{profile.bio || "Stratejik vizyon ve mühendislik yaklaşımıyla dijital deneyimler geliştiriyorum."}</p>
                                 <div className="flex gap-4 pt-4">
-                                    <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">BOOK A CONSULTATION</button>
+                                    <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">BANA ULAŞIN</button>
                                     <button onClick={handleShare} className="w-14 h-14 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-white/5 transition-all"><Share2 size={20} /></button>
                                 </div>
                             </div>
@@ -719,10 +721,10 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
 
                     {/* Expertise Tag Cloud */}
                     <section className="pt-10 space-y-4">
-                        <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Core Disciplines</h3>
+                        <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Ana Yetkinlikler</h3>
                         <div className="flex flex-wrap justify-center gap-3">
                             {services.map((s, i) => (
-                                <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default">
+                                <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default text-indigo-300">
                                     {s.title}
                                 </div>
                             ))}
@@ -736,7 +738,7 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                         onClick={() => setIsAppointmentOpen(true)}
                         className="flex-1 bg-white text-black h-16 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:bg-indigo-600 hover:text-white transition-all active:scale-95"
                     >
-                        GET IN TOUCH
+                        İLETİŞİME GEÇİN
                     </button>
                     <div className="flex bg-black/40 backdrop-blur-3xl p-2 rounded-[2rem] border border-white/10 shadow-2xl">
                         {profile.socialLinks?.slice(0, 3).map((l: any, i: number) => (
@@ -824,7 +826,7 @@ function NebulaTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                     </RevealSection>
 
                     <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Hizmetler</span>
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Uzmanlık Alanları</span>
                         <div className="space-y-4">
                             {services.slice(0, 3).map((s, i) => (
                                 <div key={i} className="flex items-center gap-4 text-sm font-bold group/item">
