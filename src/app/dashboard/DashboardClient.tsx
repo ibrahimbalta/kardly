@@ -915,17 +915,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
-                                { id: "modern", name: "Modern Minimal", description: "Hızlı, şık ve sade tasarım.", image: "/templates/modern.jpg", premium: false },
+                                { id: "modern", name: "Modern Animated", description: "Hareketli arka plan ve akışkan tasarım.", image: "/templates/modern.jpg", premium: false },
+                                { id: "bento", name: "Bento AI Grid", description: "Gelişmiş bento tasarımı ve akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
+                                { id: "minimal_ios", name: "Minimal iOS", description: "Apple tarzı sade ve temiz görünüm.", image: "/templates/minimal.jpg", premium: true },
                                 { id: "luxury", name: "Luxury Dark", description: "Vurgulu altın sarısı ve gece siyahı.", image: "/templates/luxury.jpg", premium: true },
                                 { id: "creative", name: "Creative Glass", description: "Fütüristik cam efekti ve canlı renkler.", image: "/templates/creative.jpg", premium: true },
                                 { id: "business", name: "Corporate Blue", description: "Profesyonel ve güven veren iş tasarımı.", image: "/templates/business.jpg", premium: true },
                             ].map((tpl) => (
-                                <div
+                                <motion.div
                                     key={tpl.id}
+                                    whileHover={{ y: -5 }}
                                     className={cn(
                                         "glass rounded-3xl border border-white/5 overflow-hidden group cursor-pointer transition-all",
-                                        profileData.templateId === tpl.id ? "ring-2 ring-primary" : "hover:border-white/20",
-                                        tpl.premium && currentPlan === "free" ? "grayscale opacity-50" : ""
+                                        profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary/50" : "hover:border-white/20"
                                     )}
                                     onClick={() => {
                                         if (tpl.premium && currentPlan === "free") {
@@ -938,21 +940,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     }}
                                 >
                                     <div className="aspect-[4/5] bg-white/5 relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 group-hover:scale-110 transition-transform duration-500" />
+                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 z-10" />
+
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/5 to-white/0">
+                                            {tpl.id === 'bento' ? <Layout className="w-12 h-12 text-primary/40" /> : <Smartphone className="w-12 h-12 text-white/20" />}
+                                        </div>
+
                                         {tpl.premium && (
-                                            <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-10">PRO</div>
+                                            <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-20">PRO</div>
                                         )}
                                         {profileData.templateId === tpl.id && (
-                                            <div className="absolute top-4 right-4 bg-emerald-500 text-white p-1 rounded-full z-10">
+                                            <div className="absolute top-4 right-4 bg-emerald-500 text-white p-1 rounded-full z-20 shadow-lg">
                                                 <CheckCircle2 className="w-4 h-4" />
                                             </div>
                                         )}
-                                        <div className="absolute bottom-6 left-6 right-6">
+                                        <div className="absolute bottom-6 left-6 right-6 z-20">
                                             <h3 className="font-bold text-lg mb-1">{tpl.name}</h3>
-                                            <p className="text-xs opacity-70">{tpl.description}</p>
+                                            <p className="text-xs opacity-70 leading-relaxed">{tpl.description}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
