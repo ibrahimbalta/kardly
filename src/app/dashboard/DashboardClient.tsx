@@ -29,7 +29,9 @@ import {
     X,
     Upload,
     LogOut,
-    Clock
+    Clock,
+    Zap,
+    Activity
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
