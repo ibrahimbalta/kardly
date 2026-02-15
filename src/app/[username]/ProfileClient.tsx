@@ -41,22 +41,22 @@ import { motion, AnimatePresence, useScroll, useTransform, useInView } from "fra
 interface Profile {
     id: string;
     username: string;
-    occupation: string;
-    slogan: string;
-    bio: string;
-    phone: string;
-    themeColor: string;
+    occupation?: string | null;
+    slogan?: string | null;
+    bio?: string | null;
+    phone?: string | null;
+    themeColor?: string | null;
     templateId: string;
-    socialLinks: { platform: string; url: string }[];
-    services: { title: string; description: string }[];
-    workingHours: string[];
+    socialLinks?: any;
+    services?: any;
+    workingHours?: any;
     user: {
-        name: string;
-        image: string;
-        email: string;
-        subscription?: { plan: string };
+        name?: string | null;
+        image?: string | null;
+        email?: string | null;
+        subscription?: any;
     };
-    products: { id: string; name: string; description: string; price: number; image: string; link: string }[];
+    products?: any[];
 }
 
 // ─── SHARED COMPONENTS ───────────────────────────────────────────
@@ -319,7 +319,7 @@ function MinimalTemplate({ profile, handleShare, setIsAppointmentOpen }: any) {
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
 
-export default function ProfileClient({ profile }: { profile: Profile }) {
+export default function ProfileClient({ profile }: { profile: any }) {
     const [isAppointmentOpen, setIsAppointmentOpen] = useState(false)
     const [lang, setLang] = useState("tr")
     const [mounted, setMounted] = useState(false)
