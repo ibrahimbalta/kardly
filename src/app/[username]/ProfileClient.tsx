@@ -575,7 +575,7 @@ function BusinessTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare 
     )
 }
 
-function LuxuryTemplate({ profile, handleShare }: any) {
+function LuxuryTemplate({ profile, handleShare, setIsAppointmentOpen }: any) {
     return (
         <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center p-6 text-center font-serif">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="fixed inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000_100%)] z-0 pointer-events-none" />
@@ -602,7 +602,7 @@ function LuxuryTemplate({ profile, handleShare }: any) {
     )
 }
 
-function MinimalIOSTemplate({ profile, handleShare }: any) {
+function MinimalIOSTemplate({ profile, handleShare, setIsAppointmentOpen }: any) {
     return (
         <div className="min-h-screen bg-[#F2F2F7] text-black font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif] p-6">
             <div className="max-w-md mx-auto pt-16 space-y-6">
