@@ -32,7 +32,9 @@ import {
     Activity,
     Shield,
     Download,
-    Smartphone
+    Smartphone,
+    Plus,
+    FileText
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -266,6 +268,73 @@ function BlockTimelineMock({ profile }: any) {
     )
 }
 
+function BlockProductCatalog({ profile }: any) {
+    const products = profile.products || []
+    return (
+        <RevealSection className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-white/60 space-y-4">
+            <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Mini Mağaza</h3>
+                <span className="text-[10px] font-bold text-indigo-500">Tümünü Gör</span>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                {(products.length > 0 ? products : [
+                    { name: 'Digital Service A', price: 299, image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80' },
+                    { name: 'Expert Consult', price: 499, image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80' }
+                ]).map((p: any, i: number) => (
+                    <div key={i} className="min-w-[160px] bg-white rounded-2xl p-3 shadow-sm border border-slate-100">
+                        <img src={p.image} className="w-full h-24 object-cover rounded-xl mb-3" />
+                        <h4 className="text-[11px] font-black text-slate-800 line-clamp-1">{p.name}</h4>
+                        <div className="flex items-center justify-between mt-2">
+                            <span className="text-xs font-black text-indigo-600">₺{p.price}</span>
+                            <button className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
+                                <Plus size={12} />
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </RevealSection>
+    )
+}
+
+function BlockSocialFeed({ profile }: any) {
+    return (
+        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-rose-50/30 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+                <div className="w-8 h-8 bg-rose-500 text-white rounded-xl flex items-center justify-center"><Instagram size={16} /></div>
+                <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">LIVE FEED</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-4">
+                {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="aspect-square rounded-lg bg-slate-200 overflow-hidden relative group">
+                        <img src={`https://picsum.photos/seed/${i + 10}/200`} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                        <div className="absolute inset-0 bg-rose-500/10 group-hover:bg-transparent transition-all" />
+                    </div>
+                ))}
+            </div>
+        </RevealSection>
+    )
+}
+
+function BlockDocumentVault({ profile }: any) {
+    return (
+        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-slate-50/50 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+                <div className="w-8 h-8 bg-slate-800 text-white rounded-xl flex items-center justify-center"><FileText size={16} /></div>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">DOCS</span>
+            </div>
+            <div className="mt-4 space-y-2">
+                {['Curriculum Vitae', 'Price List 2024'].map((doc, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all cursor-pointer">
+                        <span className="text-[10px] font-black text-slate-600">{doc}</span>
+                        <Download size={12} className="text-slate-300" />
+                    </div>
+                ))}
+            </div>
+        </RevealSection>
+    )
+}
+
 // ─── TEMPLATES ───────────────────────────────────────────────────
 
 function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: any) {
@@ -319,6 +388,9 @@ function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: 
                         case 'portfolio_gallery': return <BlockPortfolioGallery key={i} profile={profile} />;
                         case 'trust_score': return <BlockTrustScore key={i} profile={profile} />;
                         case 'timeline_process': return <BlockTimelineMock key={i} profile={profile} />;
+                        case 'product_catalog': return <BlockProductCatalog key={i} profile={profile} />;
+                        case 'social_feed': return <BlockSocialFeed key={i} profile={profile} />;
+                        case 'document_vault': return <BlockDocumentVault key={i} profile={profile} />;
                         case 'appointment_calendar': return (
                             <RevealSection key={i} className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex items-center justify-between">
                                 <div>
@@ -336,6 +408,7 @@ function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: 
             </div>
         )
     }
+
 
     return (
         <div className="min-h-screen bg-white text-slate-800 p-6 md:p-12 font-sans selection:bg-indigo-100 relative overflow-x-hidden">

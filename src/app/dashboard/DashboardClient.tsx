@@ -710,16 +710,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         {/* Header */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div>
-                                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
                                     <Layers className="text-primary w-8 h-8" /> Bento Store & Modüller
                                 </h2>
-                                <p className="text-white/40 mt-2">Profilinizi amaca göre şekillendiren süper modülleri yönetin.</p>
+                                <p className="text-slate-500 mt-2 font-medium">Profilinizi ihtiyacınıza göre kişiselleştirin. Modülleri yükleyin, sıralayın ve yönetin.</p>
                             </div>
-                            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
-                                <span className="px-4 py-2 text-[10px] font-black uppercase text-primary">Dijital Ofis Modu</span>
-                                <div className="w-10 h-6 bg-primary rounded-full relative flex items-center px-1">
-                                    <div className="w-4 h-4 bg-white rounded-full shadow-lg ml-auto" />
-                                </div>
+                            <div className="flex items-center gap-3 bg-white p-3 rounded-3xl border border-slate-100 shadow-sm">
+                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-2">Dijital Ofis Modu</span>
+                                <button className="w-12 h-6 bg-primary rounded-full relative flex items-center px-1 shadow-inner">
+                                    <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-md ml-auto" />
+                                </button>
                             </div>
                         </div>
 
@@ -732,17 +732,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         key={mod.type}
                                         whileHover={{ y: -5 }}
                                         className={cn(
-                                            "glass p-6 rounded-[2.5rem] border transition-all relative overflow-hidden group",
-                                            isActive ? "border-primary/50 bg-primary/5 shadow-2xl shadow-primary/10" : "border-white/5 hover:border-white/20"
+                                            "p-6 rounded-[2.5rem] border transition-all relative overflow-hidden group",
+                                            isActive
+                                                ? "border-primary/50 bg-primary shadow-2xl shadow-primary/20 text-white"
+                                                : "bg-white border-slate-100 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
                                         )}
                                     >
-                                        <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110",
-                                            isActive ? "bg-primary text-white" : "bg-white/5 " + mod.color
+                                        <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 shadow-inner",
+                                            isActive ? "bg-primary text-white" : "bg-slate-100 " + mod.color
                                         )}>
                                             {mod.icon}
                                         </div>
-                                        <h3 className="font-bold text-white mb-2">{mod.name}</h3>
-                                        <p className="text-[10px] text-white/40 leading-relaxed mb-6">{mod.description}</p>
+                                        <h3 className={cn("font-bold mb-2 transition-colors", isActive ? "text-white" : "text-slate-900")}>{mod.name}</h3>
+                                        <p className={cn("text-[10px] leading-relaxed mb-6 transition-colors", isActive ? "text-white/60" : "text-slate-500")}>{mod.description}</p>
 
                                         <button
                                             onClick={() => {
