@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Navbar } from "@/components/Navbar"
 import { Hero } from "@/components/Hero"
-import { Layout, Shield, Zap, Globe, MessageSquare, CreditCard } from "lucide-react"
+import { Layout, Shield, Zap, Globe, MessageSquare } from "lucide-react"
 
 export default function Home() {
   return (
@@ -48,11 +48,7 @@ export default function Home() {
               <p className="text-foreground/50 text-sm">Kendi isminizle profesyonel bir imaj çizin.</p>
             </div>
 
-            <div className="glass p-8 rounded-[3rem] border-white/10 flex flex-col justify-end group">
-              <CreditCard className="w-10 h-10 text-emerald-500 mb-6 group-hover:scale-110 transition-transform" />
-              <h4 className="text-xl font-black mb-2 tracking-tight">Ödeme & Satış</h4>
-              <p className="text-foreground/50 text-sm">Hizmetleriniz için anında ödeme alın.</p>
-            </div>
+
 
             <div className="md:row-span-2 glass p-10 rounded-[3rem] border-white/10 flex flex-col justify-between group relative overflow-hidden">
               <div className="absolute bottom-0 right-0 w-full h-1/2 bg-gradient-to-t from-purple-500/10 to-transparent" />
@@ -114,37 +110,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Teaser */}
-      <section id="pricing" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-black mb-20 tracking-tight">Basit ve Şeffaf <span className="text-primary">Fiyatlandırma</span></h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <PricingCard
-              title="Başlangıç"
-              price="0"
-              features={["1 Temel Şablon", "Kardly Alt Domain", "Sınırsız QR Kod", "Temel Analitik"]}
-              buttonText="Ücretsiz Başla"
-              className="glass border-white/5 opacity-80"
-            />
-            <PricingCard
-              title="Pro"
-              price="199"
-              features={["Tüm Premium Şablonlar", "Özel Domain Bağlama", "AI Stil Sihirbazı", "Gelişmiş Analitik", "vCard Kayıt Sistemi"]}
-              buttonText="Pro'ya Geç"
-              className="bg-[#020617] border-primary/20 scale-105 relative shadow-[0_40px_100px_rgba(99,102,241,0.15)] ring-2 ring-primary/30"
-              featured
-            />
-            <PricingCard
-              title="Business"
-              price="499"
-              features={["Ödeme Alma (Iyzico)", "Portfolyo Yönetimi", "WhatsApp Randevu Botu", "Beyaz Etiket Desteği", "7/24 Özel Destek"]}
-              buttonText="Business Başla"
-              className="glass border-white/5 opacity-80"
-            />
-          </div>
-        </div>
-      </section>
 
       <footer className="py-20 border-t border-white/5 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
@@ -179,28 +145,4 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
   )
 }
 
-function PricingCard({ title, price, features, buttonText, className, featured }: { title: string, price: string, features: string[], buttonText: string, className?: string, featured?: boolean }) {
-  return (
-    <div className={`p-10 rounded-[3rem] flex flex-col border transition-all duration-500 hover:border-primary/50 ${className}`}>
-      {featured && <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-xl shadow-primary/40">EN ÇOK TERCİH EDİLEN</span>}
-      <h3 className="text-2xl font-black mb-2 tracking-tight uppercase">{title}</h3>
-      <div className="flex items-baseline gap-1 mb-10">
-        <span className="text-5xl font-black tracking-tighter">₺{price}</span>
-        <span className="text-foreground/40 text-[10px] uppercase font-bold tracking-widest">/AYLIK</span>
-      </div>
-      <ul className="flex flex-col gap-5 mb-12 text-left flex-grow">
-        {features.map((f, i) => (
-          <li key={i} className="flex items-center gap-4 text-sm font-medium">
-            <div className={`w-5 h-5 rounded-full flex items-center justify-center ${featured ? "bg-primary/20" : "bg-white/5"}`}>
-              <Shield className={`w-3 h-3 ${featured ? "text-primary" : "text-foreground/40"}`} />
-            </div>
-            <span className={featured ? "text-foreground" : "text-foreground/70"}>{f}</span>
-          </li>
-        ))}
-      </ul>
-      <button className={`w-full py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] transition-all hover:scale-[1.03] active:scale-95 shadow-xl ${featured ? "bg-primary text-white shadow-primary/30" : "bg-white/5 border border-white/10 hover:bg-white/10"}`}>
-        {buttonText}
-      </button>
-    </div>
-  )
-}
+

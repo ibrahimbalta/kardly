@@ -25,7 +25,6 @@ export function Navbar() {
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-widest text-foreground/60">
                     <Link href="#features" className="hover:text-primary transition-colors">Özellikler</Link>
-                    <Link href="#pricing" className="hover:text-primary transition-colors">Fiyatlandırma</Link>
                     <Link href="#templates" className="hover:text-primary transition-colors">Şablonlar</Link>
                 </div>
 
@@ -55,7 +54,6 @@ export function Navbar() {
                         className="md:hidden absolute top-28 left-6 right-6 glass rounded-[2.5rem] p-8 flex flex-col gap-6 shadow-2xl z-50 border-white/10"
                     >
                         <Link href="#features" onClick={() => setIsOpen(false)} className="text-xl font-bold flex items-center justify-between">Özellikler <ArrowRight className="w-5 h-5 opacity-40" /></Link>
-                        <Link href="#pricing" onClick={() => setIsOpen(false)} className="text-xl font-bold flex items-center justify-between">Fiyatlandırma <ArrowRight className="w-5 h-5 opacity-40" /></Link>
                         <Link href="#templates" onClick={() => setIsOpen(false)} className="text-xl font-bold flex items-center justify-between">Şablonlar <ArrowRight className="w-5 h-5 opacity-40" /></Link>
                         <hr className="border-white/5 my-2" />
                         <div className="grid grid-cols-2 gap-4">

@@ -7,14 +7,12 @@ import {
     Settings,
     BarChart3,
     Calendar,
-    CreditCard,
     QrCode,
     ExternalLink,
     Eye,
     MousePointer2,
     Users,
     CheckCircle2,
-    XCircle,
     ShoppingBag,
     Plus,
     Trash2,
@@ -231,38 +229,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
         return (profileData.socialLinks as any[])?.find((l: any) => l.platform === platform)?.url || ""
     }
 
-    useEffect(() => {
-        const payment = searchParams.get("payment")
-        if (payment === "success") {
-            setShowToast("success")
-            setTimeout(() => {
-                setShowToast(null)
-                router.replace("/dashboard")
-            }, 5000)
-        } else if (payment === "failed") {
-            setShowToast("failed")
-            setTimeout(() => {
-                setShowToast(null)
-                router.replace("/dashboard")
-            }, 5000)
-        }
-    }, [searchParams, router])
-
-    const currentPlan = subscription?.plan || "free"
+    const currentPlan = "pro"
 
     return (
         <div className="min-h-screen bg-background flex">
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
-                    <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${showToast === "success" ? "bg-emerald-500 border-emerald-400 text-white" :
-                        showToast === "failed" ? "bg-rose-500 border-rose-400 text-white" : "bg-primary border-primary/20 text-white"
-                        }`}>
-                        {showToast === "success" ? <CheckCircle2 /> : <XCircle />}
-                        <span className="font-bold">
-                            {showToast === "success" ? "Ödeme Başarılı! Planınız güncellendi." :
-                                showToast === "failed" ? "Ödeme Başarısız. Lütfen tekrar deneyin." : showToast}
-                        </span>
+                    <div className="flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border bg-primary border-primary/20 text-white">
+                        <span className="font-bold">{showToast}</span>
                     </div>
                 </div>
             )}
@@ -276,16 +251,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <span className="text-xl font-bold">Kardly<span className="text-primary">.</span></span>
                 </Link>
 
-                {/* Plan Badge */}
-                <div className="px-4 py-3 rounded-2xl bg-white/5 border border-white/5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Mevcut Plan</p>
-                    <div className="flex items-center justify-between">
-                        <span className="font-bold text-primary capitalize">{currentPlan}</span>
-                        {currentPlan === "free" && (
-                            <Link href="/dashboard/upgrade" className="text-[10px] bg-white text-black px-2 py-0.5 rounded-md font-bold hover:scale-105 transition-transform">YÜKSELT</Link>
-                        )}
-                    </div>
-                </div>
+
 
                 <nav className="flex flex-col gap-2">
                     <NavItem
@@ -336,13 +302,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "qrcode"}
                         onClick={() => setActiveTab("qrcode")}
                     />
-                    <hr className="border-white/5 my-2" />
-                    <NavItem
-                        icon={<CreditCard className="w-5 h-5" />}
-                        label="Abonelik"
-                        active={activeTab === "subscription"}
-                        onClick={() => setActiveTab("subscription")}
-                    />
+
                     <NavItem
                         icon={<Settings className="w-5 h-5" />}
                         label="Ayarlar"
@@ -1011,87 +971,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </button>
                         </div>
                     </div>
-                ) : activeTab === "subscription" ? (
-                    <div className="max-w-4xl space-y-8">
-                        <div>
-                            <h2 className="text-xl font-bold">Abonelik Yönetimi</h2>
-                            <p className="text-sm text-foreground/50">Mevcut planınızı görüntüleyin ve özelliklerinizi yükseltin.</p>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Free Plan */}
-                            <div className={`glass p-8 rounded-[2.5rem] border-white/5 relative overflow-hidden ${currentPlan === "free" ? "ring-2 ring-primary" : "opacity-60"}`}>
-                                <div className="mb-6">
-                                    <h3 className="font-bold text-lg">Başlangıç</h3>
-                                    <div className="flex items-baseline gap-1 mt-2">
-                                        <span className="text-3xl font-black">₺0</span>
-                                        <span className="text-xs opacity-40">/aylık</span>
-                                    </div>
-                                </div>
-                                <ul className="space-y-3 mb-8 text-sm">
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Temel Profil</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> QR Kod</li>
-                                    <li className="flex items-center gap-2 text-white/20"><XCircle className="w-4 h-4" /> Özel Ürünler</li>
-                                    <li className="flex items-center gap-2 text-white/20"><XCircle className="w-4 h-4" /> Randevu Sistemi</li>
-                                </ul>
-                                {currentPlan === "free" ? (
-                                    <div className="w-full py-3 bg-white/10 rounded-xl text-center text-xs font-bold">Mevcut Plan</div>
-                                ) : (
-                                    <button className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10">Seç</button>
-                                )}
-                            </div>
-
-                            {/* Pro Plan */}
-                            <div className={`glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden ${currentPlan === "pro" ? "ring-2 ring-primary" : ""}`}>
-                                <div className="absolute top-0 right-0 bg-primary text-white px-4 py-1.5 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest">Popüler</div>
-                                <div className="mb-6">
-                                    <h3 className="font-bold text-lg">Pro</h3>
-                                    <div className="flex items-baseline gap-1 mt-2">
-                                        <span className="text-3xl font-black">₺99</span>
-                                        <span className="text-xs opacity-40">/aylık</span>
-                                    </div>
-                                </div>
-                                <ul className="space-y-3 mb-8 text-sm">
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sınırsız Ürün</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Randevu Yönetimi</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Analitik Raporlar</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Beyaz Etiket (No Logo)</li>
-                                </ul>
-                                {currentPlan === "pro" ? (
-                                    <div className="w-full py-3 bg-primary/20 rounded-xl text-center text-xs font-bold text-primary">Mevcut Plan</div>
-                                ) : (
-                                    <Link href="/dashboard/upgrade" className="block w-full py-4 bg-primary text-white rounded-2xl text-center text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">Şimdi Yükselt</Link>
-                                )}
-                            </div>
-
-                            {/* Business Plan */}
-                            <div className={`glass p-8 rounded-[2.5rem] border-white/5 relative overflow-hidden ${currentPlan === "business" ? "ring-2 ring-primary" : "opacity-60"}`}>
-                                <div className="mb-6">
-                                    <h3 className="font-bold text-lg">Business</h3>
-                                    <div className="flex items-baseline gap-1 mt-2">
-                                        <span className="text-3xl font-black">₺249</span>
-                                        <span className="text-xs opacity-40">/aylık</span>
-                                    </div>
-                                </div>
-                                <ul className="space-y-3 mb-8 text-sm">
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Çoklu Profil</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Özel Alan Adı</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> CRM Entegrasyonu</li>
-                                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Öncelikli Destek</li>
-                                </ul>
-                                <button className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10" disabled>Çok Yakında</button>
-                            </div>
-                        </div>
-
-                        <div className="glass p-8 rounded-[2.5rem] border-white/5">
-                            <h3 className="font-bold mb-6 flex items-center gap-2">
-                                <CreditCard className="w-5 h-5 text-indigo-400" /> Fatura Geçmişi
-                            </h3>
-                            <div className="text-center py-10 opacity-40 italic text-sm">
-                                Henüz bir fatura bulunmamaktadır.
-                            </div>
-                        </div>
-                    </div>
                 ) : activeTab === "statistics" ? (
                     <div className="space-y-8">
                         <div className="flex justify-between items-center">
@@ -1202,11 +1082,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h2 className="text-xl font-bold">Tasarım Şablonları</h2>
                                 <p className="text-sm text-foreground/50">Sayfanızın görünümünü değiştirmek için farklı şablonlar seçin.</p>
                             </div>
-                            {currentPlan === "free" && (
-                                <div className="bg-primary/10 text-primary px-4 py-2 rounded-xl text-xs font-bold border border-primary/20">
-                                    Pro sürümde tüm şablonlar açılır
-                                </div>
-                            )}
+
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1229,11 +1105,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary/50" : "hover:border-white/20"
                                     )}
                                     onClick={() => {
-                                        if (tpl.premium && currentPlan === "free") {
-                                            setShowToast("Bu şablon için Pro üyelik gerekiyor!");
-                                            setTimeout(() => setShowToast(null), 3000);
-                                            return;
-                                        }
                                         setProfileData({ ...profileData, templateId: tpl.id });
                                         handleSave();
                                     }}
@@ -1245,9 +1116,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             {tpl.id === 'bento' ? <Layout className="w-12 h-12 text-primary/40" /> : <Smartphone className="w-12 h-12 text-white/20" />}
                                         </div>
 
-                                        {tpl.premium && (
-                                            <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest z-20">PRO</div>
-                                        )}
+
                                         {profileData.templateId === tpl.id && (
                                             <div className="absolute top-4 right-4 bg-emerald-500 text-white p-1 rounded-full z-20 shadow-lg">
                                                 <CheckCircle2 className="w-4 h-4" />
