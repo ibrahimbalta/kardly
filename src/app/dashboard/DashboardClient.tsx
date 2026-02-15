@@ -87,9 +87,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
             if (res.ok) {
                 setShowToast("Değişiklikler kaydedildi!")
                 setTimeout(() => setShowToast(null), 3000)
+                router.refresh()
+            } else {
+                const err = await res.json().catch(() => ({}))
+                console.error("Save error:", err)
+                setShowToast("Kaydetme başarısız! Lütfen tekrar deneyin.")
+                setTimeout(() => setShowToast(null), 4000)
             }
         } catch (err) {
             console.error(err)
+            setShowToast("Bağlantı hatası!")
+            setTimeout(() => setShowToast(null), 4000)
         } finally {
             setIsSaving(false)
         }

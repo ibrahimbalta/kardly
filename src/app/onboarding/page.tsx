@@ -182,29 +182,100 @@ export default function OnboardingPage() {
 
                                 {currentStep === 2 && (
                                     <div className="grid grid-cols-2 gap-4">
-                                        {["Profesyonel", "Samimi", "Yaratıcı", "Lüks"].map((t) => (
-                                            <button
-                                                key={t}
-                                                onClick={() => setFormData({ ...formData, tone: t.toLowerCase() })}
-                                                className={cn(
-                                                    "p-6 rounded-2xl border transition-all text-left group",
-                                                    formData.tone === t.toLowerCase()
-                                                        ? "bg-primary border-primary text-white shadow-lg shadow-primary/30"
-                                                        : "glass border-white/5 hover:border-primary/50"
-                                                )}
-                                            >
-                                                <span className="font-bold block mb-1">{t}</span>
-                                                <span className={cn(
-                                                    "text-xs leading-tight block",
-                                                    formData.tone === t.toLowerCase() ? "text-white/70" : "text-foreground/40"
-                                                )}>
-                                                    {t === "Profesyonel" && "Kurumsal ve güven veren bir dil."}
-                                                    {t === "Samimi" && "Sıcak ve arkadaş canlısı bir dil."}
-                                                    {t === "Yaratıcı" && "Sıra dışı ve dikkat çekici bir stil."}
-                                                    {t === "Lüks" && "Zarif ve üst düzey bir görünüm."}
-                                                </span>
-                                            </button>
-                                        ))}
+                                        {[
+                                            {
+                                                key: "profesyonel",
+                                                label: "Profesyonel",
+                                                icon: "🏢",
+                                                color: "#2563eb",
+                                                desc: "Kurumsal ve güven veren bir dil.",
+                                                detail: "Resmi ton • Mavi/lacivert palet • Net mesajlar"
+                                            },
+                                            {
+                                                key: "samimi",
+                                                label: "Samimi",
+                                                icon: "🤝",
+                                                color: "#f97316",
+                                                desc: "Sıcak ve arkadaş canlısı bir dil.",
+                                                detail: "Günlük ton • Turuncu/sıcak palet • Emojili"
+                                            },
+                                            {
+                                                key: "yaratıcı",
+                                                label: "Yaratıcı",
+                                                icon: "🎨",
+                                                color: "#a855f7",
+                                                desc: "Sıra dışı ve dikkat çekici bir stil.",
+                                                detail: "Cesur ton • Mor/neon palet • Metaforlu"
+                                            },
+                                            {
+                                                key: "lüks",
+                                                label: "Lüks",
+                                                icon: "👑",
+                                                color: "#b8860b",
+                                                desc: "Zarif ve üst düzey bir görünüm.",
+                                                detail: "Sofistike ton • Altın/bordo palet • Zarif"
+                                            }
+                                        ].map((t) => {
+                                            const isSelected = formData.tone === t.key
+                                            return (
+                                                <button
+                                                    key={t.key}
+                                                    onClick={() => setFormData({ ...formData, tone: t.key })}
+                                                    className={cn(
+                                                        "p-6 rounded-2xl border transition-all text-left group relative overflow-hidden",
+                                                        isSelected
+                                                            ? "border-white/20 shadow-lg"
+                                                            : "glass border-white/5 hover:border-white/15"
+                                                    )}
+                                                    style={isSelected ? {
+                                                        backgroundColor: `${t.color}20`,
+                                                        borderColor: `${t.color}60`,
+                                                        boxShadow: `0 10px 40px -10px ${t.color}40`
+                                                    } : {}}
+                                                >
+                                                    {/* Color accent line */}
+                                                    <div
+                                                        className={cn(
+                                                            "absolute top-0 left-0 right-0 h-1 transition-opacity duration-300",
+                                                            isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-50"
+                                                        )}
+                                                        style={{ backgroundColor: t.color }}
+                                                    />
+
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="text-xl">{t.icon}</span>
+                                                        <span
+                                                            className="font-bold text-base"
+                                                            style={isSelected ? { color: t.color } : {}}
+                                                        >
+                                                            {t.label}
+                                                        </span>
+                                                    </div>
+                                                    <span className={cn(
+                                                        "text-xs leading-tight block mb-2",
+                                                        isSelected ? "text-white/70" : "text-foreground/40"
+                                                    )}>
+                                                        {t.desc}
+                                                    </span>
+                                                    <span className={cn(
+                                                        "text-[10px] leading-tight block font-medium",
+                                                        isSelected ? "text-white/50" : "text-foreground/20"
+                                                    )}>
+                                                        {t.detail}
+                                                    </span>
+
+                                                    {/* Selected check */}
+                                                    {isSelected && (
+                                                        <div
+                                                            className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+                                                            style={{ backgroundColor: t.color }}
+                                                        >
+                                                            ✓
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            )
+                                        })}
                                     </div>
                                 )}
 
