@@ -622,9 +622,7 @@ function MinimalIOSTemplate({ profile, handleShare }: any) {
 }
 
 function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
-    const [activeMode, setActiveMode] = useState('portfolio') // portfolio | store
     const blocks = (profile.blocks as any[]) || []
-    const products = profile.products || []
     const services = (profile.services as any[]) || []
 
     return (
@@ -648,164 +646,97 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
                             <img src={profile.user.image} className="w-full h-full object-cover rounded-xl" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-[11px] font-black uppercase tracking-tight truncate max-w-[80px]">{profile.user.name}</span>
+                            <span className="text-[11px] font-black uppercase tracking-tight truncate max-w-[120px]">{profile.user.name}</span>
                             <div className="flex items-center gap-1">
                                 <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
-                                <span className="text-[7px] font-bold opacity-40 uppercase tracking-widest">Live Portfolio</span>
+                                <span className="text-[7px] font-bold opacity-40 uppercase tracking-widest">Available for Hire</span>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/5 rounded-full p-1 border border-white/5">
-                        <button
-                            onClick={() => setActiveMode('portfolio')}
-                            className={cn("px-5 py-2 rounded-full text-[10px] font-black transition-all", activeMode === 'portfolio' ? "bg-white text-black shadow-xl" : "text-white/40 hover:text-white")}
-                        >
-                            WORK
-                        </button>
-                        <button
-                            onClick={() => setActiveMode('store')}
-                            className={cn("px-5 py-2 rounded-full text-[10px] font-black transition-all", activeMode === 'store' ? "bg-white text-black shadow-xl" : "text-white/40 hover:text-white")}
-                        >
-                            STORE
-                        </button>
                     </div>
                 </div>
             </motion.header>
 
             <main className="relative z-10 pt-40 pb-32 px-6 max-w-xl mx-auto">
-                <AnimatePresence mode="wait">
-                    {activeMode === 'portfolio' ? (
-                        <motion.div
-                            key="portfolio"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                            className="space-y-10"
-                        >
-                            {/* Visual Intro Area */}
-                            <section className="text-center space-y-6">
-                                <div className="space-y-3">
-                                    <motion.h1
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="text-6xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent leading-[0.9]"
-                                    >
-                                        Digital <br /> Visionary.
-                                    </motion.h1>
-                                    <p className="text-indigo-400 font-black uppercase tracking-[0.4em] text-[10px]">{profile.occupation || "MODERN CREATIVE"}</p>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="space-y-10"
+                >
+                    {/* Visual Intro Area */}
+                    <section className="text-center space-y-6">
+                        <div className="space-y-3">
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-6xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent leading-[0.9]"
+                            >
+                                Executive <br /> Portfolio.
+                            </motion.h1>
+                            <p className="text-indigo-400 font-black uppercase tracking-[0.4em] text-[10px]">{profile.occupation || "PROFESSIONAL SPECIALIST"}</p>
+                        </div>
+                        <p className="text-white/50 text-sm font-medium leading-relaxed max-w-[340px] mx-auto italic">
+                            "{profile.slogan || "Stratejik vizyon ve mükemmeliyetçi yaklaşımla dijital dünyada fark yaratıyoruz."}"
+                        </p>
+                    </section>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Bio Card - High Intensity Glass */}
+                        <RevealSection className="col-span-2 bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-10 rounded-[4rem] relative overflow-hidden group">
+                            <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] group-hover:bg-indigo-500/40 transition-all duration-1000" />
+                            <div className="relative z-10 space-y-6">
+                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
+                                    <Sparkles size={24} className="text-indigo-400" />
                                 </div>
-                                <p className="text-white/50 text-sm font-medium leading-relaxed max-w-[340px] mx-auto italic">
-                                    "{profile.slogan || "Yenilikçi dijital çözümler ve benzersiz vizyon."}"
-                                </p>
-                            </section>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Bio Card - High Intensity Glass */}
-                                <RevealSection className="col-span-2 bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-10 rounded-[4rem] relative overflow-hidden group">
-                                    <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] group-hover:bg-indigo-500/40 transition-all duration-1000" />
-                                    <div className="relative z-10 space-y-6">
-                                        <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-                                            <Sparkles size={24} className="text-indigo-400" />
-                                        </div>
-                                        <h2 className="text-3xl font-black">Story.</h2>
-                                        <p className="text-white/60 text-base leading-relaxed font-medium">{profile.bio || "Crafting digital experiences that matter."}</p>
-                                        <div className="flex gap-4 pt-4">
-                                            <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">LET'S TALK</button>
-                                            <button onClick={handleShare} className="w-14 h-14 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-white/5 transition-all"><Share2 size={20} /></button>
-                                        </div>
-                                    </div>
-                                </RevealSection>
-
-                                {/* Dynamic Blocks Layer */}
-                                {blocks.length > 0 ? blocks.map((block, i) => {
-                                    const delay = 0.1 * i;
-                                    switch (block.type) {
-                                        case 'skill_radar': return <div key={i} className="col-span-1"><BlockSkillRadar profile={profile} /></div>;
-                                        case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
-                                        case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
-                                        case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
-                                        case 'document_vault': return <div key={i} className="col-span-1"><BlockDocumentVault profile={profile} /></div>;
-                                        case 'social_feed': return <div key={i} className="col-span-1"><BlockSocialFeed profile={profile} /></div>;
-                                        default: return null;
-                                    }
-                                }) : (
-                                    <>
-                                        <div className="col-span-1"><BlockSkillRadar profile={profile} /></div>
-                                        <div className="col-span-1"><BlockTrustScore profile={profile} /></div>
-                                        <div className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Skills Tag Cloud */}
-                            <section className="pt-10 space-y-4">
-                                <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Core Competencies</h3>
-                                <div className="flex flex-wrap justify-center gap-3">
-                                    {services.map((s, i) => (
-                                        <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default">
-                                            {s.title}
-                                        </div>
-                                    ))}
+                                <h2 className="text-3xl font-black italic">Expertise.</h2>
+                                <p className="text-white/60 text-base leading-relaxed font-medium">{profile.bio || "Crafting digital experiences that matter."}</p>
+                                <div className="flex gap-4 pt-4">
+                                    <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">BOOK A CONSULTATION</button>
+                                    <button onClick={handleShare} className="w-14 h-14 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-white/5 transition-all"><Share2 size={20} /></button>
                                 </div>
-                            </section>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="store"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                            className="space-y-12"
-                        >
-                            <div className="text-center space-y-4 pt-10">
-                                <div className="w-20 h-20 bg-indigo-600/20 rounded-[2rem] flex items-center justify-center mx-auto border border-indigo-500/20 shadow-2xl shadow-indigo-500/10">
-                                    <ShoppingBag size={40} className="text-indigo-400" />
-                                </div>
-                                <h1 className="text-5xl font-black italic tracking-tighter">Boutique.</h1>
-                                <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.5em]">Selected Digital & Physical Goods</p>
                             </div>
+                        </RevealSection>
 
-                            <div className="grid grid-cols-1 gap-6">
-                                {products.length > 0 ? products.map((p: any, i: number) => (
-                                    <RevealSection key={i} delay={0.05 * i} className="group bg-gradient-to-r from-white/5 to-transparent border border-white/5 p-5 rounded-[3rem] flex gap-8 items-center hover:bg-white/10 transition-all duration-500">
-                                        <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden shadow-2xl shrink-0 group-hover:scale-105 transition-transform duration-700">
-                                            <img src={p.image} className="w-full h-full object-cover" />
-                                        </div>
-                                        <div className="flex-1 space-y-2">
-                                            <div className="flex items-start justify-between">
-                                                <h3 className="text-xl font-bold tracking-tight">{p.name}</h3>
-                                                <div className="px-3 py-1 bg-indigo-600/20 text-indigo-400 text-[9px] font-black rounded-lg">NEW</div>
-                                            </div>
-                                            <p className="text-[11px] text-white/40 font-medium leading-relaxed line-clamp-2">{p.description}</p>
-                                            <div className="flex items-center justify-between pt-4">
-                                                <span className="text-2xl font-black tracking-tight">₺{p.price}</span>
-                                                <a href={p.link} target="_blank" className="w-14 h-14 bg-white text-black rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl">
-                                                    <ShoppingBag size={20} />
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </RevealSection>
-                                )) : (
-                                    <div className="py-32 text-center glass-card border-white/5 rounded-[4rem] bg-white/2">
-                                        <ShoppingBag size={64} className="mx-auto text-white/5 mb-6" />
-                                        <h4 className="text-lg font-black opacity-20 italic">No inventory found.</h4>
-                                        <p className="text-[9px] font-black opacity-10 uppercase tracking-widest mt-2">Check back later for exclusive drops</p>
-                                    </div>
-                                )}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        {/* Dynamic Blocks Layer */}
+                        {blocks.length > 0 ? blocks.map((block, i) => {
+                            switch (block.type) {
+                                case 'skill_radar': return <div key={i} className="col-span-1"><BlockSkillRadar profile={profile} /></div>;
+                                case 'trust_score': return <div key={i} className="col-span-1"><BlockTrustScore profile={profile} /></div>;
+                                case 'portfolio_gallery': return <div key={i} className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
+                                case 'timeline_process': return <div key={i} className="col-span-2"><BlockTimelineMock profile={profile} /></div>;
+                                case 'document_vault': return <div key={i} className="col-span-1"><BlockDocumentVault profile={profile} /></div>;
+                                case 'social_feed': return <div key={i} className="col-span-1"><BlockSocialFeed profile={profile} /></div>;
+                                default: return null;
+                            }
+                        }) : (
+                            <>
+                                <div className="col-span-1"><BlockSkillRadar profile={profile} /></div>
+                                <div className="col-span-1"><BlockTrustScore profile={profile} /></div>
+                                <div className="col-span-2"><BlockPortfolioGallery profile={profile} /></div>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Expertise Tag Cloud */}
+                    <section className="pt-10 space-y-4">
+                        <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Core Disciplines</h3>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {services.map((s, i) => (
+                                <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default">
+                                    {s.title}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </motion.div>
 
                 {/* Footer Social Dock */}
                 <section className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-[440px] flex gap-3">
                     <button
                         onClick={() => setIsAppointmentOpen(true)}
-                        className="flex-1 bg-white text-black h-16 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-indigo-600 hover:text-white transition-all active:scale-95"
+                        className="flex-1 bg-white text-black h-16 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:bg-indigo-600 hover:text-white transition-all active:scale-95"
                     >
-                        RESERVE NOW
+                        GET IN TOUCH
                     </button>
                     <div className="flex bg-black/40 backdrop-blur-3xl p-2 rounded-[2rem] border border-white/10 shadow-2xl">
                         {profile.socialLinks?.slice(0, 3).map((l: any, i: number) => (

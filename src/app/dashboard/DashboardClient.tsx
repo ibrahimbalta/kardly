@@ -45,19 +45,20 @@ import {
     Shield,
     MapPin,
     ArrowRight,
-    Award
+    Award,
+    Briefcase
+
 } from "lucide-react"
 
 // Modül Tanımları
 const AVAILABLE_MODULES = [
     { type: 'skill_radar', name: 'Yetenek Radarı', icon: <Activity className="w-5 h-5" />, color: 'text-indigo-400', description: 'Teknik yetkinliklerinizi radar grafiğiyle sergileyin.' },
-    { type: 'portfolio_gallery', name: 'Showcase Portfolyo', icon: <Image className="w-5 h-5" />, color: 'text-rose-400', description: 'En iyi çalışmalarınızı kaydırılabilir galeriyle sunun.' },
-    { type: 'product_catalog', name: 'Mini Mağaza', icon: <ShoppingBag className="w-5 h-5" />, color: 'text-emerald-400', description: 'Ürünlerinizi fiyat ve linklerle birlikte listeleyin.' },
-    { type: 'appointment_calendar', name: 'Akıllı Randevu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Takviminizle entegre rezervasyon sistemi.' },
-    { type: 'timeline_process', name: 'Proje Zaman Çizelgesi', icon: <Clock className="w-5 h-5" />, color: 'text-amber-400', description: 'İş süreçlerinizi aşama aşama gösterin.' },
-    { type: 'trust_score', name: 'Güven Paneli', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-blue-400', description: 'Müşteri yorumları ve AI başarı skorları.' },
-    { type: 'social_feed', name: 'Canlı Akış', icon: <Instagram className="w-5 h-5" />, color: 'text-pink-400', description: 'Son paylaşımlarınızı profilinizde tutun.' },
-    { type: 'document_vault', name: 'Döküman Merkezi', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'CV, Broşür veya Fiyat Listesi paylaşın.' },
+    { type: 'portfolio_gallery', name: 'Profesyonel Galeri', icon: <Image className="w-5 h-5" />, color: 'text-rose-400', description: 'En iyi çalışmalarınızı kaydırılabilir galeriyle sunun.' },
+    { type: 'appointment_calendar', name: 'Danışmanlık Randevusu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Müşterilerinizle görüşmek için randevu sistemi.' },
+    { type: 'timeline_process', name: 'Deneyim Çizelgesi', icon: <Clock className="w-5 h-5" />, color: 'text-amber-400', description: 'Kariyer ve iş süreçlerinizi aşama aşama gösterin.' },
+    { type: 'trust_score', name: 'Referans Paneli', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-blue-400', description: 'Başarı skorları ve profesyonel referanslar.' },
+    { type: 'social_feed', name: 'LinkedIn Akışı', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-600', description: 'Sektörel paylaşımlarınızı profilinizde tutun.' },
+    { type: 'document_vault', name: 'CV & Belgeler', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'Sertifika, CV veya portfolyo dosyaları paylaşın.' },
 ]
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -293,14 +294,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         onClick={() => setActiveTab("edit")}
                     />
                     <NavItem
-                        icon={<ShoppingBag className="w-5 h-5" />}
-                        label="Ürünler"
+                        icon={<Briefcase className="w-5 h-5" />}
+                        label="Projeler & Portfolyo"
                         active={activeTab === "products"}
                         onClick={() => setActiveTab("products")}
                     />
                     <NavItem
-                        icon={<Layout className="w-5 h-5" />}
-                        label="Hizmetler"
+                        icon={<Zap className="w-5 h-5" />}
+                        label="Uzmanlık Alanları"
                         active={activeTab === "services"}
                         onClick={() => setActiveTab("services")}
                     />
@@ -312,7 +313,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Layers className="w-5 h-5" />}
-                        label="Modül Kütüphanesi"
+                        label="Portfolyo Bileşenleri"
                         active={activeTab === "bento"}
                         onClick={() => setActiveTab("bento")}
                     />
@@ -560,14 +561,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Ürünler ve Hizmetler</h2>
-                                <p className="text-sm text-foreground/50">Burada listelediğiniz ürünler profilinizde şık birer kart olarak görünecektir.</p>
+                                <h2 className="text-xl font-bold">Projeler & Portfolyo</h2>
+                                <p className="text-sm text-foreground/50">Başarı hikayelerinizi ve tamamladığınız projeleri profilinizde sergileyin.</p>
                             </div>
                             <button
                                 onClick={() => setShowProductModal(true)}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
-                                <Plus className="w-5 h-5" /> Yeni Ürün Ekle
+                                <Plus className="w-5 h-5" /> Yeni Proje Ekle
                             </button>
                         </div>
 
@@ -604,9 +605,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                             {productList.length === 0 && (
                                 <div className="col-span-full py-20 text-center glass rounded-[2.5rem] border-white/5">
-                                    <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-white/10" />
-                                    <p className="text-lg font-bold">Henüz Ürün Eklememişsin</p>
-                                    <p className="text-sm text-foreground/40 mt-2">İlk ürününü ekleyerek satış yapmaya veya hizmetlerini tanıtmaya başla.</p>
+                                    <Briefcase className="w-16 h-16 mx-auto mb-4 text-white/10" />
+                                    <p className="text-lg font-bold">Henüz Proje Eklememişsin</p>
+                                    <p className="text-sm text-foreground/40 mt-2">En iyi çalışmalarınızı ekleyerek potansiyel partnerlerinizi etkileyin.</p>
                                 </div>
                             )}
                         </div>
@@ -711,9 +712,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div>
                                 <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
-                                    <Layers className="text-primary w-8 h-8" /> Bento Store & Modüller
+                                    <Layers className="text-primary w-8 h-8" /> Portfolyo Bileşenleri
                                 </h2>
-                                <p className="text-slate-500 mt-2 font-medium">Profilinizi ihtiyacınıza göre kişiselleştirin. Modülleri yükleyin, sıralayın ve yönetin.</p>
+                                <p className="text-slate-500 mt-2 font-medium">Profilinizi profesyonel dünyada öne çıkaracak asimetrik ve interaktif kartları yönetin.</p>
                             </div>
                             <div className="flex items-center gap-3 bg-white p-3 rounded-3xl border border-slate-100 shadow-sm">
                                 <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest px-2">Dijital Ofis Modu</span>
@@ -1196,10 +1197,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
                                 { id: "modern", name: "Modern Animated", description: "Hareketli arka plan ve akışkan tasarım.", image: "/templates/modern.jpg", premium: false },
-                                { id: "bento", name: "Bento AI Grid", description: "Gelişmiş bento tasarımı ve akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
-                                { id: "minimal_ios", name: "Minimal iOS", description: "Apple tarzı sade ve temiz görünüm.", image: "/templates/minimal.jpg", premium: true },
-                                { id: "luxury", name: "Luxury Dark", description: "Vurgulu altın sarısı ve gece siyahı.", image: "/templates/luxury.jpg", premium: true },
-                                { id: "creative", name: "Visionary / Pro Studio", description: "En üst segment, interaktif ve modüler showroom.", image: "/templates/creative.jpg", premium: true },
+                                { id: "bento", name: "Professional Portfolio", description: "Sektör standartlarında bento tasarımı ve iş odaklı akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
+                                { id: "minimal_ios", name: "Minimalist CV", description: "Apple tarzı sade, öz ve profesyonel görünüm.", image: "/templates/minimal.jpg", premium: true },
+                                { id: "luxury", name: "Luxury Executive", description: "Vurgulu altın sarısı ve gece siyahı ile otoriter duruş.", image: "/templates/luxury.jpg", premium: true },
+                                { id: "creative", name: "Executive Showroom", description: "En üst segment, interaktif ve modüler profesyonel sunum.", image: "/templates/creative.jpg", premium: true },
                                 { id: "nebula_blue", name: "Nebula Midnight", description: "Uzay temalı, parlayan bento grid tasarımı.", image: "/templates/nebula_blue.jpg", premium: true },
                                 { id: "nebula_purple", name: "Nebula Sunset", description: "Eflatun ve pembe tonlarında fütüristik tasarım.", image: "/templates/nebula_purple.jpg", premium: true },
                                 { id: "nebula_emerald", name: "Nebula Emerald", description: "Zümrüt yeşili ve neon detaylı modern tasarım.", image: "/templates/nebula_emerald.jpg", premium: true },
