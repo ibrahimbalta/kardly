@@ -960,53 +960,119 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                 {/* Product Add Modal */}
                 {showProductModal && (
-                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowProductModal(false)} />
+                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                            className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
                         >
-                            <button onClick={() => setShowProductModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
-                                <X className="w-6 h-6" />
+                            <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                                <X className="w-5 h-5" />
                             </button>
 
-                            <div className="mb-8">
-                                <h2 className="text-2xl font-black">Yeni Ürün/Hizmet</h2>
-                                <p className="text-white/40 text-sm mt-1">Takipçilerinize sunmak istediğiniz ürünü detaylandırın.</p>
+                            <div className="mb-5">
+                                <h2 className="text-xl font-bold text-gray-900">Yeni Ürün/Hizmet</h2>
+                                <p className="text-gray-400 text-sm mt-1">Ürün bilgilerini girin ve görseli yükleyin.</p>
                             </div>
 
-                            <form onSubmit={handleAddProduct} className="space-y-6">
+                            <form onSubmit={handleAddProduct} className="space-y-4">
+                                {/* Image Upload Area */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Ürün Adı</label>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Görseli</label>
+                                    <div
+                                        className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
+                                        onClick={() => document.getElementById('product-image-upload')?.click()}
+                                        onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary', 'bg-primary/5'); }}
+                                        onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('border-primary', 'bg-primary/5'); }}
+                                        onDrop={async (e) => {
+                                            e.preventDefault();
+                                            e.currentTarget.classList.remove('border-primary', 'bg-primary/5');
+                                            const file = e.dataTransfer.files?.[0];
+                                            if (!file) return;
+                                            const formDataUpload = new FormData();
+                                            formDataUpload.append('file', file);
+                                            try {
+                                                const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
+                                                const data = await res.json();
+                                                if (data.url) setNewProduct({ ...newProduct, image: data.url });
+                                                else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
+                                            } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+                                        }}
+                                    >
+                                        {newProduct.image ? (
+                                            <div className="relative aspect-video">
+                                                <img src={newProduct.image} alt="Ürün" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span className="text-white text-sm font-bold">Değiştir</span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
+                                                    className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+                                                <Upload className="w-8 h-8" />
+                                                <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
+                                                <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 5MB</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input
+                                        id="product-image-upload"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            const formDataUpload = new FormData();
+                                            formDataUpload.append('file', file);
+                                            try {
+                                                const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
+                                                const data = await res.json();
+                                                if (data.url) setNewProduct({ ...newProduct, image: data.url });
+                                                else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
+                                            } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+                                            e.target.value = '';
+                                        }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ürün Adı</label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="Örn: Özel Danışmanlık Seansı"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
                                         value={newProduct.name}
                                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Fiyat (₺)</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Fiyat (₺)</label>
                                         <input
                                             type="number"
                                             required
                                             placeholder="0.00"
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
                                             value={newProduct.price}
                                             onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Link</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Link</label>
                                         <input
                                             type="text"
                                             placeholder="https://..."
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
+                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
                                             value={newProduct.link}
                                             onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
                                         />
@@ -1014,42 +1080,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Görsel URL (Opsiyonel)</label>
-                                    <input
-                                        type="text"
-                                        placeholder="https://gorsel-adresi.com/resim.jpg"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
-                                        value={newProduct.image}
-                                        onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Açıklama</label>
                                     <textarea
-                                        rows={3}
+                                        rows={2}
                                         placeholder="Ürününüz hakkında kısa bir açıklama yazın..."
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium resize-none"
                                         value={newProduct.description}
                                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                                     />
                                 </div>
 
-                                <div className="pt-2">
-                                    <button
-                                        disabled={isProductSaving}
-                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                                    >
-                                        {isProductSaving ? (
-                                            <>
-                                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                                Kaydediliyor...
-                                            </>
-                                        ) : (
-                                            "Ürünü Yayınla"
-                                        )}
-                                    </button>
-                                </div>
+                                <button
+                                    disabled={isProductSaving}
+                                    className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                                >
+                                    {isProductSaving ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                            Kaydediliyor...
+                                        </>
+                                    ) : (
+                                        "Ürünü Yayınla"
+                                    )}
+                                </button>
                             </form>
                         </motion.div>
                     </div>
