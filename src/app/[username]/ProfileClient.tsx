@@ -176,12 +176,166 @@ function SkillRadarSVG({ color, data }: { color: string, data: any[] }) {
     )
 }
 
+// ─── MODULE COMPONENTS ──────────────────────────────────────────
+
+function BlockSkillRadar({ profile }: any) {
+    const services = (profile.services as any[]) || []
+    return (
+        <RevealSection delay={0.1} className="col-span-1 glass-card p-4 rounded-[2.5rem] aspect-square relative overflow-hidden flex flex-col items-center border-2 border-white/50 bg-white/40">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Analysis Board</h3>
+            <SkillRadarSVG color="#4f46e5" data={services.slice(4, 9)} />
+        </RevealSection>
+    )
+}
+
+function BlockPortfolioGallery({ profile }: any) {
+    return (
+        <RevealSection className="col-span-2 glass-card p-2 rounded-[2.5rem] relative overflow-hidden group border-2 border-white/50 bg-slate-900 h-[240px]">
+            <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="relative z-10 p-6 h-full flex flex-col justify-end">
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-1 rounded bg-indigo-500 text-[8px] font-black text-white uppercase">Portfolyo</span>
+                    <span className="text-[10px] font-bold text-white/60">12 Yeni Proje</span>
+                </div>
+                <h4 className="text-xl font-black text-white leading-tight mb-4">Interaktif Çalışmalar & Dijital Tasarımlar</h4>
+                <div className="flex gap-2">
+                    {[1, 2, 3].map(i => <div key={i} className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-md border border-white/10" />)}
+                    <button className="ml-auto w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+                        <ArrowRight size={18} />
+                    </button>
+                </div>
+            </div>
+        </RevealSection>
+    )
+}
+
+function BlockTrustScore({ profile }: any) {
+    return (
+        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><CheckCircle2 size={20} /></div>
+                <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">TrustScore</span>
+            </div>
+            <div>
+                <div className="text-4xl font-black mb-1">A+</div>
+                <p className="text-[10px] font-bold opacity-80 leading-relaxed">Yüksek müşteri memnuniyeti ve hızlı teslimat performansı.</p>
+            </div>
+        </RevealSection>
+    )
+}
+
+function BlockTimeline({ profile }: any) {
+    return (
+        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-white/40 flex flex-col justify-between">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">İŞ SÜRECİ</h3>
+            <div className="space-y-3">
+                {[
+                    { t: 'Analiz', s: 'done' },
+                    { t: 'Tasarım', s: 'active' },
+                    { t: 'Geliştirme', s: 'pending' }
+                ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${step.s === 'done' ? 'bg-green-500' : step.s === 'active' ? 'bg-indigo-500 animate-pulse' : 'bg-slate-200'}`} />
+                        <span className={`text-[11px] font-black ${step.s === 'pending' ? 'text-slate-300' : 'text-slate-800'}`}>{step.t}</span>
+                    </div>
+                ))}
+            </div>
+        </RevealSection>
+    )
+}
+
+function BlockTimelineMock({ profile }: any) {
+    return (
+        <RevealSection className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-50/30 flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Proje Zaman Çizelgesi</h3>
+                <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-[8px] font-black text-indigo-600">CANLI TAKİP</span>
+            </div>
+            <div className="flex items-center gap-2">
+                {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="flex-1 flex flex-col gap-2">
+                        <div className={`h-1.5 rounded-full ${i <= 2 ? 'bg-indigo-500' : 'bg-indigo-200'}`} />
+                        <span className="text-[8px] font-black text-slate-400 uppercase">Aşama {i}</span>
+                    </div>
+                ))}
+            </div>
+        </RevealSection>
+    )
+}
+
 // ─── TEMPLATES ───────────────────────────────────────────────────
 
 function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: any) {
     const themeColor = profile.themeColor || "#6366f1"
     const services = (profile.services as any[]) || []
+    const blocks = (profile.blocks as any[]) || []
     const serviceColors = ['bg-[#FBBF24]', 'bg-[#60A5FA]', 'bg-[#4ADE80]', 'bg-[#A78BFA]']
+
+    // Eğer hiç blok yoksa varsayılan görünümü oluştur
+    const renderBlocks = () => {
+        if (blocks.length === 0) {
+            return (
+                <div className="grid grid-cols-2 gap-5">
+                    <RevealSection className="col-span-1 glass-card p-5 rounded-[2.5rem] flex flex-col justify-between aspect-square relative overflow-hidden group border-2 border-white/50">
+                        <div className="relative z-10 w-full h-full flex flex-col justify-between">
+                            <div className="relative h-28 w-full rounded-[1.8rem] overflow-hidden shadow-sm">
+                                <img src={profile.user.image || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2"} className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                                <div className="absolute bottom-3 left-3 right-3 text-[10px] font-black text-white leading-tight">
+                                    {profile.slogan || "Müşteri Odaklı Çözümler"}
+                                </div>
+                            </div>
+                            <button className="bg-slate-900 text-white py-3 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black shadow-lg transition-all active:scale-95">
+                                <Briefcase size={12} /> View Portfolio
+                            </button>
+                        </div>
+                    </RevealSection>
+
+                    <BlockSkillRadar profile={profile} />
+
+                    <div className="col-span-2 grid grid-cols-4 gap-4">
+                        {(services.slice(0, 4).length > 0 ? services.slice(0, 4) : [{ title: 'Digital' }, { title: 'Design' }, { title: 'Coding' }, { title: 'SEO' }]).map((service, i) => (
+                            <RevealSection key={i} delay={0.1 * i} className={`${serviceColors[i % 4]} h-[72px] rounded-[1.5rem] flex flex-col items-center justify-center text-[10px] text-white font-black shadow-lg hover:brightness-105 transition-all text-center px-1`}>
+                                <div className="bg-white/20 p-1.5 rounded-xl mb-1"><Zap size={10} fill="currentColor" /></div>
+                                <span className="leading-tight">{service.title}</span>
+                            </RevealSection>
+                        ))}
+                    </div>
+
+                    <BlockTrustScore profile={profile} />
+                    <BlockTimeline profile={profile} />
+                </div>
+            )
+        }
+
+        return (
+            <div className="grid grid-cols-2 gap-5">
+                {blocks.map((block, i) => {
+                    switch (block.type) {
+                        case 'skill_radar': return <BlockSkillRadar key={i} profile={profile} />;
+                        case 'portfolio_gallery': return <BlockPortfolioGallery key={i} profile={profile} />;
+                        case 'trust_score': return <BlockTrustScore key={i} profile={profile} />;
+                        case 'timeline_process': return <BlockTimelineMock key={i} profile={profile} />;
+                        case 'appointment_calendar': return (
+                            <RevealSection key={i} className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-xl font-black">Randevu Al</h3>
+                                    <p className="text-[10px] font-bold opacity-60">Müsaitlik durumunu kontrol et.</p>
+                                </div>
+                                <button onClick={() => setIsAppointmentOpen(true)} className="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl active:scale-95 transition-all">
+                                    TAKVİMİ AÇ
+                                </button>
+                            </RevealSection>
+                        );
+                        default: return null;
+                    }
+                })}
+            </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-white text-slate-800 p-6 md:p-12 font-sans selection:bg-indigo-100 relative overflow-x-hidden">
@@ -204,62 +358,8 @@ function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: 
                     </motion.div>
                 </header>
 
-                <div className="grid grid-cols-2 gap-5">
-                    <RevealSection className="col-span-1 glass-card p-5 rounded-[2.5rem] flex flex-col justify-between aspect-square relative overflow-hidden group border-2 border-white/50">
-                        <div className="relative z-10 w-full h-full flex flex-col justify-between">
-                            <div className="relative h-28 w-full rounded-[1.8rem] overflow-hidden shadow-sm">
-                                <img src={profile.user.image || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2"} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                                <div className="absolute bottom-3 left-3 right-3 text-[10px] font-black text-white leading-tight">
-                                    {profile.slogan || "Müşteri Odaklı Çözümler"}
-                                </div>
-                            </div>
-                            <button className="bg-slate-900 text-white py-3 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black shadow-lg transition-all active:scale-95">
-                                <Briefcase size={12} /> View Portfolio
-                            </button>
-                        </div>
-                    </RevealSection>
+                {renderBlocks()}
 
-                    <RevealSection delay={0.1} className="col-span-1 glass-card p-4 rounded-[2.5rem] aspect-square relative overflow-hidden flex flex-col items-center border-2 border-white/50">
-                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Analysis Board</h3>
-                        <SkillRadarSVG color="#4f46e5" data={services.slice(4, 9)} />
-                    </RevealSection>
-
-                    <div className="col-span-2 grid grid-cols-4 gap-4">
-                        {(services.slice(0, 4).length > 0 ? services.slice(0, 4) : [{ title: 'Digital' }, { title: 'Design' }, { title: 'Coding' }, { title: 'SEO' }]).map((service, i) => (
-                            <RevealSection key={i} delay={0.1 * i} className={`${serviceColors[i % 4]} h-[72px] rounded-[1.5rem] flex flex-col items-center justify-center text-[10px] text-white font-black shadow-lg hover:brightness-105 transition-all text-center px-1`}>
-                                <div className="bg-white/20 p-1.5 rounded-xl mb-1"><Zap size={10} fill="currentColor" /></div>
-                                <span className="leading-tight">{service.title}</span>
-                            </RevealSection>
-                        ))}
-                    </div>
-
-                    <RevealSection delay={0.2} className="col-span-1 glass-card p-6 rounded-[2.5rem] h-[180px] flex flex-col justify-between border-2 border-white/50">
-                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Office Stats</h3>
-                        <div className="flex items-end gap-1.5">
-                            <span className="text-5xl font-black text-slate-900 leading-none">98%</span>
-                            <div className="text-[9px] font-black text-green-500 mb-1">SUCCESS</div>
-                        </div>
-                        <div className="flex gap-1">
-                            <div className="px-2 py-1 rounded bg-slate-100 text-[8px] font-bold text-slate-500">CURATOR</div>
-                            <div className="px-2 py-1 rounded bg-slate-100 text-[8px] font-bold text-slate-500">EXPERT</div>
-                        </div>
-                    </RevealSection>
-
-                    <RevealSection delay={0.3} className="col-span-1 glass-card p-6 rounded-[2.5rem] h-[180px] flex flex-col justify-between border-2 border-white/50 bg-indigo-50/50">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">HQ Status</h3>
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-black text-indigo-900">Digital Office Open</p>
-                            <p className="text-[10px] text-indigo-400 font-bold">Responds in ~5 mins</p>
-                        </div>
-                        <button onClick={() => setIsAppointmentOpen(true)} className="w-full bg-indigo-600 text-white py-3 rounded-2xl font-black text-[10px] shadow-lg shadow-indigo-200">
-                            HIRE OFFICE
-                        </button>
-                    </RevealSection>
-                </div>
 
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
                     {profile.socialLinks?.map((l: any, i: number) => (

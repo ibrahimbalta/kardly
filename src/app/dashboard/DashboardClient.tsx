@@ -31,8 +31,34 @@ import {
     LogOut,
     Clock,
     Zap,
-    Activity
+    Activity,
+    Layers,
+    Monitor,
+    Image,
+    MessageSquare,
+    Map,
+    FileText,
+    Share2,
+    Code,
+    List,
+    Sparkles,
+    Shield,
+    MapPin,
+    ArrowRight,
+    Award
 } from "lucide-react"
+
+// Modül Tanımları
+const AVAILABLE_MODULES = [
+    { type: 'skill_radar', name: 'Yetenek Radarı', icon: <Activity className="w-5 h-5" />, color: 'text-indigo-400', description: 'Teknik yetkinliklerinizi radar grafiğiyle sergileyin.' },
+    { type: 'portfolio_gallery', name: 'Showcase Portfolyo', icon: <Image className="w-5 h-5" />, color: 'text-rose-400', description: 'En iyi çalışmalarınızı kaydırılabilir galeriyle sunun.' },
+    { type: 'product_catalog', name: 'Mini Mağaza', icon: <ShoppingBag className="w-5 h-5" />, color: 'text-emerald-400', description: 'Ürünlerinizi fiyat ve linklerle birlikte listeleyin.' },
+    { type: 'appointment_calendar', name: 'Akıllı Randevu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Takviminizle entegre rezervasyon sistemi.' },
+    { type: 'timeline_process', name: 'Proje Zaman Çizelgesi', icon: <Clock className="w-5 h-5" />, color: 'text-amber-400', description: 'İş süreçlerinizi aşama aşama gösterin.' },
+    { type: 'trust_score', name: 'Güven Paneli', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-blue-400', description: 'Müşteri yorumları ve AI başarı skorları.' },
+    { type: 'social_feed', name: 'Canlı Akış', icon: <Instagram className="w-5 h-5" />, color: 'text-pink-400', description: 'Son paylaşımlarınızı profilinizde tutun.' },
+    { type: 'document_vault', name: 'Döküman Merkezi', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'CV, Broşür veya Fiyat Listesi paylaşın.' },
+]
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
@@ -68,6 +94,34 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const defaultHours = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
     const [workingHours, setWorkingHours] = useState<string[]>(profile?.workingHours || defaultHours)
     const [newHour, setNewHour] = useState("")
+
+    // Modül Yönetimi (Bento Store)
+    const [blocks, setBlocks] = useState<any[]>(profile?.blocks || [])
+    const [isBlocksLoading, setIsBlocksLoading] = useState(false)
+
+    useEffect(() => {
+        const fetchBlocks = async () => {
+            try {
+                const res = await fetch("/api/blocks")
+                if (res.ok) {
+                    const data = await res.json()
+                    if (data.length > 0) setBlocks(data)
+                }
+            } catch (err) { console.error("Blocks fetch error:", err) }
+        }
+        fetchBlocks()
+    }, [])
+
+    const handleSyncBlocks = async (newBlocks: any[]) => {
+        setBlocks(newBlocks)
+        try {
+            await fetch("/api/blocks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ blocks: newBlocks })
+            })
+        } catch (err) { console.error("Blocks sync error:", err) }
+    }
 
     const handleSave = async (updatedServices?: any) => {
         setIsSaving(true)
@@ -257,8 +311,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         onClick={() => setActiveTab("templates")}
                     />
                     <NavItem
-                        icon={<Zap className="w-5 h-5" />}
-                        label="Bento Ayarları"
+                        icon={<Layers className="w-5 h-5" />}
+                        label="Modül Kütüphanesi"
                         active={activeTab === "bento"}
                         onClick={() => setActiveTab("bento")}
                     />
@@ -426,6 +480,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 />
                                             </div>
                                         </div>
+
+                                        <button
+                                            onClick={() => setShowToast("AI Stil Sihirbazı yakında aktif olacak!")}
+                                            className="w-full py-4 mt-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 animate-gradient shadow-xl"
+                                        >
+                                            <Sparkles size={18} /> AI STİL SİHİRBAZINI BAŞLAT
+                                        </button>
                                     </div>
 
                                     <div className="pt-6">
@@ -645,105 +706,158 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "bento" ? (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
-                                    <Zap className="text-primary w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h2 className="text-2xl font-black text-white">Bento Şablonu Özel Ayarları</h2>
-                                    <p className="text-sm text-white/40">Görsel öğeleri ve interaktif widgetları bu alandan yönetebilirsiniz.</p>
+                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        {/* Header */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div>
+                                <h2 className="text-3xl font-black text-white flex items-center gap-3">
+                                    <Layers className="text-primary w-8 h-8" /> Bento Store & Modüller
+                                </h2>
+                                <p className="text-white/40 mt-2">Profilinizi amaca göre şekillendiren süper modülleri yönetin.</p>
+                            </div>
+                            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-2xl border border-white/5">
+                                <span className="px-4 py-2 text-[10px] font-black uppercase text-primary">Dijital Ofis Modu</span>
+                                <div className="w-10 h-6 bg-primary rounded-full relative flex items-center px-1">
+                                    <div className="w-4 h-4 bg-white rounded-full shadow-lg ml-auto" />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* Category Buttons Editor */}
-                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                                <h3 className="font-extrabold text-lg flex items-center gap-3">
-                                    <Layout className="text-orange-400 w-6 h-6" /> Kategori Butonları
-                                </h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {[0, 1, 2, 3].map((idx) => (
-                                        <div key={idx} className="space-y-2">
-                                            <label className="text-[10px] font-black text-white/30 uppercase tracking-widest">BUTON {idx + 1}</label>
-                                            <input
-                                                type="text"
-                                                placeholder={['Strateji', 'Design', 'Coding', 'Logo'][idx]}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary/50 transition-all"
-                                                value={serviceList[idx]?.title || ""}
-                                                onChange={(e) => {
-                                                    const newList = [...serviceList];
-                                                    if (!newList[idx]) newList[idx] = { title: "", description: "" };
-                                                    newList[idx].title = e.target.value;
-                                                    setServiceList(newList);
-                                                }}
-                                            />
+                        {/* Module Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {AVAILABLE_MODULES.map((mod) => {
+                                const isActive = blocks.some(b => b.type === mod.type && b.isActive);
+                                return (
+                                    <motion.div
+                                        key={mod.type}
+                                        whileHover={{ y: -5 }}
+                                        className={cn(
+                                            "glass p-6 rounded-[2.5rem] border transition-all relative overflow-hidden group",
+                                            isActive ? "border-primary/50 bg-primary/5 shadow-2xl shadow-primary/10" : "border-white/5 hover:border-white/20"
+                                        )}
+                                    >
+                                        <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110",
+                                            isActive ? "bg-primary text-white" : "bg-white/5 " + mod.color
+                                        )}>
+                                            {mod.icon}
                                         </div>
-                                    ))}
-                                </div>
-                                <p className="text-xs text-white/30 italic">Not: Bu butonlar ana hizmetler listenizdeki ilk 4 öğeyi kullanır.</p>
-                            </div>
+                                        <h3 className="font-bold text-white mb-2">{mod.name}</h3>
+                                        <p className="text-[10px] text-white/40 leading-relaxed mb-6">{mod.description}</p>
 
-                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                                <h3 className="font-extrabold text-lg flex items-center gap-3">
-                                    <Activity className="text-primary w-6 h-6" /> Yetenek Analizi (Radar)
-                                </h3>
-                                <div className="space-y-5">
-                                    {[
-                                        { label: "Yaratıcılık", idx: 4 },
-                                        { label: "Teknik", idx: 5 },
-                                        { label: "Hız", idx: 6 },
-                                        { label: "İletişim", idx: 7 },
-                                        { label: "Kalite", idx: 8 }
-                                    ].map((skill) => (
-                                        <div key={skill.idx} className="space-y-2">
-                                            <div className="flex justify-between items-center px-1">
-                                                <input
-                                                    type="text"
-                                                    className="bg-transparent border-none p-0 text-xs font-bold text-white/60 focus:outline-none w-24"
-                                                    value={serviceList[skill.idx]?.title || skill.label}
-                                                    onChange={(e) => {
-                                                        const newList = [...serviceList];
-                                                        if (!newList[skill.idx]) newList[skill.idx] = { title: "", description: "85" };
-                                                        newList[skill.idx].title = e.target.value;
-                                                        setServiceList(newList);
-                                                    }}
-                                                />
-                                                <span className="text-[10px] font-black text-primary">{serviceList[skill.idx]?.description || "85"}%</span>
+                                        <button
+                                            onClick={() => {
+                                                let newBlocks;
+                                                if (isActive) {
+                                                    newBlocks = blocks.map(b => b.type === mod.type ? { ...b, isActive: false } : b);
+                                                } else {
+                                                    const exists = blocks.find(b => b.type === mod.type);
+                                                    if (exists) {
+                                                        newBlocks = blocks.map(b => b.type === mod.type ? { ...b, isActive: true } : b);
+                                                    } else {
+                                                        newBlocks = [...blocks, { type: mod.type, content: {}, isActive: true }];
+                                                    }
+                                                }
+                                                handleSyncBlocks(newBlocks);
+                                            }}
+                                            className={cn(
+                                                "w-full py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                                isActive
+                                                    ? "bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white"
+                                                    : "bg-primary text-white shadow-lg shadow-primary/20 hover:scale-[1.02]"
+                                            )}
+                                        >
+                                            {isActive ? 'Kaldır' : 'Yükle'}
+                                        </button>
+
+                                        {/* Status Tag */}
+                                        {isActive && (
+                                            <div className="absolute top-4 right-4 flex items-center gap-1.5">
+                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                                <span className="text-[8px] font-black text-green-500 uppercase">Aktif</span>
                                             </div>
-                                            <input
-                                                type="range"
-                                                min="0"
-                                                max="100"
-                                                className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-primary"
-                                                value={serviceList[skill.idx]?.description || "85"}
-                                                onChange={(e) => {
-                                                    const newList = [...serviceList];
-                                                    if (!newList[skill.idx]) newList[skill.idx] = { title: skill.label, description: "" };
-                                                    newList[skill.idx].description = e.target.value;
-                                                    setServiceList(newList);
-                                                }}
-                                            />
+                                        )}
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Advanced Config Section */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-2 glass p-10 rounded-[3rem] border-white/5 space-y-8">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xl font-black text-white">Aktif Modül Konfigürasyonu</h3>
+                                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">{blocks.filter(b => b.isActive).length} Modül Aktif</span>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {blocks.filter(b => b.isActive).map((block, idx) => (
+                                        <div key={idx} className="flex items-center justify-between p-6 bg-white/5 rounded-3xl border border-white/5 hover:border-white/10 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-primary">
+                                                    {AVAILABLE_MODULES.find(m => m.type === block.type)?.icon || <Layers size={18} />}
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-white uppercase">{AVAILABLE_MODULES.find(m => m.type === block.type)?.name}</h4>
+                                                    <p className="text-[10px] text-white/40">Sıra: #{idx + 1} • Son Güncelleme: Anlık</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                <button className="p-2 text-white/20 hover:text-white transition-colors"><Settings size={16} /></button>
+                                                <div className="w-[1px] h-6 bg-white/5" />
+                                                <div className="flex flex-col gap-1 items-center">
+                                                    <button onClick={() => {
+                                                        if (idx === 0) return;
+                                                        const activeOnly = blocks.filter(b => b.isActive);
+                                                        const inactiveOnly = blocks.filter(b => !b.isActive);
+                                                        const newActive = [...activeOnly];
+                                                        [newActive[idx - 1], newActive[idx]] = [newActive[idx], newActive[idx - 1]];
+                                                        handleSyncBlocks([...newActive, ...inactiveOnly]);
+                                                    }} className="text-white/20 hover:text-primary transition-all"><Plus className="w-4 h-4 rotate-[-45deg] scale-75" /></button>
+                                                    <button onClick={() => {
+                                                        const activeOnly = blocks.filter(b => b.isActive);
+                                                        if (idx === activeOnly.length - 1) return;
+                                                        const inactiveOnly = blocks.filter(b => !b.isActive);
+                                                        const newActive = [...activeOnly];
+                                                        [newActive[idx], newActive[idx + 1]] = [newActive[idx + 1], newActive[idx]];
+                                                        handleSyncBlocks([...newActive, ...inactiveOnly]);
+                                                    }} className="text-white/20 hover:text-primary transition-all rotate-180"><Plus className="w-4 h-4 rotate-[-45deg] scale-75" /></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     ))}
+                                    {blocks.filter(b => b.isActive).length === 0 && (
+                                        <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-3xl">
+                                            <p className="text-sm font-bold text-white/20 uppercase tracking-widest">Henüz modül yüklemediniz</p>
+                                            <p className="text-xs text-white/10 mt-2">Kütüphaneden bir modül seçerek başlayın.</p>
+                                        </div>
+                                    )}
                                 </div>
+                            </div>
+
+                            <div className="glass p-10 rounded-[3rem] border-primary/10 bg-primary/2 space-y-6 flex flex-col justify-between">
+                                <div>
+                                    <div className="w-16 h-16 bg-primary rounded-3xl flex items-center justify-center text-white mb-6 shadow-2xl shadow-primary/40">
+                                        <Smartphone size={32} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-white leading-tight">Canlı Önizleme & Test</h3>
+                                    <p className="text-sm text-white/40 mt-3 leading-relaxed">
+                                        Modüllerinizi ekledikten sonra telefonunuzdan nasıl göründüğünü test etmek için QR kodu kullanın.
+                                    </p>
+                                </div>
+                                <button onClick={() => setActiveTab("qrcode")} className="w-full py-5 bg-white text-primary rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all">
+                                    HIZLI QR GÖRÜNTÜLE
+                                </button>
                             </div>
                         </div>
 
-                        <div className="flex justify-end pt-4">
-                            <button
-                                onClick={handleSave}
-                                disabled={isSaving}
-                                className="px-10 py-5 bg-primary text-white rounded-[1.8rem] font-black shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
-                            >
-                                {isSaving ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-                                DEĞİŞİKLİKLERİ YAYINLA
-                            </button>
+                        <div className="flex justify-center pt-10">
+                            <div className="flex items-center gap-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
+                                <CheckCircle2 size={14} className="text-primary" /> TÜM DEĞİŞİKLİKLER ANLIK SENKRONİZE EDİLİR
+                            </div>
                         </div>
                     </div>
                 ) : activeTab === "qrcode" ? (
+
                     <div className="space-y-8 max-w-2xl mx-auto text-center py-12">
                         <div className="mb-12">
                             <h2 className="text-3xl font-bold mb-2">Dijital Kartvizit QR Kodunuz</h2>
@@ -970,6 +1084,38 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* AI Insight Panel */}
+                            <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-8 opacity-10">
+                                    <Sparkles size={120} className="text-primary" />
+                                </div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+                                            <Zap size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-black text-lg text-white">AI Performans Analizi</h3>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Assistant Insights</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
+                                            <p className="text-sm font-medium text-white">Ziyaretçileriniz en çok hafta sonu saat <span className="text-primary">20:00 - 22:00</span> arasında aktif.</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-bold text-white/60">En Popüler Modül</h4>
+                                            <p className="text-sm font-medium text-white">"Yetenek Radarı" modülü diğerlerinden <span className="text-emerald-400">%42 daha fazla</span> etkileşim alıyor.</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h4 className="text-xs font-bold text-white/60">Öneri</h4>
+                                            <p className="text-sm font-medium text-white">Ürün fiyatlarını <span className="text-amber-400">₺9 - ₺19</span> bandında tutmanız dönüşümü artırabilir.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 h-fit">
                                 <h3 className="font-bold mb-6 flex items-center gap-2">
                                     <BarChart3 className="w-5 h-5 text-indigo-400" /> Tıklama Dağılımı
