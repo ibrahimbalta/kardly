@@ -822,6 +822,158 @@ function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
     )
 }
 
+function NebulaTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
+    const blocks = (profile.blocks as any[]) || []
+    const services = (profile.services as any[]) || []
+    const templateId = profile.templateId || 'nebula_blue'
+
+    const schemes: any = {
+        nebula_blue: { primary: '#0ea5e9', secondary: '#6366f1', bg: 'bg-[#030712]', glow: 'shadow-[0_0_30px_rgba(14,165,233,0.3)]' },
+        nebula_purple: { primary: '#d946ef', secondary: '#8b5cf6', bg: 'bg-[#0f0715]', glow: 'shadow-[0_0_30px_rgba(217,70,239,0.3)]' },
+        nebula_emerald: { primary: '#10b981', secondary: '#06b6d4', bg: 'bg-[#060e0d]', glow: 'shadow-[0_0_30px_rgba(16,185,129,0.3)]' }
+    }
+    const theme = schemes[templateId] || schemes.nebula_blue
+
+    return (
+        <div className={cn("min-h-screen text-white font-sans p-6 md:p-12 relative overflow-hidden", theme.bg)}>
+            {/* Space/Nebula Background */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20" />
+                <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20" style={{ background: theme.primary }} />
+                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20" style={{ background: theme.secondary }} />
+            </div>
+
+            <div className="relative z-10 max-w-6xl mx-auto space-y-8">
+                {/* Header */}
+                <header className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10 pb-8">
+                    <h1 className="text-3xl font-black tracking-[0.3em] uppercase" style={{ color: theme.primary }}>NEBULA</h1>
+                    <nav className="flex items-center gap-6 text-[10px] font-black tracking-widest text-white/40">
+                        <button onClick={handleShare} className="hover:text-white flex items-center gap-2 transition-colors"><Share2 size={14} /> SHARE</button>
+                        <button className="hover:text-white flex items-center gap-2 transition-colors"><Briefcase size={14} /> CASE</button>
+                        <button className="hover:text-white flex items-center gap-2 transition-colors"><Zap size={14} /> SERVICES</button>
+                        <button onClick={() => setIsAppointmentOpen(true)} className="px-6 py-2 border border-white/10 rounded-full hover:bg-white hover:text-black transition-all">CONTACT</button>
+                    </nav>
+                </header>
+
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    {/* Top Row */}
+                    <RevealSection className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 flex items-center justify-center relative overflow-hidden group">
+                        <div className="relative">
+                            <div className="absolute inset-[-10px] rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-all duration-700" style={{ background: theme.primary }} />
+                            <div className="w-48 h-48 rounded-full p-1 border-2 relative z-10" style={{ borderColor: theme.primary }}>
+                                <img src={profile.user.image} className="w-full h-full object-cover rounded-full" />
+                            </div>
+                        </div>
+                    </RevealSection>
+
+                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-4">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Yetenek Analizi</span>
+                        <div className="h-48">
+                            <SkillRadarSVG color={theme.primary} data={services.slice(0, 5)} />
+                        </div>
+                    </RevealSection>
+
+                    <RevealSection delay={0.2} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-4">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Hakkımda</span>
+                        <h2 className="text-2xl font-bold">Bio.</h2>
+                        <p className="text-sm text-white/60 leading-relaxed font-medium">
+                            {profile.bio || "Crafting digital universes with AI and modern architecture."}
+                        </p>
+                    </RevealSection>
+
+                    {/* Mid Row */}
+                    <RevealSection className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-10 flex flex-col justify-between group">
+                        <div>
+                            <h2 className="text-4xl font-black mb-2" style={{ color: theme.primary }}>{profile.user.name}</h2>
+                            <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">{profile.occupation}</p>
+                        </div>
+                        <button onClick={() => {/* Watch Video Logic */ }} className="mt-8 bg-cyan-400 group-hover:animate-pulse text-black py-4 rounded-3xl font-black text-xs flex items-center justify-center gap-3 transition-all active:scale-95">
+                            <Play size={16} fill="currentColor" /> VİDEOYU İZLE
+                        </button>
+                    </RevealSection>
+
+                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Hizmetler</span>
+                        <div className="space-y-4">
+                            {services.slice(0, 3).map((s, i) => (
+                                <div key={i} className="flex items-center gap-4 text-sm font-bold group/item">
+                                    <Star size={16} className="transition-colors" style={{ color: theme.primary }} />
+                                    <span className="group-hover/item:translate-x-1 transition-transform">{s.title}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </RevealSection>
+
+                    <RevealSection delay={0.2} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Services</span>
+                        <div className="space-y-4">
+                            {services.slice(3, 6).map((s, i) => (
+                                <div key={i} className="flex items-center gap-4 text-sm font-bold group/item">
+                                    <Zap size={16} className="transition-colors" style={{ color: theme.primary }} />
+                                    <span className="group-hover/item:translate-x-1 transition-transform">{s.title}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </RevealSection>
+
+                    {/* Bottom Row */}
+                    <RevealSection className="md:col-span-8 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6 overflow-hidden">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Portfolyo İstatistikleri</span>
+                            <div className="flex gap-4">
+                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ background: theme.primary }} /> <span className="text-[10px] opacity-40 uppercase">Görüntüleme</span></div>
+                            </div>
+                        </div>
+                        <div className="h-40 w-full relative">
+                            {/* Stylized Line Graph using SVG */}
+                            <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40">
+                                <path
+                                    d="M 0 35 L 10 10 L 25 30 L 40 15 L 55 35 L 70 20 L 85 30 L 100 10"
+                                    fill="none"
+                                    stroke={theme.primary}
+                                    strokeWidth="1.5"
+                                    className="drop-shadow-[0_0_8px_rgba(14,165,233,0.5)]"
+                                />
+                                {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(x => (
+                                    <line key={x} x1={x} y1="38" x2={x} y2="40" stroke="white" strokeOpacity="0.1" />
+                                ))}
+                            </svg>
+                            <p className="text-[9px] text-white/20 mt-4 leading-relaxed max-w-[400px]">
+                                Yapay zeka veri modelleri ile güçlendirilmiş portfolyo etkileşim analizi.
+                                Son 30 günlük verileri kapsar.
+                            </p>
+                        </div>
+                    </RevealSection>
+
+                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-8 flex flex-col justify-between">
+                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Social Media</span>
+                        <div className="flex justify-between">
+                            {profile.socialLinks?.slice(0, 4).map((l: any, i: number) => (
+                                <a key={i} href={l.url} target="_blank" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all">
+                                    {l.platform === 'linkedin' && <Linkedin size={20} />}
+                                    {l.platform === 'instagram' && <Instagram size={20} />}
+                                    {l.platform === 'twitter' && <Twitter size={20} />}
+                                    {l.platform === 'github' && <Smartphone size={20} />}
+                                </a>
+                            ))}
+                            <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center border-dashed">
+                                <ArrowRight size={14} className="opacity-20" />
+                            </div>
+                        </div>
+                        <button className="w-full py-4 bg-white/5 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
+                            Portfolyo'yu incele <ArrowRight size={16} />
+                        </button>
+                    </RevealSection>
+                </div>
+
+                <footer className="pt-20 pb-12 text-center text-[10px] font-black text-white/10 tracking-[0.5em] uppercase">
+                    Nebula Series by Kardly PRO
+                </footer>
+            </div>
+        </div>
+    )
+}
+
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
 
 export default function ProfileClient({ profile }: { profile: any }) {
@@ -855,6 +1007,9 @@ export default function ProfileClient({ profile }: { profile: any }) {
             case "luxury": return <LuxuryTemplate {...props} />;
             case "creative": return <CreativeTemplate {...props} />;
             case "minimal_ios": return <MinimalIOSTemplate {...props} />;
+            case "nebula_blue": return <NebulaTemplate {...props} />;
+            case "nebula_purple": return <NebulaTemplate {...props} />;
+            case "nebula_emerald": return <NebulaTemplate {...props} />;
             case "modern": return <BentoTemplate {...props} />;
             default: return <BentoTemplate {...props} />;
         }

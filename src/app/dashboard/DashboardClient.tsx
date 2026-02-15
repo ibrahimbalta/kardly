@@ -1200,6 +1200,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "minimal_ios", name: "Minimal iOS", description: "Apple tarzı sade ve temiz görünüm.", image: "/templates/minimal.jpg", premium: true },
                                 { id: "luxury", name: "Luxury Dark", description: "Vurgulu altın sarısı ve gece siyahı.", image: "/templates/luxury.jpg", premium: true },
                                 { id: "creative", name: "Visionary / Pro Studio", description: "En üst segment, interaktif ve modüler showroom.", image: "/templates/creative.jpg", premium: true },
+                                { id: "nebula_blue", name: "Nebula Midnight", description: "Uzay temalı, parlayan bento grid tasarımı.", image: "/templates/nebula_blue.jpg", premium: true },
+                                { id: "nebula_purple", name: "Nebula Sunset", description: "Eflatun ve pembe tonlarında fütüristik tasarım.", image: "/templates/nebula_purple.jpg", premium: true },
+                                { id: "nebula_emerald", name: "Nebula Emerald", description: "Zümrüt yeşili ve neon detaylı modern tasarım.", image: "/templates/nebula_emerald.jpg", premium: true },
                                 { id: "business", name: "Corporate Blue", description: "Profesyonel ve güven veren iş tasarımı.", image: "/templates/business.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div
