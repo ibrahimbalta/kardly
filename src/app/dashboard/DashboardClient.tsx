@@ -83,7 +83,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     themeColor: profileData.themeColor,
                     templateId: profileData.templateId,
                     services: updatedServices || serviceList,
-                    workingHours
+                    workingHours,
+                    occupation: profileData.occupation
                 })
             })
             if (res.ok) {
@@ -339,38 +340,54 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {/* Simple Editor Controls */}
                             <div className="space-y-6">
                                 <h3 className="text-lg font-bold">Hızlı Düzenleme</h3>
-                                <div className="glass p-8 rounded-3xl space-y-4">
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2 opacity-60">Meslek / Ünvan</label>
+                                            <input
+                                                type="text"
+                                                value={profileData?.occupation || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
+                                                placeholder="Örn: Kıdemli Yazılım Geliştirici"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2 opacity-60">Bölge / Ofis Şubesi</label>
+                                            <input
+                                                type="text"
+                                                value={profileData?.phone || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                                placeholder="+90 5xx xxx xx xx"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Slogan</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Slogan (Kurumsal Motto)</label>
                                         <input
                                             type="text"
                                             value={profileData?.slogan || ""}
                                             onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
+                                            placeholder="Örn: Geleceği Tasarlıyoruz"
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
+
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Telefon</label>
-                                        <input
-                                            type="text"
-                                            value={profileData?.phone || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                            placeholder="+90 5xx xxx xx xx"
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Bio</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Hakkımızda / Tanıtım Yazısı</label>
                                         <textarea
                                             rows={3}
                                             value={profileData?.bio || ""}
                                             onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                                            placeholder="Ofisiniz veya kendiniz hakkında kısa bir bilgi..."
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
 
                                     <div className="pt-4 border-t border-white/5">
-                                        <label className="block text-sm font-medium mb-4 opacity-60">Sosyal Medya Linkleri</label>
+                                        <label className="block text-sm font-medium mb-4 opacity-60">İletişim & Kurumsal Bağlantılar</label>
                                         <div className="space-y-3">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
@@ -411,13 +428,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={handleSave}
-                                        disabled={isSaving}
-                                        className="px-6 py-2 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform disabled:opacity-50"
-                                    >
-                                        {isSaving ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
-                                    </button>
+                                    <div className="pt-6">
+                                        <button
+                                            onClick={() => handleSave()}
+                                            disabled={isSaving}
+                                            className="w-full flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-[1.2rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                        >
+                                            {isSaving ? (
+                                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <CheckCircle2 className="w-5 h-5" /> DEĞİŞİKLİKLERİ YAYINLA
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
