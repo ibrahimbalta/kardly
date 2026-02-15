@@ -1279,14 +1279,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 e.currentTarget.classList.remove('border-primary', 'bg-primary/5');
                                                 const file = e.dataTransfer.files?.[0];
                                                 if (!file) return;
-                                                const formDataUpload = new FormData();
-                                                formDataUpload.append('file', file);
-                                                try {
-                                                    const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
-                                                    const data = await res.json();
-                                                    if (data.url) setNewProduct({ ...newProduct, image: data.url });
-                                                    else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
-                                                } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+
+                                                if (file.size > 2 * 1024 * 1024) {
+                                                    setShowToast('Dosya boyutu çok büyük (Maks 2MB)');
+                                                    setTimeout(() => setShowToast(null), 3000);
+                                                    return;
+                                                }
+
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => {
+                                                    setNewProduct({ ...newProduct, image: reader.result as string });
+                                                };
+                                                reader.readAsDataURL(file);
                                             }}
                                         >
                                             {newProduct.image ? (
@@ -1319,14 +1323,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
-                                                const formDataUpload = new FormData();
-                                                formDataUpload.append('file', file);
-                                                try {
-                                                    const res = await fetch('/api/upload', { method: 'POST', body: formDataUpload });
-                                                    const data = await res.json();
-                                                    if (data.url) setNewProduct({ ...newProduct, image: data.url });
-                                                    else { setShowToast(data.error || 'Yükleme başarısız'); setTimeout(() => setShowToast(null), 3000); }
-                                                } catch { setShowToast('Yükleme hatası'); setTimeout(() => setShowToast(null), 3000); }
+
+                                                // Check file size (max 2MB for base64 to avoid DB bloat)
+                                                if (file.size > 2 * 1024 * 1024) {
+                                                    setShowToast('Dosya boyutu çok büyük (Maks 2MB)');
+                                                    setTimeout(() => setShowToast(null), 3000);
+                                                    return;
+                                                }
+
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => {
+                                                    setNewProduct({ ...newProduct, image: reader.result as string });
+                                                };
+                                                reader.readAsDataURL(file);
                                                 e.target.value = '';
                                             }}
                                         />
