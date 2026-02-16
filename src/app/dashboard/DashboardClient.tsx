@@ -51,7 +51,8 @@ import {
     Phone,
     Globe,
     Mail,
-    MessageCircle
+    MessageCircle,
+    Menu
 
 } from "lucide-react"
 
@@ -75,6 +76,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento, reviews
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [profileData, setProfileData] = useState({
         ...profile,
         name: profile?.user?.name || session?.user?.name || "",
@@ -325,14 +327,38 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 </div>
             )}
 
-            {/* Sidebar */}
-            <aside className="w-64 border-r border-white/5 p-6 flex flex-col gap-8">
+            {/* Mobile Header Toggle */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-white/5 z-50 flex items-center justify-between px-6">
                 <Link href="/" className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                         <Layout className="text-white w-5 h-5" />
                     </div>
-                    <span className="text-xl font-bold">Kardly<span className="text-primary">.</span></span>
+                    <span className="text-lg font-bold uppercase tracking-tighter">Kardly</span>
                 </Link>
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 transition-all hover:bg-white/5 rounded-xl text-foreground/80"
+                >
+                    {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
+
+            {/* Sidebar */}
+            <aside className={cn(
+                "fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-background p-6 flex flex-col gap-8 transition-transform lg:relative lg:translate-x-0 lg:z-10",
+                isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+            )}>
+                <div className="flex items-center justify-between lg:justify-start">
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <Layout className="text-white w-5 h-5" />
+                        </div>
+                        <span className="text-xl font-bold">Kardly<span className="text-primary">.</span></span>
+                    </Link>
+                    <button className="lg:hidden p-2 text-white/40" onClick={() => setIsSidebarOpen(false)}>
+                        <X size={20} />
+                    </button>
+                </div>
 
 
 
@@ -341,57 +367,84 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         icon={<Layout className="w-5 h-5" />}
                         label="Sayfa Düzenle"
                         active={activeTab === "edit"}
-                        onClick={() => setActiveTab("edit")}
+                        onClick={() => {
+                            setActiveTab("edit")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<Briefcase className="w-5 h-5" />}
                         label="Projeler & Portfolyo"
                         active={activeTab === "products"}
-                        onClick={() => setActiveTab("products")}
+                        onClick={() => {
+                            setActiveTab("products")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<Zap className="w-5 h-5" />}
                         label="Uzmanlık Alanları"
                         active={activeTab === "services"}
-                        onClick={() => setActiveTab("services")}
+                        onClick={() => {
+                            setActiveTab("services")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<Palette className="w-5 h-5" />}
                         label="Şablon Değiştir"
                         active={activeTab === "templates"}
-                        onClick={() => setActiveTab("templates")}
+                        onClick={() => {
+                            setActiveTab("templates")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<Calendar className="w-5 h-5" />}
                         label="Randevular"
                         active={activeTab === "appointments"}
-                        onClick={() => setActiveTab("appointments")}
+                        onClick={() => {
+                            setActiveTab("appointments")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<BarChart3 className="w-5 h-5" />}
                         label="İstatistikler"
                         active={activeTab === "statistics"}
-                        onClick={() => setActiveTab("statistics")}
+                        onClick={() => {
+                            setActiveTab("statistics")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <NavItem
                         icon={<QrCode className="w-5 h-5" />}
                         label="QR Kod"
                         active={activeTab === "qrcode"}
-                        onClick={() => setActiveTab("qrcode")}
+                        onClick={() => {
+                            setActiveTab("qrcode")
+                            setIsSidebarOpen(false)
+                        }}
                     />
 
                     <NavItem
                         icon={<MessageSquare className="w-5 h-5" />}
                         label="Yorumlar"
                         active={activeTab === "reviews"}
-                        onClick={() => setActiveTab("reviews")}
+                        onClick={() => {
+                            setActiveTab("reviews")
+                            setIsSidebarOpen(false)
+                        }}
                     />
 
                     <NavItem
                         icon={<Settings className="w-5 h-5" />}
                         label="Ayarlar"
                         active={activeTab === "settings"}
-                        onClick={() => setActiveTab("settings")}
+                        onClick={() => {
+                            setActiveTab("settings")
+                            setIsSidebarOpen(false)
+                        }}
                     />
                     <div className="mt-auto pt-4 border-t border-white/5 uppercase tracking-widest">
                         <button
@@ -404,12 +457,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 </nav>
             </aside>
 
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Main Content */}
-            <main className="flex-1 p-10 overflow-auto">
-                <header className="flex justify-between items-center mb-10">
+            <main className="flex-1 p-6 md:p-10 overflow-auto pt-24 lg:pt-10">
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                     <div>
-                        <h1 className="text-2xl font-bold">Hoş geldin, {session?.user?.name} 👋</h1>
-                        <p className="text-foreground/50">Dijital kartvizitini buradan yönetebilirsin.</p>
+                        <h1 className="text-xl md:text-2xl font-bold text-white uppercase tracking-tighter">Hoş geldin, {session?.user?.name} 👋</h1>
+                        <p className="text-foreground/50 text-xs font-medium">Dijital kartvizitini buradan yönetebilirsin.</p>
                     </div>
                     {profile && (
                         <a
@@ -834,8 +895,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
-                        <div className="glass rounded-[2.5rem] border-white/5 overflow-hidden">
-                            <table className="w-full text-left">
+                        <div className="glass rounded-[2.5rem] border-white/5 overflow-x-auto no-scrollbar">
+                            <table className="w-full text-left min-w-[700px]">
                                 <thead className="bg-white/5 border-b border-white/5">
                                     <tr>
                                         <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Müşteri</th>
@@ -878,29 +939,27 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
-                ) : activeTab === "qrcode" ? (
 
+                ) : activeTab === "qrcode" ? (
                     <div className="space-y-8 max-w-2xl mx-auto text-center py-12">
                         <div className="mb-12">
-                            <h2 className="text-3xl font-bold mb-2">Dijital Kartvizit QR Kodunuz</h2>
-                            <p className="text-foreground/50">Bu kodu fiziksel kartvizitinize basabilir veya telefonunuzdan hızlıca okutabilirsiniz.</p>
+                            <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">QR Kodun</h2>
+                            <p className="text-foreground/50 text-sm">Dijital kartvizitini hızlıca paylaşmak için bu kodu kullan.</p>
                         </div>
-
-                        <div className="glass p-12 rounded-[3rem] border-white/5 inline-block mx-auto relative group">
+                        <div className="glass p-12 rounded-[3.5rem] border-white/5 inline-block mx-auto relative group shadow-2xl">
                             <div className="absolute inset-0 bg-primary/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative">
                                 <QRCodeCard username={profile?.username || "demo"} />
                             </div>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 px-6">
                             <div className="glass p-6 rounded-3xl border-white/5 text-left flex items-center gap-4">
                                 <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center">
                                     <Smartphone className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="font-bold">Hızlı Erişim</p>
-                                    <p className="text-xs text-foreground/40">Kameranızla okutun</p>
+                                    <p className="font-bold text-sm">Hızlı Erişim</p>
+                                    <p className="text-[10px] text-foreground/40 mt-0.5">Kameranızla okutun</p>
                                 </div>
                             </div>
                             <div className="glass p-6 rounded-3xl border-white/5 text-left flex items-center gap-4">
@@ -908,12 +967,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <Download className="w-6 h-6 text-emerald-500" />
                                 </div>
                                 <div>
-                                    <p className="font-bold">Yüksek Çözünürlük</p>
-                                    <p className="text-xs text-foreground/40">Baskı için PNG formatı</p>
+                                    <p className="font-bold text-sm">Yüksek Kalite</p>
+                                    <p className="text-[10px] text-foreground/40 mt-0.5">Baskı için hazır</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 ) : activeTab === "settings" ? (
                     <div className="max-w-4xl space-y-8">
                         <div>
@@ -928,12 +988,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </h3>
                                 <div>
                                     <label className="block text-sm font-medium mb-4 opacity-60">Profil Tema Rengi</label>
-                                    <div className="flex gap-3">
+                                    <div className="grid grid-cols-5 gap-3">
                                         {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7"].map(color => (
                                             <button
                                                 key={color}
                                                 onClick={() => setProfileData({ ...profileData, themeColor: color })}
-                                                className={`w-10 h-10 rounded-full border-2 transition-all ${profileData.themeColor === color ? "border-white scale-110 shadow-lg" : "border-transparent"
+                                                className={`w-full aspect-square rounded-2xl border-2 transition-all ${profileData.themeColor === color ? "border-white scale-110 shadow-lg" : "border-transparent opacity-60 hover:opacity-100"
                                                     }`}
                                                 style={{ backgroundColor: color }}
                                             />
@@ -942,30 +1002,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                                 <button
                                     onClick={handleSave}
-                                    className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all"
+                                    className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
                                 >
                                     Ayarları Kaydet
                                 </button>
                             </div>
 
-                            {/* Working Hours */}
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
-                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri & Randevu
+                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri
                                 </h3>
-                                <p className="text-xs text-foreground/40">Randevu alınabilecek saat dilimlerini buradan yönetin. Müşterileriniz sadece bu saatleri görecektir.</p>
+                                <p className="text-[10px] text-foreground/40 leading-relaxed font-bold uppercase tracking-widest">Randevu alınabilecek saat dilimleri</p>
 
                                 <div
-                                    className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all"
+                                    className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all group"
                                     onClick={() => setProfileData({ ...profileData, showAppointmentBtn: !profileData.showAppointmentBtn })}
                                 >
                                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${profileData.showAppointmentBtn ? 'bg-primary border-primary' : 'border-white/20'}`}>
                                         {profileData.showAppointmentBtn && <CheckCircle2 size={12} className="text-white" />}
                                     </div>
-                                    <span className="text-sm font-bold">Profil sayfasında "Randevu Al" butonunu göster</span>
+                                    <span className="text-sm font-bold opacity-80 group-hover:opacity-100 transition-opacity">Randevu sistemini aktif et</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-2">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                     {workingHours.sort().map((hour: string) => (
                                         <div key={hour} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl group hover:border-rose-500/30 transition-all">
                                             <Clock className="w-3.5 h-3.5 text-emerald-400" />
@@ -975,15 +1034,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     const updated = workingHours.filter((h: string) => h !== hour)
                                                     setWorkingHours(updated)
                                                 }}
-                                                className="text-white/20 hover:text-rose-500 transition-colors"
+                                                className="ml-auto text-white/20 hover:text-rose-500 transition-colors"
                                             >
                                                 <X className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
                                     ))}
-                                    {workingHours.length === 0 && (
-                                        <p className="text-sm text-white/20 italic">Henüz saat eklenmemiş.</p>
-                                    )}
                                 </div>
 
                                 <div className="flex gap-2">
@@ -1008,7 +1064,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 <button
                                     onClick={handleSave}
-                                    className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all"
+                                    className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all uppercase tracking-widest text-xs"
                                 >
                                     Saatleri Kaydet
                                 </button>
@@ -1019,8 +1075,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <h3 className="font-bold flex items-center gap-2 text-rose-500">
                                 <Trash2 className="w-5 h-5" /> Tehlikeli Bölge
                             </h3>
-                            <p className="text-xs text-foreground/40">Profilinizi silmek tüm verilerinizi, ürünlerinizi ve randevu geçmişinizi kalıcı olarak kaldıracaktır.</p>
-                            <button className="w-full py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-sm font-bold hover:bg-rose-500/20 transition-all">
+                            <p className="text-xs text-foreground/40 font-bold uppercase tracking-widest">HESABINIZI KALICI OLARAK SİLER</p>
+                            <button className="w-full py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all transition-all">
                                 Profili Tamamen Sil
                             </button>
                         </div>
@@ -1028,43 +1084,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                 ) : activeTab === "statistics" ? (
                     <div className="space-y-8">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h2 className="text-xl font-bold">Detaylı İstatistikler</h2>
-                                <p className="text-sm text-foreground/50">Sayfanızın performansını ve ziyaretçi etkileşimlerini takip edin.</p>
-                            </div>
+                        <div>
+                            <h2 className="text-xl font-bold">Detaylı İstatistikler</h2>
+                            <p className="text-sm text-foreground/50">Sayfanızın performansını ve ziyaretçi etkileşimlerini takip edin.</p>
                         </div>
 
-                        {/* Top Summary Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StatCard
-                                icon={<Eye className="w-5 h-5 text-blue-400" />}
-                                label="Toplam Ziyaret"
-                                value={stats.totalViews.toString()}
-                                trend="Genel"
-                            />
-                            <StatCard
-                                icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />}
-                                label="Etkileşim Oranı"
-                                value={stats.clickRate}
-                                trend="Ortalama"
-                            />
-                            <StatCard
-                                icon={<FileText className="w-5 h-5 text-amber-400" />}
-                                label="CV Görüntüleme"
-                                value={stats.cvClicks.toString()}
-                                trend="Dosya"
-                            />
-                            <StatCard
-                                icon={<Briefcase className="w-5 h-5 text-rose-400" />}
-                                label="Proje Tıklama"
-                                value={stats.projectClicks.toString()}
-                                trend="Portföy"
-                            />
+                            <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label="Toplam Ziyaret" value={stats.totalViews.toString()} trend="Genel" />
+                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label="Etkileşim Oranı" value={stats.clickRate} trend="Ortalama" />
+                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label="CV Görüntüleme" value={stats.cvClicks.toString()} trend="Dosya" />
+                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label="Proje Tıklama" value={stats.projectClicks.toString()} trend="Portföy" />
                         </div>
 
-                        {/* Detailed Action Cards */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                             <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label="Ara" count={stats.phoneClicks} color="indigo" />
                             <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label="WhatsApp" count={stats.waClicks} color="emerald" />
                             <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label="E-Mail" count={stats.emailClicks} color="blue" />
@@ -1075,80 +1107,57 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label="Yorumlar" count={stats.reviewCount} color="amber" />
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* AI Insight Panel */}
-                            <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-8 opacity-10">
-                                    <Sparkles size={120} className="text-primary" />
-                                </div>
-                                <div className="relative z-10">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
-                                            <Zap size={20} />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-black text-lg text-white">Profil Performans Raporu</h3>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Assistant Insights</p>
-                                        </div>
+                        <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-10">
+                                <Sparkles size={120} className="text-primary" />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+                                        <Zap size={20} />
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
-                                            <p className="text-sm font-medium text-white">Toplam <span className="text-primary">{stats.totalViews} ziyaretçi</span> arasında en çok etkileşim kurulan kanal <span className="text-primary">{stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> oldu.</p>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">İçerik Etkileşimi</h4>
-                                            <p className="text-sm font-medium text-white">Projeleriniz ve CV'niz toplam <span className="text-emerald-400">{(stats.projectClicks + stats.cvClicks).toString()} kez</span> incelendi. Portföyünüz dikkat çekiyor.</p>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Sosyal Paylaşım</h4>
-                                            <p className="text-sm font-medium text-white">Profiliniz <span className="text-amber-400">{stats.shareClicks} kez</span> paylaşıldı. Bu, ağınızın aktif olduğunu gösteriyor.</p>
-                                        </div>
+                                    <div>
+                                        <h3 className="font-black text-lg text-white">Profil Performans Raporu</h3>
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-widest font-bold">Digital Assistant Insights</p>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
+                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Toplam <span className="text-primary">{stats.totalViews} ziyaretçi</span> arasında en çok etkileşim kurulan kanal <span className="text-primary">{stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> oldu.</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-bold text-white/60">İçerik Etkileşimi</h4>
+                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Projeleriniz ve CV'niz toplam <span className="text-emerald-400">{(stats.projectClicks + stats.cvClicks).toString()} kez</span> incelendi. Portföyünüz dikkat çekiyor.</p>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-bold text-white/60">Sosyal Paylaşım</h4>
+                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Profiliniz <span className="text-amber-400">{stats.shareClicks} kez</span> paylaşıldı. Bu, ağınızın aktif olduğunu gösteriyor.</p>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+
                 ) : activeTab === "templates" ? (
                     <div className="space-y-8">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h2 className="text-xl font-bold">Tasarım Şablonları</h2>
-                                <p className="text-sm text-foreground/50">Sayfanızın görünümünü değiştirmek için farklı şablonlar seçin.</p>
-                            </div>
-
+                        <div>
+                            <h2 className="text-xl font-bold">Tasarım Şablonları</h2>
+                            <p className="text-sm text-foreground/50">Sayfanızın görünümünü değiştirmek için farklı şablonlar seçin.</p>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
-                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım.", image: "/templates/neon_black.jpg", premium: true },
-                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım.", image: "/templates/neon_white.jpg", premium: true },
-                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar.", image: "/templates/neon_blue.jpg", premium: true },
-                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm.", image: "/templates/neon_green.jpg", premium: true },
-                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer.", image: "/templates/neon_purple.jpg", premium: true },
-                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm.", image: "/templates/neon_red.jpg", premium: true },
-                                { id: "neon_gold", name: "Neon Modern (Altın)", description: "Lüks altın sarısı neon ve seçkin tasarım.", image: "/templates/neon_gold.jpg", premium: true },
-                                { id: "neon_rose", name: "Neon Modern (Rose)", description: "Zarif rose neon ve estetik duruş.", image: "/templates/neon_rose.jpg", premium: true },
-                                { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Ferah turkuaz neon ve teknolojik hatlar.", image: "/templates/neon_cyan.jpg", premium: true },
-                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler.", image: "/templates/neon_gs.jpg", premium: true },
-                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon.", image: "/templates/neon_fb.jpg", premium: true },
-                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu.", image: "/templates/neon_ts.jpg", premium: true },
-                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon.", image: "/templates/neon_bjk.jpg", premium: true },
-                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri.", image: "/templates/neon_tr.jpg", premium: true },
-                                { id: "neon_greenwhite", name: "Neon (Yeşil-Beyaz)", description: "Dinamik yeşil ve temiz beyazın uyumu.", image: "/templates/neon_greenwhite.jpg", premium: true },
-                                { id: "neon_pinkwhite", name: "Neon (Pembe-Beyaz)", description: "Zarif pembe ve ferah beyazın birlikteliği.", image: "/templates/neon_pinkwhite.jpg", premium: true },
-                                { id: "neon_greywhite", name: "Neon (Gri-Beyaz)", description: "Vakurlu gri ve modern beyaz tasarımı.", image: "/templates/neon_greywhite.jpg", premium: true },
-                                { id: "neon_blueblack", name: "Neon (Mavi-Siyah)", description: "Derin gece mavisi ve simsiyah kontrastı.", image: "/templates/neon_blueblack.jpg", premium: true },
-                                { id: "neon_purplexwhite", name: "Neon (Mor-Beyaz)", description: "Asil mor ve saf beyazın estetik uyumu.", image: "/templates/neon_purplexwhite.jpg", premium: true },
-                                { id: "neon_yellowwhite", name: "Neon (Sarı-Beyaz)", description: "Pozitif sarı ve parlak beyaz kombinasyonu.", image: "/templates/neon_yellowwhite.jpg", premium: true },
-                                { id: "neon_mintgreen", name: "Neon (Mint-Yeşil)", description: "Ferahlatıcı nane yeşili ve beyaz tasarımı.", image: "/templates/neon_mintgreen.jpg", premium: true },
-                                { id: "neon_electricviolet", name: "Neon (Elektrik Mor)", description: "Yüksek enerjili menekşe tonları.", image: "/templates/neon_electricviolet.jpg", premium: true },
-                                { id: "neon_crimson_dark", name: "Neon (Koyu Kan Kırmızısı)", description: "Gizemli ve güçlü koyu kırmızı tonları.", image: "/templates/neon_crimson_dark.jpg", premium: true },
-                                { id: "neon_ocean_light", name: "Neon (Okyanus Işığı)", description: "Deniz mavisi ve serin beyaz esintisi.", image: "/templates/neon_ocean_light.jpg", premium: true },
-                                { id: "neon_sunset_rose", name: "Neon (Gün Batımı Rose)", description: "Sıcak gün batımı renkleri ve koyu gece.", image: "/templates/neon_sunset_rose.jpg", premium: true },
-                                { id: "neon_greenblack", name: "Neon (Yeşil-Siyah)", description: "Güçlü yeşil neon ve derin siyah kontrastı.", image: "/templates/neon_greenblack.jpg", premium: true },
-                                { id: "neon_orangeblack", name: "Neon (Turuncu-Siyah)", description: "Enerjik turuncu ve mat siyah birlikteliği.", image: "/templates/neon_orangeblack.jpg", premium: true },
+                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
+                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
+                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
+                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm." },
+                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
+                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm." },
+                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler." },
+                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon." },
+                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu." },
+                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon." },
+                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
@@ -1159,99 +1168,90 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     )}
                                     onClick={() => {
                                         setProfileData({ ...profileData, templateId: tpl.id });
-                                        handleSave();
+                                        handleSave(); // Tip: Şablon seçildiğinde otomatik kaydetme eklenebilir
                                     }}
                                 >
-                                    <div className="aspect-[4/5] bg-white/5 relative overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 z-10" />
-
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/5 to-white/0">
-                                            <Smartphone className="w-12 h-12 text-white/20" />
+                                    <div className="p-6">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <h3 className="font-bold">{tpl.name}</h3>
+                                            {profileData.templateId === tpl.id && (
+                                                <div className="bg-primary/20 text-primary p-1 rounded-full">
+                                                    <CheckCircle2 size={16} />
+                                                </div>
+                                            )}
                                         </div>
-
-
-                                        {profileData.templateId === tpl.id && (
-                                            <div className="absolute top-4 right-4 bg-emerald-500 text-white p-1 rounded-full z-20 shadow-lg">
-                                                <CheckCircle2 className="w-4 h-4" />
-                                            </div>
-                                        )}
-                                        <div className="absolute bottom-6 left-6 right-6 z-20">
-                                            <h3 className="font-bold text-lg mb-1">{tpl.name}</h3>
-                                            <p className="text-xs opacity-70 leading-relaxed">{tpl.description}</p>
-                                        </div>
+                                        <p className="text-sm text-foreground/50">{tpl.description}</p>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
-
-                        {/* Template specific settings can be added here if needed */}
                     </div>
                 ) : activeTab === "reviews" ? (
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Yorum Yönetimi</h2>
-                                <p className="text-sm text-foreground/50">Profilinizde paylaşılan yorumları buradan onaylayabilir veya silebilirsiniz.</p>
+                                <h2 className="text-xl font-bold">Müşteri Yorumları</h2>
+                                <p className="text-sm text-foreground/50">Profilinizde görünen yorumları yönetin.</p>
                             </div>
                         </div>
 
-                        <div className="glass overflow-hidden rounded-[2.5rem] border-white/5">
-                            <table className="w-full text-left">
-                                <thead className="bg-white/5 text-[10px] font-black uppercase tracking-widest text-foreground/40 border-b border-white/5">
+                        <div className="glass rounded-[2.5rem] border-white/5 overflow-x-auto no-scrollbar">
+                            <table className="w-full text-left min-w-[800px]">
+                                <thead className="bg-white/5 border-b border-white/5">
                                     <tr>
-                                        <th className="px-8 py-5">Kullanıcı</th>
-                                        <th className="px-8 py-5">Yorum</th>
-                                        <th className="px-8 py-5">Puan</th>
-                                        <th className="px-8 py-5">Durum</th>
-                                        <th className="px-8 py-5 text-right">İşlemler</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Kullanıcı</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Yorum</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Puan</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Durum</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40 text-right">İşlem</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
                                     {reviewList.map((review: any) => (
-                                        <tr key={review.id} className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-8 py-6">
+                                        <tr key={review.id} className="hover:bg-white/[0.02] transition-colors">
+                                            <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <img src={review.image} className="w-10 h-10 rounded-full border border-white/10" alt="" />
+                                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 border border-white/10">
+                                                        <img src={review.image} className="w-full h-full object-cover" />
+                                                    </div>
                                                     <div>
-                                                        <p className="text-sm font-bold">{review.name}</p>
-                                                        <p className="text-[10px] opacity-40">{review.title || 'Müşteri'}</p>
+                                                        <div className="font-bold">{review.name}</div>
+                                                        <div className="text-[10px] text-white/40 uppercase tracking-widest">{review.title}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6 max-w-xs">
-                                                <p className="text-xs italic opacity-80 line-clamp-2">"{review.content}"</p>
+                                            <td className="px-6 py-4">
+                                                <p className="text-sm text-white/60 line-clamp-2 max-w-sm">{review.content}</p>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <div className="flex gap-0.5">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-0.5 text-amber-400">
                                                     {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} size={10} className={i < review.rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                        <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-white/10"} />
                                                     ))}
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <span className={cn(
-                                                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                                                    review.isActive ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                                )}>
+                                            <td className="px-6 py-4">
+                                                <button
+                                                    onClick={() => handleToggleReview(review.id, review.isActive)}
+                                                    className={cn(
+                                                        "px-2 py-1 rounded-md text-[10px] font-bold uppercase transition-all",
+                                                        review.isActive ? "bg-emerald-500/10 text-emerald-500" : "bg-white/10 text-white/40 hover:bg-white/20"
+                                                    )}
+                                                >
                                                     {review.isActive ? 'Yayında' : 'Onay Bekliyor'}
-                                                </span>
+                                                </button>
                                             </td>
-                                            <td className="px-8 py-6 text-right">
-                                                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex justify-end gap-2">
                                                     <button
                                                         onClick={() => handleToggleReview(review.id, review.isActive)}
-                                                        className={cn(
-                                                            "p-2 rounded-lg transition-colors",
-                                                            review.isActive ? "bg-amber-500/10 text-amber-400 hover:bg-amber-500/20" : "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
-                                                        )}
-                                                        title={review.isActive ? "Gizle" : "Onayla"}
+                                                        className="p-2 hover:bg-white/5 rounded-lg transition-colors text-white/40 hover:text-white"
                                                     >
                                                         {review.isActive ? <EyeOff size={16} /> : <Eye size={16} />}
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteReview(review.id)}
-                                                        className="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition-colors"
-                                                        title="Sil"
+                                                        className="p-2 hover:bg-rose-500/10 rounded-lg transition-colors text-white/40 hover:text-rose-500"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -1261,7 +1261,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     ))}
                                     {reviewList.length === 0 && (
                                         <tr>
-                                            <td colSpan={5} className="px-8 py-20 text-center opacity-40 text-sm">Henüz bir yorum yapılmamış.</td>
+                                            <td colSpan={5} className="px-6 py-12 text-center text-white/20">
+                                                <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-10" />
+                                                <p className="font-bold uppercase tracking-widest text-xs">Henüz yorum yapılmamış</p>
+                                            </td>
                                         </tr>
                                     )}
                                 </tbody>
@@ -1270,140 +1273,143 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     </div>
                 ) : null}
 
-                {/* Project Add Modal */}
-                {showProductModal && (
-                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
-                        >
-                            <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
-                                <X className="w-5 h-5" />
-                            </button>
+                {/* Modals outside of conditional tabs */}
+                <AnimatePresence>
+                    {showProductModal && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                                className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
+                            >
+                                <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                                    <X className="w-5 h-5" />
+                                </button>
 
-                            <div className="mb-5">
-                                <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
-                                <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
-                            </div>
+                                <div className="mb-5">
+                                    <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
+                                    <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
+                                </div>
 
-                            <form onSubmit={handleAddProduct} className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
-                                    <div
-                                        className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
-                                        onClick={() => document.getElementById('product-image-upload')?.click()}
-                                    >
-                                        {newProduct.image ? (
-                                            <div className="relative aspect-video">
-                                                <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
-                                                <button
-                                                    type="button"
-                                                    onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
-                                                    className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
-                                                >
-                                                    <X className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
-                                                <Upload className="w-8 h-8" />
-                                                <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
-                                            </div>
-                                        )}
+                                <form onSubmit={handleAddProduct} className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
+                                        <div
+                                            className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
+                                            onClick={() => document.getElementById('product-image-upload')?.click()}
+                                        >
+                                            {newProduct.image ? (
+                                                <div className="relative aspect-video">
+                                                    <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
+                                                        className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+                                                    <Upload className="w-8 h-8" />
+                                                    <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <input
+                                            id="product-image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => setNewProduct({ ...newProduct, image: reader.result as string });
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
                                     </div>
                                     <input
-                                        id="product-image-upload"
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={async (e) => {
-                                            const file = e.target.files?.[0];
-                                            if (!file) return;
-                                            const reader = new FileReader();
-                                            reader.onloadend = () => setNewProduct({ ...newProduct, image: reader.result as string });
-                                            reader.readAsDataURL(file);
-                                        }}
+                                        type="text"
+                                        required
+                                        placeholder="Proje Başlığı"
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
+                                        value={newProduct.name}
+                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                     />
-                                </div>
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Proje Başlığı"
-                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
-                                    value={newProduct.name}
-                                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Canlı Link / GitHub"
-                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
-                                    value={newProduct.link}
-                                    onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
-                                />
-                                <textarea
-                                    rows={2}
-                                    placeholder="Proje Açıklaması"
-                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium resize-none"
-                                    value={newProduct.description}
-                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={isProductSaving}
-                                    className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                                >
-                                    {isProductSaving ? "Kaydediliyor..." : "Projeyi Kaydet"}
-                                </button>
-                            </form>
-                        </motion.div>
-                    </div>
-                )}
+                                    <input
+                                        type="text"
+                                        placeholder="Canlı Link / GitHub"
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
+                                        value={newProduct.link}
+                                        onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                    />
+                                    <textarea
+                                        rows={2}
+                                        placeholder="Proje Açıklaması"
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium resize-none"
+                                        value={newProduct.description}
+                                        onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={isProductSaving}
+                                        className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {isProductSaving ? "Kaydediliyor..." : "Projeyi Kaydet"}
+                                    </button>
+                                </form>
+                            </motion.div>
+                        </div>
+                    )}
 
-                {/* Service Add Modal */}
-                {showServiceModal && (
-                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
-                        >
-                            <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
-                                <X className="w-6 h-6" />
-                            </button>
-                            <div className="mb-8">
-                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
-                                    <Zap className="w-6 h-6 text-primary" />
-                                </div>
-                                <h2 className="text-2xl font-black text-white">Yeni Hizmet / Uzmanlık</h2>
-                            </div>
-                            <div className="space-y-6">
-                                <input
-                                    type="text"
-                                    placeholder="Başlık"
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium"
-                                    value={newService.title}
-                                    onChange={(e) => setNewService({ ...newService, title: e.target.value })}
-                                />
-                                <textarea
-                                    rows={3}
-                                    placeholder="Açıklama"
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium resize-none"
-                                    value={newService.description}
-                                    onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-                                />
-                                <button
-                                    onClick={handleAddService}
-                                    className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
-                                >
-                                    Hizmeti Ekle
+                    {showServiceModal && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
+                            <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                                className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                            >
+                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
+                                    <X className="w-6 h-6" />
                                 </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
+                                <div className="mb-8">
+                                    <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
+                                        <Zap className="w-6 h-6 text-primary" />
+                                    </div>
+                                    <h2 className="text-2xl font-black text-white">Yeni Hizmet / Uzmanlık</h2>
+                                </div>
+                                <div className="space-y-6">
+                                    <input
+                                        type="text"
+                                        placeholder="Başlık"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium"
+                                        value={newService.title}
+                                        onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                                    />
+                                    <textarea
+                                        rows={3}
+                                        placeholder="Açıklama"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium resize-none"
+                                        value={newService.description}
+                                        onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                                    />
+                                    <button
+                                        onClick={handleAddService}
+                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                                    >
+                                        Hizmeti Ekle
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
             </main>
         </div>
     )
