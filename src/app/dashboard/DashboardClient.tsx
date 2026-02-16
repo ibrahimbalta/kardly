@@ -16,6 +16,8 @@ import {
     ShoppingBag,
     Plus,
     Trash2,
+    EyeOff,
+    Star,
     Instagram,
     Twitter,
     Linkedin,
@@ -67,11 +69,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
 import { QRCodeCard } from "@/components/QRCodeCard"
 
-export default function DashboardClient({ session, profile, subscription, appointments, products, stats }: any) {
+export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
-    const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento
+    const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento, reviews
     const [profileData, setProfileData] = useState({
         ...profile,
         name: profile?.user?.name || session?.user?.name || "",
@@ -90,6 +92,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         image: ""
     })
     const [isProductSaving, setIsProductSaving] = useState(false)
+
+    // Reviews Management
+    const [reviewList, setReviewList] = useState(reviews || [])
 
     // Services Management
     const [showServiceModal, setShowServiceModal] = useState(false)
@@ -258,6 +263,37 @@ export default function DashboardClient({ session, profile, subscription, appoin
         }
     }
 
+    const handleToggleReview = async (id: string, currentStatus: boolean) => {
+        try {
+            const res = await fetch("/api/review/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, isActive: !currentStatus })
+            })
+            if (res.ok) {
+                setReviewList(reviewList.map((r: any) => r.id === id ? { ...r, isActive: !currentStatus } : r))
+                setShowToast(!currentStatus ? "Yorum onaylandı!" : "Yorum gizlendi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) { console.error(err) }
+    }
+
+    const handleDeleteReview = async (id: string) => {
+        if (!confirm("Bu yorumu silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch("/api/review/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            })
+            if (res.ok) {
+                setReviewList(reviewList.filter((r: any) => r.id !== id))
+                setShowToast("Yorum silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) { console.error(err) }
+    }
+
     const updateSocialLink = (platform: string, url: string) => {
         const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
         const index = currentLinks.findIndex((l: any) => l.platform === platform)
@@ -341,6 +377,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         label="QR Kod"
                         active={activeTab === "qrcode"}
                         onClick={() => setActiveTab("qrcode")}
+                    />
+
+                    <NavItem
+                        icon={<MessageSquare className="w-5 h-5" />}
+                        label="Yorumlar"
+                        active={activeTab === "reviews"}
+                        onClick={() => setActiveTab("reviews")}
                     />
 
                     <NavItem
@@ -1166,6 +1209,88 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
 
                         {/* Template specific settings can be added here if needed */}
+                    </div>
+                ) : activeTab === "reviews" ? (
+                    <div className="space-y-8">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold">Yorum Yönetimi</h2>
+                                <p className="text-sm text-foreground/50">Profilinizde paylaşılan yorumları buradan onaylayabilir veya silebilirsiniz.</p>
+                            </div>
+                        </div>
+
+                        <div className="glass overflow-hidden rounded-[2.5rem] border-white/5">
+                            <table className="w-full text-left">
+                                <thead className="bg-white/5 text-[10px] font-black uppercase tracking-widest text-foreground/40 border-b border-white/5">
+                                    <tr>
+                                        <th className="px-8 py-5">Kullanıcı</th>
+                                        <th className="px-8 py-5">Yorum</th>
+                                        <th className="px-8 py-5">Puan</th>
+                                        <th className="px-8 py-5">Durum</th>
+                                        <th className="px-8 py-5 text-right">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {reviewList.map((review: any) => (
+                                        <tr key={review.id} className="hover:bg-white/5 transition-colors group">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-3">
+                                                    <img src={review.image} className="w-10 h-10 rounded-full border border-white/10" alt="" />
+                                                    <div>
+                                                        <p className="text-sm font-bold">{review.name}</p>
+                                                        <p className="text-[10px] opacity-40">{review.title || 'Müşteri'}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6 max-w-xs">
+                                                <p className="text-xs italic opacity-80 line-clamp-2">"{review.content}"</p>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex gap-0.5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} size={10} className={i < review.rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <span className={cn(
+                                                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
+                                                    review.isActive ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                                )}>
+                                                    {review.isActive ? 'Yayında' : 'Onay Bekliyor'}
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => handleToggleReview(review.id, review.isActive)}
+                                                        className={cn(
+                                                            "p-2 rounded-lg transition-colors",
+                                                            review.isActive ? "bg-amber-500/10 text-amber-400 hover:bg-amber-500/20" : "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                                                        )}
+                                                        title={review.isActive ? "Gizle" : "Onayla"}
+                                                    >
+                                                        {review.isActive ? <EyeOff size={16} /> : <Eye size={16} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteReview(review.id)}
+                                                        className="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition-colors"
+                                                        title="Sil"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {reviewList.length === 0 && (
+                                        <tr>
+                                            <td colSpan={5} className="px-8 py-20 text-center opacity-40 text-sm">Henüz bir yorum yapılmamış.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 ) : null}
 

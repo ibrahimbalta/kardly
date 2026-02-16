@@ -22,6 +22,10 @@ export default async function ProfilePage({ params }: any) {
             products: {
                 where: { isActive: true },
                 orderBy: { createdAt: "desc" }
+            },
+            reviews: {
+                where: { isActive: true },
+                orderBy: { createdAt: "desc" }
             }
         }
     })

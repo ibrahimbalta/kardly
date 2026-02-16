@@ -80,7 +80,21 @@ model Profile {
   analytics      Analytics[]
   blocks         Block[]
   products       Product[]
+  reviews        Review[]
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  profileId String
+  name      String
+  title     String?
+  content   String
+  rating    Int      @default(5)
+  image     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Block {

@@ -74,11 +74,12 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [mounted, setMounted] = useState(false)
     const [copied, setCopied] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
-    const [reviews, setReviews] = useState([
-        { id: 1, name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://i.pravatar.cc/150?u=fatih" },
-        { id: 2, name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://i.pravatar.cc/150?u=zeynep" },
-        { id: 3, name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://i.pravatar.cc/150?u=ali" }
+    const [reviews, setReviews] = useState(profile.reviews?.length > 0 ? profile.reviews : [
+        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://i.pravatar.cc/150?u=fatih" },
+        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://i.pravatar.cc/150?u=zeynep" },
+        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://i.pravatar.cc/150?u=ali" }
     ])
+    const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => { setMounted(true) }, [])
@@ -168,11 +169,35 @@ export default function ProfileClient({ profile }: { profile: any }) {
             <ReviewModal
                 isOpen={isReviewModalOpen}
                 onClose={() => setIsReviewModalOpen(false)}
-                onSubmit={(newReview: any) => setReviews([newReview, ...reviews])}
+                onSubmit={async (newReview: any) => {
+                    try {
+                        const res = await fetch("/api/review/create", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ ...newReview, profileId: profile.id })
+                        })
+                        if (res.ok) {
+                            setReviewStatus("Yorumunuz iletildi, onay sonrası yayınlanacaktır!")
+                            setTimeout(() => setReviewStatus(null), 5000)
+                        }
+                    } catch (err) {
+                        console.error(err)
+                    }
+                }}
                 themeColor={profile.themeColor || "#0ea5e9"}
             />
 
             <AnimatePresence>
+                {reviewStatus && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-emerald-500 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-emerald-400"
+                    >
+                        <CheckCircle2 size={20} /> {reviewStatus}
+                    </motion.div>
+                )}
                 {copied && (
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -701,7 +726,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                     {/* Testimonials Slider */}
                     <div className="pt-4 overflow-hidden relative">
                         <div className="flex items-center justify-between mb-4 px-2">
-                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Müşteri Yorumları</h3>
+                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Yorumlar</h3>
                             <button
                                 onClick={() => setIsReviewModalOpen(true)}
                                 className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border transition-all", theme.btn)}
@@ -712,35 +737,41 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                         </div>
 
                         <div className="relative h-40">
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentReviewIndex}
-                                    initial={{ opacity: 0, x: 50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
-                                    className={cn("absolute inset-0 p-5 rounded-3xl border flex flex-col justify-between", theme.card, theme.border)}
-                                >
-                                    <div className="flex gap-4">
-                                        <img src={reviews[currentReviewIndex].image} className="w-12 h-12 rounded-full border border-white/10 object-cover" />
-                                        <div className="flex-1">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                    <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
+                            {reviews.length > 0 ? (
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={currentReviewIndex}
+                                        initial={{ opacity: 0, x: 50 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -50 }}
+                                        className={cn("absolute inset-0 p-5 rounded-3xl border flex flex-col justify-between", theme.card, theme.border)}
+                                    >
+                                        <div className="flex gap-4">
+                                            <img src={reviews[currentReviewIndex].image} className="w-12 h-12 rounded-full border border-white/10 object-cover" />
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                        <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
+                                                    </div>
+                                                    <div className="flex gap-0.5">
+                                                        {[...Array(5)].map((_, i) => (
+                                                            <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                                <div className="flex gap-0.5">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
-                                                    ))}
-                                                </div>
+                                                <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
+                                                    "{reviews[currentReviewIndex].content}"
+                                                </p>
                                             </div>
-                                            <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
-                                                "{reviews[currentReviewIndex].content}"
-                                            </p>
                                         </div>
-                                    </div>
-                                </motion.div>
-                            </AnimatePresence>
+                                    </motion.div>
+                                </AnimatePresence>
+                            ) : (
+                                <div className={cn("absolute inset-0 p-5 rounded-3xl border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border)}>
+                                    Henüz yorum yapılmamış.
+                                </div>
+                            )}
                         </div>
 
                         {/* Pagination Dots */}

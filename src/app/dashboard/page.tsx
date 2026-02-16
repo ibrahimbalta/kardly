@@ -58,6 +58,11 @@ export default async function DashboardPage() {
         }
     }
 
+    const reviews = await prisma.review.findMany({
+        where: { profileId: profile?.id || "" },
+        orderBy: { createdAt: "desc" }
+    })
+
     return (
         <DashboardClient
             session={session}
@@ -65,6 +70,7 @@ export default async function DashboardPage() {
             subscription={subscription}
             appointments={appointments}
             products={products}
+            reviews={reviews}
             stats={stats}
         />
     )
