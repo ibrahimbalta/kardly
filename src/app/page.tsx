@@ -150,19 +150,19 @@ export default function Home() {
             <TemplateCard
               title="Neon Modern"
               color="#f43f5e"
-              image="https://framerusercontent.com/images/3KqNoXyDAnD3K98uOq0N3H9vI.png?scale-down-to=1024"
+              image="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop"
               tag="EN POPÜLER"
             />
             <TemplateCard
               title="Clean Slate"
               color="#0ea5e9"
-              image="https://framerusercontent.com/images/lYlDsk0J7D6W1vD3w4H9vI.png?scale-down-to=1024"
+              image="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000&auto=format&fit=crop"
               tag="MİNİMAL"
             />
             <TemplateCard
               title="Soft Creative"
               color="#8b5cf6"
-              image="https://framerusercontent.com/images/6PNoXyDAnD3K98uOq0N3H123.png?scale-down-to=1024"
+              image="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop"
               tag="YENİ"
             />
           </div>
@@ -268,9 +268,9 @@ function TemplateCard({ title, image, color, tag }: any) {
     >
       <div className="absolute inset-0 rounded-[3rem] blur-2xl opacity-0 group-hover:opacity-10 transition-opacity" style={{ background: color }} />
       <div className="relative bg-white rounded-[3rem] p-4 border border-slate-100 overflow-hidden shadow-sm shadow-rose-100 hover:shadow-2xl transition-all duration-500">
-        <div className="aspect-[3/4] rounded-[2.5rem] bg-slate-50 mb-6 overflow-hidden relative border border-slate-100">
+        <div className="aspect-[3/4] rounded-[2.5rem] bg-slate-100 mb-6 overflow-hidden relative border border-slate-200 shadow-inner">
           <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-          <div className="absolute top-6 right-6 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-100 text-[9px] font-black text-rose-500 shadow-sm">{tag}</div>
+          <div className="absolute top-6 right-6 px-4 py-2 rounded-full bg-white/95 backdrop-blur-md border border-slate-100 text-[10px] font-black text-rose-500 shadow-lg">{tag}</div>
         </div>
         <div className="px-4 pb-4 flex justify-between items-center">
           <div>

@@ -87,28 +87,28 @@ export function Hero() {
                     transition={{ delay: 0.5, duration: 1 }}
                     className="relative hidden lg:block"
                 >
-                    <div className="absolute inset-0 bg-rose-200/20 blur-[100px] rounded-full" />
+                    <div className="absolute inset-0 bg-rose-200/40 blur-[120px] rounded-full" />
 
-                    <div className="relative glass p-6 rounded-[4rem] border-white shadow-2xl bg-white/40">
-                        <div className="w-[340px] h-[640px] bg-slate-50 rounded-[3.5rem] overflow-hidden relative border-8 border-white shadow-inner">
+                    <div className="relative glass p-6 rounded-[4rem] border-white shadow-[0_20px_50px_rgba(244,63,94,0.15)] bg-white/60">
+                        <div className="w-[340px] h-[640px] bg-slate-100 rounded-[3.5rem] overflow-hidden relative border-8 border-white shadow-2xl">
                             {/* Mockup Content */}
-                            <div className="p-8 flex flex-col items-center h-full">
-                                <div className="w-24 h-24 bg-gradient-to-tr from-rose-400 to-orange-400 rounded-3xl mb-8 shadow-lg flex items-center justify-center">
-                                    <Zap size={40} className="text-white fill-current" />
+                            <div className="p-8 flex flex-col items-center h-full bg-gradient-to-b from-white to-slate-50">
+                                <div className="w-24 h-24 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-3xl mb-12 shadow-2xl flex items-center justify-center">
+                                    <Zap size={48} className="text-white fill-current" />
                                 </div>
-                                <div className="h-6 w-32 bg-slate-200 rounded-full mb-3" />
-                                <div className="h-2 w-48 bg-slate-100 rounded-full mb-8" />
+                                <div className="h-6 w-32 bg-slate-300 rounded-full mb-3" />
+                                <div className="h-2 w-48 bg-slate-200 rounded-full mb-10" />
 
                                 <div className="space-y-4 w-full">
                                     {[1, 2, 3].map(i => (
-                                        <div key={i} className="h-14 w-full bg-white rounded-2xl shadow-sm border border-slate-50 flex items-center px-4 gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-rose-50" />
-                                            <div className="h-2 w-24 bg-slate-100 rounded-full" />
+                                        <div key={i} className="h-14 w-full bg-white rounded-2xl shadow-sm border border-slate-200 flex items-center px-4 gap-4">
+                                            <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center text-rose-500 font-bold text-xs" />
+                                            <div className="h-2 w-24 bg-slate-200 rounded-full" />
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="mt-auto mb-4 w-full h-16 bg-rose-500 rounded-2xl shadow-lg shadow-rose-100 flex items-center justify-center text-xs font-black text-white tracking-widest">
+                                <div className="mt-auto mb-6 w-full h-16 bg-rose-500 rounded-2xl shadow-xl shadow-rose-200 flex items-center justify-center text-xs font-black text-white tracking-widest">
                                     REHBERE EKLE
                                 </div>
                             </div>
