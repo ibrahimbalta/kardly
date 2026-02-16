@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,22 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// NextAuth Models
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -39,19 +34,17 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  sessions      Session[]
-  
-  // App specific
-  profile       Profile?
   appointments  Appointment[]
-  subscription  Subscription?
   payments      Payment[]
+  profile       Profile?
+  sessions      Session[]
+  subscription  Subscription?
 }
 
 model VerificationToken {
@@ -62,121 +55,101 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// Kardly Core Models
 model Profile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  username    String   @unique
-  occupation  String?
+  id             String      @id @default(cuid())
+  userId         String      @unique
+  username       String      @unique
+  occupation     String?
   targetAudience String?
-  tone        String?
-  
-  bio         String?
-  slogan      String?
-  phone       String?
-  services    Json?    // Array of { title: string, description: string, price?: number }
-  socialLinks Json?    // Array of { platform: string, url: string }
-  workingHours Json?   // Array of time strings e.g. ["09:00", "10:00", "14:00"]
-  
-  themeColor  String?  @default("#6366f1")
-  templateId  String   @default("modern")
-  
-  slug        String   @unique
-  qrCodeUrl   String?
-  vCardUrl    String?
-  cvUrl       String?  @db.Text
-  
-  blocks      Block[]
-  products    Product[]
-  analytics   Analytics[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tone           String?
+  bio            String?
+  slogan         String?
+  phone          String?
+  services       Json?
+  socialLinks    Json?
+  themeColor     String?     @default("#6366f1")
+  templateId     String      @default("modern")
+  slug           String      @unique
+  qrCodeUrl      String?
+  vCardUrl       String?
+  cvUrl          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  workingHours   Json?
+  analytics      Analytics[]
+  blocks         Block[]
+  products       Product[]
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Block {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  
-  type      String   // hero, about, services, gallery, contact, social, whatsapp, map
-  content   Json     // Specific content for each block type
+  type      String
+  content   Json
   order     Int
-  isActive  Boolean  @default(true)
+  isActive  Boolean @default(true)
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Analytics {
   id        String   @id @default(cuid())
   profileId String
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  
-  type      String   @default("view") // view, click_vcard, click_whatsapp, click_social, etc
-  value     String?  // Optional extra info (e.g. which social link)
-  
+  type      String   @default("view")
+  value     String?
   ip        String?
   userAgent String?
   referrer  String?
   device    String?
   country   String?
-  
   createdAt DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Appointment {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id          String   @id @default(cuid())
+  userId      String
   clientName  String
   clientEmail String
   clientPhone String?
-  
-  date      DateTime
-  status    String   @default("pending") // pending, confirmed, cancelled
-  note      String?
-  
-  createdAt DateTime @default(now())
+  date        DateTime
+  status      String   @default("pending")
+  note        String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subscription {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  plan      String   @default("free") // free, pro, business
-  status    String   @default("active")
-  
-  startDate DateTime @default(now())
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  plan      String    @default("free")
+  status    String    @default("active")
+  startDate DateTime  @default(now())
   endDate   DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Payment {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  amount      Float
-  currency    String   @default("TRY")
-  status      String   // success, failed, pending
-  provider    String   @default("iyzico")
-  
+  amount    Float
+  currency  String   @default("TRY")
+  status    String
+  provider  String   @default("iyzico")
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {
   id          String   @id @default(cuid())
   profileId   String
-  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  
   name        String
   description String?
   price       Float
   image       String?
-  link        String?  // Direct purchase link (WhatsApp, iyzico, etc)
+  link        String?
   isActive    Boolean  @default(true)
-  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
