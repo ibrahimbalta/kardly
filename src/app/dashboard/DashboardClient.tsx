@@ -1040,6 +1040,33 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <StatCard
+                                icon={<Eye className="w-5 h-5 text-blue-400" />}
+                                label="Sayfa Görüntüleme"
+                                value={stats.totalViews.toString()}
+                                trend="+12%"
+                            />
+                            <StatCard
+                                icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />}
+                                label="Etkileşim Oranı"
+                                value={stats.clickRate}
+                                trend="+5%"
+                            />
+                            <StatCard
+                                icon={<Download className="w-5 h-5 text-indigo-400" />}
+                                label="vCard İndirme"
+                                value={stats.vCardClicks.toString()}
+                                trend="+8%"
+                            />
+                            <StatCard
+                                icon={<FileText className="w-5 h-5 text-amber-400" />}
+                                label="CV Görüntüleme"
+                                value={stats.cvClicks.toString()}
+                                trend="+15%"
+                            />
+                        </div>
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             {/* AI Insight Panel */}
                             <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden">
@@ -1052,22 +1079,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <Zap size={20} />
                                         </div>
                                         <div>
-                                            <h3 className="font-black text-lg text-white">AI Performans Analizi</h3>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Assistant Insights</p>
+                                            <h3 className="font-black text-lg text-white">Performans Özeti</h3>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Card Insights</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Etkileşimi</h4>
-                                            <p className="text-sm font-medium text-white">Toplam <span className="text-primary">{stats.totalViews} Ziyaret</span> aldınız. Ziyaretçilerinizin <span className="text-primary">%{stats.clickRate}</span>'si sizinle etkileşime geçti.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Görüntüleme Analizi</h4>
+                                            <p className="text-sm font-medium text-white">Profiliniz toplam <span className="text-primary">{stats.totalViews} kez</span> ziyaret edildi. Ziyaretçileriniz genellikle <span className="text-primary">Mobil</span> cihazları tercih ediyor.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Popüler İçerik</h4>
-                                            <p className="text-sm font-medium text-white">"Projeler" ve "CV" bölümleri <span className="text-emerald-400">en çok merak edilen</span> alanlar arasında yer alıyor.</p>
+                                            <h4 className="text-xs font-bold text-white/60">En İlgi Çeken Alanlar</h4>
+                                            <p className="text-sm font-medium text-white">"Projelerim" ve "CV" bölümleri <span className="text-emerald-400">en çok etkileşim alan</span> kısımlar. Proje tıklamalarınız oldukça yüksek.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Dönüşüm Oranı</h4>
-                                            <p className="text-sm font-medium text-white">Ziyaretçilerinizin rehberine ekleme oranı <span className="text-amber-400">%{stats.totalViews > 0 ? ((stats.vCardClicks / stats.totalViews) * 100).toFixed(1) : 0}</span> seviyesinde.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Dönüşüm Durumu</h4>
+                                            <p className="text-sm font-medium text-white">Kişilerin sizi rehberine ekleme oranı <span className="text-amber-400">%{stats.totalViews > 0 ? ((stats.vCardClicks / stats.totalViews) * 100).toFixed(1) : 0}</span>. Bu oldukça sağlıklı bir oran.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1097,8 +1124,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         color="bg-amber-500"
                                     />
                                     <StatBar
-                                        label="İletişim (WA / Tel)"
-                                        count={stats.waClicks + stats.phoneClicks}
+                                        label="İletişim (WA / Tel / E-posta)"
+                                        count={stats.waClicks + stats.phoneClicks} // Simplified
                                         total={stats.totalViews}
                                         color="bg-emerald-500"
                                     />
@@ -1110,23 +1137,36 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <Users className="w-5 h-5 text-indigo-400" /> Son Aktiviteler
                                 </h3>
                                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar">
-                                    {stats.recentAnalytics.map((event: any, i: number) => (
-                                        <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0 hover:bg-white/5 px-3 rounded-2xl transition-all group">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-xl transition-transform group-hover:scale-110 ${event.type === 'view' ? 'bg-white/5 text-white/40' :
-                                                    event.type === 'click_vcard' ? 'bg-indigo-500/10 text-indigo-400' :
-                                                        'bg-primary/10 text-primary'
-                                                    }`}>
-                                                    {event.type === 'view' ? <Eye className="w-4 h-4" /> : <MousePointer2 className="w-4 h-4" />}
+                                    {stats.recentAnalytics.map((event: any, i: number) => {
+                                        const getLabel = (type: string) => {
+                                            if (type === 'view') return 'Sayfa Görüntülendi'
+                                            if (type === 'click_vcard') return 'Rehbere Eklendi (vCard)'
+                                            if (type === 'click_cv') return 'CV Görüntülendi'
+                                            if (type === 'click_product') return 'Proje İncelendi'
+                                            if (type === 'click_whatsapp') return 'WhatsApp Mesajı Gönderildi'
+                                            if (type === 'click_phone') return 'Telefonla Arandı'
+                                            if (type === 'click_email') return 'E-posta Gönderildi'
+                                            return type.replace('click_', '').replace('_', ' ')
+                                        }
+
+                                        return (
+                                            <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0 hover:bg-white/5 px-3 rounded-2xl transition-all group">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`p-2 rounded-xl transition-transform group-hover:scale-110 ${event.type === 'view' ? 'bg-white/5 text-white/40' :
+                                                        event.type === 'click_vcard' ? 'bg-indigo-500/10 text-indigo-400' :
+                                                            event.type.startsWith('click_') ? 'bg-primary/10 text-primary' : 'bg-white/5 text-white'
+                                                        }`}>
+                                                        {event.type === 'view' ? <Eye className="w-4 h-4" /> : <MousePointer2 className="w-4 h-4" />}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold">{getLabel(event.type)}</p>
+                                                        <p className="text-[10px] text-white/40">{new Date(event.createdAt).toLocaleString('tr-TR')}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm font-bold capitalize">{event.type.replace('click_', '').replace('_', ' ')}</p>
-                                                    <p className="text-[10px] text-white/40">{new Date(event.createdAt).toLocaleString('tr-TR')}</p>
-                                                </div>
+                                                {event.value && <span className="text-[10px] bg-white/5 px-2 py-1 rounded-md max-w-[120px] truncate border border-white/5">{event.value}</span>}
                                             </div>
-                                            {event.value && <span className="text-[10px] bg-white/5 px-2 py-1 rounded-md max-w-[120px] truncate border border-white/5">{event.value}</span>}
-                                        </div>
-                                    ))}
+                                        )
+                                    })}
                                     {stats.recentAnalytics.length === 0 && (
                                         <div className="text-center py-20 opacity-40">Henüz aktivite yok.</div>
                                     )}
