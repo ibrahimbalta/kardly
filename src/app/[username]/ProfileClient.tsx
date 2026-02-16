@@ -378,11 +378,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-orange-500"
         },
         pinkwhite: {
-            bg: "bg-[#FFF1F2]",
-            card: "bg-white",
-            text: "text-rose-900",
-            subtext: "text-rose-500",
-            border: "border-rose-200",
+            bg: "bg-rose-200",
+            card: "bg-white/95",
+            text: "text-rose-950",
+            subtext: "text-rose-600",
+            border: "border-rose-300/50",
             glow: "shadow-[0_0_20px_rgba(244,63,94,0.3)]",
             accent: "#f43f5e",
             btn: "bg-white border-rose-200",
@@ -390,14 +390,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-[#f43f5e]"
         },
         greywhite: {
-            bg: "bg-[#F8FAFC]",
-            card: "bg-white",
+            bg: "bg-slate-200",
+            card: "bg-white/95",
             text: "text-slate-900",
-            subtext: "text-slate-500",
+            subtext: "text-slate-600",
             border: "border-slate-300",
             glow: "shadow-[0_0_20px_rgba(71,85,105,0.3)]",
             accent: "#475569",
-            btn: "bg-slate-100 border-slate-300",
+            btn: "bg-white border-slate-300",
             btnText: "text-slate-900",
             icon: "text-[#475569]"
         },
@@ -414,11 +414,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-[#3b82f6]"
         },
         purplexwhite: {
-            bg: "bg-[#FAF5FF]",
-            card: "bg-white",
-            text: "text-purple-900",
-            subtext: "text-purple-500",
-            border: "border-purple-200",
+            bg: "bg-purple-200",
+            card: "bg-white/95",
+            text: "text-purple-950",
+            subtext: "text-purple-600",
+            border: "border-purple-300/50",
             glow: "shadow-[0_0_20px_rgba(168,85,247,0.3)]",
             accent: "#a855f7",
             btn: "bg-white border-purple-200",
@@ -426,11 +426,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-[#a855f7]"
         },
         yellowwhite: {
-            bg: "bg-[#FFFBEB]",
-            card: "bg-white",
-            text: "text-amber-900",
-            subtext: "text-amber-600",
-            border: "border-amber-200",
+            bg: "bg-amber-200",
+            card: "bg-white/95",
+            text: "text-amber-950",
+            subtext: "text-amber-700",
+            border: "border-amber-300/50",
             glow: "shadow-[0_0_20px_rgba(245,158,11,0.3)]",
             accent: "#f59e0b",
             btn: "bg-white border-amber-200",
@@ -438,11 +438,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-[#f59e0b]"
         },
         mintgreen: {
-            bg: "bg-[#F0FDF4]",
-            card: "bg-white",
-            text: "text-emerald-900",
-            subtext: "text-emerald-600",
-            border: "border-emerald-200",
+            bg: "bg-emerald-200",
+            card: "bg-white/95",
+            text: "text-emerald-950",
+            subtext: "text-emerald-700",
+            border: "border-emerald-300/50",
             glow: "shadow-[0_0_20px_rgba(16,185,129,0.3)]",
             accent: "#10b981",
             btn: "bg-white border-emerald-200",
@@ -474,11 +474,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             icon: "text-[#dc2626]"
         },
         ocean_light: {
-            bg: "bg-[#F0F9FF]",
-            card: "bg-white",
-            text: "text-sky-900",
-            subtext: "text-sky-600",
-            border: "border-sky-200",
+            bg: "bg-sky-200",
+            card: "bg-white/95",
+            text: "text-sky-950",
+            subtext: "text-sky-700",
+            border: "border-sky-300/50",
             glow: "shadow-[0_0_20px_rgba(14,165,233,0.3)]",
             accent: "#0ea5e9",
             btn: "bg-white border-sky-200",
@@ -661,7 +661,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Müşteri Yorumları</h3>
                             <button
                                 onClick={() => setIsReviewModalOpen(true)}
-                                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                                className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border transition-all", theme.btn)}
                                 style={{ color: theme.accent }}
                             >
                                 + Yorum Yaz
@@ -738,7 +738,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
                         <button
                             onClick={handleShare}
-                            className="flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl bg-white/5 border border-white/10"
+                            className={cn("flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl border", theme.btn, theme.btnText)}
                         >
                             <Share2 size={20} /> Paylaş
                         </button>
