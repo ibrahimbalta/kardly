@@ -44,7 +44,10 @@ import {
     MapPin,
     ArrowRight,
     Award,
-    Briefcase
+    Briefcase,
+    Phone,
+    Globe,
+    Mail
 
 } from "lucide-react"
 
@@ -484,6 +487,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             />
                                         </div>
                                         <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-emerald-500">
+                                                <Phone className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="WhatsApp / Telefon Numarası"
+                                                value={getSocialUrl("phone")}
+                                                onChange={(e) => updateSocialLink("phone", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-400">
                                                 <Twitter className="w-5 h-5" />
                                             </div>
@@ -504,6 +519,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 placeholder="LinkedIn URL"
                                                 value={getSocialUrl("linkedin")}
                                                 onChange={(e) => updateSocialLink("linkedin", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-emerald-400">
+                                                <Globe className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Web Sitesi URL"
+                                                value={getSocialUrl("website")}
+                                                onChange={(e) => updateSocialLink("website", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
+                                                <MapPin className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Konum (Harita Paylaşım Linki)"
+                                                value={getSocialUrl("location")}
+                                                onChange={(e) => updateSocialLink("location", e.target.value)}
                                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
                                             />
                                         </div>
@@ -1144,16 +1183,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
-                                { id: "premium_modern", name: "Premium Modern", description: "En üst segment bento tasarımı, neon detaylar ve interaktif kartlar.", image: "/templates/premium.jpg", premium: true },
-                                { id: "modern", name: "Modern Animated", description: "Hareketli arka plan ve akışkan tasarım.", image: "/templates/modern.jpg", premium: false },
-                                { id: "bento", name: "Professional Portfolio", description: "Sektör standartlarında bento tasarımı ve iş odaklı akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
-                                { id: "minimal_ios", name: "Minimalist CV", description: "Apple tarzı sade, öz ve profesyonel görünüm.", image: "/templates/minimal.jpg", premium: true },
-                                { id: "luxury", name: "Luxury Executive", description: "Vurgulu altın sarısı ve gece siyahı ile otoriter duruş.", image: "/templates/luxury.jpg", premium: true },
-                                { id: "creative", name: "Executive Showroom", description: "İnteraktif ve modüler profesyonel sunum.", image: "/templates/creative.jpg", premium: true },
-                                { id: "nebula_blue", name: "Nebula Midnight", description: "Uzay temalı, parlayan bento grid tasarımı.", image: "/templates/nebula_blue.jpg", premium: true },
-                                { id: "nebula_purple", name: "Nebula Sunset", description: "Eflatun ve pembe tonlarında fütüristik tasarım.", image: "/templates/nebula_purple.jpg", premium: true },
-                                { id: "nebula_emerald", name: "Nebula Emerald", description: "Zümrüt yeşili ve neon detaylı modern tasarım.", image: "/templates/nebula_emerald.jpg", premium: true },
-                                { id: "business", name: "Corporate Blue", description: "Profesyonel ve güven veren iş tasarımı.", image: "/templates/business.jpg", premium: true },
+                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım.", image: "/templates/neon_black.jpg", premium: true },
+                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım.", image: "/templates/neon_white.jpg", premium: true },
+                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar.", image: "/templates/neon_blue.jpg", premium: true },
+                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm.", image: "/templates/neon_green.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
@@ -1189,116 +1222,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             ))}
                         </div>
 
-                        {profileData.templateId === 'premium_modern' && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="glass p-10 rounded-[3rem] border-primary/20 bg-primary/[0.02] space-y-10"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl">
-                                        <Sparkles size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-black">Premium Şablon Detayları</h3>
-                                        <p className="text-sm text-foreground/50">Bu şablondaki tüm alanları buradan özelleştirebilirsiniz.</p>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {/* Video Settings */}
-                                    <div className="space-y-4">
-                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">Giriş Videosu</h4>
-                                        <div className="space-y-3">
-                                            <input
-                                                type="text"
-                                                placeholder="Kart Başlığı (Örn: Video)"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.videoTitle}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoTitle: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Alt Etiket (Örn: Videoyu İzle)"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.videoLabel}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoLabel: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Video URL (YouTube/Vimeo)"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.videoUrl}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoUrl: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Section Titles */}
-                                    <div className="space-y-4">
-                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">Bölüm Başlıkları</h4>
-                                        <div className="space-y-3">
-                                            <input
-                                                type="text"
-                                                placeholder="Yetenek Radarı Başlığı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.radarTitle}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, radarTitle: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Hizmetlerim Başlığı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.servicesTitle}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, servicesTitle: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Portfolyo Başlığı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.portfolioTitle}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, portfolioTitle: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Contact Section */}
-                                    <div className="space-y-4">
-                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">İletişim Alanı</h4>
-                                        <div className="space-y-3">
-                                            <input
-                                                type="text"
-                                                placeholder="İletişim Başlığı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.contactTitle}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, contactTitle: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="E-posta Buton Yazısı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.emailBtnText}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, emailBtnText: e.target.value })}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Danışmanlık Buton Yazısı"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
-                                                value={premiumConfig.consultBtnText}
-                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, consultBtnText: e.target.value })}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={() => handleSave()}
-                                    className="w-full py-5 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all"
-                                >
-                                    AYARLARI KAYDET VE ÖNİZLE
-                                </button>
-                            </motion.div>
-                        )}
+                        {/* Template specific settings can be added here if needed */}
                     </div>
                 ) : null}
 

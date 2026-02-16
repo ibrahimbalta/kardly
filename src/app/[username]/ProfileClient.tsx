@@ -6,40 +6,21 @@ import {
     MessageCircle,
     Phone,
     Share2,
-    UserPlus,
     Calendar,
     CheckCircle2,
-    ShoppingBag,
     Instagram,
     Twitter,
     Linkedin,
-    ArrowRight,
-    Sparkles,
-    Star,
     Mail,
-    Briefcase,
-    Award,
-    Clock,
     MapPin,
     Globe,
-    Heart,
-    Zap,
-    ChevronDown,
-    ExternalLink,
-    Copy,
-    Check,
-    Play,
-    QrCode,
-    Activity,
-    Shield,
-    Download,
     Smartphone,
-    Plus,
-    FileText
+    Play,
+    Download
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 // ─── TYPES ───────────────────────────────────────────────────────
 
@@ -63,856 +44,6 @@ interface Profile {
     };
     products: { id: string; name: string; description: string; price: number; image: string; link: string }[];
     blocks: { id: string; type: string; content: any; order: number; isActive: boolean }[];
-}
-
-// ─── BLOCK RENDERER ──────────────────────────────────────────────
-
-function DynamicBlocks({ profile, setIsAppointmentOpen }: any) {
-    const blocks = (profile.blocks as any[]) || []
-    if (blocks.length === 0) return null;
-
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mt-10">
-            {blocks.map((block, i) => {
-                switch (block.type) {
-                    case 'skill_radar': return <BlockSkillRadar key={i} profile={profile} />;
-                    case 'portfolio_gallery': return <div key={i} className="col-span-1 md:col-span-2"><BlockPortfolioGallery profile={profile} /></div>;
-                    case 'trust_score': return <BlockTrustScore key={i} profile={profile} />;
-                    case 'timeline_process': return <div key={i} className="col-span-1 md:col-span-2"><BlockTimelineMock profile={profile} /></div>;
-                    case 'social_feed': return <BlockSocialFeed key={i} profile={profile} />;
-                    case 'document_vault': return <BlockDocumentVault key={i} profile={profile} />;
-                    case 'appointment_calendar': return (
-                        <RevealSection key={i} className="col-span-1 md:col-span-2 glass-card p-8 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex items-center justify-between">
-                            <div>
-                                <h3 className="text-xl font-black">Randevu Al</h3>
-                                <p className="text-[10px] font-bold opacity-60">Müsaitlik durumunu kontrol et.</p>
-                            </div>
-                            <button onClick={() => setIsAppointmentOpen(true)} className="bg-white text-indigo-600 px-6 py-3 rounded-2xl font-black text-xs shadow-xl active:scale-95 transition-all">
-                                TAKVİMİ AÇ
-                            </button>
-                        </RevealSection>
-                    );
-                    default: return null;
-                }
-            })}
-        </div>
-    )
-}
-
-// ─── SHARED COMPONENTS ───────────────────────────────────────────
-
-function MeshGradientBG({ light = false }: { light?: boolean }) {
-    return (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F8FAFC]">
-            {/* Soft Glowing Orbs */}
-            <motion.div
-                className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[100px] opacity-40"
-                style={{ background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)' }}
-                animate={{ scale: [1, 1.1, 1], x: [0, 40, 0], y: [0, 40, 0] }}
-                transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-                className="absolute bottom-[20%] right-[-10%] w-[500px] h-[500px] rounded-full blur-[100px] opacity-30"
-                style={{ background: 'linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%)' }}
-                animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0], y: [0, -40, 0] }}
-                transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-                className="absolute top-[20%] right-[10%] w-[300px] h-[300px] rounded-full blur-[80px] opacity-20"
-                style={{ background: 'linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%)' }}
-            />
-            {!light && <div className="absolute inset-0 bg-[#030712]/40" />}
-        </div>
-    )
-}
-
-function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-    const ref = useRef(null)
-    const isInView = useInView(ref, { once: true, margin: "-50px" })
-    return (
-        <motion.div
-            ref={ref}
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
-            className={className}
-        >
-            {children}
-        </motion.div>
-    )
-}
-
-function SkillRadarSVG({ color, data }: { color: string, data: any[] }) {
-    // Default values if data as passed is incomplete or missing
-    const defaultSkills = [
-        { title: "Yaratıcılık", value: 85 },
-        { title: "Teknik", value: 90 },
-        { title: "Hız", value: 75 },
-        { title: "İletişim", value: 95 },
-        { title: "Kalite", value: 80 }
-    ]
-
-    const skills = data && data.length >= 5 ? data.map(s => ({ title: s.title, value: parseInt(s.description) || 85 })) : defaultSkills;
-
-    // Calculate radar path based on values
-    const getPoint = (val: number, angle: number) => {
-        const r = (val / 100) * 40;
-        const x = 50 + r * Math.cos(angle);
-        const y = 50 + r * Math.sin(angle);
-        return `${x} ${y}`;
-    }
-
-    const path = skills.map((s, i) => {
-        const angle = (i * 2 * Math.PI) / skills.length - Math.PI / 2;
-        return (i === 0 ? "M " : "L ") + getPoint(s.value, angle);
-    }).join(" ") + " Z";
-
-    return (
-        <div className="relative w-full aspect-square flex items-center justify-center p-6">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#F1F5F9" strokeWidth="1" />
-                <circle cx="50" cy="50" r="30" fill="none" stroke="#F1F5F9" strokeWidth="1" />
-                <circle cx="50" cy="50" r="20" fill="none" stroke="#F1F5F9" strokeWidth="1" />
-                <circle cx="50" cy="50" r="10" fill="none" stroke="#F1F5F9" strokeWidth="1" />
-
-                {skills.map((_, i) => {
-                    const angle = (i * 2 * Math.PI) / skills.length - Math.PI / 2;
-                    return <line key={i} x1="50" y1="50" x2={50 + 40 * Math.cos(angle)} y2={50 + 40 * Math.sin(angle)} stroke="#F1F5F9" strokeWidth="1" />
-                })}
-
-                <motion.path
-                    d={path}
-                    fill={color}
-                    fillOpacity="0.2"
-                    stroke={color}
-                    strokeWidth="2"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                />
-
-                {skills.map((s, i) => {
-                    const angle = (i * 2 * Math.PI) / skills.length - Math.PI / 2;
-                    const r = 48; // Slightly outside the circles
-                    return (
-                        <text
-                            key={i}
-                            x={50 + r * Math.cos(angle)}
-                            y={50 + r * Math.sin(angle)}
-                            textAnchor="middle"
-                            fontSize="5"
-                            fontWeight="900"
-                            fill="#94A3B8"
-                            className="uppercase"
-                        >
-                            {s.title}
-                        </text>
-                    )
-                })}
-            </svg>
-        </div>
-    )
-}
-
-// ─── MODULE COMPONENTS ──────────────────────────────────────────
-
-function BlockSkillRadar({ profile }: any) {
-    const services = (profile.services as any[]) || []
-    return (
-        <RevealSection delay={0.1} className="col-span-1 glass-card p-4 rounded-[2.5rem] aspect-square relative overflow-hidden flex flex-col items-center border-2 border-white/50 bg-white/40">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Analysis Board</h3>
-            <SkillRadarSVG color="#4f46e5" data={services.slice(4, 9)} />
-        </RevealSection>
-    )
-}
-
-function BlockPortfolioGallery({ profile }: any) {
-    return (
-        <RevealSection className="col-span-2 glass-card p-2 rounded-[2.5rem] relative overflow-hidden group border-2 border-white/50 bg-slate-900 h-[240px]">
-            <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity">
-                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" className="w-full h-full object-cover" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="relative z-10 p-6 h-full flex flex-col justify-end">
-                <div className="flex items-center gap-2 mb-2">
-                    <span className="px-2 py-1 rounded bg-indigo-500 text-[8px] font-black text-white uppercase">Portfolyo</span>
-                    <span className="text-[10px] font-bold text-white/60">12 Yeni Proje</span>
-                </div>
-                <h4 className="text-xl font-black text-white leading-tight mb-4">Interaktif Çalışmalar & Dijital Tasarımlar</h4>
-                <div className="flex gap-2">
-                    {[1, 2, 3].map(i => <div key={i} className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-md border border-white/10" />)}
-                    <button className="ml-auto w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
-                        <ArrowRight size={18} />
-                    </button>
-                </div>
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockTrustScore({ profile }: any) {
-    return (
-        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-600 text-white flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><CheckCircle2 size={20} /></div>
-                <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">TrustScore</span>
-            </div>
-            <div>
-                <div className="text-4xl font-black mb-1">A+</div>
-                <p className="text-[10px] font-bold opacity-80 leading-relaxed">Yüksek müşteri memnuniyeti ve hızlı teslimat performansı.</p>
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockTimeline({ profile }: any) {
-    return (
-        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-white/40 flex flex-col justify-between">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">İŞ SÜRECİ</h3>
-            <div className="space-y-3">
-                {[
-                    { t: 'Analiz', s: 'done' },
-                    { t: 'Tasarım', s: 'active' },
-                    { t: 'Geliştirme', s: 'pending' }
-                ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${step.s === 'done' ? 'bg-green-500' : step.s === 'active' ? 'bg-indigo-500 animate-pulse' : 'bg-slate-200'}`} />
-                        <span className={`text-[11px] font-black ${step.s === 'pending' ? 'text-slate-300' : 'text-slate-800'}`}>{step.t}</span>
-                    </div>
-                ))}
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockTimelineMock({ profile }: any) {
-    return (
-        <RevealSection className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-indigo-50/30 flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Proje Zaman Çizelgesi</h3>
-                <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-[8px] font-black text-indigo-600">CANLI TAKİP</span>
-            </div>
-            <div className="flex items-center gap-2">
-                {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="flex-1 flex flex-col gap-2">
-                        <div className={`h-1.5 rounded-full ${i <= 2 ? 'bg-indigo-500' : 'bg-indigo-200'}`} />
-                        <span className="text-[8px] font-black text-slate-400 uppercase">Aşama {i}</span>
-                    </div>
-                ))}
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockProjectPortfolio({ profile }: any) {
-    const products = profile.products || []
-    return (
-        <RevealSection className="col-span-2 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-white/60 space-y-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Proje Portfolyosu</h3>
-                <span className="text-[10px] font-bold text-indigo-500">Tümünü Gör</span>
-            </div>
-            <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
-                {(products.length > 0 ? products : [
-                    { name: 'Kurye Yönetim Paneli', price: 'Full Stack', image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80' },
-                    { name: 'AI Destekli CRM', price: 'Technical Lead', image: 'https://images.unsplash.com/photo-1551288049-bbbda5366a7a?auto=format&fit=crop&q=80' }
-                ]).map((p: any, i: number) => (
-                    <div key={i} className="min-w-[160px] bg-white rounded-2xl p-3 shadow-sm border border-slate-100">
-                        <img src={p.image} className="w-full h-24 object-cover rounded-xl mb-3" />
-                        <h4 className="text-[11px] font-black text-slate-800 line-clamp-1">{p.name}</h4>
-                        <div className="flex items-center justify-between mt-2">
-                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter opacity-70">{p.price}</span>
-                            {p.link && (
-                                <a href={p.link} target="_blank" className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
-                                    <ExternalLink size={12} />
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockSocialFeed({ profile }: any) {
-    return (
-        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-rose-50/30 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-                <div className="w-8 h-8 bg-rose-500 text-white rounded-xl flex items-center justify-center"><Instagram size={16} /></div>
-                <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">LIVE FEED</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2 mt-4">
-                {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="aspect-square rounded-lg bg-slate-200 overflow-hidden relative group">
-                        <img src={`https://picsum.photos/seed/${i + 10}/200`} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-                        <div className="absolute inset-0 bg-rose-500/10 group-hover:bg-transparent transition-all" />
-                    </div>
-                ))}
-            </div>
-        </RevealSection>
-    )
-}
-
-function BlockDocumentVault({ profile }: any) {
-    return (
-        <RevealSection className="col-span-1 glass-card p-6 rounded-[2.5rem] border-2 border-white/50 bg-slate-50/50 flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-                <div className="w-8 h-8 bg-slate-800 text-white rounded-xl flex items-center justify-center"><FileText size={16} /></div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">DOCS</span>
-            </div>
-            <div className="mt-4 space-y-2">
-                {['Curriculum Vitae', 'Price List 2024'].map((doc, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all cursor-pointer">
-                        <span className="text-[10px] font-black text-slate-600">{doc}</span>
-                        <Download size={12} className="text-slate-300" />
-                    </div>
-                ))}
-            </div>
-        </RevealSection>
-    )
-}
-
-// ─── TEMPLATES ───────────────────────────────────────────────────
-
-function BentoTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: any) {
-    const themeColor = profile.themeColor || "#6366f1"
-    const services = (profile.services as any[]) || []
-    const blocks = (profile.blocks as any[]) || []
-    const serviceColors = ['bg-[#FBBF24]', 'bg-[#60A5FA]', 'bg-[#4ADE80]', 'bg-[#A78BFA]']
-
-    // Eğer hiç blok yoksa varsayılan görünümü oluştur
-    const renderBlocks = () => {
-        if (blocks.length === 0) {
-            return (
-                <div className="grid grid-cols-2 gap-5">
-                    <RevealSection className="col-span-1 glass-card p-5 rounded-[2.5rem] flex flex-col justify-between aspect-square relative overflow-hidden group border-2 border-white/50">
-                        <div className="relative z-10 w-full h-full flex flex-col justify-between">
-                            <div className="relative h-28 w-full rounded-[1.8rem] overflow-hidden shadow-sm">
-                                <img src={profile.user.image || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2"} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                                <div className="absolute bottom-3 left-3 right-3 text-[10px] font-black text-white leading-tight">
-                                    {profile.slogan || "Müşteri Odaklı Çözümler"}
-                                </div>
-                            </div>
-                            <button className="bg-slate-900 text-white py-3 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black shadow-lg transition-all active:scale-95">
-                                <Briefcase size={12} /> View Portfolio
-                            </button>
-                        </div>
-                    </RevealSection>
-
-                    <BlockSkillRadar profile={profile} />
-
-                    <div className="col-span-2 grid grid-cols-4 gap-4">
-                        {(services.slice(0, 4).length > 0 ? services.slice(0, 4) : [{ title: 'Digital' }, { title: 'Design' }, { title: 'Coding' }, { title: 'SEO' }]).map((service, i) => (
-                            <RevealSection key={i} delay={0.1 * i} className={`${serviceColors[i % 4]} h-[72px] rounded-[1.5rem] flex flex-col items-center justify-center text-[10px] text-white font-black shadow-lg hover:brightness-105 transition-all text-center px-1`}>
-                                <div className="bg-white/20 p-1.5 rounded-xl mb-1"><Zap size={10} fill="currentColor" /></div>
-                                <span className="leading-tight">{service.title}</span>
-                            </RevealSection>
-                        ))}
-                    </div>
-
-                    <BlockTrustScore profile={profile} />
-                    <BlockTimeline profile={profile} />
-                </div>
-            )
-        }
-
-        return (
-            <div className="grid grid-cols-2 gap-5">
-                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-            </div>
-        )
-    }
-
-
-    return (
-        <div className="min-h-screen bg-white text-slate-800 p-6 md:p-12 font-sans selection:bg-indigo-100 relative overflow-x-hidden">
-            <MeshGradientBG light />
-            <div className="max-w-[480px] mx-auto relative z-10 space-y-8 pb-10">
-                <header className="flex flex-col items-center text-center space-y-4 pt-10">
-                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative">
-                        <div className="w-32 h-32 rounded-3xl p-1 bg-white shadow-2xl relative z-10 overflow-hidden border-4 border-white">
-                            <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full rounded-2xl object-cover" alt={profile.user.name} />
-                        </div>
-                        <div className="absolute top-2 -right-10 z-20 flex flex-col gap-2">
-                            <div className="bg-indigo-600 px-3 py-1 rounded-lg shadow-xl border border-white/20 flex items-center justify-center">
-                                <span className="text-[10px] font-black text-white">PRO HQ</span>
-                            </div>
-                        </div>
-                    </motion.div>
-                    <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-                        <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">{profile.user.name}</h1>
-                        <p className="text-indigo-600 font-black text-xs uppercase tracking-widest">{profile.occupation || "PROFESSIONAL"}</p>
-                    </motion.div>
-                </header>
-
-                {renderBlocks()}
-
-
-                <div className="flex flex-wrap justify-center gap-4 pt-4">
-                    {profile.socialLinks?.map((l: any, i: number) => (
-                        <a key={i} href={l.url} target="_blank" className="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-slate-600 border border-white/80">
-                            {l.platform === 'instagram' && <Instagram size={20} />}
-                            {l.platform === 'twitter' && <Twitter size={20} />}
-                            {l.platform === 'linkedin' && <Linkedin size={20} />}
-                        </a>
-                    ))}
-                </div>
-
-                <button onClick={handleShare} className="w-full bg-slate-900 text-white py-6 rounded-[2.2rem] font-black shadow-2xl flex items-center justify-center gap-3 hover:bg-slate-800 transition-all text-lg">
-                    <Share2 size={24} /> Get Digital Card
-                </button>
-            </div>
-        </div>
-    )
-}
-
-function BusinessTemplate({ profile, t, setIsAppointmentOpen, lang, handleShare }: any) {
-    return (
-        <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-100">
-            {/* Professional Office Header */}
-            <div className="h-48 bg-slate-900 relative">
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
-                <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 md:left-24 md:translate-x-0">
-                    <div className="w-32 h-32 rounded-2xl border-4 border-white shadow-xl overflow-hidden bg-white">
-                        <img src={profile.user.image} className="w-full h-full object-cover" />
-                    </div>
-                </div>
-            </div>
-
-            <div className="max-w-4xl mx-auto px-6 pt-20 pb-20">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tight">{profile.user.name}</h1>
-                        <p className="text-blue-600 font-black flex items-center gap-2 mt-1">
-                            <Shield size={16} /> {profile.occupation || "Independent Professional"}
-                        </p>
-                        <div className="flex items-center gap-3 mt-4 text-slate-400 text-sm font-bold">
-                            <span className="flex items-center gap-1"><MapPin size={14} /> {profile.phone || "Global Office"}</span>
-                            <span className="flex items-center gap-1"><Globe size={14} /> Available Worldwide</span>
-                        </div>
-                    </div>
-                    <div className="flex gap-3">
-                        <button onClick={handleShare} className="px-6 py-3 rounded-xl border-2 border-slate-200 font-black text-sm hover:bg-slate-50 transition-all flex items-center gap-2">
-                            <Share2 size={16} /> SHARE
-                        </button>
-                        <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-3 rounded-xl bg-slate-900 text-white font-black text-sm shadow-xl shadow-slate-200 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-                            <Calendar size={16} /> START PROJECT
-                        </button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Column: Office Mission */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <section className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-                            <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Activity size={16} className="text-blue-600" /> Mission & Bio
-                            </h2>
-                            <p className="text-lg font-bold text-slate-700 leading-relaxed italic mb-6">"{profile.slogan}"</p>
-                            <p className="text-slate-500 font-medium leading-relaxed">{profile.bio || "No bio information provided yet."}</p>
-                        </section>
-
-                        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {profile.services?.slice(0, 4).map((s: any, i: number) => (
-                                <div key={i} className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-all text-center group">
-                                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                                        <Zap size={20} fill="currentColor" />
-                                    </div>
-                                    <h3 className="font-black text-[11px] uppercase tracking-tight text-slate-800">{s.title}</h3>
-                                </div>
-                            ))}
-                        </section>
-
-                        {/* Awards/Corporate Stats Segment */}
-                        <div className="grid grid-cols-3 gap-4">
-                            {[
-                                { label: 'Projects', val: '120+', icon: <Briefcase size={16} /> },
-                                { label: 'Experience', val: '8 YRS', icon: <Clock size={16} /> },
-                                { label: 'Certificates', val: '15+', icon: <Award size={16} /> }
-                            ].map((stat, i) => (
-                                <div key={i} className="bg-slate-900 text-white p-6 rounded-3xl flex flex-col items-center text-center">
-                                    <div className="text-white/40 mb-2">{stat.icon}</div>
-                                    <div className="text-2xl font-black">{stat.val}</div>
-                                    <div className="text-[9px] font-extrabold opacity-40 uppercase tracking-widest">{stat.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-
-                    {/* Right Column: Office Contacts */}
-                    <div className="space-y-6">
-                        <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-2xl shadow-blue-200">
-                            <h3 className="font-black text-lg mb-4">Direct Office Line</h3>
-                            <div className="space-y-4">
-                                {profile.socialLinks?.map((l: any, i: number) => (
-                                    <a key={i} href={l.url} className="flex items-center justify-between p-4 bg-white/10 rounded-2xl hover:bg-white/20 transition-all border border-white/10">
-                                        <div className="flex items-center gap-3">
-                                            {l.platform === 'instagram' && <Instagram size={18} />}
-                                            {l.platform === 'linkedin' && <Linkedin size={18} />}
-                                            {l.platform === 'twitter' && <Twitter size={18} />}
-                                            <span className="font-black text-xs uppercase">{l.platform}</span>
-                                        </div>
-                                        <ArrowRight size={14} />
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="p-6 border border-slate-100 rounded-3xl bg-white text-center">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Scan vCard</p>
-                            <div className="w-40 h-40 bg-slate-50 rounded-2xl mx-auto flex items-center justify-center p-4">
-                                <QrCode size={120} className="text-slate-900 opacity-20" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function LuxuryTemplate({ profile, handleShare, setIsAppointmentOpen }: any) {
-    return (
-        <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center p-6 text-center font-serif">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }} className="fixed inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000_100%)] z-0 pointer-events-none" />
-            <div className="relative z-10 space-y-8 max-w-lg">
-                <div className="w-32 h-32 rounded-full border-2 border-[#D4AF37] p-1 mx-auto relative overflow-hidden">
-                    <img src={profile.user.image} className="w-full h-full rounded-full object-cover grayscale Contrast-125" />
-                </div>
-                <div>
-                    <h1 className="text-4xl font-light tracking-[0.2em] uppercase text-[#D4AF37]">{profile.user.name}</h1>
-                    <p className="text-xs tracking-[0.4em] opacity-40 mt-4 uppercase font-sans font-bold">{profile.occupation || "ARTISAN"}</p>
-                </div>
-                <p className="text-lg italic opacity-80 leading-relaxed font-sans font-bold">"{profile.slogan}"</p>
-                <div className="flex gap-8 justify-center opacity-30">
-                    <button onClick={handleShare} className="hover:opacity-100 transition-all"><Share2 size={24} /></button>
-                    <Smartphone size={24} />
-                    <Mail size={24} />
-                </div>
-                <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mt-12" />
-                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-
-                <p className="text-[10px] uppercase tracking-widest opacity-20 font-sans font-black">Private Selection by Kardly</p>
-            </div>
-        </div>
-    )
-}
-
-function MinimalIOSTemplate({ profile, handleShare, setIsAppointmentOpen }: any) {
-    return (
-        <div className="min-h-screen bg-[#F2F2F7] text-black font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif] p-6">
-            <div className="max-w-md mx-auto pt-16 space-y-6">
-                <div className="bg-white rounded-[2.5rem] p-8 shadow-sm flex flex-col items-center text-center space-y-4">
-                    <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-slate-50 shadow-inner">
-                        <img src={profile.user.image} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight">{profile.user.name}</h1>
-                        <p className="text-slate-400 font-semibold">{profile.occupation || "Apple Enthusiast"}</p>
-                    </div>
-                    <div className="flex gap-4 w-full pt-4">
-                        <button onClick={handleShare} className="flex-1 bg-[#007AFF] text-white py-3 rounded-2xl font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all">Siri Suggests</button>
-                        <button className="flex-1 bg-white border border-slate-100 text-black py-3 rounded-2xl font-bold shadow-sm active:scale-95 transition-all">Connect</button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    {profile.services?.slice(0, 4).map((s: any, i: number) => (
-                        <div key={i} className="bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-2 border border-white/40">
-                            <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-blue-500">
-                                <Zap size={20} fill="currentColor" />
-                            </div>
-                            <span className="text-[11px] font-black uppercase text-slate-800 tracking-tight">{s.title}</span>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="bg-white rounded-[2.5rem] p-8 shadow-sm">
-                    <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest mb-4">About Me</h3>
-                    <p className="text-slate-600 font-medium leading-relaxed">{profile.bio}</p>
-                </div>
-
-                <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-            </div>
-        </div>
-    )
-}
-
-function CreativeTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
-    const blocks = (profile.blocks as any[]) || []
-    const services = (profile.services as any[]) || []
-
-    return (
-        <div className="min-h-screen bg-[#020617] text-white selection:bg-indigo-500/30 font-sans overflow-x-hidden">
-            {/* Top-Tier Immersive Background */}
-            <div className="fixed inset-0 z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[120vw] h-[120vw] rounded-full bg-indigo-600/10 blur-[150px] animate-pulse pointer-events-none" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[100vw] h-[100vw] rounded-full bg-purple-600/10 blur-[150px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-100 pointer-events-none mix-blend-overlay" />
-            </div>
-
-            {/* Dynamic Glass Navigation */}
-            <motion.header
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-[420px]"
-            >
-                <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-full px-5 py-2.5 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-2xl border-2 border-indigo-500/50 p-0.5 overflow-hidden rotate-3">
-                            <img src={profile.user.image} className="w-full h-full object-cover rounded-xl" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-[11px] font-black uppercase tracking-tight truncate max-w-[120px]">{profile.user.name}</span>
-                            <div className="flex items-center gap-1">
-                                <span className="w-1 h-1 bg-green-500 rounded-full animate-pulse" />
-                                <span className="text-[7px] font-bold opacity-40 uppercase tracking-widest">Available for Hire</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </motion.header>
-
-            <main className="relative z-10 pt-40 pb-32 px-6 max-w-xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="space-y-10"
-                >
-                    {/* Visual Intro Area */}
-                    <section className="text-center space-y-6">
-                        <div className="space-y-3">
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="text-6xl font-black tracking-tighter bg-gradient-to-b from-white via-white to-white/20 bg-clip-text text-transparent leading-[0.9]"
-                            >
-                                Executive <br /> Portfolio.
-                            </motion.h1>
-                            <p className="text-indigo-400 font-black uppercase tracking-[0.4em] text-[10px]">{profile.occupation || "PROFESSIONAL SPECIALIST"}</p>
-                        </div>
-                        <p className="text-white/50 text-sm font-medium leading-relaxed max-w-[340px] mx-auto italic">
-                            "{profile.slogan || "Stratejik vizyon ve mükemmeliyetçi yaklaşımla dijital dünyada fark yaratıyoruz."}"
-                        </p>
-                    </section>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Bio Card - High Intensity Glass */}
-                        <RevealSection className="col-span-2 bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-10 rounded-[4rem] relative overflow-hidden group">
-                            <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/20 blur-[100px] group-hover:bg-indigo-500/40 transition-all duration-1000" />
-                            <div className="relative z-10 space-y-6">
-                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-                                    <Sparkles size={24} className="text-indigo-400" />
-                                </div>
-                                <h2 className="text-3xl font-black italic">Hakkımda.</h2>
-                                <p className="text-white/60 text-base leading-relaxed font-bold">{profile.bio || "Stratejik vizyon ve mühendislik yaklaşımıyla dijital deneyimler geliştiriyorum."}</p>
-                                <div className="flex gap-4 pt-4">
-                                    <button onClick={() => setIsAppointmentOpen(true)} className="px-8 py-4 bg-indigo-600 text-white text-[11px] font-black rounded-3xl hover:bg-white hover:text-black transition-all shadow-2xl">BANA ULAŞIN</button>
-                                    <button onClick={handleShare} className="w-14 h-14 border border-white/10 rounded-3xl flex items-center justify-center hover:bg-white/5 transition-all"><Share2 size={20} /></button>
-                                </div>
-                            </div>
-                        </RevealSection>
-
-                        {/* Dynamic Blocks Layer */}
-                        <div className="col-span-2">
-                            <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-                        </div>
-                    </div>
-
-                    {/* Expertise Tag Cloud */}
-                    <section className="pt-10 space-y-4">
-                        <h3 className="text-[10px] font-black text-white/30 uppercase tracking-widest text-center">Ana Yetkinlikler</h3>
-                        <div className="flex flex-wrap justify-center gap-3">
-                            {services.map((s, i) => (
-                                <div key={i} className="px-5 py-2 bg-white/5 border border-white/5 rounded-full text-[10px] font-bold hover:bg-white/10 transition-all cursor-default text-indigo-300">
-                                    {s.title}
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </motion.div>
-
-                {/* Footer Social Dock */}
-                <section className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-[440px] flex gap-3">
-                    <button
-                        onClick={() => setIsAppointmentOpen(true)}
-                        className="flex-1 bg-white text-black h-16 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl hover:bg-indigo-600 hover:text-white transition-all active:scale-95"
-                    >
-                        İLETİŞİME GEÇİN
-                    </button>
-                    <div className="flex bg-black/40 backdrop-blur-3xl p-2 rounded-[2rem] border border-white/10 shadow-2xl">
-                        {profile.socialLinks?.slice(0, 3).map((l: any, i: number) => (
-                            <a key={i} href={l.url} className="w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all text-white/60 hover:text-white">
-                                {l.platform === 'instagram' && <Instagram size={18} />}
-                                {l.platform === 'linkedin' && <Linkedin size={18} />}
-                                {l.platform === 'twitter' && <Twitter size={18} />}
-                            </a>
-                        ))}
-                    </div>
-                </section>
-            </main>
-        </div>
-    )
-}
-
-function NebulaTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
-    const blocks = (profile.blocks as any[]) || []
-    const services = (profile.services as any[]) || []
-    const templateId = profile.templateId || 'nebula_blue'
-
-    const schemes: any = {
-        nebula_blue: { primary: '#0ea5e9', secondary: '#6366f1', bg: 'bg-[#030712]', glow: 'shadow-[0_0_30px_rgba(14,165,233,0.3)]' },
-        nebula_purple: { primary: '#d946ef', secondary: '#8b5cf6', bg: 'bg-[#0f0715]', glow: 'shadow-[0_0_30px_rgba(217,70,239,0.3)]' },
-        nebula_emerald: { primary: '#10b981', secondary: '#06b6d4', bg: 'bg-[#060e0d]', glow: 'shadow-[0_0_30px_rgba(16,185,129,0.3)]' }
-    }
-    const theme = schemes[templateId] || schemes.nebula_blue
-
-    return (
-        <div className={cn("min-h-screen text-white font-sans p-6 md:p-12 relative overflow-hidden", theme.bg)}>
-            {/* Space/Nebula Background */}
-            <div className="fixed inset-0 z-0">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20" />
-                <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20" style={{ background: theme.primary }} />
-                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20" style={{ background: theme.secondary }} />
-            </div>
-
-            <div className="relative z-10 max-w-6xl mx-auto space-y-8">
-                {/* Header */}
-                <header className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10 pb-8">
-                    <h1 className="text-3xl font-black tracking-[0.3em] uppercase" style={{ color: theme.primary }}>NEBULA</h1>
-                    <nav className="flex items-center gap-6 text-[10px] font-black tracking-widest text-white/40">
-                        <button onClick={handleShare} className="hover:text-white flex items-center gap-2 transition-colors"><Share2 size={14} /> SHARE</button>
-                        <button className="hover:text-white flex items-center gap-2 transition-colors"><Briefcase size={14} /> CASE</button>
-                        <button className="hover:text-white flex items-center gap-2 transition-colors"><Zap size={14} /> SERVICES</button>
-                        <button onClick={() => setIsAppointmentOpen(true)} className="px-6 py-2 border border-white/10 rounded-full hover:bg-white hover:text-black transition-all">CONTACT</button>
-                    </nav>
-                </header>
-
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                    {/* Top Row */}
-                    <RevealSection className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 flex items-center justify-center relative overflow-hidden group">
-                        <div className="relative">
-                            <div className="absolute inset-[-10px] rounded-full blur-xl opacity-0 group-hover:opacity-50 transition-all duration-700" style={{ background: theme.primary }} />
-                            <div className="w-48 h-48 rounded-full p-1 border-2 relative z-10" style={{ borderColor: theme.primary }}>
-                                <img src={profile.user.image} className="w-full h-full object-cover rounded-full" />
-                            </div>
-                        </div>
-                    </RevealSection>
-
-                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-4">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Yetenek Analizi</span>
-                        <div className="h-48">
-                            <SkillRadarSVG color={theme.primary} data={services.slice(0, 5)} />
-                        </div>
-                    </RevealSection>
-
-                    <RevealSection delay={0.2} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-4">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Hakkımda</span>
-                        <h2 className="text-2xl font-bold">Bio.</h2>
-                        <p className="text-sm text-white/60 leading-relaxed font-medium">
-                            {profile.bio || "Crafting digital universes with AI and modern architecture."}
-                        </p>
-                    </RevealSection>
-
-                    {/* Mid Row */}
-                    <RevealSection className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-10 flex flex-col justify-between group">
-                        <div>
-                            <h2 className="text-4xl font-black mb-2" style={{ color: theme.primary }}>{profile.user.name}</h2>
-                            <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">{profile.occupation}</p>
-                        </div>
-                        <button onClick={() => {/* Watch Video Logic */ }} className="mt-8 bg-cyan-400 group-hover:animate-pulse text-black py-4 rounded-3xl font-black text-xs flex items-center justify-center gap-3 transition-all active:scale-95">
-                            <Play size={16} fill="currentColor" /> VİDEOYU İZLE
-                        </button>
-                    </RevealSection>
-
-                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Uzmanlık Alanları</span>
-                        <div className="space-y-4">
-                            {services.slice(0, 3).map((s, i) => (
-                                <div key={i} className="flex items-center gap-4 text-sm font-bold group/item">
-                                    <Star size={16} className="transition-colors" style={{ color: theme.primary }} />
-                                    <span className="group-hover/item:translate-x-1 transition-transform">{s.title}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </RevealSection>
-
-                    <RevealSection delay={0.2} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Services</span>
-                        <div className="space-y-4">
-                            {services.slice(3, 6).map((s, i) => (
-                                <div key={i} className="flex items-center gap-4 text-sm font-bold group/item">
-                                    <Zap size={16} className="transition-colors" style={{ color: theme.primary }} />
-                                    <span className="group-hover/item:translate-x-1 transition-transform">{s.title}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </RevealSection>
-
-                    {/* Bottom Row */}
-                    <RevealSection className="md:col-span-8 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-6 overflow-hidden">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Portfolyo İstatistikleri</span>
-                            <div className="flex gap-4">
-                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ background: theme.primary }} /> <span className="text-[10px] opacity-40 uppercase">Görüntüleme</span></div>
-                            </div>
-                        </div>
-                        <div className="h-40 w-full relative">
-                            {/* Stylized Line Graph using SVG */}
-                            <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40">
-                                <path
-                                    d="M 0 35 L 10 10 L 25 30 L 40 15 L 55 35 L 70 20 L 85 30 L 100 10"
-                                    fill="none"
-                                    stroke={theme.primary}
-                                    strokeWidth="1.5"
-                                    className="drop-shadow-[0_0_8px_rgba(14,165,233,0.5)]"
-                                />
-                                {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(x => (
-                                    <line key={x} x1={x} y1="38" x2={x} y2="40" stroke="white" strokeOpacity="0.1" />
-                                ))}
-                            </svg>
-                            <p className="text-[9px] text-white/20 mt-4 leading-relaxed max-w-[400px]">
-                                Yapay zeka veri modelleri ile güçlendirilmiş portfolyo etkileşim analizi.
-                                Son 30 günlük verileri kapsar.
-                            </p>
-                        </div>
-                    </RevealSection>
-
-                    <RevealSection delay={0.1} className="md:col-span-4 bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-8 flex flex-col justify-between">
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Social Media</span>
-                        <div className="flex justify-between">
-                            {profile.socialLinks?.slice(0, 4).map((l: any, i: number) => (
-                                <a key={i} href={l.url} target="_blank" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all">
-                                    {l.platform === 'linkedin' && <Linkedin size={20} />}
-                                    {l.platform === 'instagram' && <Instagram size={20} />}
-                                    {l.platform === 'twitter' && <Twitter size={20} />}
-                                    {l.platform === 'github' && <Smartphone size={20} />}
-                                </a>
-                            ))}
-                            <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center border-dashed">
-                                <ArrowRight size={14} className="opacity-20" />
-                            </div>
-                        </div>
-                        <button className="w-full py-4 bg-white/5 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3">
-                            Portfolyo'yu incele <ArrowRight size={16} />
-                        </button>
-                    </RevealSection>
-                </div>
-
-                <div className="mt-10">
-                    <DynamicBlocks profile={profile} setIsAppointmentOpen={setIsAppointmentOpen} />
-                </div>
-            </div>
-            <footer className="pt-20 pb-12 text-center text-[10px] font-black text-white/10 tracking-[0.5em] uppercase">
-                Nebula Series by Kardly PRO
-            </footer>
-        </div>
-    )
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -943,17 +74,11 @@ export default function ProfileClient({ profile }: { profile: any }) {
     // Template Selector Logic
     const renderTemplate = () => {
         switch (profile.templateId) {
-            case "bento": return <PremiumModernTemplate {...props} />;
-            case "business": return <BusinessTemplate {...props} />;
-            case "luxury": return <LuxuryTemplate {...props} />;
-            case "creative": return <CreativeTemplate {...props} />;
-            case "minimal_ios": return <MinimalIOSTemplate {...props} />;
-            case "nebula_blue": return <NebulaTemplate {...props} />;
-            case "nebula_purple": return <NebulaTemplate {...props} />;
-            case "nebula_emerald": return <NebulaTemplate {...props} />;
-            case "modern": return <PremiumModernTemplate {...props} />;
-            case "premium_modern": return <PremiumModernTemplate {...props} />;
-            default: return <PremiumModernTemplate {...props} />;
+            case "neon_black": return <NeonModernTemplate {...props} colorScheme="black" />;
+            case "neon_white": return <NeonModernTemplate {...props} colorScheme="white" />;
+            case "neon_blue": return <NeonModernTemplate {...props} colorScheme="blue" />;
+            case "neon_green": return <NeonModernTemplate {...props} colorScheme="green" />;
+            default: return <NeonModernTemplate {...props} colorScheme="black" />;
         }
     }
 
@@ -978,261 +103,182 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
-    const services = (profile.services as any[]) || []
-    const products = (profile.products as any[]) || []
-    const config = profile.blocks?.find((b: any) => b.type === 'template_config')?.content || {
-        videoTitle: "Video",
-        videoLabel: "Tanıtım Videomu İzle",
-        videoUrl: "",
-        radarTitle: "Yetenek Pusulası",
-        servicesTitle: "Hizmetlerim",
-        portfolioTitle: "Çalışmalarım",
-        contactTitle: "İletişime Geç",
-        emailBtnText: "E-posta Gönder",
-        consultBtnText: "Ücretsiz Danışma"
+function NeonModernTemplate({ profile, colorScheme, handleShare, setIsAppointmentOpen }: any) {
+    const theme = {
+        black: {
+            bg: "bg-[#030712]",
+            card: "bg-black/40",
+            text: "text-white",
+            subtext: "text-white/60",
+            border: "border-white/10",
+            glow: "shadow-[0_0_20px_rgba(14,165,233,0.5)]",
+            accent: "#0ea5e9", // Blue glow
+            btn: "bg-black/60 border-white/20",
+            btnText: "text-white",
+            icon: "text-[#0ea5e9]"
+        },
+        white: {
+            bg: "bg-[#F8FAFC]",
+            card: "bg-white",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-slate-200",
+            glow: "shadow-[0_0_20px_rgba(59,130,246,0.3)]",
+            accent: "#3b82f6",
+            btn: "bg-slate-50 border-slate-200",
+            btnText: "text-slate-900",
+            icon: "text-[#3b82f6]"
+        },
+        blue: {
+            bg: "bg-[#0c1e35]",
+            card: "bg-[#0f2a4a]/40",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/20",
+            glow: "shadow-[0_0_20px_rgba(56,189,248,0.5)]",
+            accent: "#38bdf8",
+            btn: "bg-[#0f2a4a]/60 border-blue-500/30",
+            btnText: "text-white",
+            icon: "text-[#38bdf8]"
+        },
+        green: {
+            bg: "bg-[#06140e]",
+            card: "bg-[#0a1f16]/40",
+            text: "text-white",
+            subtext: "text-green-200/60",
+            border: "border-green-500/20",
+            glow: "shadow-[0_0_20px_rgba(34,197,94,0.5)]",
+            accent: "#22c55e",
+            btn: "bg-[#0a1f16]/60 border-green-500/30",
+            btnText: "text-white",
+            icon: "text-[#22c55e]"
+        }
+    }[colorScheme as 'black' | 'white' | 'blue' | 'green'] || {
+        bg: "bg-[#030712]",
+        card: "bg-black/40",
+        text: "text-white",
+        subtext: "text-white/60",
+        border: "border-white/10",
+        glow: "shadow-[0_0_20px_rgba(14,165,233,0.5)]",
+        accent: "#0ea5e9",
+        btn: "bg-black/60 border-white/20",
+        btnText: "text-white",
+        icon: "text-[#0ea5e9]"
     }
 
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-    useEffect(() => {
-        const handleMouse = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY })
-        window.addEventListener('mousemove', handleMouse)
-        return () => window.removeEventListener('mousemove', handleMouse)
-    }, [])
+    const socialLinks = profile.socialLinks || []
 
-    const getYouTubeID = (url: string) => {
-        const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url?.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
-    };
-
-    const videoId = getYouTubeID(config.videoUrl);
-    const thumbUrl = videoId
-        ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-        : "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80";
+    const actions = [
+        { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
+        { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
+    ].filter(a => a.active)
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] text-slate-900 font-sans selection:bg-indigo-100 relative overflow-x-hidden p-4 md:p-10">
-            {/* Interactive Glow Background */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <motion.div
-                    animate={{
-                        x: mousePos.x - 400,
-                        y: mousePos.y - 400
-                    }}
-                    transition={{ type: "spring", damping: 30, stiffness: 200 }}
-                    className="absolute w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[120px] mix-blend-multiply opacity-50"
-                />
-                <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-cyan-100/40 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-[10%] right-[5%] w-64 h-64 bg-purple-100/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] opacity-20" />
+        <div className={cn("min-h-screen font-sans flex items-center justify-center p-4 relative overflow-hidden", theme.bg)}>
+            {/* Background elements */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
             </div>
 
-            <div className="max-w-6xl mx-auto relative z-10 space-y-12">
-                {/* Header Navbar */}
-                <header className="flex justify-between items-center bg-white/40 backdrop-blur-xl border border-white/80 rounded-[2.5rem] px-8 py-4 shadow-sm">
-                    <h1 className="text-2xl font-black tracking-tighter text-slate-900">{profile.user.name}</h1>
-                    <div className="flex items-center gap-3">
-                        <button onClick={handleShare} className="w-10 h-10 bg-[#4ADE80] rounded-full flex items-center justify-center text-white shadow-lg shadow-green-200 hover:scale-110 transition-transform">
-                            <Share2 size={18} />
-                        </button>
-                        <button onClick={handleShare} className="hidden md:block px-5 py-2.5 bg-[#FBBF24] text-white font-black text-xs rounded-full shadow-lg shadow-yellow-100 uppercase tracking-widest hover:scale-105 transition-transform">Paylaş</button>
-                        <button className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-200 hover:scale-110 transition-transform">
-                            <UserPlus size={18} />
-                        </button>
-                    </div>
-                </header>
-
-                {/* Main Bento Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                    {/* Left: Video Card */}
-                    <motion.div
-                        whileHover={{ y: -10 }}
-                        className="bg-[#1A1F2B] rounded-[3rem] p-8 aspect-square flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-cyan-400/20 border-t-2 border-cyan-400/30"
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,1)]" />
-                        <h4 className="text-2xl font-black text-white italic">{config.videoTitle}</h4>
-
-                        <div
-                            onClick={() => config.videoUrl && window.open(config.videoUrl, '_blank')}
-                            className="relative group cursor-pointer aspect-video rounded-3xl overflow-hidden bg-slate-800 shadow-inner"
-                        >
-                            <img
-                                src={thumbUrl}
-                                className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
-                                onError={(e: any) => e.target.src = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80"}
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center group-hover:bg-white/30 transition-all shadow-2xl"
-                                >
-                                    <Play fill="white" className="text-white ml-1" />
-                                </motion.div>
-                            </div>
-                        </div>
-
-                        <p className="text-white/60 font-black text-center text-[10px] uppercase tracking-[0.3em]">{config.videoLabel}</p>
-                    </motion.div>
-
-                    {/* Center: Profile Piece */}
-                    <div className="flex flex-col items-center gap-8 py-10 order-first lg:order-none">
-                        <div className="relative w-80 h-80 flex items-center justify-center">
-                            {/* Animated colorful ring */}
-                            <svg className="absolute inset-0 w-full h-full -rotate-90">
-                                <circle cx="160" cy="160" r="150" fill="none" stroke="#E2E8F0" strokeWidth="4" strokeDasharray="10 20" className="opacity-20" />
-                                <motion.circle
-                                    cx="160" cy="160" r="140"
-                                    fill="none" stroke="url(#paint0_linear_prem)"
-                                    strokeWidth="12"
-                                    strokeDasharray="880"
-                                    initial={{ strokeDashoffset: 880 }}
-                                    animate={{ strokeDashoffset: 220 }}
-                                    transition={{ duration: 3, ease: "easeOut" }}
-                                />
-                                <defs>
-                                    <linearGradient id="paint0_linear_prem" x1="0" y1="0" x2="320" y2="320" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#FACC15" />
-                                        <stop offset="0.33" stopColor="#A3E635" />
-                                        <stop offset="0.66" stopColor="#22D3EE" />
-                                        <stop offset="1" stopColor="#D946EF" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+            <main className="relative z-10 w-full max-w-[420px] space-y-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={cn("rounded-[3rem] border p-8 space-y-8 backdrop-blur-3xl shadow-2xl", theme.card, theme.border)}
+                >
+                    {/* Profile Section */}
+                    <div className="flex flex-col items-center text-center space-y-6">
+                        <div className="relative group">
                             <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ type: "spring", stiffness: 100, damping: 15 }}
-                                className="w-[280px] h-[280px] rounded-full overflow-hidden border-[12px] border-white shadow-2xl relative z-10 group"
+                                animate={{
+                                    boxShadow: [
+                                        `0 0 0px ${theme.accent}00`,
+                                        `0 0 20px ${theme.accent}40`,
+                                        `0 0 0px ${theme.accent}00`
+                                    ]
+                                }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="w-32 h-32 rounded-full p-1 border-2 relative z-10 overflow-hidden"
+                                style={{ borderColor: theme.accent }}
                             >
-                                <img src={profile.user.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full rounded-full object-cover" />
                             </motion.div>
+                            <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                         </div>
-                        <div className="text-center space-y-4">
-                            <motion.h2
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 }}
-                                className="text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 max-w-sm"
+
+                        <div>
+                            <h1 className={cn("text-3xl font-black tracking-tight", theme.text)}>{profile.user.name}</h1>
+                            <div className="flex items-center justify-center gap-2 mt-2">
+                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                                <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>{profile.occupation || "WEB DEVELOPER"}</p>
+                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                            </div>
+                            {profile.slogan && <p className={cn("text-sm font-bold mt-3 opacity-60", theme.text)}>“{profile.slogan}”</p>}
+                        </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="space-y-3">
+                        {actions.map((action, i) => (
+                            <motion.a
+                                key={i}
+                                href={action.href}
+                                target="_blank"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                whileHover={{ scale: 1.02, x: 5 }}
+                                className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg", theme.btn, theme.border)}
                             >
-                                {profile.slogan || "Geleceği Tasarlamaya Bugün Başlayın"}
-                            </motion.h2>
-                            {profile.occupation && (
-                                <motion.p
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.7 }}
-                                    className="text-indigo-600 font-black uppercase text-xs tracking-[0.4em] italic"
-                                >
-                                    {profile.occupation}
-                                </motion.p>
-                            )}
-                        </div>
+                                <div style={{ color: theme.accent }}>{action.icon}</div>
+                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                            </motion.a>
+                        ))}
                     </div>
 
-                    {/* Right: Skill Radar */}
-                    <motion.div
-                        whileHover={{ y: -10 }}
-                        className="bg-[#1A1F2B] rounded-[3rem] p-8 aspect-square relative overflow-hidden shadow-2xl shadow-lime-400/20 border-t-2 border-lime-400/30"
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-lime-400 shadow-[0_0_20px_rgba(163,230,53,1)]" />
-                        <h4 className="text-xl font-black text-white italic mb-4">{config.radarTitle}</h4>
-                        <div className="w-full h-full flex items-center justify-center p-2 opacity-90 overflow-hidden">
-                            <SkillRadarSVG color="#a3e635" data={services.slice(0, 5)} />
-                        </div>
-                    </motion.div>
-                </div>
+                    {/* Bio Paragraph */}
+                    {profile.bio && (
+                        <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
+                            {profile.bio}
+                        </p>
+                    )}
 
-                {/* Services Section */}
-                <div className="space-y-10 pt-10">
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="w-12 h-1 bg-indigo-600 rounded-full" />
-                        <h3 className="text-3xl font-black text-slate-900 tracking-tight">{config.servicesTitle}</h3>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                        {(services.length > 0 ? services : [1, 2, 3, 4]).slice(0, 4).map((s: any, i: number) => {
-                            const colors = [
-                                { bg: 'bg-[#F97316]', shadow: 'shadow-orange-200', text: 'Strateji' },
-                                { bg: 'bg-[#3B82F6]', shadow: 'shadow-blue-200', text: 'Tasarım' },
-                                { bg: 'bg-[#22C55E]', shadow: 'shadow-green-200', text: 'Yazılım' },
-                                { bg: 'bg-[#A855F7]', shadow: 'shadow-purple-200', text: 'Yönetim' }
-                            ]
-                            const c = colors[i % 4]
+                    {/* Social Icons */}
+                    <div className="flex justify-center gap-6 pt-2">
+                        {socialLinks.slice(0, 4).map((l: any, i: number) => {
+                            const platform = l.platform.toLowerCase()
                             return (
-                                <motion.div
-                                    key={i}
-                                    whileHover={{ scale: 1.05, y: -5 }}
-                                    className={cn("p-8 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 text-white shadow-2xl transition-all cursor-pointer relative overflow-hidden group", c.bg, c.shadow)}
-                                >
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform">
-                                        <Zap size={64} />
-                                    </div>
-                                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 relative z-10">
-                                        <Zap size={28} fill="white" />
-                                    </div>
-                                    <div className="text-center relative z-10">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1 block">{c.text}</span>
-                                        <span className="text-sm font-black uppercase tracking-tight leading-tight">{s.title || "Premium Hizmet"}</span>
-                                    </div>
-                                </motion.div>
+                                <a key={i} href={l.url} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
+                                    {platform === 'instagram' && <Instagram size={24} />}
+                                    {platform === 'linkedin' && <Linkedin size={24} />}
+                                    {platform === 'twitter' && <Twitter size={24} />}
+                                    {platform === 'github' && <Smartphone size={24} />}
+                                    {platform === 'youtube' && <Play size={24} />}
+                                </a>
                             )
                         })}
                     </div>
-                </div>
 
-                {/* Bottom Row: Portfolio and Contact */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 pt-10 pb-24">
-                    {/* Works Card */}
-                    <motion.div
-                        whileHover={{ y: -10 }}
-                        className="bg-[#1A1F2B] rounded-[4rem] p-10 relative overflow-hidden shadow-2xl shadow-pink-500/20 border-t-2 border-pink-400/30 flex flex-col gap-8 lg:col-span-1"
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-pink-500 shadow-[0_0_20px_rgba(236,72,153,1)]" />
-                        <h4 className="text-4xl font-black text-white italic">{config.portfolioTitle}</h4>
+                    <div className="pt-8 border-t border-white/5 text-center">
+                        <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-30 mb-8", theme.text)}>© 2026 {profile.user.name}</p>
 
-                        <div className="flex gap-6 overflow-x-auto pb-6 no-scrollbar snap-x">
-                            {(products.length > 0 ? products : [1, 2, 3]).map((p: any, i: number) => (
-                                <div key={i} className="min-w-[280px] bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden group snap-center hover:border-white/30 transition-all">
-                                    <div className="aspect-[4/3] relative overflow-hidden">
-                                        <img src={p.image || `https://picsum.photos/seed/${i + 40}/400/300`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                                            {p.link && (
-                                                <a href={p.link} target="_blank" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-xl">
-                                                    <ExternalLink size={18} />
-                                                </a>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="p-6">
-                                        <h5 className="text-white font-black text-base mb-1">{p.name || "Modern Proje Sunumu"}</h5>
-                                        <p className="text-white/40 text-[11px] uppercase font-bold tracking-widest leading-relaxed">{p.description || "Dijital Çözümler & Kreatif Marka Kimliği"}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    {/* Contact Card */}
-                    <motion.div
-                        whileHover={{ y: -10 }}
-                        className="bg-[#1A1F2B] rounded-[4rem] p-12 relative overflow-hidden shadow-2xl shadow-yellow-400/10 border-t-2 border-yellow-400/30 flex flex-col items-center justify-center text-center gap-8"
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,1)]" />
-                        <h4 className="text-4xl font-black text-white italic">{config.contactTitle}</h4>
-
-                        <div className="w-full space-y-5 pt-4">
-                            <a href={`mailto:${profile.user.email}`} className="w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_20px_50px_-10px_rgba(236,72,153,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
-                                <Mail size={28} /> {config.emailBtnText}
-                            </a>
-                            <button onClick={() => setIsAppointmentOpen(true)} className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_20px_50px_-10px_rgba(139,92,246,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
-                                <Sparkles size={28} /> {config.consultBtnText}
-                            </button>
-                        </div>
-                        <p className="text-white/20 text-[10px] uppercase font-bold tracking-[0.3em]">Hemen randevu alarak projeni başlat</p>
-                    </motion.div>
-                </div>
-            </div>
+                        <button
+                            onClick={handleShare}
+                            className="w-full py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl"
+                            style={{
+                                background: `linear-gradient(45deg, ${theme.accent}, ${theme.accent}cc)`,
+                                boxShadow: `0 10px 30px -10px ${theme.accent}60`
+                            }}
+                        >
+                            <Download size={20} /> Kaydet
+                        </button>
+                    </div>
+                </motion.div>
+            </main>
         </div>
     )
 }
