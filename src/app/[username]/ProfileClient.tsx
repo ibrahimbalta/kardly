@@ -981,13 +981,50 @@ export default function ProfileClient({ profile }: { profile: any }) {
 function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: any) {
     const services = (profile.services as any[]) || []
     const products = (profile.products as any[]) || []
+    const config = profile.blocks?.find((b: any) => b.type === 'template_config')?.content || {
+        videoTitle: "Video",
+        videoLabel: "Tanıtım Videomu İzle",
+        videoUrl: "",
+        radarTitle: "Yetenek Pusulası",
+        servicesTitle: "Hizmetlerim",
+        portfolioTitle: "Çalışmalarım",
+        contactTitle: "İletişime Geç",
+        emailBtnText: "E-posta Gönder",
+        consultBtnText: "Ücretsiz Danışma"
+    }
+
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+    useEffect(() => {
+        const handleMouse = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY })
+        window.addEventListener('mousemove', handleMouse)
+        return () => window.removeEventListener('mousemove', handleMouse)
+    }, [])
+
+    const getYouTubeID = (url: string) => {
+        const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url?.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    const videoId = getYouTubeID(config.videoUrl);
+    const thumbUrl = videoId
+        ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+        : "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80";
 
     return (
         <div className="min-h-screen bg-[#FDFDFD] text-slate-900 font-sans selection:bg-indigo-100 relative overflow-x-hidden p-4 md:p-10">
-            {/* Subtle Abstract Background */}
-            <div className="fixed inset-0 pointer-events-none opacity-40">
-                <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-cyan-100 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-[10%] right-[5%] w-64 h-64 bg-purple-100 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+            {/* Interactive Glow Background */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <motion.div
+                    animate={{
+                        x: mousePos.x - 400,
+                        y: mousePos.y - 400
+                    }}
+                    transition={{ type: "spring", damping: 30, stiffness: 200 }}
+                    className="absolute w-[800px] h-[800px] bg-indigo-500/5 rounded-full blur-[120px] mix-blend-multiply opacity-50"
+                />
+                <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-cyan-100/40 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-[10%] right-[5%] w-64 h-64 bg-purple-100/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] opacity-20" />
             </div>
 
@@ -999,12 +1036,9 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                         <button onClick={handleShare} className="w-10 h-10 bg-[#4ADE80] rounded-full flex items-center justify-center text-white shadow-lg shadow-green-200 hover:scale-110 transition-transform">
                             <Share2 size={18} />
                         </button>
-                        <button onClick={handleShare} className="px-5 py-2.5 bg-[#FBBF24] text-white font-black text-xs rounded-full shadow-lg shadow-yellow-100 uppercase tracking-widest hover:scale-105 transition-transform">Share</button>
-                        <button className="w-10 h-10 bg-[#FF00FF] rounded-full flex items-center justify-center text-white shadow-lg shadow-pink-200 hover:scale-110 transition-transform">
+                        <button onClick={handleShare} className="hidden md:block px-5 py-2.5 bg-[#FBBF24] text-white font-black text-xs rounded-full shadow-lg shadow-yellow-100 uppercase tracking-widest hover:scale-105 transition-transform">Paylaş</button>
+                        <button className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-200 hover:scale-110 transition-transform">
                             <UserPlus size={18} />
-                        </button>
-                        <button className="w-10 h-10 bg-[#22D3EE] rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-200 hover:scale-110 transition-transform">
-                            <QrCode size={18} />
                         </button>
                     </div>
                 </header>
@@ -1017,21 +1051,28 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                         className="bg-[#1A1F2B] rounded-[3rem] p-8 aspect-square flex flex-col justify-between relative overflow-hidden shadow-2xl shadow-cyan-400/20 border-t-2 border-cyan-400/30"
                     >
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,1)]" />
-                        <h4 className="text-2xl font-black text-white italic">Düdeo</h4>
+                        <h4 className="text-2xl font-black text-white italic">{config.videoTitle}</h4>
 
-                        <div className="relative group cursor-pointer aspect-video rounded-3xl overflow-hidden bg-slate-800 shadow-inner">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80" className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700" />
+                        <div
+                            onClick={() => config.videoUrl && window.open(config.videoUrl, '_blank')}
+                            className="relative group cursor-pointer aspect-video rounded-3xl overflow-hidden bg-slate-800 shadow-inner"
+                        >
+                            <img
+                                src={thumbUrl}
+                                className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
+                                onError={(e: any) => e.target.src = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80"}
+                            />
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <motion.div
                                     whileHover={{ scale: 1.1 }}
-                                    className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center group-hover:bg-white/30 transition-all"
+                                    className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center group-hover:bg-white/30 transition-all shadow-2xl"
                                 >
                                     <Play fill="white" className="text-white ml-1" />
                                 </motion.div>
                             </div>
                         </div>
 
-                        <p className="text-white/60 font-black text-center text-[10px] uppercase tracking-[0.3em]">Intro Videomu İzle</p>
+                        <p className="text-white/60 font-black text-center text-[10px] uppercase tracking-[0.3em]">{config.videoLabel}</p>
                     </motion.div>
 
                     {/* Center: Profile Piece */}
@@ -1043,7 +1084,7 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                                 <motion.circle
                                     cx="160" cy="160" r="140"
                                     fill="none" stroke="url(#paint0_linear_prem)"
-                                    strokeWidth="10"
+                                    strokeWidth="12"
                                     strokeDasharray="880"
                                     initial={{ strokeDashoffset: 880 }}
                                     animate={{ strokeDashoffset: 220 }}
@@ -1062,19 +1103,32 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ type: "spring", stiffness: 100, damping: 15 }}
-                                className="w-[280px] h-[280px] rounded-full overflow-hidden border-[12px] border-white shadow-2xl relative z-10"
+                                className="w-[280px] h-[280px] rounded-full overflow-hidden border-[12px] border-white shadow-2xl relative z-10 group"
                             >
-                                <img src={profile.user.image} className="w-full h-full object-cover" />
+                                <img src={profile.user.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             </motion.div>
                         </div>
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="text-5xl font-black text-center leading-[1.1] tracking-tighter text-slate-900 max-w-sm"
-                        >
-                            {profile.slogan || "Yaratıcılıkla Köprüler Kuruyorum"}
-                        </motion.h2>
+                        <div className="text-center space-y-4">
+                            <motion.h2
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                                className="text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 max-w-sm"
+                            >
+                                {profile.slogan || "Geleceği Tasarlamaya Bugün Başlayın"}
+                            </motion.h2>
+                            {profile.occupation && (
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.7 }}
+                                    className="text-indigo-600 font-black uppercase text-xs tracking-[0.4em] italic"
+                                >
+                                    {profile.occupation}
+                                </motion.p>
+                            )}
+                        </div>
                     </div>
 
                     {/* Right: Skill Radar */}
@@ -1083,35 +1137,44 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                         className="bg-[#1A1F2B] rounded-[3rem] p-8 aspect-square relative overflow-hidden shadow-2xl shadow-lime-400/20 border-t-2 border-lime-400/30"
                     >
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-lime-400 shadow-[0_0_20px_rgba(163,230,53,1)]" />
-                        <h4 className="text-xl font-black text-white italic mb-4">Yetenek Pusulası</h4>
-                        <div className="w-full h-full flex items-center justify-center p-2 invert brightness-100 opacity-90">
+                        <h4 className="text-xl font-black text-white italic mb-4">{config.radarTitle}</h4>
+                        <div className="w-full h-full flex items-center justify-center p-2 opacity-90 overflow-hidden">
                             <SkillRadarSVG color="#a3e635" data={services.slice(0, 5)} />
                         </div>
                     </motion.div>
                 </div>
 
                 {/* Services Section */}
-                <div className="space-y-8 pt-10">
-                    <h3 className="text-2xl font-black text-slate-900 text-center tracking-tight">Hizmetlerim</h3>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                        {services.slice(0, 4).map((s, i) => {
+                <div className="space-y-10 pt-10">
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-1 bg-indigo-600 rounded-full" />
+                        <h3 className="text-3xl font-black text-slate-900 tracking-tight">{config.servicesTitle}</h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                        {(services.length > 0 ? services : [1, 2, 3, 4]).slice(0, 4).map((s: any, i: number) => {
                             const colors = [
-                                { bg: 'bg-[#F97316]', shadow: 'shadow-orange-200' },
-                                { bg: 'bg-[#3B82F6]', shadow: 'shadow-blue-200' },
-                                { bg: 'bg-[#22C55E]', shadow: 'shadow-green-200' },
-                                { bg: 'bg-[#A855F7]', shadow: 'shadow-purple-200' }
+                                { bg: 'bg-[#F97316]', shadow: 'shadow-orange-200', text: 'Strateji' },
+                                { bg: 'bg-[#3B82F6]', shadow: 'shadow-blue-200', text: 'Tasarım' },
+                                { bg: 'bg-[#22C55E]', shadow: 'shadow-green-200', text: 'Yazılım' },
+                                { bg: 'bg-[#A855F7]', shadow: 'shadow-purple-200', text: 'Yönetim' }
                             ]
                             const c = colors[i % 4]
                             return (
                                 <motion.div
                                     key={i}
                                     whileHover={{ scale: 1.05, y: -5 }}
-                                    className={cn("p-8 rounded-[2rem] flex flex-col items-center justify-center gap-4 text-white shadow-2xl transition-all cursor-pointer", c.bg, c.shadow)}
+                                    className={cn("p-8 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 text-white shadow-2xl transition-all cursor-pointer relative overflow-hidden group", c.bg, c.shadow)}
                                 >
-                                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform">
+                                        <Zap size={64} />
+                                    </div>
+                                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 relative z-10">
                                         <Zap size={28} fill="white" />
                                     </div>
-                                    <span className="text-sm font-black uppercase tracking-tight text-center leading-tight">{s.title}</span>
+                                    <div className="text-center relative z-10">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1 block">{c.text}</span>
+                                        <span className="text-sm font-black uppercase tracking-tight leading-tight">{s.title || "Premium Hizmet"}</span>
+                                    </div>
                                 </motion.div>
                             )
                         })}
@@ -1126,18 +1189,24 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                         className="bg-[#1A1F2B] rounded-[4rem] p-10 relative overflow-hidden shadow-2xl shadow-pink-500/20 border-t-2 border-pink-400/30 flex flex-col gap-8 lg:col-span-1"
                     >
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-pink-500 shadow-[0_0_20px_rgba(236,72,153,1)]" />
-                        <h4 className="text-4xl font-black text-white italic">Çalışmalarım</h4>
+                        <h4 className="text-4xl font-black text-white italic">{config.portfolioTitle}</h4>
 
                         <div className="flex gap-6 overflow-x-auto pb-6 no-scrollbar snap-x">
                             {(products.length > 0 ? products : [1, 2, 3]).map((p: any, i: number) => (
-                                <div key={i} className="min-w-[240px] bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden group snap-center hover:border-white/30 transition-all">
+                                <div key={i} className="min-w-[280px] bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden group snap-center hover:border-white/30 transition-all">
                                     <div className="aspect-[4/3] relative overflow-hidden">
                                         <img src={p.image || `https://picsum.photos/seed/${i + 40}/400/300`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                                            {p.link && (
+                                                <a href={p.link} target="_blank" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-xl">
+                                                    <ExternalLink size={18} />
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="p-6">
-                                        <h5 className="text-white font-black text-base mb-1">{p.name || "Proje Uygulaması"}</h5>
-                                        <p className="text-white/40 text-[11px] uppercase font-bold tracking-widest">{p.description || "Digital Artwork & Branding"}</p>
+                                        <h5 className="text-white font-black text-base mb-1">{p.name || "Modern Proje Sunumu"}</h5>
+                                        <p className="text-white/40 text-[11px] uppercase font-bold tracking-widest leading-relaxed">{p.description || "Dijital Çözümler & Kreatif Marka Kimliği"}</p>
                                     </div>
                                 </div>
                             ))}
@@ -1150,16 +1219,17 @@ function PremiumModernTemplate({ profile, setIsAppointmentOpen, handleShare }: a
                         className="bg-[#1A1F2B] rounded-[4rem] p-12 relative overflow-hidden shadow-2xl shadow-yellow-400/10 border-t-2 border-yellow-400/30 flex flex-col items-center justify-center text-center gap-8"
                     >
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,1)]" />
-                        <h4 className="text-4xl font-black text-white italic">İletişime Geç</h4>
+                        <h4 className="text-4xl font-black text-white italic">{config.contactTitle}</h4>
 
                         <div className="w-full space-y-5 pt-4">
-                            <a href={`mailto:${profile.user.email}`} className="w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_10px_40px_-10px_rgba(236,72,153,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
-                                <Mail size={28} /> E-posta Gönder
+                            <a href={`mailto:${profile.user.email}`} className="w-full bg-gradient-to-r from-yellow-400 to-pink-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_20px_50px_-10px_rgba(236,72,153,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
+                                <Mail size={28} /> {config.emailBtnText}
                             </a>
-                            <button onClick={() => setIsAppointmentOpen(true)} className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_10px_40px_-10px_rgba(139,92,246,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
-                                <Sparkles size={28} /> Ücretsiz Danışma
+                            <button onClick={() => setIsAppointmentOpen(true)} className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 text-white py-6 rounded-[2rem] font-black text-xl shadow-[0_20px_50px_-10px_rgba(139,92,246,0.5)] flex items-center justify-center gap-4 hover:scale-[1.03] active:scale-[0.98] transition-all">
+                                <Sparkles size={28} /> {config.consultBtnText}
                             </button>
                         </div>
+                        <p className="text-white/20 text-[10px] uppercase font-bold tracking-[0.3em]">Hemen randevu alarak projeni başlat</p>
                     </motion.div>
                 </div>
             </div>

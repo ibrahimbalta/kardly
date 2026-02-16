@@ -102,6 +102,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [blocks, setBlocks] = useState<any[]>(profile?.blocks || [])
     const [isBlocksLoading, setIsBlocksLoading] = useState(false)
 
+    // Premium Template Config
+    const configBlock = blocks.find(b => b.type === 'template_config')
+    const [premiumConfig, setPremiumConfig] = useState(configBlock?.content || {
+        videoTitle: "Video",
+        videoLabel: "Tanıtım Videomu İzle",
+        videoUrl: "",
+        videoThumbnail: "",
+        radarTitle: "Yetenek Pusulası",
+        servicesTitle: "Hizmetlerim",
+        portfolioTitle: "Çalışmalarım",
+        contactTitle: "İletişime Geç",
+        emailBtnText: "E-posta Gönder",
+        consultBtnText: "Ücretsiz Danışma",
+        ringColors: ["#FACC15", "#A3E635", "#22D3EE", "#D946EF"]
+    })
+
     useEffect(() => {
         const fetchBlocks = async () => {
             try {
@@ -146,6 +162,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     image: profileData.image
                 })
             })
+
+            // Save Template Config if Premium
+            if (profileData.templateId === 'premium_modern') {
+                const configExists = blocks.find(b => b.type === 'template_config')
+                let newBlocks;
+                if (configExists) {
+                    newBlocks = blocks.map(b => b.type === 'template_config' ? { ...b, content: premiumConfig } : b)
+                } else {
+                    newBlocks = [...blocks, { type: 'template_config', content: premiumConfig, isActive: true, order: 99 }]
+                }
+                setBlocks(newBlocks)
+                await fetch("/api/blocks", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ blocks: newBlocks })
+                })
+            }
             if (res.ok) {
                 setShowToast("Değişiklikler kaydedildi!")
                 setTimeout(() => setShowToast(null), 3000)
@@ -1155,217 +1188,256 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </motion.div>
                             ))}
                         </div>
+
+                        {profileData.templateId === 'premium_modern' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="glass p-10 rounded-[3rem] border-primary/20 bg-primary/[0.02] space-y-10"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl">
+                                        <Sparkles size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black">Premium Şablon Detayları</h3>
+                                        <p className="text-sm text-foreground/50">Bu şablondaki tüm alanları buradan özelleştirebilirsiniz.</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Video Settings */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">Giriş Videosu</h4>
+                                        <div className="space-y-3">
+                                            <input
+                                                type="text"
+                                                placeholder="Kart Başlığı (Örn: Video)"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.videoTitle}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoTitle: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Alt Etiket (Örn: Videoyu İzle)"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.videoLabel}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoLabel: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Video URL (YouTube/Vimeo)"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.videoUrl}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, videoUrl: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Section Titles */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">Bölüm Başlıkları</h4>
+                                        <div className="space-y-3">
+                                            <input
+                                                type="text"
+                                                placeholder="Yetenek Radarı Başlığı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.radarTitle}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, radarTitle: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Hizmetlerim Başlığı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.servicesTitle}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, servicesTitle: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Portfolyo Başlığı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.portfolioTitle}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, portfolioTitle: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Contact Section */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-xs font-black uppercase tracking-widest text-primary/60">İletişim Alanı</h4>
+                                        <div className="space-y-3">
+                                            <input
+                                                type="text"
+                                                placeholder="İletişim Başlığı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.contactTitle}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, contactTitle: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="E-posta Buton Yazısı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.emailBtnText}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, emailBtnText: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Danışmanlık Buton Yazısı"
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm"
+                                                value={premiumConfig.consultBtnText}
+                                                onChange={(e) => setPremiumConfig({ ...premiumConfig, consultBtnText: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => handleSave()}
+                                    className="w-full py-5 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.01] transition-all"
+                                >
+                                    AYARLARI KAYDET VE ÖNİZLE
+                                </button>
+                            </motion.div>
+                        )}
                     </div>
-                ) : null
-                }
+                ) : null}
 
                 {/* Project Add Modal */}
-                {
-                    showProductModal && (
-                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
-                            <motion.div
-                                initial={{ scale: 0.95, opacity: 0, y: 10 }}
-                                animate={{ scale: 1, opacity: 1, y: 0 }}
-                                className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
-                            >
-                                <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
-                                    <X className="w-5 h-5" />
-                                </button>
+                {showProductModal && (
+                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            className="bg-[#f8fafc] w-full max-w-md rounded-2xl p-6 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto"
+                        >
+                            <button onClick={() => setShowProductModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
 
-                                <div className="mb-5">
-                                    <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
-                                    <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
-                                </div>
+                            <div className="mb-5">
+                                <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
+                                <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
+                            </div>
 
-                                <form onSubmit={handleAddProduct} className="space-y-4">
-                                    {/* Image Upload Area */}
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
-                                        <div
-                                            className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
-                                            onClick={() => document.getElementById('product-image-upload')?.click()}
-                                            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-primary', 'bg-primary/5'); }}
-                                            onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove('border-primary', 'bg-primary/5'); }}
-                                            onDrop={async (e) => {
-                                                e.preventDefault();
-                                                e.currentTarget.classList.remove('border-primary', 'bg-primary/5');
-                                                const file = e.dataTransfer.files?.[0];
-                                                if (!file) return;
-
-                                                if (file.size > 2 * 1024 * 1024) {
-                                                    setShowToast('Dosya boyutu çok büyük (Maks 2MB)');
-                                                    setTimeout(() => setShowToast(null), 3000);
-                                                    return;
-                                                }
-
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => {
-                                                    setNewProduct({ ...newProduct, image: reader.result as string });
-                                                };
-                                                reader.readAsDataURL(file);
-                                            }}
-                                        >
-                                            {newProduct.image ? (
-                                                <div className="relative aspect-video">
-                                                    <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
-                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                        <span className="text-white text-sm font-bold">Değiştir</span>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
-                                                        className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
-                                                    <Upload className="w-8 h-8" />
-                                                    <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
-                                                    <span className="text-[11px] text-gray-300">JPG, PNG, WebP • Maks 2MB</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <input
-                                            id="product-image-upload"
-                                            type="file"
-                                            accept="image/jpeg,image/png,image/webp,image/gif"
-                                            className="hidden"
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-
-                                                if (file.size > 2 * 1024 * 1024) {
-                                                    setShowToast('Dosya boyutu çok büyük (Maks 2MB)');
-                                                    setTimeout(() => setShowToast(null), 3000);
-                                                    return;
-                                                }
-
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => {
-                                                    setNewProduct({ ...newProduct, image: reader.result as string });
-                                                };
-                                                reader.readAsDataURL(file);
-                                                e.target.value = '';
-                                            }}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Başlığı</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="Örn: Mobil Uygulama Geliştirme"
-                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                            value={newProduct.name}
-                                            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Canlı Link / GitHub</label>
-                                        <input
-                                            type="text"
-                                            placeholder="https://..."
-                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium"
-                                            value={newProduct.link}
-                                            onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Açıklaması</label>
-                                        <textarea
-                                            rows={2}
-                                            placeholder="Projede hangi teknolojileri kullandınız ve neler başardınız?"
-                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary text-gray-900 placeholder:text-gray-300 transition-all text-sm font-medium resize-none"
-                                            value={newProduct.description}
-                                            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <button
-                                        disabled={isProductSaving}
-                                        className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                            <form onSubmit={handleAddProduct} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
+                                    <div
+                                        className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
+                                        onClick={() => document.getElementById('product-image-upload')?.click()}
                                     >
-                                        {isProductSaving ? (
-                                            <>
-                                                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                                Kaydediliyor...
-                                            </>
+                                        {newProduct.image ? (
+                                            <div className="relative aspect-video">
+                                                <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
+                                                    className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         ) : (
-                                            "Projeyi Kaydet"
+                                            <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
+                                                <Upload className="w-8 h-8" />
+                                                <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
+                                            </div>
                                         )}
-                                    </button>
-                                </form>
-                            </motion.div>
-                        </div>
-                    )
-                }
+                                    </div>
+                                    <input
+                                        id="product-image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => setNewProduct({ ...newProduct, image: reader.result as string });
+                                            reader.readAsDataURL(file);
+                                        }}
+                                    />
+                                </div>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Proje Başlığı"
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
+                                    value={newProduct.name}
+                                    onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Canlı Link / GitHub"
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
+                                    value={newProduct.link}
+                                    onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
+                                />
+                                <textarea
+                                    rows={2}
+                                    placeholder="Proje Açıklaması"
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium resize-none"
+                                    value={newProduct.description}
+                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isProductSaving}
+                                    className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                >
+                                    {isProductSaving ? "Kaydediliyor..." : "Projeyi Kaydet"}
+                                </button>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
 
                 {/* Service Add Modal */}
-                {
-                    showServiceModal && (
-                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                            <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                                animate={{ scale: 1, opacity: 1, y: 0 }}
-                                className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
-                            >
-                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
-                                    <X className="w-6 h-6" />
+                {showServiceModal && (
+                    <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                        >
+                            <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
+                                <X className="w-6 h-6" />
+                            </button>
+                            <div className="mb-8">
+                                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
+                                    <Zap className="w-6 h-6 text-primary" />
+                                </div>
+                                <h2 className="text-2xl font-black text-white">Yeni Hizmet / Uzmanlık</h2>
+                            </div>
+                            <div className="space-y-6">
+                                <input
+                                    type="text"
+                                    placeholder="Başlık"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium"
+                                    value={newService.title}
+                                    onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                                />
+                                <textarea
+                                    rows={3}
+                                    placeholder="Açıklama"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium resize-none"
+                                    value={newService.description}
+                                    onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                                />
+                                <button
+                                    onClick={handleAddService}
+                                    className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                                >
+                                    Hizmeti Ekle
                                 </button>
-
-                                <div className="mb-8">
-                                    <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
-                                        <Zap className="w-6 h-6 text-primary" />
-                                    </div>
-                                    <h2 className="text-2xl font-black text-white">Yeni Uzmanlık Alanı</h2>
-                                    <p className="text-white/40 text-sm mt-1">Hangi alanlarda derin uzmanlığa sahipsiniz?</p>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <div>
-                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Uzmanlık Başlığı</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Örn: Profesyonel Fotoğraf Çekimi"
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium"
-                                            value={newService.title}
-                                            onChange={(e) => setNewService({ ...newService, title: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Açıklama</label>
-                                        <textarea
-                                            rows={3}
-                                            placeholder="Hizmetiniz hakkında kısa bir bilgi..."
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-white/20 transition-all font-medium resize-none"
-                                            value={newService.description}
-                                            onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div className="pt-2">
-                                        <button
-                                            onClick={handleAddService}
-                                            className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-                                        >
-                                            Hizmeti Ekle
-                                        </button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    )
-                }
-            </main >
-        </div >
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </main>
+        </div>
     )
 }
 
