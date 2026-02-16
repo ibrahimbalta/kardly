@@ -86,6 +86,7 @@ model Profile {
   slug        String   @unique
   qrCodeUrl   String?
   vCardUrl    String?
+  cvUrl       String?  @db.Text
   
   blocks      Block[]
   products    Product[]

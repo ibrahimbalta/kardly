@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         const body = await req.json()
-        const { slogan, bio, phone, socialLinks, themeColor, templateId, services, workingHours, occupation, displayName, image } = body
+        const { slogan, bio, phone, socialLinks, themeColor, templateId, services, workingHours, occupation, displayName, image, cvUrl } = body
 
         // Update User name & image if provided
         if (displayName || image) {
@@ -33,7 +33,8 @@ export async function POST(req: Request) {
                 templateId,
                 services,
                 workingHours,
-                occupation
+                occupation,
+                cvUrl
             }
         })
 

@@ -164,7 +164,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     workingHours,
                     occupation: profileData.occupation,
                     displayName: profileData.name || session?.user?.name,
-                    image: profileData.image
+                    image: profileData.image,
+                    cvUrl: profileData.cvUrl
                 })
             })
 
