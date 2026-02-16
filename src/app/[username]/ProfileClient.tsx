@@ -116,6 +116,16 @@ export default function ProfileClient({ profile }: { profile: any }) {
             case "neon_greenwhite": return <NeonModernTemplate {...props} colorScheme="greenwhite" />;
             case "neon_greenblack": return <NeonModernTemplate {...props} colorScheme="greenblack" />;
             case "neon_orangeblack": return <NeonModernTemplate {...props} colorScheme="orangeblack" />;
+            case "neon_pinkwhite": return <NeonModernTemplate {...props} colorScheme="pinkwhite" />;
+            case "neon_greywhite": return <NeonModernTemplate {...props} colorScheme="greywhite" />;
+            case "neon_blueblack": return <NeonModernTemplate {...props} colorScheme="blueblack" />;
+            case "neon_purplexwhite": return <NeonModernTemplate {...props} colorScheme="purplexwhite" />;
+            case "neon_yellowwhite": return <NeonModernTemplate {...props} colorScheme="yellowwhite" />;
+            case "neon_mintgreen": return <NeonModernTemplate {...props} colorScheme="mintgreen" />;
+            case "neon_electricviolet": return <NeonModernTemplate {...props} colorScheme="electricviolet" />;
+            case "neon_crimson_dark": return <NeonModernTemplate {...props} colorScheme="crimson_dark" />;
+            case "neon_ocean_light": return <NeonModernTemplate {...props} colorScheme="ocean_light" />;
+            case "neon_sunset_rose": return <NeonModernTemplate {...props} colorScheme="sunset_rose" />;
             default: return <NeonModernTemplate {...props} colorScheme="black" />;
         }
     }
@@ -366,8 +376,128 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             btn: "bg-black/60 border-orange-500/30",
             btnText: "text-orange-500",
             icon: "text-orange-500"
+        },
+        pinkwhite: {
+            bg: "bg-[#FFF1F2]",
+            card: "bg-white",
+            text: "text-rose-900",
+            subtext: "text-rose-500",
+            border: "border-rose-200",
+            glow: "shadow-[0_0_20px_rgba(244,63,94,0.3)]",
+            accent: "#f43f5e",
+            btn: "bg-white border-rose-200",
+            btnText: "text-rose-900",
+            icon: "text-[#f43f5e]"
+        },
+        greywhite: {
+            bg: "bg-[#F8FAFC]",
+            card: "bg-white",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-slate-300",
+            glow: "shadow-[0_0_20px_rgba(71,85,105,0.3)]",
+            accent: "#475569",
+            btn: "bg-slate-100 border-slate-300",
+            btnText: "text-slate-900",
+            icon: "text-[#475569]"
+        },
+        blueblack: {
+            bg: "bg-[#020617]",
+            card: "bg-[#1e293b]/40",
+            text: "text-white",
+            subtext: "text-blue-300/60",
+            border: "border-blue-500/30",
+            glow: "shadow-[0_0_30px_rgba(59,130,246,0.5)]",
+            accent: "#3b82f6",
+            btn: "bg-[#1e293b]/60 border-blue-500/40",
+            btnText: "text-white",
+            icon: "text-[#3b82f6]"
+        },
+        purplexwhite: {
+            bg: "bg-[#FAF5FF]",
+            card: "bg-white",
+            text: "text-purple-900",
+            subtext: "text-purple-500",
+            border: "border-purple-200",
+            glow: "shadow-[0_0_20px_rgba(168,85,247,0.3)]",
+            accent: "#a855f7",
+            btn: "bg-white border-purple-200",
+            btnText: "text-purple-900",
+            icon: "text-[#a855f7]"
+        },
+        yellowwhite: {
+            bg: "bg-[#FFFBEB]",
+            card: "bg-white",
+            text: "text-amber-900",
+            subtext: "text-amber-600",
+            border: "border-amber-200",
+            glow: "shadow-[0_0_20px_rgba(245,158,11,0.3)]",
+            accent: "#f59e0b",
+            btn: "bg-white border-amber-200",
+            btnText: "text-amber-900",
+            icon: "text-[#f59e0b]"
+        },
+        mintgreen: {
+            bg: "bg-[#F0FDF4]",
+            card: "bg-white",
+            text: "text-emerald-900",
+            subtext: "text-emerald-600",
+            border: "border-emerald-200",
+            glow: "shadow-[0_0_20px_rgba(16,185,129,0.3)]",
+            accent: "#10b981",
+            btn: "bg-white border-emerald-200",
+            btnText: "text-emerald-900",
+            icon: "text-[#10b981]"
+        },
+        electricviolet: {
+            bg: "bg-[#05010d]",
+            card: "bg-[#1a0b3d]/40",
+            text: "text-white",
+            subtext: "text-violet-300/60",
+            border: "border-violet-500/30",
+            glow: "shadow-[0_0_30px_rgba(139,92,246,0.6)]",
+            accent: "#8b5cf6",
+            btn: "bg-[#1a0b3d]/60 border-violet-500/40",
+            btnText: "text-white",
+            icon: "text-[#8b5cf6]"
+        },
+        crimson_dark: {
+            bg: "bg-[#0a0000]",
+            card: "bg-[#2d0a0a]/40",
+            text: "text-white",
+            subtext: "text-red-300/60",
+            border: "border-red-500/30",
+            glow: "shadow-[0_0_30px_rgba(220,38,38,0.5)]",
+            accent: "#dc2626",
+            btn: "bg-[#2d0a0a]/60 border-red-500/40",
+            btnText: "text-white",
+            icon: "text-[#dc2626]"
+        },
+        ocean_light: {
+            bg: "bg-[#F0F9FF]",
+            card: "bg-white",
+            text: "text-sky-900",
+            subtext: "text-sky-600",
+            border: "border-sky-200",
+            glow: "shadow-[0_0_20px_rgba(14,165,233,0.3)]",
+            accent: "#0ea5e9",
+            btn: "bg-white border-sky-200",
+            btnText: "text-sky-900",
+            icon: "text-[#0ea5e9]"
+        },
+        sunset_rose: {
+            bg: "bg-[#030712]",
+            card: "bg-black/60",
+            text: "text-[#f43f5e]",
+            subtext: "text-orange-300/60",
+            border: "border-[#f43f5e]/30",
+            glow: "shadow-[0_0_30px_rgba(244,63,94,0.4)]",
+            accent: "#f43f5e",
+            btn: "bg-black/60 border-[#f43f5e]/40",
+            btnText: "text-[#f43f5e]",
+            icon: "text-[#f43f5e]"
         }
-    }[colorScheme as 'black' | 'white' | 'blue' | 'green' | 'purple' | 'red' | 'gold' | 'rose' | 'cyan' | 'gs' | 'fb' | 'ts' | 'bjk' | 'tr' | 'greenwhite' | 'greenblack' | 'orangeblack'] || {
+    }[colorScheme as 'black' | 'white' | 'blue' | 'green' | 'purple' | 'red' | 'gold' | 'rose' | 'cyan' | 'gs' | 'fb' | 'ts' | 'bjk' | 'tr' | 'greenwhite' | 'greenblack' | 'orangeblack' | 'pinkwhite' | 'greywhite' | 'blueblack' | 'purplexwhite' | 'yellowwhite' | 'mintgreen' | 'electricviolet' | 'crimson_dark' | 'ocean_light' | 'sunset_rose'] || {
         bg: "bg-[#030712]",
         card: "bg-black/40",
         text: "text-white",
