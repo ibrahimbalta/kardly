@@ -989,7 +989,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div>
                                     <label className="block text-sm font-medium mb-4 opacity-60">Profil Tema Rengi</label>
                                     <div className="grid grid-cols-5 gap-3">
-                                        {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7"].map(color => (
+                                        {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#d946ef", "#dc2626", "#0ea5e9", "#fbbf24", "#8b5cf6", "#7c3aed"].map(color => (
                                             <button
                                                 key={color}
                                                 onClick={() => setProfileData({ ...profileData, themeColor: color })}
@@ -1153,6 +1153,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm." },
                                 { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
                                 { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm." },
+                                { id: "neon_pink", name: "Neon Modern (Pembe)", description: "Canlı pembe ve enerjik bir görünüm." },
+                                { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Teknolojik ve fütüristik turkuaz yansımalar." },
+                                { id: "neon_orange", name: "Neon Modern (Turuncu)", description: "Sıcak ve dinamik turuncu neon enerjisi." },
+                                { id: "neon_amber", name: "Neon Modern (Kehribar)", description: "Klasik ve asil altın/kehribar ışığı." },
+                                { id: "neon_rose", name: "Neon Modern (Gül)", description: "Zarif ve modern gül pembesi tonları." },
+                                { id: "neon_emerald", name: "Neon Modern (Zümrüt)", description: "Zengin ve derin yeşil neon atmosferi." },
+                                { id: "neon_sky", name: "Neon Modern (Gök Mavisi)", description: "Ferah ve havadar açık mavi neon çizgiler." },
+                                { id: "neon_lime", name: "Neon Modern (Limon)", description: "Modern ve radikal sarı-yeşil neon tasarımı." },
+                                { id: "neon_indigo", name: "Neon Modern (İndigo)", description: "Derin ve mistik gece mavisi neon estetiği." },
+                                { id: "neon_crimson", name: "Neon Modern (Kıpkırmızı)", description: "Güçlü ve keskin koyu kırmızı neon hatlar." },
+                                { id: "neon_teal", name: "Neon Modern (Cam Göbeği)", description: "Sakin ve prestijli cam göbeği neon tasarımı." },
+                                { id: "neon_fuchsia", name: "Neon Modern (Fuşya)", description: "Cesur ve enerjik fuşya neon patlaması." },
+                                { id: "neon_violet", name: "Neon Modern (Menekşe)", description: "Asil ve derin menekşe moru neon dokunuşu." },
                                 { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler." },
                                 { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon." },
                                 { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu." },

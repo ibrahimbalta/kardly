@@ -163,6 +163,17 @@ export default function ProfileClient({ profile }: { profile: any }) {
             case "neon_gold": return <NeonModernTemplate {...props} colorScheme="gold" />;
             case "neon_rose": return <NeonModernTemplate {...props} colorScheme="rose" />;
             case "neon_cyan": return <NeonModernTemplate {...props} colorScheme="cyan" />;
+            case "neon_pink": return <NeonModernTemplate {...props} colorScheme="pink" />;
+            case "neon_amber": return <NeonModernTemplate {...props} colorScheme="amber" />;
+            case "neon_emerald": return <NeonModernTemplate {...props} colorScheme="emerald" />;
+            case "neon_sky": return <NeonModernTemplate {...props} colorScheme="sky" />;
+            case "neon_lime": return <NeonModernTemplate {...props} colorScheme="lime" />;
+            case "neon_indigo": return <NeonModernTemplate {...props} colorScheme="indigo" />;
+            case "neon_crimson": return <NeonModernTemplate {...props} colorScheme="crimson" />;
+            case "neon_teal": return <NeonModernTemplate {...props} colorScheme="teal" />;
+            case "neon_fuchsia": return <NeonModernTemplate {...props} colorScheme="fuchsia" />;
+            case "neon_violet": return <NeonModernTemplate {...props} colorScheme="violet" />;
+            case "neon_orange": return <NeonModernTemplate {...props} colorScheme="orange" />;
             case "neon_gs": return <NeonModernTemplate {...props} colorScheme="gs" />;
             case "neon_fb": return <NeonModernTemplate {...props} colorScheme="fb" />;
             case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" />;
@@ -356,6 +367,138 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
             btn: "bg-[#0a2d2d]/60 border-cyan-500/30",
             btnText: "text-white",
             icon: "text-[#06b6d4]"
+        },
+        pink: {
+            bg: "bg-[#1a0514]",
+            card: "bg-[#2d0a21]/40",
+            text: "text-white",
+            subtext: "text-pink-200/60",
+            border: "border-pink-500/20",
+            glow: "shadow-[0_0_20px_rgba(236,72,153,0.5)]",
+            accent: "#ec4899",
+            btn: "bg-[#2d0a21]/60 border-pink-500/30",
+            btnText: "text-white",
+            icon: "text-[#ec4899]"
+        },
+        amber: {
+            bg: "bg-[#1a1005]",
+            card: "bg-[#2d1c0a]/40",
+            text: "text-white",
+            subtext: "text-amber-200/60",
+            border: "border-amber-500/20",
+            glow: "shadow-[0_0_20px_rgba(245,158,11,0.5)]",
+            accent: "#f59e0b",
+            btn: "bg-[#2d1c0a]/60 border-amber-500/30",
+            btnText: "text-white",
+            icon: "text-[#f59e0b]"
+        },
+        emerald: {
+            bg: "bg-[#051a0f]",
+            card: "bg-[#0a2d1c]/40",
+            text: "text-white",
+            subtext: "text-emerald-200/60",
+            border: "border-emerald-500/20",
+            glow: "shadow-[0_0_20px_rgba(16,185,129,0.5)]",
+            accent: "#10b981",
+            btn: "bg-[#0a2d1c]/60 border-emerald-500/30",
+            btnText: "text-white",
+            icon: "text-[#10b981]"
+        },
+        sky: {
+            bg: "bg-[#05141a]",
+            card: "bg-[#0a212d]/40",
+            text: "text-white",
+            subtext: "text-sky-200/60",
+            border: "border-sky-500/20",
+            glow: "shadow-[0_0_20px_rgba(14,165,233,0.5)]",
+            accent: "#0ea5e9",
+            btn: "bg-[#0a212d]/60 border-sky-500/30",
+            btnText: "text-white",
+            icon: "text-[#0ea5e9]"
+        },
+        lime: {
+            bg: "bg-[#0f1a05]",
+            card: "bg-[#1c2d0a]/40",
+            text: "text-white",
+            subtext: "text-lime-200/60",
+            border: "border-lime-500/20",
+            glow: "shadow-[0_0_20px_rgba(132,204,22,0.5)]",
+            accent: "#84cc16",
+            btn: "bg-[#1c2d0a]/60 border-lime-500/30",
+            btnText: "text-white",
+            icon: "text-[#84cc16]"
+        },
+        indigo: {
+            bg: "bg-[#0a112d]",
+            card: "bg-[#111c4a]/40",
+            text: "text-white",
+            subtext: "text-indigo-200/60",
+            border: "border-indigo-500/20",
+            glow: "shadow-[0_0_20px_rgba(99,102,241,0.5)]",
+            accent: "#6366f1",
+            btn: "bg-[#111c4a]/60 border-indigo-500/30",
+            btnText: "text-white",
+            icon: "text-[#6366f1]"
+        },
+        crimson: {
+            bg: "bg-[#1a0505]",
+            card: "bg-[#2d0a0a]/40",
+            text: "text-white",
+            subtext: "text-red-200/60",
+            border: "border-[#dc2626]/20",
+            glow: "shadow-[0_0_20px_rgba(220,38,38,0.5)]",
+            accent: "#dc2626",
+            btn: "bg-[#2d0a0a]/60 border-[#dc2626]/30",
+            btnText: "text-white",
+            icon: "text-[#dc2626]"
+        },
+        teal: {
+            bg: "bg-[#051a1a]",
+            card: "bg-[#0a2d2d]/40",
+            text: "text-white",
+            subtext: "text-teal-200/60",
+            border: "border-teal-500/20",
+            glow: "shadow-[0_0_20px_rgba(20,184,166,0.5)]",
+            accent: "#14b8a6",
+            btn: "bg-[#0a2d2d]/60 border-teal-500/30",
+            btnText: "text-white",
+            icon: "text-[#14b8a6]"
+        },
+        fuchsia: {
+            bg: "bg-[#1a051a]",
+            card: "bg-[#2d0a2d]/40",
+            text: "text-white",
+            subtext: "text-fuchsia-200/60",
+            border: "border-fuchsia-500/20",
+            glow: "shadow-[0_0_20px_rgba(217,70,239,0.5)]",
+            accent: "#d946ef",
+            btn: "bg-[#2d0a2d]/60 border-fuchsia-500/30",
+            btnText: "text-white",
+            icon: "text-[#d946ef]"
+        },
+        violet: {
+            bg: "bg-[#11051a]",
+            card: "bg-[#1d0a2d]/40",
+            text: "text-white",
+            subtext: "text-violet-200/60",
+            border: "border-violet-500/20",
+            glow: "shadow-[0_0_20px_rgba(139,92,246,0.5)]",
+            accent: "#8b5cf6",
+            btn: "bg-[#1d0a2d]/60 border-violet-500/30",
+            btnText: "text-white",
+            icon: "text-[#8b5cf6]"
+        },
+        orange: {
+            bg: "bg-[#1a0f05]",
+            card: "bg-[#2d1c0a]/40",
+            text: "text-white",
+            subtext: "text-orange-200/60",
+            border: "border-orange-500/20",
+            glow: "shadow-[0_0_20px_rgba(249,115,22,0.5)]",
+            accent: "#f97316",
+            btn: "bg-[#2d1c0a]/60 border-orange-500/30",
+            btnText: "text-white",
+            icon: "text-[#f97316]"
         },
         gs: {
             bg: "bg-[#1a0505]",
