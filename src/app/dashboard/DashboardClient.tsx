@@ -503,7 +503,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h3 className="text-lg font-bold">Profil Bilgilerini Düzenle</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Fotoğrafı URL</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Fotoğrafı</label>
                                         <div className="flex gap-4">
                                             <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
                                                 <img
@@ -512,12 +512,34 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     alt="Preview"
                                                 />
                                             </div>
+                                            <div className="flex-1 flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.image || ""}
+                                                    onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
+                                                    placeholder="Resim linkini yapıştırın veya dosya seçin"
+                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => document.getElementById('image-upload')?.click()}
+                                                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
+                                                >
+                                                    <Upload className="w-4 h-4" /> Yükle
+                                                </button>
+                                            </div>
                                             <input
-                                                type="text"
-                                                value={profileData?.image || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
-                                                placeholder="Resim linkini buraya yapıştırın (Örn: https://...)"
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
+                                                id="image-upload"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (!file) return;
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => setProfileData({ ...profileData, image: reader.result as string });
+                                                    reader.readAsDataURL(file);
+                                                }}
                                             />
                                         </div>
                                     </div>
