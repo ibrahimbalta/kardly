@@ -44,7 +44,11 @@ export default async function DashboardPage() {
         totalViews,
         clickRate: clickRate + "%",
         vCardClicks,
-        recentAnalytics: analytics.slice(0, 10)
+        cvClicks: analytics.filter((a: any) => a.type === 'click_cv').length,
+        projectClicks: analytics.filter((a: any) => a.type === 'click_product').length,
+        waClicks: analytics.filter((a: any) => a.type === 'click_whatsapp').length,
+        phoneClicks: analytics.filter((a: any) => a.type === 'click_phone').length,
+        recentAnalytics: analytics.slice(0, 50) // Increased for better filtering in client
     }
 
     // If no profile, handle redirects (Admin goes to /admin, others to /onboarding)

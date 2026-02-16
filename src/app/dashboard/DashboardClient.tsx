@@ -1058,16 +1058,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
-                                            <p className="text-sm font-medium text-white">Ziyaretçileriniz en çok hafta sonu saat <span className="text-primary">20:00 - 22:00</span> arasında aktif.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Etkileşimi</h4>
+                                            <p className="text-sm font-medium text-white">Toplam <span className="text-primary">{stats.totalViews} Ziyaret</span> aldınız. Ziyaretçilerinizin <span className="text-primary">%{stats.clickRate}</span>'si sizinle etkileşime geçti.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">En Popüler Modül</h4>
-                                            <p className="text-sm font-medium text-white">"Yetenek Radarı" modülü diğerlerinden <span className="text-emerald-400">%42 daha fazla</span> etkileşim alıyor.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Popüler İçerik</h4>
+                                            <p className="text-sm font-medium text-white">"Projeler" ve "CV" bölümleri <span className="text-emerald-400">en çok merak edilen</span> alanlar arasında yer alıyor.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Öneri</h4>
-                                            <p className="text-sm font-medium text-white">Ürün fiyatlarını <span className="text-amber-400">₺9 - ₺19</span> bandında tutmanız dönüşümü artırabilir.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Dönüşüm Oranı</h4>
+                                            <p className="text-sm font-medium text-white">Ziyaretçilerinizin rehberine ekleme oranı <span className="text-amber-400">%{stats.totalViews > 0 ? ((stats.vCardClicks / stats.totalViews) * 100).toFixed(1) : 0}</span> seviyesinde.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1075,32 +1075,32 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 h-fit">
                                 <h3 className="font-bold mb-6 flex items-center gap-2">
-                                    <BarChart3 className="w-5 h-5 text-indigo-400" /> Tıklama Dağılımı
+                                    <BarChart3 className="w-5 h-5 text-indigo-400" /> Etkileşim Dağılımı
                                 </h3>
                                 <div className="space-y-6">
                                     <StatBar
-                                        label="vCard İndirme"
+                                        label="vCard (Rehbere Ekle)"
                                         count={stats.vCardClicks}
                                         total={stats.totalViews}
                                         color="bg-indigo-500"
                                     />
                                     <StatBar
-                                        label="WhatsApp"
-                                        count={stats.recentAnalytics.filter((a: any) => a.type === 'click_whatsapp').length}
-                                        total={stats.totalViews}
-                                        color="bg-emerald-500"
-                                    />
-                                    <StatBar
-                                        label="Telefon"
-                                        count={stats.recentAnalytics.filter((a: any) => a.type === 'click_phone').length}
-                                        total={stats.totalViews}
-                                        color="bg-blue-500"
-                                    />
-                                    <StatBar
-                                        label="Ürünler"
-                                        count={stats.recentAnalytics.filter((a: any) => a.type === 'click_product').length}
+                                        label="Proje Tıklamaları"
+                                        count={stats.projectClicks}
                                         total={stats.totalViews}
                                         color="bg-rose-500"
+                                    />
+                                    <StatBar
+                                        label="CV Görüntüleme"
+                                        count={stats.cvClicks}
+                                        total={stats.totalViews}
+                                        color="bg-amber-500"
+                                    />
+                                    <StatBar
+                                        label="İletişim (WA / Tel)"
+                                        count={stats.waClicks + stats.phoneClicks}
+                                        total={stats.totalViews}
+                                        color="bg-emerald-500"
                                     />
                                 </div>
                             </div>
