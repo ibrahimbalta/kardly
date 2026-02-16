@@ -406,7 +406,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                 >
                     {/* Profile Section */}
                     <div className="flex flex-col items-center text-center space-y-6">
-                        <div className="relative group">
+                        <div className="relative w-32 h-32 group">
                             {/* Expertise Icons Container with subtle rotation */}
                             <motion.div
                                 className="absolute inset-0 z-20 pointer-events-none"
@@ -415,7 +415,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             >
                                 {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
                                     const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                    const radius = 82; // Tightened radius
+                                    const radius = 80; // Exactly touching the 128px (64px radius) profile pic
                                     const x = Math.cos(angle) * radius;
                                     const y = Math.sin(angle) * radius;
 
@@ -438,18 +438,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                                             initial={{ opacity: 0, scale: 0 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: 0.5 + i * 0.1 }}
-                                            className="absolute flex flex-col items-center gap-1 pointer-events-auto group"
+                                            className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
                                             style={{
                                                 left: `calc(50% + ${x}px)`,
                                                 top: `calc(50% + ${y}px)`,
                                                 transform: 'translate(-50%, -50%)'
                                             }}
                                         >
-                                            {/* Counter-rotate icon to keep it upright */}
                                             <motion.div
                                                 animate={{ rotate: -360 }}
                                                 transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                                                className="w-8 h-8 rounded-full glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all hover:scale-125 hover:border-white group-hover:bg-white/10 relative"
+                                                className="w-8 h-8 rounded-full glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative"
                                                 style={{
                                                     color: theme.accent,
                                                     backgroundColor: 'rgba(255,255,255,0.05)',
@@ -459,7 +458,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                                                 {getIcon(service.title)}
 
                                                 {/* Tooltip on hover */}
-                                                <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover:scale-100">
+                                                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover/icon:scale-100">
                                                     {service.title}
                                                 </div>
                                             </motion.div>
