@@ -93,9 +93,38 @@ export default function ProfileClient({ profile }: { profile: any }) {
         }
     }
 
+    const handleCVView = () => {
+        if (!profile.cvUrl) return;
+
+        // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
+        if (profile.cvUrl.startsWith('data:')) {
+            try {
+                const parts = profile.cvUrl.split(';');
+                const contentType = parts[0].split(':')[1];
+                const base64Data = profile.cvUrl.split(',')[1];
+
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: contentType });
+                const blobUrl = URL.createObjectURL(blob);
+
+                window.open(blobUrl, '_blank');
+            } catch (err) {
+                console.error("CV açma hatası:", err);
+                window.open(profile.cvUrl, '_blank');
+            }
+        } else {
+            window.open(profile.cvUrl, '_blank');
+        }
+    }
+
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, reviews, setIsReviewModalOpen }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, reviews, setIsReviewModalOpen }
 
     // Template Selector Logic
     const renderTemplate = () => {
@@ -159,7 +188,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsReviewModalOpen, setIsAppointmentOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -757,9 +786,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             <Share2 size={20} /> Paylaş
                         </button>
 
-                        <a
-                            href={profile.cvUrl || "#"}
-                            target="_blank"
+                        <button
+                            onClick={handleCVView}
                             className="flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl"
                             style={{
                                 background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
@@ -767,7 +795,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             }}
                         >
                             <FileText size={20} /> CV Görüntüle
-                        </a>
+                        </button>
                     </div>
                 </motion.div >
             </main >
