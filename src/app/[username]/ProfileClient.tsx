@@ -407,51 +407,66 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                     {/* Profile Section */}
                     <div className="flex flex-col items-center text-center space-y-6">
                         <div className="relative group">
-                            {/* Expertise Icons */}
-                            {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
-                                const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                const radius = 95;
-                                const x = Math.cos(angle) * radius;
-                                const y = Math.sin(angle) * radius;
+                            {/* Expertise Icons Container with subtle rotation */}
+                            <motion.div
+                                className="absolute inset-0 z-20 pointer-events-none"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                            >
+                                {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                    const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                    const radius = 82; // Tightened radius
+                                    const x = Math.cos(angle) * radius;
+                                    const y = Math.sin(angle) * radius;
 
-                                const getIcon = (title: string) => {
-                                    const t = title.toLowerCase();
-                                    if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={16} />;
-                                    if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={16} />;
-                                    if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={16} />;
-                                    if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={16} />;
-                                    if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={16} />;
-                                    if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={16} />;
-                                    if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={16} />;
-                                    if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={16} />;
-                                    return <Zap size={16} />;
-                                };
+                                    const getIcon = (title: string) => {
+                                        const t = title.toLowerCase();
+                                        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
+                                        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
+                                        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
+                                        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
+                                        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
+                                        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
+                                        if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
+                                        if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
+                                        return <Zap size={14} />;
+                                    };
 
-                                return (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, scale: 0 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.5 + i * 0.1 }}
-                                        className="absolute z-20 flex flex-col items-center gap-1 group/item"
-                                        style={{
-                                            left: `calc(50% + ${x}px)`,
-                                            top: `calc(50% + ${y}px)`,
-                                            transform: 'translate(-50%, -50%)'
-                                        }}
-                                    >
-                                        <div
-                                            className="w-10 h-10 rounded-xl glass border border-white/20 flex items-center justify-center shadow-lg transition-all group-hover/item:scale-110 group-hover/item:rotate-6"
-                                            style={{ color: theme.accent, boxShadow: `0 0 15px ${theme.accent}30` }}
+                                    return (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, scale: 0 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.5 + i * 0.1 }}
+                                            className="absolute flex flex-col items-center gap-1 pointer-events-auto group"
+                                            style={{
+                                                left: `calc(50% + ${x}px)`,
+                                                top: `calc(50% + ${y}px)`,
+                                                transform: 'translate(-50%, -50%)'
+                                            }}
                                         >
-                                            {getIcon(service.title)}
-                                        </div>
-                                        <span className="text-[8px] font-black uppercase tracking-tighter opacity-0 group-hover/item:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-0.5 rounded-full text-white pointer-events-none">
-                                            {service.title}
-                                        </span>
-                                    </motion.div>
-                                );
-                            })}
+                                            {/* Counter-rotate icon to keep it upright */}
+                                            <motion.div
+                                                animate={{ rotate: -360 }}
+                                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                                className="w-8 h-8 rounded-full glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all hover:scale-125 hover:border-white group-hover:bg-white/10 relative"
+                                                style={{
+                                                    color: theme.accent,
+                                                    backgroundColor: 'rgba(255,255,255,0.05)',
+                                                    backdropFilter: 'blur(10px)'
+                                                }}
+                                            >
+                                                {getIcon(service.title)}
+
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover:scale-100">
+                                                    {service.title}
+                                                </div>
+                                            </motion.div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </motion.div>
 
                             <motion.div
                                 animate={{
@@ -479,33 +494,37 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             </div>
                             {profile.slogan && <p className={cn("text-sm font-bold mt-3 opacity-60", theme.text)}>“{profile.slogan}”</p>}
                         </div>
-                    </div>
+                    </div >
 
                     {/* Quick Actions */}
-                    <div className="space-y-3">
-                        {actions.map((action, i) => (
-                            <motion.a
-                                key={i}
-                                href={action.href}
-                                target="_blank"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                whileHover={{ scale: 1.02, x: 5 }}
-                                className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg", theme.btn, theme.border)}
-                            >
-                                <div style={{ color: theme.accent }}>{action.icon}</div>
-                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                            </motion.a>
-                        ))}
-                    </div>
+                    < div className="space-y-3" >
+                        {
+                            actions.map((action, i) => (
+                                <motion.a
+                                    key={i}
+                                    href={action.href}
+                                    target="_blank"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    whileHover={{ scale: 1.02, x: 5 }}
+                                    className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg", theme.btn, theme.border)}
+                                >
+                                    <div style={{ color: theme.accent }}>{action.icon}</div>
+                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                </motion.a>
+                            ))
+                        }
+                    </div >
 
                     {/* Bio Paragraph */}
-                    {profile.bio && (
-                        <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
-                            {profile.bio}
-                        </p>
-                    )}
+                    {
+                        profile.bio && (
+                            <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
+                                {profile.bio}
+                            </p>
+                        )
+                    }
 
                     {/* Testimonials Slider */}
                     <div className="pt-4 overflow-hidden relative">
@@ -607,9 +626,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             <FileText size={20} /> CV Görüntüle
                         </a>
                     </div>
-                </motion.div>
-            </main>
-        </div>
+                </motion.div >
+            </main >
+        </div >
     )
 }
 
