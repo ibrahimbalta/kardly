@@ -75,9 +75,9 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [copied, setCopied] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
     const [reviews, setReviews] = useState(profile.reviews?.length > 0 ? profile.reviews : [
-        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://i.pravatar.cc/150?u=fatih" },
-        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://i.pravatar.cc/150?u=zeynep" },
-        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://i.pravatar.cc/150?u=ali" }
+        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://avatar.iran.liara.run/public/31" },
+        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://avatar.iran.liara.run/public/65" },
+        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://avatar.iran.liara.run/public/48" }
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const t = translations[lang as keyof typeof translations] || translations.tr
@@ -1085,10 +1085,10 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
     const handleSubmit = () => {
         if (!formData.name || !formData.content) return
 
-        // Fixed icons based on gender
+        // Fixed icons based on gender - Corporate Style Avatars
         const image = formData.gender === 'female'
-            ? "https://avatar.iran.liara.run/public/girl"
-            : "https://avatar.iran.liara.run/public/boy"
+            ? "https://avatar.iran.liara.run/public/65"
+            : "https://avatar.iran.liara.run/public/31"
 
         onSubmit({ ...formData, image, id: Date.now() })
         setFormData({

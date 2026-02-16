@@ -67,8 +67,8 @@ export function Hero() {
                         className="flex items-center justify-center lg:justify-start gap-6 mt-16"
                     >
                         <div className="flex -space-x-3">
-                            {[1, 2, 3, 4].map(i => (
-                                <img key={i} src={`https://i.pravatar.cc/100?img=${i + 20}`} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
+                            {[31, 65, 48, 20].map(i => (
+                                <img key={i} src={`https://avatar.iran.liara.run/public/${i}`} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
                             ))}
                         </div>
                         <div className="flex flex-col">

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
                 title,
                 content,
                 rating: Number(rating) || 5,
-                image: image || `https://avatar.iran.liara.run/public/boy`,
+                image: image || `https://avatar.iran.liara.run/public/31`,
                 isActive: false // Yönetici onayına düşmesi için varsayılan false olabilir, 
                 // ama kullanıcı hemen görmek istiyorsa true da yapabiliriz.
                 // Kullanıcı "uygunsuz yorumlar olabilir" dediği için varsayılan false (onay bekliyor) daha mantıklı.

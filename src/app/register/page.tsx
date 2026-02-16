@@ -155,8 +155,8 @@ export default function RegisterPage() {
 
                         <div className="flex items-center gap-3">
                             <div className="flex -space-x-2">
-                                {[21, 22, 23, 24].map(i => (
-                                    <img key={i} src={`https://i.pravatar.cc/80?img=${i}`} className="w-8 h-8 rounded-full border-2 border-white/30" />
+                                {[31, 65, 48, 20].map(i => (
+                                    <img key={i} src={`https://avatar.iran.liara.run/public/${i}`} className="w-8 h-8 rounded-full border-2 border-white/30" />
                                 ))}
                             </div>
                             <span className="text-white/70 text-xs font-medium">Binlerce profesyonel Kardly kullanıyor</span>
