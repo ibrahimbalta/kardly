@@ -52,7 +52,8 @@ import {
     Globe,
     Mail,
     MessageCircle,
-    Menu
+    Menu,
+    TrendingUp
 
 } from "lucide-react"
 
