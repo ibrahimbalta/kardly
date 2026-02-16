@@ -369,11 +369,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
     const socialLinks = profile.socialLinks || []
 
     const actions = [
-        { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
-        { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
+        { label: "E-posta", platform: 'mail', icon: Mail, url: `mailto:${profile.user.email}`, active: !!profile.user.email },
     ].filter(a => a.active)
 
     return (
@@ -421,31 +417,59 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                         </div>
                     </div>
 
-                    {/* Quick Actions */}
-                    <div className="space-y-3">
-                        {actions.map((action, i) => (
-                            <motion.a
-                                key={i}
-                                href={action.href}
-                                target="_blank"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                whileHover={{ scale: 1.02, x: 5 }}
-                                className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg", theme.btn, theme.border)}
-                            >
-                                <div style={{ color: theme.accent }}>{action.icon}</div>
-                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                            </motion.a>
-                        ))}
-                    </div>
-
                     {/* Bio Paragraph */}
                     {profile.bio && (
                         <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
                             {profile.bio}
                         </p>
                     )}
+
+                    {/* Main Social & Contact List - Dashboard Style */}
+                    <div className="space-y-3 pt-4">
+                        {[...socialLinks, ...actions].map((l: any, i: number) => {
+                            const platform = l.platform?.toLowerCase()
+                            let Icon = l.icon || Globe
+
+                            if (platform === 'instagram') Icon = Instagram
+                            if (platform === 'linkedin') Icon = Linkedin
+                            if (platform === 'twitter') Icon = Twitter
+                            if (platform === 'github') Icon = Github
+                            if (platform === 'youtube') Icon = Youtube
+                            if (platform === 'phone') Icon = Phone
+                            if (platform === 'whatsapp') Icon = MessageCircle
+                            if (platform === 'location') Icon = MapPin
+                            if (platform === 'website') Icon = Globe
+                            if (platform === 'mail') Icon = Mail
+
+                            return (
+                                <motion.a
+                                    key={i}
+                                    href={l.url}
+                                    target={platform === 'mail' ? '_self' : '_blank'}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className={cn(
+                                        "flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.02] active:scale-95 group",
+                                        theme.card, theme.border
+                                    )}
+                                >
+                                    <div className={cn("p-2.5 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors", theme.icon)}>
+                                        <Icon size={20} />
+                                    </div>
+                                    <div className="flex-1 overflow-hidden text-left">
+                                        <h4 className={cn("text-[10px] font-black uppercase tracking-widest opacity-40 mb-0.5", theme.text)}>
+                                            {l.label || (platform === 'phone' ? 'Telefon' : platform === 'location' ? 'Konum' : platform === 'website' ? 'Web Sitesi' : l.platform)}
+                                        </h4>
+                                        <p className={cn("text-xs font-medium truncate", theme.text)}>
+                                            {l.url.replace(/^https?:\/\/(www\.)?/, '').replace('mailto:', '').split('/')[0]}
+                                        </p>
+                                    </div>
+                                    <ArrowRight size={16} className={cn("opacity-20 group-hover:opacity-100 transition-opacity", theme.text)} />
+                                </motion.a>
+                            )
+                        })}
+                    </div>
 
                     {/* Testimonials Slider */}
                     <div className="pt-4 overflow-hidden relative">
@@ -505,23 +529,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                                 />
                             ))}
                         </div>
-                    </div>
-
-                    {/* Social Icons */}
-                    <div className="flex justify-center gap-6 pt-2">
-                        {socialLinks.slice(0, 6).map((l: any, i: number) => {
-                            const platform = l.platform.toLowerCase()
-                            return (
-                                <a key={i} href={l.url} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
-                                    {platform === 'instagram' && <Instagram size={24} />}
-                                    {platform === 'linkedin' && <Linkedin size={24} />}
-                                    {platform === 'twitter' && <Twitter size={24} />}
-                                    {platform === 'github' && <Github size={24} />}
-                                    {platform === 'youtube' && <Youtube size={24} />}
-                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube'].includes(platform)) && <Globe size={24} />}
-                                </a>
-                            )
-                        })}
                     </div>
 
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
