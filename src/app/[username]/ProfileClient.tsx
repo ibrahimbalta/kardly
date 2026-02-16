@@ -25,7 +25,16 @@ import {
     MessageSquare,
     Quote,
     X,
-    QrCode
+    QrCode,
+    Zap,
+    Trophy,
+    Target,
+    Users,
+    Code,
+    Palette,
+    Briefcase,
+    Settings,
+    Shield
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -398,6 +407,52 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                     {/* Profile Section */}
                     <div className="flex flex-col items-center text-center space-y-6">
                         <div className="relative group">
+                            {/* Expertise Icons */}
+                            {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                const radius = 95;
+                                const x = Math.cos(angle) * radius;
+                                const y = Math.sin(angle) * radius;
+
+                                const getIcon = (title: string) => {
+                                    const t = title.toLowerCase();
+                                    if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={16} />;
+                                    if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={16} />;
+                                    if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={16} />;
+                                    if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={16} />;
+                                    if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={16} />;
+                                    if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={16} />;
+                                    if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={16} />;
+                                    if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={16} />;
+                                    return <Zap size={16} />;
+                                };
+
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.5 + i * 0.1 }}
+                                        className="absolute z-20 flex flex-col items-center gap-1 group/item"
+                                        style={{
+                                            left: `calc(50% + ${x}px)`,
+                                            top: `calc(50% + ${y}px)`,
+                                            transform: 'translate(-50%, -50%)'
+                                        }}
+                                    >
+                                        <div
+                                            className="w-10 h-10 rounded-xl glass border border-white/20 flex items-center justify-center shadow-lg transition-all group-hover/item:scale-110 group-hover/item:rotate-6"
+                                            style={{ color: theme.accent, boxShadow: `0 0 15px ${theme.accent}30` }}
+                                        >
+                                            {getIcon(service.title)}
+                                        </div>
+                                        <span className="text-[8px] font-black uppercase tracking-tighter opacity-0 group-hover/item:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-0.5 rounded-full text-white pointer-events-none">
+                                            {service.title}
+                                        </span>
+                                    </motion.div>
+                                );
+                            })}
+
                             <motion.div
                                 animate={{
                                     boxShadow: [
