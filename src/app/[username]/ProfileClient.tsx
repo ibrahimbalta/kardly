@@ -680,30 +680,48 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
 
                             {/* Project Marquee Section */}
                             {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                                <div className="mt-6 space-y-2">
+                                <div className="mt-6 space-y-4 group/marquee">
+                                    <style>{`
+                                        @keyframes marquee-right {
+                                            0% { transform: translateX(-50%); }
+                                            100% { transform: translateX(0); }
+                                        }
+                                        .animate-marquee-right {
+                                            display: flex;
+                                            width: max-content;
+                                            animation: marquee-right 20s linear infinite;
+                                        }
+                                        .group\\/marquee:hover .animate-marquee-right {
+                                            animation-play-state: paused;
+                                        }
+                                    `}</style>
                                     <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Projelerim</h3>
-                                    <div className="relative py-1 overflow-hidden w-full max-w-[280px] mx-auto">
-                                        <motion.div
-                                            className="flex gap-4 items-center"
-                                            animate={{ x: [-((profile.products.filter((p: any) => p.image).length * 56)), 0] }}
-                                            transition={{
-                                                duration: profile.products.filter((p: any) => p.image).length * 4,
-                                                repeat: Infinity,
-                                                ease: "linear"
-                                            }}
-                                            style={{ width: 'max-content' }}
-                                        >
-                                            {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                    <div className="relative py-2 overflow-hidden w-full max-w-[320px] mx-auto">
+                                        <div className="animate-marquee-right flex gap-4">
+                                            {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                 <a
                                                     key={i}
                                                     href={project.link || "#"}
                                                     target="_blank"
-                                                    className="w-10 h-10 rounded-full border border-white/20 overflow-hidden shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-transform hover:scale-110 cursor-pointer block"
+                                                    className="w-10 h-10 rounded-full border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-all hover:scale-125 cursor-pointer block relative"
                                                 >
-                                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" title={project.name} />
+                                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
+
+                                                    {/* Rich Tooltip */}
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-40 bg-[#0f172a]/95 backdrop-blur-xl p-3 rounded-2xl text-left pointer-events-none border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-50 group-hover/prj:scale-100 z-[100]">
+                                                        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0f172a]/95 border-r border-b border-white/10 rotate-45" />
+                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1 line-clamp-1">{project.name}</h4>
+                                                        {project.description && (
+                                                            <p className="text-[9px] text-white/50 leading-tight line-clamp-2 font-medium">{project.description}</p>
+                                                        )}
+                                                    </div>
                                                 </a>
                                             ))}
-                                        </motion.div>
+                                        </div>
+
+                                        {/* Fading gradients for the edges */}
+                                        <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#030712] to-transparent z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to right, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
+                                        <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#030712] to-transparent z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to left, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
                                     </div>
                                 </div>
                             )}
