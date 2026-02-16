@@ -73,6 +73,7 @@ model Profile {
   qrCodeUrl      String?
   vCardUrl       String?
   cvUrl          String?
+  showAppointmentBtn Boolean     @default(false)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?
