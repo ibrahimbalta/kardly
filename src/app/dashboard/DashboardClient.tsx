@@ -1258,6 +1258,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_gold", name: "Neon Modern (Altın)", description: "Lüks altın sarısı neon ve seçkin tasarım.", image: "/templates/neon_gold.jpg", premium: true },
                                 { id: "neon_rose", name: "Neon Modern (Rose)", description: "Zarif rose neon ve estetik duruş.", image: "/templates/neon_rose.jpg", premium: true },
                                 { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Ferah turkuaz neon ve teknolojik hatlar.", image: "/templates/neon_cyan.jpg", premium: true },
+                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler.", image: "/templates/neon_gs.jpg", premium: true },
+                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon.", image: "/templates/neon_fb.jpg", premium: true },
+                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu.", image: "/templates/neon_ts.jpg", premium: true },
+                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon.", image: "/templates/neon_bjk.jpg", premium: true },
+                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri.", image: "/templates/neon_tr.jpg", premium: true },
+                                { id: "neon_greenwhite", name: "Neon (Yeşil-Beyaz)", description: "Dinamik yeşil ve temiz beyazın uyumu.", image: "/templates/neon_greenwhite.jpg", premium: true },
+                                { id: "neon_greenblack", name: "Neon (Yeşil-Siyah)", description: "Güçlü yeşil neon ve derin siyah kontrastı.", image: "/templates/neon_greenblack.jpg", premium: true },
+                                { id: "neon_orangeblack", name: "Neon (Turuncu-Siyah)", description: "Enerjik turuncu ve mat siyah birlikteliği.", image: "/templates/neon_orangeblack.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}

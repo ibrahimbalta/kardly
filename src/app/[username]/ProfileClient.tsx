@@ -88,6 +88,14 @@ export default function ProfileClient({ profile }: { profile: any }) {
             case "neon_gold": return <NeonModernTemplate {...props} colorScheme="gold" />;
             case "neon_rose": return <NeonModernTemplate {...props} colorScheme="rose" />;
             case "neon_cyan": return <NeonModernTemplate {...props} colorScheme="cyan" />;
+            case "neon_gs": return <NeonModernTemplate {...props} colorScheme="gs" />;
+            case "neon_fb": return <NeonModernTemplate {...props} colorScheme="fb" />;
+            case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" />;
+            case "neon_bjk": return <NeonModernTemplate {...props} colorScheme="bjk" />;
+            case "neon_tr": return <NeonModernTemplate {...props} colorScheme="tr" />;
+            case "neon_greenwhite": return <NeonModernTemplate {...props} colorScheme="greenwhite" />;
+            case "neon_greenblack": return <NeonModernTemplate {...props} colorScheme="greenblack" />;
+            case "neon_orangeblack": return <NeonModernTemplate {...props} colorScheme="orangeblack" />;
             default: return <NeonModernTemplate {...props} colorScheme="black" />;
         }
     }
@@ -222,8 +230,104 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, setIsAppointmen
             btn: "bg-[#0a2d2d]/60 border-cyan-500/30",
             btnText: "text-white",
             icon: "text-[#06b6d4]"
+        },
+        gs: {
+            bg: "bg-[#1a0505]",
+            card: "bg-[#2d0a0a]/40",
+            text: "text-[#fbbf24]",
+            subtext: "text-red-200/60",
+            border: "border-[#fbbf24]/20",
+            glow: "shadow-[0_0_20px_rgba(251,191,36,0.3)]",
+            accent: "#fbbf24",
+            btn: "bg-[#2d0a0a]/60 border-red-500/30",
+            btnText: "text-[#fbbf24]",
+            icon: "text-[#fbbf24]"
+        },
+        fb: {
+            bg: "bg-[#050b1a]",
+            card: "bg-[#0a152d]/40",
+            text: "text-[#fbbf24]",
+            subtext: "text-blue-200/60",
+            border: "border-[#fbbf24]/20",
+            glow: "shadow-[0_0_20px_rgba(251,191,36,0.3)]",
+            accent: "#fbbf24",
+            btn: "bg-[#0a152d]/60 border-blue-500/30",
+            btnText: "text-[#fbbf24]",
+            icon: "text-[#fbbf24]"
+        },
+        ts: {
+            bg: "bg-[#1a0510]",
+            card: "bg-[#2d0a1a]/40",
+            text: "text-[#38bdf8]",
+            subtext: "text-rose-200/60",
+            border: "border-[#38bdf8]/20",
+            glow: "shadow-[0_0_20px_rgba(56,189,248,0.3)]",
+            accent: "#38bdf8",
+            btn: "bg-[#2d0a1a]/60 border-rose-500/30",
+            btnText: "text-[#38bdf8]",
+            icon: "text-[#38bdf8]"
+        },
+        bjk: {
+            bg: "bg-[#000000]",
+            card: "bg-white/5",
+            text: "text-white",
+            subtext: "text-white/60",
+            border: "border-white/20",
+            glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+            accent: "#ffffff",
+            btn: "bg-white/5 border-white/20",
+            btnText: "text-white",
+            icon: "text-white"
+        },
+        tr: {
+            bg: "bg-[#1a0505]",
+            card: "bg-white/5",
+            text: "text-white",
+            subtext: "text-red-200/60",
+            border: "border-white/20",
+            glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+            accent: "#ffffff",
+            btn: "bg-white/5 border-white/20",
+            btnText: "text-white",
+            icon: "text-white"
+        },
+        greenwhite: {
+            bg: "bg-[#06140e]",
+            card: "bg-white/5",
+            text: "text-white",
+            subtext: "text-green-200/60",
+            border: "border-white/20",
+            glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+            accent: "#ffffff",
+            btn: "bg-white/5 border-white/20",
+            btnText: "text-white",
+            icon: "text-white"
+        },
+        greenblack: {
+            bg: "bg-[#06140e]",
+            card: "bg-black/60",
+            text: "text-[#22c55e]",
+            subtext: "text-green-200/60",
+            border: "border-[#22c55e]/20",
+            glow: "shadow-[0_0_20px_rgba(34,197,94,0.3)]",
+            accent: "#22c55e",
+            btn: "bg-black/60 border-green-500/30",
+            btnText: "text-[#22c55e]",
+            icon: "text-[#22c55e]"
+        },
+        orangeblack: {
+            bg: "bg-[#0f0a05]",
+            card: "bg-black/60",
+            text: "text-orange-500",
+            subtext: "text-orange-200/60",
+            border: "border-orange-500/20",
+            glow: "shadow-[0_0_20px_rgba(249,115,22,0.3)]",
+            accent: "#f97316",
+            btn: "bg-black/60 border-orange-500/30",
+            btnText: "text-orange-500",
+            icon: "text-orange-500"
         }
-    }[colorScheme as 'black' | 'white' | 'blue' | 'green' | 'purple' | 'red' | 'gold' | 'rose' | 'cyan'] || {
+    }[colorScheme as 'black' | 'white' | 'blue' | 'green' | 'purple' | 'red' | 'gold' | 'rose' | 'cyan' | 'gs' | 'fb' | 'ts' | 'bjk' | 'tr' | 'greenwhite' | 'greenblack' | 'orangeblack'] || {
         bg: "bg-[#030712]",
         card: "bg-black/40",
         text: "text-white",
