@@ -19,7 +19,8 @@ import {
     Download,
     Github,
     Youtube,
-    FileText
+    FileText,
+    ArrowRight
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -439,7 +440,7 @@ function CosmicGlitchTemplate({ profile, handleShare }: any) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent)]" />
             <main className="w-full max-w-[350px] space-y-12">
                 <div className="relative">
-                    <motion.div animate={{ skew: [0, -2, 2, 0] }} transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }} className="w-full aspect-square border-2 border-white/10 p-2 relative">
+                    <motion.div animate={{ skewX: [0, -2, 2, 0] }} transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 3 }} className="w-full aspect-square border-2 border-white/10 p-2 relative">
                         <img src={profile.user.image} className="w-full h-full object-cover grayscale brightness-125 contrast-125" />
                         <div className="absolute inset-0 bg-red-500/20 mix-blend-screen opacity-0 hover:opacity-100 transition-opacity" />
                     </motion.div>
