@@ -1253,11 +1253,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım.", image: "/templates/neon_white.jpg", premium: true },
                                 { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar.", image: "/templates/neon_blue.jpg", premium: true },
                                 { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm.", image: "/templates/neon_green.jpg", premium: true },
-                                { id: "aurora", name: "Aurora Premium", description: "Dinamik gradyanlar ve akışkan hatlarla modern bir hava.", image: "/templates/aurora.jpg", premium: true },
-                                { id: "cyber", name: "Cyber Tactical", description: "Teknolojik, askeri ve endüstriyel bir dijital kimlik.", image: "/templates/cyber.jpg", premium: true },
-                                { id: "zen", name: "Organic Zen", description: "Sakin, minimalist ve doğal tonlarda sanatsal yaklaşım.", image: "/templates/zen.jpg", premium: true },
-                                { id: "retro", name: "Retro Synth", description: "80'lerin neon ve synthwave estetiğiyle geçmişe yolculuk.", image: "/templates/retro.jpg", premium: true },
-                                { id: "cosmic", name: "Cosmic Glitch", description: "Sıra dışı, gizemli ve glitch efektli uzay teması.", image: "/templates/cosmic.jpg", premium: true },
+                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer.", image: "/templates/neon_purple.jpg", premium: true },
+                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm.", image: "/templates/neon_red.jpg", premium: true },
+                                { id: "neon_gold", name: "Neon Modern (Altın)", description: "Lüks altın sarısı neon ve seçkin tasarım.", image: "/templates/neon_gold.jpg", premium: true },
+                                { id: "neon_rose", name: "Neon Modern (Rose)", description: "Zarif rose neon ve estetik duruş.", image: "/templates/neon_rose.jpg", premium: true },
+                                { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Ferah turkuaz neon ve teknolojik hatlar.", image: "/templates/neon_cyan.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
