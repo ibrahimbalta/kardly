@@ -680,27 +680,35 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
 
                             {/* Project Marquee Section */}
                             {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                                <div className="relative mt-5 py-1 overflow-hidden w-full max-w-[280px] mx-auto">
-                                    <motion.div
-                                        className="flex gap-4 items-center"
-                                        animate={{ x: [0, -((profile.products.filter((p: any) => p.image).length * 56))] }}
-                                        transition={{
-                                            duration: profile.products.filter((p: any) => p.image).length * 3,
-                                            repeat: Infinity,
-                                            ease: "linear"
-                                        }}
-                                        style={{ width: 'max-content' }}
-                                    >
-                                        {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
-                                            <div key={i} className="w-10 h-10 rounded-full border border-white/20 overflow-hidden shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-transform hover:scale-110">
-                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" title={project.name} />
-                                            </div>
-                                        ))}
-                                    </motion.div>
+                                <div className="mt-6 space-y-2">
+                                    <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Projelerim</h3>
+                                    <div className="relative py-1 overflow-hidden w-full max-w-[280px] mx-auto">
+                                        <motion.div
+                                            className="flex gap-4 items-center"
+                                            animate={{ x: [-((profile.products.filter((p: any) => p.image).length * 56)), 0] }}
+                                            transition={{
+                                                duration: profile.products.filter((p: any) => p.image).length * 4,
+                                                repeat: Infinity,
+                                                ease: "linear"
+                                            }}
+                                            style={{ width: 'max-content' }}
+                                        >
+                                            {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                                <a
+                                                    key={i}
+                                                    href={project.link || "#"}
+                                                    target="_blank"
+                                                    className="w-10 h-10 rounded-full border border-white/20 overflow-hidden shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-transform hover:scale-110 cursor-pointer block"
+                                                >
+                                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" title={project.name} />
+                                                </a>
+                                            ))}
+                                        </motion.div>
+                                    </div>
                                 </div>
                             )}
 
-                            {profile.slogan && <p className={cn("text-sm font-bold mt-3 opacity-60", theme.text)}>“{profile.slogan}”</p>}
+                            {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
                     </div >
 
