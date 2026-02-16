@@ -677,6 +677,29 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                 <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>{profile.occupation || "WEB DEVELOPER"}</p>
                                 <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
                             </div>
+
+                            {/* Project Marquee Section */}
+                            {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
+                                <div className="relative mt-5 py-1 overflow-hidden w-full max-w-[280px] mx-auto">
+                                    <motion.div
+                                        className="flex gap-4 items-center"
+                                        animate={{ x: [0, -((profile.products.filter((p: any) => p.image).length * 56))] }}
+                                        transition={{
+                                            duration: profile.products.filter((p: any) => p.image).length * 3,
+                                            repeat: Infinity,
+                                            ease: "linear"
+                                        }}
+                                        style={{ width: 'max-content' }}
+                                    >
+                                        {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                            <div key={i} className="w-10 h-10 rounded-full border border-white/20 overflow-hidden shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-transform hover:scale-110">
+                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" title={project.name} />
+                                            </div>
+                                        ))}
+                                    </motion.div>
+                                </div>
+                            )}
+
                             {profile.slogan && <p className={cn("text-sm font-bold mt-3 opacity-60", theme.text)}>“{profile.slogan}”</p>}
                         </div>
                     </div >
