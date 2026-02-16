@@ -20,7 +20,11 @@ import {
     Github,
     Youtube,
     FileText,
-    ArrowRight
+    ArrowRight,
+    Star,
+    MessageSquare,
+    Quote,
+    X
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -58,6 +62,12 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [lang, setLang] = useState("tr")
     const [mounted, setMounted] = useState(false)
     const [copied, setCopied] = useState(false)
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+    const [reviews, setReviews] = useState([
+        { id: 1, name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://i.pravatar.cc/150?u=fatih" },
+        { id: 2, name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://i.pravatar.cc/150?u=zeynep" },
+        { id: 3, name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://i.pravatar.cc/150?u=ali" }
+    ])
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => { setMounted(true) }, [])
@@ -74,7 +84,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, reviews, setIsReviewModalOpen }
 
     // Template Selector Logic
     const renderTemplate = () => {
@@ -105,6 +115,13 @@ export default function ProfileClient({ profile }: { profile: any }) {
             <AppointmentModal profile={profile} isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} t={t} />
             {renderTemplate()}
 
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={(newReview: any) => setReviews([newReview, ...reviews])}
+                themeColor={profile.themeColor || "#0ea5e9"}
+            />
+
             <AnimatePresence>
                 {copied && (
                     <motion.div
@@ -121,7 +138,16 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, setIsAppointmentOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsReviewModalOpen }: any) {
+    const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentReviewIndex((prev) => (prev + 1) % reviews.length)
+        }, 5000)
+        return () => clearInterval(timer)
+    }, [reviews.length])
+
     const theme = {
         black: {
             bg: "bg-[#030712]",
@@ -421,6 +447,66 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, setIsAppointmen
                         </p>
                     )}
 
+                    {/* Testimonials Slider */}
+                    <div className="pt-4 overflow-hidden relative">
+                        <div className="flex items-center justify-between mb-4 px-2">
+                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Müşteri Yorumları</h3>
+                            <button
+                                onClick={() => setIsReviewModalOpen(true)}
+                                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                                style={{ color: theme.accent }}
+                            >
+                                + Yorum Yaz
+                            </button>
+                        </div>
+
+                        <div className="relative h-40">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentReviewIndex}
+                                    initial={{ opacity: 0, x: 50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    className={cn("absolute inset-0 p-5 rounded-3xl border flex flex-col justify-between", theme.card, theme.border)}
+                                >
+                                    <div className="flex gap-4">
+                                        <img src={reviews[currentReviewIndex].image} className="w-12 h-12 rounded-full border border-white/10 object-cover" />
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                    <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
+                                                </div>
+                                                <div className="flex gap-0.5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
+                                                "{reviews[currentReviewIndex].content}"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Pagination Dots */}
+                        <div className="flex justify-center gap-1.5 mt-4">
+                            {reviews.map((_: any, i: number) => (
+                                <div
+                                    key={i}
+                                    className="h-1 rounded-full transition-all"
+                                    style={{
+                                        width: i === currentReviewIndex ? '16px' : '4px',
+                                        background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)'
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Social Icons */}
                     <div className="flex justify-center gap-6 pt-2">
                         {socialLinks.slice(0, 6).map((l: any, i: number) => {
@@ -464,3 +550,96 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, setIsAppointmen
     )
 }
 
+function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
+    const [formData, setFormData] = useState({
+        name: "",
+        title: "",
+        content: "",
+        rating: 5,
+        image: `https://i.pravatar.cc/150?u=${Math.random()}`
+    })
+
+    if (!isOpen) return null
+
+    const handleSubmit = () => {
+        if (!formData.name || !formData.content) return
+        onSubmit({ ...formData, id: Date.now() })
+        setFormData({
+            name: "",
+            title: "",
+            content: "",
+            rating: 5,
+            image: `https://i.pravatar.cc/150?u=${Math.random()}`
+        })
+        onClose()
+    }
+
+    return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                className="relative w-full max-w-md bg-[#0f172a] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl overflow-hidden"
+            >
+                <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: themeColor }} />
+
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Yorum Bırak</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-white/40"><X size={20} /></button>
+                </div>
+
+                <div className="space-y-6">
+                    <div className="flex justify-center gap-2 mb-4">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                onClick={() => setFormData({ ...formData, rating: star })}
+                                className="transition-all hover:scale-125"
+                            >
+                                <Star
+                                    size={32}
+                                    className={cn(
+                                        star <= formData.rating ? "fill-current text-amber-400" : "text-white/10"
+                                    )}
+                                />
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="space-y-4">
+                        <input
+                            type="text"
+                            placeholder="Adınız Soyadınız"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Ünvanınız (Örn: Yazılım Geliştirici)"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        />
+                        <textarea
+                            rows={4}
+                            placeholder="Yorumunuz..."
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
+                            value={formData.content}
+                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                        />
+                    </div>
+
+                    <button
+                        onClick={handleSubmit}
+                        className="w-full py-5 rounded-2xl text-white font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl"
+                        style={{ background: themeColor }}
+                    >
+                        Yorumu Yayınla
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+    )
+}
