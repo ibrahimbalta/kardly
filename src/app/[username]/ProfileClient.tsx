@@ -169,6 +169,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             border: "border-slate-200",
             glow: "shadow-[0_0_20px_rgba(59,130,246,0.3)]",
             accent: "#3b82f6",
+            cvAccent: "#3b82f6",
             btn: "bg-slate-50 border-slate-200",
             btnText: "text-slate-900",
             icon: "text-[#3b82f6]"
@@ -301,6 +302,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             border: "border-white/20",
             glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
             accent: "#ffffff",
+            cvAccent: "#a3a3a3",
             btn: "bg-white/5 border-white/20",
             btnText: "text-white",
             icon: "text-white"
@@ -313,6 +315,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             border: "border-white/20",
             glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
             accent: "#ffffff",
+            cvAccent: "#ef4444",
             btn: "bg-white/5 border-white/20",
             btnText: "text-white",
             icon: "text-white"
@@ -325,6 +328,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
             border: "border-white/20",
             glow: "shadow-[0_0_20px_rgba(255,255,255,0.1)]",
             accent: "#ffffff",
+            cvAccent: "#22c55e",
             btn: "bg-white/5 border-white/20",
             btnText: "text-white",
             icon: "text-white"
@@ -540,8 +544,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                             target="_blank"
                             className="flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl"
                             style={{
-                                background: `linear-gradient(45deg, ${theme.accent}, ${theme.accent}cc)`,
-                                boxShadow: `0 10px 30px -10px ${theme.accent}60`
+                                background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
+                                boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
                             }}
                         >
                             <FileText size={20} /> CV Görüntüle
