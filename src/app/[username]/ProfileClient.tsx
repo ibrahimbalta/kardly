@@ -24,7 +24,8 @@ import {
     Star,
     MessageSquare,
     Quote,
-    X
+    X,
+    QrCode
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -524,7 +525,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                                     {platform === 'youtube' && <Youtube size={24} />}
                                     {(platform === 'phone' || platform === 'whatsapp') && <Phone size={24} />}
                                     {platform === 'mail' && <Mail size={24} />}
-                                    {platform === 'location' && <MapPin size={24} />}
+                                    {platform === 'location' && <QrCode size={24} />}
                                     {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'phone', 'whatsapp', 'mail', 'location'].includes(platform)) && <Globe size={24} />}
                                 </a>
                             )
