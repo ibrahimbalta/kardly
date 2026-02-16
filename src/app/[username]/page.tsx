@@ -30,9 +30,9 @@ export default async function ProfilePage({ params }: any) {
         }
     })
 
-    // Mock data for initial preview if profile not found (for development)
-    if (!profile) {
-        if (process.env.NODE_ENV === 'development') {
+    // Profile visibility check
+    if (!profile || profile.user?.isActive === false) {
+        if (process.env.NODE_ENV === 'development' && !profile) {
             return <ProfilePreview username={username} />
         }
         return notFound()

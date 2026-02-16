@@ -28,11 +28,34 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
     const [activeTab, setActiveTab] = useState("overview")
     const [searchQuery, setSearchQuery] = useState("")
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+    const [localUsers, setLocalUsers] = useState(users)
+    const [loadingUserId, setLoadingUserId] = useState<string | null>(null)
 
-    const filteredUsers = users.filter((u: any) =>
+    const filteredUsers = localUsers.filter((u: any) =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         u.name?.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
+        setLoadingUserId(userId)
+        try {
+            const response = await fetch('/api/admin/users/toggle-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, isActive: !currentStatus })
+            })
+
+            if (response.ok) {
+                setLocalUsers(localUsers.map((u: any) =>
+                    u.id === userId ? { ...u, isActive: !currentStatus } : u
+                ))
+            }
+        } catch (error) {
+            console.error("Status toggle error:", error)
+        } finally {
+            setLoadingUserId(null)
+        }
+    }
 
     return (
         <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
@@ -263,6 +286,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                 <th className="px-8 py-5">Kullanıcı Bilgisi</th>
                                                 <th className="px-8 py-5">Dijital Kimlik / Username</th>
                                                 <th className="px-8 py-5">Abonelik</th>
+                                                <th className="px-8 py-5">Durum</th>
                                                 <th className="px-8 py-5 text-right">Referans ID</th>
                                             </tr>
                                         </thead>
@@ -299,6 +323,28 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                         )}>
                                                             {u.subscription?.plan || 'free'}
                                                         </span>
+                                                    </td>
+                                                    <td className="px-8 py-6">
+                                                        <button
+                                                            onClick={() => handleToggleStatus(u.id, u.isActive !== false)}
+                                                            disabled={loadingUserId === u.id}
+                                                            className={cn(
+                                                                "px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 border shadow-sm",
+                                                                u.isActive !== false
+                                                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100"
+                                                                    : "bg-rose-50 text-rose-600 border-rose-100 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-100"
+                                                            )}
+                                                        >
+                                                            {loadingUserId === u.id ? (
+                                                                <span className="w-2 h-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                            ) : (
+                                                                <span className={cn(
+                                                                    "w-2 h-2 rounded-full",
+                                                                    u.isActive !== false ? "bg-emerald-500" : "bg-rose-500"
+                                                                )} />
+                                                            )}
+                                                            {u.isActive !== false ? 'AKTİF' : 'PASİF'}
+                                                        </button>
                                                     </td>
                                                     <td className="px-8 py-6 text-right">
                                                         <div className="text-[10px] font-mono text-slate-300 group-hover:text-slate-500 transition-colors uppercase italic font-bold">#USR-{u.id.substring(0, 6)}</div>

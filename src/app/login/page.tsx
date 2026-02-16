@@ -1,14 +1,25 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import { Layout, Mail, ArrowRight, Sparkles } from "lucide-react"
+import { Layout, Mail, ArrowRight, Sparkles, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 
 export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Yükleniyor...</div>}>
+            <LoginLogic />
+        </Suspense>
+    )
+}
+
+function LoginLogic() {
     const [email, setEmail] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const searchParams = useSearchParams()
+    const error = searchParams.get("error")
 
     const handleEmailLogin = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -89,6 +100,17 @@ export default function LoginPage() {
                         </div>
                         <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-rose-500">.</span></span>
                     </div>
+
+                    {error === "account_disabled" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-600"
+                        >
+                            <AlertCircle size={20} className="shrink-0" />
+                            <p className="text-xs font-bold leading-relaxed">Hesabınız dondurulmuştur. Lütfen destek ile iletişime geçin.</p>
+                        </motion.div>
+                    )}
 
                     <div className="mb-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-100 mb-6">

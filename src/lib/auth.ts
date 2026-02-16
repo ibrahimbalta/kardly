@@ -34,6 +34,19 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
+        signIn: async ({ user, account }: any) => {
+            if (account?.provider === "credentials") return true // Authorize handles this
+
+            // For Google or other providers, check status in DB
+            const dbUser = await prisma.user.findUnique({
+                where: { email: user.email }
+            })
+
+            if (dbUser && dbUser.isActive === false) {
+                return false // Deny access
+            }
+            return true
+        },
         session: async ({ session, user, token }: any) => {
             if (session.user) {
                 session.user.id = user?.id || token?.sub

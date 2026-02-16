@@ -11,6 +11,14 @@ export default async function DashboardPage() {
         redirect("/login")
     }
 
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id }
+    })
+
+    if (!user || user.isActive === false) {
+        redirect("/login?error=account_disabled")
+    }
+
     const profile = await prisma.profile.findUnique({
         where: { userId: session.user.id }
     })
