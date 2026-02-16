@@ -12,10 +12,11 @@ import {
   ArrowRight,
   MousePointer2,
   Sparkles,
-  Layers,
   Smartphone,
   QrCode,
-  Cpu,
+  BarChart3,
+  Briefcase,
+  Calendar,
   ArrowUpRight,
   Star
 } from "lucide-react"
@@ -60,7 +61,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[280px]">
-            {/* AI Magic Card */}
+            {/* Analytics Card */}
             <motion.div
               whileHover={{ y: -5 }}
               className="md:col-span-2 md:row-span-2 rounded-[3rem] p-10 border border-slate-100 bg-white relative overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-500"
@@ -69,22 +70,28 @@ export default function Home() {
               <div className="relative h-full flex flex-col justify-between">
                 <div>
                   <div className="w-16 h-16 bg-rose-500 rounded-[1.5rem] flex items-center justify-center mb-8 shadow-xl shadow-rose-200 group-hover:rotate-6 transition-transform">
-                    <Cpu className="text-white" size={32} />
+                    <BarChart3 className="text-white" size={32} />
                   </div>
-                  <h3 className="text-3xl font-black mb-4 leading-tight text-slate-900">Yapay Zeka <br /> Tasarım Sihirbazı</h3>
-                  <p className="text-slate-500 text-lg max-w-sm">AI, sizin için en uygun renk paletini ve dizilimi saniyeler içinde belirler.</p>
+                  <h3 className="text-3xl font-black mb-4 leading-tight text-slate-900">Gelişmiş Etkileşim <br /> Analizi</h3>
+                  <p className="text-slate-500 text-lg max-w-sm">Kayıt, tıklama, görüntüleme ve paylaşım istatistiklerini anlık olarak profesyonel bir panelden takip edin.</p>
                 </div>
-                <div className="h-40 bg-slate-50 rounded-[2rem] border border-slate-100 p-6 relative group-hover:scale-[1.02] transition-transform overflow-hidden">
-                  <div className="flex gap-4 items-center mb-4">
-                    <div className="w-10 h-10 rounded-full bg-rose-100 animate-pulse" />
-                    <div className="space-y-2">
-                      <div className="w-32 h-2 bg-slate-200 rounded-full" />
-                      <div className="w-20 h-2 bg-slate-100 rounded-full" />
-                    </div>
+                <div className="h-40 bg-slate-50 rounded-[2rem] border border-slate-100 p-6 relative group-hover:scale-[1.02] transition-transform overflow-hidden flex flex-col justify-end">
+                  <div className="flex items-end gap-2 h-20">
+                    {[40, 70, 45, 90, 65, 80, 50].map((h, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ height: 0 }}
+                        whileInView={{ height: `${h}%` }}
+                        className="flex-1 bg-rose-500/20 rounded-t-lg border-t border-rose-500/30"
+                      />
+                    ))}
                   </div>
-                  <div className="space-y-3">
-                    <div className="w-full h-8 bg-white rounded-xl shadow-sm border border-slate-100" />
-                    <div className="w-full h-8 bg-rose-500/10 rounded-xl" />
+                  <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
+                    <div className="flex gap-2">
+                      <div className="w-3 h-3 rounded-full bg-rose-500" />
+                      <div className="w-12 h-2 bg-slate-200 rounded-full mt-0.5" />
+                    </div>
+                    <span className="text-[10px] font-black text-rose-500">+12.4%</span>
                   </div>
                   <MousePointer2 className="absolute bottom-4 right-4 text-rose-500 animate-bounce" />
                 </div>
@@ -104,28 +111,28 @@ export default function Home() {
               </div>
               <div>
                 <h4 className="text-2xl font-black mb-2 tracking-tight text-slate-900">Tek Tıkla Rehbere Kayıt</h4>
-                <p className="text-slate-500 text-sm">Kullanıcılarınız sizi uygulama indirmeden rehberlerine anında kaydedebilir.</p>
+                <p className="text-slate-500 text-sm">Ziyaretçileriniz herhangi bir uygulama indirmeden sizi rehberlerine anında kaydedebilir.</p>
               </div>
             </motion.div>
 
-            {/* Smart Modules */}
+            {/* Portfolio */}
             <motion.div
               whileHover={{ y: -5 }}
               className="md:col-span-1 rounded-[3rem] p-8 border border-slate-100 bg-amber-50/30 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
             >
-              <Layers className="text-amber-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
-              <h4 className="text-xl font-black tracking-tight leading-tight text-slate-900">Dinamik <br /> Modüller</h4>
-              <p className="text-slate-500 text-[11px]">Hizmetlerinizi ve projelerinizi bento kartlarıyla estetik şekilde sunun.</p>
+              <Briefcase className="text-amber-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
+              <h4 className="text-xl font-black tracking-tight leading-tight text-slate-900">Dijital <br /> Portfolyo</h4>
+              <p className="text-slate-500 text-[11px]">En iyi projelerinizi ve başarılarınızı estetik bir marquee akışıyla sergileyin.</p>
             </motion.div>
 
-            {/* SEO Optimized */}
+            {/* Booking */}
             <motion.div
               whileHover={{ y: -5 }}
               className="md:col-span-1 rounded-[3rem] p-8 border border-slate-100 bg-emerald-50/30 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
             >
-              <Globe className="text-emerald-500 mb-6 group-hover:rotate-12 transition-transform" size={40} />
-              <h4 className="text-xl font-black tracking-tight leading-tight text-slate-900">SEO <br /> Altyapısı</h4>
-              <p className="text-slate-500 text-[11px]">Google aramalarında isminiz en profesyonel halinizle en üstte çıksın.</p>
+              <Calendar className="text-emerald-500 mb-6 group-hover:rotate-12 transition-transform" size={40} />
+              <h4 className="text-xl font-black tracking-tight leading-tight text-slate-900">Randevu <br /> Planlayıcı</h4>
+              <p className="text-slate-500 text-[11px]">Müşterilerinizin doğrudan profiliniz üzerinden randevu almasını sağlayın.</p>
             </motion.div>
           </div>
         </div>
