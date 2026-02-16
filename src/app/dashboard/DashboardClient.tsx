@@ -1111,11 +1111,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
+                                { id: "premium_modern", name: "Premium Modern", description: "En üst segment bento tasarımı, neon detaylar ve interaktif kartlar.", image: "/templates/premium.jpg", premium: true },
                                 { id: "modern", name: "Modern Animated", description: "Hareketli arka plan ve akışkan tasarım.", image: "/templates/modern.jpg", premium: false },
                                 { id: "bento", name: "Professional Portfolio", description: "Sektör standartlarında bento tasarımı ve iş odaklı akıllı widgetlar.", image: "/templates/bento.jpg", premium: true },
                                 { id: "minimal_ios", name: "Minimalist CV", description: "Apple tarzı sade, öz ve profesyonel görünüm.", image: "/templates/minimal.jpg", premium: true },
                                 { id: "luxury", name: "Luxury Executive", description: "Vurgulu altın sarısı ve gece siyahı ile otoriter duruş.", image: "/templates/luxury.jpg", premium: true },
-                                { id: "creative", name: "Executive Showroom", description: "En üst segment, interaktif ve modüler profesyonel sunum.", image: "/templates/creative.jpg", premium: true },
+                                { id: "creative", name: "Executive Showroom", description: "İnteraktif ve modüler profesyonel sunum.", image: "/templates/creative.jpg", premium: true },
                                 { id: "nebula_blue", name: "Nebula Midnight", description: "Uzay temalı, parlayan bento grid tasarımı.", image: "/templates/nebula_blue.jpg", premium: true },
                                 { id: "nebula_purple", name: "Nebula Sunset", description: "Eflatun ve pembe tonlarında fütüristik tasarım.", image: "/templates/nebula_purple.jpg", premium: true },
                                 { id: "nebula_emerald", name: "Nebula Emerald", description: "Zümrüt yeşili ve neon detaylı modern tasarım.", image: "/templates/nebula_emerald.jpg", premium: true },
