@@ -34,6 +34,11 @@ export default async function DashboardPage() {
         orderBy: { createdAt: "desc" }
     })
 
+    const reviews = await prisma.review.findMany({
+        where: { profileId: profile?.id || "" },
+        orderBy: { createdAt: "desc" }
+    })
+
     // Calculate stats
     const totalViews = analytics.filter((a: any) => a.type === 'view').length
     const totalClicks = analytics.filter((a: any) => a.type.startsWith('click_')).length
@@ -48,7 +53,13 @@ export default async function DashboardPage() {
         projectClicks: analytics.filter((a: any) => a.type === 'click_product').length,
         waClicks: analytics.filter((a: any) => a.type === 'click_whatsapp').length,
         phoneClicks: analytics.filter((a: any) => a.type === 'click_phone').length,
-        recentAnalytics: analytics.slice(0, 50) // Increased for better filtering in client
+        emailClicks: analytics.filter((a: any) => a.type === 'click_email').length,
+        shareClicks: analytics.filter((a: any) => a.type === 'click_share').length,
+        appointmentClicks: analytics.filter((a: any) => a.type === 'click_appointment').length,
+        websiteClicks: analytics.filter((a: any) => a.type === 'click_website').length,
+        locationClicks: analytics.filter((a: any) => a.type === 'click_location').length,
+        reviewCount: reviews.length,
+        recentAnalytics: analytics.slice(0, 50)
     }
 
     // If no profile, handle redirects (Admin goes to /admin, others to /onboarding)
@@ -61,11 +72,6 @@ export default async function DashboardPage() {
             redirect("/onboarding")
         }
     }
-
-    const reviews = await prisma.review.findMany({
-        where: { profileId: profile?.id || "" },
-        orderBy: { createdAt: "desc" }
-    })
 
     return (
         <DashboardClient

@@ -50,7 +50,8 @@ import {
     Briefcase,
     Phone,
     Globe,
-    Mail
+    Mail,
+    MessageCircle
 
 } from "lucide-react"
 
@@ -1040,31 +1041,44 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
+                        {/* Top Summary Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <StatCard
                                 icon={<Eye className="w-5 h-5 text-blue-400" />}
-                                label="Sayfa Görüntüleme"
+                                label="Toplam Ziyaret"
                                 value={stats.totalViews.toString()}
-                                trend="+12%"
+                                trend="Genel"
                             />
                             <StatCard
                                 icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />}
                                 label="Etkileşim Oranı"
                                 value={stats.clickRate}
-                                trend="+5%"
-                            />
-                            <StatCard
-                                icon={<Download className="w-5 h-5 text-indigo-400" />}
-                                label="vCard İndirme"
-                                value={stats.vCardClicks.toString()}
-                                trend="+8%"
+                                trend="Ortalama"
                             />
                             <StatCard
                                 icon={<FileText className="w-5 h-5 text-amber-400" />}
                                 label="CV Görüntüleme"
                                 value={stats.cvClicks.toString()}
-                                trend="+15%"
+                                trend="Dosya"
                             />
+                            <StatCard
+                                icon={<Briefcase className="w-5 h-5 text-rose-400" />}
+                                label="Proje Tıklama"
+                                value={stats.projectClicks.toString()}
+                                trend="Portföy"
+                            />
+                        </div>
+
+                        {/* Detailed Action Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label="Ara" count={stats.phoneClicks} color="indigo" />
+                            <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label="WhatsApp" count={stats.waClicks} color="emerald" />
+                            <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label="E-Mail" count={stats.emailClicks} color="blue" />
+                            <ActionStatCard icon={<Calendar className="w-5 h-5 text-purple-400" />} label="Randevu" count={stats.appointmentClicks} color="purple" />
+                            <ActionStatCard icon={<Globe className="w-5 h-5 text-cyan-400" />} label="Web Sitesi" count={stats.websiteClicks} color="cyan" />
+                            <ActionStatCard icon={<MapPin className="w-5 h-5 text-rose-400" />} label="Konum" count={stats.locationClicks} color="rose" />
+                            <ActionStatCard icon={<Share2 className="w-5 h-5 text-orange-400" />} label="Paylaşım" count={stats.shareClicks} color="orange" />
+                            <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label="Yorumlar" count={stats.reviewCount} color="amber" />
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -1079,22 +1093,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <Zap size={20} />
                                         </div>
                                         <div>
-                                            <h3 className="font-black text-lg text-white">Performans Özeti</h3>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Card Insights</p>
+                                            <h3 className="font-black text-lg text-white">Profil Performans Raporu</h3>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">Digital Assistant Insights</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Görüntüleme Analizi</h4>
-                                            <p className="text-sm font-medium text-white">Profiliniz toplam <span className="text-primary">{stats.totalViews} kez</span> ziyaret edildi. Ziyaretçileriniz genellikle <span className="text-primary">Mobil</span> cihazları tercih ediyor.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
+                                            <p className="text-sm font-medium text-white">Toplam <span className="text-primary">{stats.totalViews} ziyaretçi</span> arasında en çok etkileşim kurulan kanal <span className="text-primary">{stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> oldu.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">En İlgi Çeken Alanlar</h4>
-                                            <p className="text-sm font-medium text-white">"Projelerim" ve "CV" bölümleri <span className="text-emerald-400">en çok etkileşim alan</span> kısımlar. Proje tıklamalarınız oldukça yüksek.</p>
+                                            <h4 className="text-xs font-bold text-white/60">İçerik Etkileşimi</h4>
+                                            <p className="text-sm font-medium text-white">Projeleriniz ve CV'niz toplam <span className="text-emerald-400">{(stats.projectClicks + stats.cvClicks).toString()} kez</span> incelendi. Portföyünüz dikkat çekiyor.</p>
                                         </div>
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-white/60">Dönüşüm Durumu</h4>
-                                            <p className="text-sm font-medium text-white">Kişilerin sizi rehberine ekleme oranı <span className="text-amber-400">%{stats.totalViews > 0 ? ((stats.vCardClicks / stats.totalViews) * 100).toFixed(1) : 0}</span>. Bu oldukça sağlıklı bir oran.</p>
+                                            <h4 className="text-xs font-bold text-white/60">Sosyal Paylaşım</h4>
+                                            <p className="text-sm font-medium text-white">Profiliniz <span className="text-amber-400">{stats.shareClicks} kez</span> paylaşıldı. Bu, ağınızın aktif olduğunu gösteriyor.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1125,7 +1139,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     />
                                     <StatBar
                                         label="İletişim (WA / Tel / E-posta)"
-                                        count={stats.waClicks + stats.phoneClicks} // Simplified
+                                        count={stats.waClicks + stats.phoneClicks + stats.emailClicks}
                                         total={stats.totalViews}
                                         color="bg-emerald-500"
                                     />
@@ -1143,9 +1157,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             if (type === 'click_vcard') return 'Rehbere Eklendi (vCard)'
                                             if (type === 'click_cv') return 'CV Görüntülendi'
                                             if (type === 'click_product') return 'Proje İncelendi'
-                                            if (type === 'click_whatsapp') return 'WhatsApp Mesajı Gönderildi'
-                                            if (type === 'click_phone') return 'Telefonla Arandı'
-                                            if (type === 'click_email') return 'E-posta Gönderildi'
+                                            if (type === 'click_whatsapp') return 'WhatsApp Mesajı'
+                                            if (type === 'click_phone') return 'Telefonla Arama'
+                                            if (type === 'click_email') return 'E-posta Gönderimi'
+                                            if (type === 'click_appointment') return 'Randevu Talebi'
+                                            if (type === 'click_website') return 'Web Sitesi Ziyareti'
+                                            if (type === 'click_location') return 'Konum Görüntüleme'
+                                            if (type === 'click_share') return 'Profil Paylaşıldı'
                                             return type.replace('click_', '').replace('_', ' ')
                                         }
 
@@ -1505,17 +1523,42 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
 
 function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label: string, value: string, trend: string }) {
     return (
-        <div className="glass p-6 rounded-3xl border-white/5">
+        <div className="glass p-6 rounded-[2rem] border-white/5 hover:border-white/10 transition-all">
             <div className="flex justify-between items-start mb-4">
-                <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
                     {icon}
                 </div>
-                <span className="text-emerald-500 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-md">
+                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 px-2 py-1 rounded-lg">
                     {trend}
                 </span>
             </div>
-            <p className="text-sm text-foreground/50 font-medium mb-1">{label}</p>
-            <p className="text-2xl font-bold">{value}</p>
+            <p className="text-xs text-foreground/50 font-bold uppercase tracking-wider mb-1">{label}</p>
+            <p className="text-3xl font-black">{value}</p>
+        </div>
+    )
+}
+
+function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, label: string, count: number, color: string }) {
+    const colors: any = {
+        indigo: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+        emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+        blue: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+        purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+        cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+        rose: "bg-rose-500/10 text-rose-400 border-rose-500/20",
+        orange: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+        amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    }
+
+    return (
+        <div className={cn("glass p-5 rounded-[2rem] border flex flex-col items-center text-center gap-3 transition-all hover:scale-105 active:scale-95 cursor-default", colors[color] || "border-white/5")}>
+            <div className="w-12 h-12 rounded-2xl bg-black/20 flex items-center justify-center">
+                {icon}
+            </div>
+            <div className="space-y-0.5">
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">{label}</p>
+                <p className="text-2xl font-black">{count}</p>
+            </div>
         </div>
     )
 }

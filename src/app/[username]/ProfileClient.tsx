@@ -82,10 +82,33 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const t = translations[lang as keyof typeof translations] || translations.tr
 
-    useEffect(() => { setMounted(true) }, [])
+    useEffect(() => {
+        setMounted(true)
+        // Page view track
+        if (profile.id) {
+            fetch("/api/analytics", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ profileId: profile.id, type: "view" })
+            }).catch(console.error)
+        }
+    }, [])
+
+    const trackEvent = async (type: string, value?: string) => {
+        try {
+            await fetch("/api/analytics", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ profileId: profile.id, type: `click_${type}`, value })
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     const handleShare = async () => {
         const url = `${window.location.origin}/${profile.username}`
+        trackEvent("share")
         if (navigator.share) {
             try { await navigator.share({ title: profile.user.name, text: profile.slogan, url }) } catch { }
         } else {
@@ -96,6 +119,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     const handleCVView = () => {
         if (!profile.cvUrl) return;
+        trackEvent("cv")
 
         // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
         if (profile.cvUrl.startsWith('data:')) {
@@ -125,7 +149,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, reviews, setIsReviewModalOpen }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, reviews, setIsReviewModalOpen, trackEvent }
 
     // Template Selector Logic
     const renderTemplate = () => {
@@ -213,7 +237,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -568,12 +592,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
     const socialLinks = profile.socialLinks || []
 
     const actions = [
-        { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
-        { label: "Randevu Al", icon: <Calendar size={20} />, onClick: () => setIsAppointmentOpen(true), active: !!profile.showAppointmentBtn },
-        { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
+        { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
+        {
+            label: "Randevu Al", icon: <Calendar size={20} />, onClick: () => {
+                trackEvent("appointment")
+                setIsAppointmentOpen(true)
+            }, active: !!profile.showAppointmentBtn
+        },
+        { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
 
     return (
@@ -590,6 +619,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                     animate={{ opacity: 1, y: 0 }}
                     className={cn("rounded-[3rem] border p-8 space-y-8 backdrop-blur-3xl shadow-2xl", theme.card, theme.border)}
                 >
+                    {/* Share Button Top Right */}
+                    <div className="absolute top-6 right-6 z-30">
+                        <button
+                            onClick={handleShare}
+                            className={cn("w-10 h-10 rounded-2xl border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border)}
+                        >
+                            <Share2 size={18} className={theme.icon} />
+                        </button>
+                    </div>
+
                     {/* Profile Section */}
                     <div className="flex flex-col items-center text-center space-y-6">
                         <div className="relative w-32 h-32 group">
@@ -703,6 +742,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                                     key={i}
                                                     href={project.link || "#"}
                                                     target="_blank"
+                                                    onClick={() => trackEvent("product", project.name)}
                                                     className="w-10 h-10 rounded-full border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-all hover:scale-125 cursor-pointer block relative"
                                                 >
                                                     <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
@@ -746,6 +786,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         <a
                                             href={action.href}
                                             target="_blank"
+                                            onClick={() => {
+                                                if (action.onClick) action.onClick()
+                                            }}
                                             className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border)}
                                         >
                                             <div style={{ color: theme.accent }}>{action.icon}</div>
