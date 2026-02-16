@@ -20,6 +20,7 @@ import {
     Twitter,
     Linkedin,
     Github,
+    Youtube,
     Link as LinkIcon,
     Smartphone,
     Download,
@@ -74,7 +75,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [profileData, setProfileData] = useState({
         ...profile,
         name: profile?.user?.name || session?.user?.name || "",
-        image: profile?.user?.image || session?.user?.image || ""
+        image: profile?.user?.image || session?.user?.image || "",
+        cvUrl: profile?.cvUrl || ""
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -471,6 +473,44 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     />
                                 </div>
 
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">CV (PDF/DOC)</label>
+                                    <div className="flex gap-4">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-primary">
+                                            <FileText className="w-5 h-5" />
+                                        </div>
+                                        <div className="flex-1 flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={profileData?.cvUrl || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, cvUrl: e.target.value })}
+                                                placeholder="CV dosya linki veya dosyayı yükleyin"
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => document.getElementById('cv-upload')?.click()}
+                                                className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2"
+                                            >
+                                                <Upload className="w-4 h-4" /> Yükle
+                                            </button>
+                                        </div>
+                                        <input
+                                            id="cv-upload"
+                                            type="file"
+                                            accept=".pdf,.doc,.docx"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => setProfileData({ ...profileData, cvUrl: reader.result as string });
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="pt-4 border-t border-white/5">
                                     <label className="block text-sm font-medium mb-4 opacity-60">Sosyal Medya Bağlantıları</label>
                                     <div className="space-y-3">
@@ -531,6 +571,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 placeholder="Web Sitesi URL"
                                                 value={getSocialUrl("website")}
                                                 onChange={(e) => updateSocialLink("website", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
+                                                <Github className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="GitHub URL"
+                                                value={getSocialUrl("github")}
+                                                onChange={(e) => updateSocialLink("github", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-red-500">
+                                                <Youtube className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="YouTube URL"
+                                                value={getSocialUrl("youtube")}
+                                                onChange={(e) => updateSocialLink("youtube", e.target.value)}
                                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
                                             />
                                         </div>
@@ -599,6 +663,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     {link.platform === "instagram" && <Instagram className="w-4 h-4 text-rose-400" />}
                                                     {link.platform === "twitter" && <Twitter className="w-4 h-4 text-sky-400" />}
                                                     {link.platform === "linkedin" && <Linkedin className="w-4 h-4 text-blue-500" />}
+                                                    {link.platform === "github" && <Github className="w-4 h-4 text-white" />}
+                                                    {link.platform === "youtube" && <Youtube className="w-4 h-4 text-red-500" />}
                                                 </div>
                                             ))}
                                             {(!profileData.socialLinks || profileData.socialLinks.length === 0) && (
@@ -1187,6 +1253,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım.", image: "/templates/neon_white.jpg", premium: true },
                                 { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar.", image: "/templates/neon_blue.jpg", premium: true },
                                 { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm.", image: "/templates/neon_green.jpg", premium: true },
+                                { id: "aurora", name: "Aurora Premium", description: "Dinamik gradyanlar ve akışkan hatlarla modern bir hava.", image: "/templates/aurora.jpg", premium: true },
+                                { id: "cyber", name: "Cyber Tactical", description: "Teknolojik, askeri ve endüstriyel bir dijital kimlik.", image: "/templates/cyber.jpg", premium: true },
+                                { id: "zen", name: "Organic Zen", description: "Sakin, minimalist ve doğal tonlarda sanatsal yaklaşım.", image: "/templates/zen.jpg", premium: true },
+                                { id: "retro", name: "Retro Synth", description: "80'lerin neon ve synthwave estetiğiyle geçmişe yolculuk.", image: "/templates/retro.jpg", premium: true },
+                                { id: "cosmic", name: "Cosmic Glitch", description: "Sıra dışı, gizemli ve glitch efektli uzay teması.", image: "/templates/cosmic.jpg", premium: true },
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
@@ -1204,7 +1275,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 z-10" />
 
                                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-white/5 to-white/0">
-                                            {tpl.id === 'bento' ? <Layout className="w-12 h-12 text-primary/40" /> : <Smartphone className="w-12 h-12 text-white/20" />}
+                                            <Smartphone className="w-12 h-12 text-white/20" />
                                         </div>
 
 
