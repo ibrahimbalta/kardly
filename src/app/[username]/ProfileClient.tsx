@@ -696,7 +696,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         }
                                     `}</style>
                                     <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Projelerim</h3>
-                                    <div className="relative py-2 overflow-hidden w-full max-w-[320px] mx-auto">
+                                    <div className="relative -mt-24 pt-24 pb-4 overflow-hidden w-full max-w-[320px] mx-auto">
                                         <div className="animate-marquee-right flex gap-4">
                                             {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                 <a
@@ -708,11 +708,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                                     <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
 
                                                     {/* Rich Tooltip */}
-                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-40 bg-[#0f172a]/95 backdrop-blur-xl p-3 rounded-2xl text-left pointer-events-none border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-50 group-hover/prj:scale-100 z-[100]">
-                                                        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0f172a]/95 border-r border-b border-white/10 rotate-45" />
-                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1 line-clamp-1">{project.name}</h4>
-                                                        {project.description && (
-                                                            <p className="text-[9px] text-white/50 leading-tight line-clamp-2 font-medium">{project.description}</p>
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-48 bg-[#0f172a] border border-white/10 p-4 rounded-2xl text-left pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl">
+                                                        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0f172a] border-r border-b border-white/10 rotate-45" />
+                                                        <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
+                                                        {project.description ? (
+                                                            <p className="text-[10px] text-white/60 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
+                                                        ) : (
+                                                            <p className="text-[10px] text-white/40 italic font-medium">Bu proje için açıklama girilmemiş.</p>
                                                         )}
                                                     </div>
                                                 </a>
