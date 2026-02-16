@@ -934,20 +934,26 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
         title: "",
         content: "",
         rating: 5,
-        image: `https://i.pravatar.cc/150?u=${Math.random()}`
+        gender: "male" // male or female
     })
 
     if (!isOpen) return null
 
     const handleSubmit = () => {
         if (!formData.name || !formData.content) return
-        onSubmit({ ...formData, id: Date.now() })
+
+        // Fixed icons based on gender
+        const image = formData.gender === 'female'
+            ? "https://avatar.iran.liara.run/public/girl"
+            : "https://avatar.iran.liara.run/public/boy"
+
+        onSubmit({ ...formData, image, id: Date.now() })
         setFormData({
             name: "",
             title: "",
             content: "",
             rating: 5,
-            image: `https://i.pravatar.cc/150?u=${Math.random()}`
+            gender: "male"
         })
         onClose()
     }
@@ -968,7 +974,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="flex justify-center gap-2 mb-4">
+                    <div className="flex justify-center gap-2">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <button
                                 key={star}
@@ -983,6 +989,27 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                                 />
                             </button>
                         ))}
+                    </div>
+
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={() => setFormData({ ...formData, gender: 'male' })}
+                            className={cn(
+                                "flex-1 py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2",
+                                formData.gender === 'male' ? "bg-primary border-primary text-white" : "bg-white/5 border-white/10 text-white/40"
+                            )}
+                        >
+                            Erkek
+                        </button>
+                        <button
+                            onClick={() => setFormData({ ...formData, gender: 'female' })}
+                            className={cn(
+                                "flex-1 py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2",
+                                formData.gender === 'female' ? "bg-pink-500 border-pink-500 text-white" : "bg-white/5 border-white/10 text-white/40"
+                            )}
+                        >
+                            Bayan
+                        </button>
                     </div>
 
                     <div className="space-y-4">
