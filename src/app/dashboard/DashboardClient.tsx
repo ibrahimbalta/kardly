@@ -156,26 +156,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
         } catch (err) { console.error("Blocks sync error:", err) }
     }
 
-    const handleSave = async (updatedServices?: any) => {
+    const handleSave = async (overrides?: any) => {
         setIsSaving(true)
         try {
             const res = await fetch("/api/profile/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    slogan: profileData.slogan,
-                    bio: profileData.bio,
-                    phone: profileData.phone,
-                    socialLinks: profileData.socialLinks,
-                    themeColor: profileData.themeColor,
-                    templateId: profileData.templateId,
-                    services: updatedServices || serviceList,
-                    workingHours,
-                    occupation: profileData.occupation,
-                    displayName: profileData.name || session?.user?.name,
-                    image: profileData.image,
-                    cvUrl: profileData.cvUrl,
-                    showAppointmentBtn: profileData.showAppointmentBtn
+                    slogan: overrides?.slogan ?? profileData.slogan,
+                    bio: overrides?.bio ?? profileData.bio,
+                    phone: overrides?.phone ?? profileData.phone,
+                    socialLinks: overrides?.socialLinks ?? profileData.socialLinks,
+                    themeColor: overrides?.themeColor ?? profileData.themeColor,
+                    templateId: overrides?.templateId ?? profileData.templateId,
+                    services: overrides?.services ?? serviceList,
+                    workingHours: overrides?.workingHours ?? workingHours,
+                    occupation: overrides?.occupation ?? profileData.occupation,
+                    displayName: overrides?.name ?? profileData.name ?? session?.user?.name,
+                    image: overrides?.image ?? profileData.image,
+                    cvUrl: overrides?.cvUrl ?? profileData.cvUrl,
+                    showAppointmentBtn: overrides?.showAppointmentBtn ?? profileData.showAppointmentBtn
                 })
             })
 
@@ -219,13 +219,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
         setServiceList(newList)
         setShowServiceModal(false)
         setNewService({ title: "", description: "" })
-        handleSave(newList) // Automatically save profile with new service
+        handleSave({ services: newList }) // Automatically save profile with new service
     }
 
     const handleDeleteService = (index: number) => {
         const newList = serviceList.filter((_: any, i: number) => i !== index)
         setServiceList(newList)
-        handleSave(newList) // Automatically save profile after delete
+        handleSave({ services: newList }) // Automatically save profile after delete
     }
 
     const handleAddProduct = async (e: React.FormEvent) => {
@@ -1181,7 +1181,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     )}
                                     onClick={() => {
                                         setProfileData({ ...profileData, templateId: tpl.id });
-                                        handleSave(); // Tip: Şablon seçildiğinde otomatik kaydetme eklenebilir
+                                        handleSave({ templateId: tpl.id });
                                     }}
                                 >
                                     <div className="p-6">
