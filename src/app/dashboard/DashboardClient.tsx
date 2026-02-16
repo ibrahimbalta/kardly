@@ -653,12 +653,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={() => setShowToast("AI Stil Sihirbazı yakında aktif olacak!")}
-                                        className="w-full py-4 mt-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 animate-gradient shadow-xl"
-                                    >
-                                        <Sparkles size={18} /> AI STİL SİHİRBAZINI BAŞLAT
-                                    </button>
                                 </div>
 
                                 <div className="pt-6">
