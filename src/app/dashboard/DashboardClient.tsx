@@ -318,7 +318,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const currentPlan = "pro"
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white flex overflow-hidden">
+        <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
@@ -329,7 +329,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Mobile Header Toggle */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#0b0f1a]/80 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-6">
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-50 flex items-center justify-between px-6">
                 <Link href="/" className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
                         <Zap className="text-white w-4 h-4 fill-current" />
@@ -339,7 +339,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        className="p-2 transition-all hover:bg-white/5 rounded-xl text-foreground/80"
+                        className="p-2 transition-all hover:bg-slate-100 rounded-xl text-slate-600"
                     >
                         {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
@@ -348,8 +348,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-[60] w-72 border-r border-white/5 bg-[#0b0f1a] p-6 flex flex-col gap-8 transition-transform duration-300 lg:relative lg:translate-x-0 lg:z-10",
-                isSidebarOpen ? "translate-x-0 shadow-[20px_0_50px_rgba(0,0,0,0.5)]" : "-translate-x-full"
+                "fixed inset-y-0 left-0 z-[60] w-72 border-r border-slate-200 bg-white p-6 flex flex-col gap-8 transition-transform duration-300 lg:relative lg:translate-x-0 lg:z-10",
+                isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full"
             )}>
                 <div className="flex items-center justify-between lg:justify-start gap-3 mb-4">
                     <Link href="/" className="flex items-center gap-3 group">
@@ -357,11 +357,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <Zap className="text-white w-5 h-5 fill-current" />
                         </div>
                         <div>
-                            <span className="text-xl font-black tracking-tighter">KARDLY<span className="text-primary">.</span></span>
-                            <span className="text-[9px] text-white/30 font-black uppercase tracking-[0.2em] block">Dashboard PRO</span>
+                            <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-primary">.</span></span>
+                            <span className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] block">Dashboard PRO</span>
                         </div>
                     </Link>
-                    <button className="lg:hidden p-2 text-white/20 hover:text-white" onClick={() => setIsSidebarOpen(false)}>
+                    <button className="lg:hidden p-2 text-slate-300 hover:text-slate-600" onClick={() => setIsSidebarOpen(false)}>
                         <X size={20} />
                     </button>
                 </div>
@@ -478,8 +478,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                     >
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2">Hoş geldin, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
-                        <p className="text-white/40 text-sm font-medium tracking-wide">Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.</p>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">Hoş geldin, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
+                        <p className="text-slate-400 text-sm font-medium tracking-wide">Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.</p>
                     </motion.div>
                     {profile && (
                         <motion.a
@@ -1486,7 +1486,7 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
                 "w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-sm group",
                 active
                     ? "bg-primary text-white shadow-xl shadow-primary/20"
-                    : "text-white/40 hover:bg-white/5 hover:text-white"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
             )}
         >
             <div className={cn("transition-transform group-hover:scale-110", active && "scale-110")}>
@@ -1507,21 +1507,21 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
     return (
         <motion.div
             whileHover={{ y: -5 }}
-            className="glass p-8 rounded-[2.5rem] border-white/5 hover:border-emerald-500/20 transition-all bg-white/[0.02] relative overflow-hidden group"
+            className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:border-primary/20 transition-all relative overflow-hidden group"
         >
             <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-sm">
                     {icon}
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 rounded-full">
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
                     <TrendingUp size={10} className="text-emerald-500" />
                     <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
                         {trend}
                     </span>
                 </div>
             </div>
-            <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em] mb-2">{label}</p>
-            <p className="text-3xl font-black tracking-tight">{value}</p>
+            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-2">{label}</p>
+            <p className="text-3xl font-black tracking-tight text-slate-900">{value}</p>
 
             <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
@@ -1530,24 +1530,24 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
 
 function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, label: string, count: number, color: string }) {
     const colors: any = {
-        indigo: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-        emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-        blue: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-        purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-        cyan: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-        rose: "bg-rose-500/10 text-rose-400 border-rose-500/20",
-        orange: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-        amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+        indigo: "bg-indigo-50 text-indigo-600 border-indigo-100",
+        emerald: "bg-emerald-50 text-emerald-600 border-emerald-100",
+        blue: "bg-blue-50 text-blue-600 border-blue-100",
+        purple: "bg-purple-50 text-purple-600 border-purple-100",
+        cyan: "bg-cyan-50 text-cyan-600 border-cyan-100",
+        rose: "bg-rose-50 text-rose-600 border-rose-100",
+        orange: "bg-orange-50 text-orange-600 border-orange-100",
+        amber: "bg-amber-50 text-amber-600 border-amber-100",
     }
 
     return (
-        <div className={cn("glass p-5 rounded-[2rem] border flex flex-col items-center text-center gap-3 transition-all hover:scale-105 active:scale-95 cursor-default", colors[color] || "border-white/5")}>
-            <div className="w-12 h-12 rounded-2xl bg-black/20 flex items-center justify-center">
+        <div className={cn("bg-white p-5 rounded-[2rem] border flex flex-col items-center text-center gap-3 transition-all hover:scale-105 active:scale-95 cursor-default shadow-sm", colors[color] || "border-slate-200")}>
+            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
                 {icon}
             </div>
             <div className="space-y-0.5">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">{label}</p>
-                <p className="text-2xl font-black">{count}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</p>
+                <p className="text-2xl font-black text-slate-800">{count}</p>
             </div>
         </div>
     )
