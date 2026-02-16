@@ -63,6 +63,7 @@ interface Profile {
     products: { id: string; name: string; description: string; price: number; image: string; link: string }[];
     blocks: { id: string; type: string; content: any; order: number; isActive: boolean }[];
     cvUrl?: string;
+    showAppointmentBtn?: boolean;
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -158,7 +159,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsReviewModalOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsReviewModalOpen, setIsAppointmentOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -516,6 +517,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
         { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
+        { label: "Randevu Al", icon: <Calendar size={20} />, onClick: () => setIsAppointmentOpen(true), active: !!profile.showAppointmentBtn },
         { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
@@ -625,26 +627,38 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, reviews, setIsR
                         </div>
                     </div >
 
-                    {/* Quick Actions */}
-                    < div className="space-y-3" >
+                    <div className="space-y-3">
                         {
                             actions.map((action, i) => (
-                                <motion.a
+                                <motion.div
                                     key={i}
-                                    href={action.href}
-                                    target="_blank"
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: i * 0.1 }}
                                     whileHover={{ scale: 1.02, x: 5 }}
-                                    className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg", theme.btn, theme.border)}
                                 >
-                                    <div style={{ color: theme.accent }}>{action.icon}</div>
-                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                                </motion.a>
+                                    {action.href ? (
+                                        <a
+                                            href={action.href}
+                                            target="_blank"
+                                            className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border)}
+                                        >
+                                            <div style={{ color: theme.accent }}>{action.icon}</div>
+                                            <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                        </a>
+                                    ) : (
+                                        <button
+                                            onClick={action.onClick}
+                                            className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border)}
+                                        >
+                                            <div style={{ color: theme.accent }}>{action.icon}</div>
+                                            <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                        </button>
+                                    )}
+                                </motion.div>
                             ))
                         }
-                    </div >
+                    </div>
 
                     {/* Bio Paragraph */}
                     {

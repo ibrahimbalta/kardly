@@ -76,7 +76,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         ...profile,
         name: profile?.user?.name || session?.user?.name || "",
         image: profile?.user?.image || session?.user?.image || "",
-        cvUrl: profile?.cvUrl || ""
+        cvUrl: profile?.cvUrl || "",
+        showAppointmentBtn: profile?.showAppointmentBtn || false
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -165,7 +166,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     occupation: profileData.occupation,
                     displayName: profileData.name || session?.user?.name,
                     image: profileData.image,
-                    cvUrl: profileData.cvUrl
+                    cvUrl: profileData.cvUrl,
+                    showAppointmentBtn: profileData.showAppointmentBtn
                 })
             })
 
@@ -911,9 +913,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {/* Working Hours */}
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
-                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri
+                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri & Randevu
                                 </h3>
                                 <p className="text-xs text-foreground/40">Randevu alınabilecek saat dilimlerini buradan yönetin. Müşterileriniz sadece bu saatleri görecektir.</p>
+
+                                <div
+                                    className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all"
+                                    onClick={() => setProfileData({ ...profileData, showAppointmentBtn: !profileData.showAppointmentBtn })}
+                                >
+                                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${profileData.showAppointmentBtn ? 'bg-primary border-primary' : 'border-white/20'}`}>
+                                        {profileData.showAppointmentBtn && <CheckCircle2 size={12} className="text-white" />}
+                                    </div>
+                                    <span className="text-sm font-bold">Profil sayfasında "Randevu Al" butonunu göster</span>
+                                </div>
 
                                 <div className="flex flex-wrap gap-2">
                                     {workingHours.sort().map((hour: string) => (
