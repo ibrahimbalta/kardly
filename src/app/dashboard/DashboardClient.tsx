@@ -317,7 +317,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const currentPlan = "pro"
 
     return (
-        <div className="min-h-screen bg-background flex">
+        <div className="min-h-screen bg-[#020617] text-white flex overflow-hidden">
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
@@ -328,34 +328,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Mobile Header Toggle */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-white/5 z-50 flex items-center justify-between px-6">
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#0b0f1a]/80 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-6">
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <Layout className="text-white w-5 h-5" />
+                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+                        <Zap className="text-white w-4 h-4 fill-current" />
                     </div>
-                    <span className="text-lg font-bold uppercase tracking-tighter">Kardly</span>
+                    <span className="text-sm font-black uppercase tracking-tighter tracking-[0.2em]">KARDLY</span>
                 </Link>
-                <button
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 transition-all hover:bg-white/5 rounded-xl text-foreground/80"
-                >
-                    {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className="p-2 transition-all hover:bg-white/5 rounded-xl text-foreground/80"
+                    >
+                        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-background p-6 flex flex-col gap-8 transition-transform lg:relative lg:translate-x-0 lg:z-10",
-                isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+                "fixed inset-y-0 left-0 z-[60] w-72 border-r border-white/5 bg-[#0b0f1a] p-6 flex flex-col gap-8 transition-transform duration-300 lg:relative lg:translate-x-0 lg:z-10",
+                isSidebarOpen ? "translate-x-0 shadow-[20px_0_50px_rgba(0,0,0,0.5)]" : "-translate-x-full"
             )}>
-                <div className="flex items-center justify-between lg:justify-start">
-                    <Link href="/" className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                            <Layout className="text-white w-5 h-5" />
+                <div className="flex items-center justify-between lg:justify-start gap-3 mb-4">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform">
+                            <Zap className="text-white w-5 h-5 fill-current" />
                         </div>
-                        <span className="text-xl font-bold">Kardly<span className="text-primary">.</span></span>
+                        <div>
+                            <span className="text-xl font-black tracking-tighter">KARDLY<span className="text-primary">.</span></span>
+                            <span className="text-[9px] text-white/30 font-black uppercase tracking-[0.2em] block">Dashboard PRO</span>
+                        </div>
                     </Link>
-                    <button className="lg:hidden p-2 text-white/40" onClick={() => setIsSidebarOpen(false)}>
+                    <button className="lg:hidden p-2 text-white/20 hover:text-white" onClick={() => setIsSidebarOpen(false)}>
                         <X size={20} />
                     </button>
                 </div>
@@ -467,19 +472,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
             {/* Main Content */}
             <main className="flex-1 p-6 md:p-10 overflow-auto pt-24 lg:pt-10">
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-                    <div>
-                        <h1 className="text-xl md:text-2xl font-bold text-white uppercase tracking-tighter">Hoş geldin, {session?.user?.name} 👋</h1>
-                        <p className="text-foreground/50 text-xs font-medium">Dijital kartvizitini buradan yönetebilirsin.</p>
-                    </div>
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                    >
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2">Hoş geldin, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
+                        <p className="text-white/40 text-sm font-medium tracking-wide">Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.</p>
+                    </motion.div>
                     {profile && (
-                        <a
+                        <motion.a
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             href={`/${profile.username}`}
                             target="_blank"
-                            className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all font-medium text-sm"
+                            className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all font-black text-xs uppercase tracking-widest"
                         >
                             Canlı Siteni Gör <ExternalLink className="w-4 h-4" />
-                        </a>
+                        </motion.a>
                     )}
                 </header>
 
@@ -1470,30 +1482,48 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
         <button
             onClick={onClick}
             className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-sm",
-                active ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-foreground/50 hover:bg-white/5 hover:text-foreground"
+                "w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-sm group",
+                active
+                    ? "bg-primary text-white shadow-xl shadow-primary/20"
+                    : "text-white/40 hover:bg-white/5 hover:text-white"
             )}
         >
-            {icon}
-            {label}
+            <div className={cn("transition-transform group-hover:scale-110", active && "scale-110")}>
+                {icon}
+            </div>
+            <span className="truncate">{label}</span>
+            {active && (
+                <motion.div
+                    layoutId="active-nav-dot"
+                    className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_8px_#fff]"
+                />
+            )}
         </button>
     )
 }
 
 function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label: string, value: string, trend: string }) {
     return (
-        <div className="glass p-6 rounded-[2rem] border-white/5 hover:border-white/10 transition-all">
-            <div className="flex justify-between items-start mb-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+        <motion.div
+            whileHover={{ y: -5 }}
+            className="glass p-8 rounded-[2.5rem] border-white/5 hover:border-emerald-500/20 transition-all bg-white/[0.02] relative overflow-hidden group"
+        >
+            <div className="flex justify-between items-start mb-6">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500">
                     {icon}
                 </div>
-                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 px-2 py-1 rounded-lg">
-                    {trend}
-                </span>
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 rounded-full">
+                    <TrendingUp size={10} className="text-emerald-500" />
+                    <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                        {trend}
+                    </span>
+                </div>
             </div>
-            <p className="text-xs text-foreground/50 font-bold uppercase tracking-wider mb-1">{label}</p>
-            <p className="text-3xl font-black">{value}</p>
-        </div>
+            <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em] mb-2">{label}</p>
+            <p className="text-3xl font-black tracking-tight">{value}</p>
+
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+        </motion.div>
     )
 }
 
