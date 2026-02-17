@@ -1282,7 +1282,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                     {/* Social Icons */}
                     <div className="flex justify-center flex-wrap gap-6 pt-2">
-                        {socialLinks.slice(0, 10).map((l: any, i: number) => {
+                        {socialLinks.filter((l: any) => l.platform !== 'customLinks').slice(0, 10).map((l: any, i: number) => {
                             const platform = l.platform.toLowerCase()
                             return (
                                 <a key={i} href={l.url} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
