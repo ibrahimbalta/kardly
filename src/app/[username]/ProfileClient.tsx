@@ -1111,6 +1111,53 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
+
+                        {/* Custom Links Icons */}
+                        {(() => {
+                            const customLinksEntry = (profile.socialLinks || []).find((l: any) => l.platform === 'customLinks');
+                            const links = customLinksEntry?.links || [];
+                            if (links.length === 0) return null;
+                            return (
+                                <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
+                                    {links.map((link: any, i: number) => (
+                                        <motion.a
+                                            key={i}
+                                            href={link.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            initial={{ opacity: 0, scale: 0 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.3 + i * 0.1 }}
+                                            whileHover={{ scale: 1.2, y: -3 }}
+                                            className="relative group/link"
+                                            onClick={() => trackEvent("custom_link", link.title)}
+                                        >
+                                            <div
+                                                className={cn("w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all", theme.border)}
+                                                style={{
+                                                    backgroundColor: `${theme.accent}15`,
+                                                    borderColor: `${theme.accent}40`,
+                                                    color: theme.accent
+                                                }}
+                                            >
+                                                <Globe size={18} />
+                                            </div>
+                                            <div
+                                                className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/link:opacity-100 transition-all duration-300 whitespace-nowrap px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider pointer-events-none scale-75 group-hover/link:scale-100 z-50"
+                                                style={{
+                                                    backgroundColor: theme.accent,
+                                                    color: '#000',
+                                                    boxShadow: `0 0 15px ${theme.accent}40`
+                                                }}
+                                            >
+                                                {link.title}
+                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45" style={{ backgroundColor: theme.accent }} />
+                                            </div>
+                                        </motion.a>
+                                    ))}
+                                </div>
+                            );
+                        })()}
                     </div >
 
                     <div className="space-y-3">

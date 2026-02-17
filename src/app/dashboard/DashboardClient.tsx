@@ -109,6 +109,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
         description: ""
     })
 
+    // Custom Links Management
+    const [customLinks, setCustomLinks] = useState<{ title: string, url: string }[]>(
+        (profileData.socialLinks as any[])?.find((l: any) => l.platform === 'customLinks')?.links || []
+    )
+    const [newLink, setNewLink] = useState({ title: "", url: "" })
+
+    const handleAddLink = () => {
+        if (!newLink.title || !newLink.url) return
+        const updated = [...customLinks, { title: newLink.title, url: newLink.url }]
+        setCustomLinks(updated)
+        setNewLink({ title: "", url: "" })
+        // Update socialLinks with customLinks
+        const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        const idx = currentLinks.findIndex((l: any) => l.platform === 'customLinks')
+        if (idx > -1) {
+            currentLinks[idx] = { platform: 'customLinks', links: updated }
+        } else {
+            currentLinks.push({ platform: 'customLinks', links: updated })
+        }
+        setProfileData({ ...profileData, socialLinks: currentLinks })
+    }
+
+    const handleDeleteLink = (index: number) => {
+        const updated = customLinks.filter((_: any, i: number) => i !== index)
+        setCustomLinks(updated)
+        const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        const idx = currentLinks.findIndex((l: any) => l.platform === 'customLinks')
+        if (idx > -1) {
+            currentLinks[idx] = { platform: 'customLinks', links: updated }
+        }
+        setProfileData({ ...profileData, socialLinks: currentLinks })
+    }
+
     // Working Hours Management
     const defaultHours = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
     const [workingHours, setWorkingHours] = useState<string[]>(profile?.workingHours || defaultHours)
@@ -750,6 +783,63 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
 
+                                </div>
+
+                                {/* Custom Links Section */}
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">🔗 Özel Linkler</label>
+                                    <p className="text-xs text-slate-400 mb-4">Profil sayfanızda slogan altında ikon olarak gözükecek bağlantılar ekleyin.</p>
+
+                                    {/* Existing Links */}
+                                    {customLinks.length > 0 && (
+                                        <div className="space-y-2 mb-4">
+                                            {customLinks.map((link: any, i: number) => (
+                                                <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/10 group">
+                                                    <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                                        <Globe className="w-4 h-4" />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-xs font-bold truncate">{link.title}</p>
+                                                        <p className="text-[10px] text-slate-400 truncate">{link.url}</p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleDeleteLink(i)}
+                                                        className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Add New Link */}
+                                    <div className="flex flex-col gap-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Link Başlığı (örn: Portfolyom)"
+                                            value={newLink.title}
+                                            onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                                            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Link Adresi (https://...)"
+                                                value={newLink.url}
+                                                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={handleAddLink}
+                                                disabled={!newLink.title || !newLink.url}
+                                                className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all disabled:opacity-30 flex items-center gap-1"
+                                            >
+                                                <Plus className="w-4 h-4" /> Ekle
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="pt-6">
