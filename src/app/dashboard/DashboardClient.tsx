@@ -54,7 +54,9 @@ import {
     Mail,
     MessageCircle,
     Menu,
-    TrendingUp
+    TrendingUp,
+    UserCircle,
+    User
 
 } from "lucide-react"
 
