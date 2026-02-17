@@ -79,9 +79,9 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [copied, setCopied] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
     const [reviews, setReviews] = useState(profile.reviews?.length > 0 ? profile.reviews : [
-        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, image: "https://avatar.iran.liara.run/public/31" },
-        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, image: "https://avatar.iran.liara.run/public/65" },
-        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, image: "https://avatar.iran.liara.run/public/48" }
+        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, gender: 'male', image: "https://avatar.iran.liara.run/public/31" },
+        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, gender: 'female', image: "https://avatar.iran.liara.run/public/65" },
+        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, gender: 'male', image: "https://avatar.iran.liara.run/public/48" }
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const t = translations[lang as keyof typeof translations] || translations.tr
@@ -1045,7 +1045,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             </button>
                         </div>
 
-                        <div className="relative h-40">
+                        <div className="relative h-32">
                             {reviews.length > 0 ? (
                                 <AnimatePresence mode="wait">
                                     <motion.div
@@ -1058,10 +1058,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <div className="flex gap-4">
                                             <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
                                                 <img
-                                                    src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}&background=random&color=fff`}
+                                                    src={reviews[currentReviewIndex].image || (reviews[currentReviewIndex].gender === 'female' ? "https://avatar.iran.liara.run/public/65" : "https://avatar.iran.liara.run/public/31")}
                                                     className="w-full h-full object-cover"
                                                     onError={(e: any) => {
-                                                        e.target.src = `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}&background=random&color=fff`;
+                                                        e.target.src = reviews[currentReviewIndex].gender === 'female' ? "https://avatar.iran.liara.run/public/65" : "https://avatar.iran.liara.run/public/31";
                                                     }}
                                                 />
                                             </div>
