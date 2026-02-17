@@ -898,6 +898,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         <div className={cn("min-h-screen flex items-center justify-center p-4 relative overflow-hidden", theme.bg, toneStyle.font)}>
             {/* Background elements */}
             <div className="absolute inset-0 z-0">
+                {/* Subtle brightness overlay — makes the outer area lighter so the card pops */}
+                <div className="absolute inset-0 bg-white/[0.06]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(255,255,255,0.08)_100%)]" />
                 {theme.special === "cyber" && (
                     <>
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#0ff2_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#f0f2_0%,transparent_50%)] animate-pulse" />
@@ -919,8 +922,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "aurora" && (
                     <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
                 )}
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
+                <div className="absolute top-0 right-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
+                <div className="absolute bottom-0 left-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
             </div>
 
             <style>{`
