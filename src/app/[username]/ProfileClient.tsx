@@ -1129,10 +1129,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
                         <button
-                            onClick={handleAddToContacts}
+                            onClick={handleShare}
                             className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
-                            <UserPlus size={20} /> Rehbere Ekle
+                            <Share2 size={20} /> Paylaş
                         </button>
 
                         <button
