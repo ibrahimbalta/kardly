@@ -9,37 +9,42 @@ const model = genAI.getGenerativeModel({
 })
 
 // Tone-specific style guides for AI prompt
-const toneGuides: Record<string, { style: string; colorGuide: string; sloganStyle: string; bioStyle: string }> = {
+const toneGuides: Record<string, { style: string; colorGuide: string; sloganStyle: string; bioStyle: string; designGuide: string }> = {
     profesyonel: {
         style: "Kurumsal, ciddi, güven veren bir dil kullan. Resmi ve otoriter bir ton. Kısa ve net cümleler. 'Biz' dili kullanabilirsin.",
         colorGuide: "Koyu lacivert (#1e3a5f), kurumsal mavi (#2563eb), antrasit (#334155), ya da koyu yeşil (#166534) gibi güven veren, kurumsal renkler seç. Kesinlikle canlı/parlak renkler KULLANMA.",
         sloganStyle: "Profesyonel, otoriter ve güven veren bir slogan yaz. Örnek tarz: 'Güvenilir Çözümler, Kalıcı Sonuçlar'",
-        bioStyle: "Resmi ve kurumsal bir dil ile yaz. Üçüncü tekil şahıs ya da 'biz' dili kullan. Uzmanlık ve deneyimi vurgula."
+        bioStyle: "Resmi ve kurumsal bir dil ile yaz. Üçüncü tekil şahıs ya da 'biz' dili kullan. Uzmanlık ve deneyimi vurgula.",
+        designGuide: "Temiz hatlar, keskin köşeler (rounded-lg), sade tipografi (font-sans). Şablon: neon_blue veya neon_indigo."
     },
     samimi: {
         style: "Sıcak, arkadaş canlısı, samimi bir dil kullan. Günlük konuşma dili. 'Sen/siz' dili kullan. Emojiler ile destekle. Samimi ve yakın bir ton.",
         colorGuide: "Sıcak turuncu (#f97316), mercan (#fb7185), sıcak sarı (#eab308), pastel pembe (#f472b6) ya da sıcak yeşil (#22c55e) gibi samimi ve sıcak renkler seç. Soğuk ve koyu renkler KULLANMA.",
         sloganStyle: "Samimi, sıcak ve arkadaşça bir slogan yaz. Örnek tarz: 'Birlikte Daha Güzel 🤝' veya 'Senin İçin Buradayız!'",
-        bioStyle: "Birinci tekil şahıs kullan. Samimi, sıcak ve yakın bir dil ile yaz. Okuyucuya arkadaşça hitap et."
+        bioStyle: "Birinci tekil şahıs kullan. Samimi, sıcak ve yakın bir dil ile yaz. Okuyucuya arkadaşça hitap et.",
+        designGuide: "Ekstra yuvarlak hatlar (rounded-[3rem]), yumuşak gölgeler, enerjik tipografi. Şablon: neon_orange veya neon_pink."
     },
     yaratıcı: {
         style: "Cesur, yenilikçi, farklı bir dil kullan. Sıra dışı kelime seçimleri. Metaforlar ve yaratıcı ifadeler. Enerjik ve ilham veren bir ton.",
         colorGuide: "Canlı mor (#a855f7), elektrik mavisi (#3b82f6), neon yeşil (#22d3ee), fuşya (#d946ef), ya da parlak kırmızı (#ef4444) gibi cesur ve dikkat çekici renkler seç. Pastel ve sönük renkler KULLANMA.",
         sloganStyle: "Yaratıcı, sıra dışı ve dikkat çekici bir slogan yaz. Metafor kullan. Örnek tarz: 'Sınırları Kaldır, Farkı Yaşa' ya da 'Hayal Et, Gerçekleştir ✨'",
-        bioStyle: "Yaratıcı ve enerjik bir dil ile yaz. Metafor ve güçlü kelimeler kullan. İlham verici ve heyecan verici bir ton."
+        bioStyle: "Yaratıcı ve enerjik bir dil ile yaz. Metafor ve güçlü kelimeler kullan. İlham verici ve heyecan verici bir ton.",
+        designGuide: "Vibrant renk geçişleri, asimetrik detaylar, modern ve kalın tipografi. Şablon: neon_purple veya neon_cyan."
     },
     lüks: {
         style: "Zarif, sofistike, lüks bir dil kullan. Seçkin kelime tercihleri. Kısa ve etkileyici cümleler. Premium ve özel hissettiren bir ton.",
-        colorGuide: "Altın (#d4a017), siyah-altın (#b8860b), bordo (#991b1b), derin mor (#581c87), ya da koyu emerald (#064e3b) gibi lüks ve premium hissettiren renkler seç. Parlak ve ucuz görünen renkler KULLANMA.",
+        colorGuide: "Altın (#d4a017), siyah-altın (#b8860b), bordo (#991b1b), derin mor (#581c87), ya da koyu emerald (#064e3b) gibi lüks and premium hissettiren renkler seç. Parlak ve ucuz görünen renkler KULLANMA.",
         sloganStyle: "Zarif, sofistike ve premium bir slogan yaz. Örnek tarz: 'Mükemmelliğin Adresi' ya da 'Ayrıcalıklı Deneyim'",
-        bioStyle: "Sofistike ve zarif bir dil ile yaz. Premium ve ayrıcalıklı hissettir. Kalite ve inceliği vurgula."
+        bioStyle: "Sofistike ve zarif bir dil ile yaz. Premium ve ayrıcalıklı hissettir. Kalite ve inceliği vurgula.",
+        designGuide: "Sade ve asil tasarım, ince detaylar (serif font), premium renkler. Şablon: neon_black veya neon_amber."
     }
 }
 
 // Tone-specific fallback configs
-const fallbackConfigs: Record<string, { themeColor: string; sloganPrefix: string; bioTemplate: string; services: { title: string; description: string }[] }> = {
+const fallbackConfigs: Record<string, { themeColor: string; templateId: string; sloganPrefix: string; bioTemplate: string; services: { title: string; description: string }[] }> = {
     profesyonel: {
         themeColor: "#2563eb",
+        templateId: "neon_blue",
         sloganPrefix: "Güvenilir Çözümler, Kalıcı Sonuçlar",
         bioTemplate: "{occupation} alanında uzmanlaşmış ekibimiz, {audience} kitlesine yönelik profesyonel ve kaliteli hizmet sunmaktadır. Deneyim ve güvenle yanınızdayız.",
         services: [
@@ -50,6 +55,7 @@ const fallbackConfigs: Record<string, { themeColor: string; sloganPrefix: string
     },
     samimi: {
         themeColor: "#f97316",
+        templateId: "neon_orange",
         sloganPrefix: "Birlikte Daha Güzel! 🤝",
         bioTemplate: "Merhaba! Ben bir {occupation} olarak {audience} ile çalışmayı çok seviyorum. Her zaman senin için buradayım, birlikte harika işler başarabiliriz! 😊",
         services: [
@@ -60,6 +66,7 @@ const fallbackConfigs: Record<string, { themeColor: string; sloganPrefix: string
     },
     yaratıcı: {
         themeColor: "#a855f7",
+        templateId: "neon_purple",
         sloganPrefix: "Sınırları Kaldır, Farkı Yaşa ✨",
         bioTemplate: "Sıradan olanı reddediyorum. {occupation} olarak {audience} için alışılmışın dışında, cesur ve yenilikçi çözümler tasarlıyorum. Her proje yeni bir macera!",
         services: [
@@ -70,6 +77,7 @@ const fallbackConfigs: Record<string, { themeColor: string; sloganPrefix: string
     },
     lüks: {
         themeColor: "#b8860b",
+        templateId: "neon_black",
         sloganPrefix: "Mükemmelliğin Adresi",
         bioTemplate: "Seçkin {audience} kitlesine özel, {occupation} alanında ayrıcalıklı ve üst düzey hizmet sunuyoruz. Kalite, zarafet ve mükemmellik temel ilkelerimizdir.",
         services: [
@@ -103,15 +111,17 @@ export async function generateProfileData(data: {
     🎨 RENK PALETİ: ${guide.colorGuide}
     💬 SLOGAN TARZI: ${guide.sloganStyle}
     📄 BİO TARZI: ${guide.bioStyle}
+    🏗️ TASARIM REHBERİ: ${guide.designGuide}
 
     === ÜRETMEN GEREKENLER (JSON formatında) ===
-    1. "slogan": ${guide.sloganStyle} - Mesleğe ve tona özel, kısa ve akılda kalıcı bir slogan.
-    2. "bio": ${guide.bioStyle} - 2-3 cümlelik hakkımda metni.
+    1. "slogan": Mesleğe ve tona özel, kısa ve akılda kalıcı bir slogan.
+    2. "bio": 2-3 cümlelik hakkımda metni.
     3. "services": En az 3 adet hizmet. Dizi formatında: [{title, description}]. Hizmet isimleri ve açıklamaları da "${data.tone}" tonuna uygun olmalı.
-    4. "themeColor": ${guide.colorGuide} - Tonun ruhuna ve sektöre uygun BİR adet HEX renk kodu.
-    5. "recommendations": Tasarım için kısa bir öneri (bu ton için).
+    4. "themeColor": Tonun ruhuna ve sektöre uygun BİR adet HEX renk kodu.
+    5. "templateId": "${guide.designGuide}" içindeki önerilen şablona uygun bir ID seç. (Sadece neon_black, neon_blue, neon_orange, neon_purple, neon_cyan, neon_amber, neon_rose vb. gibi mevcut templateid değerlerinden birini döndür)
+    6. "recommendations": Tasarım için kısa bir öneri (bu ton için).
 
-    🚨 KESİNLİKLE her ton için FARKLI slogan, bio, hizmet açıklaması ve renk üret. Her ton birbirinden belirgin şekilde ayırt edilebilir olmalı.
+    🚨 KESİNLİKLE her ton için FARKLI slogan, bio, hizmet açıklaması, renk ve ŞABLON üret. Her ton birbirinden belirgin şekilde ayırt edilebilir olmalı.
 
     Lütfen SADECE JSON döndür. Başka bir metin ekleme.
     `
@@ -132,6 +142,7 @@ export async function generateProfileData(data: {
                 .replace("{audience}", data.targetAudience),
             services: fallback.services,
             themeColor: fallback.themeColor,
+            templateId: fallback.templateId,
             recommendations: `${data.tone} tarzında modern bir tasarım önerilir.`
         }
     }

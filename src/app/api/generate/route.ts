@@ -45,6 +45,7 @@ export async function POST(req: Request) {
                     bio: aiResult.bio,
                     services: aiResult.services,
                     themeColor: aiResult.themeColor,
+                    templateId: aiResult.templateId || "neon_blue",
                     username: finalUsername,
                     slug: finalUsername,
                 },
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
                     bio: aiResult.bio,
                     services: aiResult.services,
                     themeColor: aiResult.themeColor,
+                    templateId: aiResult.templateId || "neon_blue",
                 }
             })
         }

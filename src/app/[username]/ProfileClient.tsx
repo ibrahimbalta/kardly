@@ -51,6 +51,7 @@ interface Profile {
     phone: string;
     themeColor: string;
     templateId: string;
+    tone: string; // Added tone
     socialLinks: { platform: string; url: string }[];
     services: { title: string; description: string }[];
     workingHours: string[];
@@ -153,46 +154,34 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     // Template Selector Logic
     const renderTemplate = () => {
+        const tone = profile.tone?.toLowerCase() || "profesyonel"
         switch (profile.templateId) {
-            case "neon_black": return <NeonModernTemplate {...props} colorScheme="black" />;
-            case "neon_white": return <NeonModernTemplate {...props} colorScheme="white" />;
-            case "neon_blue": return <NeonModernTemplate {...props} colorScheme="blue" />;
-            case "neon_green": return <NeonModernTemplate {...props} colorScheme="green" />;
-            case "neon_purple": return <NeonModernTemplate {...props} colorScheme="purple" />;
-            case "neon_red": return <NeonModernTemplate {...props} colorScheme="red" />;
-            case "neon_gold": return <NeonModernTemplate {...props} colorScheme="gold" />;
-            case "neon_rose": return <NeonModernTemplate {...props} colorScheme="rose" />;
-            case "neon_cyan": return <NeonModernTemplate {...props} colorScheme="cyan" />;
-            case "neon_pink": return <NeonModernTemplate {...props} colorScheme="pink" />;
-            case "neon_amber": return <NeonModernTemplate {...props} colorScheme="amber" />;
-            case "neon_emerald": return <NeonModernTemplate {...props} colorScheme="emerald" />;
-            case "neon_sky": return <NeonModernTemplate {...props} colorScheme="sky" />;
-            case "neon_lime": return <NeonModernTemplate {...props} colorScheme="lime" />;
-            case "neon_indigo": return <NeonModernTemplate {...props} colorScheme="indigo" />;
-            case "neon_crimson": return <NeonModernTemplate {...props} colorScheme="crimson" />;
-            case "neon_teal": return <NeonModernTemplate {...props} colorScheme="teal" />;
-            case "neon_fuchsia": return <NeonModernTemplate {...props} colorScheme="fuchsia" />;
-            case "neon_violet": return <NeonModernTemplate {...props} colorScheme="violet" />;
-            case "neon_orange": return <NeonModernTemplate {...props} colorScheme="orange" />;
-            case "neon_gs": return <NeonModernTemplate {...props} colorScheme="gs" />;
-            case "neon_fb": return <NeonModernTemplate {...props} colorScheme="fb" />;
-            case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" />;
-            case "neon_bjk": return <NeonModernTemplate {...props} colorScheme="bjk" />;
-            case "neon_tr": return <NeonModernTemplate {...props} colorScheme="tr" />;
-            case "neon_greenwhite": return <NeonModernTemplate {...props} colorScheme="greenwhite" />;
-            case "neon_greenblack": return <NeonModernTemplate {...props} colorScheme="greenblack" />;
-            case "neon_orangeblack": return <NeonModernTemplate {...props} colorScheme="orangeblack" />;
-            case "neon_pinkwhite": return <NeonModernTemplate {...props} colorScheme="pinkwhite" />;
-            case "neon_greywhite": return <NeonModernTemplate {...props} colorScheme="greywhite" />;
-            case "neon_blueblack": return <NeonModernTemplate {...props} colorScheme="blueblack" />;
-            case "neon_purplexwhite": return <NeonModernTemplate {...props} colorScheme="purplexwhite" />;
-            case "neon_yellowwhite": return <NeonModernTemplate {...props} colorScheme="yellowwhite" />;
-            case "neon_mintgreen": return <NeonModernTemplate {...props} colorScheme="mintgreen" />;
-            case "neon_electricviolet": return <NeonModernTemplate {...props} colorScheme="electricviolet" />;
-            case "neon_crimson_dark": return <NeonModernTemplate {...props} colorScheme="crimson_dark" />;
-            case "neon_ocean_light": return <NeonModernTemplate {...props} colorScheme="ocean_light" />;
-            case "neon_sunset_rose": return <NeonModernTemplate {...props} colorScheme="sunset_rose" />;
-            default: return <NeonModernTemplate {...props} colorScheme="black" />;
+            case "neon_black": return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
+            case "neon_white": return <NeonModernTemplate {...props} colorScheme="white" tone={tone} />;
+            case "neon_blue": return <NeonModernTemplate {...props} colorScheme="blue" tone={tone} />;
+            case "neon_green": return <NeonModernTemplate {...props} colorScheme="green" tone={tone} />;
+            case "neon_purple": return <NeonModernTemplate {...props} colorScheme="purple" tone={tone} />;
+            case "neon_red": return <NeonModernTemplate {...props} colorScheme="red" tone={tone} />;
+            case "neon_gold": return <NeonModernTemplate {...props} colorScheme="gold" tone={tone} />;
+            case "neon_rose": return <NeonModernTemplate {...props} colorScheme="rose" tone={tone} />;
+            case "neon_cyan": return <NeonModernTemplate {...props} colorScheme="cyan" tone={tone} />;
+            case "neon_pink": return <NeonModernTemplate {...props} colorScheme="pink" tone={tone} />;
+            case "neon_amber": return <NeonModernTemplate {...props} colorScheme="amber" tone={tone} />;
+            case "neon_emerald": return <NeonModernTemplate {...props} colorScheme="emerald" tone={tone} />;
+            case "neon_sky": return <NeonModernTemplate {...props} colorScheme="sky" tone={tone} />;
+            case "neon_lime": return <NeonModernTemplate {...props} colorScheme="lime" tone={tone} />;
+            case "neon_indigo": return <NeonModernTemplate {...props} colorScheme="indigo" tone={tone} />;
+            case "neon_crimson": return <NeonModernTemplate {...props} colorScheme="crimson" tone={tone} />;
+            case "neon_teal": return <NeonModernTemplate {...props} colorScheme="teal" tone={tone} />;
+            case "neon_fuchsia": return <NeonModernTemplate {...props} colorScheme="fuchsia" tone={tone} />;
+            case "neon_violet": return <NeonModernTemplate {...props} colorScheme="violet" tone={tone} />;
+            case "neon_orange": return <NeonModernTemplate {...props} colorScheme="orange" tone={tone} />;
+            case "neon_gs": return <NeonModernTemplate {...props} colorScheme="gs" tone={tone} />;
+            case "neon_fb": return <NeonModernTemplate {...props} colorScheme="fb" tone={tone} />;
+            case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" tone={tone} />;
+            case "neon_bjk": return <NeonModernTemplate {...props} colorScheme="bjk" tone={tone} />;
+            case "neon_tr": return <NeonModernTemplate {...props} colorScheme="tr" tone={tone} />;
+            default: return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
         }
     }
 
@@ -248,7 +237,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent, tone }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -257,6 +246,54 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
         }, 5000)
         return () => clearInterval(timer)
     }, [reviews.length])
+
+    // Tone specific styling
+    const getToneStyle = (tone: string) => {
+        switch (tone?.toLowerCase()) {
+            case "profesyonel":
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[2rem]",
+                    border: "border-solid",
+                    headerSize: "text-2xl",
+                    expertiseStyle: "slow-rotate"
+                };
+            case "samimi":
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[4rem]",
+                    border: "border-none",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "floating"
+                };
+            case "yaratıcı":
+                return {
+                    font: "font-mono",
+                    rounded: "rounded-xl skew-x-1",
+                    border: "border-dashed",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "scattered"
+                };
+            case "lüks":
+                return {
+                    font: "font-serif",
+                    rounded: "rounded-none",
+                    border: "border-double border-4",
+                    headerSize: "text-2xl uppercase tracking-[0.5em]",
+                    expertiseStyle: "minimal"
+                };
+            default:
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[3rem]",
+                    border: "border-solid",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "rotate"
+                };
+        }
+    }
+
+    const toneStyle = getToneStyle(tone)
 
     const theme = {
         black: {
@@ -749,7 +786,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
     ].filter(a => a.active)
 
     return (
-        <div className={cn("min-h-screen font-sans flex items-center justify-center p-4 relative overflow-hidden", theme.bg)}>
+        <div className={cn("min-h-screen flex items-center justify-center p-4 relative overflow-hidden", theme.bg, toneStyle.font)}>
             {/* Background elements */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
@@ -760,13 +797,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={cn("rounded-[3rem] border p-8 space-y-8 backdrop-blur-3xl shadow-2xl", theme.card, theme.border)}
+                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative", theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                 >
                     {/* Share Button Top Right */}
                     <div className="absolute top-6 right-6 z-30">
                         <button
                             onClick={handleShare}
-                            className={cn("w-10 h-10 rounded-2xl border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border)}
+                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
                             <Share2 size={18} className={theme.icon} />
                         </button>
@@ -775,65 +812,70 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                     {/* Profile Section */}
                     <div className="flex flex-col items-center text-center space-y-6">
                         <div className="relative w-32 h-32 group">
-                            {/* Expertise Icons Container with subtle rotation */}
-                            <motion.div
-                                className="absolute inset-0 z-20 pointer-events-none"
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                            >
-                                {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
-                                    const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                    const radius = 80; // Exactly touching the 128px (64px radius) profile pic
-                                    const x = Math.cos(angle) * radius;
-                                    const y = Math.sin(angle) * radius;
+                            {/* Expertise Icons Container */}
+                            {toneStyle.expertiseStyle !== 'minimal' && (
+                                <motion.div
+                                    className="absolute inset-0 z-20 pointer-events-none"
+                                    animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
+                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                >
+                                    {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                        const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                        const radius = 80;
+                                        const x = Math.cos(angle) * radius;
+                                        const y = Math.sin(angle) * radius;
 
-                                    const getIcon = (title: string) => {
-                                        const t = title.toLowerCase();
-                                        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
-                                        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
-                                        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
-                                        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
-                                        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
-                                        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
-                                        if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
-                                        if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
-                                        return <Zap size={14} />;
-                                    };
+                                        const getIcon = (title: string) => {
+                                            const t = title.toLowerCase();
+                                            if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
+                                            if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
+                                            if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
+                                            if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
+                                            if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
+                                            if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
+                                            if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
+                                            if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
+                                            return <Zap size={14} />;
+                                        };
 
-                                    return (
-                                        <motion.div
-                                            key={i}
-                                            initial={{ opacity: 0, scale: 0 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.5 + i * 0.1 }}
-                                            className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
-                                            style={{
-                                                left: `calc(50% + ${x}px)`,
-                                                top: `calc(50% + ${y}px)`,
-                                                transform: 'translate(-50%, -50%)'
-                                            }}
-                                        >
+                                        return (
                                             <motion.div
-                                                animate={{ rotate: -360 }}
-                                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                                                className="w-8 h-8 rounded-full glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative"
+                                                key={i}
+                                                initial={{ opacity: 0, scale: 0 }}
+                                                animate={toneStyle.expertiseStyle === 'floating' ? {
+                                                    opacity: 1, scale: 1,
+                                                    y: [0, -10, 0],
+                                                    transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
+                                                } : { opacity: 1, scale: 1 }}
+                                                transition={{ delay: 0.5 + i * 0.1 }}
+                                                className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
                                                 style={{
-                                                    color: theme.accent,
-                                                    backgroundColor: 'rgba(255,255,255,0.05)',
-                                                    backdropFilter: 'blur(10px)'
+                                                    left: `calc(50% + ${x}px)`,
+                                                    top: `calc(50% + ${y}px)`,
+                                                    transform: 'translate(-50%, -50%)'
                                                 }}
                                             >
-                                                {getIcon(service.title)}
+                                                <motion.div
+                                                    animate={{ rotate: -360 }}
+                                                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                                    className={cn("w-8 h-8 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                                    style={{
+                                                        color: theme.accent,
+                                                        backgroundColor: 'rgba(255,255,255,0.05)',
+                                                        backdropFilter: 'blur(10px)'
+                                                    }}
+                                                >
+                                                    {getIcon(service.title)}
 
-                                                {/* Tooltip on hover */}
-                                                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover/icon:scale-100">
-                                                    {service.title}
-                                                </div>
+                                                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover/icon:scale-100">
+                                                        {service.title}
+                                                    </div>
+                                                </motion.div>
                                             </motion.div>
-                                        </motion.div>
-                                    );
-                                })}
-                            </motion.div>
+                                        );
+                                    })}
+                                </motion.div>
+                            )}
 
                             <motion.div
                                 animate={{
@@ -844,16 +886,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                     ]
                                 }}
                                 transition={{ duration: 3, repeat: Infinity }}
-                                className="w-32 h-32 rounded-full p-1 border-2 relative z-10 overflow-hidden"
+                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
                                 style={{ borderColor: theme.accent }}
                             >
-                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full rounded-full object-cover" />
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
                             </motion.div>
                             <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                         </div>
 
                         <div>
-                            <h1 className={cn("text-3xl font-black tracking-tight", theme.text)}>{profile.user.name}</h1>
+                            <h1 className={cn("font-black tracking-tight", theme.text, toneStyle.headerSize)}>{profile.user.name}</h1>
                             <div className="flex items-center justify-center gap-2 mt-2">
                                 <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
                                 <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>{profile.occupation || "WEB DEVELOPER"}</p>
@@ -886,9 +928,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                                     href={project.link || "#"}
                                                     target="_blank"
                                                     onClick={() => trackEvent("product", project.name)}
-                                                    className="w-10 h-10 rounded-full border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-all hover:scale-125 cursor-pointer block relative"
+                                                    className={cn("w-10 h-10 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-all hover:scale-125 cursor-pointer block relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
                                                 >
-                                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
+                                                    <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
 
                                                     {/* Rich Tooltip */}
                                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-48 bg-[#0f172a] border border-white/10 p-4 rounded-2xl text-left pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl">
@@ -904,9 +946,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                             ))}
                                         </div>
 
-                                        {/* Fading gradients for the edges */}
-                                        <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#030712] to-transparent z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to right, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
-                                        <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#030712] to-transparent z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to left, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
+                                        {/* Fading gradients */}
+                                        <div className="absolute inset-y-0 left-0 w-12 z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to right, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
+                                        <div className="absolute inset-y-0 right-0 w-12 z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to left, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
                                     </div>
                                 </div>
                             )}
@@ -932,7 +974,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                             onClick={() => {
                                                 if (action.onClick) action.onClick()
                                             }}
-                                            className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border)}
+                                            className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         >
                                             <div style={{ color: theme.accent }}>{action.icon}</div>
                                             <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
@@ -940,7 +982,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                     ) : (
                                         <button
                                             onClick={action.onClick}
-                                            className={cn("w-full py-4 px-6 rounded-2xl border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border)}
+                                            className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         >
                                             <div style={{ color: theme.accent }}>{action.icon}</div>
                                             <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
@@ -951,7 +993,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                         }
                     </div>
 
-                    {/* Bio Paragraph */}
+                    {/* Bio */}
                     {
                         profile.bio && (
                             <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
@@ -960,13 +1002,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                         )
                     }
 
-                    {/* Testimonials Slider */}
+                    {/* Testimonials */}
                     <div className="pt-4 overflow-hidden relative">
                         <div className="flex items-center justify-between mb-4 px-2">
                             <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Yorumlar</h3>
                             <button
                                 onClick={() => setIsReviewModalOpen(true)}
-                                className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border transition-all", theme.btn)}
+                                className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
                                 style={{ color: theme.accent }}
                             >
                                 + Yorum Yaz
@@ -981,10 +1023,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         initial={{ opacity: 0, x: 50 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: -50 }}
-                                        className={cn("absolute inset-0 p-5 rounded-3xl border flex flex-col justify-between", theme.card, theme.border)}
+                                        className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
                                     >
                                         <div className="flex gap-4">
-                                            <img src={reviews[currentReviewIndex].image} className="w-12 h-12 rounded-full border border-white/10 object-cover" />
+                                            <img src={reviews[currentReviewIndex].image} className={cn("w-12 h-12 border border-white/10 object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
                                             <div className="flex-1">
                                                 <div className="flex justify-between items-start">
                                                     <div>
@@ -1005,7 +1047,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                     </motion.div>
                                 </AnimatePresence>
                             ) : (
-                                <div className={cn("absolute inset-0 p-5 rounded-3xl border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border)}>
+                                <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
                                     Henüz yorum yapılmamış.
                                 </div>
                             )}
@@ -1016,10 +1058,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                             {reviews.map((_: any, i: number) => (
                                 <div
                                     key={i}
-                                    className="h-1 rounded-full transition-all"
+                                    className="h-1 transition-all"
                                     style={{
                                         width: i === currentReviewIndex ? '16px' : '4px',
-                                        background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)'
+                                        background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
+                                        borderRadius: '99px'
                                     }}
                                 />
                             ))}
@@ -1049,14 +1092,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
                         <button
                             onClick={handleShare}
-                            className={cn("flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl border", theme.btn, theme.btnText)}
+                            className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
                             <Share2 size={20} /> Paylaş
                         </button>
 
                         <button
                             onClick={handleCVView}
-                            className="flex-1 py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl"
+                            className={cn("flex-1 py-5 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             style={{
                                 background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
                                 boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
