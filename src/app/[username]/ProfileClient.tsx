@@ -206,6 +206,11 @@ END:VCARD`
             case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" tone={tone} />;
             case "neon_bjk": return <NeonModernTemplate {...props} colorScheme="bjk" tone={tone} />;
             case "neon_tr": return <NeonModernTemplate {...props} colorScheme="tr" tone={tone} />;
+            case "neon_cyber": return <NeonModernTemplate {...props} colorScheme="neon_cyber" tone={tone} />;
+            case "neon_galaxy": return <NeonModernTemplate {...props} colorScheme="neon_galaxy" tone={tone} />;
+            case "neon_acid": return <NeonModernTemplate {...props} colorScheme="neon_acid" tone={tone} />;
+            case "neon_candy": return <NeonModernTemplate {...props} colorScheme="neon_candy" tone={tone} />;
+            case "neon_aurora": return <NeonModernTemplate {...props} colorScheme="neon_aurora" tone={tone} />;
             default: return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
         }
     }
@@ -793,8 +798,73 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btn: "bg-black/60 border-[#f43f5e]/40",
             btnText: "text-[#f43f5e]",
             icon: "text-[#f43f5e]"
+        },
+        neon_cyber: {
+            bg: "bg-[#00050a]",
+            card: "bg-black/40",
+            text: "text-[#0ef]",
+            subtext: "text-pink-400/60",
+            border: "border-[#0ef]/30",
+            glow: "shadow-[0_0_30px_rgba(0,238,255,0.4)]",
+            accent: "#0ef",
+            btn: "bg-black/40 border-pink-500/30",
+            btnText: "text-[#0ef]",
+            icon: "text-[#f0f]",
+            special: "cyber"
+        },
+        neon_galaxy: {
+            bg: "bg-[#050010]",
+            card: "bg-black/40",
+            text: "text-[#a855f7]",
+            subtext: "text-cyan-300/60",
+            border: "border-purple-500/30",
+            glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]",
+            accent: "#a855f7",
+            btn: "bg-black/40 border-cyan-500/30",
+            btnText: "text-white",
+            icon: "text-cyan-400",
+            special: "galaxy"
+        },
+        neon_acid: {
+            bg: "bg-[#051000]",
+            card: "bg-black/40",
+            text: "text-[#bef264]",
+            subtext: "text-yellow-200/60",
+            border: "border-lime-500/30",
+            glow: "shadow-[0_0_30px_rgba(190,242,100,0.4)]",
+            accent: "#bef264",
+            btn: "bg-black/40 border-yellow-500/30",
+            btnText: "text-[#bef264]",
+            icon: "text-yellow-400",
+            special: "acid"
+        },
+        neon_candy: {
+            bg: "bg-[#10000a]",
+            card: "bg-black/40",
+            text: "text-[#f472b6]",
+            subtext: "text-violet-200/60",
+            border: "border-pink-500/30",
+            glow: "shadow-[0_0_30px_rgba(244,114,182,0.4)]",
+            accent: "#f472b6",
+            btn: "bg-black/40 border-violet-500/30",
+            btnText: "text-white",
+            icon: "text-violet-400",
+            special: "candy"
+        },
+        neon_aurora: {
+            bg: "bg-[#000a0a]",
+            card: "bg-black/40",
+            text: "text-[#2dd4bf]",
+            subtext: "text-indigo-200/60",
+            border: "border-teal-500/30",
+            glow: "shadow-[0_0_30px_rgba(45,212,191,0.4)]",
+            accent: "#2dd4bf",
+            btn: "bg-black/40 border-indigo-500/30",
+            btnText: "text-white",
+            icon: "text-indigo-400",
+            special: "aurora"
         }
-    }[colorScheme as 'black' | 'white' | 'blue' | 'green' | 'purple' | 'red' | 'gold' | 'rose' | 'cyan' | 'gs' | 'fb' | 'ts' | 'bjk' | 'tr' | 'greenwhite' | 'greenblack' | 'orangeblack' | 'pinkwhite' | 'greywhite' | 'blueblack' | 'purplexwhite' | 'yellowwhite' | 'mintgreen' | 'electricviolet' | 'crimson_dark' | 'ocean_light' | 'sunset_rose'] || {
+    }[colorScheme as any] || {
         bg: "bg-[#030712]",
         card: "bg-black/40",
         text: "text-white",
@@ -827,9 +897,40 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         <div className={cn("min-h-screen flex items-center justify-center p-4 relative overflow-hidden", theme.bg, toneStyle.font)}>
             {/* Background elements */}
             <div className="absolute inset-0 z-0">
+                {theme.special === "cyber" && (
+                    <>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#0ff2_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#f0f2_0%,transparent_50%)] animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,#000_25%,#111_25%,#111_50%,#000_50%,#000_75%,#111_75%)] bg-[length:20px_20px] opacity-[0.03]" />
+                    </>
+                )}
+                {theme.special === "galaxy" && (
+                    <>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#a855f722_0%,transparent_70%)] animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-20" style={{ background: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0))', backgroundSize: '100px 100px' }} />
+                    </>
+                )}
+                {theme.special === "acid" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#bef26422_0%,transparent_60%),radial-gradient(circle_at_70%_80%,#eab30822_0%,transparent_60%)] animate-pulse" />
+                )}
+                {theme.special === "candy" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,#f472b622_0%,transparent_60%),radial-gradient(circle_at_80%_20%,#8b5cf622_0%,transparent_60%)] animate-pulse" />
+                )}
+                {theme.special === "aurora" && (
+                    <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
+                )}
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-20 rounded-full" style={{ background: theme.accent }} />
             </div>
+
+            <style>{`
+                @keyframes spin-slow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 15s linear infinite;
+                }
+            `}</style>
 
             <main className="relative z-10 w-full max-w-[420px] space-y-6">
                 <motion.div
