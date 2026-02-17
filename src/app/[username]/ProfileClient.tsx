@@ -1163,131 +1163,124 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                 onClick={onClose}
             />
             <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 30 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-md bg-slate-900/90 border border-white/10 rounded-[3rem] p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-hidden"
+                className="relative w-full max-w-[380px] bg-gradient-to-b from-slate-900 via-slate-950 to-black border border-white/10 rounded-[2.5rem] p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-y-auto max-h-[95vh] no-scrollbar"
             >
-                {/* Glow Effect */}
-                <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: themeColor }} />
+                {/* Subtle Gradient Accent */}
+                <div className="absolute top-0 left-0 w-full h-[150px] bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" style={{ background: `linear-gradient(180deg, ${themeColor}15 0%, transparent 100%)` }} />
 
                 <div className="relative z-10">
-                    <div className="flex justify-between items-center mb-10">
-                        <div className="space-y-1">
-                            <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Deneyimini Paylaş</h3>
-                            <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Görüşleriniz bizim için değerlidir</p>
+                    <div className="flex justify-between items-center mb-6">
+                        <div className="space-y-0.5">
+                            <h3 className="text-xl font-black text-white uppercase tracking-tighter">Deneyimini Paylaş</h3>
+                            <p className="text-[9px] text-white/40 font-bold uppercase tracking-widest">Fikriniz bizim için değerli</p>
                         </div>
                         <button
                             onClick={onClose}
-                            className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-full text-white/40 transition-all active:scale-90"
+                            className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-full text-white/40 transition-all active:scale-90"
                         >
-                            <X size={20} />
+                            <X size={16} />
                         </button>
                     </div>
 
-                    <div className="space-y-8">
-                        {/* Rating Section */}
-                        <div className="flex flex-col items-center gap-4 py-4 bg-white/5 rounded-3xl border border-white/5">
-                            <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">Puanın</span>
-                            <div className="flex gap-2">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                    <button
-                                        key={star}
-                                        onClick={() => setFormData({ ...formData, rating: star })}
-                                        className="transition-all hover:scale-125 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
-                                    >
-                                        <Star
-                                            size={28}
-                                            className={cn(
-                                                "transition-colors duration-300",
-                                                star <= formData.rating ? "fill-amber-400 text-amber-400" : "text-white/10"
-                                            )}
-                                        />
-                                    </button>
-                                ))}
+                    <div className="space-y-5">
+                        {/* Compact Rating & Gender Row */}
+                        <div className="grid grid-cols-1 gap-4">
+                            <div className="flex flex-col items-center gap-2 py-3 bg-white/5 rounded-2xl border border-white/5">
+                                <span className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em]">Puan Ver</span>
+                                <div className="flex gap-1.5">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            onClick={() => setFormData({ ...formData, rating: star })}
+                                            className="transition-all hover:scale-110"
+                                        >
+                                            <Star
+                                                size={22}
+                                                className={cn(
+                                                    "transition-colors duration-300",
+                                                    star <= formData.rating ? "fill-amber-400 text-amber-400" : "text-white/10"
+                                                )}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setFormData({ ...formData, gender: 'male' })}
+                                    className={cn(
+                                        "flex-1 relative flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300",
+                                        formData.gender === 'male'
+                                            ? "bg-blue-600/10 border-blue-500/50 text-blue-400"
+                                            : "bg-white/5 border-white/5 text-white/20"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "w-8 h-8 rounded-lg flex items-center justify-center",
+                                        formData.gender === 'male' ? "bg-blue-500 text-white" : "bg-white/5"
+                                    )}>
+                                        <User size={16} />
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-wider">Erkek</span>
+                                </button>
+
+                                <button
+                                    onClick={() => setFormData({ ...formData, gender: 'female' })}
+                                    className={cn(
+                                        "flex-1 relative flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300",
+                                        formData.gender === 'female'
+                                            ? "bg-rose-600/10 border-rose-500/50 text-rose-400"
+                                            : "bg-white/5 border-white/5 text-white/20"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "w-8 h-8 rounded-lg flex items-center justify-center",
+                                        formData.gender === 'female' ? "bg-rose-500 text-white" : "bg-white/5"
+                                    )}>
+                                        <UserCircle size={16} />
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-wider">Bayan</span>
+                                </button>
                             </div>
                         </div>
 
-                        {/* Gender selection with Icons */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <button
-                                onClick={() => setFormData({ ...formData, gender: 'male' })}
-                                className={cn(
-                                    "group relative flex flex-col items-center gap-3 py-6 rounded-3xl border transition-all duration-300 overflow-hidden",
-                                    formData.gender === 'male'
-                                        ? "bg-blue-600/20 border-blue-500 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.1)]"
-                                        : "bg-white/5 border-white/5 text-white/20 hover:bg-white/10 hover:border-white/10"
-                                )}
-                            >
-                                <div className={cn(
-                                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
-                                    formData.gender === 'male' ? "bg-blue-500 text-white shadow-lg" : "bg-white/5 text-white/20"
-                                )}>
-                                    <User size={24} />
-                                </div>
-                                <span className="text-[11px] font-black uppercase tracking-wider">Erkek</span>
-                                {formData.gender === 'male' && <motion.div layoutId="gender_active" className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500" />}
-                            </button>
-
-                            <button
-                                onClick={() => setFormData({ ...formData, gender: 'female' })}
-                                className={cn(
-                                    "group relative flex flex-col items-center gap-3 py-6 rounded-3xl border transition-all duration-300 overflow-hidden",
-                                    formData.gender === 'female'
-                                        ? "bg-rose-600/20 border-rose-500 text-rose-400 shadow-[0_0_30px_rgba(244,63,94,0.1)]"
-                                        : "bg-white/5 border-white/5 text-white/20 hover:bg-white/10 hover:border-white/10"
-                                )}
-                            >
-                                <div className={cn(
-                                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
-                                    formData.gender === 'female' ? "bg-rose-500 text-white shadow-lg" : "bg-white/5 text-white/20"
-                                )}>
-                                    <UserCircle size={24} />
-                                </div>
-                                <span className="text-[11px] font-black uppercase tracking-wider">Bayan</span>
-                                {formData.gender === 'female' && <motion.div layoutId="gender_active" className="absolute bottom-0 left-0 right-0 h-1 bg-rose-500" />}
-                            </button>
-                        </div>
-
-                        {/* Form Inputs */}
-                        <div className="space-y-4">
-                            <div className="relative group">
-                                <input
-                                    type="text"
-                                    placeholder="Adınız Soyadınız"
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                />
-                            </div>
-                            <div className="relative group">
-                                <input
-                                    type="text"
-                                    placeholder="Ünvanınız (Örn: Yazılım Geliştirici)"
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                />
-                            </div>
-                            <div className="relative group">
-                                <textarea
-                                    rows={4}
-                                    placeholder="Yorumunuz..."
-                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium resize-none"
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                />
-                            </div>
+                        {/* Form Inputs - More Compact */}
+                        <div className="space-y-3">
+                            <input
+                                type="text"
+                                placeholder="Adınız Soyadınız"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Ünvanınız (Örn: Tasarımcı)"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium"
+                                value={formData.title}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            />
+                            <textarea
+                                rows={3}
+                                placeholder="Yorumunuzun detayları..."
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium resize-none"
+                                value={formData.content}
+                                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                            />
                         </div>
 
                         <button
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className="group relative w-full py-6 rounded-[2rem] text-white font-black text-xs uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-2xl overflow-hidden"
-                            style={{ background: themeColor }}
+                            className="group relative w-full py-4 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-30 disabled:hover:scale-100 overflow-hidden shadow-lg"
                         >
-                            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <span className="relative z-10 flex items-center justify-center gap-3">
-                                <MessageSquare size={18} />
+                            <div className="absolute inset-0 opacity-80" style={{ background: themeColor }} />
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <span className="relative z-10 flex items-center justify-center gap-2">
+                                <MessageSquare size={14} />
                                 Yorumu Yayınla
                             </span>
                         </button>
