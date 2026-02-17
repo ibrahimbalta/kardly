@@ -30,6 +30,8 @@ import {
     Trophy,
     Target,
     Users,
+    User,
+    UserCircle,
     Code,
     Palette,
     Briefcase,
@@ -1026,7 +1028,15 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
                                     >
                                         <div className="flex gap-4">
-                                            <img src={reviews[currentReviewIndex].image} className={cn("w-12 h-12 border border-white/10 object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
+                                            <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
+                                                <img
+                                                    src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}&background=random&color=fff`}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e: any) => {
+                                                        e.target.src = `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}&background=random&color=fff`;
+                                                    }}
+                                                />
+                                            </div>
                                             <div className="flex-1">
                                                 <div className="flex justify-between items-start">
                                                     <div>
@@ -1128,10 +1138,10 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
     const handleSubmit = () => {
         if (!formData.name || !formData.content) return
 
-        // Fixed icons based on gender - Corporate Style Avatars
+        // Modern 3D/Glass Style Avatars based on gender
         const image = formData.gender === 'female'
-            ? "https://avatar.iran.liara.run/public/65"
-            : "https://avatar.iran.liara.run/public/31"
+            ? "https://avatar.iran.liara.run/public/65" // Standard female avatar
+            : "https://avatar.iran.liara.run/public/31" // Standard male avatar
 
         onSubmit({ ...formData, image, id: Date.now() })
         setFormData({
@@ -1146,89 +1156,142 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
 
     return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
             <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                onClick={onClose}
+            />
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 30 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-md bg-[#0f172a] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl overflow-hidden"
+                className="relative w-full max-w-md bg-slate-900/90 border border-white/10 rounded-[3rem] p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-hidden"
             >
-                <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: themeColor }} />
+                {/* Glow Effect */}
+                <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: themeColor }} />
 
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Yorum Bırak</h3>
-                    <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-white/40"><X size={20} /></button>
-                </div>
+                <div className="relative z-10">
+                    <div className="flex justify-between items-center mb-10">
+                        <div className="space-y-1">
+                            <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Deneyimini Paylaş</h3>
+                            <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Görüşleriniz bizim için değerlidir</p>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-full text-white/40 transition-all active:scale-90"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
 
-                <div className="space-y-6">
-                    <div className="flex justify-center gap-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
+                    <div className="space-y-8">
+                        {/* Rating Section */}
+                        <div className="flex flex-col items-center gap-4 py-4 bg-white/5 rounded-3xl border border-white/5">
+                            <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">Puanın</span>
+                            <div className="flex gap-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setFormData({ ...formData, rating: star })}
+                                        className="transition-all hover:scale-125 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                                    >
+                                        <Star
+                                            size={28}
+                                            className={cn(
+                                                "transition-colors duration-300",
+                                                star <= formData.rating ? "fill-amber-400 text-amber-400" : "text-white/10"
+                                            )}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Gender selection with Icons */}
+                        <div className="grid grid-cols-2 gap-4">
                             <button
-                                key={star}
-                                onClick={() => setFormData({ ...formData, rating: star })}
-                                className="transition-all hover:scale-125"
+                                onClick={() => setFormData({ ...formData, gender: 'male' })}
+                                className={cn(
+                                    "group relative flex flex-col items-center gap-3 py-6 rounded-3xl border transition-all duration-300 overflow-hidden",
+                                    formData.gender === 'male'
+                                        ? "bg-blue-600/20 border-blue-500 text-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.1)]"
+                                        : "bg-white/5 border-white/5 text-white/20 hover:bg-white/10 hover:border-white/10"
+                                )}
                             >
-                                <Star
-                                    size={32}
-                                    className={cn(
-                                        star <= formData.rating ? "fill-current text-amber-400" : "text-white/10"
-                                    )}
-                                />
+                                <div className={cn(
+                                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
+                                    formData.gender === 'male' ? "bg-blue-500 text-white shadow-lg" : "bg-white/5 text-white/20"
+                                )}>
+                                    <User size={24} />
+                                </div>
+                                <span className="text-[11px] font-black uppercase tracking-wider">Erkek</span>
+                                {formData.gender === 'male' && <motion.div layoutId="gender_active" className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500" />}
                             </button>
-                        ))}
-                    </div>
 
-                    <div className="flex justify-center gap-4">
+                            <button
+                                onClick={() => setFormData({ ...formData, gender: 'female' })}
+                                className={cn(
+                                    "group relative flex flex-col items-center gap-3 py-6 rounded-3xl border transition-all duration-300 overflow-hidden",
+                                    formData.gender === 'female'
+                                        ? "bg-rose-600/20 border-rose-500 text-rose-400 shadow-[0_0_30px_rgba(244,63,94,0.1)]"
+                                        : "bg-white/5 border-white/5 text-white/20 hover:bg-white/10 hover:border-white/10"
+                                )}
+                            >
+                                <div className={cn(
+                                    "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
+                                    formData.gender === 'female' ? "bg-rose-500 text-white shadow-lg" : "bg-white/5 text-white/20"
+                                )}>
+                                    <UserCircle size={24} />
+                                </div>
+                                <span className="text-[11px] font-black uppercase tracking-wider">Bayan</span>
+                                {formData.gender === 'female' && <motion.div layoutId="gender_active" className="absolute bottom-0 left-0 right-0 h-1 bg-rose-500" />}
+                            </button>
+                        </div>
+
+                        {/* Form Inputs */}
+                        <div className="space-y-4">
+                            <div className="relative group">
+                                <input
+                                    type="text"
+                                    placeholder="Adınız Soyadınız"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                />
+                            </div>
+                            <div className="relative group">
+                                <input
+                                    type="text"
+                                    placeholder="Ünvanınız (Örn: Yazılım Geliştirici)"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                />
+                            </div>
+                            <div className="relative group">
+                                <textarea
+                                    rows={4}
+                                    placeholder="Yorumunuz..."
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/10 focus:bg-white/10 transition-all text-sm font-medium resize-none"
+                                    value={formData.content}
+                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
                         <button
-                            onClick={() => setFormData({ ...formData, gender: 'male' })}
-                            className={cn(
-                                "flex-1 py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2",
-                                formData.gender === 'male' ? "bg-primary border-primary text-white" : "bg-white/5 border-white/10 text-white/40"
-                            )}
+                            onClick={handleSubmit}
+                            disabled={!formData.name || !formData.content}
+                            className="group relative w-full py-6 rounded-[2rem] text-white font-black text-xs uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-2xl overflow-hidden"
+                            style={{ background: themeColor }}
                         >
-                            Erkek
-                        </button>
-                        <button
-                            onClick={() => setFormData({ ...formData, gender: 'female' })}
-                            className={cn(
-                                "flex-1 py-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2",
-                                formData.gender === 'female' ? "bg-pink-500 border-pink-500 text-white" : "bg-white/5 border-white/10 text-white/40"
-                            )}
-                        >
-                            Bayan
+                            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                <MessageSquare size={18} />
+                                Yorumu Yayınla
+                            </span>
                         </button>
                     </div>
-
-                    <div className="space-y-4">
-                        <input
-                            type="text"
-                            placeholder="Adınız Soyadınız"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Ünvanınız (Örn: Yazılım Geliştirici)"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        />
-                        <textarea
-                            rows={4}
-                            placeholder="Yorumunuz..."
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none"
-                            value={formData.content}
-                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                        />
-                    </div>
-
-                    <button
-                        onClick={handleSubmit}
-                        className="w-full py-5 rounded-2xl text-white font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl"
-                        style={{ background: themeColor }}
-                    >
-                        Yorumu Yayınla
-                    </button>
                 </div>
             </motion.div>
         </div>
