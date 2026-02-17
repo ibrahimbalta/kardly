@@ -68,12 +68,11 @@ const AVAILABLE_MODULES = [
     { type: 'social_feed', name: 'LinkedIn Akışı', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-600', description: 'Sektörel paylaşımlarınızı profilinizde tutun.' },
     { type: 'document_vault', name: 'CV & Belgeler', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'Sertifika, CV veya portfolyo dosyaları paylaşın.' },
 ]
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { signOut } from "next-auth/react"
-import { QRCodeCard } from "@/components/QRCodeCard"
+import { useTranslation } from "@/context/LanguageContext"
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
+    const { t } = useTranslation()
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
@@ -440,9 +439,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
 
                 <nav className="flex flex-col gap-2">
+                    <div className="px-4 mb-4">
+                        <LanguageSwitcher />
+                    </div>
                     <NavItem
                         icon={<Layout className="w-5 h-5" />}
-                        label="Sayfa Düzenle"
+                        label={t('editPage')}
                         active={activeTab === "edit"}
                         onClick={() => {
                             setActiveTab("edit")
@@ -451,7 +453,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Briefcase className="w-5 h-5" />}
-                        label="Projeler & Portfolyo"
+                        label={t('projectsPortfolio')}
                         active={activeTab === "products"}
                         onClick={() => {
                             setActiveTab("products")
@@ -460,7 +462,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Zap className="w-5 h-5" />}
-                        label="Uzmanlık Alanları"
+                        label={t('expertise')}
                         active={activeTab === "services"}
                         onClick={() => {
                             setActiveTab("services")
@@ -469,7 +471,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Palette className="w-5 h-5" />}
-                        label="Şablon Değiştir"
+                        label={t('changeTemplate')}
                         active={activeTab === "templates"}
                         onClick={() => {
                             setActiveTab("templates")
@@ -478,7 +480,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<Calendar className="w-5 h-5" />}
-                        label="Randevular"
+                        label={t('appointments')}
                         active={activeTab === "appointments"}
                         onClick={() => {
                             setActiveTab("appointments")
@@ -487,7 +489,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<BarChart3 className="w-5 h-5" />}
-                        label="İstatistikler"
+                        label={t('statistics')}
                         active={activeTab === "statistics"}
                         onClick={() => {
                             setActiveTab("statistics")
@@ -496,7 +498,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
                     <NavItem
                         icon={<QrCode className="w-5 h-5" />}
-                        label="QR Kod"
+                        label={t('qrcode')}
                         active={activeTab === "qrcode"}
                         onClick={() => {
                             setActiveTab("qrcode")
@@ -506,7 +508,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     <NavItem
                         icon={<MessageSquare className="w-5 h-5" />}
-                        label="Yorumlar"
+                        label={t('reviews')}
                         active={activeTab === "reviews"}
                         onClick={() => {
                             setActiveTab("reviews")
@@ -516,7 +518,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     <NavItem
                         icon={<Settings className="w-5 h-5" />}
-                        label="Ayarlar"
+                        label={t('settings')}
                         active={activeTab === "settings"}
                         onClick={() => {
                             setActiveTab("settings")
@@ -528,7 +530,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             onClick={() => signOut({ callbackUrl: "/" })}
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-rose-500 hover:bg-rose-500/10 transition-all text-xs"
                         >
-                            <LogOut className="w-4 h-4" /> Çıkış Yap
+                            <LogOut className="w-4 h-4" /> {t('logout')}
                         </button>
                     </div>
                 </nav>
@@ -549,7 +551,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                     >
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">Hoş geldin, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">{t('welcome')}, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
                         <p className="text-slate-400 text-sm font-medium tracking-wide">Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.</p>
                     </motion.div>
                     {profile && (
@@ -562,7 +564,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             target="_blank"
                             className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all font-black text-xs uppercase tracking-widest"
                         >
-                            Canlı Siteni Gör <ExternalLink className="w-4 h-4" />
+                            {t('liveSite')} <ExternalLink className="w-4 h-4" />
                         </motion.a>
                     )}
                 </header>
@@ -889,7 +891,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                                         ) : (
                                             <>
-                                                <CheckCircle2 className="w-5 h-5" /> DEĞİŞİKLİKLERİ YAYINLA
+                                                <CheckCircle2 className="w-5 h-5" /> {t('saveChanges')}
                                             </>
                                         )}
                                     </button>

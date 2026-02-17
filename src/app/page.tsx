@@ -22,7 +22,11 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 
+import { useTranslation } from "@/context/LanguageContext"
+
 export default function Home() {
+  const { t } = useTranslation()
+
   return (
     <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600">
       <Navbar />
@@ -54,9 +58,9 @@ export default function Home() {
             >
               <Sparkles size={12} /> Teknoloji & Sanat
             </motion.div>
-            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9] text-slate-900">Profesyonel Dünyanı <br /><span className="gradient-text">Canlandırın.</span></h2>
+            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9] text-slate-900">{t('heroTitle')} <br /><span className="gradient-text">{t('heroSplit')}</span></h2>
             <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">
-              Kardly ile sadece bir kartvizit değil, dijital dünyadaki en canlı ve etkileyici yüzünüzü oluşturun.
+              {t('heroSub')}
             </p>
           </div>
 

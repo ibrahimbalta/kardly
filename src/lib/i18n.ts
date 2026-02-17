@@ -1,5 +1,6 @@
 export const translations: any = {
     tr: {
+        // Profile & Appointments
         available: "Müsait",
         addToContacts: "Rehbere Ekle",
         share: "Paylaş",
@@ -18,9 +19,41 @@ export const translations: any = {
         successBooking: "Randevu Talebi Gönderildi!",
         errorBooking: "Bir hata oluştu.",
         back: "Geri",
-        close: "Kapat"
+        close: "Kapat",
+
+        // Dashboard General
+        dashboard: "Dashboard",
+        overview: "Genel Bakış",
+        editPage: "Sayfa Düzenle",
+        projectsPortfolio: "Projeler & Portfolyo",
+        expertise: "Uzmanlık Alanları",
+        changeTemplate: "Şablon Değiştir",
+        appointments: "Randevular",
+        statistics: "İstatistikler",
+        qrcode: "QR Kod",
+        reviews: "Yorumlar",
+        settings: "Ayarlar",
+        logout: "Çıkış Yap",
+        welcome: "Hoş geldin",
+        liveSite: "Canlı Siteni Gör",
+        saveChanges: "Değişiklikleri Yayınla",
+        saving: "Kaydediliyor...",
+        saved: "Değişiklikler kaydedildi!",
+
+        // Landing Page
+        heroTitle: "Profesyonel Dünyanı",
+        heroSplit: "Canlandırın.",
+        heroSub: "Kardly ile sadece bir kartvizit değil, dijital dünyadaki en canlı ve etkileyici yüzünüzü oluşturun.",
+        tryFree: "Ücretsiz Dene",
+        features: "Özellikler",
+        pricing: "Fiyatlandırma",
+        templates: "Şablonlar",
+        login: "Giriş Yap",
+        register: "Kayıt Ol",
+        getStarted: "Hemen Başla"
     },
     en: {
+        // Profile & Appointments
         available: "Available",
         addToContacts: "Add to Contacts",
         share: "Share",
@@ -39,6 +72,37 @@ export const translations: any = {
         successBooking: "Booking Request Sent!",
         errorBooking: "An error occurred.",
         back: "Back",
-        close: "Close"
+        close: "Close",
+
+        // Dashboard General
+        dashboard: "Dashboard",
+        overview: "Overview",
+        editPage: "Edit Page",
+        projectsPortfolio: "Projects & Portfolio",
+        expertise: "Expertise",
+        changeTemplate: "Change Template",
+        appointments: "Appointments",
+        statistics: "Statistics",
+        qrcode: "QR Code",
+        reviews: "Reviews",
+        settings: "Settings",
+        logout: "Logout",
+        welcome: "Welcome",
+        liveSite: "View Live Site",
+        saveChanges: "Publish Changes",
+        saving: "Saving...",
+        saved: "Changes saved!",
+
+        // Landing Page
+        heroTitle: "Bring Your Professional",
+        heroSplit: "World to Life.",
+        heroSub: "With Kardly, create not just a business card, but your most vibrant and impressive face in the digital world.",
+        tryFree: "Try for Free",
+        features: "Features",
+        pricing: "Pricing",
+        templates: "Templates",
+        login: "Login",
+        register: "Register",
+        getStarted: "Get Started"
     }
 }
