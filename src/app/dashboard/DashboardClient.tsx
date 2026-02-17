@@ -1527,40 +1527,50 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     {showServiceModal && (
                         <div className="fixed inset-0 z-[150] flex items-center justify-center p-6">
-                            <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowServiceModal(false)} />
+                            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" onClick={() => setShowServiceModal(false)} />
                             <motion.div
                                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                                 animate={{ scale: 1, opacity: 1, y: 0 }}
                                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                                className="bg-[#0f172a] border border-white/10 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl"
+                                className="bg-white border border-slate-200 w-full max-w-lg rounded-[2.5rem] p-10 relative z-10 shadow-2xl overflow-hidden"
                             >
-                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors">
+                                <div className="absolute top-0 left-0 w-full h-2 bg-primary" />
+
+                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-slate-400 hover:text-slate-900 transition-colors">
                                     <X className="w-6 h-6" />
                                 </button>
+
                                 <div className="mb-8">
-                                    <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-4">
-                                        <Zap className="w-6 h-6 text-primary" />
+                                    <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                                        <Zap className="w-7 h-7 text-primary" />
                                     </div>
-                                    <h2 className="text-2xl font-black text-white">Yeni Hizmet / Uzmanlık</h2>
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Yeni Hizmet / Uzmanlık</h2>
+                                    <p className="text-sm text-slate-500 mt-2">Profilinizde görünecek yeni bir uzmanlık alanı ekleyin.</p>
                                 </div>
                                 <div className="space-y-6">
-                                    <input
-                                        type="text"
-                                        placeholder="Başlık"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium"
-                                        value={newService.title}
-                                        onChange={(e) => setNewService({ ...newService, title: e.target.value })}
-                                    />
-                                    <textarea
-                                        rows={3}
-                                        placeholder="Açıklama"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white font-medium resize-none"
-                                        value={newService.description}
-                                        onChange={(e) => setNewService({ ...newService, description: e.target.value })}
-                                    />
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Başlık</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Örn: Web Tasarım, SEO, Pazarlama"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 font-medium transition-all placeholder:text-slate-300"
+                                            value={newService.title}
+                                            onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Açıklama</label>
+                                        <textarea
+                                            rows={3}
+                                            placeholder="Hizmetiniz hakkında kısa bir açıklama yazın..."
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 font-medium resize-none transition-all placeholder:text-slate-300"
+                                            value={newService.description}
+                                            onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                                        />
+                                    </div>
                                     <button
                                         onClick={handleAddService}
-                                        className="w-full bg-primary text-white py-5 rounded-[1.5rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                                        className="w-full bg-primary text-white py-5 rounded-2xl font-black shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
                                     >
                                         Hizmeti Ekle
                                     </button>
