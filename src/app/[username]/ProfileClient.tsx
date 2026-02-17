@@ -961,7 +961,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 >
                                     {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
                                         const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                        const radius = 80;
+                                        const radius = 95;
                                         const x = Math.cos(angle) * radius;
                                         const y = Math.sin(angle) * radius;
 
