@@ -922,17 +922,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         }
                                     `}</style>
                                     <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Projelerim</h3>
-                                    <div className="relative -mt-24 pt-24 pb-4 overflow-hidden w-full max-w-[320px] mx-auto">
-                                        <div className="animate-marquee-right flex gap-4">
+                                    <div className={cn("relative py-6 px-4 overflow-hidden w-full max-w-[380px] mx-auto border backdrop-blur-md shadow-inner", theme.card, theme.border, "rounded-[2.5rem]")}>
+                                        <div className="animate-marquee-right flex gap-6">
                                             {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                 <a
                                                     key={i}
                                                     href={project.link || "#"}
                                                     target="_blank"
                                                     onClick={() => trackEvent("product", project.name)}
-                                                    className={cn("w-10 h-10 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/5 backdrop-blur-sm p-0.5 group/prj transition-all hover:scale-125 cursor-pointer block relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                                    className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
                                                 >
-                                                    <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
+                                                    <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
 
                                                     {/* Rich Tooltip */}
                                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-48 bg-[#0f172a] border border-white/10 p-4 rounded-2xl text-left pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl">
@@ -949,8 +949,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         </div>
 
                                         {/* Fading gradients */}
-                                        <div className="absolute inset-y-0 left-0 w-12 z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to right, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
-                                        <div className="absolute inset-y-0 right-0 w-12 z-10 pointer-events-none opacity-50" style={{ background: `linear-gradient(to left, ${theme.bg.replace('bg-[', '').replace(']', '')}, transparent)` }} />
+                                        <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
+                                        <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
                                     </div>
                                 </div>
                             )}
