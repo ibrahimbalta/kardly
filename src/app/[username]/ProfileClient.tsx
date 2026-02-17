@@ -921,37 +921,31 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-full border backdrop-blur-md shadow-inner py-6 px-4", theme.card, theme.border, "rounded-[2.5rem]")}>
-                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40 text-center mb-2", theme.text)}>Projelerim</h3>
-                                        <div className="relative overflow-hidden h-48"> {/* Tall enough to fit icon + tooltip */}
-                                            <div className="animate-marquee-right flex gap-6 items-end pb-2 h-full">
+                                    <div className={cn("w-full border backdrop-blur-md shadow-inner py-4 px-2 mt-4", theme.card, theme.border, "rounded-3xl")}>
+                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40 text-center mb-1", theme.text)}>Projelerim</h3>
+                                        <div className="relative overflow-hidden h-20 flex items-center">
+                                            <div className="animate-marquee-right flex gap-4 h-full items-center">
                                                 {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                     <a
                                                         key={i}
                                                         href={project.link || "#"}
                                                         target="_blank"
                                                         onClick={() => trackEvent("product", project.name)}
-                                                        className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
+                                                        className={cn("w-12 h-12 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-xl")}
                                                     >
-                                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
+                                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-lg" />
 
-                                                        {/* Rich Tooltip - Appearing Above (Room provided by h-48) */}
-                                                        <div className="absolute bottom-[calc(100%+12px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-48 bg-[#0f172a] border border-white/10 p-4 rounded-2xl text-left pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl">
-                                                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0f172a] border-r border-b border-white/10 rotate-45" />
-                                                            <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
-                                                            {project.description ? (
-                                                                <p className="text-[10px] text-white/60 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
-                                                            ) : (
-                                                                <p className="text-[10px] text-white/40 italic font-medium">Bu proje için açıklama girilmemiş.</p>
-                                                            )}
+                                                        {/* Simple Compact Tooltip */}
+                                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-32 bg-black/90 border border-white/10 p-2 rounded-lg text-left pointer-events-none shadow-xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-xl">
+                                                            <h4 className="text-[9px] font-black text-white uppercase tracking-wider line-clamp-1">{project.name}</h4>
                                                         </div>
                                                     </a>
                                                 ))}
                                             </div>
 
                                             {/* Fading gradients */}
-                                            <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
-                                            <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
+                                            <div className="absolute inset-y-0 left-0 w-12 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
+                                            <div className="absolute inset-y-0 right-0 w-12 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
                                         </div>
                                     </div>
                                 </div>
