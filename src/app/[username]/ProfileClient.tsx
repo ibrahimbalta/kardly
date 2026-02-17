@@ -297,6 +297,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
 
     const toneStyle = getToneStyle(tone)
 
+    const getIcon = (title: string) => {
+        const t = title.toLowerCase();
+        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
+        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
+        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
+        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
+        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
+        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
+        if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
+        if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
+        return <Zap size={14} />;
+    };
+
     const theme = {
         black: {
             bg: "bg-[#030712]",
@@ -827,19 +840,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                         const x = Math.cos(angle) * radius;
                                         const y = Math.sin(angle) * radius;
 
-                                        const getIcon = (title: string) => {
-                                            const t = title.toLowerCase();
-                                            if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
-                                            if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
-                                            if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
-                                            if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
-                                            if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
-                                            if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
-                                            if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
-                                            if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
-                                            return <Zap size={14} />;
-                                        };
-
                                         return (
                                             <motion.div
                                                 key={i}
@@ -955,7 +955,28 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                 </div>
                             )}
 
-                            {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
+                            {/* Expertise/Services Section */}
+                            {profile.services && profile.services.length > 0 && (
+                                <div className="mt-8 space-y-4">
+                                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Uzmanlık Alanlarım</h3>
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                        {profile.services.map((service: any, i: number) => (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: 0.2 + i * 0.1 }}
+                                                className={cn("px-4 py-2 border backdrop-blur-md flex items-center gap-2 transition-all hover:scale-105 hover:bg-white/5", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                            >
+                                                <div style={{ color: theme.accent }}>{getIcon(service.title)}</div>
+                                                <span className={cn("text-[10px] font-black uppercase tracking-wider", theme.text)}>{service.title}</span>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {profile.slogan && <p className={cn("text-sm font-bold mt-6 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
                     </div >
 
