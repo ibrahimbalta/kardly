@@ -17,6 +17,7 @@ import {
     Plus,
     Trash2,
     EyeOff,
+    Check,
     Star,
     Instagram,
     Twitter,
@@ -1238,43 +1239,49 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Müşteri Yorumları</h2>
-                                <p className="text-sm text-foreground/50">Profilinizde görünen yorumları yönetin.</p>
+                                <h2 className="text-xl font-bold text-slate-900">Müşteri Yorumları</h2>
+                                <p className="text-sm text-slate-500">Profilinizde görünen yorumları yönetin.</p>
                             </div>
                         </div>
 
-                        <div className="glass rounded-[2.5rem] border-white/5 overflow-x-auto no-scrollbar">
+                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
                             <table className="w-full text-left min-w-[800px]">
-                                <thead className="bg-white/5 border-b border-white/5">
+                                <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Kullanıcı</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Yorum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Puan</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Durum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40 text-right">İşlem</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Kullanıcı</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Yorum</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Puan</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Durum</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5">
+                                <tbody className="divide-y divide-slate-100">
                                     {reviewList.map((review: any) => (
-                                        <tr key={review.id} className="hover:bg-white/[0.02] transition-colors">
+                                        <tr key={review.id} className="hover:bg-slate-50/50 transition-colors">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 border border-white/10">
-                                                        <img src={review.image} className="w-full h-full object-cover" />
+                                                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                                                        <img
+                                                            src={review.image || `https://ui-avatars.com/api/?name=${review.name}&background=random`}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e: any) => {
+                                                                e.target.src = `https://ui-avatars.com/api/?name=${review.name}&background=random`;
+                                                            }}
+                                                        />
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold">{review.name}</div>
-                                                        <div className="text-[10px] text-white/40 uppercase tracking-widest">{review.title}</div>
+                                                        <div className="font-bold text-slate-900">{review.name}</div>
+                                                        <div className="text-[10px] text-slate-400 uppercase tracking-widest font-black">{review.title}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <p className="text-sm text-white/60 line-clamp-2 max-w-sm">{review.content}</p>
+                                                <p className="text-sm text-slate-600 line-clamp-2 max-w-sm font-medium">{review.content}</p>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="flex items-center gap-0.5 text-amber-400">
+                                                <div className="flex items-center gap-0.5 text-amber-500">
                                                     {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-white/10"} />
+                                                        <Star key={i} size={14} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-slate-200"} />
                                                     ))}
                                                 </div>
                                             </td>
@@ -1282,8 +1289,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <button
                                                     onClick={() => handleToggleReview(review.id, review.isActive)}
                                                     className={cn(
-                                                        "px-2 py-1 rounded-md text-[10px] font-bold uppercase transition-all",
-                                                        review.isActive ? "bg-emerald-500/10 text-emerald-500" : "bg-white/10 text-white/40 hover:bg-white/20"
+                                                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border",
+                                                        review.isActive
+                                                            ? "bg-emerald-50 border-emerald-100 text-emerald-600 shadow-sm"
+                                                            : "bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200"
                                                     )}
                                                 >
                                                     {review.isActive ? 'Yayında' : 'Onay Bekliyor'}
@@ -1293,13 +1302,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="flex justify-end gap-2">
                                                     <button
                                                         onClick={() => handleToggleReview(review.id, review.isActive)}
-                                                        className="p-2 hover:bg-white/5 rounded-lg transition-colors text-white/40 hover:text-white"
+                                                        className={cn(
+                                                            "w-9 h-9 rounded-xl flex items-center justify-center transition-all border shadow-sm",
+                                                            review.isActive
+                                                                ? "bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300"
+                                                                : "bg-primary/10 border-primary/20 text-primary hover:bg-primary hover:text-white"
+                                                        )}
+                                                        title={review.isActive ? "Gizle" : "Yayına Al"}
                                                     >
-                                                        {review.isActive ? <EyeOff size={16} /> : <Eye size={16} />}
+                                                        {review.isActive ? <EyeOff size={16} /> : <Check size={16} />}
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteReview(review.id)}
-                                                        className="p-2 hover:bg-rose-500/10 rounded-lg transition-colors text-white/40 hover:text-rose-500"
+                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        title="Sil"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
