@@ -288,6 +288,22 @@ END:VCARD`
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
+    const formatUrl = (url?: string) => {
+        if (!url) return ""
+        const trimmed = url.trim()
+        if (!trimmed) return ""
+        if (
+            trimmed.startsWith('http://') ||
+            trimmed.startsWith('https://') ||
+            trimmed.startsWith('tel:') ||
+            trimmed.startsWith('mailto:')
+        ) {
+            return trimmed
+        }
+        return `https://${trimmed}`
+    }
+
+    // Dynamic Tone Style Logic
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentReviewIndex((prev) => (prev + 1) % reviews.length)
@@ -908,8 +924,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setIsAppointmentOpen(true)
             }, active: !!profile.showAppointmentBtn
         },
-        { label: "Web Site", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: "Konum", icon: <MapPin size={20} />, href: socialLinks.find((l: any) => l.platform === 'location')?.url, onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
+        { label: "Web Site", icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: "Konum", icon: <MapPin size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
 
     return (
@@ -1089,7 +1105,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                     <a
                                                         key={i}
-                                                        href={project.link || "#"}
+                                                        href={formatUrl(project.link) || "#"}
                                                         target="_blank"
                                                         onClick={() => trackEvent("product", project.name)}
                                                         className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
@@ -1181,7 +1197,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 >
                                     {action.href ? (
                                         <a
-                                            href={action.href}
+                                            href={formatUrl(action.href)}
                                             target="_blank"
                                             onClick={() => {
                                                 if (action.onClick) action.onClick()
@@ -1294,7 +1310,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         {socialLinks.filter((l: any) => l.platform !== 'customLinks').slice(0, 10).map((l: any, i: number) => {
                             const platform = l.platform.toLowerCase()
                             return (
-                                <a key={i} href={l.url} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
+                                <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
                                     {platform === 'instagram' && <Instagram size={24} />}
                                     {platform === 'linkedin' && <Linkedin size={24} />}
                                     {platform === 'twitter' && <Twitter size={24} />}
