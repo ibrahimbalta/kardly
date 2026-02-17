@@ -1298,89 +1298,97 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label="Yorumlar" count={stats.reviewCount} color="amber" />
                         </div>
 
-                        <div className="lg:col-span-4 relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-indigo-600 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition-all duration-1000" />
-                            <div className="relative glass p-10 rounded-[3rem] border-white/10 bg-slate-900 overflow-hidden shadow-2xl">
-                                {/* Decorative Orbs */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
+                        <div className="lg:col-span-4 mt-8">
+                            <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0f172a] shadow-2xl border border-white/5">
+                                {/* Ambient Background Glow */}
+                                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                                <div className="relative z-10">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                                <div className="relative z-10 p-8 md:p-12">
+                                    {/* Header */}
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 pb-8 border-b border-white/5">
                                         <div className="flex items-center gap-5">
-                                            <div className="w-14 h-14 bg-gradient-to-br from-primary to-rose-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-primary/40">
-                                                <Zap size={28} className="animate-pulse" />
+                                            <div className="w-16 h-16 bg-gradient-to-br from-primary to-rose-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-primary/20">
+                                                <Zap size={32} className="fill-current" />
                                             </div>
                                             <div>
-                                                <h3 className="font-black text-2xl text-white tracking-tight">Dijital Asistan Analizi</h3>
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">AI-Powered Smart Insights</p>
+                                                <h3 className="font-black text-3xl text-white tracking-tight leading-none mb-2">Dijital Asistan Analizi</h3>
+                                                <p className="text-xs font-bold text-primary uppercase tracking-[0.4em]">Smart Performance Insights</p>
                                             </div>
                                         </div>
-                                        <div className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Canlı Veri Analizi</span>
-                                            </div>
+                                        <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+                                            <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
+                                            <span className="text-[10px] font-black text-white/70 uppercase tracking-widest">Canlı Veri Yayını</span>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                        {/* Insight 1 */}
-                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
-                                            <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary mb-5 group-hover/card:scale-110 transition-transform">
+                                    {/* Stats Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                                        {/* Ziyaretçi Trendi */}
+                                        <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300 group">
+                                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
                                                 <Users size={20} />
                                             </div>
-                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">Ziyaretçi Trendi</h4>
-                                            <p className="text-sm font-bold text-white leading-relaxed">
-                                                Toplam <span className="text-primary text-lg font-black">{stats.totalViews}</span> ziyaretçi arasından
-                                                <span className="text-white"> {stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> kanalı %{((Math.max(stats.waClicks, stats.phoneClicks) / (stats.totalViews || 1)) * 100).toFixed(0)} oranla en çok tercih edilen oldu.
-                                            </p>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">Ziyaretçi Trendi</h4>
+                                            <div className="space-y-3">
+                                                <p className="text-sm text-slate-200 leading-relaxed font-medium">
+                                                    Toplam <span className="text-white font-black text-lg">{stats.totalViews}</span> kişi içinden
+                                                    en çok <span className="text-primary font-black"> {stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> kanalı tercih edildi.
+                                                </p>
+                                                <div className="pt-2">
+                                                    <span className="text-[10px] font-black text-slate-500 bg-white/5 px-2 py-1 rounded-md">BAŞARI ORANI: %{((Math.max(stats.waClicks, stats.phoneClicks) / (stats.totalViews || 1)) * 100).toFixed(0)}</span>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        {/* Insight 2 */}
-                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
-                                            <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 mb-5 group-hover/card:scale-110 transition-transform">
+                                        {/* İçerik Etkileşimi */}
+                                        <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 group">
+                                            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
                                                 <Activity size={20} />
                                             </div>
-                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">İçerik Etkileşimi</h4>
-                                            <p className="text-sm font-bold text-white leading-relaxed">
-                                                Projeleriniz ve CV'niz toplam <span className="text-emerald-400 text-lg font-black">{(stats.projectClicks + stats.cvClicks)}</span> kez incelendi.
-                                                {stats.projectClicks > stats.cvClicks ? " Portfolyonuz şu an en popüler alanınız." : " CV merakı oldukça yüksek seviyede."}
-                                            </p>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">İçerik Etkileşimi</h4>
+                                            <div className="space-y-3">
+                                                <p className="text-sm text-slate-200 leading-relaxed font-medium">
+                                                    Projeleriniz <span className="text-emerald-400 font-black text-lg">{(stats.projectClicks + stats.cvClicks)}</span> kez tıklandı.
+                                                    {stats.projectClicks > stats.cvClicks ? " Portfolyonuz şu an en popüler alanınız." : " CV merakı oldukça yüksek seviyede."}
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        {/* Insight 3 */}
-                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
-                                            <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-5 group-hover/card:scale-110 transition-transform">
+                                        {/* Ağ Yayılımı */}
+                                        <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-amber-500/30 transition-all duration-300 group">
+                                            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-6">
                                                 <Share2 size={20} />
                                             </div>
-                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">Ağ Yayılımı</h4>
-                                            <p className="text-sm font-bold text-white leading-relaxed">
-                                                Profiliniz <span className="text-amber-400 text-lg font-black">{stats.shareClicks}</span> farklı kişiyle paylaşıldı.
-                                                Dijital kartvizitiniz ağınızda aktif bir şekilde dolaşıyor.
-                                            </p>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">Ağ Yayılımı</h4>
+                                            <div className="space-y-3">
+                                                <p className="text-sm text-slate-200 leading-relaxed font-medium">
+                                                    Dijital kartınız <span className="text-amber-500 font-black text-lg">{stats.shareClicks}</span> farklı kişiyle paylaşıldı.
+                                                    Network ağınız hızlı genişliyor.
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Smart Suggestion */}
-                                    <div className="mt-10 p-6 rounded-[2rem] bg-gradient-to-r from-primary/20 to-transparent border border-primary/20 flex flex-col md:flex-row items-center gap-6">
-                                        <div className="flex -space-x-3">
-                                            {[1, 2, 3].map(i => (
-                                                <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center overflow-hidden">
-                                                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="user" />
+                                    {/* Action Box */}
+                                    <div className="mt-12 bg-gradient-to-r from-primary/10 to-transparent rounded-[2rem] border border-primary/20 p-6 md:p-8 flex flex-col md:flex-row items-center gap-8">
+                                        <div className="flex -space-x-4">
+                                            {[24, 32, 45].map(id => (
+                                                <div key={id} className="w-12 h-12 rounded-full border-4 border-[#0f172a] overflow-hidden">
+                                                    <img src={`https://i.pravatar.cc/150?u=${id}`} className="w-full h-full object-cover" alt="avatar" />
                                                 </div>
                                             ))}
                                         </div>
                                         <div className="flex-1 text-center md:text-left">
-                                            <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">Akıllı Öneri</p>
-                                            <p className="text-sm text-white/80 font-medium">
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Akıllı Strateji Önerisi</p>
+                                            <p className="text-base text-white font-bold leading-snug">
                                                 {stats.totalViews > 10 && stats.clickRate.replace('%', '') < 5
-                                                    ? "Ziyaretçi sayınız iyi fakat tıklama oranınız düşük. Daha dikkat çekici bir slogan kullanmayı deneyin."
-                                                    : "Profil performansınız oldukça dengeli. WhatsApp butonunu sayfanın daha üst kısmına alarak dönüşümü artırabilirsiniz."}
+                                                    ? "Ziyaretçi sayınız yüksek ancak etkileşim düşük. Profil fotoğrafınızı veya slogonızı güncelleyerek merak uyandırın."
+                                                    : "Performansınız dengeli. WhatsApp butonunu görünür kılarak doğrudan iletişimleri +%20 artırabilirsiniz."}
                                             </p>
                                         </div>
-                                        <button className="px-6 py-3 bg-white text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shrink-0">
-                                            Stratejiyi Uygula
+                                        <button className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 shrink-0">
+                                            STRATEJİYİ UYGULA
                                         </button>
                                     </div>
                                 </div>
