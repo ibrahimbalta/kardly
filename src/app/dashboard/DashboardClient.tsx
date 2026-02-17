@@ -1298,32 +1298,90 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label="Yorumlar" count={stats.reviewCount} color="amber" />
                         </div>
 
-                        <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border-primary/20 bg-primary/5 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-10">
-                                <Sparkles size={120} className="text-primary" />
-                            </div>
-                            <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
-                                        <Zap size={20} />
+                        <div className="lg:col-span-4 relative group">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-indigo-600 rounded-[3rem] blur opacity-15 group-hover:opacity-25 transition-all duration-1000" />
+                            <div className="relative glass p-10 rounded-[3rem] border-white/10 bg-slate-900 overflow-hidden shadow-2xl">
+                                {/* Decorative Orbs */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
+
+                                <div className="relative z-10">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                                        <div className="flex items-center gap-5">
+                                            <div className="w-14 h-14 bg-gradient-to-br from-primary to-rose-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-primary/40">
+                                                <Zap size={28} className="animate-pulse" />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-black text-2xl text-white tracking-tight">Dijital Asistan Analizi</h3>
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">AI-Powered Smart Insights</p>
+                                            </div>
+                                        </div>
+                                        <div className="px-5 py-2.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Canlı Veri Analizi</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="font-black text-lg text-white">Profil Performans Raporu</h3>
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-widest font-bold">Digital Assistant Insights</p>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        {/* Insight 1 */}
+                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
+                                            <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary mb-5 group-hover/card:scale-110 transition-transform">
+                                                <Users size={20} />
+                                            </div>
+                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">Ziyaretçi Trendi</h4>
+                                            <p className="text-sm font-bold text-white leading-relaxed">
+                                                Toplam <span className="text-primary text-lg font-black">{stats.totalViews}</span> ziyaretçi arasından
+                                                <span className="text-white"> {stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> kanalı %{((Math.max(stats.waClicks, stats.phoneClicks) / (stats.totalViews || 1)) * 100).toFixed(0)} oranla en çok tercih edilen oldu.
+                                            </p>
+                                        </div>
+
+                                        {/* Insight 2 */}
+                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
+                                            <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 mb-5 group-hover/card:scale-110 transition-transform">
+                                                <Activity size={20} />
+                                            </div>
+                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">İçerik Etkileşimi</h4>
+                                            <p className="text-sm font-bold text-white leading-relaxed">
+                                                Projeleriniz ve CV'niz toplam <span className="text-emerald-400 text-lg font-black">{(stats.projectClicks + stats.cvClicks)}</span> kez incelendi.
+                                                {stats.projectClicks > stats.cvClicks ? " Portfolyonuz şu an en popüler alanınız." : " CV merakı oldukça yüksek seviyede."}
+                                            </p>
+                                        </div>
+
+                                        {/* Insight 3 */}
+                                        <div className="p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-500 group/card">
+                                            <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-5 group-hover/card:scale-110 transition-transform">
+                                                <Share2 size={20} />
+                                            </div>
+                                            <h4 className="text-xs font-black text-white/40 uppercase tracking-widest mb-3">Ağ Yayılımı</h4>
+                                            <p className="text-sm font-bold text-white leading-relaxed">
+                                                Profiliniz <span className="text-amber-400 text-lg font-black">{stats.shareClicks}</span> farklı kişiyle paylaşıldı.
+                                                Dijital kartvizitiniz ağınızda aktif bir şekilde dolaşıyor.
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="space-y-2">
-                                        <h4 className="text-xs font-bold text-white/60">Ziyaretçi Trendi</h4>
-                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Toplam <span className="text-primary">{stats.totalViews} ziyaretçi</span> arasında en çok etkileşim kurulan kanal <span className="text-primary">{stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> oldu.</p>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h4 className="text-xs font-bold text-white/60">İçerik Etkileşimi</h4>
-                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Projeleriniz ve CV'niz toplam <span className="text-emerald-400">{(stats.projectClicks + stats.cvClicks).toString()} kez</span> incelendi. Portföyünüz dikkat çekiyor.</p>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h4 className="text-xs font-bold text-white/60">Sosyal Paylaşım</h4>
-                                        <p className="text-sm font-medium text-white font-bold leading-relaxed">Profiliniz <span className="text-amber-400">{stats.shareClicks} kez</span> paylaşıldı. Bu, ağınızın aktif olduğunu gösteriyor.</p>
+
+                                    {/* Smart Suggestion */}
+                                    <div className="mt-10 p-6 rounded-[2rem] bg-gradient-to-r from-primary/20 to-transparent border border-primary/20 flex flex-col md:flex-row items-center gap-6">
+                                        <div className="flex -space-x-3">
+                                            {[1, 2, 3].map(i => (
+                                                <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center overflow-hidden">
+                                                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="user" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="flex-1 text-center md:text-left">
+                                            <p className="text-xs font-black text-primary uppercase tracking-widest mb-1">Akıllı Öneri</p>
+                                            <p className="text-sm text-white/80 font-medium">
+                                                {stats.totalViews > 10 && stats.clickRate.replace('%', '') < 5
+                                                    ? "Ziyaretçi sayınız iyi fakat tıklama oranınız düşük. Daha dikkat çekici bir slogan kullanmayı deneyin."
+                                                    : "Profil performansınız oldukça dengeli. WhatsApp butonunu sayfanın daha üst kısmına alarak dönüşümü artırabilirsiniz."}
+                                            </p>
+                                        </div>
+                                        <button className="px-6 py-3 bg-white text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shrink-0">
+                                            Stratejiyi Uygula
+                                        </button>
                                     </div>
                                 </div>
                             </div>
