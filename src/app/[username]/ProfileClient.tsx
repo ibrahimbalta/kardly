@@ -199,38 +199,24 @@ END:VCARD`
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
+
+        // Category based switching
+        if (profile.templateId?.startsWith("neon_")) {
+            const scheme = profile.templateId.replace("neon_", "")
+            return <NeonModernTemplate {...props} colorScheme={scheme} tone={tone} />;
+        }
+
         switch (profile.templateId) {
-            case "neon_black": return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
-            case "neon_white": return <NeonModernTemplate {...props} colorScheme="white" tone={tone} />;
-            case "neon_blue": return <NeonModernTemplate {...props} colorScheme="blue" tone={tone} />;
-            case "neon_green": return <NeonModernTemplate {...props} colorScheme="green" tone={tone} />;
-            case "neon_purple": return <NeonModernTemplate {...props} colorScheme="purple" tone={tone} />;
-            case "neon_red": return <NeonModernTemplate {...props} colorScheme="red" tone={tone} />;
-            case "neon_gold": return <NeonModernTemplate {...props} colorScheme="gold" tone={tone} />;
-            case "neon_rose": return <NeonModernTemplate {...props} colorScheme="rose" tone={tone} />;
-            case "neon_cyan": return <NeonModernTemplate {...props} colorScheme="cyan" tone={tone} />;
-            case "neon_pink": return <NeonModernTemplate {...props} colorScheme="pink" tone={tone} />;
-            case "neon_amber": return <NeonModernTemplate {...props} colorScheme="amber" tone={tone} />;
-            case "neon_emerald": return <NeonModernTemplate {...props} colorScheme="emerald" tone={tone} />;
-            case "neon_sky": return <NeonModernTemplate {...props} colorScheme="sky" tone={tone} />;
-            case "neon_lime": return <NeonModernTemplate {...props} colorScheme="lime" tone={tone} />;
-            case "neon_indigo": return <NeonModernTemplate {...props} colorScheme="indigo" tone={tone} />;
-            case "neon_crimson": return <NeonModernTemplate {...props} colorScheme="crimson" tone={tone} />;
-            case "neon_teal": return <NeonModernTemplate {...props} colorScheme="teal" tone={tone} />;
-            case "neon_fuchsia": return <NeonModernTemplate {...props} colorScheme="fuchsia" tone={tone} />;
-            case "neon_violet": return <NeonModernTemplate {...props} colorScheme="violet" tone={tone} />;
-            case "neon_orange": return <NeonModernTemplate {...props} colorScheme="orange" tone={tone} />;
-            case "neon_gs": return <NeonModernTemplate {...props} colorScheme="gs" tone={tone} />;
-            case "neon_fb": return <NeonModernTemplate {...props} colorScheme="fb" tone={tone} />;
-            case "neon_ts": return <NeonModernTemplate {...props} colorScheme="ts" tone={tone} />;
-            case "neon_bjk": return <NeonModernTemplate {...props} colorScheme="bjk" tone={tone} />;
-            case "neon_tr": return <NeonModernTemplate {...props} colorScheme="tr" tone={tone} />;
-            case "neon_cyber": return <NeonModernTemplate {...props} colorScheme="neon_cyber" tone={tone} />;
-            case "neon_galaxy": return <NeonModernTemplate {...props} colorScheme="neon_galaxy" tone={tone} />;
-            case "neon_acid": return <NeonModernTemplate {...props} colorScheme="neon_acid" tone={tone} />;
-            case "neon_candy": return <NeonModernTemplate {...props} colorScheme="neon_candy" tone={tone} />;
-            case "neon_aurora": return <NeonModernTemplate {...props} colorScheme="neon_aurora" tone={tone} />;
-            default: return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
+            case "minimal":
+                return <MinimalProfessionalTemplate {...props} colorScheme="light" tone={tone} />;
+            case "classic":
+                return <MinimalProfessionalTemplate {...props} colorScheme="corporate" tone={tone} />;
+            case "luxury":
+                return <MinimalProfessionalTemplate {...props} colorScheme="gold_dark" tone={tone} />;
+            case "sport":
+                return <SportEnergyTemplate {...props} colorScheme="vibrant" tone={tone} />;
+            default:
+                return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
         }
     }
 
@@ -1537,4 +1523,105 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
             </motion.div>
         </div>
     )
+}
+
+function MinimalProfessionalTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
+    const themes: Record<string, any> = {
+        light: { bg: "bg-slate-50", card: "bg-white", text: "text-slate-900", accent: "#6366f1", btn: "bg-slate-900 text-white", border: "border-slate-200" },
+        corporate: { bg: "bg-white", card: "bg-slate-50", text: "#1e293b", accent: "#2563eb", btn: "bg-[#2563eb] text-white", border: "border-slate-200" },
+        gold_dark: { bg: "bg-[#0a0a0a]", card: "bg-[#161616]", text: "text-white", accent: "#d4af37", btn: "bg-[#d4af37] text-black", border: "border-white/5" }
+    };
+    const theme = themes[colorScheme] || themes.light;
+
+    return (
+        <div className={cn("min-h-screen py-12 px-4 flex flex-col items-center", theme.bg)}>
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn("w-full max-w-[440px] shadow-xl rounded-3xl overflow-hidden border", theme.card, theme.border)}
+            >
+                <div className="h-40 bg-gradient-to-br from-slate-200 to-slate-300 relative">
+                    {colorScheme === 'gold_dark' && <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/20 to-black" />}
+                    <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 p-2 bg-white rounded-[2.5rem] shadow-lg">
+                        <img src={profile.user.image} className="w-32 h-32 rounded-[2rem] object-cover" />
+                    </div>
+                </div>
+
+                <div className="pt-20 pb-10 px-8 text-center space-y-4">
+                    <h1 className={cn("text-3xl font-black", theme.text)}>{profile.user.name}</h1>
+                    <p className="text-sm font-bold tracking-[0.3em] uppercase opacity-40">{profile.occupation}</p>
+                    <p className="text-sm text-slate-500 max-w-xs mx-auto">{profile.bio}</p>
+                </div>
+
+                <div className="px-8 space-y-3 pb-8">
+                    <button onClick={handleAddToContacts} className={cn("w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2", theme.btn)}>
+                        <Phone size={18} /> Rehbere Ekle
+                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button onClick={handleShare} className="py-4 bg-slate-100 rounded-2xl font-black text-[10px] uppercase tracking-widest text-slate-900 border border-slate-200">Paylaş</button>
+                        <button onClick={handleCVView} className="py-4 bg-slate-100 rounded-2xl font-black text-[10px] uppercase tracking-widest text-slate-900 border border-slate-200">CV İndir</button>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+function SportEnergyTemplate({ profile, handleShare, handleCVView, handleAddToContacts, t, trackEvent }: any) {
+    return (
+        <div className="min-h-screen bg-rose-600 text-white font-sans overflow-x-hidden p-0">
+            {/* Slanted Header */}
+            <div className="h-[40vh] bg-slate-900 relative skew-y-[-6deg] -mt-20 flex items-end justify-center pb-20 overflow-hidden">
+                <div className="absolute top-20 left-0 w-full text-white/5 font-black text-[150px] whitespace-nowrap -rotate-6 select-none leading-none">
+                    DETERMINATION POWER SPEED
+                </div>
+                <motion.div
+                    initial={{ scale: 0.5, rotate: -20, opacity: 0 }}
+                    animate={{ scale: 1, rotate: 6, opacity: 1 }}
+                    className="relative z-10 p-2 bg-rose-600 rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
+                >
+                    <img src={profile.user.image} className="w-48 h-48 rounded-[2.5rem] object-cover" />
+                </motion.div>
+            </div>
+
+            <div className="p-8 space-y-12 -mt-10 relative z-10">
+                <div className="space-y-2">
+                    <motion.h1
+                        initial={{ x: -100, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        className="text-6xl font-black italic tracking-tighter leading-none"
+                    >
+                        {profile.user.name.split(' ')[0]}<br />
+                        <span className="text-slate-900">{profile.user.name.split(' ')[1]}</span>
+                    </motion.h1>
+                    <p className="text-xl font-black bg-white text-rose-600 px-4 py-1 italic w-max">{profile.occupation}</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                    <button onClick={handleAddToContacts} className="bg-white text-slate-900 p-6 rounded-none skew-x-[-12deg] flex items-center justify-between group">
+                        <span className="font-black text-2xl italic uppercase tracking-tighter">Get Connected</span>
+                        <ArrowRight className="group-hover:translate-x-2 transition-transform" size={32} />
+                    </button>
+                    <div className="flex gap-4">
+                        <button onClick={handleShare} className="flex-1 bg-slate-900 border-2 border-white p-4 rounded-none skew-x-[-12deg] font-black italic uppercase">Share</button>
+                        <button onClick={handleCVView} className="flex-1 bg-slate-900 border-2 border-white p-4 rounded-none skew-x-[-12deg] font-black italic uppercase">Records</button>
+                    </div>
+                </div>
+
+                {profile.products && (
+                    <div className="space-y-4">
+                        <h3 className="text-2xl font-black italic border-b-4 border-white w-max pb-1">HIGHLIGHTS</h3>
+                        <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+                            {profile.products.map((p: any, i: number) => (
+                                <div key={i} className="min-w-[200px] aspect-square bg-slate-800 rounded-none skew-x-[-6deg] overflow-hidden relative">
+                                    <img src={p.image} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" />
+                                    <div className="absolute bottom-4 left-4 font-black italic text-xs bg-rose-600 px-2">{p.name}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }

@@ -901,52 +901,89 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </button>
                                 </div>
                             </div>
-                            {/* Preview Mockup */}
-                            <div className="relative group">
-                                <div className="absolute inset-0 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="relative glass rounded-[3rem] p-4 border-white/10 shadow-2xl h-[600px] overflow-hidden">
-                                    <div className="w-full h-full bg-[#020617] rounded-[2.5rem] overflow-hidden flex flex-col p-8 pointer-events-none">
-                                        <div className="w-20 h-20 bg-primary/20 rounded-[1.5rem] mx-auto mb-6 flex items-center justify-center overflow-hidden">
-                                            {(profileData?.image || session?.user?.image) ? (
-                                                <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" />
-                                            ) : (
-                                                <Layout className="text-primary w-8 h-8" />
-                                            )}
-                                        </div>
-                                        <div className="text-center mb-6">
-                                            <div className="h-4 w-32 bg-white/20 rounded-full mx-auto mb-2" />
-                                            <p className="text-[10px] text-white/40 font-bold uppercase truncate">{profileData?.occupation || "Meslek"}</p>
-                                        </div>
-                                        <div className="text-center mb-8">
-                                            <p className="text-[8px] text-white/60 italic line-clamp-2">"{profileData?.slogan || "Sloganınız..."}"</p>
-                                        </div>
+                            {/* Realistic Smartphone Preview */}
+                            <div className="relative group perspective-1000">
+                                <div className="absolute -inset-4 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-all duration-1000" />
 
-                                        {/* Mockup Social Icons */}
-                                        <div className="flex justify-center gap-2 mb-8">
-                                            {(profileData.socialLinks as any[])?.filter(l => l.url)?.map((link: any) => (
-                                                <div key={link.platform} className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                                                    {link.platform === "instagram" && <Instagram className="w-4 h-4 text-rose-400" />}
-                                                    {link.platform === "twitter" && <Twitter className="w-4 h-4 text-sky-400" />}
-                                                    {link.platform === "linkedin" && <Linkedin className="w-4 h-4 text-blue-500" />}
-                                                    {link.platform === "github" && <Github className="w-4 h-4 text-white" />}
-                                                    {link.platform === "youtube" && <Youtube className="w-4 h-4 text-red-500" />}
-                                                </div>
-                                            ))}
-                                            {(!profileData.socialLinks || profileData.socialLinks.length === 0) && (
-                                                <div className="flex gap-2">
-                                                    {[1, 2, 3].map(i => <div key={i} className="w-8 h-8 rounded-full bg-white/5 border border-white/5" />)}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="space-y-3">
-                                            {[1, 2, 3].map((i) => (
-                                                <div key={i} className="h-14 bg-white/5 rounded-2xl border border-white/10" />
-                                            ))}
-                                        </div>
+                                {/* iPhone Frame */}
+                                <div className="relative w-[320px] h-[640px] bg-[#0f172a] rounded-[3.5rem] p-3 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_10px_rgba(15,23,42,1),0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 mx-auto">
+                                    {/* Notch */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
+                                        <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
+                                        <div className="w-8 h-1 bg-white/10 rounded-full" />
                                     </div>
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-[3rem]">
-                                        <p className="font-bold text-lg text-white">Canlı Önizleme</p>
+
+                                    {/* Side Buttons */}
+                                    <div className="absolute top-24 -left-0.5 w-1 h-12 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-40 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-64 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-32 -right-0.5 w-1 h-20 bg-slate-800 rounded-l-sm shadow-sm" />
+
+                                    {/* Screen Content */}
+                                    <div className="w-full h-full bg-[#020617] rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative">
+                                        {/* Status Bar */}
+                                        <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
+                                            <span className="text-[10px] font-bold text-white/40">9:41</span>
+                                            <div className="flex items-center gap-1.5 opacity-40">
+                                                <div className="w-3 h-3 border border-white/40 rounded-[2px]" />
+                                                <div className="w-3 h-1.5 bg-white/40 rounded-sm" />
+                                            </div>
+                                        </div>
+
+                                        {/* Content Scaled */}
+                                        <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700">
+                                            <div className="w-24 h-24 bg-primary/20 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border border-white/10">
+                                                {(profileData?.image || session?.user?.image) ? (
+                                                    <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
+                                                ) : (
+                                                    <UserCircle className="text-primary w-12 h-12 opacity-50" />
+                                                )}
+                                            </div>
+                                            <div className="text-center mb-6">
+                                                <h4 className="text-white font-black text-xl mb-1 truncate">{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
+                                                <p className="text-[10px] text-primary font-black uppercase tracking-[0.2em]">{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
+                                            </div>
+                                            <div className="text-center mb-8 px-4">
+                                                <p className="text-[11px] text-white/60 italic leading-relaxed line-clamp-2 italic">"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
+                                            </div>
+
+                                            {/* Mockup Social Icons */}
+                                            <div className="flex justify-center flex-wrap gap-2.5 mb-10">
+                                                {(profileData.socialLinks as any[])?.filter((l: any) => l.url && l.platform !== 'customLinks')?.map((link: any) => (
+                                                    <div key={link.platform} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-sm">
+                                                        {link.platform === "instagram" && <Instagram className="w-5 h-5 text-rose-400" />}
+                                                        {link.platform === "twitter" && <Twitter className="w-5 h-5 text-sky-400" />}
+                                                        {link.platform === "linkedin" && <Linkedin className="w-5 h-5 text-blue-500" />}
+                                                        {link.platform === "github" && <Github className="w-5 h-5 text-white" />}
+                                                        {link.platform === "youtube" && <Youtube className="w-5 h-5 text-red-500" />}
+                                                        {link.platform === "phone" && <Phone className="w-5 h-5 text-emerald-500" />}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {[1, 2, 3].map((i) => (
+                                                    <div key={i} className="h-12 bg-white/5 rounded-2xl border border-white/10 flex items-center px-4">
+                                                        <div className="w-24 h-1.5 bg-white/10 rounded-full" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Home Indicator */}
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" />
+                                    </div>
+
+                                    {/* Shine Effect */}
+                                    <div className="absolute inset-x-12 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-[3rem]" />
+                                </div>
+
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 hover:opacity-100 transition-opacity rounded-[3.5rem] cursor-pointer" onClick={() => profile?.username && window.open(`/${profile.username}`, '_blank')}>
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-xl">
+                                            <ArrowRight size={24} />
+                                        </div>
+                                        <p className="font-black text-xs text-white uppercase tracking-widest">Canlı Görünyüle</p>
                                     </div>
                                 </div>
                             </div>
