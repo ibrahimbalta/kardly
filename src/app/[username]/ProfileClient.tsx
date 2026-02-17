@@ -236,7 +236,6 @@ END:VCARD`
 
     return (
         <>
-            <AppointmentModal profile={profile} isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} t={t} />
             {renderTemplate()}
 
             <ReviewModal
@@ -286,7 +285,7 @@ END:VCARD`
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent, tone }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -956,6 +955,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     animation: spin-slow 15s linear infinite;
                 }
             `}</style>
+
+            {/* Modal integration for dynamic theme */}
+            <AppointmentModal
+                profile={profile}
+                isOpen={isAppointmentOpen}
+                onClose={() => setIsAppointmentOpen(false)}
+                t={t}
+                theme={theme}
+                toneStyle={toneStyle}
+            />
 
             <main className="relative z-10 w-full max-w-[420px] space-y-6">
                 <motion.div
