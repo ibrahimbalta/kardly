@@ -1206,7 +1206,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon." },
                                 { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu." },
                                 { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon." },
-                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri." }
+                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri." },
+                                { id: "neon_cyber", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği." },
+                                { id: "neon_galaxy", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer." },
+                                { id: "neon_acid", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji." },
+                                { id: "neon_candy", name: "🌈 Candy Neon", description: "Şeker pembe, lavanta ve menekşe renklerinin yumuşak neon dansı." },
+                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
