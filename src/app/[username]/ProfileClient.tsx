@@ -36,7 +36,8 @@ import {
     Palette,
     Briefcase,
     Settings,
-    Shield
+    Shield,
+    UserPlus
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -150,9 +151,31 @@ export default function ProfileClient({ profile }: { profile: any }) {
         }
     }
 
+    const handleAddToContacts = () => {
+        trackEvent("vcard")
+        const phone = profile.socialLinks?.find((l: any) => l.platform === 'phone')?.url || ""
+        const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:${profile.user.name}
+ORG:${profile.occupation || ""}
+TEL;TYPE=CELL:${phone}
+EMAIL:${profile.user.email || ""}
+END:VCARD`
+
+        const blob = new Blob([vcard], { type: "text/vcard" })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", `${profile.user.name}.vcf`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+    }
+
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, reviews, setIsReviewModalOpen, trackEvent }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent }
 
     // Template Selector Logic
     const renderTemplate = () => {
@@ -239,7 +262,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     )
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent, tone }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, trackEvent, tone }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     useEffect(() => {
@@ -817,10 +840,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                     {/* Share Button Top Right */}
                     <div className="absolute top-6 right-6 z-30">
                         <button
-                            onClick={handleShare}
+                            onClick={handleAddToContacts}
                             className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
-                            <Share2 size={18} className={theme.icon} />
+                            <UserPlus size={18} className={theme.icon} />
                         </button>
                     </div>
 
@@ -1106,10 +1129,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
 
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
                         <button
-                            onClick={handleShare}
+                            onClick={handleAddToContacts}
                             className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
-                            <Share2 size={20} /> Paylaş
+                            <UserPlus size={20} /> Rehbere Ekle
                         </button>
 
                         <button
