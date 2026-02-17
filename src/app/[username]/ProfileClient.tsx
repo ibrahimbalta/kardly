@@ -279,10 +279,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
             case "lüks":
                 return {
                     font: "font-serif",
-                    rounded: "rounded-none",
+                    rounded: "rounded-[3rem]",
                     border: "border-double border-4",
                     headerSize: "text-2xl uppercase tracking-[0.5em]",
-                    expertiseStyle: "minimal"
+                    expertiseStyle: "slow-rotate"
                 };
             default:
                 return {
@@ -860,7 +860,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                                 <motion.div
                                                     animate={{ rotate: -360 }}
                                                     transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                                                    className={cn("w-8 h-8 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                                    className={cn("w-10 h-10 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative rounded-full")}
                                                     style={{
                                                         color: theme.accent,
                                                         backgroundColor: 'rgba(255,255,255,0.05)',
@@ -888,10 +888,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                     ]
                                 }}
                                 transition={{ duration: 3, repeat: Infinity }}
-                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden rounded-full")}
                                 style={{ borderColor: theme.accent }}
                             >
-                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} />
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover rounded-full")} />
                             </motion.div>
                             <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                         </div>
@@ -955,28 +955,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                 </div>
                             )}
 
-                            {/* Expertise/Services Section */}
-                            {profile.services && profile.services.length > 0 && (
-                                <div className="mt-8 space-y-4">
-                                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.3em] opacity-40", theme.text)}>Uzmanlık Alanlarım</h3>
-                                    <div className="flex flex-wrap justify-center gap-2">
-                                        {profile.services.map((service: any, i: number) => (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.2 + i * 0.1 }}
-                                                className={cn("px-4 py-2 border backdrop-blur-md flex items-center gap-2 transition-all hover:scale-105 hover:bg-white/5", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
-                                            >
-                                                <div style={{ color: theme.accent }}>{getIcon(service.title)}</div>
-                                                <span className={cn("text-[10px] font-black uppercase tracking-wider", theme.text)}>{service.title}</span>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {profile.slogan && <p className={cn("text-sm font-bold mt-6 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
+                            {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
                     </div >
 
