@@ -944,7 +944,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-full border backdrop-blur-md py-4 px-8 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
+                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-8 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
                                         <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white text-center mb-4")}>Projelerim</h3>
                                         <div
                                             className="relative h-16 flex items-center overflow-visible"
