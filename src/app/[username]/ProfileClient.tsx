@@ -177,6 +177,25 @@ END:VCARD`
 
     const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent }
 
+    // Get active accent color for review modal
+    const getActiveAccent = (): string => {
+        const colorMap: Record<string, string> = {
+            black: "#0ea5e9", white: "#3b82f6", blue: "#38bdf8", green: "#22c55e", purple: "#a855f7",
+            red: "#ef4444", gold: "#fbbf24", rose: "#f43f5e", cyan: "#06b6d4", pink: "#ec4899",
+            amber: "#f59e0b", emerald: "#10b981", sky: "#0ea5e9", lime: "#84cc16", indigo: "#6366f1",
+            crimson: "#dc2626", teal: "#14b8a6", fuchsia: "#d946ef", violet: "#8b5cf6", orange: "#f97316",
+            gs: "#fbbf24", fb: "#fbbf24", ts: "#38bdf8", bjk: "#ffffff", tr: "#ffffff",
+            neon_cyber: "#0ef", neon_galaxy: "#a855f7", neon_acid: "#bef264", neon_candy: "#f472b6", neon_aurora: "#2dd4bf",
+            greenwhite: "#ffffff", greenblack: "#22c55e", orangeblack: "#f97316", pinkwhite: "#f43f5e",
+            greywhite: "#475569", blueblack: "#3b82f6", purplexwhite: "#a855f7", yellowwhite: "#f59e0b",
+            mintgreen: "#10b981", electricviolet: "#8b5cf6", crimson_dark: "#dc2626", ocean_light: "#0ea5e9",
+            sunset_rose: "#f43f5e"
+        };
+        const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
+        return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
+    };
+    const activeAccent = getActiveAccent();
+
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
@@ -238,7 +257,7 @@ END:VCARD`
                         console.error(err)
                     }
                 }}
-                themeColor={profile.themeColor || "#0ea5e9"}
+                themeColor={activeAccent}
             />
 
             <AnimatePresence>
@@ -1300,7 +1319,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
             <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-[380px] bg-gradient-to-b from-slate-900 via-slate-950 to-black border border-white/10 rounded-[2.5rem] p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-y-auto max-h-[95vh] no-scrollbar"
+                className="relative w-full max-w-[380px] bg-gradient-to-b from-slate-900 via-slate-950 to-black rounded-[2.5rem] p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] backdrop-blur-2xl overflow-y-auto max-h-[95vh] no-scrollbar"
+                style={{ borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
             >
                 {/* Subtle Gradient Accent */}
                 <div className="absolute top-0 left-0 w-full h-[150px] bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" style={{ background: `linear-gradient(180deg, ${themeColor}15 0%, transparent 100%)` }} />
@@ -1322,7 +1342,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                     <div className="space-y-5">
                         {/* Compact Rating & Gender Row */}
                         <div className="grid grid-cols-1 gap-4">
-                            <div className="flex flex-col items-center gap-2 py-3 bg-white/5 rounded-2xl border border-white/5">
+                            <div className="flex flex-col items-center gap-2 py-3 rounded-2xl" style={{ backgroundColor: `${themeColor}10`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}20` }}>
                                 <span className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em]">Puan Ver</span>
                                 <div className="flex gap-1.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
@@ -1387,21 +1407,24 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                             <input
                                 type="text"
                                 placeholder="Adınız Soyadınız"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium"
+                                className="w-full bg-white/5 border rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 transition-all text-xs font-medium"
+                                style={{ borderColor: `${themeColor}20`, '--tw-ring-color': `${themeColor}40` } as any}
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             />
                             <input
                                 type="text"
                                 placeholder="Ünvanınız (Örn: Tasarımcı)"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium"
+                                className="w-full bg-white/5 border rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 transition-all text-xs font-medium"
+                                style={{ borderColor: `${themeColor}20`, '--tw-ring-color': `${themeColor}40` } as any}
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             />
                             <textarea
                                 rows={3}
                                 placeholder="Yorumunuzun detayları..."
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-white/20 focus:bg-white/10 transition-all text-xs font-medium resize-none"
+                                className="w-full bg-white/5 border rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:ring-1 transition-all text-xs font-medium resize-none"
+                                style={{ borderColor: `${themeColor}20`, '--tw-ring-color': `${themeColor}40` } as any}
                                 value={formData.content}
                                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                             />
