@@ -109,6 +109,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
         description: ""
     })
 
+    // Appointments Management
+    const [appointmentList, setAppointmentList] = useState(appointments || [])
+    const [selectedAppointment, setSelectedAppointment] = useState<any>(null)
+
     // Custom Links Management
     const [customLinks, setCustomLinks] = useState<{ title: string, url: string }[]>(
         (profileData.socialLinks as any[])?.find((l: any) => l.platform === 'customLinks')?.links || []
@@ -328,6 +332,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 setReviewList(reviewList.filter((r: any) => r.id !== id))
                 setShowToast("Yorum silindi!")
                 setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) { console.error(err) }
+    }
+
+    const handleUpdateAppointmentStatus = async (id: string, status: string) => {
+        try {
+            const res = await fetch("/api/appointments/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, status })
+            })
+            if (res.ok) {
+                setAppointmentList(appointmentList.map((a: any) => a.id === id ? { ...a, status } : a))
+                setShowToast(status === "confirmed" ? "Randevu onaylandı!" : "Randevu tamamlandı!")
+                setTimeout(() => setShowToast(null), 3000)
+                setSelectedAppointment(null)
+            }
+        } catch (err) { console.error(err) }
+    }
+
+    const handleDeleteAppointment = async (id: string) => {
+        if (!confirm("Bu randevuyu silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch("/api/appointments/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            })
+            if (res.ok) {
+                setAppointmentList(appointmentList.filter((a: any) => a.id !== id))
+                setShowToast("Randevu silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+                setSelectedAppointment(null)
             }
         } catch (err) { console.error(err) }
     }
@@ -1021,43 +1058,65 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
-                        <div className="glass rounded-[2.5rem] border-white/5 overflow-x-auto no-scrollbar">
+                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
                             <table className="w-full text-left min-w-[700px]">
-                                <thead className="bg-white/5 border-b border-white/5">
+                                <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Müşteri</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Tarih / Saat</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40">Durum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/40 text-right">İşlem</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Müşteri</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Tarih / Saat</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Durum</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5">
-                                    {appointments.map((appointment: any) => (
-                                        <tr key={appointment.id} className="hover:bg-white/[0.02] transition-colors">
+                                <tbody className="divide-y divide-slate-100">
+                                    {appointmentList.map((appointment: any) => (
+                                        <tr key={appointment.id} className="hover:bg-slate-50/50 transition-colors">
                                             <td className="px-6 py-4">
-                                                <div className="font-bold">{appointment.clientName}</div>
-                                                <div className="text-xs text-white/40">{appointment.clientEmail}</div>
+                                                <div className="font-bold text-slate-900">{appointment.clientName}</div>
+                                                <div className="text-xs text-slate-500">{appointment.clientEmail}</div>
+                                                <div className="text-xs text-slate-400">{appointment.clientPhone}</div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="font-medium">{new Date(appointment.date).toLocaleDateString('tr-TR')}</div>
-                                                <div className="text-xs text-white/40">{new Date(appointment.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
+                                                <div className="font-medium text-slate-700">{new Date(appointment.date).toLocaleDateString('tr-TR')}</div>
+                                                <div className="text-xs text-slate-400 font-bold">{new Date(appointment.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${appointment.status === 'pending' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'
+                                                <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-sm ${appointment.status === 'pending'
+                                                    ? 'bg-amber-50 border-amber-100 text-amber-600'
+                                                    : appointment.status === 'confirmed'
+                                                        ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                                                        : 'bg-slate-100 border-slate-200 text-slate-600'
                                                     }`}>
-                                                    {appointment.status === 'pending' ? 'Bekliyor' : 'Onaylandı'}
+                                                    {appointment.status === 'pending' ? 'Bekliyor' : appointment.status === 'confirmed' ? 'Onaylandı' : 'Tamamlandı'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <button className="text-xs font-bold text-primary hover:text-white transition-colors">Yönet</button>
+                                                <div className="flex justify-end gap-2">
+                                                    {appointment.status === 'pending' && (
+                                                        <button
+                                                            onClick={() => handleUpdateAppointmentStatus(appointment.id, 'confirmed')}
+                                                            className="w-9 h-9 bg-emerald-50 border border-emerald-100 text-emerald-500 rounded-xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                                                            title="Onayla"
+                                                        >
+                                                            <Check size={16} />
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteAppointment(appointment.id)}
+                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        title="Sil"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
-                                    {appointments.length === 0 && (
+                                    {appointmentList.length === 0 && (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-white/20">
+                                            <td colSpan={4} className="px-6 py-12 text-center text-slate-300">
                                                 <Calendar className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-bold uppercase tracking-widest text-xs">Henüz randevu talebi yok</p>
+                                                <p className="font-bold uppercase tracking-widest text-[10px]">Henüz randevu talebi yok</p>
                                             </td>
                                         </tr>
                                     )}
