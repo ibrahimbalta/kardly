@@ -921,8 +921,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, r
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-[calc(100%+4rem)] -mx-8 border-y backdrop-blur-md py-4 px-8 mt-4 relative z-20", theme.card, theme.border)}>
-                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-40 text-center mb-4", theme.text)}>Projelerim</h3>
+                                    <div className={cn("w-full border backdrop-blur-md py-4 px-8 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
+                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white text-center mb-4")}>Projelerim</h3>
                                         <div
                                             className="relative h-16 flex items-center overflow-visible"
                                             style={{ clipPath: 'inset(-200px 0 -200px 0)' }} // Clips left/right, allows top/bottom
