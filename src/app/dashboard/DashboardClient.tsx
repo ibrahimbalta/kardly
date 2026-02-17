@@ -68,6 +68,10 @@ const AVAILABLE_MODULES = [
     { type: 'social_feed', name: 'LinkedIn Akışı', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-600', description: 'Sektörel paylaşımlarınızı profilinizde tutun.' },
     { type: 'document_vault', name: 'CV & Belgeler', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'Sertifika, CV veya portfolyo dosyaları paylaşın.' },
 ]
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { signOut } from "next-auth/react"
+import { QRCodeCard } from "@/components/QRCodeCard"
 import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
