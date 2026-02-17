@@ -338,7 +338,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         return <Zap size={14} />;
     };
 
-    const theme = {
+    const themes: Record<string, any> = {
         black: {
             bg: "bg-[#030712]",
             card: "bg-black/40",
@@ -864,7 +864,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-indigo-400",
             special: "aurora"
         }
-    }[colorScheme as any] || {
+    };
+    const theme = themes[colorScheme as string] || {
         bg: "bg-[#030712]",
         card: "bg-black/40",
         text: "text-white",
@@ -875,7 +876,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         btn: "bg-black/60 border-white/20",
         btnText: "text-white",
         icon: "text-[#0ea5e9]"
-    }
+    };
 
     const socialLinks = profile.socialLinks || []
 
