@@ -911,72 +911,86 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 {/* iPhone Frame */}
                                 <div className="relative w-[320px] h-[640px] bg-[#0f172a] rounded-[3.5rem] p-3 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_10px_rgba(15,23,42,1),0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 mx-auto">
-                                    {/* Notch */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
-                                        <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
-                                        <div className="w-8 h-1 bg-white/10 rounded-full" />
-                                    </div>
+                                    { /* Calculate Mockup Theme */}
+                                    {(() => {
+                                        const tid = profileData.templateId || "neon_black";
+                                        let accent = profileData.themeColor || "#6366f1";
+                                        let bg = "#020617";
+                                        let patternSvg = "";
+
+                                        if (tid === "neon_cyber") { accent = "#0ef"; }
+                                        else if (tid === "neon_galaxy") { accent = "#a855f7"; }
+                                        else if (tid === "pattern_ottoman") { accent = "#d4af37"; bg = "#0c1421"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30 L60 0 L60 60 Z M30 30 L0 0 L0 60 Z' fill='%23d4af37' fill-opacity='0.2'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pattern_geometric") { accent = "#fff"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L40 40 M40 0 L0 40' stroke='white' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "minimal") { bg = "#ffffff"; accent = "#000"; }
+                                        else if (tid === "classic") { bg = "#f8fafc"; accent = "#334155"; }
+
+                                        return (
+                                            <div className="w-full h-full rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-colors duration-500" style={{ backgroundColor: bg }}>
+                                                {/* Pattern Overlay */}
+                                                {patternSvg && <div className="absolute inset-0 z-0 opacity-50" style={{ backgroundImage: patternSvg }} />}
+
+                                                {/* Notch */}
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
+                                                    <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
+                                                    <div className="w-8 h-1 bg-white/10 rounded-full" />
+                                                </div>
+
+                                                {/* Status Bar */}
+                                                <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
+                                                    <span className={`text-[10px] font-bold ${bg === '#ffffff' ? 'text-slate-400' : 'text-white/40'}`}>9:41</span>
+                                                    <div className={`flex items-center gap-1.5 ${bg === '#ffffff' ? 'opacity-20' : 'opacity-40'}`}>
+                                                        <div className={`w-3 h-3 border ${bg === '#ffffff' ? 'border-slate-900' : 'border-white'} rounded-[2px]`} />
+                                                        <div className={`w-3 h-1.5 ${bg === '#ffffff' ? 'bg-slate-900' : 'bg-white'} rounded-sm`} />
+                                                    </div>
+                                                </div>
+
+                                                {/* Content Scaled */}
+                                                <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
+                                                    <div className="w-24 h-24 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-colors duration-500" style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10` }}>
+                                                        {(profileData?.image || session?.user?.image) ? (
+                                                            <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
+                                                        ) : (
+                                                            <UserCircle className="w-12 h-12 opacity-50" style={{ color: accent }} />
+                                                        )}
+                                                    </div>
+                                                    <div className="text-center mb-6">
+                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#ffffff' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
+                                                    </div>
+                                                    <div className="text-center mb-8 px-4">
+                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#ffffff' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
+                                                    </div>
+
+                                                    {/* Mockup Social Icons */}
+                                                    <div className="flex justify-center flex-wrap gap-2.5 mb-10">
+                                                        {[1, 2, 3, 4].map((i) => (
+                                                            <div key={i} className={`w-10 h-10 rounded-2xl border flex items-center justify-center shadow-lg backdrop-blur-sm ${bg === '#ffffff' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10'}`}>
+                                                                <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                    <div className="space-y-3">
+                                                        {[1, 2].map((i) => (
+                                                            <div key={i} className={`h-12 rounded-2xl border flex items-center px-4 ${bg === '#ffffff' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10'}`}>
+                                                                <div className={`w-24 h-1.5 rounded-full ${bg === '#ffffff' ? 'bg-slate-200' : 'bg-white/10'}`} />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Home Indicator */}
+                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" />
+                                            </div>
+                                        );
+                                    })()}
 
                                     {/* Side Buttons */}
                                     <div className="absolute top-24 -left-0.5 w-1 h-12 bg-slate-800 rounded-r-sm shadow-sm" />
                                     <div className="absolute top-40 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
                                     <div className="absolute top-64 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
                                     <div className="absolute top-32 -right-0.5 w-1 h-20 bg-slate-800 rounded-l-sm shadow-sm" />
-
-                                    {/* Screen Content */}
-                                    <div className="w-full h-full bg-[#020617] rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative">
-                                        {/* Status Bar */}
-                                        <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
-                                            <span className="text-[10px] font-bold text-white/40">9:41</span>
-                                            <div className="flex items-center gap-1.5 opacity-40">
-                                                <div className="w-3 h-3 border border-white/40 rounded-[2px]" />
-                                                <div className="w-3 h-1.5 bg-white/40 rounded-sm" />
-                                            </div>
-                                        </div>
-
-                                        {/* Content Scaled */}
-                                        <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700">
-                                            <div className="w-24 h-24 bg-primary/20 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border border-white/10">
-                                                {(profileData?.image || session?.user?.image) ? (
-                                                    <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
-                                                ) : (
-                                                    <UserCircle className="text-primary w-12 h-12 opacity-50" />
-                                                )}
-                                            </div>
-                                            <div className="text-center mb-6">
-                                                <h4 className="text-white font-black text-xl mb-1 truncate">{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
-                                                <p className="text-[10px] text-primary font-black uppercase tracking-[0.2em]">{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
-                                            </div>
-                                            <div className="text-center mb-8 px-4">
-                                                <p className="text-[11px] text-white/60 italic leading-relaxed line-clamp-2 italic">"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
-                                            </div>
-
-                                            {/* Mockup Social Icons */}
-                                            <div className="flex justify-center flex-wrap gap-2.5 mb-10">
-                                                {(profileData.socialLinks as any[])?.filter((l: any) => l.url && l.platform !== 'customLinks')?.map((link: any) => (
-                                                    <div key={link.platform} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-sm">
-                                                        {link.platform === "instagram" && <Instagram className="w-5 h-5 text-rose-400" />}
-                                                        {link.platform === "twitter" && <Twitter className="w-5 h-5 text-sky-400" />}
-                                                        {link.platform === "linkedin" && <Linkedin className="w-5 h-5 text-blue-500" />}
-                                                        {link.platform === "github" && <Github className="w-5 h-5 text-white" />}
-                                                        {link.platform === "youtube" && <Youtube className="w-5 h-5 text-red-500" />}
-                                                        {link.platform === "phone" && <Phone className="w-5 h-5 text-emerald-500" />}
-                                                    </div>
-                                                ))}
-                                            </div>
-
-                                            <div className="space-y-3">
-                                                {[1, 2, 3].map((i) => (
-                                                    <div key={i} className="h-12 bg-white/5 rounded-2xl border border-white/10 flex items-center px-4">
-                                                        <div className="w-24 h-1.5 bg-white/10 rounded-full" />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Home Indicator */}
-                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" />
-                                    </div>
 
                                     {/* Shine Effect */}
                                     <div className="absolute inset-x-12 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-[3rem]" />
@@ -1503,7 +1517,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "neon_galaxy", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer." },
                                 { id: "neon_acid", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji." },
                                 { id: "neon_candy", name: "🌈 Candy Neon", description: "Şeker pembe, lavanta ve menekşe renklerinin yumuşak neon dansı." },
-                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili." }
+                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili." },
+
+                                // Motifli ve Desenli Arka Planlar
+                                { id: "pattern_ottoman", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
+                                { id: "pattern_geometric", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
+                                { id: "pattern_marble", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
+                                { id: "pattern_topo", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
+                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}

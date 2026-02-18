@@ -208,6 +208,10 @@ END:VCARD`
             return <NeonModernTemplate {...props} colorScheme={scheme} tone={tone} />;
         }
 
+        if (profile.templateId?.startsWith("pattern_")) {
+            return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
+        }
+
         switch (profile.templateId) {
             case "minimal":
                 return <MinimalProfessionalTemplate {...props} colorScheme="light" tone={tone} />;
@@ -887,6 +891,72 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-white",
             icon: "text-indigo-400",
             special: "aurora"
+        },
+        // Artistic & Patterned Themes
+        pattern_ottoman: {
+            bg: "bg-[#0c1421]",
+            card: "bg-black/60",
+            text: "text-amber-200",
+            subtext: "text-amber-500/60",
+            border: "border-amber-500/30",
+            glow: "shadow-[0_0_30px_rgba(245,158,11,0.3)]",
+            accent: "#d4af37",
+            btn: "bg-black/40 border-amber-500/30",
+            btnText: "text-amber-200",
+            icon: "text-amber-400",
+            special: "ottoman"
+        },
+        pattern_geometric: {
+            bg: "bg-slate-950",
+            card: "bg-slate-900/40",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-slate-800",
+            glow: "shadow-[0_0_30px_rgba(255,255,255,0.1)]",
+            accent: "#ffffff",
+            btn: "bg-white/5 border-white/10",
+            btnText: "text-white",
+            icon: "text-white",
+            special: "geometric"
+        },
+        pattern_marble: {
+            bg: "bg-zinc-100",
+            card: "bg-white/80",
+            text: "text-zinc-900",
+            subtext: "text-zinc-500",
+            border: "border-zinc-200",
+            glow: "shadow-[0_0_20px_rgba(0,0,0,0.05)]",
+            accent: "#18181b",
+            btn: "bg-white border-zinc-200",
+            btnText: "text-zinc-900",
+            icon: "text-zinc-900",
+            special: "marble"
+        },
+        pattern_topo: {
+            bg: "bg-[#050505]",
+            card: "bg-black/40",
+            text: "text-emerald-400",
+            subtext: "text-emerald-900",
+            border: "border-emerald-900/30",
+            glow: "shadow-[0_0_30px_rgba(16,185,129,0.2)]",
+            accent: "#10b981",
+            btn: "bg-black/40 border-emerald-900/30",
+            btnText: "text-emerald-400",
+            icon: "text-emerald-500",
+            special: "topo"
+        },
+        pattern_circuit: {
+            bg: "bg-[#050505]",
+            card: "bg-black/40",
+            text: "text-cyan-400",
+            subtext: "text-cyan-900",
+            border: "border-cyan-900/30",
+            glow: "shadow-[0_0_30px_rgba(6,182,212,0.2)]",
+            accent: "#06b6d4",
+            btn: "bg-black/40 border-cyan-900/30",
+            btnText: "text-cyan-400",
+            icon: "text-cyan-500",
+            special: "circuit"
         }
     };
     const theme = themes[colorScheme as string] || {
@@ -946,6 +1016,24 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "aurora" && (
                     <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
                 )}
+
+                {/* Patterns Rendering */}
+                {theme.special === "ottoman" && (
+                    <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50 L100 0 L100 100 Z M50 50 L0 0 L0 100 Z' fill='%23d4af37' fill-opacity='0.4'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%23d4af37'/%3E%3Cpath d='M0 50 L50 0 L100 50 L50 100 Z' fill='none' stroke='%23d4af37' stroke-width='1'/%3E%3C/svg%3E")`, backgroundSize: '60px 60px' }} />
+                )}
+                {theme.special === "geometric" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23ffffff' stroke-width='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 30V20h10V10h10V0h10v10h10v10h10v10H50v10H40v10H30v10H20V50H10V40H0V30h6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "marble" && (
+                    <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/white-diamond.png")` }} />
+                )}
+                {theme.special === "topo" && (
+                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 Q 50 10, 50 50 T 90 90 T 130 130 T 170 170' stroke='%2310b981' fill='transparent'/%3E%3Cpath d='M30 10 Q 70 10, 70 50 T 110 90 T 150 130 T 190 170' stroke='%2310b981' fill='transparent'/%3E%3C/svg%3E")`, backgroundSize: '150px 150px' }} />
+                )}
+                {theme.special === "circuit" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 H 90 V 90 H 10 Z' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='90' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='10' cy='90' r='1' fill='%2306b6d4'/%3E%3C/svg%3E")`, backgroundSize: '40px 40px' }} />
+                )}
+
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute top-0 right-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
