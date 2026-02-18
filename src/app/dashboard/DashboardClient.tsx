@@ -90,7 +90,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         image: profile?.user?.image || session?.user?.image || "",
         cvUrl: profile?.cvUrl || "",
         showAppointmentBtn: profile?.showAppointmentBtn || false,
-        tone: profile?.tone || "profesyonel"
+        tone: profile?.tone || "profesyonel",
+        youtubeVideoUrl: profile?.youtubeVideoUrl || "",
+        showVideoAsProfile: profile?.showVideoAsProfile || false
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -221,7 +223,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     displayName: overrides?.name ?? profileData.name ?? session?.user?.name,
                     image: overrides?.image ?? profileData.image,
                     cvUrl: overrides?.cvUrl ?? profileData.cvUrl,
-                    showAppointmentBtn: overrides?.showAppointmentBtn ?? profileData.showAppointmentBtn
+                    showAppointmentBtn: overrides?.showAppointmentBtn ?? profileData.showAppointmentBtn,
+                    youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl,
+                    showVideoAsProfile: overrides?.showVideoAsProfile ?? profileData.showVideoAsProfile
                 })
             })
 
@@ -637,6 +641,35 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             />
                                         </div>
                                     </div>
+                                    <div className="md:col-span-2 space-y-4">
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                id="useVideoAsProfile"
+                                                checked={profileData.showVideoAsProfile}
+                                                onChange={(e) => setProfileData({ ...profileData, showVideoAsProfile: e.target.checked })}
+                                                className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
+                                            />
+                                            <label htmlFor="useVideoAsProfile" className="text-sm font-medium opacity-80 cursor-pointer">{t('useVideoAsProfile')}</label>
+                                        </div>
+                                        {profileData.showVideoAsProfile && (
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-medium opacity-60">{t('profileVideoUrl')}</label>
+                                                <div className="flex gap-3">
+                                                    <div className="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center text-red-500 border border-red-500/20">
+                                                        <Youtube size={20} />
+                                                    </div>
+                                                    <input
+                                                        type="text"
+                                                        value={profileData.youtubeVideoUrl}
+                                                        onChange={(e) => setProfileData({ ...profileData, youtubeVideoUrl: e.target.value })}
+                                                        placeholder={t('youtubeHint')}
+                                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium mb-2 opacity-60">Görünen İsim (Kartvizit Üzerinde)</label>
                                         <input
@@ -996,7 +1029,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 {/* Content Scaled */}
                                                 <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
                                                     <div className={cn("w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500 shadow-2xl shadow-black/50", mTone.rounded)} style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
-                                                        {(profileData?.image || session?.user?.image) ? (
+                                                        {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
+                                                            <div className="w-full h-full bg-black flex items-center justify-center">
+                                                                <Youtube className="w-8 h-8 text-red-500 animate-pulse" />
+                                                            </div>
+                                                        ) : (profileData?.image || session?.user?.image) ? (
                                                             <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
                                                         ) : (
                                                             <UserCircle className="w-12 h-12 opacity-50" style={{ color: accent }} />

@@ -75,6 +75,8 @@ model Profile {
   vCardUrl       String?
   cvUrl          String?
   showAppointmentBtn Boolean     @default(false)
+  youtubeVideoUrl    String?
+  showVideoAsProfile Boolean     @default(false)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?

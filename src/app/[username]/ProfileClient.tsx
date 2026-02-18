@@ -312,6 +312,15 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
+    const getYoutubeEmbedUrl = (url: string) => {
+        if (!url) return ""
+        let videoId = ""
+        if (url.includes("v=")) videoId = url.split("v=")[1].split("&")[0]
+        else if (url.includes("youtu.be/")) videoId = url.split("youtu.be/")[1].split("?")[0]
+        else if (url.includes("embed/")) videoId = url.split("embed/")[1].split("?")[0]
+        return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0` : ""
+    }
+
     const formatUrl = (url?: string) => {
         if (!url) return ""
         const trimmed = url.trim()
@@ -1211,7 +1220,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden rounded-full")}
                                 style={{ borderColor: theme.accent }}
                             >
-                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover rounded-full")} />
+                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                    <iframe
+                                        className="w-full h-full object-cover rounded-full scale-[1.5]"
+                                        src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)}
+                                        allow="autoplay; encrypted-media"
+                                        frameBorder="0"
+                                    />
+                                ) : (
+                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover rounded-full")} />
+                                )}
                             </motion.div>
                             <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                         </div>

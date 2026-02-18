@@ -53,6 +53,9 @@ export const translations: any = {
         yourName: "Adınız Soyadınız",
         yourTitle: "Ünvanınız (Örn: Tasarımcı)",
         yourMessage: "Yorumunuzun detayları...",
+        profileVideoUrl: "YouTube Video Linki",
+        useVideoAsProfile: "Profil Resmi Yerine Video Göster",
+        youtubeHint: "YouTube video adresini buraya yapıştırın.",
 
         // Dashboard Settings
         accountSettings: "Hesap Ayarları",
@@ -189,6 +192,9 @@ export const translations: any = {
         yourName: "Your Full Name",
         yourTitle: "Your Title (E.g. Designer)",
         yourMessage: "Your comment details...",
+        profileVideoUrl: "YouTube Video Link",
+        useVideoAsProfile: "Show Video Instead of Profile Picture",
+        youtubeHint: "Paste the YouTube video URL here.",
 
         // Dashboard Settings
         accountSettings: "Account Settings",
