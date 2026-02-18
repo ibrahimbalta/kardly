@@ -89,7 +89,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         name: profile?.user?.name || session?.user?.name || "",
         image: profile?.user?.image || session?.user?.image || "",
         cvUrl: profile?.cvUrl || "",
-        showAppointmentBtn: profile?.showAppointmentBtn || false
+        showAppointmentBtn: profile?.showAppointmentBtn || false,
+        tone: profile?.tone || "profesyonel"
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -213,6 +214,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     socialLinks: overrides?.socialLinks ?? profileData.socialLinks,
                     themeColor: overrides?.themeColor ?? profileData.themeColor,
                     templateId: overrides?.templateId ?? profileData.templateId,
+                    tone: overrides?.tone ?? profileData.tone,
                     services: overrides?.services ?? serviceList,
                     workingHours: overrides?.workingHours ?? workingHours,
                     occupation: overrides?.occupation ?? profileData.occupation,
@@ -1230,6 +1232,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         ))}
                                     </div>
                                 </div>
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">Tasarım Tonu (Vibe)</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {[
+                                            { id: "profesyonel", name: "💼 Profesyonel", desc: "Keskin & Ciddi" },
+                                            { id: "samimi", name: "✨ Samimi", desc: "Yumuşak & Sıcak" },
+                                            { id: "yaratıcı", name: "🎨 Yaratıcı", desc: "Dinamik & Özgür" },
+                                            { id: "lüks", name: "👔 Lüks", desc: "Ağır & Prestijli" }
+                                        ].map(tone => (
+                                            <button
+                                                key={tone.id}
+                                                onClick={() => setProfileData({ ...profileData, tone: tone.id })}
+                                                className={cn(
+                                                    "p-3 rounded-xl border text-left transition-all",
+                                                    profileData.tone === tone.id ? "bg-primary/20 border-primary" : "bg-white/5 border-white/10 hover:border-white/20"
+                                                )}
+                                            >
+                                                <p className="text-xs font-bold">{tone.name}</p>
+                                                <p className="text-[10px] opacity-40">{tone.desc}</p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                                 <button
                                     onClick={handleSave}
                                     className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
@@ -1443,6 +1468,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
+                                // Premium Structural Templates
+                                { id: "minimal", name: "💎 Minimalist", description: "Sade, temiz ve odaklanmış profesyonel beyaz tasarım." },
+                                { id: "classic", name: "🏢 Kurumsal", description: "Ciddi, güven veren ve klasik profesyonel yerleşim." },
+                                { id: "luxury", name: "✨ Lüks Gece", description: "Altın detaylar ve derin siyah ile prestijli bir sunum." },
+                                { id: "sport", name: "⚡ Ultra Sport", description: "Dinamik açılar, büyük fontlar ve yüksek enerjili tasarım." },
+
+                                // Neon Style Templates
                                 { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
                                 { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
                                 { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },

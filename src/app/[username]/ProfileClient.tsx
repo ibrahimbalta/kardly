@@ -347,14 +347,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
     const getIcon = (title: string) => {
         const t = title.toLowerCase();
-        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('market')) return <Trophy size={14} />;
-        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan')) return <Target size={14} />;
-        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process')) return <Zap size={14} />;
-        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('ilişki')) return <Users size={14} />;
-        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme')) return <Code size={14} />;
-        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik')) return <Palette size={14} />;
-        if (t.includes('hukuk') || t.includes('law') || t.includes('legal')) return <Shield size={14} />;
-        if (t.includes('finans') || t.includes('money') || t.includes('bank')) return <Briefcase size={14} />;
+        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('mağaza') || t.includes('market')) return <ShoppingBag size={14} />;
+        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan') || t.includes('yönetim')) return <Target size={14} />;
+        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process') || t.includes('teknoloji')) return <Zap size={14} />;
+        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('destek')) return <Users size={14} />;
+        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme') || t.includes('bilişim')) return <Code size={14} />;
+        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik') || t.includes('sanat')) return <Palette size={14} />;
+        if (t.includes('hukuk') || t.includes('law') || t.includes('legal') || t.includes('adalet')) return <Shield size={14} />;
+        if (t.includes('finans') || t.includes('money') || t.includes('bank') || t.includes('yatırım')) return <Briefcase size={14} />;
+        if (t.includes('eğitim') || t.includes('ders') || t.includes('okul') || t.includes('akadem')) return <Trophy size={14} />;
+        if (t.includes('sağlık') || t.includes('tıp') || t.includes('doctor') || t.includes('doktor')) return <Activity size={14} />;
         return <Zap size={14} />;
     };
 
