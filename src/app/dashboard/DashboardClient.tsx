@@ -914,10 +914,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     { /* Calculate Mockup Theme */}
                                     {(() => {
                                         const tid = profileData.templateId || "neon_black";
+                                        const tone = profileData.tone || "profesyonel";
                                         let accent = profileData.themeColor || "#6366f1";
                                         let bg = "#020617";
                                         let patternSvg = "";
                                         let glow = "";
+
+                                        // Mockup Tone Styling
+                                        const getMockupTone = (t: string) => {
+                                            switch (t) {
+                                                case "samimi": return { rounded: "rounded-[3.5rem]", font: "font-sans", border: "border-none" };
+                                                case "yaratıcı": return { rounded: "rounded-xl skew-x-1", font: "font-mono", border: "border-dashed" };
+                                                case "lüks": return { rounded: "rounded-[2.5rem]", font: "font-serif", border: "border-double border-4" };
+                                                default: return { rounded: "rounded-[2.8rem]", font: "font-sans", border: "border-solid" };
+                                            }
+                                        }
+                                        const mTone = getMockupTone(tone);
 
                                         // Rainbow Neon Templates
                                         if (tid === "neon_cyber") { accent = "#0ef"; bg = "#00050a"; glow = "radial-gradient(circle at 20% 30%, #0ff2 0%, transparent 50%), radial-gradient(circle at 80% 70%, #f0f2 0%, transparent 50%)"; }
@@ -956,7 +968,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "pattern_circuit") { accent = "#06b6d4"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='30' height='30' x='5' y='5' fill='none' stroke='%2306b6d4' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
 
                                         return (
-                                            <div className="w-full h-full rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700" style={{ backgroundColor: bg }}>
+                                            <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
                                                 {/* Specialized Glowing Background for Rainbow cases */}
                                                 {glow && <div className="absolute inset-0 z-0 opacity-40 animate-pulse" style={{ background: glow }} />}
 
@@ -983,7 +995,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                 {/* Content Scaled */}
                                                 <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
-                                                    <div className="w-24 h-24 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500" style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
+                                                    <div className={cn("w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500 shadow-2xl shadow-black/50", mTone.rounded)} style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
                                                         {(profileData?.image || session?.user?.image) ? (
                                                             <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
                                                         ) : (
@@ -1001,7 +1013,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     {/* Mockup Social Icons */}
                                                     <div className="flex justify-center flex-wrap gap-2.5 mb-10">
                                                         {[1, 2, 3, 4].map((i) => (
-                                                            <div key={i} className={`w-10 h-10 rounded-2xl border flex items-center justify-center shadow-lg backdrop-blur-sm transition-all ${bg === '#f8f9fa' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10'}`}>
+                                                            <div key={i} className={cn("w-10 h-10 border flex items-center justify-center shadow-lg backdrop-blur-sm transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10')}>
                                                                 <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
                                                             </div>
                                                         ))}
@@ -1009,7 +1021,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                     <div className="space-y-3">
                                                         {[1, 2].map((i) => (
-                                                            <div key={i} className={`h-12 rounded-2xl border flex items-center px-4 transition-all ${bg === '#f8f9fa' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10'}`}>
+                                                            <div key={i} className={cn("h-12 border flex items-center px-4 transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10')}>
                                                                 <div className={`w-24 h-1.5 rounded-full ${bg === '#f8f9fa' ? 'bg-slate-200' : 'bg-white/10'}`} />
                                                             </div>
                                                         ))}

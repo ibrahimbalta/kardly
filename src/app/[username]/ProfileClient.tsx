@@ -948,18 +948,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             special: "circuit"
         }
     };
-    const theme = themes[colorScheme as string] || {
-        bg: "bg-[#030712]",
-        card: "bg-black/40",
-        text: "text-white",
-        subtext: "text-white/60",
-        border: "border-white/10",
-        glow: "shadow-[0_0_20px_rgba(14,165,233,0.5)]",
-        accent: "#0ea5e9",
-        btn: "bg-black/60 border-white/20",
-        btnText: "text-white",
-        icon: "text-[#0ea5e9]"
-    };
+    const baseTheme = themes[colorScheme as string] || themes.black;
+    const theme = { ...baseTheme };
+
+    // Override accent color with custom selection if available (except for rainbow/special patterns)
+    if (profile.themeColor && !theme.special) {
+        theme.accent = profile.themeColor;
+    }
 
     const socialLinks = profile.socialLinks || []
 
