@@ -1098,15 +1098,30 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     >
                                                         <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
 
-                                                        {/* Rich Tooltip - Now visible outside the section */}
-                                                        <div className="absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-48 bg-[#0f172a] border border-white/10 p-4 rounded-2xl text-left pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl">
-                                                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0f172a] border-r border-b border-white/10 rotate-45" />
-                                                            <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
-                                                            {project.description ? (
-                                                                <p className="text-[10px] text-white/60 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
-                                                            ) : (
-                                                                <p className="text-[10px] text-white/40 italic font-medium">Bu proje için açıklama girilmemiş.</p>
-                                                            )}
+                                                        {/* Rich Tooltip - Dynamic Colors */}
+                                                        <div
+                                                            className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
+                                                            style={{
+                                                                borderColor: `${theme.accent}60`,
+                                                                boxShadow: `0 20px 50px -10px ${theme.accent}40`
+                                                            }}
+                                                        >
+                                                            {/* Theme Tint Overlay */}
+                                                            <div className="absolute inset-0 opacity-[0.15] rounded-2xl" style={{ backgroundColor: theme.accent }} />
+
+                                                            <div
+                                                                className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-black"
+                                                                style={{ borderColor: `${theme.accent}60` }}
+                                                            />
+
+                                                            <div className="relative z-10">
+                                                                <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
+                                                                {project.description ? (
+                                                                    <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
+                                                                ) : (
+                                                                    <p className="text-[10px] text-white/40 italic font-medium">Bu proje için açıklama girilmemiş.</p>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </a>
                                                 ))}
