@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
+import { useMotionValue, useTransform, animate, useSpring } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     MessageCircle,
@@ -39,7 +40,9 @@ import {
     Shield,
     UserPlus,
     ShoppingBag,
-    Activity
+    Activity,
+    Volume2,
+    VolumeX
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -238,6 +241,7 @@ END:VCARD`
                     }
                 }}
                 themeColor={activeAccent}
+                t={t}
             />
 
             <AnimatePresence>
@@ -264,6 +268,45 @@ END:VCARD`
             </AnimatePresence>
         </>
     )
+}
+
+function BackgroundMusicPlayer({ theme, tone }: any) {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    const togglePlay = () => {
+        if (!audioRef.current) return;
+        if (isPlaying) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play().catch(e => console.log("Audio play error:", e));
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    return (
+        <div className="fixed bottom-6 right-6 z-[60]">
+            <audio ref={audioRef} loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+            <motion.button
+                onClick={togglePlay}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className={cn("w-12 h-12 flex items-center justify-center border shadow-2xl relative overflow-hidden backdrop-blur-xl transition-all", theme.btn, theme.border, "rounded-full")}
+            >
+                {isPlaying && (
+                    <motion.div
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.1, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute inset-0"
+                        style={{ backgroundColor: theme.accent }}
+                    />
+                )}
+                <div className="relative z-10">
+                    {isPlaying ? <Volume2 size={20} style={{ color: theme.accent }} /> : <VolumeX size={20} className="opacity-40" />}
+                </div>
+            </motion.button>
+        </div>
+    );
 }
 
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
@@ -958,6 +1001,24 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
     const socialLinks = profile.socialLinks || []
 
+    const mouseX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
+    const mouseY = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
+    const rotateX = useTransform(mouseY, [-200, 200], [15, -15]);
+    const rotateY = useTransform(mouseX, [-200, 200], [-15, 15]);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        mouseX.set(x);
+        mouseY.set(y);
+    };
+
+    const handleMouseLeave = () => {
+        mouseX.set(0);
+        mouseY.set(0);
+    };
+
     const actions = [
         { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
@@ -1018,6 +1079,26 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 H 90 V 90 H 10 Z' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='90' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='10' cy='90' r='1' fill='%2306b6d4'/%3E%3C/svg%3E")`, backgroundSize: '40px 40px' }} />
                 )}
 
+                {/* New Premium Vibe Backgrounds */}
+                {tone === 'lüks' && (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-amber-600/10 via-transparent to-yellow-600/10 animate-pulse opacity-30" />
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 0 L75 0 L100 50 L75 100 L25 100 L0 50 Z' fill='none' stroke='%23d4af37' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                    </>
+                )}
+                {tone === 'yaratıcı' && (
+                    <>
+                        <div className="absolute inset-0 overflow-hidden opacity-[0.03] select-none pointer-events-none font-mono text-[8px] leading-tight text-white whitespace-pre">
+                            {Array(50).fill(0).map((_, i) => (
+                                <div key={i} className="animate-marquee-vertical">
+                                    {`const project = { name: "Kardly", features: ["3D", "AI", "NFC"] };\n`.repeat(10)}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#ff00ff10_0%,transparent_50%),radial-gradient(circle_at_bottom_right,#00ffff10_0%,transparent_50%)] animate-pulse" />
+                    </>
+                )}
+
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute top-0 right-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
@@ -1025,12 +1106,12 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             </div>
 
             <style>{`
-                @keyframes spin-slow {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
+                @keyframes marquee-vertical {
+                    from { transform: translateY(0); }
+                    to { transform: translateY(-50%); }
                 }
-                .animate-spin-slow {
-                    animation: spin-slow 15s linear infinite;
+                .animate-marquee-vertical {
+                    animation: marquee-vertical 30s linear infinite;
                 }
             `}</style>
 
@@ -1044,11 +1125,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 toneStyle={toneStyle}
             />
 
-            <main className="relative z-10 w-full max-w-[420px] space-y-6">
+            <main className="relative z-10 w-full max-w-[420px] space-y-6" style={{ perspective: "1000px" }}>
                 <motion.div
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative", theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                    style={{ rotateX, rotateY }}
+                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                 >
                     {/* Share Button Top Right */}
                     <div className="absolute top-6 right-6 z-30">
@@ -1158,7 +1242,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         }
                                     `}</style>
                                     <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-8 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
-                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white text-center mb-4")}>Projelerim</h3>
+                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white text-center mb-4")}>{t.myProjects}</h3>
                                         <div
                                             className="relative h-16 flex items-center overflow-visible"
                                             style={{ clipPath: 'inset(-200px 0 -200px 0)' }} // Clips left/right, allows top/bottom
@@ -1195,7 +1279,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                                 {project.description ? (
                                                                     <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
                                                                 ) : (
-                                                                    <p className="text-[10px] text-white/40 italic font-medium">Bu proje için açıklama girilmemiş.</p>
+                                                                    <p className="text-[10px] text-white/40 italic font-medium">{t.noProjectDesc}</p>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -1224,7 +1308,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     {links.map((link: any, i: number) => (
                                         <motion.a
                                             key={i}
-                                            href={link.url}
+                                            href={formatUrl(link.url)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             initial={{ opacity: 0, scale: 0 }}
@@ -1310,13 +1394,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     {/* Testimonials */}
                     <div className="pt-4 overflow-hidden relative">
                         <div className="flex items-center justify-between mb-4 px-2">
-                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>Yorumlar</h3>
+                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
                             <button
                                 onClick={() => setIsReviewModalOpen(true)}
                                 className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
                                 style={{ color: theme.accent }}
                             >
-                                + Yorum Yaz
+                                {t.writeReview}
                             </button>
                         </div>
 
@@ -1361,7 +1445,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 </AnimatePresence>
                             ) : (
                                 <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                    Henüz yorum yapılmamış.
+                                    {t.noReviewsYet}
                                 </div>
                             )}
                         </div>
@@ -1421,13 +1505,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             <FileText size={20} /> CV Görüntüle
                         </button>
                     </div>
-                </motion.div >
-            </main >
-        </div >
+                </motion.div>
+            </main>
+            <BackgroundMusicPlayer theme={theme} tone={tone} />
+        </div>
     )
 }
 
-function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
+function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
     const [formData, setFormData] = useState({
         name: "",
         title: "",
@@ -1484,8 +1569,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                 <div className="relative z-10">
                     <div className="flex justify-between items-center mb-6">
                         <div className="space-y-0.5">
-                            <h3 className="text-xl font-black uppercase tracking-tighter" style={{ color: themeColor }}>Deneyimini Paylaş</h3>
-                            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: `${themeColor}80` }}>Fikriniz bizim için değerli</p>
+                            <h3 className="text-xl font-black uppercase tracking-tighter" style={{ color: themeColor }}>{t.leaveComment}</h3>
+                            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: `${themeColor}80` }}>{t.leaveCommentSub}</p>
                         </div>
                         <button
                             onClick={onClose}
@@ -1538,7 +1623,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={formData.gender === 'male' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
                                         <User size={16} />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-wider">Erkek</span>
+                                    <span className="text-[10px] font-black uppercase tracking-wider">{t.male}</span>
                                 </button>
 
                                 <button
@@ -1557,7 +1642,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                                     <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={formData.gender === 'female' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
                                         <UserCircle size={16} />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-wider">Bayan</span>
+                                    <span className="text-[10px] font-black uppercase tracking-wider">{t.female}</span>
                                 </button>
                             </div>
                         </div>
@@ -1566,7 +1651,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                         <div className="space-y-3">
                             <input
                                 type="text"
-                                placeholder="Adınız Soyadınız"
+                                placeholder={t.yourName}
                                 className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium"
                                 style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
@@ -1576,7 +1661,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                             />
                             <input
                                 type="text"
-                                placeholder="Ünvanınız (Örn: Tasarımcı)"
+                                placeholder={t.yourTitle}
                                 className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium"
                                 style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
@@ -1586,7 +1671,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                             />
                             <textarea
                                 rows={3}
-                                placeholder="Yorumunuzun detayları..."
+                                placeholder={t.yourMessage}
                                 className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium resize-none"
                                 style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
@@ -1606,7 +1691,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor }: any) {
                             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             <span className="relative z-10 flex items-center justify-center gap-2">
                                 <MessageSquare size={14} />
-                                Yorumu Yayınla
+                                {t.publishReview}
                             </span>
                         </button>
                     </div>

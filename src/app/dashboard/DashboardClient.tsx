@@ -78,7 +78,7 @@ import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
-    const { t } = useTranslation()
+    const { t, language } = useTranslation()
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
@@ -1186,8 +1186,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="text-xs text-slate-400">{appointment.clientPhone}</div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="font-medium text-slate-700">{new Date(appointment.date).toLocaleDateString('tr-TR')}</div>
-                                                <div className="text-xs text-slate-400 font-bold">{new Date(appointment.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
+                                                <div className="font-medium text-slate-700">{new Date(appointment.date).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US')}</div>
+                                                <div className="text-xs text-slate-400 font-bold">{new Date(appointment.date).toLocaleTimeString(language === 'tr' ? 'tr-TR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-sm ${appointment.status === 'pending'
@@ -1196,7 +1196,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
                                                         : 'bg-slate-100 border-slate-200 text-slate-600'
                                                     }`}>
-                                                    {appointment.status === 'pending' ? 'Bekliyor' : appointment.status === 'confirmed' ? 'Onaylandı' : 'Tamamlandı'}
+                                                    {appointment.status === 'pending' ? t('pending') : appointment.status === 'confirmed' ? t('approved') : t('completed')}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
@@ -1225,7 +1225,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <tr>
                                             <td colSpan={4} className="px-6 py-12 text-center text-slate-300">
                                                 <Calendar className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-bold uppercase tracking-widest text-[10px]">Henüz randevu talebi yok</p>
+                                                <p className="font-bold uppercase tracking-widest text-[10px]">{t('noAppointments')}</p>
                                             </td>
                                         </tr>
                                     )}
@@ -1237,8 +1237,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 ) : activeTab === "qrcode" ? (
                     <div className="space-y-8 max-w-2xl mx-auto text-center py-12">
                         <div className="mb-12">
-                            <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">QR Kodun</h2>
-                            <p className="text-foreground/50 text-sm">Dijital kartvizitini hızlıca paylaşmak için bu kodu kullan.</p>
+                            <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('qrTitle')}</h2>
+                            <p className="text-foreground/50 text-sm">{t('qrSub')}</p>
                         </div>
                         <div className="glass p-12 rounded-[3.5rem] border-white/5 inline-block mx-auto relative group shadow-2xl">
                             <div className="absolute inset-0 bg-primary/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -1252,8 +1252,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <Smartphone className="w-6 h-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-sm">Hızlı Erişim</p>
-                                    <p className="text-[10px] text-foreground/40 mt-0.5">Kameranızla okutun</p>
+                                    <p className="font-bold text-sm">{t('quickAccess')}</p>
+                                    <p className="text-[10px] text-foreground/40 mt-0.5">{t('scanCamera')}</p>
                                 </div>
                             </div>
                             <div className="glass p-6 rounded-3xl border-white/5 text-left flex items-center gap-4">
@@ -1261,8 +1261,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <Download className="w-6 h-6 text-emerald-500" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-sm">Yüksek Kalite</p>
-                                    <p className="text-[10px] text-foreground/40 mt-0.5">Baskı için hazır</p>
+                                    <p className="font-bold text-sm">{t('highQuality')}</p>
+                                    <p className="text-[10px] text-foreground/40 mt-0.5">{t('readyPrint')}</p>
                                 </div>
                             </div>
                         </div>
@@ -1271,17 +1271,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 ) : activeTab === "settings" ? (
                     <div className="max-w-4xl space-y-8">
                         <div>
-                            <h2 className="text-xl font-bold">Hesap Ayarları</h2>
-                            <p className="text-sm text-foreground/50">Profilinizin genel ayarlarını ve görünüm tercihlerini yönetin.</p>
+                            <h2 className="text-xl font-bold">{t('accountSettings')}</h2>
+                            <p className="text-sm text-foreground/50">{t('accountSettingsSub')}</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
-                                    <Settings className="w-5 h-5 text-indigo-400" /> Görünüm Ayarları
+                                    <Settings className="w-5 h-5 text-indigo-400" /> {t('appearanceSettings')}
                                 </h3>
                                 <div>
-                                    <label className="block text-sm font-medium mb-4 opacity-60">Profil Tema Rengi</label>
+                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('themeColorLabel')}</label>
                                     <div className="grid grid-cols-5 gap-3">
                                         {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#d946ef", "#dc2626", "#0ea5e9", "#fbbf24", "#8b5cf6", "#7c3aed"].map(color => (
                                             <button
@@ -1295,13 +1295,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                 </div>
                                 <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-medium mb-4 opacity-60">Tasarım Tonu (Vibe)</label>
+                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('designVibeLabel')}</label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {[
-                                            { id: "profesyonel", name: "💼 Profesyonel", desc: "Keskin & Ciddi" },
-                                            { id: "samimi", name: "✨ Samimi", desc: "Yumuşak & Sıcak" },
-                                            { id: "yaratıcı", name: "🎨 Yaratıcı", desc: "Dinamik & Özgür" },
-                                            { id: "lüks", name: "👔 Lüks", desc: "Ağır & Prestijli" }
+                                            { id: "profesyonel", name: `💼 ${t('vibeProfessional')}`, desc: t('vibeProfessionalDesc') },
+                                            { id: "samimi", name: `✨ ${t('vibeSincere')}`, desc: t('vibeSincereDesc') },
+                                            { id: "yaratıcı", name: `🎨 ${t('vibeCreative')}`, desc: t('vibeCreativeDesc') },
+                                            { id: "lüks", name: `👔 ${t('vibeLuxury')}`, desc: t('vibeLuxuryDesc') }
                                         ].map(tone => (
                                             <button
                                                 key={tone.id}
@@ -1327,9 +1327,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
-                                    <Clock className="w-5 h-5 text-emerald-400" /> Çalışma Saatleri
+                                    <Clock className="w-5 h-5 text-emerald-400" /> {t('appointments')}
                                 </h3>
-                                <p className="text-[10px] text-foreground/40 leading-relaxed font-bold uppercase tracking-widest">Randevu alınabilecek saat dilimleri</p>
+                                <p className="text-[10px] text-foreground/40 leading-relaxed font-bold uppercase tracking-widest">{t('workingHoursSub')}</p>
 
                                 <div
                                     className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all group"
@@ -1338,7 +1338,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${profileData.showAppointmentBtn ? 'bg-primary border-primary' : 'border-white/20'}`}>
                                         {profileData.showAppointmentBtn && <CheckCircle2 size={12} className="text-white" />}
                                     </div>
-                                    <span className="text-sm font-bold opacity-80 group-hover:opacity-100 transition-opacity">Randevu sistemini aktif et</span>
+                                    <span className="text-sm font-bold opacity-80 group-hover:opacity-100 transition-opacity">{t('enableAppointments')}</span>
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -1383,18 +1383,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     onClick={handleSave}
                                     className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all uppercase tracking-widest text-xs"
                                 >
-                                    Saatleri Kaydet
+                                    {t('saveHours')}
                                 </button>
                             </div>
                         </div>
 
                         <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                             <h3 className="font-bold flex items-center gap-2 text-rose-500">
-                                <Trash2 className="w-5 h-5" /> Tehlikeli Bölge
+                                <Trash2 className="w-5 h-5" /> {t('dangerZone')}
                             </h3>
-                            <p className="text-xs text-foreground/40 font-bold uppercase tracking-widest">HESABINIZI KALICI OLARAK SİLER</p>
+                            <p className="text-xs text-foreground/40 font-bold uppercase tracking-widest">{t('deleteProfileSub')}</p>
                             <button className="w-full py-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all transition-all">
-                                Profili Tamamen Sil
+                                {t('deleteProfile')}
                             </button>
                         </div>
                     </div>
@@ -1402,26 +1402,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 ) : activeTab === "statistics" ? (
                     <div className="space-y-8">
                         <div>
-                            <h2 className="text-xl font-bold">Detaylı İstatistikler</h2>
-                            <p className="text-sm text-foreground/50">Sayfanızın performansını ve ziyaretçi etkileşimlerini takip edin.</p>
+                            <h2 className="text-xl font-bold">{t('statsTitle')}</h2>
+                            <p className="text-sm text-foreground/50">{t('statsSub')}</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label="Toplam Ziyaret" value={stats.totalViews.toString()} trend="Genel" />
-                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label="Etkileşim Oranı" value={stats.clickRate} trend="Ortalama" />
-                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label="CV Görüntüleme" value={stats.cvClicks.toString()} trend="Dosya" />
-                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label="Proje Tıklama" value={stats.projectClicks.toString()} trend="Portföy" />
+                            <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label={t('totalViewsLabel')} value={stats.totalViews.toString()} trend="Genel" />
+                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value={stats.clickRate} trend="Ortalama" />
+                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value={stats.cvClicks.toString()} trend="Dosya" />
+                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value={stats.projectClicks.toString()} trend="Portföy" />
                         </div>
 
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label="Ara" count={stats.phoneClicks} color="indigo" />
-                            <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label="WhatsApp" count={stats.waClicks} color="emerald" />
-                            <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label="E-Mail" count={stats.emailClicks} color="blue" />
-                            <ActionStatCard icon={<Calendar className="w-5 h-5 text-purple-400" />} label="Randevu" count={stats.appointmentClicks} color="purple" />
-                            <ActionStatCard icon={<Globe className="w-5 h-5 text-cyan-400" />} label="Web Sitesi" count={stats.websiteClicks} color="cyan" />
-                            <ActionStatCard icon={<MapPin className="w-5 h-5 text-rose-400" />} label="Konum" count={stats.locationClicks} color="rose" />
-                            <ActionStatCard icon={<Share2 className="w-5 h-5 text-orange-400" />} label="Paylaşım" count={stats.shareClicks} color="orange" />
-                            <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label="Yorumlar" count={stats.reviewCount} color="amber" />
+                            <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label={t('phoneCallsBtn')} count={stats.phoneClicks} color="indigo" />
+                            <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label={t('waMessagesBtn')} count={stats.waClicks} color="emerald" />
+                            <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label={t('email')/* reused key */} count={stats.emailClicks} color="blue" />
+                            <ActionStatCard icon={<Calendar className="w-5 h-5 text-purple-400" />} label={t('bookAppointment')/* reused key */} count={stats.appointmentClicks} color="purple" />
+                            <ActionStatCard icon={<Globe className="w-5 h-5 text-cyan-400" />} label={t('liveSite')/* reused key */} count={stats.websiteClicks} color="cyan" />
+                            <ActionStatCard icon={<MapPin className="w-5 h-5 text-rose-400" />} label={t('locationsBtn')} count={stats.locationClicks} color="rose" />
+                            <ActionStatCard icon={<Share2 className="w-5 h-5 text-orange-400" />} label={t('sharesBtn')} count={stats.shareClicks} color="orange" />
+                            <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label={t('reviews')/* reused key */} count={stats.reviewCount} color="amber" />
                         </div>
 
                         <div className="lg:col-span-4 mt-8">
@@ -1438,13 +1438,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <Zap size={32} className="fill-current" />
                                             </div>
                                             <div>
-                                                <h3 className="font-black text-3xl text-white tracking-tight leading-none mb-2">Dijital Asistan Analizi</h3>
+                                                <h3 className="font-black text-3xl text-white tracking-tight leading-none mb-2">{t('analysisTitle')}</h3>
                                                 <p className="text-xs font-bold text-primary uppercase tracking-[0.4em]">Smart Performance Insights</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10">
                                             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
-                                            <span className="text-[10px] font-black text-white/70 uppercase tracking-widest">Canlı Veri Yayını</span>
+                                            <span className="text-[10px] font-black text-white/70 uppercase tracking-widest">{t('liveData')}</span>
                                         </div>
                                     </div>
 
@@ -1455,14 +1455,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
                                                 <Users size={20} />
                                             </div>
-                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">Ziyaretçi Trendi</h4>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">{t('visitorTrend')}</h4>
                                             <div className="space-y-3">
                                                 <p className="text-sm text-slate-200 leading-relaxed font-medium">
-                                                    Toplam <span className="text-white font-black text-lg">{stats.totalViews}</span> kişi içinden
-                                                    en çok <span className="text-primary font-black"> {stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon"}</span> kanalı tercih edildi.
+                                                    {t('visitorTrendDesc', stats.totalViews, stats.waClicks > stats.phoneClicks ? "WhatsApp" : "Telefon")}
                                                 </p>
                                                 <div className="pt-2">
-                                                    <span className="text-[10px] font-black text-slate-500 bg-white/5 px-2 py-1 rounded-md">BAŞARI ORANI: %{((Math.max(stats.waClicks, stats.phoneClicks) / (stats.totalViews || 1)) * 100).toFixed(0)}</span>
+                                                    <span className="text-[10px] font-black text-slate-500 bg-white/5 px-2 py-1 rounded-md">{t('successRate')}: %{((Math.max(stats.waClicks, stats.phoneClicks) / (stats.totalViews || 1)) * 100).toFixed(0)}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1472,11 +1471,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
                                                 <Activity size={20} />
                                             </div>
-                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">İçerik Etkileşimi</h4>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">{t('contentEngagement')}</h4>
                                             <div className="space-y-3">
                                                 <p className="text-sm text-slate-200 leading-relaxed font-medium">
-                                                    Projeleriniz <span className="text-emerald-400 font-black text-lg">{(stats.projectClicks + stats.cvClicks)}</span> kez tıklandı.
-                                                    {stats.projectClicks > stats.cvClicks ? " Portfolyonuz şu an en popüler alanınız." : " CV merakı oldukça yüksek seviyede."}
+                                                    {t('contentEngagementDesc', (stats.projectClicks + stats.cvClicks), stats.projectClicks > stats.cvClicks ? t('portfolioPop') : t('cvInterest'))}
                                                 </p>
                                             </div>
                                         </div>
@@ -1486,11 +1484,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-6">
                                                 <Share2 size={20} />
                                             </div>
-                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">Ağ Yayılımı</h4>
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4">{t('networkSpread')}</h4>
                                             <div className="space-y-3">
                                                 <p className="text-sm text-slate-200 leading-relaxed font-medium">
-                                                    Dijital kartınız <span className="text-amber-500 font-black text-lg">{stats.shareClicks}</span> farklı kişiyle paylaşıldı.
-                                                    Network ağınız hızlı genişliyor.
+                                                    {t('networkSpreadDesc', stats.shareClicks)}
                                                 </p>
                                             </div>
                                         </div>
@@ -1599,8 +1596,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold text-slate-900">Müşteri Yorumları</h2>
-                                <p className="text-sm text-slate-500">Profilinizde görünen yorumları yönetin.</p>
+                                <h2 className="text-xl font-bold text-slate-900">{t('customerReviews')}</h2>
+                                <p className="text-sm text-slate-500">{t('reviewManageSub')}</p>
                             </div>
                         </div>
 
@@ -1608,11 +1605,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <table className="w-full text-left min-w-[800px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Kullanıcı</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Yorum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Puan</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Durum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('userLabel')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('commentLabel')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('ratingLabel')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('statusLabel')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('actionLabel')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -1655,7 +1652,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             : "bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200"
                                                     )}
                                                 >
-                                                    {review.isActive ? 'Yayında' : 'Onay Bekliyor'}
+                                                    {review.isActive ? t('approved') : t('pending')}
                                                 </button>
                                             </td>
                                             <td className="px-6 py-4 text-right">

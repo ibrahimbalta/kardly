@@ -8,7 +8,7 @@ type Language = 'tr' | 'en'
 interface LanguageContextType {
     language: Language
     setLanguage: (lang: Language) => void
-    t: (key: string) => string
+    t: (key: string, ...args: any[]) => string
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
@@ -28,8 +28,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('lang', lang)
     }
 
-    const t = (key: string) => {
-        return translations[language][key] || key
+    const t = (key: string, ...args: any[]) => {
+        const val = translations[language][key]
+        if (typeof val === 'function') {
+            return val(...args)
+        }
+        return val || key
     }
 
     return (
