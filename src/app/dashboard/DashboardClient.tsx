@@ -1482,12 +1482,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
-                                // Premium Structural Templates
-                                { id: "minimal", name: "💎 Minimalist", description: "Sade, temiz ve odaklanmış profesyonel beyaz tasarım." },
-                                { id: "classic", name: "🏢 Kurumsal", description: "Ciddi, güven veren ve klasik profesyonel yerleşim." },
-                                { id: "luxury", name: "✨ Lüks Gece", description: "Altın detaylar ve derin siyah ile prestijli bir sunum." },
-                                { id: "sport", name: "⚡ Ultra Sport", description: "Dinamik açılar, büyük fontlar ve yüksek enerjili tasarım." },
-
                                 // Neon Style Templates
                                 { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
                                 { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
