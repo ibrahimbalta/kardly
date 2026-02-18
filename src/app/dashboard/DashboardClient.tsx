@@ -1353,7 +1353,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div>
                                     <label className="block text-sm font-medium mb-4 opacity-60">{t('themeColorLabel')}</label>
                                     <div className="grid grid-cols-5 gap-3">
-                                        {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#d946ef", "#dc2626", "#0ea5e9", "#fbbf24", "#8b5cf6", "#7c3aed"].map(color => (
+                                        {["#6366f1", "#f43f5e", "#10b981", "#f59e0b", "#a855f7", "#ec4899", "#06b6d4", "#84cc16", "#14b8a6", "#d946ef", "#dc2626", "#0ea5e9", "#fbbf24", "#8b5cf6", "#7c3aed", "#064e3b", "#9a3412", "#334155", "#92400e", "#3f6212", "#78350f", "#1e3a8a", "#475569", "#a78bfa", "#b45309"].map(color => (
                                             <button
                                                 key={color}
                                                 onClick={() => setProfileData({ ...profileData, themeColor: color })}
