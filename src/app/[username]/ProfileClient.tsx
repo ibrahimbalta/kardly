@@ -1056,6 +1056,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         mouseY.set(0);
     };
 
+    const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
+    const customLinks = customLinksEntry?.links || [];
+
     const actions = [
         { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
@@ -1066,6 +1069,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setIsAppointmentOpen(true)
             }, active: !!profile.showAppointmentBtn
         },
+        ...customLinks.filter((l: any) => l.isAction).map((l: any) => ({
+            label: l.title,
+            icon: <Globe size={20} />,
+            href: l.url,
+            onClick: () => trackEvent("custom_action", l.title),
+            active: true
+        })),
         { label: "Web Site", icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: "Konum", icon: <MapPin size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
@@ -1344,10 +1354,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
 
-                        {/* Custom Links Icons */}
                         {(() => {
-                            const customLinksEntry = (profile.socialLinks || []).find((l: any) => l.platform === 'customLinks');
-                            const links = customLinksEntry?.links || [];
+                            const links = customLinks.filter((l: any) => !l.isAction);
                             if (links.length === 0) return null;
                             return (
                                 <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">

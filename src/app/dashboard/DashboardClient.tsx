@@ -126,16 +126,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [selectedAppointment, setSelectedAppointment] = useState<any>(null)
 
     // Custom Links Management
-    const [customLinks, setCustomLinks] = useState<{ title: string, url: string }[]>(
+    const [customLinks, setCustomLinks] = useState<{ title: string, url: string, isAction?: boolean }[]>(
         (profileData.socialLinks as any[])?.find((l: any) => l.platform === 'customLinks')?.links || []
     )
-    const [newLink, setNewLink] = useState({ title: "", url: "" })
+    const [newLink, setNewLink] = useState({ title: "", url: "", isAction: false })
 
     const handleAddLink = () => {
         if (!newLink.title || !newLink.url) return
-        const updated = [...customLinks, { title: newLink.title, url: newLink.url }]
+        const updated = [...customLinks, { title: newLink.title, url: newLink.url, isAction: newLink.isAction }]
         setCustomLinks(updated)
-        setNewLink({ title: "", url: "" })
+        setNewLink({ title: "", url: "", isAction: false })
         // Update socialLinks with customLinks
         const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
         const idx = currentLinks.findIndex((l: any) => l.platform === 'customLinks')
@@ -143,6 +143,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
             currentLinks[idx] = { platform: 'customLinks', links: updated }
         } else {
             currentLinks.push({ platform: 'customLinks', links: updated })
+        }
+        setProfileData({ ...profileData, socialLinks: currentLinks })
+    }
+
+    const toggleLinkAction = (index: number) => {
+        const updated = [...customLinks]
+        updated[index] = { ...updated[index], isAction: !updated[index].isAction }
+        setCustomLinks(updated)
+        const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        const idx = currentLinks.findIndex((l: any) => l.platform === 'customLinks')
+        if (idx > -1) {
+            currentLinks[idx] = { platform: 'customLinks', links: updated }
         }
         setProfileData({ ...profileData, socialLinks: currentLinks })
     }
@@ -909,12 +921,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         <p className="text-xs font-bold truncate">{link.title}</p>
                                                         <p className="text-[10px] text-slate-400 truncate">{link.url}</p>
                                                     </div>
-                                                    <button
-                                                        onClick={() => handleDeleteLink(i)}
-                                                        className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            onClick={() => toggleLinkAction(i)}
+                                                            className={cn(
+                                                                "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all",
+                                                                link.isAction ? "bg-amber-500/20 text-amber-500 border border-amber-500/20" : "bg-white/5 text-white/30 border border-white/5 hover:bg-white/10"
+                                                            )}
+                                                        >
+                                                            {link.isAction ? "Buton Yapıldı" : "Buton Yap"}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteLink(i)}
+                                                            className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -929,6 +952,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
                                             className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
                                         />
+                                        <div className="flex items-center gap-2 mb-1 px-1">
+                                            <button
+                                                onClick={() => setNewLink({ ...newLink, isAction: !newLink.isAction })}
+                                                className={cn(
+                                                    "w-10 h-5 rounded-full relative transition-all duration-300",
+                                                    newLink.isAction ? "bg-amber-500" : "bg-white/10"
+                                                )}
+                                            >
+                                                <div className={cn(
+                                                    "absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-300",
+                                                    newLink.isAction ? "left-6" : "left-1"
+                                                )} />
+                                            </button>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ana Buton Olarak Göster</span>
+                                        </div>
                                         <div className="flex gap-2">
                                             <input
                                                 type="text"
