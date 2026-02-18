@@ -917,18 +917,54 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         let accent = profileData.themeColor || "#6366f1";
                                         let bg = "#020617";
                                         let patternSvg = "";
+                                        let glow = "";
 
-                                        if (tid === "neon_cyber") { accent = "#0ef"; }
-                                        else if (tid === "neon_galaxy") { accent = "#a855f7"; }
+                                        // Rainbow Neon Templates
+                                        if (tid === "neon_cyber") { accent = "#0ef"; bg = "#00050a"; glow = "radial-gradient(circle at 20% 30%, #0ff2 0%, transparent 50%), radial-gradient(circle at 80% 70%, #f0f2 0%, transparent 50%)"; }
+                                        else if (tid === "neon_galaxy") { accent = "#a855f7"; bg = "#050010"; glow = "radial-gradient(circle at 50% 50%, #a855f722 0%, transparent 70%)"; }
+                                        else if (tid === "neon_acid") { accent = "#bef264"; bg = "#051000"; glow = "radial-gradient(circle at 30% 20%, #bef26422 0%, transparent 60%), radial-gradient(circle at 70% 80%, #eab30822 0%, transparent 60%)"; }
+                                        else if (tid === "neon_candy") { accent = "#f472b6"; bg = "#10000a"; glow = "radial-gradient(circle at 20% 80%, #f472b622 0%, transparent 60%), radial-gradient(circle at 80% 20%, #8b5cf622 0%, transparent 60%)"; }
+                                        else if (tid === "neon_aurora") { accent = "#2dd4bf"; bg = "#000a0a"; glow = "conic-gradient(from 0deg at 50% 50%, #2dd4bf11, #6366f111, #2dd4bf11)"; }
+
+                                        // Standard Neon Colors
+                                        else if (tid === "neon_blue") { accent = "#38bdf8"; bg = "#0c1e35"; }
+                                        else if (tid === "neon_green") { accent = "#22c55e"; bg = "#06140e"; }
+                                        else if (tid === "neon_purple") { accent = "#a855f7"; bg = "#13072e"; }
+                                        else if (tid === "neon_red") { accent = "#ef4444"; bg = "#1a0505"; }
+                                        else if (tid === "neon_pink") { accent = "#ec4899"; bg = "#1a0514"; }
+                                        else if (tid === "neon_cyan") { accent = "#06b6d4"; bg = "#051a1a"; }
+                                        else if (tid === "neon_orange") { accent = "#f97316"; bg = "#1a0f05"; }
+                                        else if (tid === "neon_amber") { accent = "#f59e0b"; bg = "#1a1005"; }
+                                        else if (tid === "neon_rose") { accent = "#f43f5e"; bg = "#1a050f"; }
+                                        else if (tid === "neon_emerald") { accent = "#10b981"; bg = "#051a0f"; }
+                                        else if (tid === "neon_sky") { accent = "#0ea5e9"; bg = "#05141a"; }
+                                        else if (tid === "neon_lime") { accent = "#84cc16"; bg = "#0f1a05"; }
+                                        else if (tid === "neon_indigo") { accent = "#6366f1"; bg = "#0a112d"; }
+                                        else if (tid === "neon_fuchsia") { accent = "#d946ef"; bg = "#1a051a"; }
+                                        else if (tid === "neon_violet") { accent = "#8b5cf6"; bg = "#11051a"; }
+                                        else if (tid === "neon_gs") { accent = "#f59e0b"; bg = "#1a0505"; }
+                                        else if (tid === "neon_fb") { accent = "#fbbf24"; bg = "#0a112d"; }
+                                        else if (tid === "neon_ts") { accent = "#38bdf8"; bg = "#1a0505"; }
+                                        else if (tid === "neon_bjk") { accent = "#fff"; bg = "#000"; }
+                                        else if (tid === "neon_tr") { accent = "#fff"; bg = "#dc2626"; }
+
+                                        // Patterned Templates
                                         else if (tid === "pattern_ottoman") { accent = "#d4af37"; bg = "#0c1421"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30 L60 0 L60 60 Z M30 30 L0 0 L0 60 Z' fill='%23d4af37' fill-opacity='0.2'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pattern_geometric") { accent = "#fff"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L40 40 M40 0 L0 40' stroke='white' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
-                                        else if (tid === "minimal") { bg = "#ffffff"; accent = "#000"; }
-                                        else if (tid === "classic") { bg = "#f8fafc"; accent = "#334155"; }
+                                        else if (tid === "pattern_marble") { accent = "#18181b"; bg = "#f8f9fa"; patternSvg = `url("https://www.transparenttextures.com/patterns/white-diamond.png")`; }
+                                        else if (tid === "pattern_topo") { accent = "#10b981"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 Q 20 10, 40 40 T 80 40' stroke='%2310b981' fill='transparent' stroke-opacity='0.2'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pattern_circuit") { accent = "#06b6d4"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='30' height='30' x='5' y='5' fill='none' stroke='%2306b6d4' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
 
                                         return (
-                                            <div className="w-full h-full rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-colors duration-500" style={{ backgroundColor: bg }}>
+                                            <div className="w-full h-full rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700" style={{ backgroundColor: bg }}>
+                                                {/* Specialized Glowing Background for Rainbow cases */}
+                                                {glow && <div className="absolute inset-0 z-0 opacity-40 animate-pulse" style={{ background: glow }} />}
+
                                                 {/* Pattern Overlay */}
                                                 {patternSvg && <div className="absolute inset-0 z-0 opacity-50" style={{ backgroundImage: patternSvg }} />}
+
+                                                {/* Standard Accent Light */}
+                                                {!glow && tid.startsWith("neon_") && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] opacity-20 rounded-full" style={{ backgroundColor: accent }} />}
 
                                                 {/* Notch */}
                                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
@@ -938,34 +974,34 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                 {/* Status Bar */}
                                                 <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
-                                                    <span className={`text-[10px] font-bold ${bg === '#ffffff' ? 'text-slate-400' : 'text-white/40'}`}>9:41</span>
-                                                    <div className={`flex items-center gap-1.5 ${bg === '#ffffff' ? 'opacity-20' : 'opacity-40'}`}>
-                                                        <div className={`w-3 h-3 border ${bg === '#ffffff' ? 'border-slate-900' : 'border-white'} rounded-[2px]`} />
-                                                        <div className={`w-3 h-1.5 ${bg === '#ffffff' ? 'bg-slate-900' : 'bg-white'} rounded-sm`} />
+                                                    <span className={`text-[10px] font-bold ${bg === '#f8f9fa' ? 'text-slate-400' : 'text-white/40'}`}>9:41</span>
+                                                    <div className={`flex items-center gap-1.5 ${bg === '#f8f9fa' ? 'opacity-20' : 'opacity-40'}`}>
+                                                        <div className={`w-3 h-3 border ${bg === '#f8f9fa' ? 'border-slate-900' : 'border-white'} rounded-[2px]`} />
+                                                        <div className={`w-3 h-1.5 ${bg === '#f8f9fa' ? 'bg-slate-900' : 'bg-white'} rounded-sm`} />
                                                     </div>
                                                 </div>
 
                                                 {/* Content Scaled */}
                                                 <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
-                                                    <div className="w-24 h-24 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-colors duration-500" style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10` }}>
+                                                    <div className="w-24 h-24 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500" style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
                                                         {(profileData?.image || session?.user?.image) ? (
-                                                            <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
+                                                            <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
                                                         ) : (
                                                             <UserCircle className="w-12 h-12 opacity-50" style={{ color: accent }} />
                                                         )}
                                                     </div>
                                                     <div className="text-center mb-6">
-                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#ffffff' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
+                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#f8f9fa' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
                                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
                                                     </div>
                                                     <div className="text-center mb-8 px-4">
-                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#ffffff' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
+                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#f8f9fa' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
                                                     </div>
 
                                                     {/* Mockup Social Icons */}
                                                     <div className="flex justify-center flex-wrap gap-2.5 mb-10">
                                                         {[1, 2, 3, 4].map((i) => (
-                                                            <div key={i} className={`w-10 h-10 rounded-2xl border flex items-center justify-center shadow-lg backdrop-blur-sm ${bg === '#ffffff' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10'}`}>
+                                                            <div key={i} className={`w-10 h-10 rounded-2xl border flex items-center justify-center shadow-lg backdrop-blur-sm transition-all ${bg === '#f8f9fa' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10'}`}>
                                                                 <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
                                                             </div>
                                                         ))}
@@ -973,8 +1009,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                     <div className="space-y-3">
                                                         {[1, 2].map((i) => (
-                                                            <div key={i} className={`h-12 rounded-2xl border flex items-center px-4 ${bg === '#ffffff' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10'}`}>
-                                                                <div className={`w-24 h-1.5 rounded-full ${bg === '#ffffff' ? 'bg-slate-200' : 'bg-white/10'}`} />
+                                                            <div key={i} className={`h-12 rounded-2xl border flex items-center px-4 transition-all ${bg === '#f8f9fa' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10'}`}>
+                                                                <div className={`w-24 h-1.5 rounded-full ${bg === '#f8f9fa' ? 'bg-slate-200' : 'bg-white/10'}`} />
                                                             </div>
                                                         ))}
                                                     </div>

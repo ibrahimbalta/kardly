@@ -816,7 +816,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-[#f43f5e]",
             icon: "text-[#f43f5e]"
         },
-        neon_cyber: {
+        cyber: {
             bg: "bg-[#00050a]",
             card: "bg-black/40",
             text: "text-[#0ef]",
@@ -829,7 +829,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-[#f0f]",
             special: "cyber"
         },
-        neon_galaxy: {
+        galaxy: {
             bg: "bg-[#050010]",
             card: "bg-black/40",
             text: "text-[#a855f7]",
@@ -842,7 +842,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-cyan-400",
             special: "galaxy"
         },
-        neon_acid: {
+        acid: {
             bg: "bg-[#051000]",
             card: "bg-black/40",
             text: "text-[#bef264]",
@@ -855,7 +855,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-yellow-400",
             special: "acid"
         },
-        neon_candy: {
+        candy: {
             bg: "bg-[#10000a]",
             card: "bg-black/40",
             text: "text-[#f472b6]",
@@ -868,7 +868,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-violet-400",
             special: "candy"
         },
-        neon_aurora: {
+        aurora: {
             bg: "bg-[#000a0a]",
             card: "bg-black/40",
             text: "text-[#2dd4bf]",
