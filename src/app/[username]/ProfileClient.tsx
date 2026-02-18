@@ -1187,8 +1187,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 }}
                                             >
                                                 <motion.div
-                                                    animate={{ rotate: -360 }}
-                                                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                                    animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
+                                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
                                                     className={cn("w-10 h-10 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative rounded-full")}
                                                     style={{
                                                         color: theme.accent,
@@ -1198,7 +1198,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 >
                                                     {getIcon(service.title)}
 
-                                                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-black/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[8px] font-black text-white pointer-events-none border border-white/10 shadow-2xl scale-50 group-hover/icon:scale-100">
+                                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-[#0a0a0a]/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[11px] font-bold text-white pointer-events-none border border-white/20 shadow-[0_10px_25px_rgba(0,0,0,0.5)] scale-50 group-hover/icon:scale-100 z-50">
                                                         {service.title}
                                                     </div>
                                                 </motion.div>
