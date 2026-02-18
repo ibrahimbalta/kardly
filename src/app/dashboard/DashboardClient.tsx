@@ -907,96 +907,80 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                             {/* Realistic Smartphone Preview */}
                             <div className="relative group perspective-1000">
-                                { /* Calculate Mockup Theme */}
-                                {(() => {
-                                    const tid = profileData.templateId || "neon_black";
-                                    let accent = profileData.themeColor || "#6366f1";
-                                    let bg = "#020617";
-                                    let isPattern = tid.startsWith("pattern_");
-                                    let patternSvg = "";
+                                <div className="absolute -inset-4 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-all duration-1000" />
 
-                                    if (tid === "neon_cyber") { accent = "#0ef"; }
-                                    else if (tid === "neon_galaxy") { accent = "#a855f7"; }
-                                    else if (tid === "pattern_ottoman") { accent = "#d4af37"; bg = "#0c1421"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30 L60 0 L60 60 Z M30 30 L0 0 L0 60 Z' fill='%23d4af37' fill-opacity='0.2'/%3E%3C/svg%3E")`; }
-                                    else if (tid === "pattern_geometric") { accent = "#fff"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L40 40 M40 0 L0 40' stroke='white' stroke-opacity='0.05'/%3E%3C/svg%3E")`; }
+                                {/* iPhone Frame */}
+                                <div className="relative w-[320px] h-[640px] bg-[#0f172a] rounded-[3.5rem] p-3 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_10px_rgba(15,23,42,1),0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 mx-auto">
+                                    {/* Notch */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
+                                        <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
+                                        <div className="w-8 h-1 bg-white/10 rounded-full" />
+                                    </div>
 
-                                    return (
-                                        <>
-                                            <div className="absolute -inset-4 blur-[100px] opacity-30 transition-all duration-1000" style={{ backgroundColor: accent }} />
+                                    {/* Side Buttons */}
+                                    <div className="absolute top-24 -left-0.5 w-1 h-12 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-40 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-64 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
+                                    <div className="absolute top-32 -right-0.5 w-1 h-20 bg-slate-800 rounded-l-sm shadow-sm" />
 
-                                            {/* iPhone Frame */}
-                                            <div className="relative w-[320px] h-[640px] bg-[#0f172a] rounded-[3.5rem] p-3 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_10px_rgba(15,23,42,1),0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 mx-auto">
-                                                {/* Notch */}
-                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-[#0f172a] rounded-b-2xl z-20 flex items-center justify-center gap-1.5 px-4">
-                                                    <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
-                                                    <div className="w-8 h-1 bg-white/10 rounded-full" />
-                                                </div>
-
-                                                {/* Side Buttons */}
-                                                <div className="absolute top-24 -left-0.5 w-1 h-12 bg-slate-800 rounded-r-sm shadow-sm" />
-                                                <div className="absolute top-40 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
-                                                <div className="absolute top-64 -left-0.5 w-1 h-16 bg-slate-800 rounded-r-sm shadow-sm" />
-                                                <div className="absolute top-32 -right-0.5 w-1 h-20 bg-slate-800 rounded-l-sm shadow-sm" />
-
-                                                {/* Screen Content */}
-                                                <div className="w-full h-full rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-colors duration-500" style={{ backgroundColor: bg }}>
-                                                    {/* Pattern Overlay */}
-                                                    {patternSvg && <div className="absolute inset-0 z-0 opacity-50" style={{ backgroundImage: patternSvg }} />}
-
-                                                    {/* Status Bar */}
-                                                    <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
-                                                        <span className="text-[10px] font-bold text-white/40">9:41</span>
-                                                        <div className="flex items-center gap-1.5 opacity-40">
-                                                            <div className="w-3 h-3 border border-white/40 rounded-[2px]" />
-                                                            <div className="w-3 h-1.5 bg-white/40 rounded-sm" />
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Content Scaled */}
-                                                    <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
-                                                        <div className="w-24 h-24 bg-white/5 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-colors duration-500" style={{ borderColor: `${accent}40` }}>
-                                                            {(profileData?.image || session?.user?.image) ? (
-                                                                <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
-                                                            ) : (
-                                                                <UserCircle className="text-white w-12 h-12 opacity-50" />
-                                                            )}
-                                                        </div>
-                                                        <div className="text-center mb-6">
-                                                            <h4 className="text-white font-black text-xl mb-1 truncate">{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
-                                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
-                                                        </div>
-                                                        <div className="text-center mb-8 px-4">
-                                                            <p className="text-[11px] text-white/60 italic leading-relaxed line-clamp-2">"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
-                                                        </div>
-
-                                                        {/* Mockup Social Icons */}
-                                                        <div className="flex justify-center flex-wrap gap-2.5 mb-10">
-                                                            {(profileData.socialLinks as any[])?.filter((l: any) => l.url && l.platform !== 'customLinks')?.map((link: any) => (
-                                                                <div key={link.platform} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-sm">
-                                                                    <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-
-                                                        <div className="space-y-3">
-                                                            {[1, 2].map((i) => (
-                                                                <div key={i} className="h-12 bg-white/5 rounded-2xl border border-white/10 flex items-center px-4">
-                                                                    <div className="w-24 h-1.5 bg-white/10 rounded-full" />
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Home Indicator */}
-                                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" />
-                                                </div>
-
-                                                {/* Shine Effect */}
-                                                <div className="absolute inset-x-12 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-[3rem]" />
+                                    {/* Screen Content */}
+                                    <div className="w-full h-full bg-[#020617] rounded-[2.8rem] overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative">
+                                        {/* Status Bar */}
+                                        <div className="absolute top-3 left-8 right-8 flex justify-between items-center z-20">
+                                            <span className="text-[10px] font-bold text-white/40">9:41</span>
+                                            <div className="flex items-center gap-1.5 opacity-40">
+                                                <div className="w-3 h-3 border border-white/40 rounded-[2px]" />
+                                                <div className="w-3 h-1.5 bg-white/40 rounded-sm" />
                                             </div>
-                                        </>
-                                    );
-                                })()}
+                                        </div>
+
+                                        {/* Content Scaled */}
+                                        <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700">
+                                            <div className="w-24 h-24 bg-primary/20 rounded-3xl mx-auto mb-6 flex items-center justify-center overflow-hidden border border-white/10">
+                                                {(profileData?.image || session?.user?.image) ? (
+                                                    <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
+                                                ) : (
+                                                    <UserCircle className="text-primary w-12 h-12 opacity-50" />
+                                                )}
+                                            </div>
+                                            <div className="text-center mb-6">
+                                                <h4 className="text-white font-black text-xl mb-1 truncate">{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
+                                                <p className="text-[10px] text-primary font-black uppercase tracking-[0.2em]">{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
+                                            </div>
+                                            <div className="text-center mb-8 px-4">
+                                                <p className="text-[11px] text-white/60 italic leading-relaxed line-clamp-2 italic">"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
+                                            </div>
+
+                                            {/* Mockup Social Icons */}
+                                            <div className="flex justify-center flex-wrap gap-2.5 mb-10">
+                                                {(profileData.socialLinks as any[])?.filter((l: any) => l.url && l.platform !== 'customLinks')?.map((link: any) => (
+                                                    <div key={link.platform} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-sm">
+                                                        {link.platform === "instagram" && <Instagram className="w-5 h-5 text-rose-400" />}
+                                                        {link.platform === "twitter" && <Twitter className="w-5 h-5 text-sky-400" />}
+                                                        {link.platform === "linkedin" && <Linkedin className="w-5 h-5 text-blue-500" />}
+                                                        {link.platform === "github" && <Github className="w-5 h-5 text-white" />}
+                                                        {link.platform === "youtube" && <Youtube className="w-5 h-5 text-red-500" />}
+                                                        {link.platform === "phone" && <Phone className="w-5 h-5 text-emerald-500" />}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {[1, 2, 3].map((i) => (
+                                                    <div key={i} className="h-12 bg-white/5 rounded-2xl border border-white/10 flex items-center px-4">
+                                                        <div className="w-24 h-1.5 bg-white/10 rounded-full" />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Home Indicator */}
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" />
+                                    </div>
+
+                                    {/* Shine Effect */}
+                                    <div className="absolute inset-x-12 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-[3rem]" />
+                                </div>
 
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 hover:opacity-100 transition-opacity rounded-[3.5rem] cursor-pointer" onClick={() => profile?.username && window.open(`/${profile.username}`, '_blank')}>
                                     <div className="flex flex-col items-center gap-3">
@@ -1484,38 +1468,42 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
-                                // Artistic & Patterned Templates (Premium)
-                                { id: "pattern_ottoman", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım.", preview: "linear-gradient(45deg, #0c1421, #d4af37)" },
-                                { id: "pattern_geometric", name: "📐 Geometrik", description: "Modern, keskin ve teknolojik çizgiler.", preview: "linear-gradient(45deg, #020617, #ffffff22)" },
-                                { id: "pattern_marble", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm.", preview: "linear-gradient(45deg, #f3f4f6, #ffffff)" },
-                                { id: "pattern_topo", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler.", preview: "linear-gradient(45deg, #050505, #10b98122)" },
-                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava.", preview: "linear-gradient(45deg, #000, #00ff0011)" },
-                                { id: "pattern_dots", name: "🫧 Modern Noktalar", description: "Minimalist ve enerjik noktalı arka plan.", preview: "radial-gradient(#fff 10%, transparent 10%)" },
-
-                                // Structural Templates
-                                { id: "minimal", name: "💎 Minimalist", description: "Sade, temiz ve odaklanmış profesyonel beyaz tasarım.", preview: "#ffffff" },
-                                { id: "classic", name: "🏢 Kurumsal", description: "Ciddi, güven veren ve klasik profesyonel yerleşim.", preview: "#f1f5f9" },
-                                { id: "luxury", name: "✨ Lüks Gece", description: "Altın detaylar ve derin siyah ile prestijli bir sunum.", preview: "#0f172a" },
-                                { id: "sport", name: "⚡ Ultra Sport", description: "Dinamik açılar, büyük fontlar ve yüksek enerjili tasarım.", preview: "#ef4444" },
+                                // Premium Structural Templates
+                                { id: "minimal", name: "💎 Minimalist", description: "Sade, temiz ve odaklanmış profesyonel beyaz tasarım." },
+                                { id: "classic", name: "🏢 Kurumsal", description: "Ciddi, güven veren ve klasik profesyonel yerleşim." },
+                                { id: "luxury", name: "✨ Lüks Gece", description: "Altın detaylar ve derin siyah ile prestijli bir sunum." },
+                                { id: "sport", name: "⚡ Ultra Sport", description: "Dinamik açılar, büyük fontlar ve yüksek enerjili tasarım." },
 
                                 // Neon Style Templates
-                                { id: "neon_cyber", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği.", preview: "linear-gradient(45deg, #00eeff, #ff00ff)" },
-                                { id: "neon_galaxy", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer.", preview: "linear-gradient(45deg, #a855f7, #06b6d4)" },
-                                { id: "neon_acid", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji.", preview: "linear-gradient(45deg, #bef264, #eab308)" },
-                                { id: "neon_candy", name: "🌈 Candy Neon", description: "Şeker pembe, lavanta ve menekşe renklerinin yumuşak neon dansı.", preview: "linear-gradient(45deg, #f472b6, #8b5cf6)" },
-                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili.", preview: "linear-gradient(45deg, #2dd4bf, #6366f1)" },
-
-                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım.", preview: "#000000" },
-                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım.", preview: "#ffffff" },
-                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar.", preview: "#0000ff" },
-                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm.", preview: "#00ff00" },
-                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer.", preview: "#a855f7" },
-                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm.", preview: "#ef4444" },
-                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler.", preview: "linear-gradient(to right, #facc15, #ef4444)" },
-                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon.", preview: "linear-gradient(to right, #facc15, #1e3a8a)" },
-                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu.", preview: "linear-gradient(to right, #7f1d1d, #0ea5e9)" },
-                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon.", preview: "linear-gradient(to right, #000, #fff 50%, #000)" },
-                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri.", preview: "#dc2626" }
+                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
+                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
+                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
+                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm." },
+                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
+                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm." },
+                                { id: "neon_pink", name: "Neon Modern (Pembe)", description: "Canlı pembe ve enerjik bir görünüm." },
+                                { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Teknolojik ve fütüristik turkuaz yansımalar." },
+                                { id: "neon_orange", name: "Neon Modern (Turuncu)", description: "Sıcak ve dinamik turuncu neon enerjisi." },
+                                { id: "neon_amber", name: "Neon Modern (Kehribar)", description: "Klasik ve asil altın/kehribar ışığı." },
+                                { id: "neon_rose", name: "Neon Modern (Gül)", description: "Zarif ve modern gül pembesi tonları." },
+                                { id: "neon_emerald", name: "Neon Modern (Zümrüt)", description: "Zengin ve derin yeşil neon atmosferi." },
+                                { id: "neon_sky", name: "Neon Modern (Gök Mavisi)", description: "Ferah ve havadar açık mavi neon çizgiler." },
+                                { id: "neon_lime", name: "Neon Modern (Limon)", description: "Modern ve radikal sarı-yeşil neon tasarımı." },
+                                { id: "neon_indigo", name: "Neon Modern (İndigo)", description: "Derin ve mistik gece mavisi neon estetiği." },
+                                { id: "neon_crimson", name: "Neon Modern (Kıpkırmızı)", description: "Güçlü ve keskin koyu kırmızı neon hatlar." },
+                                { id: "neon_teal", name: "Neon Modern (Cam Göbeği)", description: "Sakin ve prestijli cam göbeği neon tasarımı." },
+                                { id: "neon_fuchsia", name: "Neon Modern (Fuşya)", description: "Cesur ve enerjik fuşya neon patlaması." },
+                                { id: "neon_violet", name: "Neon Modern (Menekşe)", description: "Asil ve derin menekşe moru neon dokunuşu." },
+                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler." },
+                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon." },
+                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu." },
+                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon." },
+                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri." },
+                                { id: "neon_cyber", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği." },
+                                { id: "neon_galaxy", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer." },
+                                { id: "neon_acid", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji." },
+                                { id: "neon_candy", name: "🌈 Candy Neon", description: "Şeker pembe, lavanta ve menekşe renklerinin yumuşak neon dansı." },
+                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
@@ -1531,13 +1519,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 >
                                     <div className="p-6">
                                         <div className="flex justify-between items-start mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <div
-                                                    className="w-8 h-8 rounded-lg border border-white/10"
-                                                    style={{ background: (tpl as any).preview }}
-                                                />
-                                                <h3 className="font-bold text-sm">{tpl.name}</h3>
-                                            </div>
+                                            <h3 className="font-bold">{tpl.name}</h3>
                                             {profileData.templateId === tpl.id && (
                                                 <div className="bg-primary/20 text-primary p-1 rounded-full">
                                                     <CheckCircle2 size={16} />
