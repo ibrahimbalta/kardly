@@ -92,7 +92,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         showAppointmentBtn: profile?.showAppointmentBtn || false,
         tone: profile?.tone || "profesyonel",
         youtubeVideoUrl: profile?.youtubeVideoUrl || "",
-        showVideoAsProfile: profile?.showVideoAsProfile || false
+        showVideoAsProfile: profile?.showVideoAsProfile || false,
+        isCatalog: profile?.isCatalog || false
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -225,7 +226,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     cvUrl: overrides?.cvUrl ?? profileData.cvUrl,
                     showAppointmentBtn: overrides?.showAppointmentBtn ?? profileData.showAppointmentBtn,
                     youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl,
-                    showVideoAsProfile: overrides?.showVideoAsProfile ?? profileData.showVideoAsProfile
+                    showVideoAsProfile: overrides?.showVideoAsProfile ?? profileData.showVideoAsProfile,
+                    isCatalog: overrides?.isCatalog ?? profileData.isCatalog
                 })
             })
 
@@ -731,40 +733,53 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">CV (PDF/DOC)</label>
-                                    <div className="flex gap-4">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-primary">
-                                            <FileText className="w-5 h-5" />
-                                        </div>
-                                        <div className="flex-1 flex gap-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{profileData.isCatalog ? 'Katalog' : 'CV'} (PDF/DOC)</label>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex items-center gap-2">
                                             <input
-                                                type="text"
-                                                value={profileData?.cvUrl || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, cvUrl: e.target.value })}
-                                                placeholder="CV dosya linki veya dosyayı yükleyin"
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                                type="checkbox"
+                                                id="isCatalog"
+                                                checked={profileData.isCatalog}
+                                                onChange={(e) => setProfileData({ ...profileData, isCatalog: e.target.checked })}
+                                                className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={() => document.getElementById('cv-upload')?.click()}
-                                                className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2"
-                                            >
-                                                <Upload className="w-4 h-4" /> Yükle
-                                            </button>
+                                            <label htmlFor="isCatalog" className="text-sm font-medium opacity-80 cursor-pointer">{t('showAsCatalog')}</label>
                                         </div>
-                                        <input
-                                            id="cv-upload"
-                                            type="file"
-                                            accept=".pdf,.doc,.docx"
-                                            className="hidden"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => setProfileData({ ...profileData, cvUrl: reader.result as string });
-                                                reader.readAsDataURL(file);
-                                            }}
-                                        />
+                                        <div className="flex gap-4">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-primary">
+                                                <FileText className="w-5 h-5" />
+                                            </div>
+                                            <div className="flex-1 flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.cvUrl || ""}
+                                                    onChange={(e) => setProfileData({ ...profileData, cvUrl: e.target.value })}
+                                                    placeholder={profileData.isCatalog ? t('catalogFileHint') : t('cvHint')}
+                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => document.getElementById('cv-upload')?.click()}
+                                                    className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2"
+                                                >
+                                                    <Upload className="w-4 h-4" /> Yükle
+                                                </button>
+                                            </div>
+                                            <input
+                                                id="cv-upload"
+                                                type="file"
+                                                accept=".pdf,.doc,.docx"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (!file) return;
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => setProfileData({ ...profileData, cvUrl: reader.result as string });
+                                                    reader.readAsDataURL(file);
+                                                }}
+                                            />
+                                        </div>
+                                        <p className="text-[10px] text-slate-400 italic ps-12">{t('catalogHint')}</p>
                                     </div>
                                 </div>
 

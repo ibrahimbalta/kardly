@@ -1520,7 +1520,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
                             }}
                         >
-                            <FileText size={20} /> CV Görüntüle
+                            <FileText size={20} /> {profile.isCatalog ? (t.viewCatalog || "Katalog Görüntüle") : (t.viewCV || "CV Görüntüle")}
                         </button>
                     </div>
                 </motion.div>

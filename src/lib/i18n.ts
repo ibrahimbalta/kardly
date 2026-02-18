@@ -10,6 +10,8 @@ export const translations: any = {
         buyNow: "Satın Al",
         whatsApp: "Hemen Mesaj Gönder",
         phone: "Beni Ara",
+        viewCV: "CV Görüntüle",
+        viewCatalog: "Katalog Görüntüle",
         selectDateTime: "Tarih ve Saat Seçin",
         contactInfo: "İletişim Bilgileri",
         name: "Ad Soyad",
@@ -56,6 +58,10 @@ export const translations: any = {
         profileVideoUrl: "YouTube Video Linki",
         useVideoAsProfile: "Profil Resmi Yerine Video Göster",
         youtubeHint: "YouTube video adresini buraya yapıştırın.",
+        showAsCatalog: "Katalog Olarak Göster",
+        catalogHint: "CV butonu yerine 'Katalog Görüntüle' etiketini kullanın.",
+        cvHint: "CV dosya linki veya dosyayı yükleyin",
+        catalogFileHint: "Katalog dosya linki veya dosyayı yükleyin",
 
         // Dashboard Settings
         accountSettings: "Hesap Ayarları",
@@ -149,6 +155,8 @@ export const translations: any = {
         buyNow: "Buy Now",
         whatsApp: "Message Now",
         phone: "Call Me",
+        viewCV: "View CV",
+        viewCatalog: "View Catalog",
         selectDateTime: "Select Date & Time",
         contactInfo: "Contact Information",
         name: "Full Name",
@@ -195,6 +203,10 @@ export const translations: any = {
         profileVideoUrl: "YouTube Video Link",
         useVideoAsProfile: "Show Video Instead of Profile Picture",
         youtubeHint: "Paste the YouTube video URL here.",
+        showAsCatalog: "Show as Catalog",
+        catalogHint: "Use 'View Catalog' label instead of CV button.",
+        cvHint: "Upload CV file or paste link",
+        catalogFileHint: "Upload catalog file or paste link",
 
         // Dashboard Settings
         accountSettings: "Account Settings",
