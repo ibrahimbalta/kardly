@@ -71,6 +71,12 @@ export const translations: any = {
         consultingBtn: "Danışmanlık Al",
         supportBtn: "Destek Ol",
         payBtn: "Ödeme Yap",
+        animationSettings: "Animasyon Efektleri",
+        animationSettingsSub: "Profil kartınızın hareket stilini seçin.",
+        animNone: "Sabit (Efekt Yok)",
+        animTilt: "3D Hareketli (Fare Hassas)",
+        animFloat: "Yumuşak Salınım",
+        animRotate: "Dinamik 3D",
 
         // Dashboard Settings
         accountSettings: "Hesap Ayarları",
@@ -225,6 +231,12 @@ export const translations: any = {
         consultingBtn: "Get Consulting",
         supportBtn: "Support Me",
         payBtn: "Make Payment",
+        animationSettings: "Animation Effects",
+        animationSettingsSub: "Choose the movement style for your profile card.",
+        animNone: "Static (No Effect)",
+        animTilt: "3D Tilt (Mouse Sensitive)",
+        animFloat: "Gentle Float",
+        animRotate: "Dynamic 3D",
 
         // Dashboard Settings
         accountSettings: "Account Settings",

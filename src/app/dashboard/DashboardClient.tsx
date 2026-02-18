@@ -95,7 +95,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         showVideoAsProfile: profile?.showVideoAsProfile || false,
         isCatalog: profile?.isCatalog || false,
         paymentLink: profile?.paymentLink || "",
-        paymentType: profile?.paymentType || "coffee"
+        paymentType: profile?.paymentType || "coffee",
+        animationStyle: profile?.animationStyle || "3d-manual"
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -231,7 +232,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     showVideoAsProfile: overrides?.showVideoAsProfile ?? profileData.showVideoAsProfile,
                     isCatalog: overrides?.isCatalog ?? profileData.isCatalog,
                     paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
-                    paymentType: overrides?.paymentType ?? profileData.paymentType
+                    paymentType: overrides?.paymentType ?? profileData.paymentType,
+                    animationStyle: overrides?.animationStyle ?? profileData.animationStyle
                 })
             })
 
@@ -1391,6 +1393,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         ))}
                                     </div>
                                 </div>
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('animationSettings')}</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {[
+                                            { id: "none", name: t('animNone') },
+                                            { id: "3d-manual", name: t('animTilt') },
+                                            { id: "float", name: t('animFloat') },
+                                            { id: "3d-dynamic", name: t('animRotate') }
+                                        ].map(anim => (
+                                            <button
+                                                key={anim.id}
+                                                onClick={() => setProfileData({ ...profileData, animationStyle: anim.id })}
+                                                className={cn(
+                                                    "p-3 rounded-xl border text-center transition-all text-[10px] font-bold uppercase tracking-wider",
+                                                    profileData.animationStyle === anim.id ? "bg-primary text-white border-primary shadow-lg" : "bg-white/5 border-white/10 hover:border-white/20 text-foreground/60"
+                                                )}
+                                            >
+                                                {anim.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <p className="text-[9px] text-foreground/40 mt-2 italic px-1">{t('animationSettingsSub')}</p>
+                                </div>
                                 <button
                                     onClick={handleSave}
                                     className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
@@ -1521,7 +1546,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 {t('deleteProfile')}
                             </button>
                         </div>
-                    </div>
+                    </div >
 
                 ) : activeTab === "statistics" ? (
                     <div className="space-y-8">
@@ -1816,7 +1841,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
-                ) : null}
+                ) : null
+                }
 
                 {/* Modals outside of conditional tabs */}
                 <AnimatePresence>

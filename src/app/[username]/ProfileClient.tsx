@@ -1015,10 +1015,34 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
     const mouseX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
     const mouseY = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
-    const rotateX = useTransform(mouseY, [-200, 200], [15, -15]);
-    const rotateY = useTransform(mouseX, [-200, 200], [-15, 15]);
+
+    // Automatic animation motion values
+    const autoX = useMotionValue(0);
+    const autoY = useMotionValue(0);
+
+    useEffect(() => {
+        if (profile.animationStyle === 'float') {
+            animate(autoY, [-10, 10, -10], { duration: 4, repeat: Infinity, ease: "easeInOut" });
+        } else if (profile.animationStyle === '3d-dynamic') {
+            animate(autoX, [-15, 15, -15], { duration: 8, repeat: Infinity, ease: "easeInOut" });
+            animate(autoY, [-10, 10, -10], { duration: 10, repeat: Infinity, ease: "easeInOut" });
+        } else {
+            autoX.set(0);
+            autoY.set(0);
+        }
+    }, [profile.animationStyle]);
+
+    // Derived transform values
+    const rotateXManual = useTransform(mouseY, [-200, 200], [15, -15]);
+    const rotateYManual = useTransform(mouseX, [-200, 200], [-15, 15]);
+
+    const rotateX = profile.animationStyle === 'none' ? 0 :
+        (profile.animationStyle === '3d-manual' ? rotateXManual : autoY);
+    const rotateY = profile.animationStyle === 'none' ? 0 :
+        (profile.animationStyle === '3d-manual' ? rotateYManual : autoX);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+        if (profile.animationStyle !== '3d-manual') return;
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
@@ -1027,6 +1051,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     };
 
     const handleMouseLeave = () => {
+        if (profile.animationStyle !== '3d-manual') return;
         mouseX.set(0);
         mouseY.set(0);
     };
