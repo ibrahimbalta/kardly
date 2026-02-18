@@ -318,7 +318,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         if (url.includes("v=")) videoId = url.split("v=")[1].split("&")[0]
         else if (url.includes("youtu.be/")) videoId = url.split("youtu.be/")[1].split("?")[0]
         else if (url.includes("embed/")) videoId = url.split("embed/")[1].split("?")[0]
-        return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0` : ""
+        return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=0` : ""
     }
 
     const formatUrl = (url?: string) => {
@@ -1222,7 +1222,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             >
                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                     <iframe
-                                        className="w-full h-full object-cover rounded-full scale-[1.5]"
+                                        className="w-full h-full object-cover rounded-full scale-[1.8] pointer-events-none"
                                         src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)}
                                         allow="autoplay; encrypted-media"
                                         frameBorder="0"

@@ -603,12 +603,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium mb-2 opacity-60">Profil Fotoğrafı</label>
                                         <div className="flex gap-4">
-                                            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
-                                                <img
-                                                    src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
-                                                    className="w-full h-full object-cover"
-                                                    alt="Preview"
-                                                />
+                                            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+                                                {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
+                                                    <div className="w-full h-full bg-black flex items-center justify-center">
+                                                        <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
+                                                    </div>
+                                                ) : (
+                                                    <img
+                                                        src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
+                                                        className="w-full h-full object-cover"
+                                                        alt="Preview"
+                                                    />
+                                                )}
                                             </div>
                                             <div className="flex-1 flex gap-2">
                                                 <input
@@ -946,6 +952,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="relative w-[320px] h-[640px] bg-[#0f172a] rounded-[3.5rem] p-3 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_10px_rgba(15,23,42,1),0_20px_50px_rgba(0,0,0,0.5)] border border-white/5 mx-auto">
                                     { /* Calculate Mockup Theme */}
                                     {(() => {
+                                        const getYoutubeEmbedUrl = (url: string) => {
+                                            if (!url) return ""
+                                            let videoId = ""
+                                            if (url.includes("v=")) videoId = url.split("v=")[1].split("&")[0]
+                                            else if (url.includes("youtu.be/")) videoId = url.split("youtu.be/")[1].split("?")[0]
+                                            else if (url.includes("embed/")) videoId = url.split("embed/")[1].split("?")[0]
+                                            return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0` : ""
+                                        }
+
                                         const tid = profileData.templateId || "neon_black";
                                         const tone = profileData.tone || "profesyonel";
                                         let accent = profileData.themeColor || "#6366f1";
@@ -1030,9 +1045,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
                                                     <div className={cn("w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500 shadow-2xl shadow-black/50", mTone.rounded)} style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
                                                         {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
-                                                            <div className="w-full h-full bg-black flex items-center justify-center">
-                                                                <Youtube className="w-8 h-8 text-red-500 animate-pulse" />
-                                                            </div>
+                                                            <iframe
+                                                                className="w-full h-full object-cover scale-[1.8] pointer-events-none"
+                                                                src={getYoutubeEmbedUrl(profileData.youtubeVideoUrl)}
+                                                                allow="autoplay"
+                                                                frameBorder="0"
+                                                            />
                                                         ) : (profileData?.image || session?.user?.image) ? (
                                                             <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
                                                         ) : (
