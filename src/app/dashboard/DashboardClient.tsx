@@ -1475,7 +1475,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             value={profileData.paymentLink || ""}
                                             onChange={(e) => setProfileData({ ...profileData, paymentLink: e.target.value })}
                                             placeholder={t('paymentLinkHint')}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white text-sm"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 text-sm"
                                         />
                                     </div>
 
@@ -1493,7 +1493,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     onClick={() => setProfileData({ ...profileData, paymentType: type.id })}
                                                     className={cn(
                                                         "px-4 py-3 rounded-xl border text-xs font-bold transition-all",
-                                                        profileData.paymentType === type.id ? "bg-primary/20 border-primary text-primary" : "bg-white/5 border-white/10 hover:border-white/20 opacity-60"
+                                                        profileData.paymentType === type.id ? "bg-primary text-white border-primary shadow-lg" : "bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300"
                                                     )}
                                                 >
                                                     {type.name}
