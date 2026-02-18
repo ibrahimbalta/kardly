@@ -37,7 +37,9 @@ import {
     Briefcase,
     Settings,
     Shield,
-    UserPlus
+    UserPlus,
+    ShoppingBag,
+    Activity
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
