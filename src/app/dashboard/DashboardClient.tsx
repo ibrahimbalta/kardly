@@ -93,7 +93,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         tone: profile?.tone || "profesyonel",
         youtubeVideoUrl: profile?.youtubeVideoUrl || "",
         showVideoAsProfile: profile?.showVideoAsProfile || false,
-        isCatalog: profile?.isCatalog || false
+        isCatalog: profile?.isCatalog || false,
+        paymentLink: profile?.paymentLink || "",
+        paymentType: profile?.paymentType || "coffee"
     })
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
@@ -227,7 +229,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     showAppointmentBtn: overrides?.showAppointmentBtn ?? profileData.showAppointmentBtn,
                     youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl,
                     showVideoAsProfile: overrides?.showVideoAsProfile ?? profileData.showVideoAsProfile,
-                    isCatalog: overrides?.isCatalog ?? profileData.isCatalog
+                    isCatalog: overrides?.isCatalog ?? profileData.isCatalog,
+                    paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
+                    paymentType: overrides?.paymentType ?? profileData.paymentType
                 })
             })
 
@@ -1454,6 +1458,56 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all uppercase tracking-widest text-xs"
                                 >
                                     {t('saveHours')}
+                                </button>
+                            </div>
+
+                            <div className="md:col-span-2 glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                                <h3 className="font-bold flex items-center gap-2">
+                                    <Zap className="w-5 h-5 text-amber-400" /> {t('monetization')}
+                                </h3>
+                                <p className="text-[10px] text-foreground/40 leading-relaxed font-bold uppercase tracking-widest">{t('monetizationSub')}</p>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <label className="block text-sm font-medium opacity-60">{t('paymentLink')}</label>
+                                        <input
+                                            type="text"
+                                            value={profileData.paymentLink || ""}
+                                            onChange={(e) => setProfileData({ ...profileData, paymentLink: e.target.value })}
+                                            placeholder={t('paymentLinkHint')}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white text-sm"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="block text-sm font-medium opacity-60">{t('paymentType')}</label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {[
+                                                { id: "coffee", name: t('coffeeBtn') },
+                                                { id: "consulting", name: t('consultingBtn') },
+                                                { id: "support", name: t('supportBtn') },
+                                                { id: "pay", name: t('payBtn') }
+                                            ].map(type => (
+                                                <button
+                                                    key={type.id}
+                                                    onClick={() => setProfileData({ ...profileData, paymentType: type.id })}
+                                                    className={cn(
+                                                        "px-4 py-3 rounded-xl border text-xs font-bold transition-all",
+                                                        profileData.paymentType === type.id ? "bg-primary/20 border-primary text-primary" : "bg-white/5 border-white/10 hover:border-white/20 opacity-60"
+                                                    )}
+                                                >
+                                                    {type.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => handleSave()}
+                                    className="w-full py-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-2xl text-sm font-bold hover:bg-amber-500/20 transition-all uppercase tracking-widest text-xs"
+                                >
+                                    Para Kazanma Ayarlarını Kaydet
                                 </button>
                             </div>
                         </div>

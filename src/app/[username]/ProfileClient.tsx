@@ -73,6 +73,9 @@ interface Profile {
     blocks: { id: string; type: string; content: any; order: number; isActive: boolean }[];
     cvUrl?: string;
     showAppointmentBtn?: boolean;
+    isCatalog?: boolean;
+    paymentLink?: string;
+    paymentType?: string;
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -1503,6 +1506,31 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             )
                         })}
                     </div>
+
+                    {profile.paymentLink && (
+                        <div className="pt-8 w-full">
+                            <motion.a
+                                href={formatUrl(profile.paymentLink)}
+                                target="_blank"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-sm uppercase tracking-[0.2em] transition-all text-white shadow-[0_20px_40px_-15px_rgba(245,158,11,0.5)] relative overflow-hidden group", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                style={{
+                                    background: `linear-gradient(135deg, #f59e0b, #ea580c)`,
+                                }}
+                                onClick={() => trackEvent("payment_click")}
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                                <Zap className="w-5 h-5 fill-white" />
+                                {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                    profile.paymentType === 'support' ? t.supportBtn :
+                                        profile.paymentType === 'pay' ? t.payBtn :
+                                            t.coffeeBtn}
+                            </motion.a>
+                        </div>
+                    )}
 
                     <div className="pt-8 border-t border-white/5 text-center flex gap-4">
                         <button

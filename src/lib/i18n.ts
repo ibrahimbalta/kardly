@@ -62,6 +62,15 @@ export const translations: any = {
         catalogHint: "CV butonu yerine 'Katalog Görüntüle' etiketini kullanın.",
         cvHint: "CV dosya linki veya dosyayı yükleyin",
         catalogFileHint: "Katalog dosya linki veya dosyayı yükleyin",
+        monetization: "Para Kazanma & Destek",
+        monetizationSub: "Profilinize ödeme veya destek butonu ekleyin.",
+        paymentLink: "Ödeme / Destek Linki",
+        paymentLinkHint: "Stripe, Iyzico, Papara veya BuyMeACoffee linkinizi buraya yapıştırın.",
+        paymentType: "Buton Yazısı",
+        coffeeBtn: "Kahve Ismarla",
+        consultingBtn: "Danışmanlık Al",
+        supportBtn: "Destek Ol",
+        payBtn: "Ödeme Yap",
 
         // Dashboard Settings
         accountSettings: "Hesap Ayarları",
@@ -207,6 +216,15 @@ export const translations: any = {
         catalogHint: "Use 'View Catalog' label instead of CV button.",
         cvHint: "Upload CV file or paste link",
         catalogFileHint: "Upload catalog file or paste link",
+        monetization: "Monetization & Support",
+        monetizationSub: "Add a payment or support button to your profile.",
+        paymentLink: "Payment / Support Link",
+        paymentLinkHint: "Paste your Stripe, Iyzico, Papara, or BuyMeACoffee link here.",
+        paymentType: "Button Label",
+        coffeeBtn: "Buy Me a Coffee",
+        consultingBtn: "Get Consulting",
+        supportBtn: "Support Me",
+        payBtn: "Make Payment",
 
         // Dashboard Settings
         accountSettings: "Account Settings",

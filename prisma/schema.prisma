@@ -78,6 +78,8 @@ model Profile {
   youtubeVideoUrl    String?
   showVideoAsProfile Boolean     @default(false)
   isCatalog          Boolean     @default(false)
+  paymentLink        String?
+  paymentType        String?     @default("coffee")
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?
