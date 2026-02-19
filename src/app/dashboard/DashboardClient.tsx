@@ -1080,6 +1080,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "pro_architect") { accent = "#0ea5e9"; bg = "#1e293b"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L 0 60 M 0 0 L 60 0' stroke='%230ea5e9' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pro_realestate") { accent = "#fbbf24"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 V 40 L 50 20 L 80 40' stroke='%23fbbf24' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pro_artistic") { accent = "#f472b6"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_software") { accent = "#10b981"; bg = "#0a0a0b"; patternSvg = `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%2310b981' fill-opacity='0.05'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_doctor") { accent = "#0ea5e9"; bg = "#f8fafc"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 50h10l10 20 10-40 10 20h10' stroke='%230ea5e9' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_chef") { accent = "#f97316"; bg = "#1c1917"; }
+                                        else if (tid === "pro_barber") { accent = "#fff"; bg = "#0c0c0c"; }
+                                        else if (tid === "pro_fitness") { accent = "#84cc16"; bg = "#000"; }
+                                        else if (tid === "pro_photographer") { accent = "#000"; bg = "#fff"; }
+                                        else if (tid === "pro_musician") { accent = "#6366f1"; bg = "#0f0714"; }
+                                        else if (tid === "pro_beauty") { accent = "#f43f5e"; bg = "#fff1f2"; }
+                                        else if (tid === "pro_finance") { accent = "#334155"; bg = "#020617"; }
+                                        else if (tid === "pro_gamer") { accent = "#00ff9f"; bg = "#050505"; }
 
                                         return (
                                             <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
@@ -1753,6 +1763,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 // Mesleki / Profesyonel Şablonlar (Yeni)
+                                { id: "pro_software", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
+                                { id: "pro_doctor", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
+                                { id: "pro_chef", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
+                                { id: "pro_barber", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
+                                { id: "pro_fitness", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
+                                { id: "pro_photographer", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet.", isNew: true },
+                                { id: "pro_musician", name: "🎸 Müzik / Sanatçı", description: "Ses dalgaları ve ritmik geçişlerle dolu sahne atmosferi.", isNew: true },
+                                { id: "pro_beauty", name: "💄 Güzellik / Bakım", description: "Pastel tonlar, soft geçişler ve estetik odaklı zarafet.", isNew: true },
+                                { id: "pro_finance", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
+                                { id: "pro_gamer", name: "🎮 Gamer / Yayıncı", description: "RGB neonlar, pikselli yapılar ve dijital oyun dünyası.", isNew: true },
                                 { id: "pro_dietitian", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler.", isNew: true },
                                 { id: "pro_lawyer", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
                                 { id: "pro_architect", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },

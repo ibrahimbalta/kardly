@@ -198,7 +198,9 @@ END:VCARD`
             greywhite: "#475569", blueblack: "#3b82f6", purplexwhite: "#a855f7", yellowwhite: "#f59e0b",
             mintgreen: "#10b981", electricviolet: "#8b5cf6", crimson_dark: "#dc2626", ocean_light: "#0ea5e9",
             sunset_rose: "#f43f5e", pro_dietitian: "#22c55e", pro_lawyer: "#d4af37", pro_architect: "#0ea5e9",
-            pro_realestate: "#fbbf24", pro_artistic: "#f472b6"
+            pro_realestate: "#fbbf24", pro_artistic: "#f472b6", pro_software: "#10b981", pro_doctor: "#0ea5e9",
+            pro_chef: "#f97316", pro_barber: "#ffffff", pro_fitness: "#84cc16", pro_photographer: "#000000",
+            pro_musician: "#6366f1", pro_beauty: "#f43f5e", pro_finance: "#334155", pro_gamer: "#00ff9f"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -1067,6 +1069,136 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-pink-400",
             icon: "text-pink-500",
             special: "artistic"
+        },
+        pro_software: {
+            bg: "bg-[#0a0a0b]",
+            card: "bg-zinc-900/80",
+            text: "text-emerald-400",
+            subtext: "text-zinc-500",
+            border: "border-emerald-500/20",
+            glow: "shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+            accent: "#10b981",
+            btn: "bg-zinc-950 border-emerald-900/30",
+            btnText: "text-emerald-400",
+            icon: "text-emerald-500",
+            special: "software"
+        },
+        pro_doctor: {
+            bg: "bg-[#f8fafc]",
+            card: "bg-white/90",
+            text: "text-[#0369a1]",
+            subtext: "text-slate-500",
+            border: "border-sky-100",
+            glow: "shadow-[0_0_30px_rgba(14,165,233,0.1)]",
+            accent: "#0ea5e9",
+            btn: "bg-white border-sky-200",
+            btnText: "text-sky-700",
+            icon: "text-sky-500",
+            special: "doctor"
+        },
+        pro_chef: {
+            bg: "bg-[#1c1917]",
+            card: "bg-stone-900/90",
+            text: "text-orange-200",
+            subtext: "text-stone-500",
+            border: "border-orange-900/30",
+            glow: "shadow-[0_0_30px_rgba(249,115,22,0.1)]",
+            accent: "#f97316",
+            btn: "bg-stone-950 border-orange-800/30",
+            btnText: "text-orange-400",
+            icon: "text-orange-500",
+            special: "chef"
+        },
+        pro_barber: {
+            bg: "bg-[#0c0c0c]",
+            card: "bg-[#1a1a1a]/80",
+            text: "text-white",
+            subtext: "text-neutral-500",
+            border: "border-neutral-800",
+            glow: "shadow-[0_0_30px_rgba(255,255,255,0.05)]",
+            accent: "#ffffff",
+            btn: "bg-black border-neutral-700",
+            btnText: "text-white",
+            icon: "text-white",
+            special: "barber"
+        },
+        pro_fitness: {
+            bg: "bg-[#000000]",
+            card: "bg-[#111]/90",
+            text: "text-[#dcfce7]",
+            subtext: "text-zinc-500",
+            border: "border-lime-500/30",
+            glow: "shadow-[0_0_40px_rgba(132,204,22,0.2)]",
+            accent: "#84cc16",
+            btn: "bg-black border-lime-500/20",
+            btnText: "text-lime-400",
+            icon: "text-lime-500",
+            special: "fitness"
+        },
+        pro_photographer: {
+            bg: "bg-white",
+            card: "bg-white",
+            text: "text-black",
+            subtext: "text-neutral-400",
+            border: "border-neutral-100",
+            glow: "shadow-none",
+            accent: "#000000",
+            btn: "bg-black",
+            btnText: "text-white",
+            icon: "text-black",
+            special: "photographer"
+        },
+        pro_musician: {
+            bg: "bg-[#0f0714]",
+            card: "bg-[#1e0d2d]/60",
+            text: "text-indigo-200",
+            subtext: "text-indigo-400/60",
+            border: "border-indigo-500/30",
+            glow: "shadow-[0_0_30px_rgba(99,102,241,0.2)]",
+            accent: "#6366f1",
+            btn: "bg-[#1e0d2d] border-indigo-500/30",
+            btnText: "text-indigo-300",
+            icon: "text-indigo-400",
+            special: "musician"
+        },
+        pro_beauty: {
+            bg: "bg-[#fff1f2]",
+            card: "bg-white/80",
+            text: "text-rose-900",
+            subtext: "text-rose-400",
+            border: "border-rose-100",
+            glow: "shadow-[0_0_30px_rgba(244,63,94,0.1)]",
+            accent: "#f43f5e",
+            btn: "bg-white border-rose-200",
+            btnText: "text-rose-600",
+            icon: "text-rose-500",
+            special: "beauty"
+        },
+        pro_finance: {
+            bg: "bg-[#020617]",
+            card: "bg-[#0f172a]/80",
+            text: "text-slate-100",
+            subtext: "text-slate-500",
+            border: "border-slate-800",
+            glow: "shadow-[0_0_30px_rgba(51,65,85,0.2)]",
+            accent: "#334155",
+            btn: "bg-slate-900 border-slate-700",
+            btnText: "text-slate-300",
+            icon: "text-slate-400",
+            special: "finance"
+        },
+        pro_gamer: {
+            bg: "bg-[#050505]",
+            card: "bg-[#111]/80",
+            text: "text-[#00ff9f]",
+            subtext: "text-[#00ff9f]/40",
+            border: "border-[#00ff9f]/20",
+            glow: "shadow-[0_0_30px_rgba(0,255,159,0.2)]",
+            accent: "#00ff9f",
+            btn: "bg-black border-[#00ff9f]/30",
+            btnText: "text-[#00ff9f]",
+            icon: "text-[#00ff9f]",
+            special: "gamer"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1260,6 +1392,55 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-l from-pink-500/20 to-transparent blur-[100px] rounded-full" />
                         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/20 to-transparent blur-[100px] rounded-full" />
                     </div>
+                )}
+                {theme.special === "software" && (
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none font-mono text-[10px] text-emerald-500/50 p-10 overflow-hidden leading-relaxed">
+                        {`function init() {\n  const system = "Kardly";\n  console.log("Welcome " + user);\n}\n`.repeat(100)}
+                    </div>
+                )}
+                {theme.special === "doctor" && (
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none flex items-center justify-center">
+                        <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="0.5">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                    </div>
+                )}
+                {theme.special === "chef" && (
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.03] pointer-events-none overflow-hidden">
+                        <div className="grid grid-cols-10 gap-10">
+                            {Array(100).fill(0).map((_, i) => (
+                                <svg key={i} width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v11" /><path d="M15 14c-.9-1.1-2-1.3-3.2-1.2h-.1V22h.1c1.2.1 2.3-.1 3.2-1.2 1-1.1 1-2.7 0-3.6" /><path d="M15 14c1.2 1.3 1.2 3.3 0 4.6" /><path d="M15 2v10" />
+                                </svg>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                {theme.special === "fitness" && (
+                    <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/carbon-fibre.png")` }} />
+                )}
+                {theme.special === "musician" && (
+                    <div className="absolute inset-x-0 bottom-0 h-64 opacity-[0.1] pointer-events-none flex items-end justify-center gap-1">
+                        {Array(40).fill(0).map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{ height: [10, 100, 20] }}
+                                transition={{ duration: 0.5 + Math.random(), repeat: Infinity, ease: "easeInOut" }}
+                                className="w-2 bg-indigo-500/30 rounded-full"
+                            />
+                        ))}
+                    </div>
+                )}
+                {theme.special === "finance" && (
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+                        <svg viewBox="0 0 1000 1000" className="w-full h-full stroke-slate-500" fill="none" strokeWidth="0.5">
+                            <path d="M0,800 L200,750 L400,780 L600,600 L800,650 L1000,400" />
+                            <path d="M0,850 L200,820 L400,830 L600,750 L800,780 L1000,600" />
+                        </svg>
+                    </div>
+                )}
+                {theme.special === "gamer" && (
+                    <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%2300ff9f' fill-opacity='0.2'/%3E%3C/svg%3E")` }} />
                 )}
 
                 {/* New Premium Vibe Backgrounds */}
