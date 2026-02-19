@@ -1721,6 +1721,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
+                                // Mesleki / Profesyonel Şablonlar (Yeni)
+                                { id: "pro_dietitian", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler.", isNew: true },
+                                { id: "pro_lawyer", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
+                                { id: "pro_architect", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
+                                { id: "pro_realestate", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
+                                { id: "pro_artistic", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
+
                                 // Neon Style Templates
                                 { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
                                 { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
@@ -1757,13 +1764,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "pattern_geometric", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
                                 { id: "pattern_marble", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
                                 { id: "pattern_topo", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
-                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
-                                // Mesleki / Profesyonel Şablonlar
-                                { id: "pro_dietitian", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
-                                { id: "pro_lawyer", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu." },
-                                { id: "pro_architect", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım." },
-                                { id: "pro_realestate", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu." },
-                                { id: "pro_artistic", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği." }
+                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
@@ -1779,7 +1780,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 >
                                     <div className="p-6">
                                         <div className="flex justify-between items-start mb-4">
-                                            <h3 className="font-bold">{tpl.name}</h3>
+                                            <div className="flex flex-col gap-1">
+                                                <h3 className="font-bold">{tpl.name}</h3>
+                                                {tpl.isNew && (
+                                                    <span className="w-fit px-1.5 py-0.5 bg-primary/20 text-primary text-[8px] font-black rounded-md uppercase tracking-widest">YENİ</span>
+                                                )}
+                                            </div>
                                             {profileData.templateId === tpl.id && (
                                                 <div className="bg-primary/20 text-primary p-1 rounded-full">
                                                     <CheckCircle2 size={16} />
