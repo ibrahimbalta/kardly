@@ -26,7 +26,11 @@ import {
   Linkedin,
   FileText,
   TrendingUp,
-  Cpu
+  CreditCard,
+  List,
+  Cpu,
+  ShoppingBag,
+  Palette
 } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -53,7 +57,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Bento - Modules Showcase */}
+      {/* Features Bento - Core Functionality Showcase */}
       <section id="features" className="py-32 px-6 relative overflow-hidden bg-white">
         <div className="blob w-[800px] h-[800px] bg-rose-50 opacity-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
@@ -64,156 +68,156 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-100 text-[10px] font-black uppercase tracking-[0.2em] text-rose-500 mb-6"
             >
-              <Sparkles size={12} /> Akıllı Modüller & Bileşenler
+              <Sparkles size={12} /> Hepsi Bir Arada Çözüm
             </motion.div>
-            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9] text-slate-900">Profilinizi <br /><span className="gradient-text">Modüllerle Güçlendirin</span></h2>
+            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9] text-slate-900">Dijital Kimliğiniz <br /><span className="gradient-text">Eksiksiz & Profesyonel</span></h2>
             <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">
-              Sadece bir kartvizit değil, tam donanımlı bir dijital ofis. İhtiyacınıza göre sayfanızı özelleştirin.
+              Profilinizi projeleriniz, uzmanlıklarınız ve ödeme sistemlerinizle donatın. Tek bir link üzerinden tüm iş dünyanızı yönetin.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
-            {/* 1. Skill Radar - Large Bento */}
+            {/* 1. Projects & Portfolio - Large Bento */}
             <motion.div
               whileHover={{ y: -5 }}
               className="md:col-span-8 md:row-span-2 rounded-[3.5rem] p-10 border border-slate-100 bg-white relative overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative h-full flex flex-col md:flex-row gap-10">
                 <div className="flex-1 flex flex-col justify-center">
-                  <div className="w-16 h-16 bg-indigo-500 rounded-[1.5rem] flex items-center justify-center mb-8 shadow-xl shadow-indigo-200 group-hover:rotate-6 transition-transform">
-                    <Activity size={32} className="text-white" />
+                  <div className="w-16 h-16 bg-rose-500 rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl shadow-rose-200 group-hover:rotate-6 transition-transform">
+                    <Briefcase size={32} className="text-white" />
                   </div>
-                  <h3 className="text-4xl font-black mb-4 tracking-tight text-slate-900">Yetenek Radarı</h3>
-                  <p className="text-slate-500 text-lg leading-relaxed">Teknik yetkinliklerinizi ve uzmanlık alanlarınızı fütüristik bir radar grafiğiyle görselleştirin. İşverenler için etkileyici bir analiz sunun.</p>
+                  <h3 className="text-4xl font-black mb-4 tracking-tight text-slate-900">Projelerim & Portfolyo</h3>
+                  <p className="text-slate-500 text-lg leading-relaxed">Başarı hikayelerinizi ve tamamladığınız projeleri görsel zenginliklerle sergileyin. Potansiyel partnerlerinizi tek bir bakışta etkileyin.</p>
                 </div>
-                <div className="flex-1 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group-hover:scale-[1.02] transition-transform overflow-hidden flex items-center justify-center p-8">
-                  <div className="relative w-full aspect-square border-2 border-dashed border-indigo-200 rounded-full flex items-center justify-center">
-                    <div className="absolute inset-4 border border-indigo-100 rounded-full" />
-                    <div className="absolute inset-12 border border-indigo-100 rounded-full" />
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      className="absolute inset-0 border-t-2 border-indigo-500/20 rounded-full"
-                    />
-                    <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-2xl">
-                      <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" fill="rgba(99, 102, 241, 0.2)" stroke="rgb(99, 102, 241)" strokeWidth="2" />
-                      <circle cx="50" cy="10" r="3" fill="rgb(99, 102, 241)" />
-                      <circle cx="85" cy="30" r="3" fill="rgb(99, 102, 241)" />
-                      <circle cx="85" cy="70" r="3" fill="rgb(99, 102, 241)" />
-                      <circle cx="50" cy="90" r="3" fill="rgb(99, 102, 241)" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 2. Portfolio Gallery */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-rose-50/20 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="flex justify-between items-start">
-                <div className="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-rose-100">
-                  <ImageIcon size={24} />
-                </div>
-                <div className="w-8 h-8 rounded-full border border-rose-200 flex items-center justify-center">
-                  <ArrowUpRight size={14} className="text-rose-500" />
-                </div>
-              </div>
-              <div>
-                <h4 className="text-2xl font-black mb-2 tracking-tight text-slate-900">Profesyonel Galeri</h4>
-                <p className="text-slate-500 text-sm">Çalışmalarınızı, ürünlerinizi veya portfolyonuzu yüksek kaliteli bir galeriyle sergileyin.</p>
-              </div>
-            </motion.div>
-
-            {/* 3. LinkedIn Feed */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-sky-50/30 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#0077b5] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-100">
-                  <Linkedin size={24} />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#0077b5]">SOCIAL SYNC</span>
-              </div>
-              <div>
-                <h4 className="text-2xl font-black mb-2 text-slate-900">LinkedIn Akışı</h4>
-                <p className="text-slate-500 text-sm">En güncel LinkedIn paylaşımlarınızı profilinizde otomatik olarak listeleyin.</p>
-              </div>
-            </motion.div>
-
-            {/* 4. Career Timeline */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-2 rounded-[3.5rem] p-8 border border-slate-100 bg-slate-50/50 flex flex-col group shadow-sm hover:shadow-xl transition-all duration-500 relative overflow-hidden"
-            >
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white mb-6 shadow-xl shadow-amber-100">
-                  <Clock size={28} />
-                </div>
-                <h4 className="text-3xl font-black mb-4 text-slate-900">Deneyim Çizelgesi</h4>
-                <p className="text-slate-500 text-base mb-8">Kariyer duraklarınızı ve başarılarınızı kronolojik bir akışla hikayeleştirin.</p>
-
-                <div className="flex-1 flex flex-col gap-6 mt-auto">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex gap-4 items-start">
-                      <div className="w-1 bg-amber-200 h-10 rounded-full" />
-                      <div className="flex-1">
-                        <div className="h-2 w-1/3 bg-slate-200 rounded-full mb-2" />
-                        <div className="h-1.5 w-2/3 bg-slate-100 rounded-full" />
+                <div className="flex-1 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group-hover:scale-[1.02] transition-transform overflow-hidden p-6 flex items-end">
+                  <div className="w-full h-4/5 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 transform translate-y-4 group-hover:translate-y-0 transition-all duration-700">
+                    <div className="aspect-video bg-slate-50 rounded-xl mb-4 overflow-hidden">
+                      <div className="w-full h-full bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center">
+                        <ImageIcon size={40} className="text-rose-200" />
                       </div>
                     </div>
-                  ))}
+                    <div className="h-4 w-2/3 bg-slate-100 rounded-full mb-2" />
+                    <div className="h-3 w-1/3 bg-slate-50 rounded-full" />
+                  </div>
                 </div>
-              </div>
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:rotate-12 transition-transform">
-                <TrendingUp size={120} />
               </div>
             </motion.div>
 
-            {/* 5. Appointment System */}
+            {/* 2. Expertise Areas */}
             <motion.div
               whileHover={{ y: -5 }}
-              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-emerald-50/20 flex items-center gap-10 group shadow-sm hover:shadow-xl transition-all duration-500"
+              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-amber-50/20 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
             >
-              <div className="w-20 h-20 bg-emerald-500 rounded-[2rem] flex items-center justify-center text-white shrink-0 shadow-2xl shadow-emerald-100">
+              <div className="flex justify-between items-start">
+                <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-100">
+                  <CheckCircle2 size={24} />
+                </div>
+                <div className="w-8 h-8 rounded-full border border-amber-200 flex items-center justify-center">
+                  <ArrowUpRight size={14} className="text-amber-500" />
+                </div>
+              </div>
+              <div>
+                <h4 className="text-2xl font-black mb-2 tracking-tight text-slate-900">Uzmanlık Alanları</h4>
+                <p className="text-slate-500 text-sm">Mesleki yetkinliklerinizi ve uzmanlıklarınızı profilinizde şık bir şekilde listeleyin.</p>
+              </div>
+            </motion.div>
+
+            {/* 3. CV & Catalog */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-indigo-50/30 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                  <List size={24} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">PRO VERSION</span>
+              </div>
+              <div>
+                <h4 className="text-2xl font-black mb-2 text-slate-900">CV & Katalog Paylaşımı</h4>
+                <p className="text-slate-500 text-sm">Profesyonel özgeçmişinizi ve kataloglarınızı tek tıkla indirilebilir hale getirin.</p>
+              </div>
+            </motion.div>
+
+            {/* 4. Monetization & Support */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="md:col-span-4 md:row-span-2 rounded-[3.5rem] p-8 border border-slate-100 bg-slate-900 text-white flex flex-col group shadow-sm hover:shadow-xl transition-all duration-500 relative overflow-hidden"
+            >
+              <div className="relative z-10 h-full flex flex-col">
+                <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mb-6 shadow-xl shadow-emerald-500/20">
+                  <CreditCard size={28} />
+                </div>
+                <h4 className="text-3xl font-black mb-4">Para Kazanma & Destek</h4>
+                <p className="text-slate-400 text-base mb-8 leading-relaxed">Stripe ve PayTR ile profiliniz üzerinden ödeme alın, destek toplayın veya hizmet satın.</p>
+
+                <div className="mt-auto space-y-4">
+                  <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl group-hover:bg-white/10 transition-colors">
+                    <div className="w-10 h-6 bg-white/10 rounded-md flex items-center justify-center text-[8px] font-black tracking-tighter">PayTR</div>
+                    <span className="text-xs font-bold">Yerel Ödeme Entegrasyonu</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl group-hover:bg-white/10 transition-colors">
+                    <div className="w-10 h-6 bg-white/10 rounded-md flex items-center justify-center text-[8px] font-black tracking-tighter">Stripe</div>
+                    <span className="text-xs font-bold">Global Ödeme Çözümü</span>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:rotate-12 transition-transform h-40 w-40">
+                <ShoppingBag size={160} />
+              </div>
+            </motion.div>
+
+            {/* 5. Appointment Tracking */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-sky-50/20 flex items-center gap-10 group shadow-sm hover:shadow-xl transition-all duration-500"
+            >
+              <div className="w-20 h-20 bg-sky-500 rounded-[2rem] flex items-center justify-center text-white shrink-0 shadow-2xl shadow-sky-100">
                 <Calendar size={40} />
               </div>
               <div className="flex-1">
-                <h4 className="text-3xl font-black mb-2 text-slate-900">Dijital Randevu</h4>
-                <p className="text-slate-500 text-lg">Müşterileriniz doğrudan profiliniz üzerinden uygun saatlerinizi görerek randevu talep edebilir. Tam entegre ajanda sistemi.</p>
+                <h4 className="text-3xl font-black mb-2 text-slate-900">Randevu Takibi</h4>
+                <p className="text-slate-500 text-lg">Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve takip edin.</p>
               </div>
-              <div className="hidden md:block w-32 h-32 border-4 border-dashed border-emerald-200 rounded-3xl shrink-0 rotate-12 group-hover:rotate-0 transition-transform" />
+              <div className="hidden md:block w-32 h-32 border-4 border-dashed border-sky-200 rounded-3xl shrink-0 -rotate-6 group-hover:rotate-0 transition-transform" />
             </motion.div>
 
-            {/* 6. Document Vault */}
+            {/* 6. Visitor Statistics */}
             <motion.div
               whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-white flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-purple-100">
-                <FileText size={24} />
-              </div>
-              <div>
-                <h4 className="text-2xl font-black mb-2 text-slate-900">CV & Belge Deposu</h4>
-                <p className="text-slate-500 text-sm">Sertifika, diploma ve CV dosyalarınızı güvenli bir alanda saklayın ve paylaşın.</p>
-              </div>
-            </motion.div>
-
-            {/* 7. Analytics & AI */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-slate-900 text-white flex items-center justify-between group shadow-2xl shadow-slate-200 transition-all duration-500"
+              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-slate-50/50 flex items-center justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
             >
               <div className="max-w-md">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[8px] font-black uppercase tracking-widest mb-6">AI POWERED</div>
-                <h4 className="text-4xl font-black mb-4">Gelişmiş Analiz Paneli</h4>
-                <p className="text-slate-400 text-lg">Ziyaretçi trafiğinizi, tıklama oranlarını ve coğrafi verileri saniyeler içinde analiz edin.</p>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-500 text-[8px] font-black uppercase tracking-widest mb-6">REAL-TIME DATA</div>
+                <h4 className="text-3xl font-black mb-4 text-slate-900">Ziyaretçi İstatistikleri</h4>
+                <p className="text-slate-500 text-lg leading-relaxed">Tıklama, görüntülenme ve coğrafi verileri profesyonel grafiklerle dashboard'unuzda görün.</p>
               </div>
-              <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center blur-sm group-hover:blur-0 transition-all">
-                <BarChart3 size={48} className="text-rose-500" />
+              <div className="w-48 h-24 flex items-end gap-2 px-6">
+                {[30, 60, 45, 90, 65, 80].map((h, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    className="flex-1 bg-rose-500/20 rounded-t-lg border-t border-rose-500/40"
+                  />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* 7. Stunning Templates */}
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-white flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500 relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-amber-50 to-rose-50 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white mb-6">
+                  <Palette size={24} />
+                </div>
+                <h4 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Eşsiz Şablonlar</h4>
+                <p className="text-slate-500 text-sm leading-relaxed">Neon ve Profesyonel seriler ile tarzınıza en uygun tasarımı anında seçin.</p>
               </div>
             </motion.div>
           </div>
