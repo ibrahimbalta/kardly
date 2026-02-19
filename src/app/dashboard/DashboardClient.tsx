@@ -1087,7 +1087,38 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 {glow && <div className="absolute inset-0 z-0 opacity-40 animate-pulse" style={{ background: glow }} />}
 
                                                 {/* Pattern Overlay */}
-                                                {patternSvg && <div className="absolute inset-0 z-0 opacity-50" style={{ backgroundImage: patternSvg }} />}
+                                                {patternSvg && <div className="absolute inset-0 z-0 opacity-50 transition-all duration-700" style={{ backgroundImage: patternSvg }} />}
+
+                                                {/* Profession Specific Mockup Extensions */}
+                                                {tid === "pro_realestate" && (
+                                                    <div className="absolute inset-x-0 bottom-0 h-24 opacity-[0.05] pointer-events-none">
+                                                        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full fill-amber-500">
+                                                            <path d="M0,100 L0,80 L50,80 L50,40 L100,40 L100,70 L200,70 L200,20 L300,20 L300,80 L400,80 L400,10 L500,10 L500,70 L600,70 L600,0 L700,0 L700,80 L800,80 L800,20 L900,20 L900,50 L1000,50 L1000,100 Z" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                                {tid === "pro_lawyer" && (
+                                                    <div className="absolute inset-0 opacity-[0.03] flex items-center justify-center pointer-events-none">
+                                                        <div className="w-40 h-40 border-2 border-amber-500/20 rounded-full flex items-center justify-center">
+                                                            <div className="w-32 h-32 border border-amber-500/10 rounded-full" />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {tid === "pro_architect" && (
+                                                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+                                                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-sky-500" />
+                                                        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-sky-500" />
+                                                    </div>
+                                                )}
+                                                {tid === "pro_dietitian" && (
+                                                    <div className="absolute inset-0 opacity-[0.05] overflow-hidden pointer-events-none">
+                                                        <div className="absolute top-10 right-10 w-10 h-10 border border-green-500 rounded-full rotate-45" />
+                                                        <div className="absolute bottom-20 left-10 w-8 h-8 border border-green-500 rounded-full -rotate-12" />
+                                                    </div>
+                                                )}
+                                                {tid === "pro_artistic" && (
+                                                    <div className="absolute inset-0 opacity-[0.1] pointer-events-none bg-[radial-gradient(circle_at_top_right,#f472b622_0%,transparent_50%),radial-gradient(circle_at_bottom_left,#8b5cf622_0%,transparent_50%)]" />
+                                                )}
 
                                                 {/* Standard Accent Light */}
                                                 {!glow && tid.startsWith("neon_") && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 blur-[80px] opacity-20 rounded-full" style={{ backgroundColor: accent }} />}

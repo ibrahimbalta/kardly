@@ -1207,6 +1207,61 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-width='1'/%3E%3Cpath d='M20 20 L 100 100 M 100 20 L 20 100' stroke='%23f472b6' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
                 )}
 
+                {/* Profession-Specific Design Extensions */}
+                {theme.special === "realestate" && (
+                    <div className="absolute inset-x-0 bottom-0 h-[400px] opacity-[0.03] select-none pointer-events-none z-0 overflow-hidden">
+                        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full fill-amber-500">
+                            <path d="M0,100 L0,80 L50,80 L50,40 L100,40 L100,70 L150,70 L150,20 L200,20 L200,80 L250,80 L250,40 L300,40 L300,60 L350,60 L350,10 L400,10 L400,80 L450,80 L450,30 L500,30 L500,70 L550,70 L550,0 L600,0 L600,80 L650,80 L650,40 L700,40 L700,60 L750,60 L750,20 L800,20 L800,80 L850,80 L850,50 L900,50 L900,80 L950,80 L950,30 L1000,30 L1000,100 Z" />
+                        </svg>
+                    </div>
+                )}
+                {theme.special === "lawyer" && (
+                    <div className="absolute inset-0 opacity-[0.02] pointer-events-none select-none flex items-center justify-center">
+                        <svg width="600" height="600" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="0.1">
+                            <path d="M12 3v18M12 3l7 3M12 3L5 6m7 15l7-3m-7 3l-7-3M5 6v12m14-12v12M5 10h14M5 14h14" />
+                        </svg>
+                    </div>
+                )}
+                {theme.special === "architect" && (
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none select-none">
+                        <div className="absolute top-10 left-10 text-[10px] font-mono text-[#0ea5e9]">R: 12.5m</div>
+                        <div className="absolute bottom-20 right-10 text-[10px] font-mono text-[#0ea5e9]">θ: 45°</div>
+                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[#0ea5e9]/20" />
+                        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-[#0ea5e9]/20" />
+                    </div>
+                )}
+                {theme.special === "dietitian" && (
+                    <div className="absolute inset-0 overflow-hidden opacity-[0.05] pointer-events-none">
+                        {Array(5).fill(0).map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    y: [0, -100, 0],
+                                    x: [0, i % 2 === 0 ? 50 : -50, 0],
+                                    rotate: [0, 180, 360]
+                                }}
+                                transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+                                className="absolute"
+                                style={{
+                                    top: `${20 * i}%`,
+                                    left: `${15 * i}%`,
+                                }}
+                            >
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1">
+                                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-7 7c-.67 0-1.32-.1-1.94-.27" />
+                                    <path d="M11 20c-2.33 0-4.32-1.45-5.12-3.5M11 20c.56 0 1.1-.1 1.6-.3" />
+                                </svg>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+                {theme.special === "artistic" && (
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-l from-pink-500/20 to-transparent blur-[100px] rounded-full" />
+                        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/20 to-transparent blur-[100px] rounded-full" />
+                    </div>
+                )}
+
                 {/* New Premium Vibe Backgrounds */}
                 {tone === 'lüks' && (
                     <>
