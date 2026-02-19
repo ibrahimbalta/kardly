@@ -1001,6 +1001,71 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-cyan-400",
             icon: "text-cyan-500",
             special: "circuit"
+        },
+        pro_dietitian: {
+            bg: "bg-[#f0f9f0]",
+            card: "bg-white/80",
+            text: "text-[#166534]",
+            subtext: "text-[#15803d]/60",
+            border: "border-[#bbf7d0]",
+            glow: "shadow-[0_0_30px_rgba(34,197,94,0.15)]",
+            accent: "#22c55e",
+            btn: "bg-[#f0f9f0] border-[#bbf7d0]",
+            btnText: "text-[#166534]",
+            icon: "text-[#22c55e]",
+            special: "dietitian"
+        },
+        pro_lawyer: {
+            bg: "bg-[#0f172a]",
+            card: "bg-white/5",
+            text: "text-[#f8fafc]",
+            subtext: "text-[#94a3b8]",
+            border: "border-[#1e293b]",
+            glow: "shadow-[0_0_30px_rgba(212,175,55,0.2)]",
+            accent: "#d4af37",
+            btn: "bg-[#1e293b] border-[#d4af37]/30",
+            btnText: "text-[#d4af37]",
+            icon: "text-[#d4af37]",
+            special: "lawyer"
+        },
+        pro_architect: {
+            bg: "bg-[#1e293b]",
+            card: "bg-[#0f172a]/80",
+            text: "text-[#38bdf8]",
+            subtext: "text-[#7dd3fc]/60",
+            border: "border-[#0ea5e9]/30",
+            glow: "shadow-[0_0_30px_rgba(14,165,233,0.2)]",
+            accent: "#0ea5e9",
+            btn: "bg-[#0f172a] border-[#0ea5e9]/30",
+            btnText: "text-[#38bdf8]",
+            icon: "text-[#38bdf8]",
+            special: "architect"
+        },
+        pro_realestate: {
+            bg: "bg-[#020617]",
+            card: "bg-white/5",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-slate-800",
+            glow: "shadow-[0_0_40px_rgba(251,191,36,0.15)]",
+            accent: "#fbbf24",
+            btn: "bg-slate-900 border-amber-500/30",
+            btnText: "text-amber-400",
+            icon: "text-amber-400",
+            special: "realestate"
+        },
+        pro_artistic: {
+            bg: "bg-[#050505]",
+            card: "bg-[#111]/80",
+            text: "text-[#f472b6]",
+            subtext: "text-zinc-500",
+            border: "border-zinc-800",
+            glow: "shadow-[0_0_30px_rgba(244,114,182,0.3)]",
+            accent: "#f472b6",
+            btn: "bg-black border-pink-500/20",
+            btnText: "text-pink-400",
+            icon: "text-pink-500",
+            special: "artistic"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1124,6 +1189,21 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "circuit" && (
                     <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 H 90 V 90 H 10 Z' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='90' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='10' cy='90' r='1' fill='%2306b6d4'/%3E%3C/svg%3E")`, backgroundSize: '40px 40px' }} />
+                )}
+                {theme.special === "dietitian" && (
+                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20 Q 60 40, 50 60 Q 40 40, 50 20 Z M50 60 L 50 80' stroke='%2322c55e' fill='none' stroke-width='1.5'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                )}
+                {theme.special === "lawyer" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 H 100 V 100 H 20 Z M60 20 V 100 M20 60 H 100' stroke='%23d4af37' fill='none' stroke-width='2'/%3E%3C/svg%3E")`, backgroundSize: '100px 100px' }} />
+                )}
+                {theme.special === "architect" && (
+                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L 0 60 M 0 0 L 60 0 M 30 0 L 30 60 M 0 30 L 60 30' stroke='%230ea5e9' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "realestate" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 V 40 L 50 20 L 80 40 V 100' stroke='%23fbbf24' fill='none' stroke-width='2'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                )}
+                {theme.special === "artistic" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-width='1'/%3E%3Cpath d='M20 20 L 100 100 M 100 20 L 20 100' stroke='%23f472b6' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
                 )}
 
                 {/* New Premium Vibe Backgrounds */}

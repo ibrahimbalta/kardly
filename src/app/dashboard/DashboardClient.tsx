@@ -1074,6 +1074,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "pattern_topo") { accent = "#10b981"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 Q 20 10, 40 40 T 80 40' stroke='%2310b981' fill='transparent' stroke-opacity='0.2'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pattern_circuit") { accent = "#06b6d4"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='30' height='30' x='5' y='5' fill='none' stroke='%2306b6d4' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
 
+                                        // Professional Templates
+                                        else if (tid === "pro_dietitian") { accent = "#22c55e"; bg = "#f0f9f0"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20 Q 60 40, 50 60 Q 40 40, 50 20 Z' stroke='%2322c55e' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_lawyer") { accent = "#d4af37"; bg = "#0f172a"; patternSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 H 100 V 100 H 20 Z' stroke='%23d4af37' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_architect") { accent = "#0ea5e9"; bg = "#1e293b"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L 0 60 M 0 0 L 60 0' stroke='%230ea5e9' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_realestate") { accent = "#fbbf24"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 V 40 L 50 20 L 80 40' stroke='%23fbbf24' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_artistic") { accent = "#f472b6"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
+
                                         return (
                                             <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
                                                 {/* Specialized Glowing Background for Rainbow cases */}
@@ -1750,7 +1757,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 { id: "pattern_geometric", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
                                 { id: "pattern_marble", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
                                 { id: "pattern_topo", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
-                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." }
+                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
+                                // Mesleki / Profesyonel Şablonlar
+                                { id: "pro_dietitian", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
+                                { id: "pro_lawyer", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu." },
+                                { id: "pro_architect", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım." },
+                                { id: "pro_realestate", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu." },
+                                { id: "pro_artistic", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği." }
                             ].map((tpl) => (
                                 <motion.div
                                     key={tpl.id}
