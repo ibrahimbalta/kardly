@@ -197,7 +197,8 @@ END:VCARD`
             greenwhite: "#ffffff", greenblack: "#22c55e", orangeblack: "#f97316", pinkwhite: "#f43f5e",
             greywhite: "#475569", blueblack: "#3b82f6", purplexwhite: "#a855f7", yellowwhite: "#f59e0b",
             mintgreen: "#10b981", electricviolet: "#8b5cf6", crimson_dark: "#dc2626", ocean_light: "#0ea5e9",
-            sunset_rose: "#f43f5e"
+            sunset_rose: "#f43f5e", pro_dietitian: "#22c55e", pro_lawyer: "#d4af37", pro_architect: "#0ea5e9",
+            pro_realestate: "#fbbf24", pro_artistic: "#f472b6"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -214,7 +215,7 @@ END:VCARD`
             return <NeonModernTemplate {...props} colorScheme={scheme} tone={tone} />;
         }
 
-        if (profile.templateId?.startsWith("pattern_")) {
+        if (profile.templateId?.startsWith("pattern_") || profile.templateId?.startsWith("pro_")) {
             return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
         }
 
