@@ -1109,10 +1109,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </div>
                                                 )}
                                                 {tid === "pro_lawyer" && (
-                                                    <div className="absolute inset-0 opacity-[0.03] flex items-center justify-center pointer-events-none">
-                                                        <div className="w-40 h-40 border-2 border-amber-500/20 rounded-full flex items-center justify-center">
-                                                            <div className="w-32 h-32 border border-amber-500/10 rounded-full" />
-                                                        </div>
+                                                    <div className="absolute inset-x-0 bottom-0 h-20 opacity-[0.05] flex justify-around items-end px-4 pointer-events-none">
+                                                        <div className="w-6 h-16 bg-amber-500/20 rounded-t-sm" />
+                                                        <div className="w-6 h-16 bg-amber-500/20 rounded-t-sm" />
+                                                        <div className="w-6 h-16 bg-amber-500/20 rounded-t-sm" />
                                                     </div>
                                                 )}
                                                 {tid === "pro_architect" && (
@@ -1127,8 +1127,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         <div className="absolute bottom-20 left-10 w-8 h-8 border border-green-500 rounded-full -rotate-12" />
                                                     </div>
                                                 )}
+                                                {tid === "pro_software" && (
+                                                    <div className="absolute inset-0 opacity-[0.05] font-mono text-[8px] p-10 overflow-hidden leading-tight text-emerald-500 pointer-events-none">
+                                                        {"const dev = true;\nif(dev) {\n  console.log('Kardly');\n}\n".repeat(20)}
+                                                    </div>
+                                                )}
+                                                {tid === "pro_gamer" && (
+                                                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-48 h-1 bg-black/50 rounded-full overflow-hidden border border-[#00ff9f]/20 pointer-events-none">
+                                                        <div className="w-[80%] h-full bg-[#00ff9f]/50" />
+                                                    </div>
+                                                )}
                                                 {tid === "pro_artistic" && (
                                                     <div className="absolute inset-0 opacity-[0.1] pointer-events-none bg-[radial-gradient(circle_at_top_right,#f472b622_0%,transparent_50%),radial-gradient(circle_at_bottom_left,#8b5cf622_0%,transparent_50%)]" />
+                                                )}
+                                                {tid === "pro_musician" && (
+                                                    <div className="absolute bottom-0 inset-x-0 h-16 flex items-end justify-center gap-0.5 opacity-[0.1] pointer-events-none">
+                                                        {Array(20).fill(0).map((_, i) => (
+                                                            <div key={i} className="w-1 bg-indigo-500" style={{ height: `${Math.random() * 100}%` }} />
+                                                        ))}
+                                                    </div>
                                                 )}
 
                                                 {/* Standard Accent Light */}

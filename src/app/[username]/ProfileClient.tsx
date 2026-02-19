@@ -42,7 +42,10 @@ import {
     ShoppingBag,
     Activity,
     Volume2,
-    VolumeX
+    VolumeX,
+    Sparkles,
+    Layers,
+    TrendingUp
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -1572,30 +1575,136 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     ]
                                 }}
                                 transition={{ duration: 3, repeat: Infinity }}
-                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden rounded-full")}
+                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden",
+                                    theme.special === 'software' ? 'rounded-xl' :
+                                        theme.special === 'photographer' ? 'rounded-sm border-white' :
+                                            'rounded-full'
+                                )}
                                 style={{ borderColor: theme.accent }}
                             >
                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                     <iframe
-                                        className="w-full h-full object-cover rounded-full scale-[1.8] pointer-events-none"
+                                        className="w-full h-full object-cover scale-[1.8] pointer-events-none"
                                         src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)}
                                         allow="autoplay; encrypted-media"
                                         frameBorder="0"
                                     />
                                 ) : (
-                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover rounded-full")} />
+                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover")} />
+                                )}
+
+                                {/* Profession Overlays */}
+                                {theme.special === 'software' && (
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div className="absolute top-0 left-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">DIV</div>
+                                        <div className="absolute bottom-0 right-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">/DIV</div>
+                                    </div>
+                                )}
+                                {theme.special === 'photographer' && (
+                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div className="w-full h-[1px] bg-red-500/30 absolute top-1/2" />
+                                        <div className="h-full w-[1px] bg-red-500/30 absolute left-1/2" />
+                                        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white" />
+                                        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-white" />
+                                        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white" />
+                                        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white" />
+                                    </div>
+                                )}
+                                {theme.special === 'lawyer' && (
+                                    <div className="absolute inset-0 border-2 border-amber-500/20 rounded-full scale-90" />
+                                )}
+                                {theme.special === 'architect' && (
+                                    <div className="absolute inset-0 border border-sky-500/30">
+                                        <div className="absolute top-0 left-1/2 w-[1px] h-full bg-sky-500/10" />
+                                        <div className="absolute left-0 top-1/2 w-full h-[1px] bg-sky-500/10" />
+                                    </div>
+                                )}
+                                {theme.special === 'barber' && (
+                                    <div className="absolute inset-0 border-4 border-double border-white/10" />
                                 )}
                             </motion.div>
+
+                            {/* External Profession Icons */}
+                            {theme.special === 'doctor' && (
+                                <div className="absolute -top-4 -right-4 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center border border-sky-100 z-20">
+                                    <Activity size={20} className="text-sky-500 animate-pulse" />
+                                </div>
+                            )}
+                            {theme.special === 'chef' && (
+                                <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
+                                    <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#f97316">
+                                            <path d="M12 3c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9 4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zM8.5 15h7c.28 0 .5.22.5.5s-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z" />
+                                        </svg>
+                                    </motion.div>
+                                </div>
+                            )}
+                            {theme.special === 'gamer' && (
+                                <div className="absolute -bottom-2 inset-x-0 flex justify-center z-20">
+                                    <div className="bg-black border border-[#00ff9f]/50 px-2 py-0.5 rounded text-[8px] font-mono text-[#00ff9f] tracking-tighter shadow-[0_0_10px_#00ff9f50]">LVL 99 PRO</div>
+                                </div>
+                            )}
+                            {theme.special === 'dietitian' && (
+                                <div className="absolute -top-4 left-0 z-20 opacity-60">
+                                    <motion.div animate={{ rotate: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+                                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
+                                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-7 7" />
+                                        </svg>
+                                    </motion.div>
+                                </div>
+                            )}
+                            {theme.special === 'beauty' && (
+                                <div className="absolute -top-2 -right-2 z-20">
+                                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
+                                        <Sparkles size={24} className="text-rose-400" />
+                                    </motion.div>
+                                </div>
+                            )}
+                            {theme.special === 'musician' && (
+                                <div className="absolute top-1/2 -right-8 -translate-y-1/2 z-20 opacity-20 flex flex-col gap-1">
+                                    <div className="w-12 h-[1px] bg-indigo-500" />
+                                    <div className="w-12 h-[1px] bg-indigo-500" />
+                                    <div className="w-12 h-[1px] bg-indigo-500" />
+                                </div>
+                            )}
+
                             <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                         </div>
 
                         <div>
-                            <h1 className={cn("font-black tracking-tight", theme.text, toneStyle.headerSize)}>{profile.user.name}</h1>
-                            <div className="flex items-center justify-center gap-2 mt-2">
-                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
-                                <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>{profile.occupation || "WEB DEVELOPER"}</p>
-                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                            <div className="flex items-center justify-center gap-3">
+                                {theme.special === 'software' && <Code size={20} className="text-emerald-500 opacity-50" />}
+                                {theme.special === 'doctor' && <Shield size={20} className="text-sky-500 opacity-50" />}
+                                {theme.special === 'chef' && <Zap size={20} className="text-orange-500 opacity-50" />}
+                                {theme.special === 'artistic' && <Palette size={20} className="text-pink-500 opacity-50" />}
+                                <h1 className={cn("font-black tracking-tight", theme.text, toneStyle.headerSize)}>{profile.user.name}</h1>
+                                {theme.special === 'realestate' && <Briefcase size={20} className="text-amber-500 opacity-50" />}
+                                {theme.special === 'architect' && <Layers size={20} className="text-sky-500 opacity-50" />}
+                                {theme.special === 'barber' && <Star size={20} className="text-white opacity-50" />}
                             </div>
+
+                            <div className="flex items-center justify-center gap-2 mt-2 relative">
+                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                                <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
+                                    {profile.occupation || "PROFESSIONAL"}
+                                    {theme.special === 'software' && <span className="animate-pulse">_</span>}
+                                </p>
+                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+
+                                {theme.special === 'fitness' && (
+                                    <div className="absolute -right-12 top-0 flex gap-0.5">
+                                        <div className="w-1 h-3 bg-lime-500" />
+                                        <div className="w-1 h-3 bg-lime-500" />
+                                        <div className="w-1 h-3 bg-lime-500/30" />
+                                    </div>
+                                )}
+                            </div>
+
+                            {theme.special === 'finance' && (
+                                <div className="flex items-center justify-center gap-1 mt-1 text-[8px] font-bold text-emerald-500">
+                                    <TrendingUp size={10} /> MARKET ACTIVE +4.2%
+                                </div>
+                            )}
 
                             {/* Project Marquee Section */}
                             {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
