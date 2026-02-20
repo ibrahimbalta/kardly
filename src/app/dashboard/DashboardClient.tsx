@@ -60,7 +60,10 @@ import {
     User,
     Gamepad2,
     Cpu,
-    History
+    History,
+    Cloud,
+    Moon,
+    Sun
 } from "lucide-react"
 
 // Modül Tanımları
@@ -225,7 +228,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
         // Future & Glass
         { id: "future_holo", category: "future", name: "🛸 Hologram Pro", description: "Işık kırılmalı kenarlar ve fütüristik parlayan hologram kartları.", isNew: true },
-        { id: "future_glass", category: "future", name: "❄️ Buzul Cam (Frost)", description: "Bulanık cam arkası efekti ve pastel yüzen ışık balonları.", isNew: true }
+        { id: "future_glass", category: "future", name: "❄️ Buzul Cam (Frost)", description: "Bulanık cam arkası efekti ve pastel yüzen ışık balonları.", isNew: true },
+
+        // Büyülü Akış (Dream)
+        { id: "dream_mist", category: "dream", name: "☁️ Sisli Rüya", description: "Pastel renk geçişleri ve yumuşak sis efektli huzurlu tasarım.", isNew: true },
+        { id: "dream_nebula", category: "dream", name: "🌌 Kozmik Bulut", description: "Derin uzay moru ve parlayan nebulalarla dolu masalsı atmosfer.", isNew: true },
+
+        // Gizemli Gece (Dark)
+        { id: "dark_onyx", category: "dark", name: "🕶️ Saf Oniks", description: "Tam karanlık, sadece en önemli detayların parladığı gizemli şıklık.", isNew: true },
+        { id: "dark_stealth", category: "dark", name: "⬛ Karbon Stealth", description: "Mat siyah karbon fiber doku ve teknolojik kırmızı detaylar.", isNew: true },
+
+        // Prizmatik Işık (Light)
+        { id: "light_prism", category: "light", name: "🌈 Prizma Yansıması", description: "Işığın kırılma efektleri ve gökkuşağı çizgileriyle modern beyaz.", isNew: true },
+        { id: "light_solar", category: "light", name: "☀️ Gün Batımı", description: "Sıcak turuncu ve altın sarısı güneş ışığı huzmeleri.", isNew: true }
     ]
 
     // Working Hours Management
@@ -1996,7 +2011,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     { id: "future", name: "Gelecek", icon: <Cpu size={14} /> },
                                     { id: "neon", name: "Neon", icon: <Zap size={14} /> },
                                     { id: "pattern", name: "Desen", icon: <Layers size={14} /> },
-                                    { id: "nature", name: "Doğa", icon: <Sparkles size={14} /> }
+                                    { id: "nature", name: "Doğa", icon: <Sparkles size={14} /> },
+                                    { id: "dream", name: "Büyülü Akış", icon: <Cloud size={14} /> },
+                                    { id: "dark", name: "Gizemli Gece", icon: <Moon size={14} /> },
+                                    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> }
                                 ].map((cat) => (
                                     <button
                                         key={cat.id}

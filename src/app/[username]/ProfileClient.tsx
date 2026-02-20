@@ -206,7 +206,9 @@ END:VCARD`
             pro_musician: "#6366f1", pro_beauty: "#f43f5e", pro_finance: "#334155", pro_gamer: "#00ff9f",
             retro_mac: "#94a3b8", retro_news: "#000000", retro_synth: "#f472b6", luxury_gold: "#fbbf24",
             luxury_silver: "#94a3b8", luxury_marble: "#18181b", life_gamer: "#ef4444", life_travel: "#d97706",
-            life_zen: "#22c55e", future_holo: "#06b6d4", future_glass: "#38bdf8"
+            life_zen: "#22c55e", future_holo: "#06b6d4", future_glass: "#38bdf8",
+            dream_mist: "#f472b6", dream_nebula: "#a855f7", dark_onyx: "#0ea5e9",
+            dark_stealth: "#ef4444", light_prism: "#38bdf8", light_solar: "#fbbf24"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -217,7 +219,7 @@ END:VCARD`
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
 
-        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_"];
+        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_"];
         if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
             return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
         }
@@ -1351,6 +1353,90 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-slate-700",
             icon: "text-sky-500",
             special: "future_glass"
+        },
+
+        // Dream (Büyülü Akış)
+        dream_mist: {
+            bg: "bg-[#faf5ff]",
+            card: "bg-white/60",
+            text: "text-purple-900",
+            subtext: "text-purple-500",
+            border: "border-purple-200/50",
+            glow: "shadow-[0_0_40px_rgba(168,85,247,0.1)]",
+            accent: "#a855f7",
+            btn: "bg-white border-purple-100",
+            btnText: "text-purple-700",
+            icon: "text-purple-500",
+            special: "dream_mist"
+        },
+        dream_nebula: {
+            bg: "bg-[#050010]",
+            card: "bg-black/40",
+            text: "text-white",
+            subtext: "text-indigo-300",
+            border: "border-purple-500/20",
+            glow: "shadow-[0_0_50px_rgba(139,92,246,0.3)]",
+            accent: "#8b5cf6",
+            btn: "bg-indigo-950/40 border-purple-500/30",
+            btnText: "text-white",
+            icon: "text-purple-400",
+            special: "dream_nebula"
+        },
+
+        // Dark (Gizemli Gece)
+        dark_onyx: {
+            bg: "bg-black",
+            card: "bg-zinc-900/50",
+            text: "text-zinc-100",
+            subtext: "text-zinc-500",
+            border: "border-zinc-800",
+            glow: "none",
+            accent: "#0ea5e9",
+            btn: "bg-zinc-900 border-zinc-800",
+            btnText: "text-zinc-300",
+            icon: "text-sky-500",
+            special: "dark_onyx"
+        },
+        dark_stealth: {
+            bg: "bg-[#050505]",
+            card: "bg-black/80",
+            text: "text-white",
+            subtext: "text-zinc-600",
+            border: "border-red-900/30",
+            glow: "shadow-[0_0_20px_rgba(239,68,68,0.1)]",
+            accent: "#ef4444",
+            btn: "bg-zinc-950 border-red-900/20",
+            btnText: "text-red-500",
+            icon: "text-red-600",
+            special: "dark_stealth"
+        },
+
+        // Light (Prizmatik Işık)
+        light_prism: {
+            bg: "bg-slate-50",
+            card: "bg-white/90",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-slate-200",
+            glow: "shadow-[0_10px_40px_rgba(56,189,248,0.1)]",
+            accent: "#38bdf8",
+            btn: "bg-white border-slate-200",
+            btnText: "text-slate-800",
+            icon: "text-sky-500",
+            special: "light_prism"
+        },
+        light_solar: {
+            bg: "bg-orange-50/30",
+            card: "bg-white/80",
+            text: "text-orange-950",
+            subtext: "text-orange-800/60",
+            border: "border-orange-200/50",
+            glow: "shadow-[0_10px_50px_rgba(245,158,11,0.1)]",
+            accent: "#f59e0b",
+            btn: "bg-white border-orange-100",
+            btnText: "text-orange-900",
+            icon: "text-orange-600",
+            special: "light_solar"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1518,6 +1604,29 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "future_glass" && (
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf811_0%,transparent_40%),radial-gradient(circle_at_80%_80%,#f472b611_0%,transparent_40%)]" />
+                )}
+
+                {/* New Category Specific Effects */}
+                {theme.special === "dream_mist" && (
+                    <div className="absolute inset-0">
+                        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-200/30 blur-[100px] animate-pulse" />
+                        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-200/30 blur-[100px] animate-pulse" />
+                    </div>
+                )}
+                {theme.special === "dream_nebula" && (
+                    <>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#8b5cf622_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#ec489911_0%,transparent_50%)]" />
+                        <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(1px 1px at 10px 10px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 80px, #fff, rgba(0,0,0,0))', backgroundSize: '100px 100px' }} />
+                    </>
+                )}
+                {theme.special === "dark_stealth" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L10 10 M10 0 L0 10' stroke='%23ffffff' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "light_prism" && (
+                    <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(56,189,248,0.05)_0%,rgba(244,63,94,0.05)_50%,rgba(251,191,36,0.05)_100%)]" />
+                )}
+                {theme.special === "light_solar" && (
+                    <div className="absolute inset-x-0 top-0 h-[300px] bg-[radial-gradient(circle_at_50%_0%,#f59e0b22_0%,transparent_70%)]" />
                 )}
 
                 {/* Profession-Specific Design Extensions */}
