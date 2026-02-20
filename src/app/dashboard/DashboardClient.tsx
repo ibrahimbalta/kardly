@@ -132,7 +132,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         isCatalog: profile?.isCatalog || false,
         paymentLink: profile?.paymentLink || "",
         paymentType: profile?.paymentType || "coffee",
-        animationStyle: profile?.animationStyle || "none"
+        animationStyle: profile?.animationStyle || "none",
+        profileBgImage: profile?.profileBgImage || ""
     })
     const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isTplCatOpen, setIsTplCatOpen] = useState(false)
@@ -440,7 +441,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     isCatalog: overrides?.isCatalog ?? profileData.isCatalog,
                     paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
                     paymentType: overrides?.paymentType ?? profileData.paymentType,
-                    animationStyle: overrides?.animationStyle ?? profileData.animationStyle
+                    animationStyle: overrides?.animationStyle ?? profileData.animationStyle,
+                    profileBgImage: overrides?.profileBgImage ?? profileData.profileBgImage
                 })
             })
 
@@ -1097,6 +1099,54 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         )}
                                     </div>
+                                    <div className="md:col-span-2 space-y-4 mb-6">
+                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Alanı Arka Plan Görseli</label>
+                                        <div className="flex gap-4">
+                                            <div className="w-24 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative shadow-inner">
+                                                {profileData.profileBgImage ? (
+                                                    <img
+                                                        src={profileData.profileBgImage}
+                                                        className="w-full h-full object-cover"
+                                                        alt="BG Preview"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-slate-800/50">
+                                                        <Monitor className="w-6 h-6 opacity-20" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1 flex gap-2 self-end">
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.profileBgImage || ""}
+                                                    onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
+                                                    placeholder="Arka plan resim linki"
+                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => document.getElementById('bg-image-upload')?.click()}
+                                                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
+                                                >
+                                                    <Upload className="w-4 h-4" /> Yükle
+                                                </button>
+                                            </div>
+                                            <input
+                                                id="bg-image-upload"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (!file) return;
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => setProfileData({ ...profileData, profileBgImage: reader.result as string });
+                                                    reader.readAsDataURL(file);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium mb-2 opacity-60">Görünen İsim (Kartvizit Üzerinde)</label>
                                         <input

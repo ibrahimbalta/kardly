@@ -2389,8 +2389,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     onMouseLeave={handleMouseLeave}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    style={{ rotateX, rotateY }}
-                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                    style={{
+                        rotateX,
+                        rotateY,
+                        ...(profile.profileBgImage ? {
+                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${profile.profileBgImage})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        } : {})
+                    }}
+                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                 >
                     {/* Share Button Top Right */}
                     <div className="absolute top-6 right-6 z-30">

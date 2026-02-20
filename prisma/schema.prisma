@@ -81,6 +81,7 @@ model Profile {
   paymentLink        String?
   paymentType        String?     @default("coffee")
   animationStyle     String?     @default("none")
+  profileBgImage     String?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?
