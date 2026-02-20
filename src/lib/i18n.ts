@@ -157,7 +157,149 @@ export const translations: any = {
         templates: "Şablonlar",
         login: "Giriş Yap",
         register: "Kayıt Ol",
-        getStarted: "Hemen Başla"
+        getStarted: "Hemen Başla",
+
+        // Dashboard Extra
+        incomingLeads: "Gelen Talepler",
+        welcomeSub: "Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.",
+        contactsSaved: "Rehbere Kayıt",
+        pendingAppointments: "Bekleyen Randevu",
+        approvedReviews: "Onaylı Yorum",
+
+        // Categories
+        catAll: "Tümü",
+        catPro: "Asalet & Prestij",
+        catRetro: "Nostaljik Esinti",
+        catLuxury: "Premium Lüks",
+        catLifestyle: "Tutku & Yaşam",
+        catFuture: "Fütüristik Vizyon",
+        catNeon: "Neon Enerjisi",
+        catPattern: "Sanatsal Doku",
+        catNature: "Ekolojik Ruh",
+        catDream: "Büyülü Akış",
+        catDark: "Gizemli Gece",
+        catLight: "Prizmatik Işık",
+        catCyber: "Siber Gerçeklik",
+        catAntique: "Antik Miras",
+        catLiquid: "Likit Akış",
+        catPop: "Dinamik Pop",
+        catZen: "Zihinsel Odak",
+        catAdventure: "Macera Ruhu",
+        catCelestial: "İlahi Işıltı",
+        catMinimal: "Yalın Estetik",
+        catIndustrial: "Endüstriyel",
+        catVibrant: "Enerji Katı",
+        catRoyal: "Hanedan",
+        catTech: "Yüksek Teknoloji",
+        catMeta: "Metaverse",
+
+        // Steps
+        howItWorks: "Nasıl Çalışır?",
+        step1Title: "Kayıt Olun",
+        step1Desc: "E-posta adresinizle saniyeler içinde hesap oluşturun. Kredi kartı gerekmez.",
+        step2Title: "Profilinizi Doldurun",
+        step2Desc: "Projeler, uzmanlıklar, hizmetler ve iletişim bilgilerinizi ekleyin.",
+        step3Title: "Link ile Paylaşın",
+        step3Desc: "QR kod veya kısa link ile müşterilerinize her yerde ulaşın.",
+        buildProfileTitle: "3 adımda profesyonel profilinizi oluşturun",
+        buildProfileDesc: "Karmaşık kurulum yok. Kayıt olun, içeriğinizi ekleyin, paylaşın. İşte bu kadar.",
+
+        // Features 2
+        featuresTitle: "Profilinizi güçlendiren her araç burada",
+        featuresDesc: "Sadece bir dijital kartvizit değil. Projelerinizden randevularınıza, istatistiklerden ödemelere kadar iş hayatınızın tamamını yöneten bir platform.",
+        f1Title: "Projeler & Portfolyo",
+        f1Desc: "Tamamladığınız projeleri görsellerle sergileyin. Potansiyel müşterileriniz çalışmalarınızı anında görsün.",
+        f2Title: "Uzmanlık Alanları",
+        f2Desc: "Mesleki yetkinliklerinizi ve becerilerinizi kategorize ederek profilinizde profesyonelce listeleyin.",
+        f3Title: "CV & Katalog",
+        f3Desc: "Profesyonel özgeçmişinizi veya hizmet kataloglarınızı tek tıkla indirilebilir hale getirin.",
+        f4Title: "Ödeme Alma",
+        f4Desc: "Stripe ve PayTR entegrasyonu ile profiliniz üzerinden güvenle ödeme alın veya destek toplayın.",
+        f5Title: "Randevu Takibi",
+        f5Desc: "Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve planlayın.",
+        f6Title: "Ziyaretçi Analizi",
+        f6Desc: "Profilinize kimlerin, nereden ve ne zaman girdiğini detaylı grafiklerle takip edin.",
+        f7Title: "Premium Şablonlar",
+        f7Desc: "Neon, Minimal ve Profesyonel seriler arasından sektörünüze uygun tasarımı tek tıkla seçin.",
+        f8Title: "QR Kod & vCard",
+        f8Desc: "Özel QR kodunuzu oluşturun, tek taramayla kişi rehberine eklenen dijital kartvizit paylaşın.",
+        f9Title: "Güvenli Altyapı",
+        f9Desc: "Verileriniz şifrelenerek korunur. 7/24 kesintisiz erişim ve güvenli bir dijital varlık sunarız.",
+
+        // Feature Deep Dive
+        dive1Label: "Portfolyo & Projeler",
+        dive1Title: "İşleriniz sizin yerinize konuşsun",
+        dive1Desc: "Profilinize eklediğiniz projeler, görsellerle birlikte profesyonel bir galeri olarak görüntülenir. Müşterileriniz geçmiş çalışmalarınızı inceleyerek size güvenle ulaşır.",
+        dive1List: [
+            "Görsel yükleme ile zengin sunum",
+            "Proje açıklaması ve link ekleme",
+            "Sürükle-bırak sıralama"
+        ],
+        dive2Label: "İstatistikler & Analiz",
+        dive2Title: "Kim bakıyor, nereden geliyor?",
+        dive2Desc: "Her ziyaretçiyi takip edin. Hangi linklerinize tıklanıyor, hangi şehirden geliyorlar? Veriye dayalı kararlar alın ve profilinizi sürekli geliştirin.",
+        dive2List: [
+            "Gerçek zamanlı ziyaretçi takibi",
+            "Coğrafi konum analizi",
+            "Link bazlı tıklama raporu"
+        ],
+        dive3Label: "Ödeme & Kazanç",
+        dive3Title: "Profiliniz, kasanız olsun",
+        dive3Desc: "Stripe ve PayTR entegrasyonuyla profiliniz üzerinden doğrudan ödeme alın. Hizmet satışı, danışmanlık ücreti veya bağış toplama — hepsi tek yerden.",
+        dive3List: [
+            "Stripe ile global ödeme",
+            "PayTR ile yerel çözüm",
+            "Otomatik fatura & bildirim"
+        ],
+        last30Days: "Son 30 Gün",
+        viewsLabel: "Görüntülenme",
+        clicksLabel: "Tıklama",
+        conversionLabel: "Dönüşüm",
+        securePayment: "Güvenli ödeme altyapısı",
+
+        // Templates Section
+        templateTitle: "Tarzınızı yansıtan tasarımlar",
+        templateDesc: "Profesyonel, minimal veya kreatif — her sektöre ve her kişiliğe özel şablonlar.",
+        tagPopular: "EN POPÜLER",
+        tagMinimal: "MİNİMAL",
+        tagPremium: "PREMİUM",
+        neonDesc: "Cesur ve dikkat çekici. Kreatif sektörler için ideal.",
+        minimalDesc: "Sade ve şık. Kurumsal profesyoneller için.",
+        softDesc: "Yaratıcı ve sıcak tonlar. Freelancerlar için.",
+        preview: "Önizleme",
+
+        // Social Proof
+        usersLabel: "Kullanıcılarımız",
+        usersTitle: "Binlerce profesyonel Kardly kullanıyor",
+        testimonial1: "Müşterilerime projelerimi göstermek hiç bu kadar kolay olmamıştı. QR kodum hep yanımda.",
+        testimonial2: "Randevu takibi ve istatistikler sayesinde satışlarım %30 arttı. Süper bir araç.",
+        testimonial3: "Portfolyomu tek linkte toplamak işlerimi kat kat hızlandırdı. Herkes soruyor nasıl yaptığımı.",
+
+        // CTA
+        ctaTitle: "Dijital kimliğinizi bugün oluşturun",
+        ctaDesc: "Kredi kartı gerekmez. 60 saniyede kayıt olun, dakikalar içinde profiliniz yayında olsun.",
+        ctaStart: "Ücretsiz Başla",
+        ctaExplore: "Özellikleri İncele",
+
+        // Footer
+        footerDesc: "Profesyonel dijital kartvizit platformu. İş dünyasını tek linkte birleştirin.",
+        product: "Ürün",
+        support: "Destek",
+        legal: "Yasal",
+        social: "Sosyal",
+        allRights: "Tüm hakları saklıdır.",
+        designedIn: "Türkiye'de tasarlandı, dünyaya sunuldu.",
+
+        // Hero 
+        heroBadge: "Yeni Nesil Dijital Kartvizitler",
+        heroTitle1: "Profesyonel",
+        heroTitle2: "kimliğinizi",
+        heroTitle3: "tek linkte",
+        heroTitle4: "buluşturun.",
+        heroDesc2: "Projeleriniz, randevularınız ve ödemeleriniz — hepsi tek bir modern profilde. Dakikalar içinde oluşturun, dünyayla paylaşın.",
+        activeUsers: "Aktif Kullanıcı",
+        satisfaction: "5.0 Müşteri Memnuniyeti",
+        callNow: "Hemen Ara"
     },
     en: {
         // Profile & Appointments
@@ -317,6 +459,148 @@ export const translations: any = {
         templates: "Templates",
         login: "Login",
         register: "Register",
-        getStarted: "Get Started"
+        getStarted: "Get Started",
+
+        // Dashboard Extra
+        incomingLeads: "Incoming Leads",
+        welcomeSub: "Manage your digital business card and track performance from here.",
+        contactsSaved: "Saved to Contacts",
+        pendingAppointments: "Pending Appointments",
+        approvedReviews: "Approved Reviews",
+
+        // Categories
+        catAll: "All",
+        catPro: "Nobility & Prestige",
+        catRetro: "Nostalgic Breeze",
+        catLuxury: "Premium Luxury",
+        catLifestyle: "Passion & Life",
+        catFuture: "Futuristic Vision",
+        catNeon: "Neon Energy",
+        catPattern: "Artistic Texture",
+        catNature: "Ecological Soul",
+        catDream: "Magical Flow",
+        catDark: "Mysterious Night",
+        catLight: "Prismatic Light",
+        catCyber: "Cyber Reality",
+        catAntique: "Ancient Heritage",
+        catLiquid: "Liquid Flow",
+        catPop: "Dynamic Pop",
+        catZen: "Mental Focus",
+        catAdventure: "Adventure Spirit",
+        catCelestial: "Divine Radiance",
+        catMinimal: "Simple Aesthetic",
+        catIndustrial: "Industrial",
+        catVibrant: "Energy Power",
+        catRoyal: "Dynasty",
+        catTech: "High Tech",
+        catMeta: "Metaverse",
+
+        // Steps
+        howItWorks: "How It Works",
+        step1Title: "Sign Up",
+        step1Desc: "Create an account in seconds with your email. No credit card required.",
+        step2Title: "Fill Your Profile",
+        step2Desc: "Add your projects, expertise, services, and contact information.",
+        step3Title: "Share with Link",
+        step3Desc: "Reach your customers everywhere with a QR code or short link.",
+        buildProfileTitle: "Build your professional profile in 3 steps",
+        buildProfileDesc: "No complex setup. Sign up, add your content, share. That's it.",
+
+        // Features 2
+        featuresTitle: "Every tool to empower your profile is here",
+        featuresDesc: "Not just a digital business card. A platform that manages your entire business life, from projects to appointments, statistics to payments.",
+        f1Title: "Projects & Portfolio",
+        f1Desc: "Showcase your completed projects with visuals. Let potential clients see your work instantly.",
+        f2Title: "Expertise Areas",
+        f2Desc: "Professionalize your profile by categorizing your vocational competencies and skills.",
+        f3Title: "CV & Catalog",
+        f3Desc: "Make your professional resume or service catalogs downloadable with a single click.",
+        f4Title: "Collecting Payments",
+        f4Desc: "Securely receive payments or collect support through your profile with Stripe and PayTR integration.",
+        f5Title: "Appointment Tracking",
+        f5Desc: "Instantly manage and plan appointment requests from your clients via the dashboard.",
+        f6Title: "Visitor Analysis",
+        f6Desc: "Track who visits your profile, from where and when, with detailed charts.",
+        f7Title: "Premium Templates",
+        f7Desc: "Select the design that fits your industry from Neon, Minimal, and Professional series with one click.",
+        f8Title: "QR Code & vCard",
+        f8Desc: "Create your custom QR code, share a digital business card that adds to contacts with one scan.",
+        f9Title: "Secure Infrastructure",
+        f9Desc: "Your data is protected by encryption. We offer 24/7 uninterrupted access and a secure digital asset.",
+
+        // Feature Deep Dive
+        dive1Label: "Portfolio & Projects",
+        dive1Title: "Let your work speak for itself",
+        dive1Desc: "Projects you add to your profile are displayed as a professional gallery with visuals. Your clients reach you with confidence by reviewing your past work.",
+        dive1List: [
+            "Rich presentation with image upload",
+            "Project description and link adding",
+            "Drag-and-drop ordering"
+        ],
+        dive2Label: "Statistics & Analysis",
+        dive2Title: "Who's looking, where are they from?",
+        dive2Desc: "Track every visitor. Which of your links are clicked, what city are they from? Make data-driven decisions and constantly improve your profile.",
+        dive2List: [
+            "Real-time visitor tracking",
+            "Geographic location analysis",
+            "Link-based click report"
+        ],
+        dive3Label: "Payment & Earnings",
+        dive3Title: "Let your profile be your cash desk",
+        dive3Desc: "Directly receive payments through your profile with Stripe and PayTR integration. Selling services, consulting fees, or collecting donations — all in one place.",
+        dive3List: [
+            "Global payment with Stripe",
+            "Local solution with PayTR",
+            "Automatic invoice & notification"
+        ],
+        last30Days: "Last 30 Days",
+        viewsLabel: "Views",
+        clicksLabel: "Clicks",
+        conversionLabel: "Conversion",
+        securePayment: "Secure payment infrastructure",
+
+        // Templates Section
+        templateTitle: "Designs that reflect your style",
+        templateDesc: "Professional, minimal, or creative — templates special for every industry and personality.",
+        tagPopular: "MOST POPULAR",
+        tagMinimal: "MINIMAL",
+        tagPremium: "PREMIUM",
+        neonDesc: "Bold and striking. Ideal for creative sectors.",
+        minimalDesc: "Simple and stylish. For corporate professionals.",
+        softDesc: "Creative and warm tones. For freelancers.",
+        preview: "Preview",
+
+        // Social Proof
+        usersLabel: "Our Users",
+        usersTitle: "Thousands of professionals use Kardly",
+        testimonial1: "Showing my projects to my clients has never been this easy. My QR code is always with me.",
+        testimonial2: "Thanks to appointment tracking and statistics, my sales increased by 30%. A great tool.",
+        testimonial3: "Gathering my portfolio in one link accelerated my work many times over. Everyone asks how I did it.",
+
+        // CTA
+        ctaTitle: "Create your digital identity today",
+        ctaDesc: "No credit card required. Sign up in 60 seconds, your profile will be live in minutes.",
+        ctaStart: "Start for Free",
+        ctaExplore: "Explore Features",
+
+        // Footer
+        footerDesc: "Professional digital business card platform. Combine the business world in one link.",
+        product: "Product",
+        support: "Support",
+        legal: "Legal",
+        social: "Social",
+        allRights: "All rights reserved.",
+        designedIn: "Designed in Turkey, served to the world.",
+
+        // Hero
+        heroBadge: "Next Generation Digital Business Cards",
+        heroTitle1: "Bring Your",
+        heroTitle2: "Professional",
+        heroTitle3: "Identity",
+        heroTitle4: "Together in One Link.",
+        heroDesc2: "Your projects, appointments, and payments — all in one modern profile. Create in minutes, share with the world.",
+        activeUsers: "Active Users",
+        satisfaction: "5.0 Customer Satisfaction",
+        callNow: "Call Now"
     }
 }

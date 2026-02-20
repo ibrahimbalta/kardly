@@ -86,35 +86,62 @@ import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
 const TEMPLATE_CATEGORIES = [
-    { id: "all", name: "Tümü", icon: <Layout size={14} /> },
-    { id: "pro", name: "Asalet & Prestij", icon: <Briefcase size={14} /> },
-    { id: "retro", name: "Nostaljik Esinti", icon: <History size={14} /> },
-    { id: "luxury", name: "Premium Lüks", icon: <Award size={14} /> },
-    { id: "lifestyle", name: "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
-    { id: "future", name: "Fütüristik Vizyon", icon: <Cpu size={14} /> },
-    { id: "neon", name: "Neon Enerjisi", icon: <Zap size={14} /> },
-    { id: "pattern", name: "Sanatsal Doku", icon: <Layers size={14} /> },
-    { id: "nature", name: "Ekolojik Ruh", icon: <Sparkles size={14} /> },
-    { id: "dream", name: "Büyülü Akış", icon: <Cloud size={14} /> },
-    { id: "dark", name: "Gizemli Gece", icon: <Moon size={14} /> },
-    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> },
-    { id: "cyber", name: "Siber Gerçeklik", icon: <Monitor size={14} /> },
-    { id: "antique", name: "Antik Miras", icon: <Map size={14} /> },
-    { id: "liquid", name: "Likit Akış", icon: <Activity size={14} /> },
-    { id: "pop", name: "Dinamik Pop", icon: <Palette size={14} /> },
-    { id: "zen", name: "Zihinsel Odak", icon: <Target size={14} /> },
-    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> },
-    { id: "celestial", name: "İlahi Işıltı", icon: <Compass size={14} /> },
-    { id: "minimal", name: "Yalın Estetik", icon: <Layout size={14} /> },
-    { id: "industrial", name: "Endüstriyel", icon: <Wind size={14} /> },
-    { id: "vibrant", name: "Enerji Katı", icon: <Zap size={14} /> },
-    { id: "royal", name: "Hanedan", icon: <Gem size={14} /> },
-    { id: "tech", name: "Yüksek Teknoloji", icon: <Atom size={14} /> },
-    { id: "meta", name: "Metaverse", icon: <Boxes size={14} /> }
+    { id: "all", name: t('catAll') || "Tümü", icon: <Layout size={14} /> },
+    { id: "pro", name: t('catPro') || "Asalet & Prestij", icon: <Briefcase size={14} /> },
+    { id: "retro", name: t('catRetro') || "Nostaljik Esinti", icon: <History size={14} /> },
+    { id: "luxury", name: t('catLuxury') || "Premium Lüks", icon: <Award size={14} /> },
+    { id: "lifestyle", name: t('catLifestyle') || "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
+    { id: "future", name: t('catFuture') || "Fütüristik Vizyon", icon: <Cpu size={14} /> },
+    { id: "neon", name: t('catNeon') || "Neon Enerjisi", icon: <Zap size={14} /> },
+    { id: "pattern", name: t('catPattern') || "Sanatsal Doku", icon: <Layers size={14} /> },
+    { id: "nature", name: t('catNature') || "Ekolojik Ruh", icon: <Sparkles size={14} /> },
+    { id: "dream", name: t('catDream') || "Büyülü Akış", icon: <Cloud size={14} /> },
+    { id: "dark", name: t('catDark') || "Gizemli Gece", icon: <Moon size={14} /> },
+    { id: "light", name: t('catLight') || "Prizmatik Işık", icon: <Sun size={14} /> },
+    { id: "cyber", name: t('catCyber') || "Siber Gerçeklik", icon: <Monitor size={14} /> },
+    { id: "antique", name: t('catAntique') || "Antik Miras", icon: <Map size={14} /> },
+    { id: "liquid", name: t('catLiquid') || "Likit Akış", icon: <Activity size={14} /> },
+    { id: "pop", name: t('catPop') || "Dinamik Pop", icon: <Palette size={14} /> },
+    { id: "zen", name: t('catZen') || "Zihinsel Odak", icon: <Target size={14} /> },
+    { id: "adventure", name: t('catAdventure') || "Macera Ruhu", icon: <MapPin size={14} /> },
+    { id: "celestial", name: t('catCelestial') || "İlahi Işıltı", icon: <Compass size={14} /> },
+    { id: "minimal", name: t('catMinimal') || "Yalın Estetik", icon: <Layout size={14} /> },
+    { id: "industrial", name: t('catIndustrial') || "Endüstriyel", icon: <Wind size={14} /> },
+    { id: "vibrant", name: t('catVibrant') || "Enerji Katı", icon: <Zap size={14} /> },
+    { id: "royal", name: t('catRoyal') || "Hanedan", icon: <Gem size={14} /> },
+    { id: "tech", name: t('catTech') || "Yüksek Teknoloji", icon: <Atom size={14} /> },
+    { id: "meta", name: t('catMeta') || "Metaverse", icon: <Boxes size={14} /> }
 ]
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
     const { t, language } = useTranslation()
+    const TEMPLATE_CATEGORIES = [
+        { id: "all", name: t('catAll'), icon: <Layout size={14} /> },
+        { id: "pro", name: t('catPro'), icon: <Briefcase size={14} /> },
+        { id: "retro", name: t('catRetro'), icon: <History size={14} /> },
+        { id: "luxury", name: t('catLuxury'), icon: <Award size={14} /> },
+        { id: "lifestyle", name: t('catLifestyle'), icon: <Gamepad2 size={14} /> },
+        { id: "future", name: t('catFuture'), icon: <Cpu size={14} /> },
+        { id: "neon", name: t('catNeon'), icon: <Zap size={14} /> },
+        { id: "pattern", name: t('catPattern'), icon: <Layers size={14} /> },
+        { id: "nature", name: t('catNature'), icon: <Sparkles size={14} /> },
+        { id: "dream", name: t('catDream'), icon: <Cloud size={14} /> },
+        { id: "dark", name: t('catDark'), icon: <Moon size={14} /> },
+        { id: "light", name: t('catLight'), icon: <Sun size={14} /> },
+        { id: "cyber", name: t('catCyber'), icon: <Monitor size={14} /> },
+        { id: "antique", name: t('catAntique'), icon: <Map size={14} /> },
+        { id: "liquid", name: t('catLiquid'), icon: <Activity size={14} /> },
+        { id: "pop", name: t('catPop'), icon: <Palette size={14} /> },
+        { id: "zen", name: t('catZen'), icon: <Target size={14} /> },
+        { id: "adventure", name: t('catAdventure'), icon: <MapPin size={14} /> },
+        { id: "celestial", name: t('catCelestial'), icon: <Compass size={14} /> },
+        { id: "minimal", name: t('catMinimal'), icon: <Layout size={14} /> },
+        { id: "industrial", name: t('catIndustrial'), icon: <Wind size={14} /> },
+        { id: "vibrant", name: t('catVibrant'), icon: <Zap size={14} /> },
+        { id: "royal", name: t('catRoyal'), icon: <Gem size={14} /> },
+        { id: "tech", name: t('catTech'), icon: <Atom size={14} /> },
+        { id: "meta", name: t('catMeta'), icon: <Boxes size={14} /> }
+    ]
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
@@ -769,7 +796,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     <NavItem
                         icon={<Inbox className="w-5 h-5" />}
-                        label="Gelen Talepler"
+                        label={t('incomingLeads')}
                         active={activeTab === "leads"}
                         onClick={() => {
                             setActiveTab("leads")
@@ -823,7 +850,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         animate={{ opacity: 1, x: 0 }}
                     >
                         <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">{t('welcome')}, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
-                        <p className="text-slate-400 text-sm font-medium tracking-wide">Dijital kartvizitini buradan yönetebilir, performansını takip edebilirsin.</p>
+                        <p className="text-slate-400 text-sm font-medium tracking-wide">{t('welcomeSub')}</p>
                     </motion.div>
                     {profile && (
                         <motion.a
@@ -846,25 +873,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <StatCard
                                 icon={<Eye />}
-                                label="Toplam Ziyaret"
+                                label={t('totalViewsLabel')}
                                 value={stats?.totalViews?.toString() || "0"}
                                 trend="+12%"
                             />
                             <StatCard
                                 icon={<Users />}
-                                label="Rehbere Kayıt"
+                                label={t('contactsSaved')}
                                 value={stats?.vCardClicks?.toString() || "0"}
                                 trend="+5%"
                             />
                             <StatCard
                                 icon={<Calendar />}
-                                label="Bekleyen Randevu"
+                                label={t('pendingAppointments')}
                                 value={appointmentList.filter((a: any) => a.status === 'pending').length.toString()}
                                 trend="0%"
                             />
                             <StatCard
                                 icon={<Star />}
-                                label="Onaylı Yorum"
+                                label={t('approvedReviews')}
                                 value={reviewList.filter((r: any) => r.isActive).length.toString()}
                                 trend="+2"
                             />

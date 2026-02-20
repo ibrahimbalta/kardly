@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, Play, Globe, Users, BarChart3, ShieldCheck, Phone, Mail, MapPin, Briefcase, Star, Calendar, ExternalLink, Instagram, Linkedin, Sparkles } from "lucide-react"
+import { useTranslation } from "@/context/LanguageContext"
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -13,6 +14,7 @@ const fadeUp = {
 }
 
 export function Hero() {
+    const { t } = useTranslation()
     return (
         <section className="relative pt-32 pb-24 px-6 overflow-hidden min-h-[90vh] flex items-center bg-white">
             {/* ─── BACKGROUND DECORATIONS ─── */}
@@ -44,27 +46,27 @@ export function Hero() {
                             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/60 mb-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 shadow-sm"
                         >
                             <Sparkles size={11} className="text-rose-500" />
-                            Yeni Nesil Dijital Kartvizitler
+                            {t('heroBadge')}
                         </motion.div>
 
                         <motion.h1
                             custom={1} variants={fadeUp} initial="hidden" animate="visible"
                             className="text-5xl md:text-6xl xl:text-[76px] font-black tracking-tight mb-8 leading-[1] text-slate-900"
                         >
-                            Profesyonel <br />
-                            kimliğinizi <span className="relative">
-                                <span className="relative z-10 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 bg-clip-text text-transparent italic">tek linkte</span>
+                            {t('heroTitle1')} <br />
+                            {t('heroTitle2')} <span className="relative">
+                                <span className="relative z-10 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 bg-clip-text text-transparent italic">{t('heroTitle3')}</span>
                                 <svg className="absolute -bottom-2 left-0 w-full h-3 text-rose-100/80 -z-0" viewBox="0 0 100 10" preserveAspectRatio="none">
                                     <path d="M0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="8" />
                                 </svg>
-                            </span> buluşturun.
+                            </span> {t('heroTitle4')}
                         </motion.h1>
 
                         <motion.p
                             custom={2} variants={fadeUp} initial="hidden" animate="visible"
                             className="text-lg md:text-xl text-slate-500 max-w-lg mb-12 leading-relaxed font-medium opacity-80"
                         >
-                            Projeleriniz, randevularınız ve ödemeleriniz — hepsi tek bir modern profilde. Dakikalar içinde oluşturun, dünyayla paylaşın.
+                            {t('heroDesc2')}
                         </motion.p>
 
                         <motion.div
@@ -72,13 +74,13 @@ export function Hero() {
                             className="flex flex-col sm:flex-row gap-4 mb-16"
                         >
                             <Link href="/register" className="group px-10 py-5 bg-slate-900 text-white font-bold text-base rounded-[20px] transition-all hover:bg-rose-500 active:scale-[0.97] shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3">
-                                Ücretsiz Başla <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                {t('ctaStart')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <button className="px-10 py-5 bg-white text-slate-700 border border-slate-200/80 font-bold text-base rounded-[20px] hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-sm active:scale-[0.97]">
                                 <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500">
                                     <Play size={18} fill="currentColor" />
                                 </div>
-                                Nasıl Çalışır?
+                                {t('howItWorks')}
                             </button>
                         </motion.div>
 
@@ -102,14 +104,14 @@ export function Hero() {
                             </div>
                             <div>
                                 <div className="text-xl font-black text-slate-900 leading-none mb-1">2,400+</div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Aktif Kullanıcı</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('activeUsers')}</div>
                             </div>
                             <div className="h-10 w-[1px] bg-slate-100" />
                             <div className="hidden sm:block">
                                 <div className="flex items-center gap-1 text-amber-500 mb-1">
                                     {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
                                 </div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">5.0 Müşteri Memnuniyeti</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('satisfaction')}</div>
                             </div>
                         </motion.div>
                     </div>
@@ -173,11 +175,11 @@ export function Hero() {
                                             <div className="grid grid-cols-2 gap-3 mb-8">
                                                 <div className="p-3.5 rounded-2xl bg-slate-900 text-white flex flex-col items-center gap-2 shadow-lg shadow-slate-900/20 active:scale-95 transition-all">
                                                     <Phone size={16} fill="white" strokeWidth={0} />
-                                                    <span className="text-[9px] font-black uppercase tracking-wider">Hemen Ara</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-wider">{t('callNow')}</span>
                                                 </div>
                                                 <div className="p-3.5 rounded-2xl bg-rose-500 text-white flex flex-col items-center gap-2 shadow-lg shadow-rose-500/20 active:scale-95 transition-all">
                                                     <Mail size={16} fill="white" strokeWidth={0} />
-                                                    <span className="text-[9px] font-black uppercase tracking-wider">E-posta</span>
+                                                    <span className="text-[9px] font-black uppercase tracking-wider">{t('email')}</span>
                                                 </div>
                                             </div>
 

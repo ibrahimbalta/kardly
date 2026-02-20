@@ -53,22 +53,22 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
               className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >Nasıl Çalışır?</motion.p>
+            >{t('howItWorks')}</motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >3 adımda profesyonel profilinizi oluşturun</motion.h2>
+            >{t('buildProfileTitle')}</motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-slate-500 text-lg max-w-2xl mx-auto"
-            >Karmaşık kurulum yok. Kayıt olun, içeriğinizi ekleyin, paylaşın. İşte bu kadar.</motion.p>
+            >{t('buildProfileDesc')}</motion.p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Kayıt Olun', desc: 'E-posta adresinizle saniyeler içinde hesap oluşturun. Kredi kartı gerekmez.', icon: <MousePointer2 size={24} /> },
-              { step: '02', title: 'Profilinizi Doldurun', desc: 'Projeler, uzmanlıklar, hizmetler ve iletişim bilgilerinizi ekleyin.', icon: <Palette size={24} /> },
-              { step: '03', title: 'Link ile Paylaşın', desc: 'QR kod veya kısa link ile müşterilerinize her yerde ulaşın.', icon: <Share2 size={24} /> }
+              { step: '01', title: t('step1Title'), desc: t('step1Desc'), icon: <MousePointer2 size={24} /> },
+              { step: '02', title: t('step2Title'), desc: t('step2Desc'), icon: <Palette size={24} /> },
+              { step: '03', title: t('step3Title'), desc: t('step3Desc'), icon: <Share2 size={24} /> }
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -101,71 +101,71 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
               className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >Özellikler</motion.p>
+            >{t('features')}</motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >Profilinizi güçlendiren her araç burada</motion.h2>
+            >{t('featuresTitle')}</motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-slate-500 text-lg max-w-2xl mx-auto"
-            >Sadece bir dijital kartvizit değil. Projelerinizden randevularınıza, istatistiklerden ödemelere kadar iş hayatınızın tamamını yöneten bir platform.</motion.p>
+            >{t('featuresDesc')}</motion.p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: <Briefcase size={24} />,
-                title: 'Projeler & Portfolyo',
-                desc: 'Tamamladığınız projeleri görsellerle sergileyin. Potansiyel müşterileriniz çalışmalarınızı anında görsün.',
+                title: t('f1Title'),
+                desc: t('f1Desc'),
                 accent: 'bg-rose-50 text-rose-500'
               },
               {
                 icon: <CheckCircle2 size={24} />,
-                title: 'Uzmanlık Alanları',
-                desc: 'Mesleki yetkinliklerinizi ve becerilerinizi kategorize ederek profilinizde profesyonelce listeleyin.',
+                title: t('f2Title'),
+                desc: t('f2Desc'),
                 accent: 'bg-amber-50 text-amber-500'
               },
               {
                 icon: <FileText size={24} />,
-                title: 'CV & Katalog',
-                desc: 'Profesyonel özgeçmişinizi veya hizmet kataloglarınızı tek tıkla indirilebilir hale getirin.',
+                title: t('f3Title'),
+                desc: t('f3Desc'),
                 accent: 'bg-indigo-50 text-indigo-500'
               },
               {
                 icon: <CreditCard size={24} />,
-                title: 'Ödeme Alma',
-                desc: 'Stripe ve PayTR entegrasyonu ile profiliniz üzerinden güvenle ödeme alın veya destek toplayın.',
+                title: t('f4Title'),
+                desc: t('f4Desc'),
                 accent: 'bg-emerald-50 text-emerald-500'
               },
               {
                 icon: <Calendar size={24} />,
-                title: 'Randevu Takibi',
-                desc: 'Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve planlayın.',
+                title: t('f5Title'),
+                desc: t('f5Desc'),
                 accent: 'bg-sky-50 text-sky-500'
               },
               {
                 icon: <BarChart3 size={24} />,
-                title: 'Ziyaretçi Analizi',
-                desc: 'Profilinize kimlerin, nereden ve ne zaman girdiğini detaylı grafiklerle takip edin.',
+                title: t('f6Title'),
+                desc: t('f6Desc'),
                 accent: 'bg-violet-50 text-violet-500'
               },
               {
                 icon: <Palette size={24} />,
-                title: 'Premium Şablonlar',
-                desc: 'Neon, Minimal ve Profesyonel seriler arasından sektörünüze uygun tasarımı tek tıkla seçin.',
+                title: t('f7Title'),
+                desc: t('f7Desc'),
                 accent: 'bg-pink-50 text-pink-500'
               },
               {
                 icon: <QrCode size={24} />,
-                title: 'QR Kod & vCard',
-                desc: 'Özel QR kodunuzu oluşturun, tek taramayla kişi rehberine eklenen dijital kartvizit paylaşın.',
+                title: t('f8Title'),
+                desc: t('f8Desc'),
                 accent: 'bg-slate-100 text-slate-600'
               },
               {
                 icon: <Shield size={24} />,
-                title: 'Güvenli Altyapı',
-                desc: 'Verileriniz şifrelenerek korunur. 7/24 kesintisiz erişim ve güvenli bir dijital varlık sunarız.',
+                title: t('f9Title'),
+                desc: t('f9Desc'),
                 accent: 'bg-teal-50 text-teal-500'
               },
             ].map((f, i) => (
@@ -194,13 +194,13 @@ export default function Home() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">Portfolyo & Projeler</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">İşleriniz sizin yerinize konuşsun</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">Profilinize eklediğiniz projeler, görsellerle birlikte profesyonel bir galeri olarak görüntülenir. Müşterileriniz geçmiş çalışmalarınızı inceleyerek size güvenle ulaşır.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive1Label')}</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive1Title')}</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive1Desc')}</p>
               <ul className="space-y-3">
-                {['Görsel yükleme ile zengin sunum', 'Proje açıklaması ve link ekleme', 'Sürükle-bırak sıralama'].map((t, i) => (
+                {(t('dive1List') as unknown as string[]).map((text, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
                   </li>
                 ))}
               </ul>
@@ -222,7 +222,7 @@ export default function Home() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
           >
             <div className="order-2 lg:order-1 bg-slate-900 rounded-3xl p-8 shadow-lg">
-              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-6">Son 30 Gün</div>
+              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-6">{t('last30Days')}</div>
               <div className="flex items-end gap-2 h-40 mb-6">
                 {[30, 50, 45, 70, 55, 90, 75, 60, 85, 65, 95, 80].map((h, i) => (
                   <motion.div
@@ -236,9 +236,9 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { val: '2.4K', label: 'Görüntülenme' },
-                  { val: '389', label: 'Tıklama' },
-                  { val: '%16', label: 'Dönüşüm' }
+                  { val: '2.4K', label: t('viewsLabel') },
+                  { val: '389', label: t('clicksLabel') },
+                  { val: '%16', label: t('conversionLabel') }
                 ].map((s, i) => (
                   <div key={i} className="text-center">
                     <div className="text-2xl font-bold text-white">{s.val}</div>
@@ -248,13 +248,13 @@ export default function Home() {
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">İstatistikler & Analiz</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">Kim bakıyor, nereden geliyor?</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">Her ziyaretçiyi takip edin. Hangi linklerinize tıklanıyor, hangi şehirden geliyorlar? Veriye dayalı kararlar alın ve profilinizi sürekli geliştirin.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive2Label')}</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive2Title')}</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive2Desc')}</p>
               <ul className="space-y-3">
-                {['Gerçek zamanlı ziyaretçi takibi', 'Coğrafi konum analizi', 'Link bazlı tıklama raporu'].map((t, i) => (
+                {(t('dive2List') as unknown as string[]).map((text, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
                   </li>
                 ))}
               </ul>
@@ -267,13 +267,13 @@ export default function Home() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">Ödeme & Kazanç</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">Profiliniz, kasanız olsun</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">Stripe ve PayTR entegrasyonuyla profiliniz üzerinden doğrudan ödeme alın. Hizmet satışı, danışmanlık ücreti veya bağış toplama — hepsi tek yerden.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive3Label')}</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive3Title')}</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive3Desc')}</p>
               <ul className="space-y-3">
-                {['Stripe ile global ödeme', 'PayTR ile yerel çözüm', 'Otomatik fatura & bildirim'].map((t, i) => (
+                {(t('dive3List') as unknown as string[]).map((text, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
                   </li>
                 ))}
               </ul>
@@ -285,7 +285,7 @@ export default function Home() {
                   <div key={p} className="px-5 py-2.5 bg-white rounded-xl border border-emerald-100 text-xs font-semibold text-emerald-600 shadow-sm">{p}</div>
                 ))}
               </div>
-              <div className="text-sm text-emerald-600/70 font-medium">Güvenli ödeme altyapısı</div>
+              <div className="text-sm text-emerald-600/70 font-medium">{t('securePayment')}</div>
             </div>
           </motion.div>
         </div>
@@ -298,22 +298,22 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
               className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >Şablonlar</motion.p>
+            >{t('templates')}</motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >Tarzınızı yansıtan tasarımlar</motion.h2>
+            >{t('templateTitle')}</motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-slate-500 text-lg max-w-xl mx-auto"
-            >Profesyonel, minimal veya kreatif — her sektöre ve her kişiliğe özel şablonlar.</motion.p>
+            >{t('templateDesc')}</motion.p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Neon Modern", color: "#f43f5e", tag: "EN POPÜLER", desc: "Cesur ve dikkat çekici. Kreatif sektörler için ideal.", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
-              { title: "Clean Slate", color: "#0ea5e9", tag: "MİNİMAL", desc: "Sade ve şık. Kurumsal profesyoneller için.", image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400" },
-              { title: "Soft Creative", color: "#8b5cf6", tag: "PREMİUM", desc: "Yaratıcı ve sıcak tonlar. Freelancerlar için.", image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" }
+              { title: "Neon Modern", color: "#f43f5e", tag: t('tagPopular'), desc: t('neonDesc'), image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
+              { title: "Clean Slate", color: "#0ea5e9", tag: t('tagMinimal'), desc: t('minimalDesc'), image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400" },
+              { title: "Soft Creative", color: "#8b5cf6", tag: t('tagPremium'), desc: t('softDesc'), image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" }
             ].map((tmpl, i) => (
               <motion.div
                 key={i}
@@ -333,7 +333,7 @@ export default function Home() {
                       <div className="w-4 h-4 rounded-full bg-slate-100" />
                       <div className="w-4 h-4 rounded-full bg-slate-50" />
                     </div>
-                    <span className="text-xs font-semibold text-rose-500 group-hover:underline">Önizleme →</span>
+                    <span className="text-xs font-semibold text-rose-500 group-hover:underline">{t('preview')} →</span>
                   </div>
                 </div>
               </motion.div>
@@ -349,18 +349,18 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
               className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >Kullanıcılarımız</motion.p>
+            >{t('usersLabel')}</motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >Binlerce profesyonel Kardly kullanıyor</motion.h2>
+            >{t('usersTitle')}</motion.h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: 'Ayşe Kara', role: 'UX Designer', text: 'Müşterilerime projelerimi göstermek hiç bu kadar kolay olmamıştı. QR kodum hep yanımda.' },
-              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: 'Randevu takibi ve istatistikler sayesinde satışlarım %30 arttı. Süper bir araç.' },
-              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: 'Portfolyomu tek linkte toplamak işlerimi kat kat hızlandırdı. Herkes soruyor nasıl yaptığımı.' }
+              { name: 'Ayşe Kara', role: 'UX Designer', text: t('testimonial1') },
+              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: t('testimonial2') },
+              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: t('testimonial3') }
             ].map((t, i) => (
               <motion.div
                 key={i}
@@ -395,15 +395,15 @@ export default function Home() {
             className="space-y-8"
           >
             <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-              Dijital kimliğinizi <br />bugün oluşturun
+              {t('ctaTitle')}
             </h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto">Kredi kartı gerekmez. 60 saniyede kayıt olun, dakikalar içinde profiliniz yayında olsun.</p>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto">{t('ctaDesc')}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/register" className="group px-10 py-5 bg-rose-500 text-white rounded-2xl font-semibold text-base hover:bg-rose-600 active:scale-[0.98] transition-all shadow-lg shadow-rose-500/20 flex items-center justify-center gap-3">
-                Ücretsiz Başla <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                {t('ctaStart')} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link href="#features" className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-2xl font-semibold text-base hover:bg-white/10 transition-all flex items-center justify-center">
-                Özellikleri İncele
+                {t('ctaExplore')}
               </Link>
             </div>
           </motion.div>
@@ -421,10 +421,10 @@ export default function Home() {
                 </div>
                 <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
               </Link>
-              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">Profesyonel dijital kartvizit platformu. İş dünyasını tek linkte birleştirin.</p>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
             </div>
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Ürün</h5>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('product')}</h5>
               <ul className="space-y-3">
                 <li><a href="#features" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Özellikler</a></li>
                 <li><a href="#templates" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Şablonlar</a></li>
@@ -432,7 +432,7 @@ export default function Home() {
               </ul>
             </div>
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Destek</h5>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('support')}</h5>
               <ul className="space-y-3">
                 <li><Link href="/blog" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Blog</Link></li>
                 <li><Link href="/iletisim" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">İletişim</Link></li>
@@ -440,14 +440,14 @@ export default function Home() {
               </ul>
             </div>
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Yasal</h5>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('legal')}</h5>
               <ul className="space-y-3">
                 <li><Link href="/kullanim-sartlari" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Kullanım Şartları</Link></li>
                 <li><Link href="/gizlilik" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Gizlilik</Link></li>
               </ul>
             </div>
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Sosyal</h5>
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('social')}</h5>
               <ul className="space-y-3">
                 <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Instagram</a></li>
                 <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Twitter</a></li>
@@ -456,8 +456,8 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-300 font-medium">© 2026 Kardly. Tüm hakları saklıdır.</p>
-            <p className="text-xs text-slate-300 font-medium">Türkiye'de tasarlandı, dünyaya sunuldu.</p>
+            <p className="text-xs text-slate-300 font-medium">© 2026 Kardly. {t('allRights')}</p>
+            <p className="text-xs text-slate-300 font-medium">{t('designedIn')}</p>
           </div>
         </div>
       </footer>
