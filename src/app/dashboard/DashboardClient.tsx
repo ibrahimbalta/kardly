@@ -85,33 +85,7 @@ import { QRCodeCard } from "@/components/QRCodeCard"
 import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
-const TEMPLATE_CATEGORIES = [
-    { id: "all", name: t('catAll') || "Tümü", icon: <Layout size={14} /> },
-    { id: "pro", name: t('catPro') || "Asalet & Prestij", icon: <Briefcase size={14} /> },
-    { id: "retro", name: t('catRetro') || "Nostaljik Esinti", icon: <History size={14} /> },
-    { id: "luxury", name: t('catLuxury') || "Premium Lüks", icon: <Award size={14} /> },
-    { id: "lifestyle", name: t('catLifestyle') || "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
-    { id: "future", name: t('catFuture') || "Fütüristik Vizyon", icon: <Cpu size={14} /> },
-    { id: "neon", name: t('catNeon') || "Neon Enerjisi", icon: <Zap size={14} /> },
-    { id: "pattern", name: t('catPattern') || "Sanatsal Doku", icon: <Layers size={14} /> },
-    { id: "nature", name: t('catNature') || "Ekolojik Ruh", icon: <Sparkles size={14} /> },
-    { id: "dream", name: t('catDream') || "Büyülü Akış", icon: <Cloud size={14} /> },
-    { id: "dark", name: t('catDark') || "Gizemli Gece", icon: <Moon size={14} /> },
-    { id: "light", name: t('catLight') || "Prizmatik Işık", icon: <Sun size={14} /> },
-    { id: "cyber", name: t('catCyber') || "Siber Gerçeklik", icon: <Monitor size={14} /> },
-    { id: "antique", name: t('catAntique') || "Antik Miras", icon: <Map size={14} /> },
-    { id: "liquid", name: t('catLiquid') || "Likit Akış", icon: <Activity size={14} /> },
-    { id: "pop", name: t('catPop') || "Dinamik Pop", icon: <Palette size={14} /> },
-    { id: "zen", name: t('catZen') || "Zihinsel Odak", icon: <Target size={14} /> },
-    { id: "adventure", name: t('catAdventure') || "Macera Ruhu", icon: <MapPin size={14} /> },
-    { id: "celestial", name: t('catCelestial') || "İlahi Işıltı", icon: <Compass size={14} /> },
-    { id: "minimal", name: t('catMinimal') || "Yalın Estetik", icon: <Layout size={14} /> },
-    { id: "industrial", name: t('catIndustrial') || "Endüstriyel", icon: <Wind size={14} /> },
-    { id: "vibrant", name: t('catVibrant') || "Enerji Katı", icon: <Zap size={14} /> },
-    { id: "royal", name: t('catRoyal') || "Hanedan", icon: <Gem size={14} /> },
-    { id: "tech", name: t('catTech') || "Yüksek Teknoloji", icon: <Atom size={14} /> },
-    { id: "meta", name: t('catMeta') || "Metaverse", icon: <Boxes size={14} /> }
-]
+
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
     const { t, language } = useTranslation()
