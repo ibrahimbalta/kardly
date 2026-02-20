@@ -6,420 +6,462 @@ import { Hero } from "@/components/Hero"
 import {
   Layout,
   Shield,
-  Zap,
-  Globe,
-  MessageSquare,
   ArrowRight,
-  MousePointer2,
   Sparkles,
   Smartphone,
   QrCode,
   BarChart3,
   Briefcase,
   Calendar,
-  ArrowUpRight,
   Star,
-  Activity,
-  Image as ImageIcon,
-  Clock,
   CheckCircle2,
-  Linkedin,
   FileText,
-  TrendingUp,
   CreditCard,
-  List,
-  Cpu,
-  ShoppingBag,
   Palette,
-  Layers,
-  Search,
-  Users
+  Eye,
+  Share2,
+  Zap,
+  MousePointer2,
+  Globe,
+  Users,
+  ChevronRight,
+  Check
 } from "lucide-react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { useTranslation } from "@/context/LanguageContext"
-import { useRef } from "react"
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+  })
+}
 
 export default function Home() {
   const { t } = useTranslation()
-  const containerRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  })
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-slate-50 text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
+    <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
       <Navbar />
       <Hero />
 
-      {/* Trust Section - Floating Logos */}
-      <section className="py-20 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col items-center">
+      {/* ─── HOW IT WORKS ─── */}
+      <section className="py-32 px-6 relative bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-20">
             <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-12"
-            >
-              Dünya Çapında Profesyonellerin Tercihi
-            </motion.p>
-            <div className="flex flex-wrap justify-center gap-16 md:gap-24 items-center opacity-30">
-              {['TECHFLOW', 'ZENITH', 'NEXUS', 'VANTAGE', 'HORIZON'].map((logo) => (
-                <span key={logo} className="text-xl md:text-2xl font-black tracking-tighter hover:opacity-100 transition-opacity cursor-default">{logo}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Showcase - The "Wow" Grid */}
-      <section id="features" className="py-40 px-6 relative">
-        {/* Dynamic Background Elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 90, 0],
-              x: [0, 100, 0]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[10%] -left-[10%] w-[600px] h-[600px] bg-rose-200/20 blur-[120px] rounded-full"
-          />
-          <motion.div
-            animate={{
-              scale: [1.2, 1, 1.2],
-              rotate: [0, -90, 0],
-              x: [0, -100, 0]
-            }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[10%] -right-[10%] w-[700px] h-[700px] bg-indigo-200/20 blur-[120px] rounded-full"
-          />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative">
-          <div className="max-w-3xl mb-32">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] mb-8"
-            >
-              <Sparkles size={12} className="text-rose-500" /> Geleceğin Networking Standartı
-            </motion.div>
-            <h2 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.85] text-slate-900 uppercase">
-              Tüm Güç <br />
-              <span className="text-rose-500 italic">Profilinizde.</span>
-            </h2>
-            <p className="text-slate-500 text-xl font-medium leading-relaxed max-w-2xl">
-              İçeriğiniz aynı, ama sunumunuz artık bir sanat eseri. Dünyanın her yerindeki müşterileriniz ve partnerleriniz için saniyeler içinde büyüleyici bir dijital varlık oluşturun.
-            </p>
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
+            >Nasıl Çalışır?</motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+            >3 adımda profesyonel profilinizi oluşturun</motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-slate-500 text-lg max-w-2xl mx-auto"
+            >Karmaşık kurulum yok. Kayıt olun, içeriğinizi ekleyin, paylaşın. İşte bu kadar.</motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 auto-rows-[320px]">
-            {/* 1. Projects - Large Premium Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-8 lg:row-span-2 rounded-[4rem] bg-white border border-slate-100 p-12 relative overflow-hidden group shadow-2xl shadow-slate-200/50"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700" />
-              <div className="relative z-10 h-full flex flex-col md:flex-row gap-12">
-                <div className="flex-1 flex flex-col justify-center">
-                  <div className="w-20 h-20 bg-rose-500 rounded-[2.5rem] flex items-center justify-center text-white mb-10 shadow-2xl shadow-rose-200 group-hover:rotate-6 transition-transform duration-500">
-                    <Briefcase size={40} />
-                  </div>
-                  <h3 className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-slate-900 uppercase">Projelerim & <br />Portfolyo</h3>
-                  <p className="text-slate-500 text-lg leading-relaxed mb-8">Sınırları aşın. Projelerinizi yüksek çözünürlüklü görseller ve etkileşimli kartlarla global bir kitleye sergileyin.</p>
-                  <div className="flex gap-4">
-                    <div className="flex -space-x-3">
-                      {[1, 2, 3].map(i => <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-100" />)}
-                    </div>
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-400 self-center">100+ Proje Yayında</span>
-                  </div>
-                </div>
-                <div className="flex-1 relative">
-                  <div className="absolute inset-0 bg-slate-50 rounded-[3rem] border border-slate-100 overflow-hidden transform group-hover:scale-105 transition-transform duration-700">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 aspect-[3/4] bg-white rounded-3xl shadow-2xl p-6 rotate-6 group-hover:rotate-0 transition-all duration-700">
-                      <div className="w-full h-2/3 bg-rose-50 rounded-2xl mb-4" />
-                      <div className="h-4 w-3/4 bg-slate-100 rounded-full mb-2" />
-                      <div className="h-4 w-1/2 bg-slate-50 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 2. Expertise Area - Tall Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-4 lg:row-span-2 rounded-[4rem] bg-slate-900 border border-slate-800 p-12 relative overflow-hidden group shadow-2xl"
-            >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 blur-[80px] rounded-full" />
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div>
-                  <div className="w-16 h-16 bg-amber-500 rounded-3xl flex items-center justify-center text-white mb-10 shadow-xl shadow-amber-500/20">
-                    <CheckCircle2 size={32} />
-                  </div>
-                  <h3 className="text-4xl font-black mb-6 text-white uppercase tracking-tight">Uzmanlık <br />Alanları</h3>
-                  <p className="text-slate-400 text-lg leading-relaxed">Yetkinliklerinizi sadece listelemeyin, onları parlatın. Uzmanlıklarınızı dünyanın her yerinden anlaşılır kılın.</p>
-                </div>
-                <div className="space-y-4">
-                  {['UI/UX Design', 'Full-stack Dev', 'Marketing'].map((skill) => (
-                    <div key={skill} className="py-4 px-6 rounded-2xl bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-[0.2em] group-hover:bg-white/10 transition-colors">
-                      {skill}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 3. CV & Catalog - Wide Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-6 lg:row-span-1 rounded-[4rem] bg-indigo-500 p-12 relative overflow-hidden group shadow-2xl shadow-indigo-200"
-            >
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/microfabrics.png')] opacity-20" />
-              <div className="relative z-10 flex items-center gap-10 h-full">
-                <div className="w-24 h-24 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2.5rem] flex items-center justify-center text-white shrink-0">
-                  <FileText size={48} />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black mb-3 text-white uppercase tracking-tight">CV & Katalog</h3>
-                  <p className="text-white/80 text-lg">Tüm profesyonel geçmişiniz ve ürün kataloğunuz tek tık uzağınızda.</p>
-                </div>
-                <div className="ml-auto w-16 h-16 rounded-full border-2 border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <ArrowUpRight size={24} className="text-white" />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 4. Monetization - Wide Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-6 lg:row-span-1 rounded-[4rem] bg-white border border-slate-100 p-12 relative overflow-hidden group shadow-2xl shadow-slate-200/50"
-            >
-              <div className="relative z-10 flex items-center gap-10 h-full">
-                <div className="w-24 h-24 bg-emerald-500 rounded-[2.5rem] flex items-center justify-center text-white shrink-0 shadow-2xl shadow-emerald-200">
-                  <CreditCard size={48} />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black mb-3 text-slate-900 uppercase tracking-tight">Para Kazanma</h3>
-                  <p className="text-slate-500 text-lg">Stripe ve PayTR ile profilinizi kazanca dönüştürün.</p>
-                </div>
-                <div className="ml-auto flex gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100" />
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100" />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 5. Appointment - Regular Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-4 lg:row-span-1 rounded-[4rem] bg-sky-500 p-12 relative overflow-hidden group shadow-2xl shadow-sky-200"
-            >
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-white mb-8">
-                  <Calendar size={32} />
-                </div>
-                <h3 className="text-3xl font-black mb-3 text-white uppercase tracking-tight">Randevu Takibi</h3>
-                <p className="text-white/80 text-base">Zamanınızı verimli yönetin, talepleri anında yakalayın.</p>
-              </div>
-            </motion.div>
-
-            {/* 6. Stats - Large Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-8 lg:row-span-1 rounded-[4rem] bg-white border border-slate-100 p-12 relative overflow-hidden group shadow-2xl shadow-slate-200/50"
-            >
-              <div className="relative z-10 flex items-center justify-between h-full">
-                <div className="max-w-md">
-                  <div className="w-16 h-16 bg-rose-500 rounded-3xl flex items-center justify-center text-white mb-8">
-                    <BarChart3 size={32} />
-                  </div>
-                  <h3 className="text-3xl font-black mb-3 text-slate-900 uppercase tracking-tight">Ziyaretçi Analizi</h3>
-                  <p className="text-slate-500 text-lg">Kimin, nereden tıkladığını anlık olarak izleyin.</p>
-                </div>
-                <div className="flex items-end gap-3 h-32 px-10">
-                  {[40, 70, 50, 90, 60, 80, 45].map((h, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${h}%` }}
-                      transition={{ delay: i * 0.1 }}
-                      className="w-4 bg-rose-500/20 rounded-t-full border-t border-rose-500"
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* 7. Templates - Bottom Professional Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="lg:col-span-12 lg:row-span-1 rounded-[4rem] bg-gradient-to-r from-slate-900 to-slate-800 p-12 relative overflow-hidden group shadow-2xl"
-            >
-              <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-              <div className="relative z-10 flex items-center justify-between h-full">
-                <div className="flex items-center gap-12">
-                  <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-[2.5rem] flex items-center justify-center text-white group-hover:rotate-12 transition-transform">
-                    <Palette size={48} />
-                  </div>
-                  <div>
-                    <h3 className="text-4xl font-black mb-3 text-white uppercase tracking-tight">Eşsiz Şablonlar</h3>
-                    <p className="text-slate-400 text-xl">Neon, Profesyonel ve Minimal. Her tarza uygun sanat eserleri.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="w-20 h-28 bg-white/5 border border-white/10 rounded-2xl group-hover:scale-110 transition-transform cursor-pointer" />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Templates Showcase - Animated Gallery */}
-      <section id="templates" className="py-40 relative bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <div className="text-center mb-32">
-            <h2 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-none text-slate-900 uppercase">Tarzınızı <br /><span className="text-rose-500 italic underline decoration-slate-900 decoration-8 underline-offset-8">Dünyaya</span> Duyurun.</h2>
-            <p className="text-slate-500 text-xl font-medium max-w-2xl mx-auto">Modern, minimal veya kreatif. Global standartlarda tasarlanmış şablonlar.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Neon Modern", color: "#f43f5e", tag: "TRENDING", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
-              { title: "Clean Slate", color: "#0ea5e9", tag: "MINIMAL", image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400" },
-              { title: "Soft Creative", color: "#8b5cf6", tag: "PREMIUM", image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" }
-            ].map((tmpl, i) => (
-              <TemplateCard key={i} {...tmpl} />
+              { step: '01', title: 'Kayıt Olun', desc: 'E-posta adresinizle saniyeler içinde hesap oluşturun. Kredi kartı gerekmez.', icon: <MousePointer2 size={24} /> },
+              { step: '02', title: 'Profilinizi Doldurun', desc: 'Projeler, uzmanlıklar, hizmetler ve iletişim bilgilerinizi ekleyin.', icon: <Palette size={24} /> },
+              { step: '03', title: 'Link ile Paylaşın', desc: 'QR kod veya kısa link ile müşterilerinize her yerde ulaşın.', icon: <Share2 size={24} /> }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="bg-white border border-slate-200 rounded-3xl p-10 hover:border-slate-300 hover:shadow-lg transition-all duration-300 h-full">
+                  <div className="text-[80px] font-extrabold text-slate-100 leading-none mb-6 select-none">{item.step}</div>
+                  <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mb-6">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+                {i < 2 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-4 z-10 w-8 h-8 rounded-full bg-white border border-slate-200 items-center justify-center shadow-sm">
+                    <ChevronRight size={14} className="text-slate-400" />
+                  </div>
+                )}
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section - The Big Finish */}
-      <section className="py-40 relative overflow-hidden bg-slate-900">
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute inset-0 bg-rose-500/20 blur-[150px] rounded-full -top-1/2 -left-1/4"
-        />
-        <motion.div
-          animate={{ scale: [1.1, 1, 1.1], opacity: [0.3, 0.4, 0.3] }}
-          transition={{ duration: 12, repeat: Infinity }}
-          className="absolute inset-0 bg-indigo-500/20 blur-[150px] rounded-full -bottom-1/2 -right-1/4"
-        />
+      {/* ─── FEATURES ─── */}
+      <section id="features" className="py-32 px-6 bg-slate-50 relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.p
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
+            >Özellikler</motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+            >Profilinizi güçlendiren her araç burada</motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-slate-500 text-lg max-w-2xl mx-auto"
+            >Sadece bir dijital kartvizit değil. Projelerinizden randevularınıza, istatistiklerden ödemelere kadar iş hayatınızın tamamını yöneten bir platform.</motion.p>
+          </div>
 
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            className="space-y-12"
-          >
-            <h2 className="text-7xl md:text-[120px] font-black text-white leading-[0.85] tracking-tighters uppercase">
-              REKABET <br />
-              <span className="text-rose-500 italic">YENİDEN</span> <br />
-              TANIMLANDI.
-            </h2>
-            <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
-              <Link href="/register" className="px-16 py-8 bg-rose-500 text-white rounded-[2.5rem] font-black text-2xl tracking-tight shadow-3xl hover:scale-105 active:scale-95 transition-all group flex items-center gap-6">
-                Hemen Başla <ArrowRight size={32} className="group-hover:translate-x-2 transition-transform" />
-              </Link>
-              <div className="flex flex-col items-center md:items-start gap-2">
-                <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} className="fill-rose-500 text-rose-500" />)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <Briefcase size={24} />,
+                title: 'Projeler & Portfolyo',
+                desc: 'Tamamladığınız projeleri görsellerle sergileyin. Potansiyel müşterileriniz çalışmalarınızı anında görsün.',
+                accent: 'bg-rose-50 text-rose-500'
+              },
+              {
+                icon: <CheckCircle2 size={24} />,
+                title: 'Uzmanlık Alanları',
+                desc: 'Mesleki yetkinliklerinizi ve becerilerinizi kategorize ederek profilinizde profesyonelce listeleyin.',
+                accent: 'bg-amber-50 text-amber-500'
+              },
+              {
+                icon: <FileText size={24} />,
+                title: 'CV & Katalog',
+                desc: 'Profesyonel özgeçmişinizi veya hizmet kataloglarınızı tek tıkla indirilebilir hale getirin.',
+                accent: 'bg-indigo-50 text-indigo-500'
+              },
+              {
+                icon: <CreditCard size={24} />,
+                title: 'Ödeme Alma',
+                desc: 'Stripe ve PayTR entegrasyonu ile profiliniz üzerinden güvenle ödeme alın veya destek toplayın.',
+                accent: 'bg-emerald-50 text-emerald-500'
+              },
+              {
+                icon: <Calendar size={24} />,
+                title: 'Randevu Takibi',
+                desc: 'Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve planlayın.',
+                accent: 'bg-sky-50 text-sky-500'
+              },
+              {
+                icon: <BarChart3 size={24} />,
+                title: 'Ziyaretçi Analizi',
+                desc: 'Profilinize kimlerin, nereden ve ne zaman girdiğini detaylı grafiklerle takip edin.',
+                accent: 'bg-violet-50 text-violet-500'
+              },
+              {
+                icon: <Palette size={24} />,
+                title: 'Premium Şablonlar',
+                desc: 'Neon, Minimal ve Profesyonel seriler arasından sektörünüze uygun tasarımı tek tıkla seçin.',
+                accent: 'bg-pink-50 text-pink-500'
+              },
+              {
+                icon: <QrCode size={24} />,
+                title: 'QR Kod & vCard',
+                desc: 'Özel QR kodunuzu oluşturun, tek taramayla kişi rehberine eklenen dijital kartvizit paylaşın.',
+                accent: 'bg-slate-100 text-slate-600'
+              },
+              {
+                icon: <Shield size={24} />,
+                title: 'Güvenli Altyapı',
+                desc: 'Verileriniz şifrelenerek korunur. 7/24 kesintisiz erişim ve güvenli bir dijital varlık sunarız.',
+                accent: 'bg-teal-50 text-teal-500'
+              },
+            ].map((f, i) => (
+              <motion.div
+                key={i}
+                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                className="bg-white rounded-2xl border border-slate-200 p-8 hover:border-slate-300 hover:shadow-md transition-all duration-300 group"
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${f.accent} transition-transform group-hover:scale-110`}>
+                  {f.icon}
                 </div>
-                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Global verified platform</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FEATURE DEEP DIVE (THE "AHA" SECTION) ─── */}
+      <section className="py-32 px-6 bg-white">
+        <div className="max-w-6xl mx-auto space-y-24">
+          {/* Feature 1: Portfolio */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">Portfolyo & Projeler</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">İşleriniz sizin yerinize konuşsun</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">Profilinize eklediğiniz projeler, görsellerle birlikte profesyonel bir galeri olarak görüntülenir. Müşterileriniz geçmiş çalışmalarınızı inceleyerek size güvenle ulaşır.</p>
+              <ul className="space-y-3">
+                {['Görsel yükleme ile zengin sunum', 'Proje açıklaması ve link ekleme', 'Sürükle-bırak sıralama'].map((t, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-slate-50 rounded-3xl border border-slate-200 p-8 shadow-sm">
+              <div className="grid grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="aspect-[4/3] bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center">
+                    <Briefcase size={24} className="text-slate-200" />
+                  </div>
+                ))}
               </div>
+            </div>
+          </motion.div>
+
+          {/* Feature 2: Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          >
+            <div className="order-2 lg:order-1 bg-slate-900 rounded-3xl p-8 shadow-lg">
+              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-6">Son 30 Gün</div>
+              <div className="flex items-end gap-2 h-40 mb-6">
+                {[30, 50, 45, 70, 55, 90, 75, 60, 85, 65, 95, 80].map((h, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    transition={{ delay: i * 0.05, duration: 0.5 }}
+                    className="flex-1 bg-rose-500/30 rounded-sm border-t border-rose-500"
+                  />
+                ))}
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { val: '2.4K', label: 'Görüntülenme' },
+                  { val: '389', label: 'Tıklama' },
+                  { val: '%16', label: 'Dönüşüm' }
+                ].map((s, i) => (
+                  <div key={i} className="text-center">
+                    <div className="text-2xl font-bold text-white">{s.val}</div>
+                    <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="order-1 lg:order-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">İstatistikler & Analiz</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">Kim bakıyor, nereden geliyor?</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">Her ziyaretçiyi takip edin. Hangi linklerinize tıklanıyor, hangi şehirden geliyorlar? Veriye dayalı kararlar alın ve profilinizi sürekli geliştirin.</p>
+              <ul className="space-y-3">
+                {['Gerçek zamanlı ziyaretçi takibi', 'Coğrafi konum analizi', 'Link bazlı tıklama raporu'].map((t, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* Feature 3: Payments */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">Ödeme & Kazanç</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">Profiliniz, kasanız olsun</h3>
+              <p className="text-slate-500 text-lg leading-relaxed mb-8">Stripe ve PayTR entegrasyonuyla profiliniz üzerinden doğrudan ödeme alın. Hizmet satışı, danışmanlık ücreti veya bağış toplama — hepsi tek yerden.</p>
+              <ul className="space-y-3">
+                {['Stripe ile global ödeme', 'PayTR ile yerel çözüm', 'Otomatik fatura & bildirim'].map((t, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                    <Check size={16} className="text-emerald-500 shrink-0" /> {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-10 flex flex-col items-center justify-center shadow-sm">
+              <CreditCard size={64} className="text-emerald-500 mb-6" />
+              <div className="flex gap-4 mb-6">
+                {['Stripe', 'PayTR'].map(p => (
+                  <div key={p} className="px-5 py-2.5 bg-white rounded-xl border border-emerald-100 text-xs font-semibold text-emerald-600 shadow-sm">{p}</div>
+                ))}
+              </div>
+              <div className="text-sm text-emerald-600/70 font-medium">Güvenli ödeme altyapısı</div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      <footer className="py-32 bg-white border-t border-slate-100 px-6 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-24 mb-32">
-            <div className="md:col-span-5">
-              <Link href="/" className="flex items-center gap-4 mb-10 group">
-                <div className="w-16 h-16 bg-rose-500 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-rose-200 group-hover:rotate-6 transition-transform">
-                  <Layout className="text-white w-8 h-8" />
+      {/* ─── TEMPLATES ─── */}
+      <section id="templates" className="py-32 relative bg-slate-50 overflow-hidden px-6">
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center mb-20">
+            <motion.p
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
+            >Şablonlar</motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+            >Tarzınızı yansıtan tasarımlar</motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-slate-500 text-lg max-w-xl mx-auto"
+            >Profesyonel, minimal veya kreatif — her sektöre ve her kişiliğe özel şablonlar.</motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Neon Modern", color: "#f43f5e", tag: "EN POPÜLER", desc: "Cesur ve dikkat çekici. Kreatif sektörler için ideal.", image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
+              { title: "Clean Slate", color: "#0ea5e9", tag: "MİNİMAL", desc: "Sade ve şık. Kurumsal profesyoneller için.", image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400" },
+              { title: "Soft Creative", color: "#8b5cf6", tag: "PREMİUM", desc: "Yaratıcı ve sıcak tonlar. Freelancerlar için.", image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" }
+            ].map((tmpl, i) => (
+              <motion.div
+                key={i}
+                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                className="group bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-500"
+              >
+                <div className="aspect-[4/5] relative overflow-hidden">
+                  <img src={`${tmpl.image}?q=80&w=800&auto=format&fit=crop`} alt={tmpl.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute top-5 right-5 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-slate-700 tracking-wider shadow-sm">{tmpl.tag}</div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-3xl font-black tracking-tighter leading-none text-slate-900">KARDLY<span className="text-rose-500">.</span></span>
-                  <span className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.4em] mt-1">Digital Evolution</span>
+                <div className="p-8">
+                  <h4 className="text-xl font-bold text-slate-900 mb-2">{tmpl.title}</h4>
+                  <p className="text-sm text-slate-500 mb-5">{tmpl.desc}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-2 items-center">
+                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: tmpl.color }} />
+                      <div className="w-4 h-4 rounded-full bg-slate-100" />
+                      <div className="w-4 h-4 rounded-full bg-slate-50" />
+                    </div>
+                    <span className="text-xs font-semibold text-rose-500 group-hover:underline">Önizleme →</span>
+                  </div>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SOCIAL PROOF ─── */}
+      <section className="py-32 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-20">
+            <motion.p
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
+            >Kullanıcılarımız</motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+            >Binlerce profesyonel Kardly kullanıyor</motion.h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Ayşe Kara', role: 'UX Designer', text: 'Müşterilerime projelerimi göstermek hiç bu kadar kolay olmamıştı. QR kodum hep yanımda.' },
+              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: 'Randevu takibi ve istatistikler sayesinde satışlarım %30 arttı. Süper bir araç.' },
+              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: 'Portfolyomu tek linkte toplamak işlerimi kat kat hızlandırdı. Herkes soruyor nasıl yaptığımı.' }
+            ].map((t, i) => (
+              <motion.div
+                key={i}
+                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+                className="bg-slate-50 rounded-2xl border border-slate-200 p-8"
+              >
+                <div className="flex gap-1 mb-5">
+                  {[1, 2, 3, 4, 5].map(s => <Star key={s} size={14} className="fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-slate-600 text-sm leading-relaxed mb-8 italic">"{t.text}"</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-500">
+                    {t.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-slate-900">{t.name}</div>
+                    <div className="text-xs text-slate-400">{t.role}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA ─── */}
+      <section className="py-32 px-6 relative bg-slate-900 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-transparent to-indigo-500/10" />
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+              Dijital kimliğinizi <br />bugün oluşturun
+            </h2>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto">Kredi kartı gerekmez. 60 saniyede kayıt olun, dakikalar içinde profiliniz yayında olsun.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/register" className="group px-10 py-5 bg-rose-500 text-white rounded-2xl font-semibold text-base hover:bg-rose-600 active:scale-[0.98] transition-all shadow-lg shadow-rose-500/20 flex items-center justify-center gap-3">
+                Ücretsiz Başla <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              <p className="text-slate-400 text-lg font-medium leading-relaxed max-w-sm">Dünyanın en ilham verici dijital kartvizit platformu. Profesyonelliğinizi sanatla birleştirin.</p>
+              <Link href="#features" className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-2xl font-semibold text-base hover:bg-white/10 transition-all flex items-center justify-center">
+                Özellikleri İncele
+              </Link>
             </div>
-            <div className="md:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-16">
-              <FooterLinkGroup title="Ürün" links={["Özellikler", "Şablonlar", "Fiyatlandırma"]} />
-              <FooterLinkGroup title="Yardım" links={["Blog", "İletişim", "SSS"]} />
-              <FooterLinkGroup title="Yasal" links={["Kullanım", "Gizlilik"]} />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── FOOTER ─── */}
+      <footer className="py-20 bg-white border-t border-slate-100 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
+            <div className="col-span-2 md:col-span-4">
+              <Link href="/" className="flex items-center gap-3 mb-6 group">
+                <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200">
+                  <Layout className="text-white w-5 h-5" />
+                </div>
+                <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
+              </Link>
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">Profesyonel dijital kartvizit platformu. İş dünyasını tek linkte birleştirin.</p>
+            </div>
+            <div className="md:col-span-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Ürün</h5>
+              <ul className="space-y-3">
+                {['Özellikler', 'Şablonlar', 'Fiyatlandırma'].map(l => (
+                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div className="md:col-span-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Destek</h5>
+              <ul className="space-y-3">
+                {['Blog', 'İletişim', 'SSS'].map(l => (
+                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div className="md:col-span-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Yasal</h5>
+              <ul className="space-y-3">
+                {['Kullanım Şartları', 'Gizlilik'].map(l => (
+                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div className="md:col-span-2">
+              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Sosyal</h5>
+              <ul className="space-y-3">
+                {['Instagram', 'Twitter', 'LinkedIn'].map(l => (
+                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
+                ))}
+              </ul>
             </div>
           </div>
-          <div className="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-12">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-300">© 2026 KARDLY INC. FOR GLOBALS.</p>
-            <div className="flex gap-12">
-              {["INSTAGRAM", "TWITTER", "LINKEDIN"].map(social => (
-                <a key={social} href="#" className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 hover:text-rose-500 transition-colors">{social}</a>
-              ))}
-            </div>
+          <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-slate-300 font-medium">© 2026 Kardly. Tüm hakları saklıdır.</p>
+            <p className="text-xs text-slate-300 font-medium">Türkiye'de tasarlandı, dünyaya sunuldu.</p>
           </div>
         </div>
       </footer>
     </main>
-  )
-}
-
-function TemplateCard({ title, image, color, tag }: any) {
-  return (
-    <motion.div
-      whileHover={{ y: -20, rotate: 2 }}
-      className="group relative"
-    >
-      <div className="absolute inset-x-10 bottom-0 top-20 rounded-[4rem] blur-3xl opacity-0 group-hover:opacity-20 transition-all duration-700" style={{ background: color }} />
-      <div className="relative bg-white rounded-[4rem] p-6 border border-slate-100 overflow-hidden shadow-2xl shadow-slate-200/50 hover:border-rose-100 transition-all duration-500">
-        <div className="aspect-[4/5] rounded-[3rem] bg-slate-50 mb-8 overflow-hidden relative border border-slate-100">
-          <img src={`${image}?q=80&w=800&auto=format&fit=crop`} alt={title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
-          <div className="absolute top-8 right-8 px-6 py-3 rounded-full bg-white/90 backdrop-blur-md border border-slate-100 text-[10px] font-black text-rose-500 shadow-xl tracking-widest">{tag}</div>
-        </div>
-        <div className="px-4 pb-4">
-          <h4 className="text-3xl font-black tracking-tight text-slate-900 mb-4">{title}</h4>
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              <div className="h-2 rounded-full w-12" style={{ backgroundColor: color }} />
-              <div className="h-2 rounded-full w-4 bg-slate-100" />
-            </div>
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-rose-50 group-hover:text-rose-500 transition-colors">
-              <ArrowRight size={20} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-function FooterLinkGroup({ title, links }: { title: string, links: string[] }) {
-  return (
-    <div className="space-y-10">
-      <h5 className="text-[12px] font-black uppercase tracking-[0.4em] text-slate-900 border-b-2 border-rose-500 pb-2 inline-block">{title}</h5>
-      <ul className="space-y-6">
-        {links.map(link => (
-          <li key={link}>
-            <a href="#" className="text-base font-bold text-slate-400 hover:text-rose-500 transition-colors">{link}</a>
-          </li>
-        ))}
-      </ul>
-    </div>
   )
 }
