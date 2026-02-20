@@ -1545,6 +1545,118 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
                 )}
 
+                {/* ─── NEW UNIQUE TEMPLATE EFFECTS ─── */}
+
+                {theme.special === "dream_mist" && (
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        {[...Array(3)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    x: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                    y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                    scale: [1, 1.5, 1],
+                                    rotate: [0, 180, 360]
+                                }}
+                                transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
+                                className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-20"
+                                style={{
+                                    background: i === 0 ? '#f472b6' : i === 1 ? '#a855f7' : '#38bdf8',
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {theme.special === "dream_nebula" && (
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#4c1d9533_0%,transparent_70%)]" />
+                        {[...Array(50)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: Math.random() }}
+                                animate={{ opacity: [0.2, 1, 0.2] }}
+                                transition={{ duration: 2 + Math.random() * 3, repeat: Infinity }}
+                                className="absolute w-1 h-1 bg-white rounded-full"
+                                style={{
+                                    top: `${Math.random() * 100}%`,
+                                    left: `${Math.random() * 100}%`,
+                                    boxShadow: '0 0 5px #fff'
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {theme.special === "dark_stealth" && (
+                    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+                        <motion.div
+                            animate={{ y: ['-100%', '100%'] }}
+                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-x-0 h-[20%] bg-gradient-to-b from-transparent via-red-500/10 to-transparent z-10"
+                        />
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
+                    </div>
+                )}
+
+                {theme.special === "dark_onyx" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1e293b_0%,black_100%)]" />
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
+                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
+                    </div>
+                )}
+
+                {theme.special === "light_prism" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                            className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,#38bdf811,#f472b611,#fbbf2411,#38bdf811)] blur-[80px]"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "light_solar" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <motion.div
+                            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-[radial-gradient(circle,#fbbf2433_0%,transparent_70%)] blur-[40px]"
+                        />
+                    </div>
+                )}
+
+                {/* ─── RESTORED PATTERNS ─── */}
+                {theme.special === "retro_mac" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "retro_news" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
+                )}
+                {theme.special === "retro_synth" && (
+                    <>
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_bottom,transparent,#8b5cf633)]" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(#f472b6 1px, transparent 1px), linear-gradient(90deg, #f472b6 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-100px)' }} />
+                    </>
+                )}
+                {theme.special === "luxury_gold" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#fbbf2411_0%,transparent_50%)]" />
+                )}
+                {theme.special === "life_gamer" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L10 10 M10 0 L0 10' stroke='%23ef4444' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "life_travel" && (
+                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23d97706' fill='none' stroke-width='1'/%3E%3Cpath d='M50 10 V 90 M 10 50 H 90' stroke='%23d97706' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
+                )}
+                {theme.special === "future_holo" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)] animate-pulse" />
+                )}
+                {theme.special === "future_glass" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf811_0%,transparent_40%),radial-gradient(circle_at_80%_80%,#f472b611_0%,transparent_40%)]" />
+                )}
+
                 {/* Patterns Rendering */}
                 {theme.special === "ottoman" && (
                     <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50 L100 0 L100 100 Z M50 50 L0 0 L0 100 Z' fill='%23d4af37' fill-opacity='0.4'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%23d4af37'/%3E%3Cpath d='M0 50 L50 0 L100 50 L50 100 Z' fill='none' stroke='%23d4af37' stroke-width='1'/%3E%3C/svg%3E")`, backgroundSize: '60px 60px' }} />
@@ -1577,57 +1689,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-width='1'/%3E%3Cpath d='M20 20 L 100 100 M 100 20 L 20 100' stroke='%23f472b6' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
                 )}
 
-                {/* New Background Patterns */}
-                {theme.special === "retro_mac" && (
-                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000'/%3E%3C/svg%3E")` }} />
-                )}
-                {theme.special === "retro_news" && (
-                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
-                )}
-                {theme.special === "retro_synth" && (
-                    <>
-                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_bottom,transparent,#8b5cf633)]" />
-                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(#f472b6 1px, transparent 1px), linear-gradient(90deg, #f472b6 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-100px)' }} />
-                    </>
-                )}
-                {theme.special === "luxury_gold" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#fbbf2411_0%,transparent_50%)]" />
-                )}
-                {theme.special === "life_gamer" && (
-                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L10 10 M10 0 L0 10' stroke='%23ef4444' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
-                )}
-                {theme.special === "life_travel" && (
-                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23d97706' fill='none' stroke-width='1'/%3E%3Cpath d='M50 10 V 90 M 10 50 H 90' stroke='%23d97706' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
-                )}
-                {theme.special === "future_holo" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)] animate-pulse" />
-                )}
-                {theme.special === "future_glass" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf811_0%,transparent_40%),radial-gradient(circle_at_80%_80%,#f472b611_0%,transparent_40%)]" />
-                )}
-
-                {/* New Category Specific Effects */}
-                {theme.special === "dream_mist" && (
-                    <div className="absolute inset-0">
-                        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-200/30 blur-[100px] animate-pulse" />
-                        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-200/30 blur-[100px] animate-pulse" />
-                    </div>
-                )}
-                {theme.special === "dream_nebula" && (
-                    <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#8b5cf622_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#ec489911_0%,transparent_50%)]" />
-                        <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(1px 1px at 10px 10px, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 40px 80px, #fff, rgba(0,0,0,0))', backgroundSize: '100px 100px' }} />
-                    </>
-                )}
-                {theme.special === "dark_stealth" && (
-                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L10 10 M10 0 L0 10' stroke='%23ffffff' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
-                )}
-                {theme.special === "light_prism" && (
-                    <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(56,189,248,0.05)_0%,rgba(244,63,94,0.05)_50%,rgba(251,191,36,0.05)_100%)]" />
-                )}
-                {theme.special === "light_solar" && (
-                    <div className="absolute inset-x-0 top-0 h-[300px] bg-[radial-gradient(circle_at_50%_0%,#f59e0b22_0%,transparent_70%)]" />
-                )}
 
                 {/* Profession-Specific Design Extensions */}
                 {theme.special === "realestate" && (
