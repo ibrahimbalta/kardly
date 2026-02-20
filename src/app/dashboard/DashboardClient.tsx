@@ -73,18 +73,21 @@ import {
     Atom,
     Boxes,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    Brain,
+    Flame
 } from "lucide-react"
 
 // Modül Tanımları
 const AVAILABLE_MODULES = [
-    { type: 'skill_radar', name: 'Yetenek Radarı', icon: <Activity className="w-5 h-5" />, color: 'text-indigo-400', description: 'Teknik yetkinliklerinizi radar grafiğiyle sergileyin.' },
-    { type: 'portfolio_gallery', name: 'Profesyonel Galeri', icon: <Image className="w-5 h-5" />, color: 'text-rose-400', description: 'En iyi çalışmalarınızı kaydırılabilir galeriyle sunun.' },
-    { type: 'appointment_calendar', name: 'Danışmanlık Randevusu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Müşterilerinizle görüşmek için randevu sistemi.' },
-    { type: 'timeline_process', name: 'Deneyim Çizelgesi', icon: <Clock className="w-5 h-5" />, color: 'text-amber-400', description: 'Kariyer ve iş süreçlerinizi aşama aşama gösterin.' },
-    { type: 'trust_score', name: 'Referans Paneli', icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-blue-400', description: 'Başarı skorları ve profesyonel referanslar.' },
-    { type: 'social_feed', name: 'LinkedIn Akışı', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-600', description: 'Sektörel paylaşımlarınızı profilinizde tutun.' },
-    { type: 'document_vault', name: 'CV & Belgeler', icon: <FileText className="w-5 h-5" />, color: 'text-slate-400', description: 'Sertifika, CV veya portfolyo dosyaları paylaşın.' },
+    { type: 'ai_assistant', name: 'AI Temsilcisi', icon: <Brain className="w-5 h-5" />, color: 'text-purple-400', description: 'Sizi 7/24 temsil eden ve soruları cevaplayan yapay zeka asistanı.' },
+    { type: 'digital_store', name: 'Premium Mağaza', icon: <ShoppingBag className="w-5 h-5" />, color: 'text-emerald-400', description: 'Dosyalarınızı, eğitimlerinizi veya danışmanlığınızı doğrudan satın.' },
+    { type: 'testimonial_pro', name: 'Referans Vitrini', icon: <Star className="w-5 h-5" />, color: 'text-amber-400', description: 'Müşteri yorumlarını ve güven rozetlerini en şık haliyle sergileyin.' },
+    { type: 'expertise_map', name: 'Uzmanlık Haritası', icon: <Flame className="w-5 h-5" />, color: 'text-orange-400', description: 'Teknik yetkinliklerinizi ısı haritasıyla etkileyici bir görselle sunun.' },
+    { type: 'smart_booking', name: 'Akıllı Randevu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Takviminizle tam senkronize, profesyonel randevu toplama sistemi.' },
+    { type: 'newsletter', name: 'Kitle Büyütücü', icon: <Mail className="w-5 h-5" />, color: 'text-indigo-400', description: 'Ziyaretçileri haber bülteninize abone yaparak ağınızı genişletin.' },
+    { type: 'case_study', name: 'Başarı Hikayesi', icon: <Award className="w-5 h-5" />, color: 'text-rose-400', description: 'En çok gurur duyduğunuz işinizi tüm süreciyle ön plana çıkarın.' },
+    { type: 'brand_partners', name: 'Marka İşbirlikleri', icon: <Globe className="w-5 h-5" />, color: 'text-blue-400', description: 'Çalıştığınız markaları ve logoları kayan bir bantla sergileyin.' },
 ]
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"

@@ -45,7 +45,9 @@ import {
     VolumeX,
     Sparkles,
     Layers,
-    TrendingUp
+    TrendingUp,
+    Brain,
+    Flame
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -2660,6 +2662,145 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     </div>
                                 </div>
                             )}
+
+                            {/* Bento Elite Extensions */}
+                            {profile.blocks && profile.blocks.filter((b: any) => b.isActive).length > 0 && (
+                                <div className="mt-8 px-4 grid grid-cols-2 gap-3">
+                                    {profile.blocks.filter((b: any) => b.isActive).map((block: any, i: number) => (
+                                        <motion.div
+                                            key={block.id || i}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.2 + i * 0.1 }}
+                                            className={cn(
+                                                "p-4 border backdrop-blur-md rounded-3xl flex flex-col gap-3 group relative overflow-hidden",
+                                                theme.card, theme.border
+                                            )}
+                                            style={{ minHeight: '120px' }}
+                                        >
+                                            {/* Glow effect matching theme accent */}
+                                            <div
+                                                className="absolute -right-4 -top-4 w-12 h-12 blur-2xl opacity-20 transition-opacity group-hover:opacity-40"
+                                                style={{ background: theme.accent }}
+                                            />
+
+                                            {block.type === 'ai_assistant' && (
+                                                <>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="p-2 bg-purple-500/10 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
+                                                            <Brain size={18} />
+                                                        </div>
+                                                        <div className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[8px] font-black rounded-full">ONLINE</div>
+                                                    </div>
+                                                    <div className="text-left">
+                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">AI Temsilcisi</h4>
+                                                        <p className="text-[8px] text-white/50 leading-tight line-clamp-2">Sizin yerinize soruları yanıtlamak için burada.</p>
+                                                    </div>
+                                                    <motion.button
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className="mt-auto w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white transition-all"
+                                                    >
+                                                        KONUŞMAYA BAŞLA
+                                                    </motion.button>
+                                                </>
+                                            )}
+
+                                            {block.type === 'digital_store' && (
+                                                <>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="p-2 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:scale-110 transition-transform">
+                                                            <ShoppingBag size={18} />
+                                                        </div>
+                                                        <div className="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-[8px] font-black rounded-full">SALE</div>
+                                                    </div>
+                                                    <div className="text-left">
+                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Dijital Dükkan</h4>
+                                                        <p className="text-[8px] text-white/50 leading-tight line-clamp-2">Özel içerik ve dijital ürünlerime göz atın.</p>
+                                                    </div>
+                                                    <motion.button
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className="mt-auto w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white transition-all"
+                                                    >
+                                                        DÜKKANI GEZ
+                                                    </motion.button>
+                                                </>
+                                            )}
+
+                                            {block.type === 'stats_live' && (
+                                                <>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="p-2 bg-rose-500/10 rounded-xl text-rose-500 group-hover:scale-110 transition-transform">
+                                                            <Flame size={18} />
+                                                        </div>
+                                                        <div className="px-2 py-0.5 bg-white/5 text-white/40 text-[8px] font-black rounded-full">LIVE</div>
+                                                    </div>
+                                                    <div className="mt-auto grid grid-cols-2 gap-2 text-center pb-1">
+                                                        <div>
+                                                            <div className="text-sm font-black text-white">{profile.products?.length || '0'}</div>
+                                                            <div className="text-[7px] text-white/40 font-bold uppercase tracking-widest">PROJE</div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-sm font-black text-white">5+</div>
+                                                            <div className="text-[7px] text-white/40 font-bold uppercase tracking-widest">YIL DENEYİM</div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            {block.type === 'media_kit' && (
+                                                <>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="p-2 bg-blue-500/10 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
+                                                            <Download size={18} />
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-left mt-2">
+                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Media Kit</h4>
+                                                        <p className="text-[8px] text-white/50 leading-tight">İş birliği ve detaylar için PDF dosyasını indirin.</p>
+                                                    </div>
+                                                    <motion.button
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className="mt-auto w-full py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-xl text-[9px] font-black uppercase tracking-widest text-blue-400 transition-all"
+                                                    >
+                                                        İNDİR (PDF)
+                                                    </motion.button>
+                                                </>
+                                            )}
+
+                                            {block.type === 'testimonials_elite' && (
+                                                <>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="p-2 bg-amber-500/10 rounded-xl text-amber-500 group-hover:scale-110 transition-transform">
+                                                            <Star size={18} />
+                                                        </div>
+                                                        <div className="flex gap-0.5">
+                                                            {[1, 2, 3].map(s => <Star key={s} size={6} className="fill-amber-500 text-amber-500" />)}
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-left mt-2">
+                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Elite Referanslar</h4>
+                                                        <div className="flex -space-x-2 mt-2">
+                                                            {[1, 2, 3].map(id => (
+                                                                <div key={id} className="w-5 h-5 rounded-full border border-black overflow-hidden bg-zinc-800">
+                                                                    <img src={`https://i.pravatar.cc/100?u=${id + 20}`} className="w-full h-full object-cover" alt="" />
+                                                                </div>
+                                                            ))}
+                                                            <div className="w-5 h-5 rounded-full border border-black bg-zinc-800 flex items-center justify-center text-[6px] font-bold text-white">+5</div>
+                                                        </div>
+                                                    </div>
+                                                    <motion.button
+                                                        whileTap={{ scale: 0.95 }}
+                                                        className="mt-auto w-full py-2 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white"
+                                                    >
+                                                        İNCELE
+                                                    </motion.button>
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )
+                            }
 
                             {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
