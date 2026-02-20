@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, Sparkles, QrCode, Zap, Star, ShieldCheck } from "lucide-react"
+import { ArrowRight, Sparkles, QrCode, Zap, Star, ShieldCheck, Globe } from "lucide-react"
 
 export function Hero() {
     return (
@@ -20,20 +20,20 @@ export function Hero() {
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-rose-50 border border-rose-100 mb-8 text-[11px] font-black uppercase tracking-[0.3em] text-rose-500 shadow-sm"
+                        className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-900 border border-slate-800 mb-8 text-[11px] font-black uppercase tracking-[0.3em] text-white shadow-xl shadow-rose-100/20"
                     >
-                        <Sparkles size={14} className="animate-spin-slow" />
-                        <span>Dijital Kartvizitin Geleceği</span>
+                        <Globe size={14} className="text-rose-500 animate-pulse" />
+                        <span>Global Networking Vizyonu</span>
                     </motion.div>
 
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "circOut" }}
-                        className="text-6xl md:text-[90px] font-black tracking-tighter mb-8 leading-[0.9] text-slate-900"
+                        className="text-7xl md:text-[100px] font-black tracking-tighter mb-8 leading-[0.85] text-slate-900"
                     >
-                        Networking <br />
-                        <span className="gradient-text">Renklensin.</span>
+                        Sınırsız <br />
+                        <span className="gradient-text italic">Bağlantı.</span>
                     </motion.h1>
 
                     <motion.p
@@ -42,7 +42,7 @@ export function Hero() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="text-xl md:text-2xl text-slate-500 max-w-xl mb-12 font-medium leading-relaxed"
                     >
-                        Klasik kartvizitleri unutun. Saniyeler içinde size özel, canlı ve profesyonel dijital kimliğinizi oluşturun.
+                        Dünyanın neresinde olursanız olun, dijital kimliğiniz saniyeler içinde global profesyonellerle buluşsun. Modern, hızlı ve etkileyici.
                     </motion.p>
 
                     <motion.div
@@ -51,11 +51,11 @@ export function Hero() {
                         transition={{ delay: 0.4 }}
                         className="flex flex-col sm:flex-row gap-5 items-center justify-center lg:justify-start"
                     >
-                        <Link href="/register" className="group relative w-full sm:w-auto px-12 py-6 bg-rose-500 text-white font-black text-xs uppercase tracking-widest rounded-3xl transition-all hover:scale-105 active:scale-95 shadow-xl shadow-rose-200 flex items-center justify-center gap-4">
-                            ÜCRETSİZ BAŞLA <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        <Link href="/register" className="group relative w-full sm:w-auto px-12 py-6 bg-rose-500 text-white font-black text-xs uppercase tracking-widest rounded-[2rem] transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-rose-200 flex items-center justify-center gap-4">
+                            Hemen Keşfet <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <button className="w-full sm:w-auto glass px-10 py-6 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-3 border-slate-200 text-slate-600">
-                            NASIL ÇALIŞIR?
+                        <button className="w-full sm:w-auto glass-light border border-slate-100 px-10 py-6 rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-3 text-slate-500 bg-white/50 backdrop-blur-xl shadow-sm">
+                            Global Demo İzle
                         </button>
                     </motion.div>
 
@@ -67,7 +67,7 @@ export function Hero() {
                         className="flex items-center justify-center lg:justify-start gap-6 mt-16"
                     >
                         <div className="flex -space-x-3">
-                            {[31, 65, 48, 20].map(i => (
+                            {[31, 65, 48, 20, 12, 44].map(i => (
                                 <img key={i} src={`https://avatar.iran.liara.run/public/${i}`} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" />
                             ))}
                         </div>
@@ -75,7 +75,11 @@ export function Hero() {
                             <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} className="fill-current text-amber-400" />)}
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">2.000+ Mutlu Kullanıcı</span>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Trusted by 10k+ Globals</span>
+                                <div className="w-1 h-1 rounded-full bg-rose-500" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-rose-500">Global Verified</span>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
@@ -89,48 +93,70 @@ export function Hero() {
                 >
                     <div className="absolute inset-0 bg-rose-200/40 blur-[120px] rounded-full" />
 
-                    <div className="relative glass p-6 rounded-[4rem] border-white shadow-[0_20px_50px_rgba(244,63,94,0.15)] bg-white/60">
-                        <div className="w-[340px] h-[640px] bg-slate-100 rounded-[3.5rem] overflow-hidden relative border-8 border-white shadow-2xl">
+                    <div className="relative glass p-6 rounded-[5rem] border-white shadow-[0_40px_100px_rgba(244,63,94,0.1)] bg-white/60">
+                        <div className="w-[360px] h-[680px] bg-slate-100 rounded-[4rem] overflow-hidden relative border-8 border-white shadow-2xl">
                             {/* Mockup Content */}
-                            <div className="p-8 flex flex-col items-center h-full bg-gradient-to-b from-white to-slate-50">
-                                <div className="w-24 h-24 bg-gradient-to-tr from-rose-500 to-orange-500 rounded-3xl mb-12 shadow-2xl flex items-center justify-center">
-                                    <Zap size={48} className="text-white fill-current" />
+                            <div className="p-8 flex flex-col items-center h-full bg-gradient-to-b from-white via-white to-slate-50">
+                                <div className="w-full flex justify-between items-center mb-10">
+                                    <div className="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-200">
+                                        <Globe size={24} className="text-white" />
+                                    </div>
+                                    <div className="flex gap-1.5">
+                                        <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                                        <div className="w-2 h-2 rounded-full bg-slate-200" />
+                                        <div className="w-2 h-2 rounded-full bg-slate-200" />
+                                    </div>
                                 </div>
-                                <div className="h-6 w-32 bg-slate-300 rounded-full mb-3" />
-                                <div className="h-2 w-48 bg-slate-200 rounded-full mb-10" />
 
-                                <div className="space-y-4 w-full">
-                                    {[1, 2, 3].map(i => (
-                                        <div key={i} className="h-14 w-full bg-white rounded-2xl shadow-sm border border-slate-200 flex items-center px-4 gap-4">
-                                            <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center text-rose-500 font-bold text-xs" />
-                                            <div className="h-2 w-24 bg-slate-200 rounded-full" />
+                                <div className="w-28 h-28 rounded-[2.5rem] bg-slate-200 mb-8 border-4 border-white shadow-xl overflow-hidden">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="h-4 w-32 bg-slate-900 rounded-full mb-3" />
+                                <div className="h-2 w-48 bg-slate-300 rounded-full mb-12" />
+
+                                <div className="space-y-4 w-full px-2">
+                                    {[
+                                        { icon: <Zap size={18} />, label: "Quick Contact", color: "bg-amber-500" },
+                                        { icon: <QrCode size={18} />, label: "Save to Phone", color: "bg-indigo-500" },
+                                        { icon: <ShieldCheck size={18} />, label: "Verify Identity", color: "bg-emerald-500" }
+                                    ].map((item, i) => (
+                                        <div key={i} className="h-16 w-full bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center px-5 gap-5 hover:border-rose-200 transition-colors">
+                                            <div className={`${item.color} w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg`}>
+                                                {item.icon}
+                                            </div>
+                                            <div className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-400">{item.label}</div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="mt-auto mb-6 w-full h-16 bg-rose-500 rounded-2xl shadow-xl shadow-rose-200 flex items-center justify-center text-xs font-black text-white tracking-widest">
-                                    REHBERE EKLE
+                                <div className="mt-auto mb-6 w-full h-16 bg-rose-500 rounded-[2rem] shadow-2xl shadow-rose-200 flex items-center justify-center text-xs font-black text-white tracking-[0.2em] uppercase">
+                                    Share Profile
                                 </div>
                             </div>
                         </div>
 
                         {/* Floating Cards */}
                         <motion.div
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                            className="absolute top-12 -right-8 glass p-5 rounded-3xl border-white shadow-xl bg-white/90"
+                            animate={{ y: [0, -15, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-12 -right-12 glass p-6 rounded-[2.5rem] border-white shadow-2xl bg-white/95"
                         >
-                            <QrCode className="w-8 h-8 text-rose-500 mb-2" />
-                            <div className="text-[9px] font-black text-slate-400">TARAT & KAYDET</div>
+                            <QrCode className="w-10 h-10 text-rose-500 mb-3" />
+                            <div className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Global QR</div>
                         </motion.div>
 
                         <motion.div
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ duration: 5, repeat: Infinity }}
-                            className="absolute bottom-20 -left-8 glass p-5 rounded-3xl border-white shadow-xl bg-white/90"
+                            animate={{ y: [0, 15, 0] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute bottom-24 -left-12 glass p-6 rounded-[2.5rem] border-white shadow-2xl bg-white/95"
                         >
-                            <ShieldCheck className="w-8 h-8 text-green-500 mb-2" />
-                            <div className="text-[9px] font-black text-slate-400">GÜVENLİ VCARD</div>
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                                    <ShieldCheck size={16} />
+                                </div>
+                                <div className="h-2 w-16 bg-slate-100 rounded-full" />
+                            </div>
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Verified</div>
                         </motion.div>
                     </div>
                 </motion.div>
