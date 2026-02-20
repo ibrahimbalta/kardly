@@ -2838,9 +2838,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </div>
 
                     {/* Smart Lead Capture Form */}
-                    <div className="pt-4">
-                        <div className="flex items-center justify-between mb-2 px-2">
-                            <h3 className={cn("text-[9px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>İletişim Talebi Bırak</h3>
+                    <div className="pt-8">
+                        <div className="flex items-center gap-2 mb-4 px-2">
+                            <div className="w-1 h-4 rounded-full" style={{ background: theme.accent }} />
+                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-60", theme.text)}>İletişim & Teklif Talebi</h3>
                         </div>
 
                         <form
@@ -2872,32 +2873,50 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     console.error(err);
                                 }
                             }}
-                            className={cn("p-4 border space-y-2", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
+                            className={cn("p-5 border space-y-3", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
                         >
-                            <input
-                                type="text"
-                                name="name"
-                                required
-                                placeholder="Adınız Soyadınız"
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-[10px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
-                                style={{ borderColor: `${theme.accent}30` }}
-                            />
-                            <div className="grid grid-cols-2 gap-2">
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="Telefon"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-[10px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
-                                    style={{ borderColor: `${theme.accent}30` }}
-                                />
-                                <button
-                                    type="submit"
-                                    className={cn("w-full py-2 flex items-center justify-center gap-2 font-black text-[9px] uppercase tracking-widest transition-all active:scale-95 text-white", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")}
-                                    style={{ background: theme.accent }}
-                                >
-                                    <Zap size={12} className="fill-white" /> Gönder
-                                </button>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <label className={cn("text-[9px] font-black uppercase tracking-widest opacity-40 ml-1", theme.text)}>Ad Soyad</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        required
+                                        placeholder="Örn: Ahmet Yılmaz"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                        style={{ borderColor: `${theme.accent}20` }}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className={cn("text-[9px] font-black uppercase tracking-widest opacity-40 ml-1", theme.text)}>Telefon</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        placeholder="05xx xxx xx xx"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                        style={{ borderColor: `${theme.accent}20` }}
+                                    />
+                                </div>
                             </div>
+
+                            <div className="space-y-1">
+                                <label className={cn("text-[9px] font-black uppercase tracking-widest opacity-40 ml-1", theme.text)}>Mesajınız</label>
+                                <textarea
+                                    name="message"
+                                    rows={2}
+                                    placeholder="Talebinizi veya sorunuzu kısaca yazın..."
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all resize-none"
+                                    style={{ borderColor: `${theme.accent}20` }}
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className={cn("w-full py-3.5 flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")}
+                                style={{ background: theme.accent, shadowColor: `${theme.accent}30` }}
+                            >
+                                <Zap size={14} className="fill-white" /> Talebi İlet
+                            </button>
                         </form>
                     </div>
 
