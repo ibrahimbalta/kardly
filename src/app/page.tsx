@@ -57,172 +57,104 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Bento - Core Functionality Showcase */}
+      {/* Features Grid - Professional & Unified */}
       <section id="features" className="py-32 px-6 relative overflow-hidden bg-white">
-        <div className="blob w-[800px] h-[800px] bg-rose-50 opacity-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+          <div className="absolute top-1/4 left-0 w-96 h-96 bg-rose-50/50 rounded-full blur-[100px]" />
+          <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-slate-50 rounded-full blur-[100px]" />
+        </div>
 
         <div className="max-w-7xl mx-auto relative">
           <div className="text-center mb-24">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-100 text-[10px] font-black uppercase tracking-[0.2em] text-rose-500 mb-6"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6"
             >
-              <Sparkles size={12} /> Hepsi Bir Arada Çözüm
+              <Sparkles size={12} className="text-rose-500" /> Profesyonel Özellikler
             </motion.div>
-            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[0.9] text-slate-900">Dijital Kimliğiniz <br /><span className="gradient-text">Eksiksiz & Profesyonel</span></h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium">
-              Profilinizi projeleriniz, uzmanlıklarınız ve ödeme sistemlerinizle donatın. Tek bir link üzerinden tüm iş dünyanızı yönetin.
+            <h2 className="text-5xl md:text-6xl font-black mb-6 tracking-tight text-slate-900 uppercase">Dijital Kimliğiniz <br /><span className="text-rose-500 italic">Eksiksiz & Düzenli.</span></h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-lg font-medium">
+              Profilinizi iş dünyasının gerektirdiği tüm araçlarla donatın. Karmaşadan uzak, sade ve etkileyici bir yönetim deneyimi.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
-            {/* 1. Projects & Portfolio - Large Bento */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-8 md:row-span-2 rounded-[3.5rem] p-10 border border-slate-100 bg-white relative overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative h-full flex flex-col md:flex-row gap-10">
-                <div className="flex-1 flex flex-col justify-center">
-                  <div className="w-16 h-16 bg-rose-500 rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl shadow-rose-200 group-hover:rotate-6 transition-transform">
-                    <Briefcase size={32} className="text-white" />
-                  </div>
-                  <h3 className="text-4xl font-black mb-4 tracking-tight text-slate-900">Projelerim & Portfolyo</h3>
-                  <p className="text-slate-500 text-lg leading-relaxed">Başarı hikayelerinizi ve tamamladığınız projeleri görsel zenginliklerle sergileyin. Potansiyel partnerlerinizi tek bir bakışta etkileyin.</p>
-                </div>
-                <div className="flex-1 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative group-hover:scale-[1.02] transition-transform overflow-hidden p-6 flex items-end">
-                  <div className="w-full h-4/5 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 transform translate-y-4 group-hover:translate-y-0 transition-all duration-700">
-                    <div className="aspect-video bg-slate-50 rounded-xl mb-4 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center">
-                        <ImageIcon size={40} className="text-rose-200" />
-                      </div>
-                    </div>
-                    <div className="h-4 w-2/3 bg-slate-100 rounded-full mb-2" />
-                    <div className="h-3 w-1/3 bg-slate-50 rounded-full" />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* 1. Projects & Portfolio */}
+            <FeatureCard
+              icon={<Briefcase size={28} />}
+              title="Projelerim & Portfolyo"
+              description="Başarı hikayelerinizi ve tamamladığınız projeleri görsel zenginliklerle sergileyin. Şık ve hızlı bir sunum."
+              color="rose"
+            />
 
             {/* 2. Expertise Areas */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-amber-50/20 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="flex justify-between items-start">
-                <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-100">
-                  <CheckCircle2 size={24} />
-                </div>
-                <div className="w-8 h-8 rounded-full border border-amber-200 flex items-center justify-center">
-                  <ArrowUpRight size={14} className="text-amber-500" />
-                </div>
-              </div>
-              <div>
-                <h4 className="text-2xl font-black mb-2 tracking-tight text-slate-900">Uzmanlık Alanları</h4>
-                <p className="text-slate-500 text-sm">Mesleki yetkinliklerinizi ve uzmanlıklarınızı profilinizde şık bir şekilde listeleyin.</p>
-              </div>
-            </motion.div>
+            <FeatureCard
+              icon={<CheckCircle2 size={28} />}
+              title="Uzmanlık Alanları"
+              description="Mesleki yetkinliklerinizi ve uzmanlıklarınızı profilinizde kategorize edilmiş şekilde şık bir şekilde listeleyin."
+              color="amber"
+            />
 
             {/* 3. CV & Catalog */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-indigo-50/30 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-100">
-                  <List size={24} />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">PRO VERSION</span>
-              </div>
-              <div>
-                <h4 className="text-2xl font-black mb-2 text-slate-900">CV & Katalog Paylaşımı</h4>
-                <p className="text-slate-500 text-sm">Profesyonel özgeçmişinizi ve kataloglarınızı tek tıkla indirilebilir hale getirin.</p>
-              </div>
-            </motion.div>
+            <FeatureCard
+              icon={<FileText size={28} />}
+              title="CV & Katalog"
+              description="Profesyonel özgeçmişinizi ve hizmet kataloglarınızı tek tıkla indirilebilir dijital formatlara dönüştürün."
+              color="indigo"
+            />
 
             {/* 4. Monetization & Support */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-2 rounded-[3.5rem] p-8 border border-slate-100 bg-slate-900 text-white flex flex-col group shadow-sm hover:shadow-xl transition-all duration-500 relative overflow-hidden"
-            >
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mb-6 shadow-xl shadow-emerald-500/20">
-                  <CreditCard size={28} />
-                </div>
-                <h4 className="text-3xl font-black mb-4">Para Kazanma & Destek</h4>
-                <p className="text-slate-400 text-base mb-8 leading-relaxed">Stripe ve PayTR ile profiliniz üzerinden ödeme alın, destek toplayın veya hizmet satın.</p>
-
-                <div className="mt-auto space-y-4">
-                  <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl group-hover:bg-white/10 transition-colors">
-                    <div className="w-10 h-6 bg-white/10 rounded-md flex items-center justify-center text-[8px] font-black tracking-tighter">PayTR</div>
-                    <span className="text-xs font-bold">Yerel Ödeme Entegrasyonu</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl group-hover:bg-white/10 transition-colors">
-                    <div className="w-10 h-6 bg-white/10 rounded-md flex items-center justify-center text-[8px] font-black tracking-tighter">Stripe</div>
-                    <span className="text-xs font-bold">Global Ödeme Çözümü</span>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:rotate-12 transition-transform h-40 w-40">
-                <ShoppingBag size={160} />
-              </div>
-            </motion.div>
+            <FeatureCard
+              icon={<CreditCard size={28} />}
+              title="Para Kazanma"
+              description="Stripe ve PayTR entegrasyonu ile profiliniz üzerinden güvenle ödeme alın veya destek toplayın."
+              color="emerald"
+            />
 
             {/* 5. Appointment Tracking */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-sky-50/20 flex items-center gap-10 group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="w-20 h-20 bg-sky-500 rounded-[2rem] flex items-center justify-center text-white shrink-0 shadow-2xl shadow-sky-100">
-                <Calendar size={40} />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-3xl font-black mb-2 text-slate-900">Randevu Takibi</h4>
-                <p className="text-slate-500 text-lg">Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve takip edin.</p>
-              </div>
-              <div className="hidden md:block w-32 h-32 border-4 border-dashed border-sky-200 rounded-3xl shrink-0 -rotate-6 group-hover:rotate-0 transition-transform" />
-            </motion.div>
+            <FeatureCard
+              icon={<Calendar size={28} />}
+              title="Randevu Takibi"
+              description="Müşterilerinizden gelen randevu taleplerini dashboard üzerinden anlık olarak yönetin ve planlayın."
+              color="sky"
+            />
 
             {/* 6. Visitor Statistics */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-8 md:row-span-1 rounded-[3.5rem] p-10 border border-slate-100 bg-slate-50/50 flex items-center justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="max-w-md">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-500 text-[8px] font-black uppercase tracking-widest mb-6">REAL-TIME DATA</div>
-                <h4 className="text-3xl font-black mb-4 text-slate-900">Ziyaretçi İstatistikleri</h4>
-                <p className="text-slate-500 text-lg leading-relaxed">Tıklama, görüntülenme ve coğrafi verileri profesyonel grafiklerle dashboard'unuzda görün.</p>
-              </div>
-              <div className="w-48 h-24 flex items-end gap-2 px-6">
-                {[30, 60, 45, 90, 65, 80].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    className="flex-1 bg-rose-500/20 rounded-t-lg border-t border-rose-500/40"
-                  />
-                ))}
-              </div>
-            </motion.div>
+            <FeatureCard
+              icon={<BarChart3 size={28} />}
+              title="Ziyaretçi Analizi"
+              description="Tıklama, görüntülenme ve coğrafi verileri profesyonel ve sade grafiklerle anlık olarak takip edin."
+              color="rose"
+            />
 
             {/* 7. Stunning Templates */}
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="md:col-span-4 md:row-span-1 rounded-[3rem] p-8 border border-slate-100 bg-white flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-amber-50 to-rose-50 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative z-10">
-                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white mb-6">
-                  <Palette size={24} />
-                </div>
-                <h4 className="text-2xl font-black mb-2 text-slate-900 tracking-tight">Eşsiz Şablonlar</h4>
-                <p className="text-slate-500 text-sm leading-relaxed">Neon ve Profesyonel seriler ile tarzınıza en uygun tasarımı anında seçin.</p>
-              </div>
-            </motion.div>
+            <FeatureCard
+              icon={<Palette size={28} />}
+              title="Eşsiz Şablonlar"
+              description="Neon ve Profesyonel seriler arasından tarzınıza en uygun tasarımı tek tıkla seçin ve yayınlayın."
+              color="slate"
+            />
+
+            {/* 8. Secure Infrastructure */}
+            <FeatureCard
+              icon={<Shield size={28} />}
+              title="Güvenli Altyapı"
+              description="Verileriniz global güvenlik standartlarında korunur. 7/24 kesintisiz ve güvenli bir dijital varlık."
+              color="indigo"
+            />
+
+            {/* 9. Smart Networking */}
+            <FeatureCard
+              icon={<Smartphone size={28} />}
+              title="Akıllı Paylaşım"
+              description="vCard, QR Kod ve tek link üzerinden tüm iletişim bilgilerinizi profesyonelce paylaşın."
+              color="emerald"
+            />
           </div>
         </div>
       </section>
+
 
       {/* Templates Showcase */}
       <section id="templates" className="py-24 relative bg-slate-50/50 overflow-hidden">
@@ -350,6 +282,34 @@ export default function Home() {
         </div>
       </footer>
     </main>
+  )
+}
+
+function FeatureCard({ icon, title, description, color }: any) {
+  const colorMap: any = {
+    rose: "bg-rose-50/50 text-rose-500 border-rose-100/50",
+    amber: "bg-amber-50/50 text-amber-500 border-amber-100/50",
+    indigo: "bg-indigo-50/50 text-indigo-500 border-indigo-100/50",
+    emerald: "bg-emerald-50/50 text-emerald-500 border-emerald-100/50",
+    sky: "bg-sky-50/50 text-sky-500 border-sky-100/50",
+    slate: "bg-slate-50/50 text-slate-500 border-slate-100/50",
+  }
+
+  const selectedColor = colorMap[color] || colorMap.slate
+
+  return (
+    <motion.div
+      whileHover={{ y: -8 }}
+      className="p-10 rounded-[3rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(244,63,94,0.08)] transition-all duration-500 group"
+    >
+      <div className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center mb-8 border transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${selectedColor}`}>
+        {icon}
+      </div>
+      <h3 className="text-xl font-black mb-4 tracking-tight text-slate-900 uppercase">{title}</h3>
+      <p className="text-slate-500 text-sm font-medium leading-relaxed">
+        {description}
+      </p>
+    </motion.div>
   )
 }
 
