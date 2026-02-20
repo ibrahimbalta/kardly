@@ -148,6 +148,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         image: ""
     })
     const [isProductSaving, setIsProductSaving] = useState(false)
+    const [statsRange, setStatsRange] = useState("30")
 
     // Reviews Management
     const [reviewList, setReviewList] = useState(reviews || [])
@@ -854,8 +855,24 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <p className="text-xs text-slate-400 font-medium tracking-wide">Ziyaretçileriniz sizi hangi mecralarda buluyor?</p>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button className="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-200 transition-all">7 Gün</button>
-                                            <button className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-primary/20">30 Gün</button>
+                                            <button
+                                                onClick={() => setStatsRange("7")}
+                                                className={cn(
+                                                    "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
+                                                    statsRange === "7" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                7 Gün
+                                            </button>
+                                            <button
+                                                onClick={() => setStatsRange("30")}
+                                                className={cn(
+                                                    "px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
+                                                    statsRange === "30" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                30 Gün
+                                            </button>
                                         </div>
                                     </div>
                                     <div className="space-y-6">
