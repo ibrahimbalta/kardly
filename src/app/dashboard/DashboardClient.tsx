@@ -877,8 +877,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <section className="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
                                     <div className="flex justify-between items-center mb-8">
                                         <div>
-                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">Kanal Performansı</h3>
-                                            <p className="text-xs text-slate-400 font-medium tracking-wide">Ziyaretçileriniz sizi hangi mecralarda buluyor?</p>
+                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">{t('channelPerformance')}</h3>
+                                            <p className="text-xs text-slate-400 font-medium tracking-wide">{t('channelPerformanceSub')}</p>
                                         </div>
                                         <div className="flex gap-2">
                                             <button
@@ -888,7 +888,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     statsRange === "7" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                                                 )}
                                             >
-                                                7 Gün
+                                                {t('7days')}
                                             </button>
                                             <button
                                                 onClick={() => setStatsRange("30")}
@@ -897,26 +897,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     statsRange === "30" ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                                                 )}
                                             >
-                                                30 Gün
+                                                {t('30days')}
                                             </button>
                                         </div>
                                     </div>
                                     <div className="space-y-6">
-                                        <StatBar label="Instagram / Sosyal Medya" count={420} total={1000} color="bg-primary" />
-                                        <StatBar label="WhatsApp Paylaşımları" count={280} total={1000} color="bg-indigo-500" />
-                                        <StatBar label="Doğrudan Trafik / QR Kod" count={150} total={1000} color="bg-emerald-500" />
-                                        <StatBar label="Diğer" count={150} total={1000} color="bg-slate-200" />
+                                        <StatBar label={t('instagramSocial')} count={420} total={1000} color="bg-primary" />
+                                        <StatBar label={t('whatsappShares')} count={280} total={1000} color="bg-indigo-500" />
+                                        <StatBar label={t('directTraffic')} count={150} total={1000} color="bg-emerald-500" />
+                                        <StatBar label={t('others')} count={150} total={1000} color="bg-slate-200" />
                                     </div>
                                 </section>
 
                                 <section>
-                                    <h3 className="text-lg font-black text-slate-900 tracking-tight mb-6">Hızlı İşlemler</h3>
+                                    <h3 className="text-lg font-black text-slate-900 tracking-tight mb-6">{t('quickActions')}</h3>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <button onClick={() => setActiveTab("edit")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
                                             <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-4 group-hover:scale-110 transition-transform">
                                                 <Layout size={20} />
                                             </div>
-                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Profili Düzenle</span>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('editProfile')}</span>
                                         </button>
                                         <div className="relative group/main">
                                             <button
@@ -927,7 +927,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <Palette size={20} />
                                                 </div>
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Şablon Değiştir</span>
+                                                    <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('changeTemplate')}</span>
                                                     <ChevronDown size={14} className={cn("text-slate-400 transition-transform", isQuickTplMenuOpen && "rotate-180")} />
                                                 </div>
                                             </button>
@@ -943,7 +943,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[280px] max-h-[400px] overflow-y-auto no-scrollbar bg-white border border-slate-200 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] z-50 p-3 grid grid-cols-1 gap-1"
                                                         >
                                                             <div className="px-4 py-2 mb-2 border-b border-slate-50">
-                                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Kategori Seçin</p>
+                                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('selectCategory')}</p>
                                                             </div>
                                                             {TEMPLATE_CATEGORIES.map((cat) => (
                                                                 <button
@@ -971,13 +971,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
                                                 <Briefcase size={20} />
                                             </div>
-                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Proje Ekle</span>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('addProject')}</span>
                                         </button>
                                         <button onClick={() => setActiveTab("qrcode")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-slate-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
                                             <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
                                                 <QrCode size={20} />
                                             </div>
-                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">QR Paylaş</span>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('shareQR')}</span>
                                         </button>
                                     </div>
                                 </section>
@@ -987,7 +987,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <div className="space-y-8">
                                 <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/30 relative overflow-hidden group">
                                     <div className="relative z-10">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">Mevcut Şablon</h4>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">{t('currentTemplate')}</h4>
                                         <h3 className="text-2xl font-black mb-6 tracking-tight">
                                             {ALL_TEMPLATES.find(t => t.id === profileData.templateId)?.name || 'Standart Modern'}
                                         </h3>
@@ -998,43 +998,47 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         </div>
                                         <button onClick={() => setActiveTab("templates")} className="w-full mt-6 py-4 bg-white text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
-                                            Şablonu Özelleştir
+                                            {t('customizeTemplate')}
                                         </button>
                                     </div>
                                     <div className="absolute -top-24 -right-24 w-60 h-60 bg-primary/20 blur-[100px] rounded-full" />
                                 </div>
 
                                 <div className="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
-                                    <h4 className="text-sm font-black text-slate-900 tracking-tight mb-6">Yaklaşan Etkinlikler</h4>
+                                    <h4 className="text-sm font-black text-slate-900 tracking-tight mb-6">{t('upcomingEvents')}</h4>
                                     <div className="space-y-4">
                                         {appointmentList.slice(0, 3).map((app: any, i: number) => (
                                             <div key={i} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/20 transition-all">
                                                 <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex flex-col items-center justify-center">
-                                                    <span className="text-[8px] font-black text-slate-400 uppercase leading-none">ARA</span>
-                                                    <span className="text-lg font-black text-slate-900 leading-none">20</span>
+                                                    <span className="text-[8px] font-black text-slate-400 uppercase leading-none">
+                                                        {new Date(app.date).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { month: 'short' }).toUpperCase()}
+                                                    </span>
+                                                    <span className="text-lg font-black text-slate-900 leading-none">
+                                                        {new Date(app.date).getDate()}
+                                                    </span>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-xs font-black text-slate-900 truncate">{app.clientName}</p>
-                                                    <p className="text-[10px] font-medium text-slate-400">Görüşme Talebi</p>
+                                                    <p className="text-[10px] font-medium text-slate-400">{t('meetingRequest')}</p>
                                                 </div>
                                                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                             </div>
                                         ))}
                                         {appointmentList.length === 0 && (
-                                            <p className="text-xs text-slate-400 font-medium text-center py-4">Yakın zamanda randevu yok.</p>
+                                            <p className="text-xs text-slate-400 font-medium text-center py-4">{t('noUpcomingAppointments')}</p>
                                         )}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </div >
+                    </div >
                 ) : activeTab === "edit" ? (
                     <div className="space-y-10">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                            <StatCard icon={<Eye />} label="Toplam Görüntülenme" value={stats?.totalViews?.toString() || "0"} trend="+0%" />
-                            <StatCard icon={<MousePointer2 />} label="Tıklama Oranı" value={stats?.clickRate || "0%"} trend="+0%" />
-                            <StatCard icon={<Users />} label="Rehbere Ekleyenler" value={stats?.vCardClicks?.toString() || "0"} trend="+0%" />
+                            <StatCard icon={<Eye />} label={t('totalViewsLabel')} value={stats?.totalViews?.toString() || "0"} trend="+0%" />
+                            <StatCard icon={<MousePointer2 />} label={t('clickRateLabel')} value={stats?.clickRate || "0%"} trend="+0%" />
+                            <StatCard icon={<Users />} label={t('vCardClicksLabel')} value={stats?.vCardClicks?.toString() || "0"} trend="+0%" />
 
                             <div className="glass p-6 rounded-3xl border-white/5 flex flex-col items-center justify-center">
                                 <QRCodeCard username={profile?.username || "demo"} />
@@ -1045,10 +1049,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Simple Editor Controls */}
                             <div className="space-y-6">
-                                <h3 className="text-lg font-bold">Profil Bilgilerini Düzenle</h3>
+                                <h3 className="text-lg font-bold">{t('editProfileInfo')}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Fotoğrafı</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
                                         <div className="flex gap-4">
                                             <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
                                                 {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
@@ -1068,7 +1072,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     type="text"
                                                     value={profileData?.image || ""}
                                                     onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
-                                                    placeholder="Resim linkini yapıştırın veya dosya seçin"
+                                                    placeholder={t('imagePlaceholder')}
                                                     className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
                                                 />
                                                 <button
@@ -1076,7 +1080,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     onClick={() => document.getElementById('image-upload')?.click()}
                                                     className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
                                                 >
-                                                    <Upload className="w-4 h-4" /> Yükle
+                                                    <Upload className="w-4 h-4" /> {t('upload')}
                                                 </button>
                                             </div>
                                             <input
@@ -1124,7 +1128,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         )}
                                     </div>
                                     <div className="md:col-span-2 space-y-4 mb-6">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Profil Alanı Arka Plan Görseli</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('profileBgImageLabel')}</label>
                                         <div className="flex gap-4">
                                             <div className="w-24 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative shadow-inner">
                                                 {profileData.profileBgImage ? (
@@ -1144,7 +1148,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     type="text"
                                                     value={profileData?.profileBgImage || ""}
                                                     onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
-                                                    placeholder="Arka plan resim linki"
+                                                    placeholder={t('bgImagePlaceholder')}
                                                     className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
                                                 />
                                                 <button
@@ -1152,7 +1156,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     onClick={() => document.getElementById('bg-image-upload')?.click()}
                                                     className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
                                                 >
-                                                    <Upload className="w-4 h-4" /> Yükle
+                                                    <Upload className="w-4 h-4" /> {t('upload')}
                                                 </button>
                                             </div>
                                             <input
@@ -1172,55 +1176,55 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
 
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Görünen İsim (Kartvizit Üzerinde)</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('displayNameLabel')}</label>
                                         <input
                                             type="text"
                                             value={profileData?.name || session?.user?.name || ""}
                                             onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                            placeholder="Örn: İbrahim Balta"
+                                            placeholder={t('namePlaceholder')}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Meslek / Unvan</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('occupationLabel')}</label>
                                         <input
                                             type="text"
                                             value={profileData?.occupation || ""}
                                             onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
-                                            placeholder="Örn: Kıdemli Yazılım Mimarı"
+                                            placeholder={t('occupationPlaceholder')}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">Lokasyon / Şehir</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('locationLabel')}</label>
                                         <input
                                             type="text"
                                             value={profileData?.phone || ""}
                                             onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                            placeholder="Örn: İstanbul, Türkiye"
+                                            placeholder={t('locationPlaceholder')}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">Kısa Tanıtım / Kişisel Motto</label>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('mottoLabel')}</label>
                                     <input
                                         type="text"
                                         value={profileData?.slogan || ""}
                                         onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
-                                        placeholder="Örn: Geleceği kodluyor, dijital deneyimler inşa ediyorum."
+                                        placeholder={t('mottoPlaceholder')}
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">Hakkımda / Kariyer Özeti</label>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('aboutLabel')}</label>
                                     <textarea
                                         rows={3}
                                         value={profileData?.bio || ""}
                                         onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                                        placeholder="Profesyonel geçmişiniz, yetkinlikleriniz ve hedeflerinizden bahsedin..."
+                                        placeholder={t('aboutPlaceholder')}
                                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
                                 </div>
@@ -1277,7 +1281,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-medium mb-4 opacity-60">Sosyal Medya Bağlantıları</label>
+                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('socialConnections')}</label>
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
@@ -1369,7 +1373,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                             <input
                                                 type="text"
-                                                placeholder="Konum (Harita Paylaşım Linki)"
+                                                placeholder={t('locationLinkPlaceholder')}
                                                 value={getSocialUrl("location")}
                                                 onChange={(e) => updateSocialLink("location", e.target.value)}
                                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -1381,8 +1385,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 {/* Custom Links Section */}
                                 <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-medium mb-4 opacity-60">🔗 Özel Linkler</label>
-                                    <p className="text-xs text-slate-400 mb-4">Profil sayfanızda slogan altında ikon olarak gözükecek bağlantılar ekleyin.</p>
+                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('customLinksLabel')}</label>
+                                    <p className="text-xs text-slate-400 mb-4">{t('customLinksSub')}</p>
 
                                     {/* Existing Links */}
                                     {customLinks.length > 0 && (
@@ -1404,7 +1408,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 link.isAction ? "bg-amber-500/20 text-amber-500 border border-amber-500/20" : "bg-white/5 text-white/30 border border-white/5 hover:bg-white/10"
                                                             )}
                                                         >
-                                                            {link.isAction ? "Buton Yapıldı" : "Buton Yap"}
+                                                            {link.isAction ? t('buttonDone') : t('makeButton')}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteLink(i)}
@@ -1422,7 +1426,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="flex flex-col gap-2">
                                         <input
                                             type="text"
-                                            placeholder="Link Başlığı (örn: Portfolyom)"
+                                            placeholder={t('linkTitlePlaceholder')}
                                             value={newLink.title}
                                             onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
                                             className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -1440,12 +1444,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     newLink.isAction ? "left-6" : "left-1"
                                                 )} />
                                             </button>
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ana Buton Olarak Göster</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t('showAsMainButton')}</span>
                                         </div>
                                         <div className="flex gap-2">
                                             <input
                                                 type="text"
-                                                placeholder="Link Adresi (https://...)"
+                                                placeholder={t('linkUrlPlaceholder')}
                                                 value={newLink.url}
                                                 onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
@@ -1456,7 +1460,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 disabled={!newLink.title || !newLink.url}
                                                 className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all disabled:opacity-30 flex items-center gap-1"
                                             >
-                                                <Plus className="w-4 h-4" /> Ekle
+                                                <Plus className="w-4 h-4" /> {t('add')}
                                             </button>
                                         </div>
                                     </div>
@@ -1661,11 +1665,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         )}
                                                     </div>
                                                     <div className="text-center mb-6">
-                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#f8f9fa' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || "Kullanıcı"}</h4>
-                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || "Ünvan Belirtilmedi"}</p>
+                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#f8f9fa' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || t('user')}</h4>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || t('noTitleSpec')}</p>
                                                     </div>
                                                     <div className="text-center mb-8 px-4">
-                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#f8f9fa' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || "Motto buraya gelecek..."}"</p>
+                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#f8f9fa' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || t('mottoWillBeHere')}"</p>
                                                     </div>
 
                                                     {/* Mockup Social Icons */}
@@ -1707,7 +1711,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-xl">
                                             <ArrowRight size={24} />
                                         </div>
-                                        <p className="font-black text-xs text-white uppercase tracking-widest">Canlı Görünyüle</p>
+                                        <p className="font-black text-xs text-white uppercase tracking-widest">{t('viewLive')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -1717,8 +1721,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Projeler & Portfolyo</h2>
-                                <p className="text-sm text-foreground/50">Başarı hikayelerinizi ve tamamladığınız projeleri profilinizde sergileyin.</p>
+                                <h2 className="text-xl font-bold">{t('myProjects')}</h2>
+                                <p className="text-sm text-foreground/50">{t('myProjectsSub')}</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -1728,7 +1732,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 }}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
-                                <Plus className="w-5 h-5" /> Yeni Proje Ekle
+                                <Plus className="w-5 h-5" /> {t('addNewProject')}
                             </button>
                         </div>
 
@@ -1773,7 +1777,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 }}
                                                 className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all"
                                             >
-                                                Düzenle
+                                                {t('edit')}
                                             </button>
                                             {product.link && (
                                                 <a href={product.link} target="_blank" className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-xl hover:scale-105 transition-all">
@@ -1788,8 +1792,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {productList.length === 0 && (
                                 <div className="col-span-full py-20 text-center glass rounded-[2.5rem] border-white/5">
                                     <Briefcase className="w-16 h-16 mx-auto mb-4 text-white/10" />
-                                    <p className="text-lg font-bold">Henüz Proje Eklememişsin</p>
-                                    <p className="text-sm text-foreground/40 mt-2">En iyi çalışmalarınızı ekleyerek potansiyel partnerlerinizi etkileyin.</p>
+                                    <p className="text-lg font-bold">{t('noProjectsYet')}</p>
+                                    <p className="text-sm text-foreground/40 mt-2">{t('noProjectsYetSub')}</p>
                                 </div>
                             )}
                         </div>
@@ -1798,8 +1802,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold">Uzmanlık Alanları</h2>
-                                <p className="text-sm text-foreground/50">Mesleki yetkinliklerinizi ve odak noktalarınıza listeleyin.</p>
+                                <h2 className="text-xl font-bold">{t('expertiseAreas')}</h2>
+                                <p className="text-sm text-foreground/50">{t('expertiseAreasSub')}</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -1809,7 +1813,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 }}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
-                                <Plus className="w-5 h-5" /> Yeni Uzmanlık Ekle
+                                <Plus className="w-5 h-5" /> {t('addNewExpertise')}
                             </button>
                         </div>
 
@@ -1828,7 +1832,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 setShowServiceModal(true)
                                             }}
                                             className="p-3 bg-white/5 border border-white/10 text-white/40 rounded-xl hover:bg-white/10 hover:text-white transition-all shadow-sm"
-                                            title="Düzenle"
+                                            title={t('edit')}
                                         >
                                             <Sparkles className="w-5 h-5" />
                                         </button>
@@ -1845,8 +1849,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {serviceList.length === 0 && (
                                 <div className="py-20 text-center glass rounded-[2.5rem] border-white/5">
                                     <Layout className="w-16 h-16 mx-auto mb-4 text-white/10" />
-                                    <p className="text-lg font-bold">Henüz Hizmet Eklememişsin</p>
-                                    <p className="text-sm text-foreground/40 mt-2">Neler yaptığını anlatmak için hizmetlerini ekle.</p>
+                                    <p className="text-lg font-bold">{t('noServicesYet')}</p>
+                                    <p className="text-sm text-foreground/40 mt-2">{t('noServicesYetSub')}</p>
                                 </div>
                             )}
                         </div>
@@ -1854,10 +1858,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 ) : activeTab === "appointments" ? (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-bold">Randevu Talepleri</h2>
+                            <h2 className="text-xl font-bold">{t('appointmentRequests')}</h2>
                             <div className="flex gap-2">
-                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white/40">Tümü</span>
-                                <span className="px-3 py-1 bg-primary/20 border border-primary/20 rounded-full text-xs font-bold text-primary">Bekleyen</span>
+                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white/40">{t('all')}</span>
+                                <span className="px-3 py-1 bg-primary/20 border border-primary/20 rounded-full text-xs font-bold text-primary">{t('pending')}</span>
                             </div>
                         </div>
 
@@ -1865,10 +1869,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <table className="w-full text-left min-w-[700px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Müşteri</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Tarih / Saat</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Durum</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('client')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('dateAndTime')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('status')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('action')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -1899,7 +1903,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         <button
                                                             onClick={() => handleUpdateAppointmentStatus(appointment.id, 'confirmed')}
                                                             className="w-9 h-9 bg-emerald-50 border border-emerald-100 text-emerald-500 rounded-xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
-                                                            title="Onayla"
+                                                            title={t('approve')}
                                                         >
                                                             <Check size={16} />
                                                         </button>
@@ -1907,7 +1911,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <button
                                                         onClick={() => handleDeleteAppointment(appointment.id)}
                                                         className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                                                        title="Sil"
+                                                        title={t('delete')}
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -1932,7 +1936,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-8 max-w-2xl mx-auto text-center py-12">
                         <div className="mb-12">
                             <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('qrTitle')}</h2>
-                            <p className="text-foreground/50 text-sm">{t('qrSub')}</p>
+                            <p className="text-sm text-foreground/50">{t('qrSub')}</p>
                         </div>
                         <div className="glass p-12 rounded-[3.5rem] border-white/5 inline-block mx-auto relative group shadow-2xl">
                             <div className="absolute inset-0 bg-primary/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -2038,7 +2042,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     onClick={handleSave}
                                     className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
                                 >
-                                    Ayarları Kaydet
+                                    {t('saveSettings')}
                                 </button>
                             </div>
 
@@ -2150,7 +2154,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     onClick={() => handleSave()}
                                     className="w-full py-4 bg-amber-500/10 border border-amber-500/20 text-amber-500 rounded-2xl text-sm font-bold hover:bg-amber-500/20 transition-all uppercase tracking-widest text-xs"
                                 >
-                                    Para Kazanma Ayarlarını Kaydet
+                                    {t('saveMonetizationSettings')}
                                 </button>
                             </div>
                         </div>
@@ -2174,10 +2178,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label={t('totalViewsLabel')} value={stats.totalViews.toString()} trend="Genel" />
-                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value={stats.clickRate} trend="Ortalama" />
-                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value={stats.cvClicks.toString()} trend="Dosya" />
-                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value={stats.projectClicks.toString()} trend="Portföy" />
+                            <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label={t('totalViewsLabel')} value={stats.totalViews.toString()} trend={t('general')} />
+                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value={stats.clickRate} trend={t('average')} />
+                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value={stats.cvClicks.toString()} trend={t('file')} />
+                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value={stats.projectClicks.toString()} trend={t('portfolio')} />
                         </div>
 
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -2270,15 +2274,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             ))}
                                         </div>
                                         <div className="flex-1 text-center md:text-left">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Akıllı Strateji Önerisi</p>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">{t('strategyTitle')}</p>
                                             <p className="text-base text-white font-bold leading-snug">
                                                 {stats.totalViews > 10 && stats.clickRate.replace('%', '') < 5
-                                                    ? "Ziyaretçi sayınız yüksek ancak etkileşim düşük. Profil fotoğrafınızı veya slogonızı güncelleyerek merak uyandırın."
-                                                    : "Performansınız dengeli. WhatsApp butonunu görünür kılarak doğrudan iletişimleri +%20 artırabilirsiniz."}
+                                                    ? t('strategyLowInteraction')
+                                                    : t('strategyBalanced')}
                                             </p>
                                         </div>
                                         <button className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 shrink-0">
-                                            STRATEJİYİ UYGULA
+                                            {t('strategyApply')}
                                         </button>
                                     </div>
                                 </div>
@@ -2290,8 +2294,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-10">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Tasarım Şablonları</h2>
-                                <p className="text-sm text-slate-500 font-medium tracking-wide">Profiliniz için en uygun stili kategoriler arasından bulun.</p>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t('designTemplates')}</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">{t('designTemplatesSub')}</p>
                             </div>
                             <div className="relative">
                                 <button
@@ -2372,7 +2376,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="flex flex-col gap-2">
                                                     <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
                                                     {tpl.isNew && (
-                                                        <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">YENİ</span>
+                                                        <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">{t('new')}</span>
                                                     )}
                                                 </div>
                                                 {profileData.templateId === tpl.id && (
@@ -2463,14 +2467,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 ? "bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300"
                                                                 : "bg-primary/10 border-primary/20 text-primary hover:bg-primary hover:text-white"
                                                         )}
-                                                        title={review.isActive ? "Gizle" : "Yayına Al"}
+                                                        title={review.isActive ? t('hide') : t('publish')}
                                                     >
                                                         {review.isActive ? <EyeOff size={16} /> : <Check size={16} />}
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteReview(review.id)}
                                                         className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                                                        title="Sil"
+                                                        title={t('delete')}
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -2482,7 +2486,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <tr>
                                             <td colSpan={5} className="px-6 py-12 text-center text-white/20">
                                                 <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-bold uppercase tracking-widest text-xs">Henüz yorum yapılmamış</p>
+                                                <p className="font-bold uppercase tracking-widest text-xs">{t('noReviewsYet')}</p>
                                             </td>
                                         </tr>
                                     )}
@@ -2494,8 +2498,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-xl font-bold text-slate-900">Gelen Talepler</h2>
-                                <p className="text-sm text-slate-500">Profiliniz üzerinden gelen iletişim ve teklif taleplerini buradan yönetin.</p>
+                                <h2 className="text-xl font-bold text-slate-900">{t('incomingLeads')}</h2>
+                                <p className="text-sm text-slate-500">{t('incomingLeadsSub')}</p>
                             </div>
                         </div>
 
@@ -2503,10 +2507,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <table className="w-full text-left min-w-[800px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Müşteri</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Mesaj</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Tarih</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('client')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('message')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('date')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('action')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -2528,7 +2532,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <button
                                                         onClick={() => handleDeleteLead(lead.id)}
                                                         className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                                                        title="Sil"
+                                                        title={t('delete')}
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -2540,7 +2544,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <tr>
                                             <td colSpan={4} className="px-6 py-20 text-center text-slate-300">
                                                 <Inbox className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-black uppercase tracking-widest text-[10px]">Henüz talep gelmemiş</p>
+                                                <p className="font-black uppercase tracking-widest text-[10px]">{t('noLeadsYet')}</p>
                                             </td>
                                         </tr>
                                     )}
@@ -2567,13 +2571,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
 
                                 <div className="mb-5">
-                                    <h2 className="text-xl font-bold text-gray-900">{editingProduct ? "Projeyi Düzenle" : "Yeni Proje Ekle"}</h2>
-                                    <p className="text-gray-400 text-sm mt-1">{editingProduct ? "Proje detaylarını buradan güncelleyebilirsiniz." : "Projenizi tanıtacak bir görsel ve detayları girin."}</p>
+                                    <h2 className="text-xl font-bold text-gray-900">{editingProduct ? t('editProject') : t('addNewProject')}</h2>
+                                    <p className="text-gray-400 text-sm mt-1">{editingProduct ? t('editProjectSub') : t('newProjectSub')}</p>
                                 </div>
 
                                 <form onSubmit={handleAddProduct} className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Proje Görseli</label>
+                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">{t('projectImage')}</label>
                                         <div
                                             className="relative border-2 border-dashed border-gray-200 rounded-xl overflow-hidden transition-all hover:border-primary/50 cursor-pointer group"
                                             onClick={() => document.getElementById('product-image-upload')?.click()}
@@ -2592,7 +2596,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             ) : (
                                                 <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
                                                     <Upload className="w-8 h-8" />
-                                                    <span className="text-sm font-medium">Görseli sürükle veya tıkla</span>
+                                                    <span className="text-sm font-medium">{t('projectImageSub')}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -2613,21 +2617,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <input
                                         type="text"
                                         required
-                                        placeholder="Proje Başlığı"
+                                        placeholder={t('projectTitle')}
                                         className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
                                         value={newProduct.name}
                                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                     />
                                     <input
                                         type="text"
-                                        placeholder="Canlı Link / GitHub"
+                                        placeholder={t('liveLinkGithub')}
                                         className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium"
                                         value={newProduct.link}
                                         onChange={(e) => setNewProduct({ ...newProduct, link: e.target.value })}
                                     />
                                     <textarea
                                         rows={2}
-                                        placeholder="Proje Açıklaması"
+                                        placeholder={t('projectDescription')}
                                         className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium resize-none"
                                         value={newProduct.description}
                                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
@@ -2637,7 +2641,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         disabled={isProductSaving}
                                         className="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                                     >
-                                        {isProductSaving ? "Kaydediliyor..." : "Projeyi Kaydet"}
+                                        {isProductSaving ? t('savingProject') : t('saveProject')}
                                     </button>
                                 </form>
                             </motion.div>
@@ -2663,25 +2667,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                                         <Zap className="w-7 h-7 text-primary" />
                                     </div>
-                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">{editingServiceIndex !== null ? "Uzmanlığı Düzenle" : "Yeni Hizmet / Uzmanlık"}</h2>
-                                    <p className="text-sm text-slate-500 mt-2">{editingServiceIndex !== null ? "Uzmanlık alanınızı buradan güncelleyebilirsiniz." : "Profilinizde görünecek yeni bir uzmanlık alanı ekleyin."}</p>
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">{editingServiceIndex !== null ? t('editExpertise') : t('newExpertiseTitle')}</h2>
+                                    <p className="text-sm text-slate-500 mt-2">{editingServiceIndex !== null ? t('editExpertiseSub') : t('newExpertiseSub')}</p>
                                 </div>
                                 <div className="space-y-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Başlık</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('titleLabel')}</label>
                                         <input
                                             type="text"
-                                            placeholder="Örn: Web Tasarım, SEO, Pazarlama"
+                                            placeholder={t('titlePlaceholder')}
                                             className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 font-medium transition-all placeholder:text-slate-300"
                                             value={newService.title}
                                             onChange={(e) => setNewService({ ...newService, title: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Açıklama</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('descriptionLabel')}</label>
                                         <textarea
                                             rows={3}
-                                            placeholder="Hizmetiniz hakkında kısa bir açıklama yazın..."
+                                            placeholder={t('descriptionPlaceholder')}
                                             className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 text-slate-900 font-medium resize-none transition-all placeholder:text-slate-300"
                                             value={newService.description}
                                             onChange={(e) => setNewService({ ...newService, description: e.target.value })}
@@ -2691,15 +2695,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         onClick={handleAddService}
                                         className="w-full bg-primary text-white py-5 rounded-2xl font-black shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
                                     >
-                                        {editingServiceIndex !== null ? "Güncelle" : "Hizmeti Ekle"}
+                                        {editingServiceIndex !== null ? t('update') : t('addExpertise')}
                                     </button>
                                 </div>
                             </motion.div>
                         </div>
                     )}
                 </AnimatePresence>
-            </main>
-        </div>
+            </main >
+        </div >
     )
 }
 

@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { QrCode, Download } from "lucide-react"
+import { useTranslation } from "@/context/LanguageContext"
 
 export function QRCodeCard({ username }: { username: string }) {
+    const { t } = useTranslation()
     const [qrCode, setQrCode] = useState<string | null>(null)
 
     useEffect(() => {
@@ -16,7 +18,7 @@ export function QRCodeCard({ username }: { username: string }) {
         return (
             <div className="flex flex-col items-center gap-2 text-white/20">
                 <QrCode className="w-12 h-12 animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-widest">QR Oluşturuluyor</span>
+                <span className="text-xs font-bold uppercase tracking-widest">{t('generatingQR')}</span>
             </div>
         )
     }
@@ -31,7 +33,7 @@ export function QRCodeCard({ username }: { username: string }) {
                 download={`${username}-qr.png`}
                 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary hover:text-white transition-colors"
             >
-                <Download className="w-3 h-3" /> İndir
+                <Download className="w-3 h-3" /> {t('download')}
             </a>
         </div>
     )
