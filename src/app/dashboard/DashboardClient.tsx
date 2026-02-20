@@ -72,7 +72,9 @@ import {
     Crosshair,
     Dna,
     Atom,
-    Boxes
+    Boxes,
+    ChevronDown,
+    ChevronUp
 } from "lucide-react"
 
 // Modül Tanımları
@@ -91,6 +93,34 @@ import { signOut } from "next-auth/react"
 import { QRCodeCard } from "@/components/QRCodeCard"
 import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+
+const TEMPLATE_CATEGORIES = [
+    { id: "all", name: "Tümü", icon: <Layout size={14} /> },
+    { id: "pro", name: "Asalet & Prestij", icon: <Briefcase size={14} /> },
+    { id: "retro", name: "Nostaljik Esinti", icon: <History size={14} /> },
+    { id: "luxury", name: "Premium Lüks", icon: <Award size={14} /> },
+    { id: "lifestyle", name: "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
+    { id: "future", name: "Fütüristik Vizyon", icon: <Cpu size={14} /> },
+    { id: "neon", name: "Neon Enerjisi", icon: <Zap size={14} /> },
+    { id: "pattern", name: "Sanatsal Doku", icon: <Layers size={14} /> },
+    { id: "nature", name: "Ekolojik Ruh", icon: <Sparkles size={14} /> },
+    { id: "dream", name: "Büyülü Akış", icon: <Cloud size={14} /> },
+    { id: "dark", name: "Gizemli Gece", icon: <Moon size={14} /> },
+    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> },
+    { id: "cyber", name: "Siber Gerçeklik", icon: <Monitor size={14} /> },
+    { id: "antique", name: "Antik Miras", icon: <Map size={14} /> },
+    { id: "liquid", name: "Likit Akış", icon: <Activity size={14} /> },
+    { id: "pop", name: "Dinamik Pop", icon: <Palette size={14} /> },
+    { id: "zen", name: "Zihinsel Odak", icon: <Target size={14} /> },
+    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> },
+    { id: "celestial", name: "İlahi Işıltı", icon: <Compass size={14} /> },
+    { id: "minimal", name: "Yalın Estetik", icon: <Layout size={14} /> },
+    { id: "industrial", name: "Endüstriyel", icon: <Wind size={14} /> },
+    { id: "vibrant", name: "Enerji Katı", icon: <Zap size={14} /> },
+    { id: "royal", name: "Hanedan", icon: <Gem size={14} /> },
+    { id: "tech", name: "Yüksek Teknoloji", icon: <Atom size={14} /> },
+    { id: "meta", name: "Metaverse", icon: <Boxes size={14} /> }
+]
 
 export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
     const { t, language } = useTranslation()
@@ -114,6 +144,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         animationStyle: profile?.animationStyle || "none"
     })
     const [selectedTplCat, setSelectedTplCat] = useState("all")
+    const [isTplCatOpen, setIsTplCatOpen] = useState(false)
+    const [isQuickTplMenuOpen, setIsQuickTplMenuOpen] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
     const [productList, setProductList] = useState(products || [])
@@ -814,12 +846,55 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                             <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Profili Düzenle</span>
                                         </button>
-                                        <button onClick={() => setActiveTab("templates")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-indigo-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
-                                            <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                                <Palette size={20} />
-                                            </div>
-                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Şablon Değiştir</span>
-                                        </button>
+                                        <div className="relative group/main">
+                                            <button
+                                                onClick={() => setIsQuickTplMenuOpen(!isQuickTplMenuOpen)}
+                                                className="w-full group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-indigo-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center relative z-20"
+                                            >
+                                                <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                    <Palette size={20} />
+                                                </div>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Şablon Değiştir</span>
+                                                    <ChevronDown size={14} className={cn("text-slate-400 transition-transform", isQuickTplMenuOpen && "rotate-180")} />
+                                                </div>
+                                            </button>
+
+                                            <AnimatePresence>
+                                                {isQuickTplMenuOpen && (
+                                                    <>
+                                                        <div className="fixed inset-0 z-40" onClick={() => setIsQuickTplMenuOpen(false)} />
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[280px] max-h-[400px] overflow-y-auto no-scrollbar bg-white border border-slate-200 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] z-50 p-3 grid grid-cols-1 gap-1"
+                                                        >
+                                                            <div className="px-4 py-2 mb-2 border-b border-slate-50">
+                                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Kategori Seçin</p>
+                                                            </div>
+                                                            {TEMPLATE_CATEGORIES.map((cat) => (
+                                                                <button
+                                                                    key={cat.id}
+                                                                    onClick={() => {
+                                                                        setSelectedTplCat(cat.id);
+                                                                        setActiveTab("templates");
+                                                                        setIsQuickTplMenuOpen(false);
+                                                                    }}
+                                                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-wider transition-all text-left text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 group/item"
+                                                                >
+                                                                    <div className="text-indigo-500/60 group-hover/item:scale-110 transition-transform">
+                                                                        {cat.icon}
+                                                                    </div>
+                                                                    {cat.name}
+                                                                    <ArrowRight size={12} className="ml-auto opacity-0 group-hover/item:opacity-100 transition-all -translate-x-2 group-hover/item:translate-x-0" />
+                                                                </button>
+                                                            ))}
+                                                        </motion.div>
+                                                    </>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
                                         <button onClick={() => setActiveTab("products")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-emerald-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
                                             <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
                                                 <Briefcase size={20} />
@@ -2062,47 +2137,55 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Tasarım Şablonları</h2>
                                 <p className="text-sm text-slate-500 font-medium tracking-wide">Profiliniz için en uygun stili kategoriler arasından bulun.</p>
                             </div>
-                            <div className="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
-                                {[
-                                    { id: "all", name: "Tümü", icon: <Layout size={14} /> },
-                                    { id: "pro", name: "Asalet & Prestij", icon: <Briefcase size={14} /> },
-                                    { id: "retro", name: "Nostaljik Esinti", icon: <History size={14} /> },
-                                    { id: "luxury", name: "Premium Lüks", icon: <Award size={14} /> },
-                                    { id: "lifestyle", name: "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
-                                    { id: "future", name: "Fütüristik Vizyon", icon: <Cpu size={14} /> },
-                                    { id: "neon", name: "Neon Enerjisi", icon: <Zap size={14} /> },
-                                    { id: "pattern", name: "Sanatsal Doku", icon: <Layers size={14} /> },
-                                    { id: "nature", name: "Ekolojik Ruh", icon: <Sparkles size={14} /> },
-                                    { id: "dream", name: "Büyülü Akış", icon: <Cloud size={14} /> },
-                                    { id: "dark", name: "Gizemli Gece", icon: <Moon size={14} /> },
-                                    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> },
-                                    { id: "cyber", name: "Siber Gerçeklik", icon: <Monitor size={14} /> },
-                                    { id: "antique", name: "Antik Miras", icon: <Map size={14} /> },
-                                    { id: "liquid", name: "Likit Akış", icon: <Activity size={14} /> },
-                                    { id: "pop", name: "Dinamik Pop", icon: <Palette size={14} /> },
-                                    { id: "zen", name: "Zihinsel Odak", icon: <Target size={14} /> },
-                                    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> },
-                                    { id: "celestial", name: "İlahi Işıltı", icon: <Compass size={14} /> },
-                                    { id: "minimal", name: "Yalın Estetik", icon: <Layout size={14} /> },
-                                    { id: "industrial", name: "Endüstriyel", icon: <Wind size={14} /> },
-                                    { id: "vibrant", name: "Enerji Katı", icon: <Zap size={14} /> },
-                                    { id: "royal", name: "Hanedan", icon: <Gem size={14} /> },
-                                    { id: "tech", name: "Yüksek Teknoloji", icon: <Atom size={14} /> },
-                                    { id: "meta", name: "Metaverse", icon: <Boxes size={14} /> }
-                                ].map((cat) => (
-                                    <button
-                                        key={cat.id}
-                                        onClick={() => setSelectedTplCat(cat.id)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
-                                            selectedTplCat === cat.id
-                                                ? "bg-white text-primary shadow-md border border-slate-100"
-                                                : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
-                                        )}
-                                    >
-                                        {cat.icon} {cat.name}
-                                    </button>
-                                ))}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsTplCatOpen(!isTplCatOpen)}
+                                    className="flex items-center gap-3 px-6 py-3.5 bg-white border border-slate-200 rounded-2xl font-black text-xs uppercase tracking-widest text-slate-900 shadow-sm hover:border-primary/30 transition-all min-w-[240px] justify-between group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="text-primary group-hover:scale-110 transition-transform">
+                                            {TEMPLATE_CATEGORIES.find(c => c.id === selectedTplCat)?.icon}
+                                        </div>
+                                        {TEMPLATE_CATEGORIES.find(c => c.id === selectedTplCat)?.name}
+                                    </div>
+                                    {isTplCatOpen ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
+                                </button>
+
+                                <AnimatePresence>
+                                    {isTplCatOpen && (
+                                        <>
+                                            <div className="fixed inset-0 z-40" onClick={() => setIsTplCatOpen(false)} />
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                className="absolute right-0 md:left-0 top-full mt-2 w-[280px] max-h-[400px] overflow-y-auto no-scrollbar bg-white border border-slate-200 rounded-[2rem] shadow-2xl z-50 p-2 grid grid-cols-1 gap-1"
+                                            >
+                                                {TEMPLATE_CATEGORIES.map((cat) => (
+                                                    <button
+                                                        key={cat.id}
+                                                        onClick={() => {
+                                                            setSelectedTplCat(cat.id);
+                                                            setIsTplCatOpen(false);
+                                                        }}
+                                                        className={cn(
+                                                            "flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all text-left",
+                                                            selectedTplCat === cat.id
+                                                                ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                                                : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                                                        )}
+                                                    >
+                                                        <div className={cn(selectedTplCat === cat.id ? "text-white" : "text-primary/60")}>
+                                                            {cat.icon}
+                                                        </div>
+                                                        {cat.name}
+                                                        {selectedTplCat === cat.id && <Check size={14} className="ml-auto" />}
+                                                    </button>
+                                                ))}
+                                            </motion.div>
+                                        </>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
 
