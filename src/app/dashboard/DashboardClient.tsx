@@ -149,6 +149,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         image: ""
     })
     const [isProductSaving, setIsProductSaving] = useState(false)
+    const [editingProduct, setEditingProduct] = useState<any>(null)
     const [statsRange, setStatsRange] = useState("30")
 
     // Reviews Management
@@ -161,6 +162,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         title: "",
         description: ""
     })
+    const [editingServiceIndex, setEditingServiceIndex] = useState<number | null>(null)
 
     // Leads Management
     const [leads, setLeads] = useState<any[]>([])
@@ -482,11 +484,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleAddService = () => {
-        const newList = [...serviceList, newService]
+        let newList;
+        if (editingServiceIndex !== null) {
+            newList = [...serviceList]
+            newList[editingServiceIndex] = newService
+            setShowToast("Uzmanlık güncellendi!")
+        } else {
+            newList = [...serviceList, newService]
+            setShowToast("Uzmanlık eklendi!")
+        }
         setServiceList(newList)
         setShowServiceModal(false)
+        setEditingServiceIndex(null)
         setNewService({ title: "", description: "" })
-        handleSave({ services: newList }) // Automatically save profile with new service
+        handleSave({ services: newList })
+        setTimeout(() => setShowToast(null), 3000)
     }
 
     const handleDeleteService = (index: number) => {
@@ -499,21 +511,32 @@ export default function DashboardClient({ session, profile, subscription, appoin
         e.preventDefault()
         setIsProductSaving(true)
         try {
-            const res = await fetch("/api/products", {
-                method: "POST",
+            const endpoint = editingProduct ? `/api/products?id=${editingProduct.id}` : "/api/products"
+            const method = editingProduct ? "PUT" : "POST"
+
+            const res = await fetch(endpoint, {
+                method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newProduct)
             })
             if (res.ok) {
-                const added = await res.json()
-                setProductList([added, ...productList])
+                const updatedProduct = await res.json()
+                if (editingProduct) {
+                    setProductList(productList.map((p: any) => p.id === editingProduct.id ? updatedProduct : p))
+                    setShowToast("Proje güncellendi!")
+                } else {
+                    setProductList([updatedProduct, ...productList])
+                    setShowToast("Ürün eklendi!")
+                }
                 setShowProductModal(false)
+                setEditingProduct(null)
                 setNewProduct({ name: "", description: "", price: "", link: "", image: "" })
-                setShowToast("Ürün eklendi!")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
             console.error(err)
+            setShowToast("İşlem başarısız!")
+            setTimeout(() => setShowToast(null), 3000)
         } finally {
             setIsProductSaving(false)
         }
@@ -1697,7 +1720,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <p className="text-sm text-foreground/50">Başarı hikayelerinizi ve tamamladığınız projeleri profilinizde sergileyin.</p>
                             </div>
                             <button
-                                onClick={() => setShowProductModal(true)}
+                                onClick={() => {
+                                    setEditingProduct(null)
+                                    setNewProduct({ name: "", description: "", price: "", link: "", image: "" })
+                                    setShowProductModal(true)
+                                }}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
                                 <Plus className="w-5 h-5" /> Yeni Proje Ekle
@@ -1731,7 +1758,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <p className="text-sm text-foreground/50 mb-4 line-clamp-2">{product.description}</p>
                                         <div className="flex gap-2">
-                                            <button className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all">Düzenle</button>
+                                            <button
+                                                onClick={() => {
+                                                    setEditingProduct(product)
+                                                    setNewProduct({
+                                                        name: product.name,
+                                                        description: product.description || "",
+                                                        price: product.price?.toString() || "",
+                                                        link: product.link || "",
+                                                        image: product.image || ""
+                                                    })
+                                                    setShowProductModal(true)
+                                                }}
+                                                className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all"
+                                            >
+                                                Düzenle
+                                            </button>
                                             {product.link && (
                                                 <a href={product.link} target="_blank" className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-xl hover:scale-105 transition-all">
                                                     <ExternalLink size={18} />
@@ -1759,7 +1801,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <p className="text-sm text-foreground/50">Mesleki yetkinliklerinizi ve odak noktalarınıza listeleyin.</p>
                             </div>
                             <button
-                                onClick={() => setShowServiceModal(true)}
+                                onClick={() => {
+                                    setEditingServiceIndex(null)
+                                    setNewService({ title: "", description: "" })
+                                    setShowServiceModal(true)
+                                }}
                                 className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
                             >
                                 <Plus className="w-5 h-5" /> Yeni Uzmanlık Ekle
@@ -1773,12 +1819,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <h3 className="font-bold text-lg mb-1">{service.title}</h3>
                                         <p className="text-sm text-foreground/50">{service.description}</p>
                                     </div>
-                                    <button
-                                        onClick={() => handleDeleteService(index)}
-                                        className="flex items-center gap-2 p-3 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => {
+                                                setEditingServiceIndex(index)
+                                                setNewService(service)
+                                                setShowServiceModal(true)
+                                            }}
+                                            className="p-3 bg-white/5 border border-white/10 text-white/40 rounded-xl hover:bg-white/10 hover:text-white transition-all shadow-sm"
+                                            title="Düzenle"
+                                        >
+                                            <Sparkles className="w-5 h-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteService(index)}
+                                            className="flex items-center gap-2 p-3 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
 
@@ -2507,8 +2566,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
 
                                 <div className="mb-5">
-                                    <h2 className="text-xl font-bold text-gray-900">Yeni Proje Ekle</h2>
-                                    <p className="text-gray-400 text-sm mt-1">Projenizi tanıtacak bir görsel ve detayları girin.</p>
+                                    <h2 className="text-xl font-bold text-gray-900">{editingProduct ? "Projeyi Düzenle" : "Yeni Proje Ekle"}</h2>
+                                    <p className="text-gray-400 text-sm mt-1">{editingProduct ? "Proje detaylarını buradan güncelleyebilirsiniz." : "Projenizi tanıtacak bir görsel ve detayları girin."}</p>
                                 </div>
 
                                 <form onSubmit={handleAddProduct} className="space-y-4">
@@ -2603,8 +2662,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                                         <Zap className="w-7 h-7 text-primary" />
                                     </div>
-                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Yeni Hizmet / Uzmanlık</h2>
-                                    <p className="text-sm text-slate-500 mt-2">Profilinizde görünecek yeni bir uzmanlık alanı ekleyin.</p>
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">{editingServiceIndex !== null ? "Uzmanlığı Düzenle" : "Yeni Hizmet / Uzmanlık"}</h2>
+                                    <p className="text-sm text-slate-500 mt-2">{editingServiceIndex !== null ? "Uzmanlık alanınızı buradan güncelleyebilirsiniz." : "Profilinizde görünecek yeni bir uzmanlık alanı ekleyin."}</p>
                                 </div>
                                 <div className="space-y-6">
                                     <div className="space-y-2">
@@ -2631,7 +2690,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         onClick={handleAddService}
                                         className="w-full bg-primary text-white py-5 rounded-2xl font-black shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
                                     >
-                                        Hizmeti Ekle
+                                        {editingServiceIndex !== null ? "Güncelle" : "Hizmeti Ekle"}
                                     </button>
                                 </div>
                             </motion.div>

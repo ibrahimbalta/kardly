@@ -39,6 +39,36 @@ export async function POST(req: Request) {
     }
 }
 
+export async function PUT(req: Request) {
+    try {
+        const session = await getServerSession(authOptions)
+        if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+        const { searchParams } = new URL(req.url)
+        const id = searchParams.get("id")
+        if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 })
+
+        const body = await req.json()
+        const { name, description, price, image, link } = body
+
+        const updated = await prisma.product.update({
+            where: { id, profile: { userId: session.user.id } },
+            data: {
+                name,
+                description,
+                price: price ? parseFloat(price) || 0 : 0,
+                image,
+                link
+            }
+        })
+
+        return NextResponse.json(updated)
+    } catch (error) {
+        console.error("Product Update Error:", error)
+        return NextResponse.json({ error: "Update failed" }, { status: 500 })
+    }
+}
+
 export async function DELETE(req: Request) {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: "Auth required" }, { status: 401 })
