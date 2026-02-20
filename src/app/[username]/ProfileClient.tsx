@@ -2913,7 +2913,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             <button
                                 type="submit"
                                 className={cn("w-full py-3.5 flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")}
-                                style={{ background: theme.accent, shadowColor: `${theme.accent}30` }}
+                                style={{ background: theme.accent, boxShadow: `0 10px 20px -5px ${theme.accent}40` }}
                             >
                                 <Zap size={14} className="fill-white" /> Talebi İlet
                             </button>
