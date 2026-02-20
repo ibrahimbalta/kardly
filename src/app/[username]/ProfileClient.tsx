@@ -214,10 +214,11 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
+        if (profile.themeColor) return profile.themeColor;
         const colorMap: Record<string, string> = {
             black: "#0ea5e9", white: "#3b82f6", blue: "#38bdf8", green: "#22c55e", purple: "#a855f7",
             red: "#ef4444", gold: "#fbbf24", rose: "#f43f5e", cyan: "#06b6d4", pink: "#ec4899",
@@ -294,7 +295,7 @@ END:VCARD`
                 isOpen={isQrOpen}
                 onClose={() => setIsQrOpen(false)}
                 qrDataUrl={qrDataUrl}
-                theme={themes[profile.templateId] || themes.black}
+                theme={{ accent: activeAccent }}
                 profile={profile}
                 t={t}
             />
@@ -364,7 +365,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     const getYoutubeEmbedUrl = (url: string) => {
