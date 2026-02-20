@@ -2930,7 +2930,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                     {/* Social Icons */}
                     <div className="flex justify-center flex-wrap gap-6 pt-2">
-                        {socialLinks.filter((l: any) => l.platform !== 'customLinks').slice(0, 10).map((l: any, i: number) => {
+                        {socialLinks.filter((l: any) => l.platform !== 'customLinks' && l.platform.toLowerCase() !== 'phone').slice(0, 10).map((l: any, i: number) => {
                             const platform = l.platform.toLowerCase()
                             return (
                                 <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
@@ -2939,10 +2939,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     {platform === 'twitter' && <Twitter size={24} />}
                                     {platform === 'github' && <Github size={24} />}
                                     {platform === 'youtube' && <Youtube size={24} />}
-                                    {(platform === 'phone' || platform === 'whatsapp') && <Phone size={24} />}
+                                    {platform === 'whatsapp' && <MessageCircle size={24} />}
                                     {platform === 'mail' && <Mail size={24} />}
                                     {platform === 'location' && <QrCode size={24} />}
-                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'phone', 'whatsapp', 'mail', 'location'].includes(platform)) && <Globe size={24} />}
+                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'location'].includes(platform)) && <Globe size={24} />}
                                 </a>
                             )
                         })}
