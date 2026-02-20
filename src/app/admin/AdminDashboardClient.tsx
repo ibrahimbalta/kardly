@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
     Users,
     CreditCard,
@@ -18,7 +18,16 @@ import {
     X,
     Activity,
     ChevronRight,
-    ArrowUpRight
+    ArrowUpRight,
+    MessageSquare,
+    FileText,
+    Plus,
+    Trash2,
+    Eye,
+    EyeOff,
+    Check,
+    Edit3,
+    Send
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -30,6 +39,17 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [localUsers, setLocalUsers] = useState(users)
     const [loadingUserId, setLoadingUserId] = useState<string | null>(null)
+
+    // Contact Messages
+    const [messages, setMessages] = useState<any[]>([])
+    const [messagesLoading, setMessagesLoading] = useState(false)
+
+    // Blog Posts
+    const [blogPosts, setBlogPosts] = useState<any[]>([])
+    const [blogLoading, setBlogLoading] = useState(false)
+    const [showBlogForm, setShowBlogForm] = useState(false)
+    const [editingPost, setEditingPost] = useState<any>(null)
+    const [blogForm, setBlogForm] = useState({ title: '', slug: '', excerpt: '', content: '', coverImage: '', isPublished: false })
 
     const filteredUsers = localUsers.filter((u: any) =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -56,6 +76,96 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
             setLoadingUserId(null)
         }
     }
+
+    // Load messages
+    const loadMessages = async () => {
+        setMessagesLoading(true)
+        try {
+            const res = await fetch('/api/admin/contact')
+            const data = await res.json()
+            if (Array.isArray(data)) setMessages(data)
+        } catch { } finally { setMessagesLoading(false) }
+    }
+
+    // Mark message as read
+    const toggleMessageRead = async (id: string, isRead: boolean) => {
+        await fetch('/api/admin/contact', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, isRead: !isRead })
+        })
+        setMessages(messages.map(m => m.id === id ? { ...m, isRead: !isRead } : m))
+    }
+
+    // Delete message
+    const deleteMessage = async (id: string) => {
+        await fetch('/api/admin/contact', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        })
+        setMessages(messages.filter(m => m.id !== id))
+    }
+
+    // Load blog posts
+    const loadBlogPosts = async () => {
+        setBlogLoading(true)
+        try {
+            const res = await fetch('/api/blog?admin=true')
+            const data = await res.json()
+            if (Array.isArray(data)) setBlogPosts(data)
+        } catch { } finally { setBlogLoading(false) }
+    }
+
+    // Save blog post
+    const saveBlogPost = async () => {
+        const method = editingPost ? 'PUT' : 'POST'
+        const body = editingPost ? { id: editingPost.id, ...blogForm } : blogForm
+
+        const res = await fetch('/api/blog', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        if (res.ok) {
+            setShowBlogForm(false)
+            setEditingPost(null)
+            setBlogForm({ title: '', slug: '', excerpt: '', content: '', coverImage: '', isPublished: false })
+            loadBlogPosts()
+        }
+    }
+
+    // Delete blog post
+    const deleteBlogPost = async (id: string) => {
+        await fetch('/api/blog', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        })
+        setBlogPosts(blogPosts.filter(p => p.id !== id))
+    }
+
+    // Edit blog post
+    const startEditPost = (post: any) => {
+        setEditingPost(post)
+        setBlogForm({
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt || '',
+            content: post.content,
+            coverImage: post.coverImage || '',
+            isPublished: post.isPublished
+        })
+        setShowBlogForm(true)
+    }
+
+    useEffect(() => {
+        if (activeTab === 'messages') loadMessages()
+        if (activeTab === 'blog') loadBlogPosts()
+    }, [activeTab])
+
+    const unreadCount = messages.filter(m => !m.isRead).length
 
     return (
         <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
@@ -118,6 +228,21 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                 onClick={() => { setActiveTab("payments"); setIsSidebarOpen(false); }}
                             />
 
+                            <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">İçerik Yönetimi</div>
+                            <AdminNavItem
+                                icon={<MessageSquare className="w-5 h-5" />}
+                                label="İletişim Mesajları"
+                                active={activeTab === "messages"}
+                                onClick={() => { setActiveTab("messages"); setIsSidebarOpen(false); }}
+                                badge={unreadCount > 0 ? unreadCount : undefined}
+                            />
+                            <AdminNavItem
+                                icon={<FileText className="w-5 h-5" />}
+                                label="Blog Yönetimi"
+                                active={activeTab === "blog"}
+                                onClick={() => { setActiveTab("blog"); setIsSidebarOpen(false); }}
+                            />
+
                             <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Hızlı Erişim</div>
                             <Link href="/dashboard" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-all group">
                                 <div className="flex items-center gap-3">
@@ -160,7 +285,13 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2 text-slate-900">Sistem <span className="gradient-text">Özeti.</span></h1>
+                        <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2 text-slate-900">
+                            {activeTab === 'overview' && <>Sistem <span className="gradient-text">Özeti.</span></>}
+                            {activeTab === 'users' && <>Kullanıcı <span className="gradient-text">Yönetimi.</span></>}
+                            {activeTab === 'payments' && <>Ödeme <span className="gradient-text">Kayıtları.</span></>}
+                            {activeTab === 'messages' && <>İletişim <span className="gradient-text">Mesajları.</span></>}
+                            {activeTab === 'blog' && <>Blog <span className="gradient-text">Yönetimi.</span></>}
+                        </h1>
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
                     <div className="mt-4 lg:mt-0 flex items-center gap-3">
@@ -185,7 +316,6 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             animate={{ opacity: 1, y: 0 }}
                             className="space-y-10"
                         >
-                            {/* Stats Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 <AdminStatCard icon={<Users className="w-6 h-6" />} label="Toplam Kullanıcı" value={stats.totalUsers} color="text-blue-600" bgColor="bg-blue-50" />
                                 <AdminStatCard icon={<TrendingUp className="w-6 h-6" />} label="Toplam Ciro" value={`₺${stats.totalRevenue}`} color="text-emerald-600" bgColor="bg-emerald-50" />
@@ -193,13 +323,12 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                 <AdminStatCard icon={<Activity className="w-6 h-6" />} label="Etkileşim" value={stats.totalViews} color="text-amber-600" bgColor="bg-amber-50" />
                             </div>
 
-                            {/* Main Content Area */}
                             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                                 <div className="xl:col-span-2 bg-white p-8 rounded-[3rem] border border-slate-200 shadow-sm relative overflow-hidden">
                                     <div className="flex justify-between items-center mb-8">
                                         <div>
                                             <h3 className="text-xl font-black tracking-tight mb-1 uppercase tracking-tighter text-slate-900">Son İşlemler</h3>
-                                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest uppercase">Ödeme Geçmişi</p>
+                                            <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Ödeme Geçmişi</p>
                                         </div>
                                         <button className="text-xs font-bold text-slate-400 hover:text-slate-900 transition-all flex items-center gap-1">
                                             Tümü <ArrowUpRight size={14} />
@@ -232,7 +361,6 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                             </tbody>
                                         </table>
                                     </div>
-                                    {/* Decoration */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full" />
                                 </div>
 
@@ -365,7 +493,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             className="space-y-6"
                         >
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
-                                <h1 className="text-2xl font-black uppercase tracking-tighter italic text-primary tracking-tighter">İşlem Kayıtları (₺)</h1>
+                                <h1 className="text-2xl font-black uppercase tracking-tighter italic text-primary">İşlem Kayıtları (₺)</h1>
                                 <div className="flex gap-3">
                                     <div className="px-4 py-2 bg-emerald-50 rounded-xl text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-2 shadow-sm">
                                         <Activity size={12} /> Canlı Kayıtlar
@@ -425,13 +553,252 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             </div>
                         </motion.div>
                     )}
+
+                    {/* ─── MESSAGES TAB ─── */}
+                    {activeTab === "messages" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-6"
+                        >
+                            <div className="flex justify-between items-center mb-8">
+                                <div>
+                                    <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900">İletişim Mesajları</h1>
+                                    <p className="text-xs text-slate-400 mt-1">{messages.length} mesaj, {unreadCount} okunmamış</p>
+                                </div>
+                            </div>
+
+                            {messagesLoading ? (
+                                <div className="flex justify-center py-20">
+                                    <div className="w-8 h-8 border-3 border-slate-200 border-t-rose-500 rounded-full animate-spin" />
+                                </div>
+                            ) : messages.length === 0 ? (
+                                <div className="bg-white rounded-3xl border border-slate-200 p-20 text-center">
+                                    <MessageSquare size={48} className="text-slate-200 mx-auto mb-4" />
+                                    <p className="text-slate-400 font-medium">Henüz mesaj yok</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {messages.map((msg: any) => (
+                                        <div key={msg.id} className={cn(
+                                            "bg-white rounded-2xl border p-6 transition-all",
+                                            msg.isRead ? "border-slate-200" : "border-rose-200 bg-rose-50/30"
+                                        )}>
+                                            <div className="flex items-start justify-between gap-4 mb-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={cn(
+                                                        "w-10 h-10 rounded-xl flex items-center justify-center",
+                                                        msg.isRead ? "bg-slate-100 text-slate-400" : "bg-rose-100 text-rose-500"
+                                                    )}>
+                                                        <Mail size={18} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-sm font-bold text-slate-900">{msg.name}</div>
+                                                        <div className="text-xs text-slate-400">{msg.email}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[10px] text-slate-400 font-medium">
+                                                        {new Date(msg.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => toggleMessageRead(msg.id, msg.isRead)}
+                                                        className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+                                                        title={msg.isRead ? "Okunmadı işaretle" : "Okundu işaretle"}
+                                                    >
+                                                        {msg.isRead ? <EyeOff size={14} /> : <Eye size={14} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteMessage(msg.id)}
+                                                        className="p-2 rounded-lg hover:bg-rose-50 transition-colors text-slate-400 hover:text-rose-500"
+                                                        title="Sil"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="text-xs font-bold text-slate-700 mb-2">{msg.subject}</div>
+                                            <p className="text-sm text-slate-500 leading-relaxed">{msg.message}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+
+                    {/* ─── BLOG TAB ─── */}
+                    {activeTab === "blog" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-6"
+                        >
+                            <div className="flex justify-between items-center mb-8">
+                                <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Blog Yazıları</h1>
+                                <button
+                                    onClick={() => {
+                                        setEditingPost(null)
+                                        setBlogForm({ title: '', slug: '', excerpt: '', content: '', coverImage: '', isPublished: false })
+                                        setShowBlogForm(true)
+                                    }}
+                                    className="px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-sm"
+                                >
+                                    <Plus size={14} /> Yeni Yazı
+                                </button>
+                            </div>
+
+                            {/* Blog Form Modal */}
+                            {showBlogForm && (
+                                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm space-y-5">
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="text-lg font-bold text-slate-900">{editingPost ? 'Yazıyı Düzenle' : 'Yeni Blog Yazısı'}</h3>
+                                        <button onClick={() => { setShowBlogForm(false); setEditingPost(null) }} className="text-slate-400 hover:text-slate-600">
+                                            <X size={18} />
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 block">Başlık</label>
+                                            <input
+                                                type="text"
+                                                value={blogForm.title}
+                                                onChange={e => setBlogForm({ ...blogForm, title: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9ğüşöçı]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') })}
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-300 transition-all"
+                                                placeholder="Yazı başlığı..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 block">Slug (URL)</label>
+                                            <input
+                                                type="text"
+                                                value={blogForm.slug}
+                                                onChange={e => setBlogForm({ ...blogForm, slug: e.target.value })}
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium font-mono focus:outline-none focus:border-rose-300 transition-all"
+                                                placeholder="yazi-url-adresi"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 block">Kapak Görseli (URL)</label>
+                                        <input
+                                            type="text"
+                                            value={blogForm.coverImage}
+                                            onChange={e => setBlogForm({ ...blogForm, coverImage: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-300 transition-all"
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 block">Özet</label>
+                                        <input
+                                            type="text"
+                                            value={blogForm.excerpt}
+                                            onChange={e => setBlogForm({ ...blogForm, excerpt: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-300 transition-all"
+                                            placeholder="Kısa özet..."
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 block">İçerik</label>
+                                        <textarea
+                                            rows={10}
+                                            value={blogForm.content}
+                                            onChange={e => setBlogForm({ ...blogForm, content: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-300 transition-all resize-none"
+                                            placeholder="Yazı içeriğini buraya girin..."
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <label className="flex items-center gap-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={blogForm.isPublished}
+                                                onChange={e => setBlogForm({ ...blogForm, isPublished: e.target.checked })}
+                                                className="w-4 h-4 rounded accent-rose-500"
+                                            />
+                                            <span className="text-sm font-medium text-slate-600">Hemen yayınla</span>
+                                        </label>
+                                        <button
+                                            onClick={saveBlogPost}
+                                            className="px-8 py-3 bg-rose-500 text-white rounded-xl text-sm font-bold hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-sm"
+                                        >
+                                            <Send size={14} /> {editingPost ? 'Güncelle' : 'Kaydet'}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Blog Posts List */}
+                            {blogLoading ? (
+                                <div className="flex justify-center py-20">
+                                    <div className="w-8 h-8 border-3 border-slate-200 border-t-rose-500 rounded-full animate-spin" />
+                                </div>
+                            ) : blogPosts.length === 0 && !showBlogForm ? (
+                                <div className="bg-white rounded-3xl border border-slate-200 p-20 text-center">
+                                    <FileText size={48} className="text-slate-200 mx-auto mb-4" />
+                                    <p className="text-slate-400 font-medium">Henüz blog yazısı yok</p>
+                                    <p className="text-slate-300 text-sm mt-1">Yeni bir yazı ekleyerek başlayın.</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {blogPosts.map((post: any) => (
+                                        <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-6 flex items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4 min-w-0">
+                                                <div className={cn(
+                                                    "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                                                    post.isPublished ? "bg-emerald-50 text-emerald-500" : "bg-slate-100 text-slate-400"
+                                                )}>
+                                                    <FileText size={18} />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <div className="text-sm font-bold text-slate-900 truncate">{post.title}</div>
+                                                    <div className="text-xs text-slate-400 flex items-center gap-3 mt-1">
+                                                        <span className="font-mono">/blog/{post.slug}</span>
+                                                        <span>•</span>
+                                                        <span>{new Date(post.createdAt).toLocaleDateString('tr-TR')}</span>
+                                                        <span>•</span>
+                                                        <span className={post.isPublished ? "text-emerald-500" : "text-slate-400"}>
+                                                            {post.isPublished ? 'Yayında' : 'Taslak'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <button
+                                                    onClick={() => startEditPost(post)}
+                                                    className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+                                                >
+                                                    <Edit3 size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => deleteBlogPost(post.id)}
+                                                    className="p-2 rounded-lg hover:bg-rose-50 transition-colors text-slate-400 hover:text-rose-500"
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                                {post.isPublished && (
+                                                    <Link
+                                                        href={`/blog/${post.slug}`}
+                                                        target="_blank"
+                                                        className="p-2 rounded-lg hover:bg-indigo-50 transition-colors text-slate-400 hover:text-indigo-500"
+                                                    >
+                                                        <ExternalLink size={14} />
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
                 </div>
             </main>
         </div>
     )
 }
 
-function AdminNavItem({ icon, label, active, onClick }: any) {
+function AdminNavItem({ icon, label, active, onClick, badge }: any) {
     return (
         <button
             onClick={onClick}
@@ -449,7 +816,12 @@ function AdminNavItem({ icon, label, active, onClick }: any) {
                 {icon}
             </div>
             <span className="truncate">{label}</span>
-            {active && (
+            {badge && (
+                <span className="ml-auto px-2 py-0.5 bg-rose-500 text-white text-[10px] font-black rounded-full min-w-[20px] text-center">
+                    {badge}
+                </span>
+            )}
+            {active && !badge && (
                 <motion.div
                     layoutId="active-nav"
                     className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_#fff]"
@@ -476,7 +848,6 @@ function AdminStatCard({ icon, label, value, color, bgColor }: any) {
             <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{label}</p>
             <p className="text-3xl font-black tracking-tighter text-slate-900">{value}</p>
 
-            {/* Decoration */}
             <div className={`absolute -bottom-4 -right-4 w-20 h-20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-full ${bgColor}`} />
         </motion.div>
     )
@@ -485,4 +856,3 @@ function AdminStatCard({ icon, label, value, color, bgColor }: any) {
 function cn(...inputs: any[]) {
     return inputs.filter(Boolean).join(" ")
 }
-

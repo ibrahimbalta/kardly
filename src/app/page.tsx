@@ -426,33 +426,32 @@ export default function Home() {
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Ürün</h5>
               <ul className="space-y-3">
-                {['Özellikler', 'Şablonlar', 'Fiyatlandırma'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
-                ))}
+                <li><a href="#features" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Özellikler</a></li>
+                <li><a href="#templates" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Şablonlar</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Fiyatlandırma</a></li>
               </ul>
             </div>
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Destek</h5>
               <ul className="space-y-3">
-                {['Blog', 'İletişim', 'SSS'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
-                ))}
+                <li><Link href="/blog" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Blog</Link></li>
+                <li><Link href="/iletisim" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">İletişim</Link></li>
+                <li><Link href="/sss" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">SSS</Link></li>
               </ul>
             </div>
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Yasal</h5>
               <ul className="space-y-3">
-                {['Kullanım Şartları', 'Gizlilik'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
-                ))}
+                <li><Link href="/kullanim-sartlari" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Kullanım Şartları</Link></li>
+                <li><Link href="/gizlilik" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Gizlilik</Link></li>
               </ul>
             </div>
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">Sosyal</h5>
               <ul className="space-y-3">
-                {['Instagram', 'Twitter', 'LinkedIn'].map(l => (
-                  <li key={l}><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{l}</a></li>
-                ))}
+                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Instagram</a></li>
+                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Twitter</a></li>
+                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">LinkedIn</a></li>
               </ul>
             </div>
           </div>
