@@ -1,4 +1,3 @@
-// Triggering Vercel build - Professional themes update
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
@@ -64,7 +63,16 @@ import {
     Cloud,
     Moon,
     Sun,
-    Target
+    Target,
+    Zap,
+    Wind,
+    Gem,
+    Waves,
+    Compass,
+    Crosshair,
+    Dna,
+    Atom,
+    Boxes
 } from "lucide-react"
 
 // Modül Tanımları
@@ -265,7 +273,35 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
         // Macera Ruhu
         { id: "adventure_peak", category: "adventure", name: "🏔️ Zirve Hikayesi", description: "Dağ manzaraları ve tırmanış esintili detaylar.", isNew: true },
-        { id: "adventure_safari", category: "adventure", name: "🐆 Vahşi Safari", description: "Toprak tonları ve vahşi doğa desenleri.", isNew: true }
+        { id: "adventure_safari", category: "adventure", name: "🐆 Vahşi Safari", description: "Toprak tonları ve vahşi doğa desenleri.", isNew: true },
+
+        // İlahi Işıltı (Celestial)
+        { id: "celestial_star", category: "celestial", name: "⭐ Yıldız Tozu", description: "Parlayan yıldızlar ve gece mavisi derinlik.", isNew: true },
+        { id: "celestial_sun", category: "celestial", name: "🔆 Güneş Tanrısı", description: "Altın sarısı ışık patlamaları ve antik güneş sembolleri.", isNew: true },
+
+        // Yalın Estetik (Minimal)
+        { id: "minimal_pure", category: "minimal", name: "⚪ Bembeyaz", description: "Sıfır gürültü, sadece saf içerik odağı.", isNew: true },
+        { id: "minimal_graphite", category: "minimal", name: "🌑 Grafit Gri", description: "Mat gri tonları ve incecik kalem çizgileri.", isNew: true },
+
+        // Endüstriyel Hamlık (Industrial)
+        { id: "ind_concrete", category: "industrial", name: "🏗️ Brüt Beton", description: "Ham beton dokusu ve inşaat estetiği.", isNew: true },
+        { id: "ind_rusty", category: "industrial", name: "⚙️ Paslı Metal", description: "Eskitilmiş demir ve endüstriyel pas detayları.", isNew: true },
+
+        // Enerji Patlaması (Vibrant)
+        { id: "vibe_bolt", category: "vibrant", name: "⚡ Yıldırım Hızı", description: "Yüksek kontrast, elektrik sarısı ve siyah uyumu.", isNew: true },
+        { id: "vibe_pulse", category: "vibrant", name: "💓 Nabız Atışı", description: "Dinamik vuruşlar ve kalp atışı ritimli çizgiler.", isNew: true },
+
+        // Hanedan Mirası (Royal)
+        { id: "royal_velvet", category: "royal", name: "👑 Mor Kadife", description: "Kraliyet moru ve altın işlemeli detaylar.", isNew: true },
+        { id: "royal_emerald", category: "royal", name: "💎 Zümrüt Saray", description: "Derin zümrüt yeşili ve elmas pırıltıları.", isNew: true },
+
+        // Yüksek Teknoloji (Tech)
+        { id: "tech_core", category: "tech", name: "🧬 Çekirdek Gücü", description: "Moleküler animasyonlar ve DNA süzülmeleri.", isNew: true },
+        { id: "tech_atom", category: "tech", name: "⚛️ Atomik Yapı", description: "Parçacık fiziği ve kuantum enerji efektleri.", isNew: true },
+
+        // Metaverse & 3D
+        { id: "meta_portal", category: "meta", name: "🌀 Metaverse Portal", description: "3D derinlik hissi veren parlayan bir geçit.", isNew: true },
+        { id: "meta_pixel", category: "meta", name: "👾 8-Bit Evren", description: "Piksel piksel bir dünya ve retro dijital parıltılar.", isNew: true }
     ]
 
     // Working Hours Management
@@ -2045,7 +2081,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     { id: "liquid", name: "Likit Akış", icon: <Activity size={14} /> },
                                     { id: "pop", name: "Dinamik Pop", icon: <Palette size={14} /> },
                                     { id: "zen", name: "Zihinsel Odak", icon: <Target size={14} /> },
-                                    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> }
+                                    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> },
+                                    { id: "celestial", name: "İlahi Işıltı", icon: <Compass size={14} /> },
+                                    { id: "minimal", name: "Yalın Estetik", icon: <Layout size={14} /> },
+                                    { id: "industrial", name: "Endüstriyel", icon: <Wind size={14} /> },
+                                    { id: "vibrant", name: "Enerji Katı", icon: <Zap size={14} /> },
+                                    { id: "royal", name: "Hanedan", icon: <Gem size={14} /> },
+                                    { id: "tech", name: "Yüksek Teknoloji", icon: <Atom size={14} /> },
+                                    { id: "meta", name: "Metaverse", icon: <Boxes size={14} /> }
                                 ].map((cat) => (
                                     <button
                                         key={cat.id}

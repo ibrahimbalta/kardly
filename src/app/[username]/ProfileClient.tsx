@@ -212,7 +212,12 @@ END:VCARD`
             cyber_glitch: "#0ef", cyber_vapor: "#f472b6", antique_gold: "#fbbf24",
             antique_myth: "#94a3b8", liquid_lava: "#ef4444", liquid_ocean: "#38bdf8",
             pop_comic: "#fbbf24", pop_graffiti: "#a855f7", zen_garden: "#22c55e",
-            zen_focus: "#6366f1", adventure_peak: "#38bdf8", adventure_safari: "#d97706"
+            zen_focus: "#6366f1", adventure_peak: "#38bdf8", adventure_safari: "#d97706",
+            celestial_star: "#fbbf24", celestial_sun: "#FACC15", minimal_pure: "#000000",
+            minimal_graphite: "#4b5563", ind_concrete: "#64748b", ind_rusty: "#b45309",
+            vibe_bolt: "#facc15", vibe_pulse: "#ef4444", royal_velvet: "#a855f7",
+            royal_emerald: "#10b981", tech_core: "#38bdf8", tech_atom: "#6366f1",
+            meta_portal: "#f472b6", meta_pixel: "#38bdf8"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -223,7 +228,7 @@ END:VCARD`
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
 
-        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_", "cyber_", "antique_", "liquid_", "pop_", "zen_", "adventure_"];
+        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_", "cyber_", "antique_", "liquid_", "pop_", "zen_", "adventure_", "celestial_", "minimal_", "ind_", "vibe_", "royal_", "tech_", "meta_"];
         if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
             return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
         }
@@ -1609,6 +1614,202 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-orange-900",
             icon: "text-orange-700",
             special: "adventure_safari"
+        },
+
+        // İlahi Işıltı (Celestial)
+        celestial_star: {
+            bg: "bg-[#020617]",
+            card: "bg-white/5",
+            text: "text-white",
+            subtext: "text-blue-300",
+            border: "border-blue-400/20",
+            glow: "shadow-[0_0_50px_rgba(30,58,138,1)]",
+            accent: "#fbbf24",
+            btn: "bg-blue-900/20 border-blue-400/20",
+            btnText: "text-blue-200",
+            icon: "text-yellow-400",
+            special: "celestial_star"
+        },
+        celestial_sun: {
+            bg: "bg-[#713f12]",
+            card: "bg-black/40",
+            text: "text-yellow-400",
+            subtext: "text-orange-300",
+            border: "border-yellow-500/30",
+            glow: "shadow-[0_0_100px_#713f12]",
+            accent: "#FACC15",
+            btn: "bg-orange-950/40 border-yellow-500/20",
+            btnText: "text-yellow-500",
+            icon: "text-yellow-400",
+            special: "celestial_sun"
+        },
+
+        // Yalın Estetik (Minimal)
+        minimal_pure: {
+            bg: "bg-white",
+            card: "bg-white",
+            text: "text-black",
+            subtext: "text-slate-400",
+            border: "border-slate-100",
+            glow: "none",
+            accent: "#000000",
+            btn: "bg-white border-slate-200",
+            btnText: "text-black",
+            icon: "text-slate-400",
+            special: "minimal_pure"
+        },
+        minimal_graphite: {
+            bg: "bg-[#fafafa]",
+            card: "bg-white",
+            text: "text-[#333]",
+            subtext: "text-slate-400",
+            border: "border-slate-200",
+            glow: "shadow-[0_4px_20px_rgba(0,0,0,0.03)]",
+            accent: "#4b5563",
+            btn: "bg-white border-slate-200",
+            btnText: "text-slate-600",
+            icon: "text-slate-400",
+            special: "minimal_graphite"
+        },
+
+        // Endüstriyel Hamlık (Industrial)
+        ind_concrete: {
+            bg: "bg-[#64748b]",
+            card: "bg-[#475569]/90",
+            text: "text-white",
+            subtext: "text-slate-300",
+            border: "border-slate-400/30",
+            glow: "none",
+            accent: "#64748b",
+            btn: "bg-slate-700 border-slate-500",
+            btnText: "text-slate-200",
+            icon: "text-slate-400",
+            special: "ind_concrete"
+        },
+        ind_rusty: {
+            bg: "bg-[#1c1917]",
+            card: "bg-[#292524]/90",
+            text: "text-[#b45309]",
+            subtext: "text-[#78350f]",
+            border: "border-[#78350f]/30",
+            glow: "none",
+            accent: "#b45309",
+            btn: "bg-[#1c1917] border-[#78350f]/20",
+            btnText: "text-[#b45309]",
+            icon: "text-[#78350f]",
+            special: "ind_rusty"
+        },
+
+        // Enerji Patlaması (Vibrant)
+        vibe_bolt: {
+            bg: "bg-yellow-400",
+            card: "bg-black",
+            text: "text-yellow-400",
+            subtext: "text-white/60",
+            border: "border-white/10",
+            glow: "shadow-[0_0_40px_rgba(250,204,21,0.2)]",
+            accent: "#facc15",
+            btn: "bg-zinc-900 border-white/5",
+            btnText: "text-yellow-400",
+            icon: "text-yellow-400",
+            special: "vibe_bolt"
+        },
+        vibe_pulse: {
+            bg: "bg-black",
+            card: "bg-black",
+            text: "text-red-600",
+            subtext: "text-white",
+            border: "border-red-600",
+            glow: "shadow-[0_0_20px_rgba(220,38,38,0.5)]",
+            accent: "#ef4444",
+            btn: "bg-red-600 border-red-600",
+            btnText: "text-white",
+            icon: "text-white",
+            special: "vibe_pulse"
+        },
+
+        // Hanedan Mirası (Royal)
+        royal_velvet: {
+            bg: "bg-[#4c1d95]",
+            card: "bg-black/30",
+            text: "text-white",
+            subtext: "text-purple-200",
+            border: "border-yellow-500/40 border-2",
+            glow: "shadow-[0_0_50px_rgba(168,85,247,0.3)]",
+            accent: "#a855f7",
+            btn: "bg-purple-950/50 border-yellow-500/20",
+            btnText: "text-yellow-400",
+            icon: "text-yellow-500",
+            special: "royal_velvet"
+        },
+        royal_emerald: {
+            bg: "bg-[#064e3b]",
+            card: "bg-black/20",
+            text: "text-emerald-400",
+            subtext: "text-emerald-200/60",
+            border: "border-emerald-500/30",
+            glow: "shadow-[0_0_60px_rgba(16,185,129,0.2)]",
+            accent: "#10b981",
+            btn: "bg-emerald-950/50 border-emerald-500/20",
+            btnText: "text-emerald-400",
+            icon: "text-emerald-500",
+            special: "royal_emerald"
+        },
+
+        // Yüksek Teknoloji (Tech)
+        tech_core: {
+            bg: "bg-[#000d1a]",
+            card: "bg-white/5",
+            text: "text-[#38bdf8]",
+            subtext: "text-[#0ea5e9]/50",
+            border: "border-[#38bdf8]/20",
+            glow: "shadow-[0_0_100px_rgba(56,189,248,0.1)]",
+            accent: "#38bdf8",
+            btn: "bg-black border-[#38bdf8]/20",
+            btnText: "text-white",
+            icon: "text-[#38bdf8]",
+            special: "tech_core"
+        },
+        tech_atom: {
+            bg: "bg-[#050510]",
+            card: "bg-indigo-950/20",
+            text: "text-white",
+            subtext: "text-indigo-400",
+            border: "border-indigo-500/10",
+            glow: "shadow-[0_0_30px_#6366f1]",
+            accent: "#6366f1",
+            btn: "bg-indigo-950/30 border-indigo-500/20",
+            btnText: "text-indigo-200",
+            icon: "text-white",
+            special: "tech_atom"
+        },
+
+        // Metaverse
+        meta_portal: {
+            bg: "bg-[#0a0a0a]",
+            card: "bg-black/80",
+            text: "text-white",
+            subtext: "text-pink-400",
+            border: "border-pink-500/20",
+            glow: "shadow-[0_0_50px_rgba(236,72,153,0.3)]",
+            accent: "#ec4899",
+            btn: "bg-black border-pink-500/20",
+            btnText: "text-pink-400",
+            icon: "text-pink-500",
+            special: "meta_portal"
+        },
+        meta_pixel: {
+            bg: "bg-[#050505]",
+            card: "bg-black/90",
+            text: "text-[#0ea5e9]",
+            subtext: "text-indigo-400",
+            border: "border-[#0ea5e9]/20",
+            glow: "shadow-[0_0_30px_rgba(14,165,233,0.1)]",
+            accent: "#0ea5e9",
+            btn: "bg-zinc-950 border-[#0ea5e9]/10",
+            btnText: "text-white",
+            icon: "text-[#0ea5e9]",
+            special: "meta_pixel"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1863,6 +2064,104 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             <path d="M0,300 L0,200 L200,100 L400,250 L600,50 L800,200 L1000,150 L1000,300 Z" />
                         </svg>
                     </div>
+                )}
+
+                {/* ─── FINAL TIER SPECIAL EFFECTS ─── */}
+
+                {theme.special === "celestial_star" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        {[...Array(100)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: Math.random() }}
+                                animate={{ opacity: [0, 1, 0] }}
+                                transition={{ duration: 3 + Math.random() * 5, repeat: Infinity }}
+                                className="absolute w-[2px] h-[2px] bg-white rounded-full shadow-[0_0_5px_#fff]"
+                                style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {theme.special === "celestial_sun" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden bg-[radial-gradient(circle_at_50%_0%,#713f12_0%,transparent_100%)]">
+                        <motion.div
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-[-50%] left-[-25%] w-[150%] h-[150%] bg-[radial-gradient(circle,#FACC15_0%,transparent_70%)] blur-[100px]"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "ind_concrete" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.2]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
+                )}
+
+                {theme.special === "vibe_bolt" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <motion.div
+                            animate={{ x: ['-100%', '100%'] }}
+                            transition={{ duration: 0.15, repeat: Infinity, repeatDelay: 5 }}
+                            className="absolute inset-0 bg-white/30 z-50 mix-blend-overlay"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "vibe_pulse" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                        <motion.div
+                            animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
+                            transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute inset-0 bg-red-600 blur-[60px]"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "tech_core" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    y: ['100%', '-100%'],
+                                    opacity: [0, 0.3, 0]
+                                }}
+                                transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent shadow-[0_0_20px_#38bdf8]"
+                                style={{ top: `${i * 20}%` }}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {theme.special === "tech_atom" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(#6366f1 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-indigo-500/10 rounded-full"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "meta_portal" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden bg-black">
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.5, 1],
+                                opacity: [0.3, 0.6, 0.3],
+                                rotate: [0, 180, 360]
+                            }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[conic-gradient(from_0deg,#ec489911,#0ea5e911,#ec489911)] rounded-full blur-[60px]"
+                        />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-pink-500/10 rounded-full animate-pulse" />
+                    </div>
+                )}
+
+                {theme.special === "meta_pixel" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%230ea5e9'/%3E%3Crect width='2' height='2' x='10' y='10' fill='%236366f1'/%3E%3C/svg%3E")` }} />
                 )}
 
                 {/* ─── RESTORED PATTERNS ─── */}
