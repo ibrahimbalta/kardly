@@ -208,7 +208,11 @@ END:VCARD`
             luxury_silver: "#94a3b8", luxury_marble: "#18181b", life_gamer: "#ef4444", life_travel: "#d97706",
             life_zen: "#22c55e", future_holo: "#06b6d4", future_glass: "#38bdf8",
             dream_mist: "#f472b6", dream_nebula: "#a855f7", dark_onyx: "#0ea5e9",
-            dark_stealth: "#ef4444", light_prism: "#38bdf8", light_solar: "#fbbf24"
+            dark_stealth: "#ef4444", light_prism: "#38bdf8", light_solar: "#fbbf24",
+            cyber_glitch: "#0ef", cyber_vapor: "#f472b6", antique_gold: "#fbbf24",
+            antique_myth: "#94a3b8", liquid_lava: "#ef4444", liquid_ocean: "#38bdf8",
+            pop_comic: "#fbbf24", pop_graffiti: "#a855f7", zen_garden: "#22c55e",
+            zen_focus: "#6366f1", adventure_peak: "#38bdf8", adventure_safari: "#d97706"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -219,7 +223,7 @@ END:VCARD`
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
 
-        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_"];
+        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_", "cyber_", "antique_", "liquid_", "pop_", "zen_", "adventure_"];
         if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
             return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
         }
@@ -1437,6 +1441,174 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-orange-900",
             icon: "text-orange-600",
             special: "light_solar"
+        },
+
+        // Siber Gerçeklik
+        cyber_glitch: {
+            bg: "bg-zinc-950",
+            card: "bg-black/80",
+            text: "text-[#0ef]",
+            subtext: "text-red-500",
+            border: "border-[#0ef]/20",
+            glow: "shadow-[0_0_30px_rgba(0,238,255,0.2)]",
+            accent: "#0ef",
+            btn: "bg-black border-red-500/20",
+            btnText: "text-[#0ef]",
+            icon: "text-red-500",
+            special: "cyber_glitch"
+        },
+        cyber_vapor: {
+            bg: "bg-[#0b0b1a]",
+            card: "bg-white/5",
+            text: "text-[#ff71ce]",
+            subtext: "text-[#01cdfe]",
+            border: "border-[#05ffa1]/20",
+            glow: "shadow-[0_0_40px_rgba(255,113,206,0.3)]",
+            accent: "#ff71ce",
+            btn: "bg-white/5 border-[#01cdfe]/20",
+            btnText: "text-[#05ffa1]",
+            icon: "text-[#01cdfe]",
+            special: "cyber_vapor"
+        },
+
+        // Antik Miras
+        antique_gold: {
+            bg: "bg-[#1a1405]",
+            card: "bg-[#2d230a]/90",
+            text: "text-white",
+            subtext: "text-amber-500/60",
+            border: "border-amber-500/40 border-double border-4",
+            glow: "shadow-[0_0_50px_rgba(251,191,36,0.1)]",
+            accent: "#fbbf24",
+            btn: "bg-[#1a1405] border-amber-600/30",
+            btnText: "text-amber-400",
+            icon: "text-amber-500",
+            special: "antique_gold"
+        },
+        antique_myth: {
+            bg: "bg-[#f4f4f4]",
+            card: "bg-white/95",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-slate-300 border-2",
+            glow: "none",
+            accent: "#64748b",
+            btn: "bg-slate-50 border-slate-300",
+            btnText: "text-slate-900",
+            icon: "text-slate-600",
+            special: "antique_myth"
+        },
+
+        // Likit Akış
+        liquid_lava: {
+            bg: "bg-[#1a0505]",
+            card: "bg-black/60",
+            text: "text-orange-500",
+            subtext: "text-red-900",
+            border: "border-red-500/20",
+            glow: "shadow-[0_0_40px_rgba(239,68,68,0.2)]",
+            accent: "#ef4444",
+            btn: "bg-black border-red-900/40",
+            btnText: "text-orange-400",
+            icon: "text-red-500",
+            special: "liquid_lava"
+        },
+        liquid_ocean: {
+            bg: "bg-sky-950",
+            card: "bg-white/10",
+            text: "text-white",
+            subtext: "text-sky-300",
+            border: "border-sky-400/20",
+            glow: "shadow-[0_0_50px_rgba(56,189,248,0.2)]",
+            accent: "#38bdf8",
+            btn: "bg-sky-900/40 border-sky-400/30",
+            btnText: "text-white",
+            icon: "text-sky-300",
+            special: "liquid_ocean"
+        },
+
+        // Dinamik Pop
+        pop_comic: {
+            bg: "bg-yellow-400",
+            card: "bg-white",
+            text: "text-black",
+            subtext: "text-black/60",
+            border: "border-black border-4",
+            glow: "shadow-[8px_8px_0px_#000]",
+            accent: "#000",
+            btn: "bg-white border-black border-2",
+            btnText: "text-black",
+            icon: "text-black",
+            special: "pop_comic"
+        },
+        pop_graffiti: {
+            bg: "bg-[#0a0a0a]",
+            card: "bg-black/60",
+            text: "text-[#f472b6]",
+            subtext: "text-[#a855f7]",
+            border: "border-[#f472b6]/30",
+            glow: "shadow-[0_0_30px_rgba(244,114,182,0.3)]",
+            accent: "#f472b6",
+            btn: "bg-black border-[#a855f7]/20",
+            btnText: "text-[#f472b6]",
+            icon: "text-[#a855f7]",
+            special: "pop_graffiti"
+        },
+
+        // Zihinsel Odak
+        zen_garden: {
+            bg: "bg-[#f5f5f0]",
+            card: "bg-white/70",
+            text: "text-stone-900",
+            subtext: "text-stone-500",
+            border: "border-stone-200",
+            glow: "none",
+            accent: "#166534",
+            btn: "bg-stone-50 border-stone-200",
+            btnText: "text-stone-800",
+            icon: "text-emerald-700",
+            special: "zen_garden"
+        },
+        zen_focus: {
+            bg: "bg-slate-950",
+            card: "bg-white/5",
+            text: "text-indigo-400",
+            subtext: "text-slate-600",
+            border: "border-indigo-500/20",
+            glow: "shadow-[0_0_20px_rgba(99,102,241,0.1)]",
+            accent: "#6366f1",
+            btn: "bg-black border-indigo-500/20",
+            btnText: "text-indigo-300",
+            icon: "text-indigo-400",
+            special: "zen_focus"
+        },
+
+        // Macera Ruhu
+        adventure_peak: {
+            bg: "bg-[#f1f5f9]",
+            card: "bg-white/80",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-sky-200",
+            glow: "shadow-[0_10px_30px_rgba(14,165,233,0.05)]",
+            accent: "#0ea5e9",
+            btn: "bg-slate-50 border-sky-100",
+            btnText: "text-sky-900",
+            icon: "text-sky-600",
+            special: "adventure_peak"
+        },
+        adventure_safari: {
+            bg: "bg-[#fdf3e7]",
+            card: "bg-white/80",
+            text: "text-orange-950",
+            subtext: "text-orange-800/60",
+            border: "border-orange-200",
+            glow: "none",
+            accent: "#d97706",
+            btn: "bg-white border-orange-100",
+            btnText: "text-orange-900",
+            icon: "text-orange-700",
+            special: "adventure_safari"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1625,6 +1797,71 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
                             className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-[radial-gradient(circle,#fbbf2433_0%,transparent_70%)] blur-[40px]"
                         />
+                    </div>
+                )}
+
+                {/* ─── NEW HIGH-END EXPERIMENTAL EFFECTS ─── */}
+
+                {theme.special === "cyber_glitch" && (
+                    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(0,255,255,0.05),rgba(255,0,0,0.03),rgba(0,255,0,0.05))] bg-[length:100%_2px,3px_100%] opacity-20" />
+                        <motion.div
+                            animate={{ x: ['-2px', '2px', '-1px', '3px', '0px'] }}
+                            transition={{ duration: 0.1, repeat: Infinity }}
+                            className="absolute inset-0 opacity-10 mix-blend-screen bg-cyan-500/10"
+                        />
+                    </div>
+                )}
+
+                {theme.special === "cyber_vapor" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden bg-gradient-to-b from-[#0b0b1a] via-[#1a0b1a] to-[#0b0b1a]">
+                        <div className="absolute bottom-0 left-0 w-full h-[300px] bg-[linear-gradient(transparent,#ff71ce33)]" />
+                        <motion.div
+                            animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.4, 0.2] }}
+                            transition={{ duration: 5, repeat: Infinity }}
+                            className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#01cdfe22] blur-[120px] rounded-full"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(#ff71ce 1px, transparent 1px), linear-gradient(90deg, #ff71ce 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-50px)' }} />
+                    </div>
+                )}
+
+                {theme.special === "antique_gold" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30 L60 0 L60 60 Z M30 30 L0 0 L0 60 Z' fill='%23fbbf24'/%3E%3C/svg%3E")` }} />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#fbbf2422_0%,transparent_50%)]" />
+                    </div>
+                )}
+
+                {theme.special === "liquid_lava" && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    x: [Math.random() * 100, Math.random() * 500, Math.random() * 100],
+                                    y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                    scale: [1.5, 2.5, 1.5]
+                                }}
+                                transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute w-[300px] h-[300px] bg-red-600/10 blur-[80px] rounded-full"
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {theme.special === "pop_comic" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='5' fill='%23000'/%3E%3C/svg%3E")`, backgroundSize: '10px 10px' }} />
+                )}
+
+                {theme.special === "zen_garden" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='30' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='20' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '150px 150px' }} />
+                )}
+
+                {theme.special === "adventure_peak" && (
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none opacity-[0.05] overflow-hidden">
+                        <svg viewBox="0 0 1000 300" preserveAspectRatio="none" className="w-full h-full fill-slate-900">
+                            <path d="M0,300 L0,200 L200,100 L400,250 L600,50 L800,200 L1000,150 L1000,300 Z" />
+                        </svg>
                     </div>
                 )}
 

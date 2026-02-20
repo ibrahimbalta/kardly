@@ -63,7 +63,11 @@ import {
     History,
     Cloud,
     Moon,
-    Sun
+    Sun,
+    Monitor,
+    Activity,
+    Palette,
+    Target
 } from "lucide-react"
 
 // Modül Tanımları
@@ -240,7 +244,31 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
         // Prizmatik Işık (Light)
         { id: "light_prism", category: "light", name: "🌈 Prizma Yansıması", description: "Işığın kırılma efektleri ve gökkuşağı çizgileriyle modern beyaz.", isNew: true },
-        { id: "light_solar", category: "light", name: "☀️ Gün Batımı", description: "Sıcak turuncu ve altın sarısı güneş ışığı huzmeleri.", isNew: true }
+        { id: "light_solar", category: "light", name: "☀️ Gün Batımı", description: "Sıcak turuncu ve altın sarısı güneş ışığı huzmeleri.", isNew: true },
+
+        // Siber Gerçeklik
+        { id: "cyber_glitch", category: "cyber", name: "📟 Glitch Art", description: "Dijital bozulma efektleri ve vhs estetiğiyle siber bir dünya.", isNew: true },
+        { id: "cyber_vapor", category: "cyber", name: "🌸 Vaporwave", description: "80'lerin Japon estetiği, pembe-mavi tonları ve heykeller.", isNew: true },
+
+        // Antik Miras
+        { id: "antique_gold", category: "antique", name: "🏺 Antik Altın", description: "Eskitilmiş altın dokular ve klasik Roma desenleri.", isNew: true },
+        { id: "antique_myth", category: "antique", name: "🏛️ Mitolojik", description: "Yunan mitolojisinden esintiler ve mermer sütun detayları.", isNew: true },
+
+        // Likit Akış
+        { id: "liquid_lava", category: "liquid", name: "🔥 Lav Akışı", description: "Akışkan kırmızı ve turuncu tonları, organik hareketler.", isNew: true },
+        { id: "liquid_ocean", category: "liquid", name: "🌊 Derin Okyanus", description: "Su altı efektleri ve yavaşça süzülen dalgalar.", isNew: true },
+
+        // Dinamik Pop
+        { id: "pop_comic", category: "pop", name: "💥 Pop Comic", description: "Çizgi roman tarzı konuşma balonları ve canlı noktalar.", isNew: true },
+        { id: "pop_graffiti", category: "pop", name: "🎨 Sokak Sanatı", description: "Grafiti dokuları ve sprey boya sıçramaları.", isNew: true },
+
+        // Zihinsel Odak
+        { id: "zen_garden", category: "zen", name: "🎍 Zen Bahçesi", description: "Taş ve kum desenleri, minimalist denge ve huzur.", isNew: true },
+        { id: "zen_focus", category: "zen", name: "🎯 Derin Odak", description: "Zihni dinlendiren sade geometrik formlar.", isNew: true },
+
+        // Macera Ruhu
+        { id: "adventure_peak", category: "adventure", name: "🏔️ Zirve Hikayesi", description: "Dağ manzaraları ve tırmanış esintili detaylar.", isNew: true },
+        { id: "adventure_safari", category: "adventure", name: "🐆 Vahşi Safari", description: "Toprak tonları ve vahşi doğa desenleri.", isNew: true }
     ]
 
     // Working Hours Management
@@ -2004,17 +2032,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <div className="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
                                 {[
                                     { id: "all", name: "Tümü", icon: <Layout size={14} /> },
-                                    { id: "pro", name: "Mesleki", icon: <Briefcase size={14} /> },
-                                    { id: "retro", name: "Retro", icon: <History size={14} /> },
-                                    { id: "luxury", name: "Lüks", icon: <Award size={14} /> },
-                                    { id: "lifestyle", name: "Hobi", icon: <Gamepad2 size={14} /> },
-                                    { id: "future", name: "Gelecek", icon: <Cpu size={14} /> },
-                                    { id: "neon", name: "Neon", icon: <Zap size={14} /> },
-                                    { id: "pattern", name: "Desen", icon: <Layers size={14} /> },
-                                    { id: "nature", name: "Doğa", icon: <Sparkles size={14} /> },
+                                    { id: "pro", name: "Asalet & Prestij", icon: <Briefcase size={14} /> },
+                                    { id: "retro", name: "Nostaljik Esinti", icon: <History size={14} /> },
+                                    { id: "luxury", name: "Premium Lüks", icon: <Award size={14} /> },
+                                    { id: "lifestyle", name: "Tutku & Yaşam", icon: <Gamepad2 size={14} /> },
+                                    { id: "future", name: "Fütüristik Vizyon", icon: <Cpu size={14} /> },
+                                    { id: "neon", name: "Neon Enerjisi", icon: <Zap size={14} /> },
+                                    { id: "pattern", name: "Sanatsal Doku", icon: <Layers size={14} /> },
+                                    { id: "nature", name: "Ekolojik Ruh", icon: <Sparkles size={14} /> },
                                     { id: "dream", name: "Büyülü Akış", icon: <Cloud size={14} /> },
                                     { id: "dark", name: "Gizemli Gece", icon: <Moon size={14} /> },
-                                    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> }
+                                    { id: "light", name: "Prizmatik Işık", icon: <Sun size={14} /> },
+                                    { id: "cyber", name: "Siber Gerçeklik", icon: <Monitor size={14} /> },
+                                    { id: "antique", name: "Antik Miras", icon: <Map size={14} /> },
+                                    { id: "liquid", name: "Likit Akış", icon: <Activity size={14} /> },
+                                    { id: "pop", name: "Dinamik Pop", icon: <Palette size={14} /> },
+                                    { id: "zen", name: "Zihinsel Odak", icon: <Target size={14} /> },
+                                    { id: "adventure", name: "Macera Ruhu", icon: <MapPin size={14} /> }
                                 ].map((cat) => (
                                     <button
                                         key={cat.id}
