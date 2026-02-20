@@ -644,7 +644,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-[60] w-72 border-r border-slate-200 bg-white p-6 flex flex-col gap-8 transition-transform duration-300 lg:relative lg:translate-x-0 lg:z-10",
+                "fixed inset-y-0 left-0 z-[60] w-72 border-r border-slate-200 bg-white p-6 flex flex-col transition-transform duration-300 overflow-y-auto no-scrollbar lg:relative lg:translate-x-0 lg:z-10",
                 isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full"
             )}>
                 <div className="flex items-center justify-between lg:justify-start gap-3 mb-4">
