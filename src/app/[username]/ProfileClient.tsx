@@ -203,7 +203,10 @@ END:VCARD`
             sunset_rose: "#f43f5e", pro_dietitian: "#22c55e", pro_lawyer: "#d4af37", pro_architect: "#0ea5e9",
             pro_realestate: "#fbbf24", pro_artistic: "#f472b6", pro_software: "#10b981", pro_doctor: "#0ea5e9",
             pro_chef: "#f97316", pro_barber: "#ffffff", pro_fitness: "#84cc16", pro_photographer: "#000000",
-            pro_musician: "#6366f1", pro_beauty: "#f43f5e", pro_finance: "#334155", pro_gamer: "#00ff9f"
+            pro_musician: "#6366f1", pro_beauty: "#f43f5e", pro_finance: "#334155", pro_gamer: "#00ff9f",
+            retro_mac: "#94a3b8", retro_news: "#000000", retro_synth: "#f472b6", luxury_gold: "#fbbf24",
+            luxury_silver: "#94a3b8", luxury_marble: "#18181b", life_gamer: "#ef4444", life_travel: "#d97706",
+            life_zen: "#22c55e", future_holo: "#06b6d4", future_glass: "#38bdf8"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -214,13 +217,8 @@ END:VCARD`
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
 
-        // Category based switching
-        if (profile.templateId?.startsWith("neon_")) {
-            const scheme = profile.templateId.replace("neon_", "")
-            return <NeonModernTemplate {...props} colorScheme={scheme} tone={tone} />;
-        }
-
-        if (profile.templateId?.startsWith("pattern_") || profile.templateId?.startsWith("pro_")) {
+        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_"];
+        if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
             return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
         }
 
@@ -1202,6 +1200,157 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-[#00ff9f]",
             icon: "text-[#00ff9f]",
             special: "gamer"
+        },
+
+        // Retro & Nostalji
+        retro_mac: {
+            bg: "bg-[#c0c0c0]",
+            card: "bg-[#e0e0e0]",
+            text: "text-black",
+            subtext: "text-slate-600",
+            border: "border-slate-400 border-2",
+            glow: "shadow-[4px_4px_0px_#808080]",
+            accent: "#475569",
+            btn: "bg-[#d4d4d4] border-slate-500 border-2",
+            btnText: "text-black",
+            icon: "text-slate-700",
+            special: "retro_mac"
+        },
+        retro_news: {
+            bg: "bg-[#f4f1ea]",
+            card: "bg-white/40",
+            text: "text-stone-900",
+            subtext: "text-stone-600",
+            border: "border-stone-900 border-b-4",
+            glow: "none",
+            accent: "#1c1917",
+            btn: "bg-stone-100 border-stone-800 border",
+            btnText: "text-stone-900",
+            icon: "text-stone-900",
+            special: "retro_news"
+        },
+        retro_synth: {
+            bg: "bg-[#0b031a]",
+            card: "bg-purple-900/20",
+            text: "text-[#f472b6]",
+            subtext: "text-cyan-400",
+            border: "border-pink-500/50",
+            glow: "shadow-[0_0_40px_rgba(244,114,182,0.4)]",
+            accent: "#f472b6",
+            btn: "bg-indigo-950/40 border-cyan-400/30",
+            btnText: "text-cyan-300",
+            icon: "text-pink-400",
+            special: "retro_synth"
+        },
+
+        // Lüks & Premium
+        luxury_gold: {
+            bg: "bg-[#0a0a0a]",
+            card: "bg-zinc-900/90",
+            text: "text-white",
+            subtext: "text-amber-500/60",
+            border: "border-amber-500/40",
+            glow: "shadow-[0_0_50px_rgba(245,158,11,0.1)]",
+            accent: "#fbbf24",
+            btn: "bg-black border-amber-500/30",
+            btnText: "text-amber-400",
+            icon: "text-amber-500",
+            special: "luxury_gold"
+        },
+        luxury_silver: {
+            bg: "bg-[#0c1421]",
+            card: "bg-slate-900/80",
+            text: "text-slate-100",
+            subtext: "text-slate-400",
+            border: "border-slate-500/30",
+            glow: "shadow-[0_0_30px_rgba(255,255,255,0.05)]",
+            accent: "#94a3b8",
+            btn: "bg-slate-800 border-slate-500/30",
+            btnText: "text-slate-200",
+            icon: "text-slate-300",
+            special: "luxury_silver"
+        },
+        luxury_marble: {
+            bg: "bg-white",
+            card: "bg-white/80",
+            text: "text-zinc-900",
+            subtext: "text-zinc-500",
+            border: "border-zinc-200",
+            glow: "shadow-[0_10px_40px_rgba(0,0,0,0.05)]",
+            accent: "#18181b",
+            btn: "bg-white border-zinc-200",
+            btnText: "text-zinc-900",
+            icon: "text-zinc-900",
+            special: "luxury_marble"
+        },
+
+        // Lifestyle & Hobi
+        life_gamer: {
+            bg: "bg-[#050505]",
+            card: "bg-zinc-900/90",
+            text: "text-white",
+            subtext: "text-red-500/60",
+            border: "border-red-600/30",
+            glow: "shadow-[0_0_30px_rgba(239,68,68,0.2)]",
+            accent: "#ef4444",
+            btn: "bg-black border-red-500/30",
+            btnText: "text-red-500",
+            icon: "text-red-600",
+            special: "life_gamer"
+        },
+        life_travel: {
+            bg: "bg-[#fdf8f1]",
+            card: "bg-white/70",
+            text: "text-orange-950",
+            subtext: "text-orange-900/50",
+            border: "border-orange-200",
+            glow: "none",
+            accent: "#d97706",
+            btn: "bg-orange-50 border-orange-200",
+            btnText: "text-orange-900",
+            icon: "text-orange-700",
+            special: "life_travel"
+        },
+        life_zen: {
+            bg: "bg-[#f9fafb]",
+            card: "bg-emerald-50/50",
+            text: "text-emerald-950",
+            subtext: "text-emerald-700/60",
+            border: "border-emerald-100",
+            glow: "none",
+            accent: "#22c55e",
+            btn: "bg-white border-emerald-100",
+            btnText: "text-emerald-800",
+            icon: "text-emerald-600",
+            special: "life_zen"
+        },
+
+        // Future & Glass
+        future_holo: {
+            bg: "bg-[#000000]",
+            card: "bg-white/5",
+            text: "text-[#0ef]",
+            subtext: "text-[#0ef]/50",
+            border: "border-[#0ef]/30",
+            glow: "shadow-[0_0_50px_rgba(0,238,255,0.3)]",
+            accent: "#06b6d4",
+            btn: "bg-black border-[#0ef]/20",
+            btnText: "text-[#0ef]",
+            icon: "text-[#0ef]",
+            special: "future_holo"
+        },
+        future_glass: {
+            bg: "bg-slate-100",
+            card: "bg-white/20",
+            text: "text-slate-800",
+            subtext: "text-slate-500",
+            border: "border-white/40",
+            glow: "shadow-[0_20px_60px_rgba(0,0,0,0.05)]",
+            accent: "#38bdf8",
+            btn: "bg-white/40 border-white/60",
+            btnText: "text-slate-700",
+            icon: "text-sky-500",
+            special: "future_glass"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1340,6 +1489,35 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "artistic" && (
                     <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-width='1'/%3E%3Cpath d='M20 20 L 100 100 M 100 20 L 20 100' stroke='%23f472b6' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
+                )}
+
+                {/* New Background Patterns */}
+                {theme.special === "retro_mac" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "retro_news" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
+                )}
+                {theme.special === "retro_synth" && (
+                    <>
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_bottom,transparent,#8b5cf633)]" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(#f472b6 1px, transparent 1px), linear-gradient(90deg, #f472b6 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-100px)' }} />
+                    </>
+                )}
+                {theme.special === "luxury_gold" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#fbbf2411_0%,transparent_50%)]" />
+                )}
+                {theme.special === "life_gamer" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L10 10 M10 0 L0 10' stroke='%23ef4444' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "life_travel" && (
+                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23d97706' fill='none' stroke-width='1'/%3E%3Cpath d='M50 10 V 90 M 10 50 H 90' stroke='%23d97706' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
+                )}
+                {theme.special === "future_holo" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)] animate-pulse" />
+                )}
+                {theme.special === "future_glass" && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf811_0%,transparent_40%),radial-gradient(circle_at_80%_80%,#f472b611_0%,transparent_40%)]" />
                 )}
 
                 {/* Profession-Specific Design Extensions */}
