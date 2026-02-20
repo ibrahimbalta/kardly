@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, Sparkles, QrCode, Zap, Star, ShieldCheck, Play, Globe, Users, BarChart3 } from "lucide-react"
+import { ArrowRight, Play, Globe, Users, BarChart3, ShieldCheck, MapPin, Mail, Phone, Briefcase, Star, ExternalLink, Instagram, Linkedin, Github, Calendar, CreditCard } from "lucide-react"
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -72,7 +72,7 @@ export function Hero() {
                     ))}
                 </motion.div>
 
-                {/* Hero Visual — Browser Mockup */}
+                {/* ─── HERO VISUAL: Real Card Template Preview ─── */}
                 <motion.div
                     custom={5} variants={fadeUp} initial="hidden" animate="visible"
                     className="max-w-5xl mx-auto relative"
@@ -92,65 +92,119 @@ export function Hero() {
                             <div className="flex-1 mx-8">
                                 <div className="bg-white border border-slate-200 rounded-xl px-5 py-2 text-xs text-slate-400 font-mono flex items-center gap-2 max-w-md mx-auto">
                                     <ShieldCheck size={12} className="text-emerald-500" />
-                                    kardly.com/<span className="text-slate-700 font-medium">isminiz</span>
+                                    kardly.com/<span className="text-slate-700 font-medium">ayse-demir</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* App Content Preview */}
-                        <div className="p-8 md:p-12 bg-gradient-to-br from-slate-50 to-white min-h-[400px]">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {/* Profile Preview */}
-                                <div className="bg-white rounded-2xl border border-slate-100 p-8 flex flex-col items-center text-center shadow-sm">
-                                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-rose-500 to-orange-400 mb-6 flex items-center justify-center shadow-lg">
-                                        <Zap size={32} className="text-white" />
+                        {/* ─── Realistic Profile Card Inside Browser ─── */}
+                        <div className="p-6 md:p-10 bg-gradient-to-br from-slate-50 via-white to-rose-50/30 min-h-[480px]">
+                            <div className="max-w-3xl mx-auto">
+                                {/* Profile Card */}
+                                <div className="bg-white rounded-[2rem] border border-slate-100 shadow-lg overflow-hidden">
+                                    {/* Cover/Banner */}
+                                    <div className="h-36 md:h-44 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 relative overflow-hidden">
+                                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.3) 0%, transparent 50%),radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2) 0%, transparent 40%)' }} />
+                                        {/* Floating decorative shapes */}
+                                        <motion.div
+                                            animate={{ y: [-5, 5, -5], rotate: [0, 3, 0] }}
+                                            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                            className="absolute top-6 right-8 w-16 h-16 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-sm"
+                                        />
+                                        <motion.div
+                                            animate={{ y: [5, -5, 5], rotate: [0, -2, 0] }}
+                                            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                                            className="absolute bottom-4 right-32 w-10 h-10 rounded-full bg-white/10 border border-white/15"
+                                        />
                                     </div>
-                                    <div className="h-4 w-28 bg-slate-200 rounded-full mb-3" />
-                                    <div className="h-3 w-36 bg-slate-100 rounded-full mb-6" />
-                                    <div className="space-y-3 w-full">
-                                        {['LinkedIn', 'Portfolio', 'E-posta'].map((l, i) => (
-                                            <div key={i} className="h-11 bg-slate-50 rounded-xl border border-slate-100 flex items-center px-4 gap-3">
-                                                <div className="w-6 h-6 rounded-md bg-rose-50" />
-                                                <span className="text-xs text-slate-400 font-medium">{l}</span>
+
+                                    {/* Profile Info */}
+                                    <div className="px-6 md:px-10 pb-8 -mt-12 relative">
+                                        {/* Avatar */}
+                                        <div className="w-24 h-24 rounded-2xl bg-white p-1 shadow-xl mb-5 relative">
+                                            <div className="w-full h-full rounded-[14px] bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center overflow-hidden">
+                                                <img
+                                                    src="https://avatar.iran.liara.run/public/girl"
+                                                    alt="Ayşe Demir"
+                                                    className="w-full h-full object-cover"
+                                                />
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Stats Preview */}
-                                <div className="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
-                                    <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-6">Ziyaretçi İstatistikleri</div>
-                                    <div className="flex items-end gap-2 h-32 mb-6">
-                                        {[35, 55, 40, 75, 60, 90, 50].map((h, i) => (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ height: 0 }}
-                                                animate={{ height: `${h}%` }}
-                                                transition={{ delay: 1.2 + i * 0.08, duration: 0.6, ease: "easeOut" }}
-                                                className="flex-1 bg-rose-500/15 rounded-lg border-t-2 border-rose-500/40"
-                                            />
-                                        ))}
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="bg-slate-50 rounded-xl p-3 text-center">
-                                            <div className="text-2xl font-bold text-slate-900">847</div>
-                                            <div className="text-[10px] text-slate-400 font-medium">Görüntülenme</div>
+                                            <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+                                                <ShieldCheck size={12} className="text-white" />
+                                            </div>
                                         </div>
-                                        <div className="bg-slate-50 rounded-xl p-3 text-center">
-                                            <div className="text-2xl font-bold text-slate-900">124</div>
-                                            <div className="text-[10px] text-slate-400 font-medium">Tıklama</div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* QR & Share Preview */}
-                                <div className="bg-white rounded-2xl border border-slate-100 p-8 flex flex-col items-center justify-center shadow-sm">
-                                    <div className="w-32 h-32 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-6">
-                                        <QrCode size={64} className="text-slate-300" />
-                                    </div>
-                                    <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">QR Kod ile Paylaş</div>
-                                    <div className="w-full h-11 bg-slate-900 rounded-xl flex items-center justify-center text-[11px] font-semibold text-white tracking-wide">
-                                        REHBERE EKLE
+                                        {/* Name & Title */}
+                                        <div className="mb-6">
+                                            <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-1">Ayşe Demir</h3>
+                                            <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                                                <Briefcase size={14} className="text-rose-400" />
+                                                UX/UI Designer & Brand Strategist
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs text-slate-400 mt-1.5">
+                                                <MapPin size={12} />
+                                                İstanbul, Türkiye
+                                            </div>
+                                        </div>
+
+                                        {/* Bio */}
+                                        <p className="text-sm text-slate-500 leading-relaxed mb-8 max-w-lg">
+                                            10+ yıllık deneyimle markaları dijital dünyada öne çıkarıyorum. Kullanıcı odaklı tasarım, marka kimliği ve strateji konusunda uzmanım.
+                                        </p>
+
+                                        {/* Quick Action Buttons */}
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                                            {[
+                                                { icon: <Mail size={16} />, label: 'E-posta', color: 'bg-blue-50 text-blue-600 border-blue-100' },
+                                                { icon: <Phone size={16} />, label: 'Ara', color: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
+                                                { icon: <Calendar size={16} />, label: 'Randevu', color: 'bg-purple-50 text-purple-600 border-purple-100' },
+                                                { icon: <CreditCard size={16} />, label: 'Ödeme Yap', color: 'bg-amber-50 text-amber-600 border-amber-100' },
+                                            ].map((btn, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    whileHover={{ y: -2 }}
+                                                    className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-xs font-semibold cursor-pointer transition-all hover:shadow-md ${btn.color}`}
+                                                >
+                                                    {btn.icon}
+                                                    <span className="hidden sm:inline">{btn.label}</span>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+
+                                        {/* Social Links */}
+                                        <div className="space-y-2.5 mb-8">
+                                            {[
+                                                { icon: <Linkedin size={16} />, label: 'LinkedIn', handle: 'ayse-demir', color: 'hover:bg-blue-50 hover:border-blue-200' },
+                                                { icon: <Instagram size={16} />, label: 'Instagram', handle: '@aysedemir.design', color: 'hover:bg-pink-50 hover:border-pink-200' },
+                                                { icon: <Github size={16} />, label: 'GitHub', handle: 'aysedemir', color: 'hover:bg-slate-100 hover:border-slate-300' },
+                                                { icon: <Globe size={16} />, label: 'Portfolio', handle: 'aysedemir.com', color: 'hover:bg-rose-50 hover:border-rose-200' },
+                                            ].map((link, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: 1.5 + i * 0.1 }}
+                                                    className={`flex items-center gap-4 px-5 py-3.5 rounded-xl border border-slate-100 bg-white cursor-pointer group transition-all ${link.color}`}
+                                                >
+                                                    <span className="text-slate-400 group-hover:text-slate-600 transition-colors">{link.icon}</span>
+                                                    <div className="flex-1">
+                                                        <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{link.label}</div>
+                                                        <div className="text-sm text-slate-700 font-semibold">{link.handle}</div>
+                                                    </div>
+                                                    <ExternalLink size={14} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                                                </motion.div>
+                                            ))}
+                                        </div>
+
+                                        {/* Star Rating */}
+                                        <div className="flex items-center gap-3 pt-6 border-t border-slate-100">
+                                            <div className="flex items-center gap-0.5">
+                                                {[1, 2, 3, 4, 5].map(i => (
+                                                    <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
+                                                ))}
+                                            </div>
+                                            <span className="text-xs text-slate-400 font-medium">4.9 / 5 · 128 değerlendirme</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
