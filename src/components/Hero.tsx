@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, Play, Globe, Users, BarChart3, ShieldCheck, Phone, Mail, MapPin, Briefcase, Star, Calendar, ExternalLink } from "lucide-react"
+import { ArrowRight, Play, Globe, Users, BarChart3, ShieldCheck, Phone, Mail, MapPin, Briefcase, Star, Calendar, ExternalLink, Instagram, Linkedin } from "lucide-react"
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -76,145 +76,132 @@ export function Hero() {
                         </motion.div>
                     </div>
 
-                    {/* ─── RIGHT: Profile Card Preview ─── */}
+                    {/* ─── RIGHT: Light Profile Card ─── */}
                     <motion.div
                         custom={3} variants={fadeUp} initial="hidden" animate="visible"
                         className="flex justify-center lg:justify-end"
                     >
                         <div className="relative">
                             {/* Glow behind card */}
-                            <div className="absolute -inset-8 bg-gradient-to-br from-rose-300/20 via-amber-200/10 to-emerald-200/10 blur-3xl rounded-full pointer-events-none" />
+                            <div className="absolute -inset-8 bg-gradient-to-br from-rose-200/30 via-pink-100/20 to-orange-100/20 blur-3xl rounded-full pointer-events-none" />
 
                             {/* ─── THE CARD ─── */}
-                            <div className="relative w-[300px] md:w-[320px] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-900/20 border border-slate-700/50"
-                                style={{ background: 'linear-gradient(160deg, #1a2a1a 0%, #1e2e1c 30%, #2a3628 60%, #1c2a1a 100%)' }}
+                            <motion.div
+                                animate={{ y: [-6, 6, -6] }}
+                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                className="relative w-[300px] md:w-[320px] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-200/80 border border-slate-200/80 bg-white"
                             >
-                                {/* Subtle texture overlay */}
-                                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(200,255,200,0.15) 0%, transparent 60%)' }} />
+                                {/* Cover Banner */}
+                                <div className="h-28 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 relative overflow-hidden">
+                                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.4) 0%, transparent 50%)' }} />
+                                    <motion.div
+                                        animate={{ x: [-3, 3, -3], y: [-2, 2, -2] }}
+                                        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                                        className="absolute top-3 right-4 w-10 h-10 rounded-xl bg-white/15 border border-white/20"
+                                    />
+                                    <motion.div
+                                        animate={{ x: [2, -2, 2] }}
+                                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                        className="absolute bottom-2 right-16 w-6 h-6 rounded-full bg-white/10 border border-white/15"
+                                    />
+                                </div>
 
-                                <div className="relative z-10 p-6 pt-8">
-                                    {/* Decorative Top Corner */}
-                                    <div className="absolute top-4 right-4">
-                                        <div className="w-6 h-6 rounded-md border border-lime-500/30 flex items-center justify-center">
-                                            <ShieldCheck size={12} className="text-lime-400/70" />
-                                        </div>
-                                    </div>
-
+                                <div className="px-6 pb-6 -mt-10 relative">
                                     {/* Avatar */}
-                                    <div className="flex flex-col items-center mb-5">
-                                        <div className="w-20 h-20 rounded-full p-[3px] bg-gradient-to-br from-lime-400/60 to-emerald-600/60 mb-4">
-                                            <div className="w-full h-full rounded-full overflow-hidden bg-slate-800">
-                                                <img
-                                                    src="https://avatar.iran.liara.run/public/boy"
-                                                    alt="İbrahim Balta"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg font-extrabold text-white tracking-tight uppercase">İBRAHİM BALTA</h3>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <div className="w-6 h-[1px] bg-lime-500/40" />
-                                            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-lime-400/70">Yazılım Test Uzmanı</span>
-                                            <div className="w-6 h-[1px] bg-lime-500/40" />
+                                    <div className="w-20 h-20 rounded-2xl bg-white p-1 shadow-lg mb-4">
+                                        <div className="w-full h-full rounded-[14px] overflow-hidden bg-rose-100">
+                                            <img
+                                                src="https://avatar.iran.liara.run/public/girl"
+                                                alt="Ayşe Demir"
+                                                className="w-full h-full object-cover"
+                                            />
                                         </div>
                                     </div>
 
-                                    {/* Username badge */}
-                                    <div className="flex justify-center mb-4">
-                                        <div className="px-4 py-2 rounded-full bg-slate-800/80 border border-slate-600/30 text-xs text-slate-400 font-mono">
-                                            rahatsızlık
-                                        </div>
+                                    {/* Name & Title */}
+                                    <h3 className="text-lg font-extrabold text-slate-900 tracking-tight mb-0.5">Ayşe Demir</h3>
+                                    <div className="flex items-center gap-1.5 mb-1">
+                                        <Briefcase size={12} className="text-rose-400" />
+                                        <span className="text-xs text-slate-500 font-medium">UX/UI Designer</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mb-5">
+                                        <MapPin size={11} className="text-slate-300" />
+                                        <span className="text-[11px] text-slate-400">İstanbul, Türkiye</span>
                                     </div>
 
-                                    {/* Quote */}
-                                    <div className="text-center mb-6">
-                                        <p className="text-xs text-slate-400 italic leading-relaxed">&ldquo;Hayallere koşları, Farkı Yaşa &rdquo;</p>
-                                    </div>
-
-                                    {/* Action Links */}
-                                    <div className="space-y-2 mb-6">
+                                    {/* Action Buttons */}
+                                    <div className="grid grid-cols-3 gap-2 mb-5">
                                         {[
-                                            { icon: <Phone size={14} />, label: 'ARA' },
-                                            { icon: <Mail size={14} />, label: 'WHATSAPP' },
-                                            { icon: <Mail size={14} />, label: 'E-MAİL' },
-                                            { icon: <Calendar size={14} />, label: 'RANDEVU AL' },
-                                            { icon: <Globe size={14} />, label: 'WEB SİTE' },
-                                            { icon: <MapPin size={14} />, label: 'KONUM' },
-                                        ].map((item, i) => (
+                                            { icon: <Phone size={14} />, label: 'Ara', color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
+                                            { icon: <Mail size={14} />, label: 'E-posta', color: 'text-blue-500 bg-blue-50 border-blue-100' },
+                                            { icon: <Calendar size={14} />, label: 'Randevu', color: 'text-purple-500 bg-purple-50 border-purple-100' },
+                                        ].map((btn, i) => (
+                                            <div key={i} className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border text-center cursor-pointer hover:shadow-md transition-all ${btn.color}`}>
+                                                {btn.icon}
+                                                <span className="text-[10px] font-semibold">{btn.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Social Links */}
+                                    <div className="space-y-2 mb-5">
+                                        {[
+                                            { icon: <Linkedin size={14} />, label: 'LinkedIn', handle: 'ayse-demir' },
+                                            { icon: <Instagram size={14} />, label: 'Instagram', handle: '@aysedemir.design' },
+                                            { icon: <Globe size={14} />, label: 'Portfolio', handle: 'aysedemir.com' },
+                                        ].map((link, i) => (
                                             <motion.div
                                                 key={i}
-                                                initial={{ opacity: 0, x: -10 }}
+                                                initial={{ opacity: 0, x: -8 }}
                                                 animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: 1.0 + i * 0.08 }}
-                                                className="flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-700/40 bg-slate-800/30 hover:bg-slate-700/40 transition-all cursor-pointer group"
+                                                transition={{ delay: 1.2 + i * 0.1 }}
+                                                className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-slate-100 bg-slate-50/50 cursor-pointer group hover:border-rose-200 hover:bg-rose-50/30 transition-all"
                                             >
-                                                <span className="text-slate-500 group-hover:text-lime-400 transition-colors">{item.icon}</span>
-                                                <span className="text-xs font-bold text-slate-300 uppercase tracking-widest group-hover:text-white transition-colors">{item.label}</span>
+                                                <span className="text-slate-400 group-hover:text-rose-500 transition-colors">{link.icon}</span>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{link.label}</div>
+                                                    <div className="text-xs text-slate-700 font-semibold truncate">{link.handle}</div>
+                                                </div>
+                                                <ExternalLink size={12} className="text-slate-300 group-hover:text-rose-400 transition-colors" />
                                             </motion.div>
                                         ))}
                                     </div>
 
-                                    {/* Bio */}
-                                    <div className="mb-5 px-1">
-                                        <p className="text-[11px] text-slate-500 leading-relaxed">
-                                            Yazılım test süreçlerini yönetiyor, modern test otomasyon araçlarıyla çalışıyorum. Kalite odaklı profesyonel yaklaşım.
-                                        </p>
-                                    </div>
-
-                                    {/* Review */}
-                                    <div className="bg-slate-800/40 rounded-xl p-3 border border-slate-700/30 mb-5">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="text-[10px] font-bold text-slate-400">Ali Yılmaz</span>
-                                            <div className="flex gap-0.5">
-                                                {[1, 2, 3, 4].map(i => (
-                                                    <Star key={i} size={9} className="text-amber-400 fill-amber-400" />
-                                                ))}
-                                                <Star size={9} className="text-slate-600" />
-                                            </div>
+                                    {/* Rating */}
+                                    <div className="flex items-center gap-2 pt-4 border-t border-slate-100">
+                                        <div className="flex gap-0.5">
+                                            {[1, 2, 3, 4, 5].map(i => (
+                                                <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
+                                            ))}
                                         </div>
-                                        <p className="text-[10px] text-slate-500 leading-relaxed">&ldquo;Harika bir profesyonel...&rdquo;</p>
-                                    </div>
-
-                                    {/* Bottom CTA */}
-                                    <div className="space-y-2">
-                                        <div className="w-full py-3 bg-lime-500 rounded-xl text-center text-sm font-bold text-slate-900 shadow-lg shadow-lime-500/20 cursor-pointer hover:bg-lime-400 transition-colors">
-                                            DANIŞMANLIK AL
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <div className="flex-1 py-2.5 bg-slate-800/60 border border-slate-700/40 rounded-xl text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer hover:bg-slate-700/50 transition-colors">
-                                                PAYLAŞ
-                                            </div>
-                                            <div className="flex-1 py-2.5 bg-lime-500/20 border border-lime-500/30 rounded-xl text-center text-[10px] font-bold text-lime-400 uppercase tracking-widest cursor-pointer hover:bg-lime-500/30 transition-colors">
-                                                ⭐ Değerlendir
-                                            </div>
-                                        </div>
+                                        <span className="text-[11px] text-slate-400 font-medium">4.9 · 128 değerlendirme</span>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            {/* Floating elements around the card */}
+                            {/* Floating elements */}
                             <motion.div
                                 animate={{ y: [-8, 8, -8] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute -top-4 -left-6 w-12 h-12 rounded-2xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
+                                className="absolute -top-3 -left-5 w-11 h-11 rounded-2xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
                             >
-                                <Briefcase size={18} className="text-rose-500" />
+                                <Briefcase size={16} className="text-rose-500" />
                             </motion.div>
 
                             <motion.div
                                 animate={{ y: [6, -6, 6] }}
                                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute -bottom-3 -left-8 w-11 h-11 rounded-xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
+                                className="absolute -bottom-2 -left-6 w-10 h-10 rounded-xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
                             >
-                                <BarChart3 size={16} className="text-emerald-500" />
+                                <BarChart3 size={15} className="text-emerald-500" />
                             </motion.div>
 
                             <motion.div
                                 animate={{ y: [-5, 7, -5] }}
                                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute top-16 -right-6 w-11 h-11 rounded-xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
+                                className="absolute top-20 -right-5 w-10 h-10 rounded-xl bg-white shadow-lg shadow-slate-200/60 flex items-center justify-center border border-slate-100"
                             >
-                                <Star size={16} className="text-amber-500 fill-amber-500" />
+                                <Star size={15} className="text-amber-500 fill-amber-500" />
                             </motion.div>
                         </div>
                     </motion.div>
