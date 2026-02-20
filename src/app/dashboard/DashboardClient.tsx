@@ -64,7 +64,6 @@ import {
     Moon,
     Sun,
     Target,
-    Zap,
     Wind,
     Gem,
     Waves,
