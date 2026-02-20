@@ -1092,6 +1092,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "pro_finance") { accent = "#334155"; bg = "#020617"; }
                                         else if (tid === "pro_gamer") { accent = "#00ff9f"; bg = "#050505"; }
 
+                                        // New Specialized Templates
+                                        else if (tid === "minimal_glass") { accent = "#6366f1"; bg = "#f1f5f9"; glow = "linear-gradient(135deg, #6366f110 0%, #a855f710 100%)"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='%236366f1' fill-opacity='0.1'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "nature_dawn") { accent = "#f59e0b"; bg = "#0f172a"; glow = "linear-gradient(to bottom, #1e1b4b, #312e81, #4338ca, #6366f1, #fb923c)"; }
+
                                         return (
                                             <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
                                                 {/* Specialized Glowing Background for Rainbow cases */}
@@ -1772,102 +1776,125 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
 
-                ) : activeTab === "templates" ? (
-                    <div className="space-y-8">
-                        <div>
-                            <h2 className="text-xl font-bold">Tasarım Şablonları</h2>
-                            <p className="text-sm text-foreground/50">Sayfanızın görünümünü değiştirmek için farklı şablonlar seçin.</p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                // Mesleki / Profesyonel Şablonlar (Yeni)
-                                { id: "pro_software", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
-                                { id: "pro_doctor", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
-                                { id: "pro_chef", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
-                                { id: "pro_barber", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
-                                { id: "pro_fitness", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
-                                { id: "pro_photographer", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet.", isNew: true },
-                                { id: "pro_musician", name: "🎸 Müzik / Sanatçı", description: "Ses dalgaları ve ritmik geçişlerle dolu sahne atmosferi.", isNew: true },
-                                { id: "pro_beauty", name: "💄 Güzellik / Bakım", description: "Pastel tonlar, soft geçişler ve estetik odaklı zarafet.", isNew: true },
-                                { id: "pro_finance", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
-                                { id: "pro_gamer", name: "🎮 Gamer / Yayıncı", description: "RGB neonlar, pikselli yapılar ve dijital oyun dünyası.", isNew: true },
-                                { id: "pro_dietitian", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler.", isNew: true },
-                                { id: "pro_lawyer", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
-                                { id: "pro_architect", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
-                                { id: "pro_realestate", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
-                                { id: "pro_artistic", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
+                ) : activeTab === "templates" ? (() => {
+                    const [selectedTplCat, setSelectedTplCat] = useState("all")
+                    const categories = [
+                        { id: "all", name: "Tümü", icon: <Layout size={14} /> },
+                        { id: "pro", name: "Mesleki", icon: <Briefcase size={14} /> },
+                        { id: "neon", name: "Neon & Enerjik", icon: <Zap size={14} /> },
+                        { id: "pattern", name: "Desen & Sanat", icon: <Layers size={14} /> },
+                        { id: "nature", name: "Doğa & Minimal", icon: <Sparkles size={14} /> }
+                    ]
 
-                                // Neon Style Templates
-                                { id: "neon_black", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
-                                { id: "neon_white", name: "Neon Modern (Beyaz)", description: "Aydınlık ve ferah, modern neon esintili tasarım." },
-                                { id: "neon_blue", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
-                                { id: "neon_green", name: "Neon Modern (Yeşil)", description: "Enerjik yeşil neon ve teknolojik görünüm." },
-                                { id: "neon_purple", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
-                                { id: "neon_red", name: "Neon Modern (Kırmızı)", description: "Tutkulu kırmızı neon ile dikkat çekici görünüm." },
-                                { id: "neon_pink", name: "Neon Modern (Pembe)", description: "Canlı pembe ve enerjik bir görünüm." },
-                                { id: "neon_cyan", name: "Neon Modern (Turkuaz)", description: "Teknolojik ve fütüristik turkuaz yansımalar." },
-                                { id: "neon_orange", name: "Neon Modern (Turuncu)", description: "Sıcak ve dinamik turuncu neon enerjisi." },
-                                { id: "neon_amber", name: "Neon Modern (Kehribar)", description: "Klasik ve asil altın/kehribar ışığı." },
-                                { id: "neon_rose", name: "Neon Modern (Gül)", description: "Zarif ve modern gül pembesi tonları." },
-                                { id: "neon_emerald", name: "Neon Modern (Zümrüt)", description: "Zengin ve derin yeşil neon atmosferi." },
-                                { id: "neon_sky", name: "Neon Modern (Gök Mavisi)", description: "Ferah ve havadar açık mavi neon çizgiler." },
-                                { id: "neon_lime", name: "Neon Modern (Limon)", description: "Modern ve radikal sarı-yeşil neon tasarımı." },
-                                { id: "neon_indigo", name: "Neon Modern (İndigo)", description: "Derin ve mistik gece mavisi neon estetiği." },
-                                { id: "neon_crimson", name: "Neon Modern (Kıpkırmızı)", description: "Güçlü ve keskin koyu kırmızı neon hatlar." },
-                                { id: "neon_teal", name: "Neon Modern (Cam Göbeği)", description: "Sakin ve prestijli cam göbeği neon tasarımı." },
-                                { id: "neon_fuchsia", name: "Neon Modern (Fuşya)", description: "Cesur ve enerjik fuşya neon patlaması." },
-                                { id: "neon_violet", name: "Neon Modern (Menekşe)", description: "Asil ve derin menekşe moru neon dokunuşu." },
-                                { id: "neon_gs", name: "Spor (Sarı-Kırmızı)", description: "Aslanların ruhunu yansıtan efsane renkler." },
-                                { id: "neon_fb", name: "Spor (Sarı-Lacivert)", description: "Kanaryaların gücünü temsil eden klasik kombinasyon." },
-                                { id: "neon_ts", name: "Spor (Bordo-Mavi)", description: "Karadeniz fırtınasının modern neon yorumu." },
-                                { id: "neon_bjk", name: "Spor (Siyah-Beyaz)", description: "Kartalların asaletini yansıtan monokrom neon." },
-                                { id: "neon_tr", name: "Milli (Kırmızı-Beyaz)", description: "Ay yıldızlı bayrağımızın asil renkleri." },
-                                { id: "neon_cyber", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği." },
-                                { id: "neon_galaxy", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer." },
-                                { id: "neon_acid", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji." },
-                                { id: "neon_candy", name: "🌈 Candy Neon", description: "Şeker pembe, lavanta ve menekşe renklerinin yumuşak neon dansı." },
-                                { id: "neon_aurora", name: "🌈 Aurora Neon", description: "Kuzey ışıkları etkisiyle turkuaz, çivit mavisi ve zümrüt yeşili." },
+                    const templates = [
+                        // Mesleki
+                        { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
+                        { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
+                        { id: "pro_chef", category: "pro", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
+                        { id: "pro_barber", category: "pro", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
+                        { id: "pro_fitness", category: "pro", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
+                        { id: "pro_lawyer", category: "pro", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
+                        { id: "pro_architect", category: "pro", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
+                        { id: "pro_realestate", category: "pro", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
+                        { id: "pro_finance", category: "pro", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
 
-                                // Motifli ve Desenli Arka Planlar
-                                { id: "pattern_ottoman", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
-                                { id: "pattern_geometric", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
-                                { id: "pattern_marble", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
-                                { id: "pattern_topo", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
-                                { id: "pattern_circuit", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." }
-                            ].map((tpl) => (
-                                <motion.div
-                                    key={tpl.id}
-                                    whileHover={{ y: -5 }}
-                                    className={cn(
-                                        "glass rounded-3xl border border-white/5 overflow-hidden group cursor-pointer transition-all",
-                                        profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary/50" : "hover:border-white/20"
-                                    )}
-                                    onClick={() => {
-                                        setProfileData({ ...profileData, templateId: tpl.id });
-                                        handleSave({ templateId: tpl.id });
-                                    }}
-                                >
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="flex flex-col gap-1">
-                                                <h3 className="font-bold">{tpl.name}</h3>
-                                                {tpl.isNew && (
-                                                    <span className="w-fit px-1.5 py-0.5 bg-primary/20 text-primary text-[8px] font-black rounded-md uppercase tracking-widest">YENİ</span>
-                                                )}
-                                            </div>
-                                            {profileData.templateId === tpl.id && (
-                                                <div className="bg-primary/20 text-primary p-1 rounded-full">
-                                                    <CheckCircle2 size={16} />
-                                                </div>
+                        // Neon
+                        { id: "neon_cyber", category: "neon", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği.", isNew: true },
+                        { id: "neon_galaxy", category: "neon", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer.", isNew: true },
+                        { id: "neon_acid", category: "neon", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji.", isNew: true },
+                        { id: "neon_black", category: "neon", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
+                        { id: "neon_blue", category: "neon", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
+                        { id: "neon_purple", category: "neon", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
+
+                        // Pattern & Art
+                        { id: "pro_artistic", category: "pattern", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
+                        { id: "pattern_ottoman", category: "pattern", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
+                        { id: "pattern_geometric", category: "pattern", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
+                        { id: "pattern_marble", category: "pattern", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
+                        { id: "pattern_circuit", category: "pattern", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
+
+                        // Nature & Minimal
+                        { id: "pro_dietitian", category: "nature", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
+                        { id: "pro_photographer", category: "nature", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet." },
+                        { id: "pattern_topo", category: "nature", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
+                        { id: "minimal_glass", category: "nature", name: "💎 Kristal Cam", description: "Yumuşak buzlu cam efekti ve transparan modern şıklık.", isNew: true },
+                        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true }
+                    ]
+
+                    const filteredTemplates = templates.filter(t => selectedTplCat === "all" || t.category === selectedTplCat)
+
+                    return (
+                        <div className="space-y-10">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                                <div>
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Tasarım Şablonları</h2>
+                                    <p className="text-sm text-slate-500 font-medium tracking-wide">Profiliniz için en uygun stili kategoriler arasından bulun.</p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
+                                    {categories.map((cat) => (
+                                        <button
+                                            key={cat.id}
+                                            onClick={() => setSelectedTplCat(cat.id)}
+                                            className={cn(
+                                                "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
+                                                selectedTplCat === cat.id
+                                                    ? "bg-white text-primary shadow-md border border-slate-100"
+                                                    : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
                                             )}
-                                        </div>
-                                        <p className="text-sm text-foreground/50">{tpl.description}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
+                                        >
+                                            {cat.icon} {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <motion.div
+                                layout
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            >
+                                <AnimatePresence mode="popLayout">
+                                    {filteredTemplates.map((tpl) => (
+                                        <motion.div
+                                            key={tpl.id}
+                                            layout
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            whileHover={{ y: -5 }}
+                                            className={cn(
+                                                "bg-white rounded-[2rem] border overflow-hidden group cursor-pointer transition-all shadow-sm",
+                                                profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary shadow-xl shadow-primary/10" : "border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
+                                            )}
+                                            onClick={() => {
+                                                setProfileData({ ...profileData, templateId: tpl.id });
+                                                handleSave({ templateId: tpl.id });
+                                            }}
+                                        >
+                                            <div className="p-8">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className="flex flex-col gap-2">
+                                                        <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
+                                                        {tpl.isNew && (
+                                                            <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">YENİ</span>
+                                                        )}
+                                                    </div>
+                                                    {profileData.templateId === tpl.id && (
+                                                        <div className="bg-primary text-white p-1.5 rounded-xl shadow-lg shadow-primary/20">
+                                                            <CheckCircle2 size={16} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-slate-500 font-medium leading-relaxed">{tpl.description}</p>
+                                            </div>
+                                            {/* Preview Strip */}
+                                            <div className="h-2 bg-slate-50 border-t border-slate-100 group-hover:bg-primary/5 transition-colors" />
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+                            </motion.div>
                         </div>
-                    </div>
-                ) : activeTab === "reviews" ? (
+                    )
+                })() : activeTab === "reviews" ? (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
