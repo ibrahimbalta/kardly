@@ -64,9 +64,6 @@ import {
     Cloud,
     Moon,
     Sun,
-    Monitor,
-    Activity,
-    Palette,
     Target
 } from "lucide-react"
 
