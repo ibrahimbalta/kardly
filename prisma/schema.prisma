@@ -88,7 +88,21 @@ model Profile {
   blocks         Block[]
   products       Product[]
   reviews        Review[]
+  leads          Lead[]
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  profileId String
+  name      String
+  phone     String?
+  email     String?
+  subject   String?
+  message   String?
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Review {

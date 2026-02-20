@@ -166,13 +166,17 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     const handleAddToContacts = () => {
         trackEvent("vcard")
-        const phone = profile.socialLinks?.find((l: any) => l.platform === 'phone')?.url || ""
+        const phone = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || profile.phone || ""
+        const website = `${window.location.origin}/${profile.username}`
         const vcard = `BEGIN:VCARD
 VERSION:3.0
 FN:${profile.user.name}
+N:${profile.user.name.split(" ").reverse().join(";") || ""};;;;
 ORG:${profile.occupation || ""}
 TEL;TYPE=CELL:${phone}
 EMAIL:${profile.user.email || ""}
+URL:${website}
+NOTE:${profile.bio || profile.slogan || ""}
 END:VCARD`
 
         const blob = new Blob([vcard], { type: "text/vcard" })
@@ -188,7 +192,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent }
+    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -329,7 +333,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     const getYoutubeEmbedUrl = (url: string) => {
@@ -2049,6 +2053,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 className="absolute w-[300px] h-[300px] bg-red-600/10 blur-[80px] rounded-full"
                             />
                         ))}
+                        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
                     </div>
                 )}
 
@@ -2057,7 +2062,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
 
                 {theme.special === "zen_garden" && (
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='30' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='20' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '150px 150px' }} />
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='30' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='20' stroke='%23000' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '150px 150px' }} />
                 )}
 
                 {theme.special === "adventure_peak" && (
@@ -2663,145 +2668,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 </div>
                             )}
 
-                            {/* Bento Elite Extensions */}
-                            {profile.blocks && profile.blocks.filter((b: any) => b.isActive).length > 0 && (
-                                <div className="mt-8 px-4 grid grid-cols-2 gap-3">
-                                    {profile.blocks.filter((b: any) => b.isActive).map((block: any, i: number) => (
-                                        <motion.div
-                                            key={block.id || i}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.2 + i * 0.1 }}
-                                            className={cn(
-                                                "p-4 border backdrop-blur-md rounded-3xl flex flex-col gap-3 group relative overflow-hidden",
-                                                theme.card, theme.border
-                                            )}
-                                            style={{ minHeight: '120px' }}
-                                        >
-                                            {/* Glow effect matching theme accent */}
-                                            <div
-                                                className="absolute -right-4 -top-4 w-12 h-12 blur-2xl opacity-20 transition-opacity group-hover:opacity-40"
-                                                style={{ background: theme.accent }}
-                                            />
-
-                                            {block.type === 'ai_assistant' && (
-                                                <>
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="p-2 bg-purple-500/10 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
-                                                            <Brain size={18} />
-                                                        </div>
-                                                        <div className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[8px] font-black rounded-full">ONLINE</div>
-                                                    </div>
-                                                    <div className="text-left">
-                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">AI Temsilcisi</h4>
-                                                        <p className="text-[8px] text-white/50 leading-tight line-clamp-2">Sizin yerinize soruları yanıtlamak için burada.</p>
-                                                    </div>
-                                                    <motion.button
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="mt-auto w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white transition-all"
-                                                    >
-                                                        KONUŞMAYA BAŞLA
-                                                    </motion.button>
-                                                </>
-                                            )}
-
-                                            {block.type === 'digital_store' && (
-                                                <>
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="p-2 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:scale-110 transition-transform">
-                                                            <ShoppingBag size={18} />
-                                                        </div>
-                                                        <div className="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-[8px] font-black rounded-full">SALE</div>
-                                                    </div>
-                                                    <div className="text-left">
-                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Dijital Dükkan</h4>
-                                                        <p className="text-[8px] text-white/50 leading-tight line-clamp-2">Özel içerik ve dijital ürünlerime göz atın.</p>
-                                                    </div>
-                                                    <motion.button
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="mt-auto w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white transition-all"
-                                                    >
-                                                        DÜKKANI GEZ
-                                                    </motion.button>
-                                                </>
-                                            )}
-
-                                            {block.type === 'stats_live' && (
-                                                <>
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="p-2 bg-rose-500/10 rounded-xl text-rose-500 group-hover:scale-110 transition-transform">
-                                                            <Flame size={18} />
-                                                        </div>
-                                                        <div className="px-2 py-0.5 bg-white/5 text-white/40 text-[8px] font-black rounded-full">LIVE</div>
-                                                    </div>
-                                                    <div className="mt-auto grid grid-cols-2 gap-2 text-center pb-1">
-                                                        <div>
-                                                            <div className="text-sm font-black text-white">{profile.products?.length || '0'}</div>
-                                                            <div className="text-[7px] text-white/40 font-bold uppercase tracking-widest">PROJE</div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="text-sm font-black text-white">5+</div>
-                                                            <div className="text-[7px] text-white/40 font-bold uppercase tracking-widest">YIL DENEYİM</div>
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            {block.type === 'media_kit' && (
-                                                <>
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="p-2 bg-blue-500/10 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
-                                                            <Download size={18} />
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-left mt-2">
-                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Media Kit</h4>
-                                                        <p className="text-[8px] text-white/50 leading-tight">İş birliği ve detaylar için PDF dosyasını indirin.</p>
-                                                    </div>
-                                                    <motion.button
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="mt-auto w-full py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-xl text-[9px] font-black uppercase tracking-widest text-blue-400 transition-all"
-                                                    >
-                                                        İNDİR (PDF)
-                                                    </motion.button>
-                                                </>
-                                            )}
-
-                                            {block.type === 'testimonials_elite' && (
-                                                <>
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="p-2 bg-amber-500/10 rounded-xl text-amber-500 group-hover:scale-110 transition-transform">
-                                                            <Star size={18} />
-                                                        </div>
-                                                        <div className="flex gap-0.5">
-                                                            {[1, 2, 3].map(s => <Star key={s} size={6} className="fill-amber-500 text-amber-500" />)}
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-left mt-2">
-                                                        <h4 className="text-[10px] font-black text-white uppercase tracking-wider mb-1">Elite Referanslar</h4>
-                                                        <div className="flex -space-x-2 mt-2">
-                                                            {[1, 2, 3].map(id => (
-                                                                <div key={id} className="w-5 h-5 rounded-full border border-black overflow-hidden bg-zinc-800">
-                                                                    <img src={`https://i.pravatar.cc/100?u=${id + 20}`} className="w-full h-full object-cover" alt="" />
-                                                                </div>
-                                                            ))}
-                                                            <div className="w-5 h-5 rounded-full border border-black bg-zinc-800 flex items-center justify-center text-[6px] font-bold text-white">+5</div>
-                                                        </div>
-                                                    </div>
-                                                    <motion.button
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="mt-auto w-full py-2 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white"
-                                                    >
-                                                        İNCELE
-                                                    </motion.button>
-                                                </>
-                                            )}
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            )
-                            }
-
                             {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
 
@@ -2969,6 +2835,75 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 />
                             ))}
                         </div>
+                    </div>
+
+                    {/* Smart Lead Capture Form */}
+                    <div className="pt-8">
+                        <div className="flex items-center justify-between mb-4 px-2">
+                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>İletişim Talebi Bırak</h3>
+                        </div>
+
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                const formData = new FormData(e.currentTarget);
+                                const data = {
+                                    name: formData.get('name'),
+                                    phone: formData.get('phone'),
+                                    message: formData.get('message'),
+                                    profileId: profile.id
+                                };
+
+                                if (!data.name) return;
+
+                                try {
+                                    const res = await fetch("/api/leads/create", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(data)
+                                    });
+                                    if (res.ok) {
+                                        (e.target as HTMLFormElement).reset();
+                                        setReviewStatus("Talebiniz başarıyla iletildi!");
+                                        setTimeout(() => setReviewStatus(null), 5000);
+                                        trackEvent("lead_submitted");
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                            }}
+                            className={cn("p-6 border space-y-4", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2.5rem]")}
+                        >
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                placeholder="Adınız Soyadınız"
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-xs focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                style={{ borderColor: `${theme.accent}30` }}
+                            />
+                            <input
+                                type="tel"
+                                name="phone"
+                                placeholder="Telefon Numaranız"
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-xs focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                style={{ borderColor: `${theme.accent}30` }}
+                            />
+                            <textarea
+                                name="message"
+                                rows={2}
+                                placeholder="Mesajınız veya talebiniz..."
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-xs focus:outline-none focus:ring-1 focus:ring-current transition-all resize-none"
+                                style={{ borderColor: `${theme.accent}30"` }}
+                            />
+                            <button
+                                type="submit"
+                                className={cn("w-full py-4 flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 text-white", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")}
+                                style={{ background: theme.accent }}
+                            >
+                                <Zap size={14} className="fill-white" /> Talebi Gönder
+                            </button>
+                        </form>
                     </div>
 
                     {/* Social Icons */}

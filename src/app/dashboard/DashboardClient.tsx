@@ -60,6 +60,7 @@ import {
     Gamepad2,
     Cpu,
     History,
+    Inbox,
     Cloud,
     Moon,
     Sun,
@@ -73,22 +74,10 @@ import {
     Atom,
     Boxes,
     ChevronDown,
-    ChevronUp,
-    Brain,
-    Flame
+    ChevronUp
 } from "lucide-react"
 
-// Modül Tanımları
-const AVAILABLE_MODULES = [
-    { type: 'ai_assistant', name: 'AI Temsilcisi', icon: <Brain className="w-5 h-5" />, color: 'text-purple-400', description: 'Sizi 7/24 temsil eden ve soruları cevaplayan yapay zeka asistanı.' },
-    { type: 'digital_store', name: 'Premium Mağaza', icon: <ShoppingBag className="w-5 h-5" />, color: 'text-emerald-400', description: 'Dosyalarınızı, eğitimlerinizi veya danışmanlığınızı doğrudan satın.' },
-    { type: 'testimonial_pro', name: 'Referans Vitrini', icon: <Star className="w-5 h-5" />, color: 'text-amber-400', description: 'Müşteri yorumlarını ve güven rozetlerini en şık haliyle sergileyin.' },
-    { type: 'expertise_map', name: 'Uzmanlık Haritası', icon: <Flame className="w-5 h-5" />, color: 'text-orange-400', description: 'Teknik yetkinliklerinizi ısı haritasıyla etkileyici bir görselle sunun.' },
-    { type: 'smart_booking', name: 'Akıllı Randevu', icon: <Calendar className="w-5 h-5" />, color: 'text-sky-400', description: 'Takviminizle tam senkronize, profesyonel randevu toplama sistemi.' },
-    { type: 'newsletter', name: 'Kitle Büyütücü', icon: <Mail className="w-5 h-5" />, color: 'text-indigo-400', description: 'Ziyaretçileri haber bülteninize abone yaparak ağınızı genişletin.' },
-    { type: 'case_study', name: 'Başarı Hikayesi', icon: <Award className="w-5 h-5" />, color: 'text-rose-400', description: 'En çok gurur duyduğunuz işinizi tüm süreciyle ön plana çıkarın.' },
-    { type: 'brand_partners', name: 'Marka İşbirlikleri', icon: <Globe className="w-5 h-5" />, color: 'text-blue-400', description: 'Çalıştığınız markaları ve logoları kayan bir bantla sergileyin.' },
-]
+
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
@@ -170,6 +159,43 @@ export default function DashboardClient({ session, profile, subscription, appoin
         title: "",
         description: ""
     })
+
+    // Leads Management
+    const [leads, setLeads] = useState<any[]>([])
+    const [isLeadsLoading, setIsLeadsLoading] = useState(false)
+
+    useEffect(() => {
+        if (activeTab === "leads") {
+            fetchLeads()
+        }
+    }, [activeTab])
+
+    const fetchLeads = async () => {
+        setIsLeadsLoading(true)
+        try {
+            const res = await fetch("/api/leads/list")
+            const data = await res.json()
+            setLeads(data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setIsLeadsLoading(false)
+        }
+    }
+
+    const handleDeleteLead = async (id: string) => {
+        if (!confirm("Bu talebi silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch(`/api/leads/delete?id=${id}`, { method: "DELETE" })
+            if (res.ok) {
+                setLeads(leads.filter(l => l.id !== id))
+                setShowToast("Talep silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     // Appointments Management
     const [appointmentList, setAppointmentList] = useState(appointments || [])
@@ -661,15 +687,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         }}
                     />
                     <NavItem
-                        icon={<Layers className="w-5 h-5" />}
-                        label={t('bentoStore') || "Bento Mağazası"}
-                        active={activeTab === "bento"}
-                        onClick={() => {
-                            setActiveTab("bento")
-                            setIsSidebarOpen(false)
-                        }}
-                    />
-                    <NavItem
                         icon={<Briefcase className="w-5 h-5" />}
                         label={t('projectsPortfolio')}
                         active={activeTab === "products"}
@@ -720,6 +737,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "qrcode"}
                         onClick={() => {
                             setActiveTab("qrcode")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+
+                    <NavItem
+                        icon={<Inbox className="w-5 h-5" />}
+                        label="Gelen Talepler"
+                        active={activeTab === "leads"}
+                        onClick={() => {
+                            setActiveTab("leads")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -2235,70 +2262,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 ))}
                             </AnimatePresence>
                         </motion.div>
-                    </div>
-                ) : activeTab === "bento" ? (
-                    <div className="space-y-10">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                            <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Bento Modülleri</h2>
-                                <p className="text-sm text-slate-500 font-medium tracking-wide">Profilinizde hangi bölümlerin yer alacağını seçin ve düzenleyin.</p>
-                            </div>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl border border-amber-100">
-                                <Sparkles className="w-4 h-4 text-amber-500" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">Beta: Sürükle Bırak Yakında</span>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {AVAILABLE_MODULES.map((module) => {
-                                const isActive = blocks.some(b => b.type === module.type)
-                                return (
-                                    <motion.div
-                                        key={module.type}
-                                        whileHover={{ y: -5 }}
-                                        className={cn(
-                                            "bg-white rounded-[2rem] border p-8 transition-all shadow-sm group",
-                                            isActive ? "border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/10" : "border-slate-200 opacity-60 grayscale hover:grayscale-0 hover:opacity-100"
-                                        )}
-                                    >
-                                        <div className="flex justify-between items-start mb-6">
-                                            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-500", isActive ? "bg-primary/10 text-primary" : "bg-slate-50 text-slate-400")}>
-                                                {module.icon}
-                                            </div>
-                                            <button
-                                                onClick={() => {
-                                                    let newBlocks;
-                                                    if (isActive) {
-                                                        newBlocks = blocks.filter(b => b.type !== module.type)
-                                                    } else {
-                                                        newBlocks = [...blocks, { type: module.type, content: {}, order: blocks.length, isActive: true }]
-                                                    }
-                                                    handleSyncBlocks(newBlocks)
-                                                }}
-                                                className={cn(
-                                                    "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                                                    isActive ? "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white" : "bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105"
-                                                )}
-                                            >
-                                                {isActive ? "Kaldır" : "Ekle"}
-                                            </button>
-                                        </div>
-                                        <h3 className="text-lg font-black text-slate-900 tracking-tight mb-2">{module.name}</h3>
-                                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{module.description}</p>
-
-                                        {isActive && (
-                                            <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Aktif</span>
-                                                </div>
-                                                <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Özelleştir</button>
-                                            </div>
-                                        )}
-                                    </motion.div>
-                                )
-                            })}
-                        </div>
                     </div>
                 ) : activeTab === "reviews" ? (
                     <div className="space-y-6">
