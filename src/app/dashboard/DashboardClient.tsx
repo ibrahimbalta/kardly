@@ -2363,6 +2363,64 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
+                ) : activeTab === "leads" ? (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-900">Gelen Talepler</h2>
+                                <p className="text-sm text-slate-500">Profiliniz üzerinden gelen iletişim ve teklif taleplerini buradan yönetin.</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
+                            <table className="w-full text-left min-w-[800px]">
+                                <thead className="bg-slate-50 border-b border-slate-100">
+                                    <tr>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Müşteri</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Mesaj</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">Tarih</th>
+                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {leads.map((lead: any) => (
+                                        <tr key={lead.id} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="font-bold text-slate-900">{lead.name}</div>
+                                                <div className="text-xs text-slate-500">{lead.phone}</div>
+                                                <div className="text-[10px] text-slate-400">{lead.email}</div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <p className="text-sm text-slate-600 font-medium">{lead.message}</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-xs text-slate-400 font-bold uppercase">
+                                                {new Date(lead.createdAt).toLocaleDateString("tr-TR")}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <button
+                                                        onClick={() => handleDeleteLead(lead.id)}
+                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        title="Sil"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {leads.length === 0 && (
+                                        <tr>
+                                            <td colSpan={4} className="px-6 py-20 text-center text-slate-300">
+                                                <Inbox className="w-12 h-12 mx-auto mb-4 opacity-10" />
+                                                <p className="font-black uppercase tracking-widest text-[10px]">Henüz talep gelmemiş</p>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 ) : null
                 }
 
