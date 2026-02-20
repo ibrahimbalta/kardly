@@ -2883,7 +2883,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         name="name"
                                         required
                                         placeholder="Örn: Ahmet Yılmaz"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                        className={cn("w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all", theme.text)}
                                         style={{ borderColor: `${theme.accent}20` }}
                                     />
                                 </div>
@@ -2893,7 +2893,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         type="tel"
                                         name="phone"
                                         placeholder="05xx xxx xx xx"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all"
+                                        className={cn("w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all", theme.text)}
                                         style={{ borderColor: `${theme.accent}20` }}
                                     />
                                 </div>
@@ -2905,7 +2905,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     name="message"
                                     rows={2}
                                     placeholder="Talebinizi veya sorunuzu kısaca yazın..."
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all resize-none"
+                                    className={cn("w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-current transition-all resize-none", theme.text)}
                                     style={{ borderColor: `${theme.accent}20` }}
                                 />
                             </div>
