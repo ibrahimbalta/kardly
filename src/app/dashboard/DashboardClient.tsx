@@ -97,7 +97,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         isCatalog: profile?.isCatalog || false,
         paymentLink: profile?.paymentLink || "",
         paymentType: profile?.paymentType || "coffee",
-        animationStyle: profile?.animationStyle || "3d-manual"
+        animationStyle: profile?.animationStyle || "none"
     })
     const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isSaving, setIsSaving] = useState(false)

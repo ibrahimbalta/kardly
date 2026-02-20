@@ -80,7 +80,7 @@ model Profile {
   isCatalog          Boolean     @default(false)
   paymentLink        String?
   paymentType        String?     @default("coffee")
-  animationStyle     String?     @default("3d-manual")
+  animationStyle     String?     @default("none")
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?
