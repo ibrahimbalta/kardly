@@ -88,9 +88,14 @@ export function Hero() {
                             className="flex items-center gap-10 border-t border-slate-100 pt-10"
                         >
                             <div className="flex -space-x-3">
-                                {[1, 2, 3, 4].map(i => (
+                                {[
+                                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop",
+                                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
+                                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop",
+                                    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop"
+                                ].map((url, i) => (
                                     <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm">
-                                        <img src={`https://avatar.iran.liara.run/public/${i + 20}`} alt="User" />
+                                        <img src={url} alt="User" className="w-full h-full object-cover" />
                                     </div>
                                 ))}
                                 <div className="w-10 h-10 rounded-full border-2 border-white bg-rose-500 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">+</div>
@@ -141,7 +146,7 @@ export function Hero() {
                                     <div className="px-6 mb-4">
                                         <div className="bg-slate-50/80 rounded-2xl px-4 py-2 border border-slate-100 flex items-center gap-2">
                                             <ShieldCheck size={12} className="text-emerald-500" />
-                                            <span className="text-[10px] text-slate-400 font-medium truncate">kardly.com/aysedemir</span>
+                                            <span className="text-[10px] text-slate-400 font-medium truncate">kardly.com/lara-yildiz</span>
                                         </div>
                                     </div>
 
@@ -158,10 +163,10 @@ export function Hero() {
                                         <div className="px-6 -mt-10 relative text-center">
                                             <div className="inline-block p-1.5 bg-white rounded-3xl shadow-xl shadow-rose-200/50 mb-4 transform group-hover:scale-105 transition-transform duration-500">
                                                 <div className="w-20 h-20 rounded-[20px] bg-slate-100 flex items-center justify-center overflow-hidden">
-                                                    <img src="https://avatar.iran.liara.run/public/girl" alt="Ayşe" className="w-full h-full object-cover" />
+                                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" alt="Lara" className="w-full h-full object-cover" />
                                                 </div>
                                             </div>
-                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">Ayşe Demir</h3>
+                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">Lara Yıldız</h3>
                                             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-6 mt-1">UX/UI Designer</div>
 
                                             {/* Quick Actions (Floating Grid) */}
