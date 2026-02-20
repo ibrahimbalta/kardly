@@ -57,8 +57,10 @@ import {
     Menu,
     TrendingUp,
     UserCircle,
-    User
-
+    User,
+    Gamepad2,
+    Cpu,
+    History
 } from "lucide-react"
 
 // Modül Tanımları
@@ -204,7 +206,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "pro_photographer", category: "nature", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet." },
         { id: "pattern_topo", category: "nature", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
         { id: "minimal_glass", category: "nature", name: "💎 Kristal Cam", description: "Yumuşak buzlu cam efekti ve transparan modern şıklık.", isNew: true },
-        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true }
+        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true },
+
+        // Retro & Nostalji
+        { id: "retro_mac", category: "retro", name: "💾 Retro Macintosh", description: "Eskitilmiş bej tonları, piksel dokunuşu ve nostaljik bloklar.", isNew: true },
+        { id: "retro_news", category: "retro", name: "🗞️ Eski Gazete", description: "Saman kağıdı dokusu ve yüksek kontrastlı siyah-beyaz şıklık.", isNew: true },
+        { id: "retro_synth", category: "retro", name: "🕹️ 80s Synthwave", description: "Mor, pembe ve neon grid çizgileriyle enerjik retro atmosfer.", isNew: true },
+
+        // Lüks & Premium
+        { id: "luxury_gold", category: "luxury", name: "💎 Mat Siyah & Altın", description: "Derin mat siyah zemin üzerinde asil altın varaklı detaylar.", isNew: true },
+        { id: "luxury_silver", category: "luxury", name: "🥈 Gece Mavisi & Gümüş", description: "Lacivert ve gümüşün kurumsal ağırlıkla mükemmel uyumu.", isNew: true },
+        { id: "luxury_marble", category: "luxury", name: "🏛️ Mermer Asalet", description: "Beyaz mermer dokusu üzerine ince siyah estetik hatlar.", isNew: true },
+
+        // Lifestyle & Hobi
+        { id: "life_gamer", category: "lifestyle", name: "🎮 Gamer Kırmızı", description: "Karbon fiber doku ve dinamik neon kırmızı oyuncu tasarımı.", isNew: true },
+        { id: "life_travel", category: "lifestyle", name: "🗺️ Gezgin Haritası", description: "Eski harita desenleri ve toprak tonlarıyla macera ruhu.", isNew: true },
+        { id: "life_zen", category: "lifestyle", name: "🎋 Zen Bahçesi", description: "Sakinleştirici boşluklar ve huzurlu doğal yeşil tonları.", isNew: true },
+
+        // Future & Glass
+        { id: "future_holo", category: "future", name: "🛸 Hologram Pro", description: "Işık kırılmalı kenarlar ve fütüristik parlayan hologram kartları.", isNew: true },
+        { id: "future_glass", category: "future", name: "❄️ Buzul Cam (Frost)", description: "Bulanık cam arkası efekti ve pastel yüzen ışık balonları.", isNew: true }
     ]
 
     // Working Hours Management
@@ -1969,9 +1990,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 {[
                                     { id: "all", name: "Tümü", icon: <Layout size={14} /> },
                                     { id: "pro", name: "Mesleki", icon: <Briefcase size={14} /> },
-                                    { id: "neon", name: "Neon & Enerjik", icon: <Zap size={14} /> },
-                                    { id: "pattern", name: "Desen & Sanat", icon: <Layers size={14} /> },
-                                    { id: "nature", name: "Doğa & Minimal", icon: <Sparkles size={14} /> }
+                                    { id: "retro", name: "Retro", icon: <History size={14} /> },
+                                    { id: "luxury", name: "Lüks", icon: <Award size={14} /> },
+                                    { id: "lifestyle", name: "Hobi", icon: <Gamepad2 size={14} /> },
+                                    { id: "future", name: "Gelecek", icon: <Cpu size={14} /> },
+                                    { id: "neon", name: "Neon", icon: <Zap size={14} /> },
+                                    { id: "pattern", name: "Desen", icon: <Layers size={14} /> },
+                                    { id: "nature", name: "Doğa", icon: <Sparkles size={14} /> }
                                 ].map((cat) => (
                                     <button
                                         key={cat.id}
