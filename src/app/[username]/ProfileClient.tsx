@@ -97,6 +97,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
         { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, gender: 'male', image: "https://avatar.iran.liara.run/public/48" }
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
+    const [isQrOpen, setIsQrOpen] = useState(false)
+    const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => {
@@ -108,6 +110,26 @@ export default function ProfileClient({ profile }: { profile: any }) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ profileId: profile.id, type: "view" })
             }).catch(console.error)
+
+            // Dynamic QR Code Generation
+            const generateQr = async () => {
+                try {
+                    const QRCode = (await import('qrcode')).default
+                    const url = `${window.location.origin}/${profile.username}`
+                    const dataUrl = await QRCode.toDataURL(url, {
+                        margin: 2,
+                        width: 400,
+                        color: {
+                            dark: '#000000',
+                            light: '#ffffff'
+                        }
+                    })
+                    setQrDataUrl(dataUrl)
+                } catch (err) {
+                    console.error("QR generating error:", err)
+                }
+            }
+            generateQr()
         }
     }, [])
 
@@ -265,6 +287,15 @@ END:VCARD`
                     }
                 }}
                 themeColor={activeAccent}
+                t={t}
+            />
+
+            <QrModal
+                isOpen={isQrOpen}
+                onClose={() => setIsQrOpen(false)}
+                qrDataUrl={qrDataUrl}
+                theme={themes[profile.templateId] || themes.black}
+                profile={profile}
                 t={t}
             />
 
@@ -2400,7 +2431,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     }}
                     className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                 >
-                    {/* Share Button Top Right */}
+                    {/* Floating Buttons: QA (Top Left) & Share (Top Right) */}
+                    <div className="absolute top-6 left-6 z-30">
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setIsQrOpen(true)}
+                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                        >
+                            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
+                            <QrCode size={18} className={theme.icon} />
+                        </motion.button>
+                    </div>
+
                     <div className="absolute top-6 right-6 z-30">
                         <button
                             onClick={handleAddToContacts}
@@ -2930,7 +2973,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                     {/* Social Icons */}
                     <div className="flex justify-center flex-wrap gap-6 pt-2">
-                        {socialLinks.filter((l: any) => l.platform !== 'customLinks' && l.platform.toLowerCase() !== 'phone').slice(0, 10).map((l: any, i: number) => {
+                        {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
                             const platform = l.platform.toLowerCase()
                             return (
                                 <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
@@ -2941,8 +2984,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     {platform === 'youtube' && <Youtube size={24} />}
                                     {platform === 'whatsapp' && <MessageCircle size={24} />}
                                     {platform === 'mail' && <Mail size={24} />}
-                                    {platform === 'location' && <QrCode size={24} />}
-                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'location'].includes(platform)) && <Globe size={24} />}
+                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail'].includes(platform)) && <Globe size={24} />}
                                 </a>
                             )
                         })}
@@ -3187,4 +3229,90 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
         </div>
     )
 }
+
+function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+                onClick={onClose}
+            />
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                className="relative w-full max-w-[360px] bg-[#0a0a0b] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+            >
+                {/* Visual Flair */}
+                <div className="absolute top-0 inset-x-0 h-32 opacity-20" style={{ background: `linear-gradient(180deg, ${theme.accent}, transparent)` }} />
+
+                <div className="relative p-8 flex flex-col items-center">
+                    <button
+                        onClick={onClose}
+                        className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                    >
+                        <X size={16} />
+                    </button>
+
+                    <div className="mb-8 text-center">
+                        <div className="w-16 h-16 rounded-2xl border-2 border-white/10 p-1 mb-4 mx-auto overflow-hidden" style={{ borderColor: theme.accent }}>
+                            <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover rounded-xl" />
+                        </div>
+                        <h3 className="text-xl font-black text-white uppercase tracking-tighter">{profile.user.name}</h3>
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">{profile.occupation}</p>
+                    </div>
+
+                    {/* QR Code Container */}
+                    <div className="relative group">
+                        <div className="absolute -inset-4 bg-white/5 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative bg-white p-6 rounded-[2rem] shadow-2xl">
+                            {qrDataUrl ? (
+                                <img src={qrDataUrl} alt="QR Code" className="w-[180px] h-[180px] select-none" />
+                            ) : (
+                                <div className="w-[180px] h-[180px] flex items-center justify-center">
+                                    <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-10 text-center space-y-2">
+                        <p className="text-xs font-bold text-white/80 uppercase tracking-widest">Kartviziti Paylaş</p>
+                        <p className="text-[10px] text-white/40 max-w-[200px] leading-relaxed">
+                            Bu kodu başkalarına okutarak dijital kartvizitinizi anında paylaşabilirsiniz.
+                        </p>
+                    </div>
+
+                    <div className="mt-8 flex gap-2 w-full">
+                        <button
+                            onClick={() => {
+                                const link = document.createElement('a');
+                                link.download = `${profile.username}-qr.png`;
+                                link.href = qrDataUrl;
+                                link.click();
+                            }}
+                            className="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                        >
+                            <Download size={14} /> İndir
+                        </button>
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin}/${profile.username}`);
+                                alert("Link kopyalandı!");
+                            }}
+                            className="flex-1 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black"
+                            style={{ background: theme.accent }}
+                        >
+                            <Share2 size={14} /> Kopyala
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
 
