@@ -99,6 +99,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         paymentType: profile?.paymentType || "coffee",
         animationStyle: profile?.animationStyle || "3d-manual"
     })
+    const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isSaving, setIsSaving] = useState(false)
     const [showProductModal, setShowProductModal] = useState(false)
     const [productList, setProductList] = useState(products || [])
@@ -170,6 +171,41 @@ export default function DashboardClient({ session, profile, subscription, appoin
         }
         setProfileData({ ...profileData, socialLinks: currentLinks })
     }
+
+    const ALL_TEMPLATES = [
+        // Mesleki
+        { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
+        { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
+        { id: "pro_chef", category: "pro", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
+        { id: "pro_barber", category: "pro", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
+        { id: "pro_fitness", category: "pro", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
+        { id: "pro_lawyer", category: "pro", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
+        { id: "pro_architect", category: "pro", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
+        { id: "pro_realestate", category: "pro", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
+        { id: "pro_finance", category: "pro", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
+
+        // Neon
+        { id: "neon_cyber", category: "neon", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği.", isNew: true },
+        { id: "neon_galaxy", category: "neon", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer.", isNew: true },
+        { id: "neon_acid", category: "neon", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji.", isNew: true },
+        { id: "neon_black", category: "neon", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
+        { id: "neon_blue", category: "neon", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
+        { id: "neon_purple", category: "neon", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
+
+        // Pattern & Art
+        { id: "pro_artistic", category: "pattern", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
+        { id: "pattern_ottoman", category: "pattern", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
+        { id: "pattern_geometric", category: "pattern", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
+        { id: "pattern_marble", category: "pattern", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
+        { id: "pattern_circuit", category: "pattern", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
+
+        // Nature & Minimal
+        { id: "pro_dietitian", category: "nature", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
+        { id: "pro_photographer", category: "nature", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet." },
+        { id: "pattern_topo", category: "nature", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
+        { id: "minimal_glass", category: "nature", name: "💎 Kristal Cam", description: "Yumuşak buzlu cam efekti ve transparan modern şıklık.", isNew: true },
+        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true }
+    ]
 
     // Working Hours Management
     const defaultHours = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
@@ -476,11 +512,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <LanguageSwitcher />
                     </div>
                     <NavItem
+                        icon={<Monitor className="w-5 h-5" />}
+                        label={t('overview') || "Genel Bakış"}
+                        active={activeTab === "overview"}
+                        onClick={() => {
+                            setActiveTab("overview")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
                         icon={<Layout className="w-5 h-5" />}
                         label={t('editPage')}
                         active={activeTab === "edit"}
                         onClick={() => {
                             setActiveTab("edit")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
+                        icon={<Layers className="w-5 h-5" />}
+                        label={t('bentoStore') || "Bento Mağazası"}
+                        active={activeTab === "bento"}
+                        onClick={() => {
+                            setActiveTab("bento")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -602,7 +656,135 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     )}
                 </header>
 
-                {activeTab === "edit" ? (
+                {activeTab === "overview" ? (
+                    <div className="space-y-10">
+                        {/* Summary Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <StatCard
+                                icon={<Eye />}
+                                label="Toplam Ziyaret"
+                                value={stats?.totalViews?.toString() || "0"}
+                                trend="+12%"
+                            />
+                            <StatCard
+                                icon={<Users />}
+                                label="Rehbere Kayıt"
+                                value={stats?.vCardClicks?.toString() || "0"}
+                                trend="+5%"
+                            />
+                            <StatCard
+                                icon={<Calendar />}
+                                label="Bekleyen Randevu"
+                                value={appointmentList.filter((a: any) => a.status === 'pending').length.toString()}
+                                trend="0%"
+                            />
+                            <StatCard
+                                icon={<Star />}
+                                label="Onaylı Yorum"
+                                value={reviewList.filter((r: any) => r.isActive).length.toString()}
+                                trend="+2"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                            {/* Performance Chart Placeholder / Main Activity */}
+                            <div className="lg:col-span-2 space-y-8">
+                                <section className="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
+                                    <div className="flex justify-between items-center mb-8">
+                                        <div>
+                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">Kanal Performansı</h3>
+                                            <p className="text-xs text-slate-400 font-medium tracking-wide">Ziyaretçileriniz sizi hangi mecralarda buluyor?</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button className="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-200 transition-all">7 Gün</button>
+                                            <button className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-primary/20">30 Gün</button>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-6">
+                                        <StatBar label="Instagram / Sosyal Medya" count={420} total={1000} color="bg-primary" />
+                                        <StatBar label="WhatsApp Paylaşımları" count={280} total={1000} color="bg-indigo-500" />
+                                        <StatBar label="Doğrudan Trafik / QR Kod" count={150} total={1000} color="bg-emerald-500" />
+                                        <StatBar label="Diğer" count={150} total={1000} color="bg-slate-200" />
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <h3 className="text-lg font-black text-slate-900 tracking-tight mb-6">Hızlı İşlemler</h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <button onClick={() => setActiveTab("edit")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
+                                            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                <Layout size={20} />
+                                            </div>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Profili Düzenle</span>
+                                        </button>
+                                        <button onClick={() => setActiveTab("templates")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-indigo-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
+                                            <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                <Palette size={20} />
+                                            </div>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Şablon Değiştir</span>
+                                        </button>
+                                        <button onClick={() => setActiveTab("products")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-emerald-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
+                                            <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                <Briefcase size={20} />
+                                            </div>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">Proje Ekle</span>
+                                        </button>
+                                        <button onClick={() => setActiveTab("qrcode")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-slate-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
+                                            <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                <QrCode size={20} />
+                                            </div>
+                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">QR Paylaş</span>
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+
+                            {/* Sidebar Info */}
+                            <div className="space-y-8">
+                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/30 relative overflow-hidden group">
+                                    <div className="relative z-10">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">Mevcut Şablon</h4>
+                                        <h3 className="text-2xl font-black mb-6 tracking-tight">
+                                            {ALL_TEMPLATES.find(t => t.id === profileData.templateId)?.name || 'Standart Modern'}
+                                        </h3>
+                                        <div className="h-40 w-full rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                                            <div className="relative">
+                                                <Smartphone className="w-20 h-20 opacity-20" />
+                                                <Sparkles className="absolute -top-2 -right-2 text-primary animate-pulse" />
+                                            </div>
+                                        </div>
+                                        <button onClick={() => setActiveTab("templates")} className="w-full mt-6 py-4 bg-white text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
+                                            Şablonu Özelleştir
+                                        </button>
+                                    </div>
+                                    <div className="absolute -top-24 -right-24 w-60 h-60 bg-primary/20 blur-[100px] rounded-full" />
+                                </div>
+
+                                <div className="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
+                                    <h4 className="text-sm font-black text-slate-900 tracking-tight mb-6">Yaklaşan Etkinlikler</h4>
+                                    <div className="space-y-4">
+                                        {appointmentList.slice(0, 3).map((app: any, i: number) => (
+                                            <div key={i} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/20 transition-all">
+                                                <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex flex-col items-center justify-center">
+                                                    <span className="text-[8px] font-black text-slate-400 uppercase leading-none">ARA</span>
+                                                    <span className="text-lg font-black text-slate-900 leading-none">20</span>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs font-black text-slate-900 truncate">{app.clientName}</p>
+                                                    <p className="text-[10px] font-medium text-slate-400">Görüşme Talebi</p>
+                                                </div>
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                            </div>
+                                        ))}
+                                        {appointmentList.length === 0 && (
+                                            <p className="text-xs text-slate-400 font-medium text-center py-4">Yakın zamanda randevu yok.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : activeTab === "edit" ? (
                     <div className="space-y-10">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
@@ -1776,125 +1958,147 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
 
-                ) : activeTab === "templates" ? (() => {
-                    const [selectedTplCat, setSelectedTplCat] = useState("all")
-                    const categories = [
-                        { id: "all", name: "Tümü", icon: <Layout size={14} /> },
-                        { id: "pro", name: "Mesleki", icon: <Briefcase size={14} /> },
-                        { id: "neon", name: "Neon & Enerjik", icon: <Zap size={14} /> },
-                        { id: "pattern", name: "Desen & Sanat", icon: <Layers size={14} /> },
-                        { id: "nature", name: "Doğa & Minimal", icon: <Sparkles size={14} /> }
-                    ]
-
-                    const templates = [
-                        // Mesleki
-                        { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
-                        { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
-                        { id: "pro_chef", category: "pro", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
-                        { id: "pro_barber", category: "pro", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
-                        { id: "pro_fitness", category: "pro", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
-                        { id: "pro_lawyer", category: "pro", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
-                        { id: "pro_architect", category: "pro", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
-                        { id: "pro_realestate", category: "pro", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
-                        { id: "pro_finance", category: "pro", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
-
-                        // Neon
-                        { id: "neon_cyber", category: "neon", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği.", isNew: true },
-                        { id: "neon_galaxy", category: "neon", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer.", isNew: true },
-                        { id: "neon_acid", category: "neon", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji.", isNew: true },
-                        { id: "neon_black", category: "neon", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
-                        { id: "neon_blue", category: "neon", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
-                        { id: "neon_purple", category: "neon", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
-
-                        // Pattern & Art
-                        { id: "pro_artistic", category: "pattern", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
-                        { id: "pattern_ottoman", category: "pattern", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
-                        { id: "pattern_geometric", category: "pattern", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
-                        { id: "pattern_marble", category: "pattern", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
-                        { id: "pattern_circuit", category: "pattern", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
-
-                        // Nature & Minimal
-                        { id: "pro_dietitian", category: "nature", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
-                        { id: "pro_photographer", category: "nature", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet." },
-                        { id: "pattern_topo", category: "nature", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
-                        { id: "minimal_glass", category: "nature", name: "💎 Kristal Cam", description: "Yumuşak buzlu cam efekti ve transparan modern şıklık.", isNew: true },
-                        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true }
-                    ]
-
-                    const filteredTemplates = templates.filter(t => selectedTplCat === "all" || t.category === selectedTplCat)
-
-                    return (
-                        <div className="space-y-10">
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                                <div>
-                                    <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Tasarım Şablonları</h2>
-                                    <p className="text-sm text-slate-500 font-medium tracking-wide">Profiliniz için en uygun stili kategoriler arasından bulun.</p>
-                                </div>
-                                <div className="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
-                                    {categories.map((cat) => (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => setSelectedTplCat(cat.id)}
-                                            className={cn(
-                                                "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
-                                                selectedTplCat === cat.id
-                                                    ? "bg-white text-primary shadow-md border border-slate-100"
-                                                    : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
-                                            )}
-                                        >
-                                            {cat.icon} {cat.name}
-                                        </button>
-                                    ))}
-                                </div>
+                ) : activeTab === "templates" ? (
+                    <div className="space-y-10">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Tasarım Şablonları</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">Profiliniz için en uygun stili kategoriler arasından bulun.</p>
                             </div>
+                            <div className="flex flex-wrap gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
+                                {[
+                                    { id: "all", name: "Tümü", icon: <Layout size={14} /> },
+                                    { id: "pro", name: "Mesleki", icon: <Briefcase size={14} /> },
+                                    { id: "neon", name: "Neon & Enerjik", icon: <Zap size={14} /> },
+                                    { id: "pattern", name: "Desen & Sanat", icon: <Layers size={14} /> },
+                                    { id: "nature", name: "Doğa & Minimal", icon: <Sparkles size={14} /> }
+                                ].map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => setSelectedTplCat(cat.id)}
+                                        className={cn(
+                                            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
+                                            selectedTplCat === cat.id
+                                                ? "bg-white text-primary shadow-md border border-slate-100"
+                                                : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
+                                        )}
+                                    >
+                                        {cat.icon} {cat.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
-                            <motion.div
-                                layout
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                            >
-                                <AnimatePresence mode="popLayout">
-                                    {filteredTemplates.map((tpl) => (
-                                        <motion.div
-                                            key={tpl.id}
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            whileHover={{ y: -5 }}
-                                            className={cn(
-                                                "bg-white rounded-[2rem] border overflow-hidden group cursor-pointer transition-all shadow-sm",
-                                                profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary shadow-xl shadow-primary/10" : "border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
-                                            )}
-                                            onClick={() => {
-                                                setProfileData({ ...profileData, templateId: tpl.id });
-                                                handleSave({ templateId: tpl.id });
-                                            }}
-                                        >
-                                            <div className="p-8">
-                                                <div className="flex justify-between items-start mb-4">
-                                                    <div className="flex flex-col gap-2">
-                                                        <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
-                                                        {tpl.isNew && (
-                                                            <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">YENİ</span>
-                                                        )}
-                                                    </div>
-                                                    {profileData.templateId === tpl.id && (
-                                                        <div className="bg-primary text-white p-1.5 rounded-xl shadow-lg shadow-primary/20">
-                                                            <CheckCircle2 size={16} />
-                                                        </div>
+                        <motion.div
+                            layout
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            <AnimatePresence mode="popLayout">
+                                {ALL_TEMPLATES.filter(t => selectedTplCat === "all" || t.category === selectedTplCat).map((tpl) => (
+                                    <motion.div
+                                        key={tpl.id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        whileHover={{ y: -5 }}
+                                        className={cn(
+                                            "bg-white rounded-[2rem] border overflow-hidden group cursor-pointer transition-all shadow-sm",
+                                            profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary shadow-xl shadow-primary/10" : "border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
+                                        )}
+                                        onClick={() => {
+                                            setProfileData({ ...profileData, templateId: tpl.id });
+                                            handleSave({ templateId: tpl.id });
+                                        }}
+                                    >
+                                        <div className="p-8">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="flex flex-col gap-2">
+                                                    <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
+                                                    {tpl.isNew && (
+                                                        <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">YENİ</span>
                                                     )}
                                                 </div>
-                                                <p className="text-xs text-slate-500 font-medium leading-relaxed">{tpl.description}</p>
+                                                {profileData.templateId === tpl.id && (
+                                                    <div className="bg-primary text-white p-1.5 rounded-xl shadow-lg shadow-primary/20">
+                                                        <CheckCircle2 size={16} />
+                                                    </div>
+                                                )}
                                             </div>
-                                            {/* Preview Strip */}
-                                            <div className="h-2 bg-slate-50 border-t border-slate-100 group-hover:bg-primary/5 transition-colors" />
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-                            </motion.div>
+                                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{tpl.description}</p>
+                                        </div>
+                                        {/* Preview Strip */}
+                                        <div className="h-2 bg-slate-50 border-t border-slate-100 group-hover:bg-primary/5 transition-colors" />
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+                    </div>
+                ) : activeTab === "bento" ? (
+                    <div className="space-y-10">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Bento Modülleri</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">Profilinizde hangi bölümlerin yer alacağını seçin ve düzenleyin.</p>
+                            </div>
+                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-xl border border-amber-100">
+                                <Sparkles className="w-4 h-4 text-amber-500" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">Beta: Sürükle Bırak Yakında</span>
+                            </div>
                         </div>
-                    )
-                })() : activeTab === "reviews" ? (
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {AVAILABLE_MODULES.map((module) => {
+                                const isActive = blocks.some(b => b.type === module.type)
+                                return (
+                                    <motion.div
+                                        key={module.type}
+                                        whileHover={{ y: -5 }}
+                                        className={cn(
+                                            "bg-white rounded-[2rem] border p-8 transition-all shadow-sm group",
+                                            isActive ? "border-primary/20 shadow-xl shadow-primary/5 ring-1 ring-primary/10" : "border-slate-200 opacity-60 grayscale hover:grayscale-0 hover:opacity-100"
+                                        )}
+                                    >
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-500", isActive ? "bg-primary/10 text-primary" : "bg-slate-50 text-slate-400")}>
+                                                {module.icon}
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    let newBlocks;
+                                                    if (isActive) {
+                                                        newBlocks = blocks.filter(b => b.type !== module.type)
+                                                    } else {
+                                                        newBlocks = [...blocks, { type: module.type, content: {}, order: blocks.length, isActive: true }]
+                                                    }
+                                                    handleSyncBlocks(newBlocks)
+                                                }}
+                                                className={cn(
+                                                    "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                                    isActive ? "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white" : "bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105"
+                                                )}
+                                            >
+                                                {isActive ? "Kaldır" : "Ekle"}
+                                            </button>
+                                        </div>
+                                        <h3 className="text-lg font-black text-slate-900 tracking-tight mb-2">{module.name}</h3>
+                                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{module.description}</p>
+
+                                        {isActive && (
+                                            <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Aktif</span>
+                                                </div>
+                                                <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Özelleştir</button>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                ) : activeTab === "reviews" ? (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
