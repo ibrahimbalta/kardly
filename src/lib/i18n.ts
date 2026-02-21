@@ -45,6 +45,8 @@ export const translations: any = {
         // Profile Sections
         myProjects: "Projelerim",
         noProjectDesc: "Bu proje için açıklama girilmemiş.",
+        portfolioView: "Portfolyo Görünümü",
+        standardView: "Standart Görünüm",
         writeReview: "+ Yorum Yaz",
         noReviewsYet: "Henüz yorum yapılmamış.",
         male: "Erkek",
@@ -458,6 +460,8 @@ export const translations: any = {
         // Profile Sections
         myProjects: "Projects",
         noProjectDesc: "No description provided for this project.",
+        portfolioView: "Portfolio View",
+        standardView: "Standard View",
         writeReview: "+ Write Review",
         noReviewsYet: "No reviews yet.",
         male: "Male",

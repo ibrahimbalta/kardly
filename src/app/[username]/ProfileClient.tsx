@@ -368,6 +368,8 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
 
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
+    const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
+
 
     const getYoutubeEmbedUrl = (url: string) => {
         if (!url) return ""
@@ -2667,59 +2669,114 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-8 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
-                                        <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white text-center mb-4")}>{t.myProjects}</h3>
-                                        <div
-                                            className="relative h-16 flex items-center overflow-visible"
-                                            style={{ clipPath: 'inset(-200px 0 -200px 0)' }} // Clips left/right, allows top/bottom
-                                        >
-                                            <div className="animate-marquee-right flex gap-6 h-full items-center">
-                                                {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
-                                                    <a
-                                                        key={i}
-                                                        href={formatUrl(project.link) || "#"}
-                                                        target="_blank"
-                                                        onClick={() => trackEvent("product", project.name)}
-                                                        className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
-                                                    >
-                                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
+                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                                                <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white")}>
+                                                    {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
+                                                </h3>
+                                            </div>
+                                            <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
+                                                <button
+                                                    onClick={() => setLayoutMode('marquee')}
+                                                    className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'marquee' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
+                                                    title={t.standardView}
+                                                >
+                                                    <Layers size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => setLayoutMode('grid')}
+                                                    className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'grid' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
+                                                    title={t.portfolioView}
+                                                >
+                                                    <Layout size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                                        {/* Rich Tooltip - Dynamic Colors */}
-                                                        <div
-                                                            className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
-                                                            style={{
-                                                                borderColor: `${theme.accent}60`,
-                                                                boxShadow: `0 20px 50px -10px ${theme.accent}40`
-                                                            }}
+                                        {layoutMode === 'marquee' ? (
+                                            <div
+                                                className="relative h-16 flex items-center overflow-visible"
+                                                style={{ clipPath: 'inset(-200px 0 -200px 0)' }} // Clips left/right, allows top/bottom
+                                            >
+                                                <div className="animate-marquee-right flex gap-6 h-full items-center">
+                                                    {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                                        <a
+                                                            key={i}
+                                                            href={formatUrl(project.link) || "#"}
+                                                            target="_blank"
+                                                            onClick={() => trackEvent("product", project.name)}
+                                                            className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
                                                         >
-                                                            {/* Theme Tint Overlay */}
-                                                            <div className="absolute inset-0 opacity-[0.15] rounded-2xl" style={{ backgroundColor: theme.accent }} />
+                                                            <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
 
                                                             <div
-                                                                className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-black"
-                                                                style={{ borderColor: `${theme.accent}60` }}
-                                                            />
+                                                                className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
+                                                                style={{
+                                                                    borderColor: `${theme.accent}60`,
+                                                                    boxShadow: `0 20px 50px -10px ${theme.accent}40`
+                                                                }}
+                                                            >
+                                                                <div className="absolute inset-0 opacity-[0.15] rounded-2xl" style={{ backgroundColor: theme.accent }} />
 
-                                                            <div className="relative z-10">
-                                                                <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
-                                                                {project.description ? (
-                                                                    <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
-                                                                ) : (
-                                                                    <p className="text-[10px] text-white/40 italic font-medium">{t.noProjectDesc}</p>
-                                                                )}
+                                                                <div
+                                                                    className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-black"
+                                                                    style={{ borderColor: `${theme.accent}60` }}
+                                                                />
+
+                                                                <div className="relative z-10">
+                                                                    <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
+                                                                    {project.description ? (
+                                                                        <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
+                                                                    ) : (
+                                                                        <p className="text-[10px] text-white/40 italic font-medium">{t.noProjectDesc}</p>
+                                                                    )}
+                                                                </div>
                                                             </div>
+                                                        </a>
+                                                    ))}
+                                                </div>
+
+                                                <div className="absolute inset-y-0 left-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
+                                                <div className="absolute inset-y-0 right-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-3 gap-2 pb-2">
+                                                {profile.products.filter((p: any) => p.image).map((project: any, i: number) => (
+                                                    <motion.div
+                                                        key={i}
+                                                        initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                                                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                                                        transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
+                                                        className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl border border-white/10 shadow-lg"
+                                                        onClick={() => {
+                                                            trackEvent("product_grid", project.name);
+                                                            if (project.link) window.open(formatUrl(project.link), "_blank");
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={project.image}
+                                                            alt={project.name}
+                                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125 group-hover:rotate-3"
+                                                        />
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-2 text-center pb-3">
+                                                            <p className="text-[7px] font-black text-white uppercase tracking-tighter leading-tight line-clamp-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                                                                {project.name}
+                                                            </p>
+                                                            <div className="w-4 h-[1px] bg-white/40 mt-1 transform scale-x-0 group-hover:scale-x-100 transition-transform" />
                                                         </div>
-                                                    </a>
+
+                                                        {/* Premium Glass Shine Effect */}
+                                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                                                    </motion.div>
                                                 ))}
                                             </div>
-
-                                            {/* Fading gradients */}
-                                            <div className="absolute inset-y-0 left-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
-                                            <div className="absolute inset-y-0 right-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
+
 
                             {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
                         </div>
