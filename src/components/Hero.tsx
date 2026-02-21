@@ -230,7 +230,7 @@ export function Hero() {
                                     <Users size={18} />
                                 </div>
                                 <div className="pr-4">
-                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Yeni Kayıt</div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{t('newRegistration')}</div>
                                     <div className="text-xs font-black text-slate-900 leading-tight">Can Berk</div>
                                 </div>
                             </motion.div>
@@ -249,7 +249,7 @@ export function Hero() {
                                     ))}
                                 </div>
                                 <div className="text-[14px] font-black text-slate-900 mt-1 flex items-center gap-1">
-                                    +14.2% <span className="text-[10px] font-bold text-slate-400 tracking-tight">Artış</span>
+                                    +14.2% <span className="text-[10px] font-bold text-slate-400 tracking-tight">{t('statIncrease')}</span>
                                 </div>
                             </motion.div>
                         </div>

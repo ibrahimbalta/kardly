@@ -426,24 +426,24 @@ export default function Home() {
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('product')}</h5>
               <ul className="space-y-3">
-                <li><a href="#features" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Özellikler</a></li>
-                <li><a href="#templates" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Şablonlar</a></li>
-                <li><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Fiyatlandırma</a></li>
+                <li><a href="#features" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('features')}</a></li>
+                <li><a href="#templates" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('templates')}</a></li>
+                <li><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('pricing')}</a></li>
               </ul>
             </div>
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('support')}</h5>
               <ul className="space-y-3">
-                <li><Link href="/blog" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Blog</Link></li>
-                <li><Link href="/iletisim" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">İletişim</Link></li>
-                <li><Link href="/sss" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">SSS</Link></li>
+                <li><Link href="/blog" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('blog')}</Link></li>
+                <li><Link href="/iletisim" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('contact')}</Link></li>
+                <li><Link href="/sss" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('faq')}</Link></li>
               </ul>
             </div>
             <div className="md:col-span-2">
               <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('legal')}</h5>
               <ul className="space-y-3">
-                <li><Link href="/kullanim-sartlari" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Kullanım Şartları</Link></li>
-                <li><Link href="/gizlilik" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Gizlilik</Link></li>
+                <li><Link href="/kullanim-sartlari" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('terms')}</Link></li>
+                <li><Link href="/gizlilik" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('privacy')}</Link></li>
               </ul>
             </div>
             <div className="md:col-span-2">

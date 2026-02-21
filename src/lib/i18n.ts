@@ -393,6 +393,13 @@ export const translations: any = {
         social: "Sosyal",
         allRights: "Tüm hakları saklıdır.",
         designedIn: "Türkiye'de tasarlandı, dünyaya sunuldu.",
+        blog: "Blog",
+        contact: "İletişim",
+        faq: "SSS",
+        terms: "Kullanım Şartları",
+        privacy: "Gizlilik",
+        newRegistration: "Yeni Kayıt",
+        statIncrease: "Artış",
 
         // Hero 
         heroBadge: "Yeni Nesil Dijital Kartvizitler",
@@ -799,6 +806,13 @@ export const translations: any = {
         social: "Social",
         allRights: "All rights reserved.",
         designedIn: "Designed in Turkey, served to the world.",
+        blog: "Blog",
+        contact: "Contact",
+        faq: "FAQ",
+        terms: "Terms of Use",
+        privacy: "Privacy Policy",
+        newRegistration: "New Registration",
+        statIncrease: "Increase",
 
         // Hero
         heroBadge: "Next Generation Digital Business Cards",
