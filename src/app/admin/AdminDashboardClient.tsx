@@ -295,11 +295,13 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
                     <div className="mt-4 lg:mt-0 flex items-center gap-3">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold overflow-hidden shadow-sm">
-                                <img src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} alt="Admin" />
-                            </div>
-                        ))}
+                        <div className="flex -space-x-2 mr-4 hidden sm:flex">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold overflow-hidden shadow-sm">
+                                    <img src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} alt="Admin" />
+                                </div>
+                            ))}
+                        </div>
                         <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-[0.1em]">
                             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                             Sistem Devrede

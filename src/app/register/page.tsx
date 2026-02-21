@@ -153,16 +153,17 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
-                        <div className="flex -space-x-2">
-                            {[31, 65, 48, 20].map(i => (
-                                <img key={i} src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} className="w-8 h-8 rounded-full border-2 border-white/30" />
-                            ))}
+                        <div className="flex items-center gap-3">
+                            <div className="flex -space-x-2">
+                                {[31, 65, 48, 20].map(i => (
+                                    <img key={i} src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} className="w-8 h-8 rounded-full border-2 border-white/30" />
+                                ))}
+                            </div>
+                            <span className="text-white/70 text-xs font-medium">Binlerce profesyonel Kardly kullanıyor</span>
                         </div>
-                        <span className="text-white/70 text-xs font-medium">Binlerce profesyonel Kardly kullanıyor</span>
                     </div>
+                </motion.div>
             </div>
-        </motion.div>
-            </div >
-        </div >
+        </div>
     )
 }
