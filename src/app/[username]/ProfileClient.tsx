@@ -3239,27 +3239,32 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
 
     if (!isOpen) return null;
 
-    // Get phone number from profile or social links
+    // Get phone from profile or socialLinks
     const phoneNumber = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
+    const accent = theme.accent || "#0ea5e9";
+
+    // Derive darker BG from accent for theme-matching
+    const hexToRgb = (hex: string) => {
+        const c = hex.replace('#', '');
+        const bigint = parseInt(c.length === 3 ? c.split('').map((x: string) => x + x).join('') : c, 16);
+        return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+    };
+    const rgb = hexToRgb(accent);
+    const cardBg = `rgb(${Math.round(rgb.r * 0.08)}, ${Math.round(rgb.g * 0.08)}, ${Math.round(rgb.b * 0.08)})`;
+    const cardBgMid = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.06)`;
 
     const generateImage = async () => {
         if (!cardRef.current) return null;
-
         try {
-            // Wait for images to be ready
             await new Promise(resolve => setTimeout(resolve, 300));
-
             const canvas = await html2canvas(cardRef.current, {
                 useCORS: true,
-                scale: 2,
-                backgroundColor: "#0d0d0e",
+                scale: 3,
+                backgroundColor: null,
                 logging: false,
                 onclone: (clonedDoc) => {
-                    const clonedCard = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                    if (clonedCard) {
-                        clonedCard.style.transform = 'none';
-                        clonedCard.style.borderRadius = '2rem';
-                    }
+                    const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
+                    if (el) { el.style.transform = 'none'; }
                 }
             });
             return canvas;
@@ -3279,14 +3284,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.download = `${profile.username}-kartvizit.png`;
                 link.click();
-            } else {
-                alert("Görsel hazırlanamadı. Lütfen tekrar deneyin.");
             }
-        } catch (err) {
-            console.error('Download error:', err);
-        } finally {
-            setDownloading(false);
-        }
+        } catch (err) { console.error(err); } finally { setDownloading(false); }
     };
 
     const handleShareImage = async () => {
@@ -3295,17 +3294,11 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         try {
             const canvas = await generateImage();
             if (canvas) {
-                const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
-
+                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.95));
                 if (blob) {
                     const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
-
                     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: `${profile.user.name}`,
-                            text: `${profile.user.name} dijital kartviziti.`
-                        });
+                        await navigator.share({ files: [file], title: profile.user.name, text: `${profile.user.name} dijital kartviziti.` });
                     } else {
                         const link = document.createElement('a');
                         link.href = URL.createObjectURL(blob);
@@ -3313,139 +3306,172 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         link.click();
                     }
                 }
-            } else {
-                handleDownload();
             }
-        } catch (err) {
-            console.error('Share error:', err);
-            handleDownload();
-        } finally {
-            setSharing(false);
-        }
+        } catch (err) { console.error(err); handleDownload(); } finally { setSharing(false); }
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] flex flex-col">
+            {/* Backdrop */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute inset-0 bg-black/85 backdrop-blur-md"
+                className="absolute inset-0 bg-black/90 backdrop-blur-lg"
                 onClick={onClose}
             />
-            <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-[340px] flex flex-col items-center max-h-[95vh]"
-            >
-                <div className="w-full flex justify-end mb-4 pr-1">
-                    <button
-                        onClick={onClose}
-                        className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors backdrop-blur-md"
-                    >
-                        <X size={20} />
+
+            {/* Scrollable Content */}
+            <div className="relative z-10 flex-1 overflow-y-auto flex flex-col items-center px-4 py-6" style={{ WebkitOverflowScrolling: 'touch' }}>
+                {/* Close */}
+                <div className="w-full max-w-[360px] flex justify-end mb-3">
+                    <button onClick={onClose} className="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all hover:scale-110">
+                        <X size={18} />
                     </button>
                 </div>
 
-                <div
+                {/* THE CARD — Captured as image */}
+                <motion.div
+                    initial={{ scale: 0.92, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     ref={cardRef}
                     data-card-capture
-                    className="relative w-full min-h-[480px] bg-[#0d0d0e] rounded-[2rem] overflow-hidden shadow-2xl border border-white/10"
+                    className="relative w-full max-w-[360px] rounded-[2rem] overflow-hidden"
+                    style={{
+                        background: `linear-gradient(160deg, ${cardBg} 0%, #0a0a0c 40%, ${cardBg} 100%)`,
+                        boxShadow: `0 40px 80px -20px rgba(0,0,0,0.8), 0 0 60px ${accent}15, inset 0 1px 0 rgba(255,255,255,0.05)`
+                    }}
                 >
+                    {/* Border overlay */}
+                    <div className="absolute inset-0 rounded-[2rem] pointer-events-none" style={{ border: `1px solid ${accent}20` }} />
+
+                    {/* Background Effects */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-0 inset-x-0 h-48 opacity-20"
-                            style={{ background: `linear-gradient(to bottom, ${theme.accent}, transparent)` }} />
-                        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-[100px] opacity-10"
-                            style={{ background: theme.accent }} />
-                        <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-[100px] opacity-10"
-                            style={{ background: theme.accent }} />
-                        <div className="absolute inset-0 opacity-[0.04]"
-                            style={{ backgroundImage: `radial-gradient(${theme.accent} 1px, transparent 1px)`, backgroundSize: '16px 16px' }} />
+                        {/* Top accent gradient */}
+                        <div className="absolute top-0 left-0 right-0 h-[45%]" style={{ background: `linear-gradient(180deg, ${accent}18 0%, transparent 100%)` }} />
+                        {/* Glowing orbs */}
+                        <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full blur-[80px]" style={{ background: accent, opacity: 0.12 }} />
+                        <div className="absolute -bottom-20 -left-16 w-56 h-56 rounded-full blur-[90px]" style={{ background: accent, opacity: 0.08 }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full blur-[60px]" style={{ background: accent, opacity: 0.05 }} />
+                        {/* Subtle grid */}
+                        <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(${accent}08 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                        {/* Top shine */}
+                        <div className="absolute top-0 left-[10%] right-[10%] h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accent}40, transparent)` }} />
                     </div>
 
-                    <div className="relative h-full flex flex-col items-center p-7 py-9 z-10 space-y-7">
+                    <div className="relative z-10 flex flex-col items-center px-8 py-10 space-y-8">
+                        {/* Profile Section */}
                         <div className="text-center w-full">
-                            <div className="relative w-20 h-20 mx-auto mb-4">
-                                <div className="absolute inset-0 rounded-2xl border-2 opacity-30" style={{ borderColor: theme.accent }} />
+                            <div className="relative w-[76px] h-[76px] mx-auto mb-5">
+                                {/* Glow ring */}
+                                <div className="absolute -inset-2 rounded-2xl opacity-30" style={{ background: `linear-gradient(135deg, ${accent}, transparent, ${accent})`, filter: 'blur(8px)' }} />
+                                {/* Border */}
+                                <div className="absolute inset-0 rounded-2xl" style={{ border: `2px solid ${accent}50`, boxShadow: `0 0 20px ${accent}20` }} />
                                 <img
-                                    src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`}
-                                    className="w-full h-full object-cover rounded-xl relative z-10"
+                                    src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}&background=1a1a2e&color=${accent.replace('#', '')}`}
+                                    className="w-full h-full object-cover rounded-[14px] relative z-10"
                                     crossOrigin="anonymous"
                                 />
                             </div>
-                            <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{profile.user.name}</h3>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: theme.accent }}>{profile.occupation || "PROFESSIONAL"}</p>
+                            <h3 className="text-[22px] font-black text-white uppercase tracking-tight leading-tight mb-2">{profile.user.name}</h3>
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full" style={{ background: `${accent}15`, border: `1px solid ${accent}25` }}>
+                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 6px ${accent}` }} />
+                                <span className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
+                            </div>
                         </div>
 
+                        {/* Divider */}
+                        <div className="w-full flex items-center gap-4">
+                            <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accent}30)` }} />
+                            <div className="w-1.5 h-1.5 rotate-45" style={{ background: accent, opacity: 0.5 }} />
+                            <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, ${accent}30, transparent)` }} />
+                        </div>
+
+                        {/* QR Code */}
                         <div className="relative">
-                            <div className="absolute -inset-6 rounded-full blur-2xl opacity-10" style={{ background: theme.accent }} />
-                            <div className="relative bg-white p-4 rounded-2xl shadow-xl">
+                            <div className="absolute -inset-8 rounded-3xl blur-[35px] opacity-15" style={{ background: accent }} />
+                            <div className="relative bg-white p-4 rounded-[1.25rem] shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+                                <div className="absolute inset-0 rounded-[1.25rem]" style={{ border: `2px solid ${accent}30` }} />
                                 {qrDataUrl ? (
-                                    <img src={qrDataUrl} alt="QR Code" className="w-[130px] h-[130px]" />
+                                    <img src={qrDataUrl} alt="QR" className="w-[140px] h-[140px] select-none" />
                                 ) : (
-                                    <div className="w-[130px] h-[130px] flex items-center justify-center">
+                                    <div className="w-[140px] h-[140px] flex items-center justify-center">
                                         <div className="w-7 h-7 border-2 border-black border-t-transparent rounded-full animate-spin" />
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="w-full space-y-4 pt-2">
-                            <h4 className="text-[9px] font-black text-white/40 text-center uppercase tracking-[0.4em]">DİJİTAL KARTVİZİT</h4>
+                        {/* Small label under QR */}
+                        <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-white/25">QR İLE TARA</p>
 
-                            <div className="space-y-2 flex flex-col items-center">
-                                {phoneNumber && (
-                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80">
-                                        <Phone size={12} style={{ color: theme.accent }} />
-                                        <span>{phoneNumber}</span>
+                        {/* Contact Info */}
+                        <div className="w-full rounded-2xl p-5 space-y-3" style={{ background: `${accent}08`, border: `1px solid ${accent}12` }}>
+                            {phoneNumber && (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${accent}15` }}>
+                                        <Phone size={13} style={{ color: accent }} />
                                     </div>
-                                )}
-                                <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80">
-                                    <Mail size={12} style={{ color: theme.accent }} />
-                                    <span className="truncate max-w-[200px]">{profile.user.email}</span>
+                                    <span className="text-[12px] font-bold text-white/90 tracking-wide">{phoneNumber}</span>
                                 </div>
-                                <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80">
-                                    <Globe size={12} style={{ color: theme.accent }} />
-                                    <span className="opacity-80 truncate max-w-[200px]">kardly.com/{profile.username}</span>
+                            )}
+                            <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${accent}15` }}>
+                                    <Mail size={13} style={{ color: accent }} />
                                 </div>
+                                <span className="text-[12px] font-bold text-white/90 truncate">{profile.user.email}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${accent}15` }}>
+                                    <Globe size={13} style={{ color: accent }} />
+                                </div>
+                                <span className="text-[12px] font-bold text-white/90">kardly.com/{profile.username}</span>
                             </div>
                         </div>
 
-                        <div className="pt-2">
-                            <span className="text-[8px] font-black text-white/20 tracking-[0.5em] uppercase">KARDLY PREMIUM</span>
+                        {/* Footer */}
+                        <div className="flex items-center gap-3 pt-1">
+                            <div className="h-[1px] w-8" style={{ background: `${accent}20` }} />
+                            <span className="text-[7px] font-black text-white/15 tracking-[0.6em] uppercase">KARDLY</span>
+                            <div className="h-[1px] w-8" style={{ background: `${accent}20` }} />
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="mt-8 flex gap-4 w-full px-2">
+                {/* ACTION BUTTONS — Always visible after card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="w-full max-w-[360px] flex gap-3 mt-6 mb-8 px-1"
+                >
                     <button
                         onClick={handleDownload}
                         disabled={downloading || sharing}
-                        className="flex-1 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[11px] uppercase tracking-[0.15em] hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-2.5 disabled:opacity-50"
+                        className="flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-2.5 disabled:opacity-40 active:scale-95"
+                        style={{
+                            background: `${accent}12`,
+                            border: `1px solid ${accent}30`,
+                            color: accent,
+                        }}
                     >
-                        {downloading ? (
-                            <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            <Download size={16} />
-                        )}
+                        {downloading ? <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: `${accent} transparent transparent ${accent}` }} /> : <Download size={16} />}
                         {downloading ? "..." : (t.download || "İndir")}
                     </button>
                     <button
                         onClick={handleShareImage}
                         disabled={sharing || downloading}
-                        className="flex-1 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2.5 text-black shadow-lg active:scale-95 disabled:opacity-50"
-                        style={{ background: theme.accent, boxShadow: `0 10px 25px ${theme.accent}40` }}
+                        className="flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.12em] transition-all flex items-center justify-center gap-2.5 text-black active:scale-95 disabled:opacity-40"
+                        style={{
+                            background: `linear-gradient(135deg, ${accent}, ${accent}dd)`,
+                            boxShadow: `0 8px 32px ${accent}40, inset 0 1px 0 rgba(255,255,255,0.2)`
+                        }}
                     >
-                        {sharing ? (
-                            <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            <Share2 size={16} />
-                        )}
+                        {sharing ? <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" /> : <Share2 size={16} />}
                         {sharing ? "..." : (t.share || "PAYLAŞ")}
                     </button>
-                </div>
-            </motion.div>
+                </motion.div>
+            </div>
         </div>
     );
 }
-
-
