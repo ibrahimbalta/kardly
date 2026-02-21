@@ -3236,6 +3236,57 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [sharing, setSharing] = useState(false);
     const [downloading, setDownloading] = useState(false);
+    const [imageReady, setImageReady] = useState(false);
+    const cachedBlobRef = useRef<Blob | null>(null);
+    const cachedDataUrlRef = useRef<string | null>(null);
+
+    // Pre-generate image when modal opens - MUST be before conditional return
+    useEffect(() => {
+        if (!isOpen) {
+            setImageReady(false);
+            cachedBlobRef.current = null;
+            cachedDataUrlRef.current = null;
+            return;
+        }
+        const timer = setTimeout(async () => {
+            if (!cardRef.current) return;
+            try {
+                const canvas = await html2canvas(cardRef.current, {
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: "#0d0d0e",
+                    logging: false,
+                    allowTaint: true,
+                    imageTimeout: 3000,
+                    onclone: (clonedDoc: Document) => {
+                        const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
+                        if (el) {
+                            el.style.transform = 'none';
+                            el.style.borderRadius = '2.5rem';
+                            const allNodes = el.querySelectorAll('*');
+                            allNodes.forEach((node) => {
+                                const htmlNode = node as HTMLElement;
+                                const cs = window.getComputedStyle(htmlNode);
+                                ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
+                                    const val = (cs as any)[prop];
+                                    if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab(') || val.includes('lch('))) {
+                                        htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+                cachedDataUrlRef.current = canvas.toDataURL('image/png', 1.0);
+                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.95));
+                cachedBlobRef.current = blob;
+                setImageReady(true);
+            } catch (err) {
+                console.error('Pre-generate error:', err);
+            }
+        }, 800);
+        return () => clearTimeout(timer);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -3248,109 +3299,60 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         const r = (bigint >> 16) & 255;
         const g = (bigint >> 8) & 255;
         const b = bigint & 255;
-        return { r, g, b, rgba: (a: number) => `rgba(${r}, ${g}, ${b}, ${a})` };
+        return { r, g, b };
     };
 
     const rgb = hexToRgb(accent);
     const cardBg = `rgb(${Math.round(rgb.r * 0.08)}, ${Math.round(rgb.g * 0.08)}, ${Math.round(rgb.b * 0.08)})`;
 
-    const generateImage = async () => {
-        if (!cardRef.current) return null;
-        try {
-            // Reduced wait time to preserve user gesture as much as possible
-            await new Promise(resolve => setTimeout(resolve, 300));
-
-            const canvas = await html2canvas(cardRef.current, {
-                useCORS: true,
-                scale: 2,
-                backgroundColor: "#0d0d0e",
-                logging: false,
-                allowTaint: true,
-                imageTimeout: 3000, // Safety timeout for external images
-                onclone: (clonedDoc) => {
-                    const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                    if (el) {
-                        el.style.transform = 'none';
-                        el.style.borderRadius = '2.5rem';
-
-                        const allNodes = el.querySelectorAll('*');
-                        allNodes.forEach((node) => {
-                            const htmlNode = node as HTMLElement;
-                            const style = window.getComputedStyle(htmlNode);
-                            ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
-                                const val = (style as any)[prop];
-                                if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab') || val.includes('lch'))) {
-                                    htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
-                                }
-                            });
-                        });
-                    }
-                }
-            });
-            return canvas;
-        } catch (err) {
-            console.error('Image generation error:', err);
-            return null;
-        }
-    };
-
-    const handleDownload = async () => {
+    const handleDownload = () => {
         if (downloading || sharing) return;
         setDownloading(true);
         try {
-            const canvas = await generateImage();
-            if (canvas) {
+            if (cachedDataUrlRef.current) {
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png', 1.0);
+                link.href = cachedDataUrlRef.current;
                 link.download = `${profile.username}-kartvizit.png`;
                 link.click();
             } else {
-                alert("Görsel oluşturulamadı.");
+                alert("Görsel henüz hazırlanıyor, lütfen birkaç saniye bekleyip tekrar deneyin.");
             }
         } catch (err) {
             console.error(err);
         } finally { setDownloading(false); }
     };
 
-    const handleShareImage = async () => {
+    const handleShareImage = () => {
         if (sharing || downloading) return;
+        if (!cachedBlobRef.current) {
+            alert("Görsel henüz hazırlanıyor, lütfen birkaç saniye bekleyip tekrar deneyin.");
+            return;
+        }
         setSharing(true);
-        try {
-            const canvas = await generateImage();
-            if (canvas) {
-                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.95));
-                if (blob) {
-                    const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
+        const file = new File([cachedBlobRef.current], `${profile.username}-kartvizit.png`, { type: 'image/png' });
 
-                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
-                            // The browser allows a small asynchronous window after click for navigator.share
-                            await navigator.share({
-                                files: [file],
-                                title: profile.user.name,
-                                text: `${profile.user.name} Dijital Kartvizit`
-                            });
-                        } catch (sErr) {
-                            if ((sErr as Error).name !== 'AbortError') {
-                                // Fallback if share fails due to gesture loss
-                                console.warn('Share gesture failed, falling back to download');
-                                handleDownload();
-                            }
-                        }
-                    } else {
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `${profile.username}-kartvizit.png`;
-                        link.click();
-                        setTimeout(() => URL.revokeObjectURL(url), 1000);
-                    }
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+                files: [file],
+                title: profile.user.name,
+                text: `${profile.user.name} Dijital Kartvizit`
+            }).catch((sErr: any) => {
+                if (sErr.name !== 'AbortError') {
+                    console.warn('Share failed, downloading instead');
+                    handleDownload();
                 }
-            }
-        } catch (err) {
-            console.error('Share error:', err);
-            handleDownload();
-        } finally { setSharing(false); }
+            }).finally(() => setSharing(false));
+            return;
+        }
+
+        // Fallback: download
+        const url = URL.createObjectURL(cachedBlobRef.current);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${profile.username}-kartvizit.png`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setSharing(false);
     };
 
     return (
