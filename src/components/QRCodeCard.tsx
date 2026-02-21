@@ -4,15 +4,17 @@ import { useEffect, useState } from "react"
 import { QrCode, Download } from "lucide-react"
 import { useTranslation } from "@/context/LanguageContext"
 
-export function QRCodeCard({ username }: { username: string }) {
+export function QRCodeCard({ username, dark, light }: { username: string, dark?: string, light?: string }) {
     const { t } = useTranslation()
     const [qrCode, setQrCode] = useState<string | null>(null)
 
     useEffect(() => {
-        fetch(`/api/qr?username=${username}`)
+        const darkParam = dark ? `&dark=${encodeURIComponent(dark)}` : ''
+        const lightParam = light ? `&light=${encodeURIComponent(light)}` : ''
+        fetch(`/api/qr?username=${username}${darkParam}${lightParam}`)
             .then(res => res.json())
             .then(data => setQrCode(data.qrCode))
-    }, [username])
+    }, [username, dark, light])
 
     if (!qrCode) {
         return (

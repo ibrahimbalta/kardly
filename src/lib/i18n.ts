@@ -3,6 +3,9 @@ export const translations: any = {
         // Profile & Appointments
         available: "Müsait",
         addToContacts: "Rehbere Ekle",
+        addToWallet: "Cüzdana Ekle",
+        savePassDesc: "Dijital kartınızı telefonunuza kaydedin.",
+        vcfLabel: "Rehbere Kaydet (VCF)",
         share: "Paylaş",
         services: "Hizmetler",
         products: "Ürünler & Hizmetler",
@@ -58,6 +61,7 @@ export const translations: any = {
         yourTitle: "Ünvanınız (Örn: Tasarımcı)",
         yourMessage: "Yorumunuzun detayları...",
         profileVideoUrl: "YouTube Video Linki",
+        writeWithAI: "Magic Bio ✨",
         useVideoAsProfile: "Profil Resmi Yerine Video Göster",
         youtubeHint: "YouTube video adresini buraya yapıştırın.",
         showAsCatalog: "Katalog Olarak Göster",
@@ -412,12 +416,20 @@ export const translations: any = {
         heroDesc2: "Projeleriniz, randevularınız ve ödemeleriniz — hepsi tek bir modern profilde. Dakikalar içinde oluşturun, dünyayla paylaşın.",
         activeUsers: "Aktif Kullanıcı",
         satisfaction: "5.0 Müşteri Memnuniyeti",
-        callNow: "Hemen Ara"
+        callNow: "Hemen Ara",
+        proofVisit: (count: number) => `${count} kişi son 24 saatte bu profili inceledi.`,
+        proofVcard: "Birisi rehbere ekledi! 🚀",
+        proofShare: "Bu profil az önce paylaşıldı.",
+        proofLocation: (city: string) => `${city}'den bir ziyaretçi bağlandı.`,
+        justNow: "AZ ÖNCE"
     },
     en: {
         // Profile & Appointments
         available: "Available",
         addToContacts: "Add to Contacts",
+        addToWallet: "Add to Wallet",
+        savePassDesc: "Save your digital card to your phone.",
+        vcfLabel: "Add to Contacts (VCF)",
         share: "Share",
         services: "Services",
         products: "Products & Services",
@@ -473,6 +485,7 @@ export const translations: any = {
         yourTitle: "Your Title (E.g. Designer)",
         yourMessage: "Your comment details...",
         profileVideoUrl: "YouTube Video Link",
+        writeWithAI: "Magic Bio ✨",
         useVideoAsProfile: "Show Video Instead of Profile Picture",
         youtubeHint: "Paste the YouTube video URL here.",
         showAsCatalog: "Show as Catalog",
@@ -827,6 +840,11 @@ export const translations: any = {
         heroDesc2: "Your projects, appointments, and payments — all in one modern profile. Create in minutes, share with the world.",
         activeUsers: "Active Users",
         satisfaction: "5.0 Customer Satisfaction",
-        callNow: "Call Now"
+        callNow: "Call Now",
+        proofVisit: (count: number) => `${count} people viewed this profile in the last 24 hours.`,
+        proofVcard: "Someone added to contacts! 🚀",
+        proofShare: "This profile was just shared.",
+        proofLocation: (city: string) => `A visitor from ${city} connected.`,
+        justNow: "JUST NOW"
     }
 }

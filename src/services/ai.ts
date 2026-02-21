@@ -147,3 +147,47 @@ export async function generateProfileData(data: {
         }
     }
 }
+
+export async function generateBio(data: {
+    occupation: string
+    targetAudience: string
+    tone: string
+}) {
+    const toneKey = data.tone.toLowerCase()
+    const guide = toneGuides[toneKey] || toneGuides.profesyonel
+
+    const prompt = `
+    Sen bir profesyonel metin yazarısın. Aşağıdaki bilgilere uygun olarak, bir dijital kartvizit için etkileyici ve profesyonel bir "Hakkımda" (Bio) metni yazmalısın.
+
+    KULLANICI BİLGİLERİ:
+    - Meslek: ${data.occupation}
+    - Hedef Kitle: ${data.targetAudience}
+    - Seçilen Ton: ${data.tone}
+
+    TON REHBERİ:
+    ${guide.style}
+
+    KURALLAR:
+    1. Metin 2 ya da 3 cümleden oluşmalı.
+    2. Seçilen tona (${data.tone}) %100 sadık kalmalı.
+    3. Hedef kitleye hitap etmeli.
+    4. Sadece metni döndür, başka açıklama ekleme.
+
+    Lütfen SADECE JSON formatında döndür: {"bio": "..."}
+    `
+
+    try {
+        const result = await model.generateContent(prompt)
+        const response = result.response
+        const text = response.text()
+        return JSON.parse(text)
+    } catch (error) {
+        console.error("Gemini Bio API Error:", error)
+        const fallback = fallbackConfigs[toneKey] || fallbackConfigs.profesyonel
+        return {
+            bio: fallback.bioTemplate
+                .replace("{occupation}", data.occupation)
+                .replace("{audience}", data.targetAudience)
+        }
+    }
+}

@@ -134,12 +134,47 @@ export default function DashboardClient({ session, profile, subscription, appoin
         paymentLink: profile?.paymentLink || "",
         paymentType: profile?.paymentType || "coffee",
         animationStyle: profile?.animationStyle || "none",
-        profileBgImage: profile?.profileBgImage || ""
+        profileBgImage: profile?.profileBgImage || "",
+        qrColorDark: profile?.qrColorDark || "#0f172a",
+        qrColorLight: profile?.qrColorLight || "#ffffff"
     })
     const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isTplCatOpen, setIsTplCatOpen] = useState(false)
     const [isQuickTplMenuOpen, setIsQuickTplMenuOpen] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
+    const [isGeneratingBio, setIsGeneratingBio] = useState(false)
+
+    const handleGenerateBio = async () => {
+        if (!profileData.occupation) {
+            setShowToast("Lütfen önce meslek alanını doldurun.")
+            setTimeout(() => setShowToast(null), 3000)
+            return
+        }
+        setIsGeneratingBio(true)
+        try {
+            const res = await fetch("/api/generate/bio", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    occupation: profileData.occupation,
+                    targetAudience: profileData.targetAudience || "Potansiyel müşteriler",
+                    tone: profileData.tone || "profesyonel"
+                })
+            })
+            const data = await res.json()
+            if (data.bio) {
+                setProfileData({ ...profileData, bio: data.bio })
+                setShowToast("Bio başarıyla oluşturuldu! ✨")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+            setShowToast("AI oluşturma hatası.")
+            setTimeout(() => setShowToast(null), 3000)
+        } finally {
+            setIsGeneratingBio(false)
+        }
+    }
     const [showProductModal, setShowProductModal] = useState(false)
     const [productList, setProductList] = useState(products || [])
     const [newProduct, setNewProduct] = useState({
@@ -1219,7 +1254,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('aboutLabel')}</label>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <label className="block text-sm font-medium opacity-60">{t('aboutLabel')}</label>
+                                        <button
+                                            type="button"
+                                            onClick={handleGenerateBio}
+                                            disabled={isGeneratingBio}
+                                            className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 border border-primary/20 rounded-lg text-[10px] font-black uppercase text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
+                                        >
+                                            {isGeneratingBio ? (
+                                                <div className="w-3 h-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                            ) : (
+                                                <Sparkles size={12} />
+                                            )}
+                                            {t('writeWithAI') || 'AI İle Yaz'}
+                                        </button>
+                                    </div>
                                     <textarea
                                         rows={3}
                                         value={profileData?.bio || ""}
@@ -1941,8 +1991,62 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <div className="glass p-12 rounded-[3.5rem] border-white/5 inline-block mx-auto relative group shadow-2xl">
                             <div className="absolute inset-0 bg-primary/10 blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative">
-                                <QRCodeCard username={profile?.username || "demo"} />
+                                <QRCodeCard
+                                    username={profile?.username || "demo"}
+                                    dark={profileData.qrColorDark}
+                                    light={profileData.qrColorLight}
+                                />
                             </div>
+                        </div>
+
+                        <div className="max-w-md mx-auto grid grid-cols-2 gap-6 mt-8">
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('qrColorDark') || 'QR Rengi'}</label>
+                                <div className="flex gap-2 flex-wrap justify-center">
+                                    {["#0f172a", "#000000", "#6366f1", "#f43f5e", "#10b981", "#a855f7"].map(color => (
+                                        <button
+                                            key={color}
+                                            onClick={() => setProfileData({ ...profileData, qrColorDark: color })}
+                                            className={`w-8 h-8 rounded-full border-2 transition-all ${profileData.qrColorDark === color ? 'border-primary scale-110 shadow-lg' : 'border-white/10 opacity-60 hover:opacity-100'}`}
+                                            style={{ backgroundColor: color }}
+                                        />
+                                    ))}
+                                    <input
+                                        type="color"
+                                        value={profileData.qrColorDark}
+                                        onChange={(e) => setProfileData({ ...profileData, qrColorDark: e.target.value })}
+                                        className="w-8 h-8 rounded-full bg-transparent border-none cursor-pointer overflow-hidden p-0"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest opacity-40">{t('qrColorLight') || 'Arka Plan'}</label>
+                                <div className="flex gap-2 flex-wrap justify-center">
+                                    {["#ffffff", "#f8fafc", "#f0f9f0", "#1e293b", "#0f172a"].map(color => (
+                                        <button
+                                            key={color}
+                                            onClick={() => setProfileData({ ...profileData, qrColorLight: color })}
+                                            className={`w-8 h-8 rounded-full border-2 transition-all ${profileData.qrColorLight === color ? 'border-primary scale-110 shadow-lg' : 'border-white/10 opacity-60 hover:opacity-100'}`}
+                                            style={{ backgroundColor: color }}
+                                        />
+                                    ))}
+                                    <input
+                                        type="color"
+                                        value={profileData.qrColorLight}
+                                        onChange={(e) => setProfileData({ ...profileData, qrColorLight: e.target.value })}
+                                        className="w-8 h-8 rounded-full bg-transparent border-none cursor-pointer overflow-hidden p-0"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-8">
+                            <button
+                                onClick={handleSave}
+                                className="px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all text-white/60 hover:text-white"
+                            >
+                                {t('saveChanges')}
+                            </button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 px-6">
                             <div className="glass p-6 rounded-3xl border-white/5 text-left flex items-center gap-4">

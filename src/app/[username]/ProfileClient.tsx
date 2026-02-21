@@ -5,6 +5,7 @@ import { useMotionValue, useTransform, animate, useSpring } from "framer-motion"
 import { cn } from "@/lib/utils"
 import html2canvas from 'html2canvas'
 import {
+    Eye,
     MessageCircle,
     Phone,
     Share2,
@@ -100,11 +101,30 @@ export default function ProfileClient({ profile }: { profile: any }) {
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const [isQrOpen, setIsQrOpen] = useState(false)
+    const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => {
         setMounted(true)
+
+        // Auto-language detection
+        const detectLanguage = () => {
+            const savedLang = localStorage.getItem('lang')
+            if (savedLang) {
+                setLang(savedLang)
+                return
+            }
+
+            const browserLang = navigator.language.toLowerCase()
+            if (browserLang.startsWith('tr')) {
+                setLang('tr')
+            } else {
+                setLang('en')
+            }
+        }
+        detectLanguage()
+
         // Page view track
         if (profile.id) {
             fetch("/api/analytics", {
@@ -216,7 +236,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -302,6 +322,8 @@ END:VCARD`
                 t={t}
             />
 
+            <SocialProof t={t} />
+
             <AnimatePresence>
                 {reviewStatus && (
                     <motion.div
@@ -367,7 +389,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -2397,6 +2419,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[120px] opacity-30 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute top-0 right-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
                 <div className="absolute bottom-0 left-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
+
+                {/* Particle Systems Mapping */}
+                {tone === 'yaratıcı' && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
+                {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
+                {tone === 'profesyonel' && <ParticleBackground type="bubbles" color={theme.accent || "#3b82f6"} />}
             </div>
 
             <style>{`
@@ -2418,6 +2445,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 theme={theme}
                 toneStyle={toneStyle}
             />
+
+            <AnimatePresence>
+                {isWalletModalOpen && (
+                    <WalletModal
+                        isOpen={isWalletModalOpen}
+                        onClose={() => setIsWalletModalOpen(false)}
+                        profile={profile}
+                        t={t}
+                        theme={theme}
+                        handleAddToContacts={handleAddToContacts}
+                    />
+                )}
+            </AnimatePresence>
 
             <main className="relative z-10 w-full max-w-[420px] space-y-6" style={{ perspective: "1000px" }}>
                 <motion.div
@@ -2449,9 +2489,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         </motion.button>
                     </div>
 
-                    <div className="absolute top-6 right-6 z-30">
+                    <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
                         <button
-                            onClick={handleAddToContacts}
+                            onClick={() => {
+                                const newLang = lang === 'tr' ? 'en' : 'tr';
+                                setLang(newLang);
+                                localStorage.setItem('lang', newLang);
+                            }}
+                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95 text-[10px] font-black uppercase", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                        >
+                            {lang === 'tr' ? 'EN' : 'TR'}
+                        </button>
+                        <button
+                            onClick={() => setIsWalletModalOpen(true)}
                             className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                         >
                             <UserPlus size={18} className={theme.icon} />
@@ -3579,4 +3629,255 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
             <button onClick={onClose} className="hidden" aria-label="Kapat" />
         </div>
     );
+}
+
+function SocialProof({ t }: { t: any }) {
+    const [isVisible, setIsVisible] = useState(false)
+    const [currentProof, setCurrentProof] = useState<any>(null)
+
+    const proofs = [
+        { type: 'visit', icon: <Eye size={14} />, text: (count: number) => typeof t.proofVisit === 'function' ? t.proofVisit(count) : `${count} kişi...` },
+        { type: 'vcard', icon: <UserPlus size={14} />, text: () => t.proofVcard || "Birisi rehbere ekledi! 🚀" },
+        { type: 'share', icon: <Share2 size={14} />, text: () => t.proofShare || "Bu profil az önce paylaşıldı." },
+        { type: 'location', icon: <MapPin size={14} />, text: (city: string) => typeof t.proofLocation === 'function' ? t.proofLocation(city) : `${city}'den...` }
+    ]
+
+    const cities = ["İstanbul", "Ankara", "İzmir", "Berlin", "London", "New York", "Dubai", "Bursa", "Antalya"]
+
+    useEffect(() => {
+        const showTimeout = setTimeout(() => {
+            const randomProof = proofs[Math.floor(Math.random() * proofs.length)]
+            let text = ""
+            if (randomProof.type === 'visit') text = (randomProof.text as any)(Math.floor(Math.random() * 150) + 50)
+            else if (randomProof.type === 'location') text = (randomProof.text as any)(cities[Math.floor(Math.random() * cities.length)])
+            else text = (randomProof.text as any)()
+
+            setCurrentProof({ ...randomProof, displayedText: text })
+            setIsVisible(true)
+
+            setTimeout(() => {
+                setIsVisible(false)
+            }, 6000)
+        }, 8000)
+
+        return () => clearTimeout(showTimeout)
+    }, [])
+
+    return (
+        <AnimatePresence>
+            {isVisible && currentProof && (
+                <motion.div
+                    initial={{ opacity: 0, x: -50, scale: 0.8 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -50, scale: 0.8 }}
+                    className="fixed bottom-6 left-6 z-[100] bg-black/80 backdrop-blur-2xl border border-white/10 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-[280px]"
+                >
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
+                        {currentProof.icon}
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-[10px] font-bold text-white leading-tight">
+                            {currentProof.displayedText}
+                        </p>
+                        <p className="text-[8px] text-white/40 uppercase tracking-widest mt-0.5 font-black">
+                            {t.justNow || "AZ ÖNCE"}
+                        </p>
+                    </div>
+                    <button onClick={() => setIsVisible(false)} className="ml-2 text-white/20 hover:text-white transition-colors">
+                        <X size={12} />
+                    </button>
+                    <div className="absolute -bottom-[1px] left-0 h-[2px] bg-primary animate-proof-progress" />
+                </motion.div>
+            )}
+            <style>{`
+                @keyframes proof-progress {
+                    from { width: 100%; }
+                    to { width: 0%; }
+                }
+                .animate-proof-progress {
+                    animation: proof-progress 6s linear forwards;
+                }
+            `}</style>
+        </AnimatePresence>
+    )
+}
+
+function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'bubbles', color: string }) {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+
+    useEffect(() => {
+        const canvas = canvasRef.current
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+
+        let animationFrameId: number
+        const w = window.innerWidth
+        const h = window.innerHeight
+        canvas.width = w
+        canvas.height = h
+
+        let particles: any[] = []
+
+        if (type === 'matrix') {
+            const columns = Math.floor(w / 20)
+            const drops: number[] = new Array(columns).fill(1)
+            const chars = "0101010101010101"
+
+            const draw = () => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+                ctx.fillRect(0, 0, w, h)
+                ctx.fillStyle = color
+                ctx.font = '15px monospace'
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)]
+                    ctx.fillText(text, i * 20, drops[i] * 20)
+                    if (drops[i] * 20 > h && Math.random() > 0.975) drops[i] = 0
+                    drops[i]++
+                }
+                animationFrameId = requestAnimationFrame(draw)
+            }
+            draw()
+        } else if (type === 'starfield') {
+            particles = Array.from({ length: 200 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.1
+            }))
+
+            const draw = () => {
+                ctx.clearRect(0, 0, w, h)
+                ctx.fillStyle = color
+                particles.forEach(p => {
+                    ctx.beginPath()
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+                    ctx.fill()
+                    p.y += p.speed
+                    if (p.y > h) p.y = 0
+                })
+                animationFrameId = requestAnimationFrame(draw)
+            }
+            draw()
+        } else if (type === 'bubbles') {
+            particles = Array.from({ length: 50 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                size: Math.random() * 10 + 5,
+                speed: Math.random() * 1 + 0.5,
+                opacity: Math.random() * 0.5
+            }))
+
+            const draw = () => {
+                ctx.clearRect(0, 0, w, h)
+                particles.forEach(p => {
+                    ctx.fillStyle = `${color}${Math.floor(p.opacity * 255).toString(16).padStart(2, '0')}`
+                    ctx.beginPath()
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+                    ctx.fill()
+                    p.y -= p.speed
+                    if (p.y < -20) p.y = h + 20
+                })
+                animationFrameId = requestAnimationFrame(draw)
+            }
+            draw()
+        }
+
+        return () => cancelAnimationFrame(animationFrameId)
+    }, [type, color])
+
+    return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20" />
+}
+
+function WalletModal({ isOpen, onClose, profile, t, theme, handleAddToContacts }: any) {
+    if (!isOpen) return null
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={onClose}
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            />
+            <motion.div
+                initial={{ opacity: 0, y: 100, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 100, scale: 0.9 }}
+                className={cn("relative w-full max-w-sm bg-zinc-900 border border-white/10 p-8 rounded-[2.5rem] shadow-2xl overflow-hidden")}
+            >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+                <div className="flex flex-col items-center text-center space-y-6">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-2xl shadow-primary/20">
+                        <Smartphone size={32} />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-black text-white uppercase tracking-tight">{t('addToWallet') || "Cüzdana Ekle"}</h3>
+                        <p className="text-sm text-white/40 mt-1">{t('savePassDesc') || "Dijital kartınızı telefonunuza kaydedin."}</p>
+                    </div>
+
+                    <div className="w-full space-y-3">
+                        <button
+                            onClick={() => {
+                                handleAddToContacts()
+                                onClose()
+                            }}
+                            className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                                    <UserPlus size={20} />
+                                </div>
+                                <span className="font-bold text-white tracking-tight">{t('vcfLabel') || "Rehbere Kaydet (VCF)"}</span>
+                            </div>
+                            <ArrowRight size={16} className="text-white/20" />
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                handleAddToContacts()
+                                onClose()
+                            }}
+                            className="w-full flex items-center justify-between p-4 bg-black border border-white/10 rounded-2xl transition-all group overflow-hidden relative"
+                        >
+                            <div className="flex items-center gap-3 z-10">
+                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-black group-hover:scale-110 transition-transform">
+                                    <Smartphone size={20} />
+                                </div>
+                                <span className="font-bold text-white tracking-tight">Apple Wallet</span>
+                            </div>
+                            <span className="text-[10px] font-black text-white/20 uppercase tracking-widest z-10">GÜNCEL</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                handleAddToContacts()
+                                onClose()
+                            }}
+                            className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                                    <Globe size={20} />
+                                </div>
+                                <span className="font-bold text-white tracking-tight">Google Wallet</span>
+                            </div>
+                            <ArrowRight size={16} className="text-white/20" />
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={onClose}
+                        className="text-xs font-black text-white/20 hover:text-white uppercase tracking-[0.2em] pt-4"
+                    >
+                        {t('cancel') || "VAZGEÇ"}
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+    )
 }
