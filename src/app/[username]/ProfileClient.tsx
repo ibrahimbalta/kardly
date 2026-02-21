@@ -3235,50 +3235,78 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
 function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [sharing, setSharing] = useState(false);
+    const [downloading, setDownloading] = useState(false);
 
     if (!isOpen) return null;
 
+    const generateImage = async () => {
+        if (!cardRef.current) return null;
+
+        // Wait a bit for images and styles
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        return await html2canvas(cardRef.current, {
+            useCORS: true,
+            scale: 2, // 2 is enough for mobile and faster
+            backgroundColor: "#0d0d0e",
+            logging: false,
+            onclone: (clonedDoc) => {
+                const clonedCard = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
+                if (clonedCard) {
+                    clonedCard.style.transform = 'none';
+                    clonedCard.style.borderRadius = '2rem';
+                }
+            }
+        });
+    };
+
+    const handleDownload = async () => {
+        if (downloading || sharing) return;
+        setDownloading(true);
+        try {
+            const canvas = await generateImage();
+            if (canvas) {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `${profile.username}-kartvizit.png`;
+                link.click();
+            }
+        } catch (err) {
+            console.error('Download error:', err);
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     const handleShareImage = async () => {
-        if (!cardRef.current || sharing) return;
+        if (sharing || downloading) return;
         setSharing(true);
         try {
-            // Wait a bit for images to load if any
-            await new Promise(resolve => setTimeout(resolve, 100));
+            const canvas = await generateImage();
+            if (canvas) {
+                const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png', 0.9));
 
-            const canvas = await html2canvas(cardRef.current, {
-                useCORS: true,
-                scale: 3, // Higher scale for better quality
-                backgroundColor: "#0a0a0b",
-                logging: false,
-                onclone: (clonedDoc) => {
-                    // Ensure the card is visible in the clone
-                    const clonedCard = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                    if (clonedCard) {
-                        clonedCard.style.transform = 'none';
-                    }
-                }
-            });
-
-            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png', 1.0));
-
-            if (blob) {
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'card.png', { type: 'image/png' })] })) {
+                if (blob) {
                     const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
-                    await navigator.share({
-                        files: [file],
-                        title: `${profile.user.name} - Dijital Kartvizit`,
-                        text: `${profile.user.name} dijital kartviziti.`
-                    });
-                } else {
-                    // Fallback to download if sharing is not supported
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `${profile.username}-kartvizit.png`;
-                    link.click();
+
+                    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: `${profile.user.name}`,
+                            text: `${profile.user.name} dijital kartviziti.`
+                        });
+                    } else {
+                        // Desktop/Fallback
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `${profile.username}-kartvizit.png`;
+                        link.click();
+                    }
                 }
             }
         } catch (err) {
-            console.error('Error sharing image:', err);
+            console.error('Share error:', err);
+            handleDownload();
         } finally {
             setSharing(false);
         }
@@ -3289,145 +3317,130 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+                className="absolute inset-0 bg-black/85 backdrop-blur-md"
                 onClick={onClose}
             />
             <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-[380px] flex flex-col items-center"
+                className="relative w-full max-w-[340px] flex flex-col items-center max-h-[95vh]"
             >
-                {/* The Business Card - This is what will be captured */}
+                {/* Close Button Header */}
+                <div className="w-full flex justify-end mb-4 pr-1">
+                    <button
+                        onClick={onClose}
+                        className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors backdrop-blur-md"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* The Business Card - More compact dimensions */}
                 <div
                     ref={cardRef}
                     data-card-capture
-                    className="relative w-full aspect-[2/3] bg-[#0a0a0b] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10"
+                    className="relative w-full min-h-[460px] bg-[#0d0d0e] rounded-[2rem] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-white/10"
                 >
-                    {/* Decorative Background Elements */}
+                    {/* Theme-Reactive Design Elements */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        {/* Top Wave */}
-                        <svg className="absolute -top-10 -left-10 w-[150%] h-auto opacity-30 blur-sm" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 150C100 100 200 200 300 150C400 100 500 200 600 150V0H0V150Z"
-                                fill={`url(#grad-top)`} />
-                            <defs>
-                                <linearGradient id="grad-top" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor={theme.accent} stopOpacity="0.8" />
-                                    <stop offset="100%" stopColor={theme.accent} stopOpacity="0.2" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
+                        <div className="absolute top-0 inset-x-0 h-40 opacity-20"
+                            style={{ background: `linear-gradient(to bottom, ${theme.accent}, transparent)` }} />
+                        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[100px] opacity-10"
+                            style={{ background: theme.accent }} />
+                        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full blur-[100px] opacity-10"
+                            style={{ background: theme.accent }} />
 
-                        {/* Bottom Wave */}
-                        <svg className="absolute -bottom-20 -right-20 w-[150%] h-auto opacity-20 blur-sm" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 150C100 200 200 100 300 150C400 200 500 100 600 150V300H0V150Z"
-                                fill={`url(#grad-bottom)`} />
-                            <defs>
-                                <linearGradient id="grad-bottom" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor={theme.accent} stopOpacity="0.2" />
-                                    <stop offset="100%" stopColor={theme.accent} stopOpacity="0.6" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-
-                        {/* Glowing Orbs */}
-                        <div className="absolute top-1/4 -right-20 w-40 h-40 rounded-full blur-[80px] opacity-20" style={{ background: theme.accent }} />
-                        <div className="absolute bottom-1/4 -left-20 w-40 h-40 rounded-full blur-[80px] opacity-20" style={{ background: theme.accent }} />
+                        {/* Decorative mesh */}
+                        <div className="absolute inset-0 opacity-[0.03]"
+                            style={{ backgroundImage: `radial-gradient(${theme.accent} 1px, transparent 1px)`, backgroundSize: '15px 15px' }} />
                     </div>
 
-                    <div className="relative h-full flex flex-col items-center justify-between p-8 py-10 z-10">
+                    <div className="relative h-full flex flex-col items-center p-6 py-8 z-10 space-y-6">
                         {/* Profile Info */}
                         <div className="text-center w-full">
-                            <div className="relative w-20 h-20 mx-auto mb-4 group px-3 pt-3">
-                                <div className="absolute inset-0 rounded-2xl border-2 animate-pulse opacity-50" style={{ borderColor: theme.accent, boxShadow: `0 0 20px ${theme.accent}40` }} />
-                                <div className="absolute inset-0 rounded-2xl border border-white/20" />
+                            <div className="relative w-16 h-16 mx-auto mb-3">
+                                <div className="absolute inset-0 rounded-2xl border-2 opacity-30" style={{ borderColor: theme.accent }} />
                                 <img
                                     src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`}
                                     className="w-full h-full object-cover rounded-xl relative z-10"
                                     crossOrigin="anonymous"
                                 />
                             </div>
-                            <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1">{profile.user.name}</h3>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: theme.accent }}>{profile.occupation || "PROFESSIONAL"}</p>
+                            <h3 className="text-lg font-black text-white uppercase tracking-tight mb-0.5">{profile.user.name}</h3>
+                            <p className="text-[8px] font-bold uppercase tracking-[0.2em]" style={{ color: theme.accent }}>{profile.occupation || "PROFESSIONAL"}</p>
                         </div>
 
-                        {/* QR Code Section */}
-                        <div className="relative mt-2">
-                            {/* Inner Glow */}
-                            <div className="absolute -inset-6 rounded-full blur-3xl opacity-20" style={{ background: theme.accent }} />
-
-                            <div className="relative bg-white p-4 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] group">
-                                <div className="absolute inset-0 rounded-3xl border-2 opacity-50 transition-opacity" style={{ borderColor: theme.accent }} />
+                        {/* QR Code Section - Scaled Down */}
+                        <div className="relative">
+                            <div className="absolute -inset-4 rounded-full blur-2xl opacity-10" style={{ background: theme.accent }} />
+                            <div className="relative bg-white p-3 rounded-2xl shadow-xl">
                                 {qrDataUrl ? (
-                                    <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px] select-none" />
+                                    <img src={qrDataUrl} alt="QR Code" className="w-[120px] h-[120px]" />
                                 ) : (
-                                    <div className="w-[140px] h-[140px] flex items-center justify-center">
-                                        <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                    <div className="w-[120px] h-[120px] flex items-center justify-center">
+                                        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Contact Info */}
-                        <div className="w-full space-y-4 text-center">
-                            <div>
-                                <h4 className="text-[10px] font-black text-white/90 uppercase tracking-[0.3em] mb-3">KARTVİZİTİ PAYLAŞ</h4>
-                                <div className="h-[1px] w-12 mx-auto mb-4 opacity-20" style={{ background: theme.accent }} />
-                            </div>
+                        {/* Contact Info - Compact List */}
+                        <div className="w-full space-y-3 pt-2">
+                            <h4 className="text-[9px] font-black text-white/40 text-center uppercase tracking-[0.3em]">DİJİTAL KARTVİZİT</h4>
 
-                            <div className="space-y-2.5">
+                            <div className="space-y-1.5 flex flex-col items-center">
                                 {profile.phone && (
-                                    <div className="flex items-center justify-center gap-2 text-[11px] font-bold text-white/70">
-                                        <Phone size={12} style={{ color: theme.accent }} />
+                                    <div className="flex items-center gap-2 text-[10px] font-bold text-white/60">
+                                        <Phone size={10} style={{ color: theme.accent }} />
                                         <span>{profile.phone}</span>
                                     </div>
                                 )}
-                                <div className="flex items-center justify-center gap-2 text-[11px] font-bold text-white/70">
-                                    <Mail size={12} style={{ color: theme.accent }} />
-                                    <span className="truncate max-w-[200px]">{profile.user.email}</span>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/60">
+                                    <Mail size={10} style={{ color: theme.accent }} />
+                                    <span className="truncate max-w-[180px]">{profile.user.email}</span>
                                 </div>
-                                <div className="flex items-center justify-center gap-2 text-[11px] font-bold text-white/70">
-                                    <Globe size={12} style={{ color: theme.accent }} />
-                                    <span>{typeof window !== 'undefined' ? window.location.host : ''}/{profile.username}</span>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/60">
+                                    <Globe size={10} style={{ color: theme.accent }} />
+                                    <span className="opacity-80 truncate max-w-[180px]">{typeof window !== 'undefined' ? window.location.host : ''}/{profile.username}</span>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Footer Branding */}
+                        <div className="pt-2">
+                            <span className="text-[7px] font-black text-white/20 tracking-[0.4em] uppercase">KARDLY PREMIUM</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Modal Actions (Outside the capture area) */}
-                <div className="mt-8 flex gap-3 w-full">
+                {/* Modal Actions - Better Spacing */}
+                <div className="mt-6 flex gap-3 w-full">
                     <button
-                        onClick={() => {
-                            const link = document.createElement('a');
-                            link.download = `${profile.username}-qr.png`;
-                            link.href = qrDataUrl;
-                            link.click();
-                        }}
-                        className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[11px] uppercase tracking-widest hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-2 shadow-xl"
+                        onClick={handleDownload}
+                        disabled={downloading || sharing}
+                        className="flex-1 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/10 backdrop-blur-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        <Download size={16} /> {t.download || "İndir"}
+                        {downloading ? (
+                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <Download size={14} />
+                        )}
+                        {downloading ? "HAZIRLANIYOR..." : (t.download || "İndir")}
                     </button>
                     <button
                         onClick={handleShareImage}
-                        disabled={sharing}
-                        className="flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-xl active:scale-95 disabled:opacity-50"
-                        style={{ background: theme.accent, boxShadow: `0 10px 30px ${theme.accent}40` }}
+                        disabled={sharing || downloading}
+                        className="flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-lg active:scale-95 disabled:opacity-50"
+                        style={{ background: theme.accent, boxShadow: `0 10px 25px ${theme.accent}40` }}
                     >
                         {sharing ? (
-                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                            <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
                         ) : (
-                            <Share2 size={16} />
+                            <Share2 size={14} />
                         )}
-                        {sharing ? "HAZIRLANIYOR..." : "PAYLAŞ"}
+                        {sharing ? "HAZIRLANIYOR..." : (t.share || "PAYLAŞ")}
                     </button>
                 </div>
-
-                <button
-                    onClick={onClose}
-                    className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors backdrop-blur-md"
-                >
-                    <X size={20} />
-                </button>
             </motion.div>
         </div>
     );
