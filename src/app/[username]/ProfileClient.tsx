@@ -3245,7 +3245,10 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     const hexToRgb = (hex: string) => {
         const c = hex.replace('#', '');
         const bigint = parseInt(c.length === 3 ? c.split('').map((x: string) => x + x).join('') : c, 16);
-        return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return { r, g, b, rgba: (a: number) => `rgba(${r}, ${g}, ${b}, ${a})` };
     };
     const rgb = hexToRgb(accent);
     const cardBg = `rgb(${Math.round(rgb.r * 0.08)}, ${Math.round(rgb.g * 0.08)}, ${Math.round(rgb.b * 0.08)})`;
@@ -3254,7 +3257,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         if (!cardRef.current) return null;
         try {
             // Wait a bit for everything to settle
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 600));
 
             const canvas = await html2canvas(cardRef.current, {
                 useCORS: true,
@@ -3267,6 +3270,24 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                     if (el) {
                         el.style.transform = 'none';
                         el.style.borderRadius = '2.5rem';
+
+                        // DEEP CLEAN: html2canvas v1.4.1 doesn't support oklab/oklch colors (Tailwind 4 default)
+                        // We must recursively find and replace these with safe colors in the cloned's computed styles
+                        const allNodes = el.querySelectorAll('*');
+                        allNodes.forEach((node) => {
+                            const htmlNode = node as HTMLElement;
+                            const style = window.getComputedStyle(htmlNode);
+
+                            ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
+                                const val = (style as any)[prop];
+                                if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab') || val.includes('lch'))) {
+                                    // Fallback to a safe color if browser gives us modern colors
+                                    // Most modern browsers will return rgb/rgba in getComputedStyle anyway, 
+                                    // but if it doesn't, we force it to a safe default
+                                    htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
+                                }
+                            });
+                        });
                     }
                 }
             });
@@ -3289,11 +3310,10 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                 link.download = `${profile.username}-kartvizit.png`;
                 link.click();
             } else {
-                alert("Görsel oluşturulamadı. Lütfen sayfayı yenileyip tekrar deneyin.");
+                alert("Görsel oluşturulamadı. Lütfen tekrar deneyin.");
             }
         } catch (err) {
             console.error(err);
-            alert("İndirme sırasında bir hata oluştu.");
         } finally { setDownloading(false); }
     };
 
@@ -3328,8 +3348,6 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         setTimeout(() => URL.revokeObjectURL(url), 1000);
                     }
                 }
-            } else {
-                alert("Görsel paylaşıma hazırlanamadı.");
             }
         } catch (err) {
             console.error('Share error:', err);
@@ -3338,7 +3356,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     };
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/95 backdrop-blur-2xl">
             <div className="min-h-full w-full flex flex-col items-center justify-center p-4 py-8 relative">
                 {/* Close Overlay */}
                 <div className="absolute inset-0 z-0" onClick={onClose} />
@@ -3360,7 +3378,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         className="relative w-full rounded-[2.5rem] overflow-hidden flex-shrink-0"
                         style={{
                             background: `linear-gradient(165deg, ${cardBg} 0%, #0a0a0c 50%, ${cardBg} 100%)`,
-                            boxShadow: `0 30px 60px -15px rgba(0,0,0,0.7), 0 0 40px ${accent}10`
+                            boxShadow: `0 30px 60px -15px rgba(0,0,0,0.7), 0 0 40px ${accent}20`
                         }}
                     >
                         {/* Background Design */}
@@ -3368,7 +3386,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                             <div className="absolute top-0 inset-x-0 h-48 opacity-20" style={{ background: `linear-gradient(to bottom, ${accent}, transparent)` }} />
                             <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full blur-[100px] opacity-10" style={{ background: accent }} />
                             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full blur-[100px] opacity-10" style={{ background: accent }} />
-                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(${accent} 1.5px, transparent 1.5px)`, backgroundSize: '15px 15px' }} />
+                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px)`, backgroundSize: '15px 15px' }} />
                         </div>
 
                         <div className="relative z-10 p-6 pt-10 pb-8 flex flex-col items-center">
@@ -3384,15 +3402,15 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                                     />
                                 </div>
                                 <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1.5 leading-none">{profile.user.name}</h3>
-                                <div className="inline-block px-3 py-0.5 rounded-full border border-white/10 bg-white/5">
+                                <div className="inline-block px-3 py-0.5 rounded-full border border-white/10" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
                                     <span className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
                                 </div>
                             </div>
 
                             <div className="w-full flex items-center gap-3 mb-6">
-                                <div className="flex-1 h-px bg-white/10" />
+                                <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
                                 <div className="w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
-                                <div className="flex-1 h-px bg-white/10" />
+                                <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
                             </div>
 
                             {/* QR Section */}
@@ -3410,21 +3428,21 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                             </div>
 
                             {/* Contact Details */}
-                            <div className="w-full space-y-3 pt-1">
-                                <h4 className="text-[9px] font-black text-white/30 text-center uppercase tracking-[0.4em] mb-3">DİJİTAL KARTVİZİT</h4>
+                            <div className="w-full space-y-3 pt-1 text-center">
+                                <h4 className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em] mb-3">DİJİTAL KARTVİZİT</h4>
 
-                                <div className="space-y-3">
+                                <div className="space-y-2.5">
                                     {phoneNumber && (
-                                        <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 uppercase">
+                                        <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 uppercase" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                             <Phone size={13} style={{ color: accent }} />
                                             <span>{phoneNumber}</span>
                                         </div>
                                     )}
-                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 lowercase">
+                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 lowercase" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                         <Mail size={13} style={{ color: accent }} />
                                         <span className="truncate">{profile.user.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 lowercase opacity-80">
+                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 lowercase opacity-80" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                         <Globe size={13} style={{ color: accent }} />
                                         <span>kardly.com/{profile.username}</span>
                                     </div>
@@ -3443,7 +3461,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         <button
                             onClick={handleDownload}
                             disabled={downloading || sharing}
-                            className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[11px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="flex-1 py-4 rounded-2xl border text-white font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                            style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
                         >
                             {downloading ? (
                                 <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
