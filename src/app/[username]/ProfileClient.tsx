@@ -3253,17 +3253,24 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     const generateImage = async () => {
         if (!cardRef.current) return null;
         try {
-            await new Promise(resolve => setTimeout(resolve, 400));
-            return await html2canvas(cardRef.current, {
+            // Wait a bit for everything to settle
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const canvas = await html2canvas(cardRef.current, {
                 useCORS: true,
-                scale: 2, // 2 is enough and safer
-                backgroundColor: null,
+                scale: 2,
+                backgroundColor: "#0d0d0e", // Solid background for reliability
                 logging: false,
+                allowTaint: true,
                 onclone: (clonedDoc) => {
                     const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                    if (el) { el.style.transform = 'none'; }
+                    if (el) {
+                        el.style.transform = 'none';
+                        el.style.borderRadius = '2.5rem';
+                    }
                 }
             });
+            return canvas;
         } catch (err) {
             console.error('Image generation error:', err);
             return null;
@@ -3277,11 +3284,17 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
             const canvas = await generateImage();
             if (canvas) {
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/jpeg', 0.9);
-                link.download = `${profile.username}-kartvizit.jpg`;
+                // PNG is much safer for rounded corners and overall compatibility
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.download = `${profile.username}-kartvizit.png`;
                 link.click();
+            } else {
+                alert("Görsel oluşturulamadı. Lütfen sayfayı yenileyip tekrar deneyin.");
             }
-        } catch (err) { console.error(err); } finally { setDownloading(false); }
+        } catch (err) {
+            console.error(err);
+            alert("İndirme sırasında bir hata oluştu.");
+        } finally { setDownloading(false); }
     };
 
     const handleShareImage = async () => {
@@ -3290,20 +3303,38 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         try {
             const canvas = await generateImage();
             if (canvas) {
-                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/jpeg', 0.85));
+                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.95));
                 if (blob) {
-                    const file = new File([blob], `${profile.username}-kartvizit.jpg`, { type: 'image/jpeg' });
+                    const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
+
+                    // Check if sharing is supported and file sharing is allowed
                     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: profile.user.name, text: `${profile.user.name} dijital kartviziti.` });
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: profile.user.name,
+                                text: `${profile.user.name} Dijital Kartvizit`
+                            });
+                        } catch (sErr) {
+                            if ((sErr as Error).name !== 'AbortError') throw sErr;
+                        }
                     } else {
+                        // Fallback to direct download/view
+                        const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `${profile.username}-kartvizit.jpg`;
+                        link.href = url;
+                        link.download = `${profile.username}-kartvizit.png`;
                         link.click();
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
                     }
                 }
+            } else {
+                alert("Görsel paylaşıma hazırlanamadı.");
             }
-        } catch (err) { console.error(err); handleDownload(); } finally { setSharing(false); }
+        } catch (err) {
+            console.error('Share error:', err);
+            handleDownload();
+        } finally { setSharing(false); }
     };
 
     return (
@@ -3437,6 +3468,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                     </div>
                 </div>
             </div>
+            {/* Hidden close button to help with accessibility */}
+            <button onClick={onClose} className="hidden" aria-label="Kapat" />
         </div>
     );
 }
