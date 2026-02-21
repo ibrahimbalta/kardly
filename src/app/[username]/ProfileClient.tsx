@@ -3250,40 +3250,36 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         const b = bigint & 255;
         return { r, g, b, rgba: (a: number) => `rgba(${r}, ${g}, ${b}, ${a})` };
     };
+
     const rgb = hexToRgb(accent);
     const cardBg = `rgb(${Math.round(rgb.r * 0.08)}, ${Math.round(rgb.g * 0.08)}, ${Math.round(rgb.b * 0.08)})`;
 
     const generateImage = async () => {
         if (!cardRef.current) return null;
         try {
-            // Wait a bit for everything to settle
-            await new Promise(resolve => setTimeout(resolve, 600));
+            // Reduced wait time to preserve user gesture as much as possible
+            await new Promise(resolve => setTimeout(resolve, 300));
 
             const canvas = await html2canvas(cardRef.current, {
                 useCORS: true,
                 scale: 2,
-                backgroundColor: "#0d0d0e", // Solid background for reliability
+                backgroundColor: "#0d0d0e",
                 logging: false,
                 allowTaint: true,
+                imageTimeout: 3000, // Safety timeout for external images
                 onclone: (clonedDoc) => {
                     const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
                     if (el) {
                         el.style.transform = 'none';
                         el.style.borderRadius = '2.5rem';
 
-                        // DEEP CLEAN: html2canvas v1.4.1 doesn't support oklab/oklch colors (Tailwind 4 default)
-                        // We must recursively find and replace these with safe colors in the cloned's computed styles
                         const allNodes = el.querySelectorAll('*');
                         allNodes.forEach((node) => {
                             const htmlNode = node as HTMLElement;
                             const style = window.getComputedStyle(htmlNode);
-
                             ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
                                 const val = (style as any)[prop];
                                 if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab') || val.includes('lch'))) {
-                                    // Fallback to a safe color if browser gives us modern colors
-                                    // Most modern browsers will return rgb/rgba in getComputedStyle anyway, 
-                                    // but if it doesn't, we force it to a safe default
                                     htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
                                 }
                             });
@@ -3305,12 +3301,11 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
             const canvas = await generateImage();
             if (canvas) {
                 const link = document.createElement('a');
-                // PNG is much safer for rounded corners and overall compatibility
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.download = `${profile.username}-kartvizit.png`;
                 link.click();
             } else {
-                alert("Görsel oluşturulamadı. Lütfen tekrar deneyin.");
+                alert("Görsel oluşturulamadı.");
             }
         } catch (err) {
             console.error(err);
@@ -3327,19 +3322,22 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                 if (blob) {
                     const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
 
-                    // Check if sharing is supported and file sharing is allowed
                     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                         try {
+                            // The browser allows a small asynchronous window after click for navigator.share
                             await navigator.share({
                                 files: [file],
                                 title: profile.user.name,
                                 text: `${profile.user.name} Dijital Kartvizit`
                             });
                         } catch (sErr) {
-                            if ((sErr as Error).name !== 'AbortError') throw sErr;
+                            if ((sErr as Error).name !== 'AbortError') {
+                                // Fallback if share fails due to gesture loss
+                                console.warn('Share gesture failed, falling back to download');
+                                handleDownload();
+                            }
                         }
                     } else {
-                        // Fallback to direct download/view
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
@@ -3358,7 +3356,6 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     return (
         <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/95 backdrop-blur-2xl">
             <div className="min-h-full w-full flex flex-col items-center justify-center p-4 py-8 relative">
-                {/* Close Overlay */}
                 <div className="absolute inset-0 z-0" onClick={onClose} />
 
                 <div className="relative z-10 w-full max-w-[340px] flex flex-col items-center">
@@ -3396,7 +3393,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                                     <div className="absolute -inset-1.5 rounded-2xl opacity-40 blur-md" style={{ background: accent }} />
                                     <div className="absolute inset-0 rounded-2xl border-2 z-20" style={{ borderColor: `${accent}40` }} />
                                     <img
-                                        src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}&background=0d0d0e&color=${accent.replace('#', '')}`}
+                                        src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=128&bold=true`}
                                         className="w-full h-full object-cover rounded-xl relative z-10 bg-black"
                                         crossOrigin="anonymous"
                                     />
@@ -3487,7 +3484,6 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                     </div>
                 </div>
             </div>
-            {/* Hidden close button to help with accessibility */}
             <button onClick={onClose} className="hidden" aria-label="Kapat" />
         </div>
     );
