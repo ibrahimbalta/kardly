@@ -295,13 +295,11 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
                     <div className="mt-4 lg:mt-0 flex items-center gap-3">
-                        <div className="flex -space-x-2 mr-4 hidden sm:flex">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold overflow-hidden shadow-sm">
-                                    <img src={`https://avatar.iran.liara.run/public/${i + 30}`} alt="Admin" />
-                                </div>
-                            ))}
-                        </div>
+                        {[1, 2, 3].map(i => (
+                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold overflow-hidden shadow-sm">
+                                <img src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} alt="Admin" />
+                            </div>
+                        ))}
                         <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-[0.1em]">
                             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                             Sistem Devrede
@@ -424,7 +422,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                     <td className="px-8 py-6">
                                                         <div className="flex items-center gap-4">
                                                             <div className="w-10 h-10 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 group-hover:bg-primary group-hover:text-white transition-all overflow-hidden duration-500 shadow-sm border border-slate-200">
-                                                                <img src={u.image || `https://avatar.iran.liara.run/username?username=${u.name || 'User'}`} className="w-full h-full object-cover" alt={u.name} />
+                                                                <img src={(!u.image || u.image.includes('avatar.iran.liara.run')) ? `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'User')}&background=0d0d0e&color=fff` : u.image} className="w-full h-full object-cover" alt={u.name} />
                                                             </div>
                                                             <div>
                                                                 <div className="font-black text-sm tracking-tight flex items-center gap-2 text-slate-700 group-hover:text-slate-900">

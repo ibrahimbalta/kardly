@@ -93,9 +93,9 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [copied, setCopied] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
     const [reviews, setReviews] = useState(profile.reviews?.length > 0 ? profile.reviews : [
-        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, gender: 'male', image: "https://avatar.iran.liara.run/public/31" },
-        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, gender: 'female', image: "https://avatar.iran.liara.run/public/65" },
-        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, gender: 'male', image: "https://avatar.iran.liara.run/public/48" }
+        { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, gender: 'male', image: "https://ui-avatars.com/api/?name=Fatih+Yaman&background=0d0d0e&color=fff&size=128" },
+        { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, gender: 'female', image: "https://ui-avatars.com/api/?name=Zeynep+Kaya&background=0d0d0e&color=fff&size=128" },
+        { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, gender: 'male', image: "https://ui-avatars.com/api/?name=Ali+Yilmaz&background=0d0d0e&color=fff&size=128" }
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
     const [isQrOpen, setIsQrOpen] = useState(false)
@@ -2841,10 +2841,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <div className="flex gap-4">
                                             <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
                                                 <img
-                                                    src={reviews[currentReviewIndex].image || (reviews[currentReviewIndex].gender === 'female' ? "https://avatar.iran.liara.run/public/65" : "https://avatar.iran.liara.run/public/31")}
+                                                    src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
                                                     className="w-full h-full object-cover"
                                                     onError={(e: any) => {
-                                                        e.target.src = reviews[currentReviewIndex].gender === 'female' ? "https://avatar.iran.liara.run/public/65" : "https://avatar.iran.liara.run/public/31";
+                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
                                                     }}
                                                 />
                                             </div>
@@ -3058,9 +3058,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
         if (!formData.name || !formData.content) return
 
         // Modern 3D/Glass Style Avatars based on gender
-        const image = formData.gender === 'female'
-            ? "https://avatar.iran.liara.run/public/65" // Standard female avatar
-            : "https://avatar.iran.liara.run/public/31" // Standard male avatar
+        const image = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=1a1a2e&color=e94560&bold=true&size=128`
 
         onSubmit({ ...formData, image, id: Date.now() })
         setFormData({
@@ -3243,29 +3241,44 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
     // Pre-generate image when modal opens - MUST be before conditional return
     useEffect(() => {
         if (!isOpen) {
+            console.log('QrModal: Modal closed, resetting');
             setImageReady(false);
             cachedBlobRef.current = null;
             cachedDataUrlRef.current = null;
             return;
         }
+
+        console.log('QrModal: Starting generation process...');
         const timer = setTimeout(async () => {
             if (!cardRef.current) return;
             try {
+                console.log('QrModal: Capturing card with html2canvas');
                 const canvas = await html2canvas(cardRef.current, {
                     useCORS: true,
                     scale: 2,
                     backgroundColor: "#0d0d0e",
                     logging: false,
                     allowTaint: true,
-                    imageTimeout: 3000,
+                    imageTimeout: 10000, // Increased timeout
                     onclone: (clonedDoc: Document) => {
                         const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
                         if (el) {
                             el.style.transform = 'none';
                             el.style.borderRadius = '2.5rem';
+
+                            // Sanitize both styles AND images in the clone
                             const allNodes = el.querySelectorAll('*');
                             allNodes.forEach((node) => {
                                 const htmlNode = node as HTMLElement;
+
+                                // Intercept broken images in clone
+                                if (htmlNode.tagName === 'IMG') {
+                                    const img = htmlNode as HTMLImageElement;
+                                    if (img.src.includes('avatar.iran.liara.run')) {
+                                        img.src = `https://ui-avatars.com/api/?name=User&background=0d0d0e&color=fff&size=128`;
+                                    }
+                                }
+
                                 const cs = window.getComputedStyle(htmlNode);
                                 ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
                                     const val = (cs as any)[prop];
@@ -3277,14 +3290,31 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         }
                     }
                 });
-                cachedDataUrlRef.current = canvas.toDataURL('image/png', 1.0);
-                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.95));
-                cachedBlobRef.current = blob;
-                setImageReady(true);
+
+                console.log('QrModal: Canvas generated, converting to dataURL');
+                const dataUrl = canvas.toDataURL('image/png', 1.0);
+                cachedDataUrlRef.current = dataUrl;
+
+                console.log('QrModal: Converting to blob');
+                const blob = await new Promise<Blob | null>((resolve) => {
+                    const timeout = setTimeout(() => resolve(null), 5000);
+                    canvas.toBlob((b) => {
+                        clearTimeout(timeout);
+                        resolve(b);
+                    }, 'image/png', 0.95);
+                });
+
+                if (blob) {
+                    cachedBlobRef.current = blob;
+                    setImageReady(true);
+                    console.log('QrModal: SUCCESS - Image generated and ready');
+                } else {
+                    console.error('QrModal: Blob generation failed or timed out');
+                }
             } catch (err) {
-                console.error('Pre-generate error:', err);
+                console.error('QrModal: CAPTURE FAILED:', err);
             }
-        }, 800);
+        }, 1000); // Wait for animations to settle
         return () => clearTimeout(timer);
     }, [isOpen]);
 
@@ -3395,7 +3425,9 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                                     <div className="absolute -inset-1.5 rounded-2xl opacity-40 blur-md" style={{ background: accent }} />
                                     <div className="absolute inset-0 rounded-2xl border-2 z-20" style={{ borderColor: `${accent}40` }} />
                                     <img
-                                        src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=128&bold=true`}
+                                        src={(!profile.user.image || profile.user.image.includes('avatar.iran.liara.run'))
+                                            ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=128&bold=true`
+                                            : profile.user.image}
                                         className="w-full h-full object-cover rounded-xl relative z-10 bg-black"
                                         crossOrigin="anonymous"
                                     />
