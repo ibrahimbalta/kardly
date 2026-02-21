@@ -3277,8 +3277,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
             const canvas = await generateImage();
             if (canvas) {
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.download = `${profile.username}-kartvizit.png`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.download = `${profile.username}-kartvizit.jpg`;
                 link.click();
             }
         } catch (err) { console.error(err); } finally { setDownloading(false); }
@@ -3290,15 +3290,15 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
         try {
             const canvas = await generateImage();
             if (canvas) {
-                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/png', 0.9));
+                const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/jpeg', 0.85));
                 if (blob) {
-                    const file = new File([blob], `${profile.username}-kartvizit.png`, { type: 'image/png' });
+                    const file = new File([blob], `${profile.username}-kartvizit.jpg`, { type: 'image/jpeg' });
                     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({ files: [file], title: profile.user.name, text: `${profile.user.name} dijital kartviziti.` });
                     } else {
                         const link = document.createElement('a');
                         link.href = URL.createObjectURL(blob);
-                        link.download = `${profile.username}-kartvizit.png`;
+                        link.download = `${profile.username}-kartvizit.jpg`;
                         link.click();
                     }
                 }
@@ -3308,11 +3308,11 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
 
     return (
         <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/90 backdrop-blur-xl">
-            <div className="min-h-full w-full flex flex-col items-center justify-center p-4 py-12 relative">
+            <div className="min-h-full w-full flex flex-col items-center justify-center p-4 py-8 relative">
                 {/* Close Overlay */}
                 <div className="absolute inset-0 z-0" onClick={onClose} />
 
-                <div className="relative z-10 w-full max-w-[360px] flex flex-col items-center">
+                <div className="relative z-10 w-full max-w-[340px] flex flex-col items-center">
                     {/* Close Button Header */}
                     <div className="w-full flex justify-end mb-4">
                         <button onClick={onClose} className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all">
@@ -3337,14 +3337,14 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                             <div className="absolute top-0 inset-x-0 h-48 opacity-20" style={{ background: `linear-gradient(to bottom, ${accent}, transparent)` }} />
                             <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full blur-[100px] opacity-10" style={{ background: accent }} />
                             <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full blur-[100px] opacity-10" style={{ background: accent }} />
-                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(${accent} 1.5px, transparent 1.5px)`, backgroundSize: '20px 20px' }} />
+                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(${accent} 1.5px, transparent 1.5px)`, backgroundSize: '15px 15px' }} />
                         </div>
 
-                        <div className="relative z-10 p-8 pt-12 pb-10 flex flex-col items-center">
+                        <div className="relative z-10 p-6 pt-10 pb-8 flex flex-col items-center">
                             {/* Profile Info */}
-                            <div className="text-center w-full mb-8">
-                                <div className="relative w-20 h-20 mx-auto mb-4">
-                                    <div className="absolute -inset-2 rounded-2xl opacity-40 blur-md" style={{ background: accent }} />
+                            <div className="text-center w-full mb-6">
+                                <div className="relative w-16 h-16 mx-auto mb-3">
+                                    <div className="absolute -inset-1.5 rounded-2xl opacity-40 blur-md" style={{ background: accent }} />
                                     <div className="absolute inset-0 rounded-2xl border-2 z-20" style={{ borderColor: `${accent}40` }} />
                                     <img
                                         src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}&background=0d0d0e&color=${accent.replace('#', '')}`}
@@ -3352,85 +3352,85 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                                         crossOrigin="anonymous"
                                     />
                                 </div>
-                                <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-2 leading-none">{profile.user.name}</h3>
-                                <div className="inline-block px-4 py-1 rounded-full border border-white/10 bg-white/5">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
+                                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1.5 leading-none">{profile.user.name}</h3>
+                                <div className="inline-block px-3 py-0.5 rounded-full border border-white/10 bg-white/5">
+                                    <span className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
                                 </div>
                             </div>
 
-                            <div className="w-full flex items-center gap-4 mb-8">
+                            <div className="w-full flex items-center gap-3 mb-6">
                                 <div className="flex-1 h-px bg-white/10" />
                                 <div className="w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
                                 <div className="flex-1 h-px bg-white/10" />
                             </div>
 
                             {/* QR Section */}
-                            <div className="relative mb-8">
-                                <div className="absolute -inset-10 rounded-full blur-[50px] opacity-10" style={{ background: accent }} />
-                                <div className="relative bg-white p-4 rounded-3xl shadow-2xl">
+                            <div className="relative mb-6">
+                                <div className="absolute -inset-8 rounded-full blur-[40px] opacity-10" style={{ background: accent }} />
+                                <div className="relative bg-white p-3 rounded-2xl shadow-2xl">
                                     {qrDataUrl ? (
-                                        <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px] block" />
+                                        <img src={qrDataUrl} alt="QR Code" className="w-[110px] h-[110px] block" />
                                     ) : (
-                                        <div className="w-[140px] h-[140px] flex items-center justify-center">
-                                            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                        <div className="w-[110px] h-[110px] flex items-center justify-center">
+                                            <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                             {/* Contact Details */}
-                            <div className="w-full space-y-4 pt-2">
-                                <h4 className="text-[10px] font-black text-white/30 text-center uppercase tracking-[0.4em] mb-4">DİJİTAL KARTVİZİT</h4>
+                            <div className="w-full space-y-3 pt-1">
+                                <h4 className="text-[9px] font-black text-white/30 text-center uppercase tracking-[0.4em] mb-3">DİJİTAL KARTVİZİT</h4>
 
-                                <div className="space-y-4">
+                                <div className="space-y-3">
                                     {phoneNumber && (
-                                        <div className="flex items-center gap-3 text-[13px] font-bold text-white/80 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 uppercase">
-                                            <Phone size={14} style={{ color: accent }} />
+                                        <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 uppercase">
+                                            <Phone size={13} style={{ color: accent }} />
                                             <span>{phoneNumber}</span>
                                         </div>
                                     )}
-                                    <div className="flex items-center gap-3 text-[13px] font-bold text-white/80 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 lowercase">
-                                        <Mail size={14} style={{ color: accent }} />
+                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 lowercase">
+                                        <Mail size={13} style={{ color: accent }} />
                                         <span className="truncate">{profile.user.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-[13px] font-bold text-white/80 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 lowercase opacity-80">
-                                        <Globe size={14} style={{ color: accent }} />
+                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/5 lowercase opacity-80">
+                                        <Globe size={13} style={{ color: accent }} />
                                         <span>kardly.com/{profile.username}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Footer Branding */}
-                            <div className="mt-10 pt-4 opacity-20">
-                                <span className="text-[8px] font-black text-white tracking-[0.6em] uppercase">KARDLY PREMIUM</span>
+                            <div className="mt-8 pt-2 opacity-20">
+                                <span className="text-[7px] font-black text-white tracking-[0.6em] uppercase">KARDLY PREMIUM</span>
                             </div>
                         </div>
                     </motion.div>
 
                     {/* Actions */}
-                    <div className="mt-8 flex gap-4 w-full">
+                    <div className="mt-6 flex gap-4 w-full">
                         <button
                             onClick={handleDownload}
                             disabled={downloading || sharing}
-                            className="flex-1 py-4.5 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[12px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-black text-[11px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                             {downloading ? (
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
-                                <Download size={18} />
+                                <Download size={16} />
                             )}
                             {downloading ? "..." : (t.download || "İndir")}
                         </button>
                         <button
                             onClick={handleShareImage}
                             disabled={sharing || downloading}
-                            className="flex-1 py-4.5 rounded-2xl font-black text-[12px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-lg disabled:opacity-50"
-                            style={{ background: accent, boxShadow: `0 10px 30px ${accent}40` }}
+                            className="flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-lg disabled:opacity-50"
+                            style={{ background: accent, boxShadow: `0 8px 25px ${accent}40` }}
                         >
                             {sharing ? (
-                                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                                <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
                             ) : (
-                                <Share2 size={18} />
+                                <Share2 size={16} />
                             )}
                             {sharing ? "..." : (t.share || "PAYLAŞ")}
                         </button>
