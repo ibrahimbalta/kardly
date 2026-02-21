@@ -3814,8 +3814,8 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                         <Smartphone size={32} />
                     </div>
                     <div>
-                        <h3 className="text-xl font-black text-white uppercase tracking-tight">{t('addToWallet') || "Cüzdana Ekle"}</h3>
-                        <p className="text-sm text-white/40 mt-1">{t('savePassDesc') || "Dijital kartınızı telefonunuza kaydedin."}</p>
+                        <h3 className="text-xl font-black text-white uppercase tracking-tight">{t.addToWallet || "Cüzdana Ekle"}</h3>
+                        <p className="text-sm text-white/40 mt-1">{t.savePassDesc || "Dijital kartınızı telefonunuza kaydedin."}</p>
                     </div>
 
                     <div className="w-full space-y-3">
@@ -3830,7 +3830,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                                 <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
                                     <UserPlus size={20} />
                                 </div>
-                                <span className="font-bold text-white tracking-tight">{t('vcfLabel') || "Rehbere Kaydet (VCF)"}</span>
+                                <span className="font-bold text-white tracking-tight">{t.vcfLabel || "Rehbere Kaydet (VCF)"}</span>
                             </div>
                             <ArrowRight size={16} className="text-white/20" />
                         </button>
@@ -3873,7 +3873,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                         onClick={onClose}
                         className="text-xs font-black text-white/20 hover:text-white uppercase tracking-[0.2em] pt-4"
                     >
-                        {t('cancel') || "VAZGEÇ"}
+                        {t.cancel || "VAZGEÇ"}
                     </button>
                 </div>
             </motion.div>
