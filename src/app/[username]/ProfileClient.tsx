@@ -2453,7 +2453,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         onClose={() => setIsWalletModalOpen(false)}
                         profile={profile}
                         t={t}
-                        theme={theme}
                         handleAddToContacts={handleAddToContacts}
                     />
                 )}
@@ -3790,7 +3789,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
     return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20" />
 }
 
-function WalletModal({ isOpen, onClose, profile, t, theme, handleAddToContacts }: any) {
+function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) {
     if (!isOpen) return null
 
     return (
@@ -3808,10 +3807,10 @@ function WalletModal({ isOpen, onClose, profile, t, theme, handleAddToContacts }
                 exit={{ opacity: 0, y: 100, scale: 0.9 }}
                 className={cn("relative w-full max-w-sm bg-zinc-900 border border-white/10 p-8 rounded-[2.5rem] shadow-2xl overflow-hidden")}
             >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
                 <div className="flex flex-col items-center text-center space-y-6">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-2xl shadow-primary/20">
+                    <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 shadow-2xl shadow-indigo-500/20">
                         <Smartphone size={32} />
                     </div>
                     <div>
