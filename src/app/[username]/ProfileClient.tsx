@@ -46,6 +46,7 @@ import {
     VolumeX,
     Sparkles,
     Layers,
+    Layout,
     TrendingUp,
     Brain,
     Flame
