@@ -2454,6 +2454,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         profile={profile}
                         t={t}
                         handleAddToContacts={handleAddToContacts}
+                        theme={theme}
+                        toneStyle={toneStyle}
                     />
                 )}
             </AnimatePresence>
@@ -3789,7 +3791,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
     return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20" />
 }
 
-function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) {
+function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, toneStyle }: any) {
     if (!isOpen) return null
 
     return (
@@ -3811,24 +3813,34 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                 }}
             >
                 {/* Top Inner Light Effect */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
+                <div
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] opacity-30"
+                    style={{ background: `linear-gradient(90deg, transparent, ${theme?.accent || '#6366f1'}, transparent)` }}
+                />
 
                 <div className="flex flex-col items-center text-center space-y-8 relative z-10">
                     {/* Header Icon */}
                     <div className="relative">
-                        <div className="absolute inset-0 blur-3xl opacity-30 bg-indigo-500/50 rounded-full" />
-                        <div className="w-20 h-20 rounded-[2rem] bg-[#1a1a2e] flex items-center justify-center text-indigo-400 border border-indigo-500/20 shadow-inner relative overflow-hidden group">
+                        <div
+                            className="absolute inset-0 blur-3xl opacity-30 rounded-full"
+                            style={{ backgroundColor: theme?.accent || '#6366f1' }}
+                        />
+                        <div
+                            className="w-20 h-20 rounded-[2rem] bg-[#1a1a2e] flex items-center justify-center shadow-inner relative overflow-hidden group border"
+                            style={{ color: theme?.accent || '#818cf8', borderColor: `${theme?.accent || '#6366f1'}33` }}
+                        >
                             <motion.div
                                 animate={{ opacity: [0.1, 0.3, 0.1] }}
                                 transition={{ duration: 4, repeat: Infinity }}
-                                className="absolute inset-0 bg-indigo-500"
+                                className="absolute inset-0"
+                                style={{ backgroundColor: theme?.accent || '#6366f1' }}
                             />
                             <Smartphone size={32} className="relative z-10" />
                         </div>
                     </div>
 
                     <div className="space-y-3">
-                        <h3 className="text-3xl font-serif font-black text-white px-2 leading-tight">
+                        <h3 className={cn("text-3xl font-black text-white px-2 leading-tight", toneStyle?.font || "font-serif")}>
                             {t.addToWallet || "ADD TO WALLET"}
                         </h3>
                         <p className="text-xs font-bold text-white/30 tracking-[0.05em] uppercase">
@@ -3846,10 +3858,17 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                             className="w-full flex items-center justify-between p-5 bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 rounded-[1.8rem] transition-all group active:scale-[0.98]"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-[1.2rem] bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-all border border-indigo-500/10">
+                                <div
+                                    className="w-12 h-12 rounded-[1.2rem] flex items-center justify-center transition-all border"
+                                    style={{
+                                        backgroundColor: `${theme?.accent || '#6366f1'}1A`,
+                                        color: theme?.accent || '#818cf8',
+                                        borderColor: `${theme?.accent || '#6366f1'}1A`
+                                    }}
+                                >
                                     <UserPlus size={22} />
                                 </div>
-                                <span className="font-serif text-lg font-bold text-white/80">{t.vcfLabel || "Add to Contacts (VCF)"}</span>
+                                <span className={cn("text-lg font-bold text-white/80", toneStyle?.font || "font-serif")}>{t.vcfLabel || "Add to Contacts (VCF)"}</span>
                             </div>
                             <ArrowRight size={18} className="text-white/5 group-hover:text-white/20 transition-colors mr-1" />
                         </button>
@@ -3866,7 +3885,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                                 <div className="w-12 h-12 rounded-[1.2rem] bg-white flex items-center justify-center text-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                                     <Smartphone size={22} />
                                 </div>
-                                <span className="font-serif text-lg font-bold text-white">Apple Wallet</span>
+                                <span className={cn("text-lg font-bold text-white", toneStyle?.font || "font-serif")}>Apple Wallet</span>
                             </div>
                             <div className="flex items-center gap-3 z-10">
                                 <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">{t.current || "GÜNCEL"}</span>
@@ -3883,10 +3902,17 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                             className="w-full flex items-center justify-between p-5 bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 rounded-[1.8rem] transition-all group active:scale-[0.98]"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-[1.2rem] bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-all border border-indigo-500/10">
+                                <div
+                                    className="w-12 h-12 rounded-[1.2rem] flex items-center justify-center transition-all border"
+                                    style={{
+                                        backgroundColor: `${theme?.accent || '#6366f1'}1A`,
+                                        color: theme?.accent || '#818cf8',
+                                        borderColor: `${theme?.accent || '#6366f1'}1A`
+                                    }}
+                                >
                                     <Globe size={22} />
                                 </div>
-                                <span className="font-serif text-lg font-bold text-white/80">Google Wallet</span>
+                                <span className={cn("text-lg font-bold text-white/80", toneStyle?.font || "font-serif")}>Google Wallet</span>
                             </div>
                             <ArrowRight size={18} className="text-white/5 group-hover:text-white/20 transition-colors mr-1" />
                         </button>
