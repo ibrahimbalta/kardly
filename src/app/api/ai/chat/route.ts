@@ -56,6 +56,16 @@ export async function POST(req: Request) {
             parts: [{ text: m.content }],
         }));
 
+        // Gemini history must start with a "user" message.
+        // If our history starts with a "model" message (the greeting), 
+        // we prepend a hidden system-like user instruction.
+        if (history.length > 0 && history[0].role === "model") {
+            history.unshift({
+                role: "user",
+                parts: [{ text: "Merhaba, seninle sohbet etmek istiyorum." }]
+            });
+        }
+
         const chat = model.startChat({ history });
 
         const lastMessage = messages[messages.length - 1].content;
