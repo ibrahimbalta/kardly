@@ -49,7 +49,7 @@ export async function POST(req: Request) {
         const model = genAI.getGenerativeModel({
             model: "gemini-1.5-flash",
             systemInstruction: systemPrompt
-        })
+        }, { apiVersion: 'v1' })
 
         // Filter out error messages and ensure alternating roles
         const filteredMessages = messages.filter((m: any) => !m.isError);
