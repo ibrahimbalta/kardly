@@ -62,12 +62,41 @@ export const authOptions: NextAuthOptions = {
         }
     },
     session: {
-        strategy: "jwt", // Credentials provider için JWT şart
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 gün
+    },
+    cookies: {
+        sessionToken: {
+            name: `kardly-session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === "production"
+            }
+        },
+        callbackUrl: {
+            name: `kardly-callback-url`,
+            options: {
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === "production"
+            }
+        },
+        csrfToken: {
+            name: `kardly-csrf-token`,
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+                secure: process.env.NODE_ENV === "production"
+            }
+        }
     },
     pages: {
         signIn: "/login",
         error: "/auth/error",
     },
-    debug: process.env.NODE_ENV === "development",
+    debug: false, // Üretim ortamında kapalı tutmak header boyutunu azaltır
     secret: process.env.NEXTAUTH_SECRET,
 }
