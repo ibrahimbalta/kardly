@@ -47,17 +47,27 @@ export async function POST(req: Request) {
         `.trim()
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-            systemInstruction: systemPrompt
-        }, { apiVersion: 'v1' })
+            model: "gemini-1.5-flash"
+        })
 
-        // Filter out error messages and ensure alternating roles
+        // Filter out error messages
         const filteredMessages = messages.filter((m: any) => !m.isError);
         const lastMessage = filteredMessages[filteredMessages.length - 1].content;
         const historyData = filteredMessages.slice(0, -1);
 
-        const history: any[] = [];
-        let lastRole: string | null = null;
+        // Prepend system prompt to the first message to guide the AI
+        const history: any[] = [
+            {
+                role: "user",
+                parts: [{ text: systemPrompt + "\n\nYukarıdaki bilgilere dayanarak benimle bir asistan gibi konuş." }]
+            },
+            {
+                role: "model",
+                parts: [{ text: "Anladım. İbrahim Bey'in asistanı olarak size yardımcı olmaya hazırım." }]
+            }
+        ];
+
+        let lastRole: string = "model";
 
         for (const m of historyData) {
             const role = m.role === "user" ? "user" : "model";
@@ -69,14 +79,6 @@ export async function POST(req: Request) {
                 });
                 lastRole = role;
             }
-        }
-
-        // Gemini history must start with "user"
-        if (history.length > 0 && history[0].role === "model") {
-            history.unshift({
-                role: "user",
-                parts: [{ text: "Bana kendinden bahset." }]
-            });
         }
 
         const chat = model.startChat({ history });
