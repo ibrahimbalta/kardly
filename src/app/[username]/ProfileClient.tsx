@@ -275,16 +275,64 @@ END:VCARD`
     };
     const activeAccent = getActiveAccent();
 
+    // Tone specific styling
+    const getToneStyle = (tone: string) => {
+        switch (tone?.toLowerCase()) {
+            case "profesyonel":
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[2rem]",
+                    border: "border-solid",
+                    headerSize: "text-2xl",
+                    expertiseStyle: "slow-rotate"
+                };
+            case "samimi":
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[4rem]",
+                    border: "border-none",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "floating"
+                };
+            case "yaratıcı":
+                return {
+                    font: "font-mono",
+                    rounded: "rounded-xl skew-x-1",
+                    border: "border-dashed",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "scattered"
+                };
+            case "lüks":
+                return {
+                    font: "font-serif",
+                    rounded: "rounded-[3rem]",
+                    border: "border-double border-4",
+                    headerSize: "text-2xl uppercase tracking-[0.5em]",
+                    expertiseStyle: "slow-rotate"
+                };
+            default:
+                return {
+                    font: "font-sans",
+                    rounded: "rounded-[3rem]",
+                    border: "border-solid",
+                    headerSize: "text-3xl",
+                    expertiseStyle: "rotate"
+                };
+        }
+    }
+
+    const toneStyle = getToneStyle(profile.tone || "profesyonel")
+
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
 
         const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_", "cyber_", "antique_", "liquid_", "pop_", "zen_", "adventure_", "celestial_", "minimal_", "ind_", "vibe_", "royal_", "tech_", "meta_"];
         if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
-            return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} />;
+            return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} toneStyle={toneStyle} />;
         }
 
-        return <NeonModernTemplate {...props} colorScheme="black" tone={tone} />;
+        return <NeonModernTemplate {...props} colorScheme="black" tone={tone} toneStyle={toneStyle} />;
     }
 
     return (
@@ -381,7 +429,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -418,53 +466,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         return () => clearInterval(timer)
     }, [reviews.length])
 
-    // Tone specific styling
-    const getToneStyle = (tone: string) => {
-        switch (tone?.toLowerCase()) {
-            case "profesyonel":
-                return {
-                    font: "font-sans",
-                    rounded: "rounded-[2rem]",
-                    border: "border-solid",
-                    headerSize: "text-2xl",
-                    expertiseStyle: "slow-rotate"
-                };
-            case "samimi":
-                return {
-                    font: "font-sans",
-                    rounded: "rounded-[4rem]",
-                    border: "border-none",
-                    headerSize: "text-3xl",
-                    expertiseStyle: "floating"
-                };
-            case "yaratıcı":
-                return {
-                    font: "font-mono",
-                    rounded: "rounded-xl skew-x-1",
-                    border: "border-dashed",
-                    headerSize: "text-3xl",
-                    expertiseStyle: "scattered"
-                };
-            case "lüks":
-                return {
-                    font: "font-serif",
-                    rounded: "rounded-[3rem]",
-                    border: "border-double border-4",
-                    headerSize: "text-2xl uppercase tracking-[0.5em]",
-                    expertiseStyle: "slow-rotate"
-                };
-            default:
-                return {
-                    font: "font-sans",
-                    rounded: "rounded-[3rem]",
-                    border: "border-solid",
-                    headerSize: "text-3xl",
-                    expertiseStyle: "rotate"
-                };
-        }
-    }
-
-    const toneStyle = getToneStyle(tone)
 
     const getIcon = (title: string) => {
         const t = title.toLowerCase();
