@@ -1877,7 +1877,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         {
-            label: lang === 'tr' ? "İletişime Geç" : "Contact Me",
+            label: t.contactMeTitle,
             icon: <MessageSquare size={20} />,
             onClick: () => {
                 trackEvent("contact_form")
@@ -3065,7 +3065,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             body: JSON.stringify({ ...leadData, profileId: profile.id })
                         })
                         if (res.ok) {
-                            setLeadStatus(lang === 'tr' ? "Mesajınız iletildi! En kısa sürede döneceğim." : "Message sent! I'll get back to you soon.")
+                            setLeadStatus(t.leadSuccessMsg)
                             setTimeout(() => setLeadStatus(null), 5000)
                             // Form sonrası vCard indirmeyi teklif et/başlat
                             handleAddToContacts()
@@ -3938,10 +3938,10 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                     <div className="flex justify-between items-start mb-8">
                         <div>
                             <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none mb-2">
-                                {t('contactMeTitle')}
+                                {t.contactMeTitle}
                             </h3>
                             <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
-                                {t('contactMeSub')}
+                                {t.contactMeSub}
                             </p>
                         </div>
                         <button onClick={onClose} className="p-2 rounded-full hover:bg-white/5 transition-colors" style={{ color: themeColor }}>
@@ -3951,19 +3951,19 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
 
                     <div className="space-y-4">
                         <div className="space-y-1.5">
-                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('fullNameLabel')}</label>
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t.fullNameLabel}</label>
                             <input
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
-                                placeholder={t('namePlaceholder') || "..."}
+                                placeholder={t.namePlaceholder || "..."}
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('phoneNumberLabel')}</label>
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t.phoneNumberLabel}</label>
                                 <input
                                     type="tel"
                                     value={formData.phone}
@@ -3973,7 +3973,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('emailAddressLabel')}</label>
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t.emailAddressLabel}</label>
                                 <input
                                     type="email"
                                     value={formData.email}
@@ -3985,7 +3985,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('messageLabel')}</label>
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t.messageLabel}</label>
                             <textarea
                                 value={formData.message}
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -4001,7 +4001,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                             style={{ background: themeColor, boxShadow: `0 10px 40px ${themeColor}40` }}
                         >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
-                            <span className="relative z-10">{t('sendMyInfoBtn')}</span>
+                            <span className="relative z-10">{t.sendMyInfoBtn}</span>
                         </button>
                     </div>
                 </div>
