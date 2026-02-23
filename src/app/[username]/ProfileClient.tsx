@@ -109,6 +109,17 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const [isAIChatOpen, setIsAIChatOpen] = useState(false)
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
+
+    const aiConfig = useMemo(() => {
+        const block = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
+        return block?.content || {
+            isEnabled: true,
+            assistantName: "Kardly AI",
+            greeting: "",
+            instructions: ""
+        }
+    }, [profile.blocks])
+
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => {
@@ -242,7 +253,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -381,7 +392,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -3120,26 +3131,28 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             </AnimatePresence>
 
             {/* AI Floating Button */}
-            <motion.button
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsAIChatOpen(true)}
-                className="fixed bottom-8 right-8 z-[150] w-16 h-16 rounded-full flex items-center justify-center shadow-2xl overflow-hidden group"
-                style={{
-                    background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`,
-                    boxShadow: `0 0 30px ${theme.accent}60, 0 10px 40px -10px rgba(0,0,0,0.5)`
-                }}
-            >
-                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <Bot size={28} className="text-white relative z-10" />
-                <motion.div
-                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 bg-white rounded-full"
-                />
-            </motion.button>
+            {aiConfig?.isEnabled !== false && (
+                <motion.button
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setIsAIChatOpen(true)}
+                    className="fixed bottom-8 right-8 z-[150] w-16 h-16 rounded-full flex items-center justify-center shadow-2xl overflow-hidden group"
+                    style={{
+                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`,
+                        boxShadow: `0 0 30px ${theme.accent}60, 0 10px 40px -10px rgba(0,0,0,0.5)`
+                    }}
+                >
+                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Bot size={28} className="text-white relative z-10" />
+                    <motion.div
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute inset-0 bg-white rounded-full"
+                    />
+                </motion.button>
+            )}
 
             <AIChatAssistant
                 isOpen={isAIChatOpen}
@@ -3150,6 +3163,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 toneStyle={toneStyle}
                 messages={chatMessages}
                 setMessages={setChatMessages}
+                aiConfig={aiConfig}
             />
         </div>
     )
@@ -4047,7 +4061,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
     )
 }
 
-function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, messages, setMessages }: any) {
+function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, messages, setMessages, aiConfig }: any) {
     const [input, setInput] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -4060,14 +4074,16 @@ function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, m
 
     useEffect(() => {
         if (isOpen && messages.length === 0) {
+            const defaultGreeting = (profile.lang === 'tr' || !profile.lang)
+                ? `Merhaba! Ben ${profile.user.name}'in dijital asistanıyım. Size nasıl yardımcı olabilirim?`
+                : `Hello! I'm ${profile.user.name}'s digital assistant. How can I help you?`
+
             setMessages([{
                 role: "assistant",
-                content: (profile.lang === 'tr' || !profile.lang)
-                    ? `Merhaba! Ben ${profile.user.name}'in dijital asistanıyım. Size nasıl yardımcı olabilirim?`
-                    : `Hello! I'm ${profile.user.name}'s digital assistant. How can I help you?`
+                content: aiConfig?.greeting || defaultGreeting
             }])
         }
-    }, [isOpen, messages, profile.user.name, profile.lang, setMessages])
+    }, [isOpen, messages, profile.user.name, profile.lang, setMessages, aiConfig])
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return
@@ -4122,7 +4138,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, m
                             <Bot size={24} />
                         </div>
                         <div>
-                            <h3 className={cn("text-sm font-black text-white uppercase tracking-tighter", toneStyle?.font)}>Kardly AI</h3>
+                            <h3 className={cn("text-sm font-black text-white uppercase tracking-tighter", toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
                             <div className="flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                 <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">ÇEVRİMİÇİ</span>

@@ -139,6 +139,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         qrColorDark: profile?.qrColorDark || "#0f172a",
         qrColorLight: profile?.qrColorLight || "#ffffff"
     })
+
     const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isTplCatOpen, setIsTplCatOpen] = useState(false)
     const [isQuickTplMenuOpen, setIsQuickTplMenuOpen] = useState(false)
@@ -447,6 +448,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
         consultBtnText: "Ücretsiz Danışma",
         ringColors: ["#FACC15", "#A3E635", "#22D3EE", "#D946EF"]
     })
+
+    const aiBlock = blocks?.find((b: any) => b.type === 'ai_assistant')
+    const [aiConfig, setAiConfig] = useState(aiBlock?.content || {
+        isEnabled: true,
+        assistantName: "Kardly AI",
+        greeting: "",
+        instructions: ""
+    })
+
+    // Update aiConfig when blocks are loaded
+    useEffect(() => {
+        const ai = blocks?.find((b: any) => b.type === 'ai_assistant')
+        if (ai) setAiConfig(ai.content)
+    }, [blocks])
 
     useEffect(() => {
         const fetchBlocks = async () => {
@@ -828,6 +843,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "leads"}
                         onClick={() => {
                             setActiveTab("leads")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+
+                    <NavItem
+                        icon={<Sparkles className="w-5 h-5" />}
+                        label="AI Asistan"
+                        active={activeTab === "ai"}
+                        onClick={() => {
+                            setActiveTab("ai")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -1998,6 +2023,124 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     )}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                ) : activeTab === "ai" ? (
+                    <div className="max-w-4xl space-y-8">
+                        <div>
+                            <h2 className="text-xl font-bold">Yapay Zeka Asistanı</h2>
+                            <p className="text-sm text-foreground/50">Profil sayfanızda ziyaretçilerle konuşacak asistanı yönetin.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="md:col-span-2 space-y-6">
+                                <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                                                <Sparkles size={20} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-sm">Asistan Durumu</h3>
+                                                <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest">
+                                                    {aiConfig.isEnabled ? "Aktif - Ziyaretçilerle Konuşuyor" : "Pasif - Profilde Gizli"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => setAiConfig({ ...aiConfig, isEnabled: !aiConfig.isEnabled })}
+                                            className={cn(
+                                                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                                                aiConfig.isEnabled ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/20" : "bg-rose-500/20 text-rose-500 border border-rose-500/20"
+                                            )}
+                                        >
+                                            {aiConfig.isEnabled ? "KAPAT" : "AÇ"}
+                                        </button>
+                                    </div>
+
+                                    <div className="pt-6 border-t border-white/5 space-y-4">
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Asistan Adı</label>
+                                            <input
+                                                type="text"
+                                                value={aiConfig.assistantName}
+                                                onChange={(e) => setAiConfig({ ...aiConfig, assistantName: e.target.value })}
+                                                placeholder="Örn: Kardly AI"
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Özel Karşılama Mesajı (Opsiyonel)</label>
+                                            <textarea
+                                                value={aiConfig.greeting}
+                                                onChange={(e) => setAiConfig({ ...aiConfig, greeting: e.target.value })}
+                                                placeholder="Örn: Merhaba! Size nasıl yardımcı olabilirim?"
+                                                rows={2}
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                                            />
+                                            <p className="text-[9px] text-foreground/30 mt-2 italic">* Boş bırakılırsa varsayılan mesaj kullanılır.</p>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Özel Talimatlar</label>
+                                            <textarea
+                                                value={aiConfig.instructions}
+                                                onChange={(e) => setAiConfig({ ...aiConfig, instructions: e.target.value })}
+                                                placeholder="Asistanın bilmesi gereken ekstra bilgiler veya davranış şekilleri..."
+                                                rows={4}
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={async () => {
+                                            setIsSaving(true)
+                                            try {
+                                                const existing = blocks.find((b: any) => b.type === 'ai_assistant')
+                                                let newBlocks;
+                                                if (existing) {
+                                                    newBlocks = blocks.map((b: any) => b.type === 'ai_assistant' ? { ...b, content: aiConfig } : b)
+                                                } else {
+                                                    newBlocks = [...blocks, { type: 'ai_assistant', content: aiConfig, order: 100, isActive: true }]
+                                                }
+                                                await handleSyncBlocks(newBlocks)
+                                                setShowToast("AI Ayarları kaydedildi! ✨")
+                                                setTimeout(() => setShowToast(null), 3000)
+                                            } catch (err) {
+                                                setShowToast("Hata oluştu.")
+                                                setTimeout(() => setShowToast(null), 3000)
+                                            } finally {
+                                                setIsSaving(false)
+                                            }
+                                        }}
+                                        disabled={isSaving}
+                                        className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {isSaving ? "Kaydediliyor..." : <><Check size={16} /> AYARLARI KAYDET</>}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                                    <div className="relative z-10">
+                                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                            <Zap className="text-amber-400" size={18} /> AI İpucu
+                                        </h3>
+                                        <p className="text-sm text-white/60 leading-relaxed mb-6">
+                                            Asistanınız profilinizdeki tüm bilgileri (meslek, hizmetler, biyografi) otomatik olarak bilmektedir. Buraya ekleyeceğiniz talimatlar asistanın karakterini belirler.
+                                        </p>
+                                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
+                                            <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Örnek Talimat:</p>
+                                            <p className="text-xs italic text-white/40">"Müşterilerle senli benli konuş, çok şakacı ol ve mutlaka her cümlenin sonuna roket emojisi ekle."</p>
+                                        </div>
+                                    </div>
+                                    <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 blur-[60px] rounded-full" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 

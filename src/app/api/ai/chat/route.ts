@@ -14,8 +14,14 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Profile context is required" }, { status: 400 })
         }
 
+        const aiBlock = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
+        const aiConfig = aiBlock?.content || {
+            assistantName: "Kardly AI",
+            instructions: ""
+        }
+
         const systemPrompt = `
-        Sen ${profile.user.name}'in dijital asistanısın. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
+        Sen ${profile.user.name}'in dijital asistanısın${aiConfig.assistantName !== 'Kardly AI' ? ` (Adın: ${aiConfig.assistantName})` : ""}. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
         
         === PROFİL SAHİBİ BİLGİLERİ ===
         - İsim: ${profile.user.name}
@@ -33,31 +39,28 @@ export async function POST(req: Request) {
         5. Eğer iletişim kurmak isterse, "İletişime Geç" butonuna tıklamasını veya mail/telefon bilgilerini paylaşabileceğini belirt.
         6. Bilmediğin konularda uydurma yapma, "Bu konuda İbrahim Bey'e danışıp size dönebiliriz" de.
         7. Yanıtlarda emojiler kullanabilirsin ama aşırıya kaçma.
+        ${aiConfig.instructions ? `\n=== ÖZEL TALİMATLAR ===\n${aiConfig.instructions}` : ""}
         
         Kullanıcının dili neyse (Türkçe veya İngilizce) o dilde cevap ver.
         `.trim()
 
-        const chat = model.startChat({
-            history: [
-                {
-                    role: "user",
-                    parts: [{ text: systemPrompt }],
-                },
-                {
-                    role: "model",
-                    parts: [{ text: "Anladım. Ben " + profile.user.name + "'in dijital asistanıyım. Ziyaretçilere yardımcı olmak için hazırım!" }],
-                },
-                ...messages.map((m: any) => ({
-                    role: m.role === "user" ? "user" : "model",
-                    parts: [{ text: m.content }],
-                })),
-            ],
-        })
+        const history = [
+            {
+                role: "user",
+                parts: [{ text: systemPrompt + "\n\nSana profil sahibi hakkında bu bilgileri verdim. Şimdi bu bilgilere dayanarak ziyaretçiye nazikçe karşılık ver." }],
+            },
+            ...messages.slice(0, -1).map((m: any) => ({
+                role: m.role === "user" ? "user" : "model",
+                parts: [{ text: m.content }],
+            })),
+        ];
 
-        const lastMessage = messages[messages.length - 1].content
-        const result = await chat.sendMessage(lastMessage)
-        const response = await result.response
-        const text = response.text()
+        const chat = model.startChat({ history });
+
+        const lastMessage = messages[messages.length - 1].content;
+        const result = await chat.sendMessage(lastMessage);
+        const response = await result.response;
+        const text = response.text();
 
         return NextResponse.json({ text })
     } catch (error) {
