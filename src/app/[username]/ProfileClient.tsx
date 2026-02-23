@@ -236,7 +236,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -313,15 +313,6 @@ END:VCARD`
                 t={t}
             />
 
-            <QrModal
-                isOpen={isQrOpen}
-                onClose={() => setIsQrOpen(false)}
-                qrDataUrl={qrDataUrl}
-                theme={{ accent: activeAccent }}
-                profile={profile}
-                t={t}
-            />
-
             <SocialProof t={t} />
 
             <AnimatePresence>
@@ -389,7 +380,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -2460,6 +2451,20 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
             </AnimatePresence>
 
+            <AnimatePresence>
+                {isQrOpen && (
+                    <QrModal
+                        isOpen={isQrOpen}
+                        onClose={() => setIsQrOpen(false)}
+                        qrDataUrl={qrDataUrl}
+                        theme={theme}
+                        profile={profile}
+                        t={t}
+                        toneStyle={toneStyle}
+                    />
+                )}
+            </AnimatePresence>
+
             <main className="relative z-10 w-full max-w-[420px] space-y-6" style={{ perspective: "1000px" }}>
                 <motion.div
                     onMouseMove={handleMouseMove}
@@ -3339,7 +3344,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
     )
 }
 
-function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
+function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: any) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [sharing, setSharing] = useState(false);
     const [downloading, setDownloading] = useState(false);
@@ -3513,7 +3518,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         animate={{ scale: 1, opacity: 1 }}
                         ref={cardRef}
                         data-card-capture
-                        className="relative w-full rounded-[2.5rem] overflow-hidden flex-shrink-0"
+                        className={cn("relative w-full overflow-hidden flex-shrink-0", toneStyle?.rounded || "rounded-[2.5rem]")}
                         style={{
                             background: `linear-gradient(165deg, ${cardBg} 0%, #0a0a0c 50%, ${cardBg} 100%)`,
                             boxShadow: `0 30px 60px -15px rgba(0,0,0,0.7), 0 0 40px ${accent}20`
@@ -3537,13 +3542,13 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                                         src={(!profile.user.image || profile.user.image.includes('avatar.iran.liara.run'))
                                             ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=128&bold=true`
                                             : profile.user.image}
-                                        className="w-full h-full object-cover rounded-xl relative z-10 bg-black"
+                                        className={cn("w-full h-full object-cover relative z-10 bg-black", toneStyle?.rounded?.replace('rounded-[', 'rounded-[1.2rem]'))}
                                         crossOrigin="anonymous"
                                     />
                                 </div>
-                                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-1.5 leading-none">{profile.user.name}</h3>
-                                <div className="inline-block px-3 py-0.5 rounded-full border border-white/10" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
-                                    <span className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
+                                <h3 className={cn("text-xl font-black text-white uppercase tracking-tight mb-1.5 leading-none", toneStyle?.font)}>{profile.user.name}</h3>
+                                <div className={cn("inline-block px-3 py-0.5 rounded-full border border-white/10", toneStyle?.rounded)} style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                                    <span className={cn("text-[9px] font-bold uppercase tracking-[0.2em]", toneStyle?.font)} style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
                                 </div>
                             </div>
 
@@ -3556,7 +3561,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                             {/* QR Section */}
                             <div className="relative mb-6">
                                 <div className="absolute -inset-8 rounded-full blur-[40px] opacity-10" style={{ background: accent }} />
-                                <div className="relative bg-white p-3 rounded-2xl shadow-2xl">
+                                <div className={cn("relative bg-white p-3 shadow-2xl", toneStyle?.rounded?.replace('[3rem]', '[1.5rem]').replace('[2rem]', '[1rem]'))}>
                                     {qrDataUrl ? (
                                         <img src={qrDataUrl} alt="QR Code" className="w-[110px] h-[110px] block" />
                                     ) : (
@@ -3569,29 +3574,29 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
 
                             {/* Contact Details */}
                             <div className="w-full space-y-3 pt-1 text-center">
-                                <h4 className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em] mb-3">DİJİTAL KARTVİZİT</h4>
+                                <h4 className={cn("text-[9px] font-black text-white/30 uppercase tracking-[0.4em] mb-3", toneStyle?.font)}>DİJİTAL KARTVİZİT</h4>
 
                                 <div className="space-y-2.5">
                                     {phoneNumber && (
-                                        <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 uppercase" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                                        <div className={cn("flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 border border-white/5 uppercase", toneStyle?.rounded?.replace('[3rem]', '[1rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                             <Phone size={13} style={{ color: accent }} />
-                                            <span>{phoneNumber}</span>
+                                            <span className={toneStyle?.font}>{phoneNumber}</span>
                                         </div>
                                     )}
-                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 lowercase" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                                    <div className={cn("flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 border border-white/5 lowercase", toneStyle?.rounded?.replace('[3rem]', '[1rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                         <Mail size={13} style={{ color: accent }} />
-                                        <span className="truncate">{profile.user.email}</span>
+                                        <span className={cn("truncate", toneStyle?.font)}>{profile.user.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 rounded-xl border border-white/5 lowercase opacity-80" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                                    <div className={cn("flex items-center gap-2.5 text-[11px] font-bold text-white/80 px-3.5 py-2.5 border border-white/5 lowercase opacity-80", toneStyle?.rounded?.replace('[3rem]', '[1rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                         <Globe size={13} style={{ color: accent }} />
-                                        <span>kardly.com/{profile.username}</span>
+                                        <span className={toneStyle?.font}>kardly.com/{profile.username}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Footer Branding */}
                             <div className="mt-8 pt-2 opacity-20">
-                                <span className="text-[7px] font-black text-white tracking-[0.6em] uppercase">KARDLY PREMIUM</span>
+                                <span className={cn("text-[7px] font-black text-white tracking-[0.6em] uppercase", toneStyle?.font)}>KARDLY PREMIUM</span>
                             </div>
                         </div>
                     </motion.div>
@@ -3601,7 +3606,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         <button
                             onClick={handleDownload}
                             disabled={downloading || sharing}
-                            className="flex-1 py-4 rounded-2xl border text-white font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                            className={cn("flex-1 py-4 border text-white font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50", toneStyle?.rounded, toneStyle?.font)}
                             style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}
                         >
                             {downloading ? (
@@ -3614,7 +3619,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t }: any) {
                         <button
                             onClick={handleShareImage}
                             disabled={sharing || downloading}
-                            className="flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-lg disabled:opacity-50"
+                            className={cn("flex-1 py-4 font-black text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-black shadow-lg disabled:opacity-50", toneStyle?.rounded, toneStyle?.font)}
                             style={{ background: accent, boxShadow: `0 8px 25px ${accent}40` }}
                         >
                             {sharing ? (
