@@ -87,7 +87,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
 
 
-export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, stats }: any) {
+export default function DashboardClient({ session, profile, subscription, appointments, products, reviews, leads: initialLeads, stats }: any) {
     const { t, language } = useTranslation()
     const TEMPLATE_CATEGORIES = [
         { id: "all", name: t('catAll'), icon: <Layout size={14} /> },
@@ -201,7 +201,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [editingServiceIndex, setEditingServiceIndex] = useState<number | null>(null)
 
     // Leads Management
-    const [leads, setLeads] = useState<any[]>([])
+    const [leads, setLeads] = useState<any[]>(initialLeads || [])
     const [isLeadsLoading, setIsLeadsLoading] = useState(false)
 
     useEffect(() => {

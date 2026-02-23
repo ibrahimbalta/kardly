@@ -81,6 +81,11 @@ export default async function DashboardPage() {
         }
     }
 
+    const leads = await prisma.lead.findMany({
+        where: { profileId: profile?.id || "" },
+        orderBy: { createdAt: "desc" }
+    })
+
     return (
         <DashboardClient
             session={session}
@@ -89,6 +94,7 @@ export default async function DashboardPage() {
             appointments={appointments}
             products={products}
             reviews={reviews}
+            leads={leads}
             stats={stats}
         />
     )

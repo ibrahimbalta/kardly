@@ -100,6 +100,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
         { id: '3', name: "Ali Yılmaz", title: "Proje Yöneticisi", content: "İletişimi çok güçlü ve teslimatları her zaman zamanında yapıyor.", rating: 4, gender: 'male', image: "https://ui-avatars.com/api/?name=Ali+Yilmaz&background=0d0d0e&color=fff&size=128" }
     ])
     const [reviewStatus, setReviewStatus] = useState<string | null>(null)
+    const [leadStatus, setLeadStatus] = useState<string | null>(null)
+    const [isLeadModalOpen, setIsLeadModalOpen] = useState(false)
     const [isQrOpen, setIsQrOpen] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
@@ -236,7 +238,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -375,7 +377,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -1874,6 +1876,15 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const actions = [
         { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        {
+            label: lang === 'tr' ? "İletişime Geç" : "Contact Me",
+            icon: <MessageSquare size={20} />,
+            onClick: () => {
+                trackEvent("contact_form")
+                setIsLeadModalOpen(true)
+            },
+            active: true
+        },
         { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
         {
             label: "Randevu Al", icon: <Calendar size={20} />, onClick: () => {
@@ -3125,6 +3136,32 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 toneStyle={toneStyle}
             />
 
+            <LeadModal
+                isOpen={isLeadModalOpen}
+                onClose={() => setIsLeadModalOpen(false)}
+                onSubmit={async (leadData: any) => {
+                    try {
+                        const res = await fetch("/api/leads/create", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ ...leadData, profileId: profile.id })
+                        })
+                        if (res.ok) {
+                            setLeadStatus(lang === 'tr' ? "Mesajınız iletildi! En kısa sürede döneceğim." : "Message sent! I'll get back to you soon.")
+                            setTimeout(() => setLeadStatus(null), 5000)
+                            // Form sonrası vCard indirmeyi teklif et/başlat
+                            handleAddToContacts()
+                        }
+                    } catch (err) {
+                        console.error(err)
+                    }
+                }}
+                themeColor={theme.accent}
+                t={t}
+                lang={lang}
+                toneStyle={toneStyle}
+            />
+
             <SocialProof t={t} />
 
             <AnimatePresence>
@@ -3136,6 +3173,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-emerald-500 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-emerald-400"
                     >
                         <CheckCircle2 size={20} /> {reviewStatus}
+                    </motion.div>
+                )}
+                {leadStatus && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-indigo-600 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-indigo-400"
+                    >
+                        <CheckCircle2 size={20} /> {leadStatus}
                     </motion.div>
                 )}
                 {copied && (
@@ -3925,6 +3972,107 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                     >
                         {t.cancel || "VAZGEÇ"}
                     </button>
+                </div>
+            </motion.div>
+        </div>
+    )
+}
+function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }: any) {
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        message: ""
+    })
+
+    if (!isOpen) return null
+
+    const handleSubmit = () => {
+        if (!formData.name || !formData.phone) return
+        onSubmit(formData)
+        setFormData({ name: "", phone: "", message: "" })
+        onClose()
+    }
+
+    return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+                onClick={onClose}
+            />
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                className={cn("relative w-full max-w-[400px] p-8 overflow-hidden", toneStyle?.rounded || "rounded-[3rem]")}
+                style={{
+                    background: `linear-gradient(180deg, ${themeColor}15 0%, #0a0a0f 40%, #050508 100%)`,
+                    border: `2px solid ${themeColor}40`,
+                    boxShadow: `0 0 80px ${themeColor}15`
+                }}
+            >
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${themeColor}, transparent)` }} />
+                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: themeColor }} />
+
+                <div className="relative z-10">
+                    <div className="flex justify-between items-start mb-8">
+                        <div>
+                            <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none mb-2">
+                                {lang === 'tr' ? "İletişime Geç" : "Let's Talk"}
+                            </h3>
+                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
+                                {lang === 'tr' ? "Seninle tanışmak için sabırsızlanıyorum" : "I'm looking forward to meeting you"}
+                            </p>
+                        </div>
+                        <button onClick={onClose} className="p-2 rounded-full hover:bg-white/5 transition-colors" style={{ color: themeColor }}>
+                            <X size={24} />
+                        </button>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "İsim Soyisim" : "Full Name"}</label>
+                            <input
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
+                                placeholder={lang === 'tr' ? "Adınız..." : "Your name..."}
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "Telefon Numarası" : "Phone Number"}</label>
+                            <input
+                                type="tel"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
+                                placeholder="+90 ..."
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "Mesajınız" : "Message"}</label>
+                            <textarea
+                                value={formData.message}
+                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium min-h-[100px] resize-none"
+                                placeholder={lang === 'tr' ? "Nasıl yardımcı olabilirim?" : "How can I help you?"}
+                            />
+                        </div>
+
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!formData.name || !formData.phone}
+                            className="w-full py-5 rounded-2xl text-white font-black text-xs uppercase tracking-[0.4em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40"
+                            style={{ background: themeColor, boxShadow: `0 10px 40px ${themeColor}40` }}
+                        >
+                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
+                            <span className="relative z-10">{lang === 'tr' ? "BİLGİLERİMİ GÖNDER" : "SEND MY INFO"}</span>
+                        </button>
+                    </div>
                 </div>
             </motion.div>
         </div>
