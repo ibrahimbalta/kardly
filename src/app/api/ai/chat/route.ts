@@ -51,31 +51,45 @@ export async function POST(req: Request) {
             systemInstruction: systemPrompt
         })
 
-        const history = messages.slice(0, -1).map((m: any) => ({
-            role: m.role === "user" ? "user" : "model",
-            parts: [{ text: m.content }],
-        }));
+        // Filter out error messages and ensure alternating roles
+        const filteredMessages = messages.filter((m: any) => !m.isError);
+        const lastMessage = filteredMessages[filteredMessages.length - 1].content;
+        const historyData = filteredMessages.slice(0, -1);
 
-        // Gemini history must start with a "user" message.
-        // If our history starts with a "model" message (the greeting), 
-        // we prepend a hidden system-like user instruction.
+        const history: any[] = [];
+        let lastRole: string | null = null;
+
+        for (const m of historyData) {
+            const role = m.role === "user" ? "user" : "model";
+            // Gemini doesn't allow two messages from the same role to be adjacent
+            if (role !== lastRole) {
+                history.push({
+                    role: role,
+                    parts: [{ text: m.content }]
+                });
+                lastRole = role;
+            }
+        }
+
+        // Gemini history must start with "user"
         if (history.length > 0 && history[0].role === "model") {
             history.unshift({
                 role: "user",
-                parts: [{ text: "Merhaba, seninle sohbet etmek istiyorum." }]
+                parts: [{ text: "Bana kendinden bahset." }]
             });
         }
 
         const chat = model.startChat({ history });
-
-        const lastMessage = messages[messages.length - 1].content;
         const result = await chat.sendMessage(lastMessage);
         const response = await result.response;
         const text = response.text();
 
         return NextResponse.json({ text })
     } catch (error: any) {
-        console.error("AI Chat Error:", error)
-        return NextResponse.json({ error: error.message || "Yapay zeka asistanı şu an yanıt veremiyor." }, { status: 500 })
+        console.error("AI Chat Error Details:", error);
+        return NextResponse.json({
+            error: error.message || "Bilinmeyen bir hata oluştu.",
+            suggestion: "Vercel environment variables içinde GEMINI_API_KEY'in doğru olduğundan emin olun."
+        }, { status: 500 })
     }
 }

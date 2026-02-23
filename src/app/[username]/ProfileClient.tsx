@@ -4094,7 +4094,9 @@ function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, m
             if (data.text) {
                 setMessages([...newMessages, { role: "assistant", content: data.text }])
             } else if (data.error) {
-                setMessages([...newMessages, { role: "assistant", isError: true, content: (profile.lang === 'tr' || !profile.lang) ? "Üzgünüm, şu an yanıt veremiyorum. Lütfen sonra tekrar deneyin." : "Sorry, I can't respond right now. Please try again later." }])
+                // Show actual error from server for debugging
+                const userFriendlyError = data.error; // Directly use data.error content
+                setMessages([...newMessages, { role: "assistant", isError: true, content: userFriendlyError }])
             }
         } catch (error) {
             console.error("Chat Error:", error)
