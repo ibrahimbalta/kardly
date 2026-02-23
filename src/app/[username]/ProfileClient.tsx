@@ -2674,7 +2674,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem]", theme.card, theme.border)}>
+                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem] overflow-visible", theme.card, theme.border)}>
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
@@ -2703,9 +2703,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         {layoutMode === 'marquee' ? (
                                             <div
                                                 className="relative h-16 flex items-center overflow-visible"
-                                                style={{ clipPath: 'inset(-200px 0 -200px 0)' }} // Clips left/right, allows top/bottom
+                                                style={{ clipPath: 'inset(-300px -300px -300px -300px)' }} // Hem dikey hem yatay taşmaya izin verir
                                             >
-                                                <div className="animate-marquee-right flex gap-6 h-full items-center">
+                                                <div className="animate-marquee-right flex gap-6 h-full items-center overflow-visible">
                                                     {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
                                                         <a
                                                             key={i}
