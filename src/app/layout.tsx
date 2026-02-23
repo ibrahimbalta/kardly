@@ -61,7 +61,7 @@ export default function RootLayout({
         {/* PWA Meta Tags */}
         <link rel="icon" href="/icons/favicon.png" sizes="32x32" type="image/png" />
         <link rel="icon" href="/icons/icon-192x192.png" sizes="192x192" type="image/png" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />

@@ -1,97 +1,148 @@
-// PWA Icon Generator Script
-// Generates PNG icons from SVG for PWA manifest
-// Run: node scripts/generate-icons.js
-
+const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
 const iconsDir = path.join(__dirname, '..', 'public', 'icons');
 
-// Create icons directory
-if (!fs.existsSync(iconsDir)) {
-    fs.mkdirSync(iconsDir, { recursive: true });
-}
+// Kardly logo SVG - exact match to the provided icon
+// Coral-pink rounded square with white outlined card/layout icon
+const generateKardlyIcon = (size) => {
+  const s = size;
+  const bgR = s * 0.22; // background corner radius
 
-// SVG icon template - Kardly logo (coral pink card icon)
-const generateSVG = (size, padding = 0) => {
-    const p = padding;
-    const s = size;
-    const innerSize = s - p * 2;
-    const cx = s / 2;
-    const cy = s / 2;
+  // Card outline dimensions
+  const cardW = s * 0.44;
+  const cardH = s * 0.40;
+  const cardX = s * 0.5 - cardW * 0.5;
+  const cardY = s * 0.5 - cardH * 0.5 + s * 0.01;
+  const cardR = s * 0.05;
+  const strokeW = s * 0.035;
 
-    // Card icon dimensions relative to inner size
-    const cardW = innerSize * 0.42;
-    const cardH = innerSize * 0.52;
-    const cardX = cx - cardW / 2;
-    const cardY = cy - cardH / 2 + innerSize * 0.02;
-    const cardR = innerSize * 0.04;
+  // Header bar (top section of card)
+  const headerH = cardH * 0.30;
+  const headerY = cardY;
 
-    // Small window/color block on the card
-    const blockW = cardW * 0.35;
-    const blockH = cardH * 0.22;
-    const blockX = cardX + cardW * 0.14;
-    const blockY = cardY + cardH * 0.18;
-    const blockR = innerSize * 0.02;
+  // Vertical divider position (left ~38% of card width)
+  const dividerX = cardX + cardW * 0.38;
+  const dividerTopY = cardY + headerH;
+  const dividerBottomY = cardY + cardH;
 
-    // Line elements on card
-    const lineY1 = cardY + cardH * 0.58;
-    const lineY2 = cardY + cardH * 0.72;
-    const lineX = cardX + cardW * 0.14;
-    const lineW1 = cardW * 0.72;
-    const lineW2 = cardW * 0.50;
-    const lineH = innerSize * 0.022;
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF4D7D"/>
-      <stop offset="100%" style="stop-color:#FF3060"/>
-    </linearGradient>
-    <linearGradient id="block" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1A1A2E"/>
-      <stop offset="100%" style="stop-color:#16213E"/>
+      <stop offset="0%" style="stop-color:#FF2D6A"/>
+      <stop offset="50%" style="stop-color:#FF2055"/>
+      <stop offset="100%" style="stop-color:#FF1A50"/>
     </linearGradient>
   </defs>
   <!-- Background -->
-  <rect x="${p}" y="${p}" width="${innerSize}" height="${innerSize}" rx="${innerSize * 0.22}" fill="url(#bg)"/>
-  <!-- Card shape -->
-  <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${cardR}" fill="white" opacity="0.95"/>
-  <!-- Color block -->
-  <rect x="${blockX}" y="${blockY}" width="${blockW}" height="${blockH}" rx="${blockR}" fill="url(#block)"/>
-  <!-- Text lines -->
-  <rect x="${lineX}" y="${lineY1}" width="${lineW1}" height="${lineH}" rx="${lineH / 2}" fill="#FF3060" opacity="0.25"/>
-  <rect x="${lineX}" y="${lineY2}" width="${lineW2}" height="${lineH}" rx="${lineH / 2}" fill="#FF3060" opacity="0.15"/>
+  <rect x="0" y="0" width="${s}" height="${s}" rx="${bgR}" fill="url(#bg)"/>
+  <!-- Card outline -->
+  <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${cardR}" 
+        fill="none" stroke="white" stroke-width="${strokeW}" stroke-linejoin="round"/>
+  <!-- Header divider line (horizontal) -->
+  <line x1="${cardX}" y1="${cardY + headerH}" x2="${cardX + cardW}" y2="${cardY + headerH}" 
+        stroke="white" stroke-width="${strokeW}" stroke-linecap="round"/>
+  <!-- Vertical divider (left section below header) -->
+  <line x1="${dividerX}" y1="${dividerTopY}" x2="${dividerX}" y2="${dividerBottomY}" 
+        stroke="white" stroke-width="${strokeW}" stroke-linecap="round"/>
 </svg>`;
 };
 
-// Generate maskable SVG (with safe zone padding)
-const generateMaskableSVG = (size) => {
-    const padding = size * 0.1; // 10% safe zone
-    return generateSVG(size, padding);
+// Maskable version with safe zone padding (10%)
+const generateMaskableIcon = (size) => {
+  const s = size;
+  const padding = s * 0.15;
+  const innerS = s - padding * 2;
+  const bgR = innerS * 0.22;
+
+  const cardW = innerS * 0.44;
+  const cardH = innerS * 0.40;
+  const cardX = s * 0.5 - cardW * 0.5;
+  const cardY = s * 0.5 - cardH * 0.5 + innerS * 0.01;
+  const cardR = innerS * 0.05;
+  const strokeW = innerS * 0.035;
+
+  const headerH = cardH * 0.30;
+  const dividerX = cardX + cardW * 0.38;
+  const dividerTopY = cardY + headerH;
+  const dividerBottomY = cardY + cardH;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF2D6A"/>
+      <stop offset="50%" style="stop-color:#FF2055"/>
+      <stop offset="100%" style="stop-color:#FF1A50"/>
+    </linearGradient>
+  </defs>
+  <!-- Full bleed background for maskable -->
+  <rect x="0" y="0" width="${s}" height="${s}" fill="url(#bg2)"/>
+  <!-- Card outline -->
+  <rect x="${cardX}" y="${cardY}" width="${cardW}" height="${cardH}" rx="${cardR}" 
+        fill="none" stroke="white" stroke-width="${strokeW}" stroke-linejoin="round"/>
+  <!-- Header divider line -->
+  <line x1="${cardX}" y1="${cardY + headerH}" x2="${cardX + cardW}" y2="${cardY + headerH}" 
+        stroke="white" stroke-width="${strokeW}" stroke-linecap="round"/>
+  <!-- Vertical divider -->
+  <line x1="${dividerX}" y1="${dividerTopY}" x2="${dividerX}" y2="${dividerBottomY}" 
+        stroke="white" stroke-width="${strokeW}" stroke-linecap="round"/>
+</svg>`;
 };
 
-const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+async function generateAllIcons() {
+  // Clean existing icons
+  const existingFiles = fs.readdirSync(iconsDir);
+  existingFiles.forEach(f => {
+    fs.unlinkSync(path.join(iconsDir, f));
+  });
+  console.log('🗑️  Cleaned old icons');
 
-// Write SVG files (they can be used directly or converted to PNG)
-sizes.forEach(size => {
-    const svg = generateSVG(size);
-    fs.writeFileSync(path.join(iconsDir, `icon-${size}x${size}.svg`), svg);
-    console.log(`✅ Generated icon-${size}x${size}.svg`);
-});
+  const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 
-// Maskable icons
-[192, 512].forEach(size => {
-    const svg = generateMaskableSVG(size);
-    fs.writeFileSync(path.join(iconsDir, `icon-maskable-${size}x${size}.svg`), svg);
-    console.log(`✅ Generated icon-maskable-${size}x${size}.svg`);
-});
+  // Generate regular icons
+  for (const size of sizes) {
+    const svg = generateKardlyIcon(size);
+    const svgBuffer = Buffer.from(svg);
 
-// Also generate a simple favicon SVG
-const faviconSVG = generateSVG(32);
-fs.writeFileSync(path.join(iconsDir, 'favicon.svg'), faviconSVG);
-console.log('✅ Generated favicon.svg');
+    await sharp(svgBuffer)
+      .resize(size, size)
+      .png({ quality: 100 })
+      .toFile(path.join(iconsDir, `icon-${size}x${size}.png`));
 
-console.log('\n🎉 All icons generated!');
-console.log('📌 Note: For best results, convert SVG to PNG using a tool like sharp or an online converter.');
-console.log('   The manifest.json references .png files. SVG icons work in modern browsers.');
+    console.log(`✅ icon-${size}x${size}.png`);
+  }
+
+  // Generate maskable icons
+  for (const size of [192, 512]) {
+    const svg = generateMaskableIcon(size);
+    const svgBuffer = Buffer.from(svg);
+
+    await sharp(svgBuffer)
+      .resize(size, size)
+      .png({ quality: 100 })
+      .toFile(path.join(iconsDir, `icon-maskable-${size}x${size}.png`));
+
+    console.log(`✅ icon-maskable-${size}x${size}.png`);
+  }
+
+  // Generate favicon
+  const faviconSvg = generateKardlyIcon(32);
+  await sharp(Buffer.from(faviconSvg))
+    .resize(32, 32)
+    .png({ quality: 100 })
+    .toFile(path.join(iconsDir, 'favicon.png'));
+  console.log(`✅ favicon.png`);
+
+  // Also generate a 180x180 Apple touch icon
+  const appleSvg = generateKardlyIcon(180);
+  await sharp(Buffer.from(appleSvg))
+    .resize(180, 180)
+    .png({ quality: 100 })
+    .toFile(path.join(iconsDir, 'apple-touch-icon.png'));
+  console.log(`✅ apple-touch-icon.png`);
+
+  console.log('\n🎉 Tüm ikonlar Kardly logosundan oluşturuldu!');
+}
+
+generateAllIcons().catch(console.error);
