@@ -112,13 +112,42 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     const aiConfig = useMemo(() => {
         const block = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
-        return block?.content || {
+        const content = block?.content || {
             isEnabled: true,
             assistantName: "Kardly AI",
             greeting: "",
             instructions: ""
         }
-    }, [profile.blocks])
+
+        const systemPrompt = `
+        Sen ${profile.user.name}'in dijital asistanısın${content.assistantName !== 'Kardly AI' ? ` (Adın: ${content.assistantName})` : ""}. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
+        
+        === PROFİL SAHİBİ BİLGİLERİ ===
+        - İsim: ${profile.user.name}
+        - Meslek/Unvan: ${profile.occupation || "Belirtilmedi"}
+        - Slogan: ${profile.slogan || "Belirtilmedi"}
+        - Biyografi: ${profile.bio || "Belirtilmedi"}
+        - Hizmetler: ${JSON.stringify(profile.services || [])}
+        - Sosyal Medya: ${JSON.stringify(profile.socialLinks || [])}
+        
+        === KURALLAR ===
+        1. Her zaman nazik, profesyonel ve yardımcı ol.
+        2. ${profile.user.name} adına konuşuyormuş gibi değil, onun asistanı gibi konuş (Örn: "İbrahim Bey şu an...", "Size bu konuda yardımcı olabilirim").
+        3. Yanıtlarını kısa ve öz tut.
+        4. Eğer kullanıcı randevu almak isterse, sayfadaki "Randevu Al" butonunu kullanabileceğini söyle.
+        5. Eğer iletişim kurmak isterse, "İletişime Geç" butonuna tıklamasını veya mail/telefon bilgilerini paylaşabileceğini belirt.
+        6. Bilmediğin konularda uydurma yapma, "Bu konuda İbrahim Bey'e danışıp size dönebiliriz" de.
+        7. Yanıtlarda emojiler kullanabilirsin ama aşırıya kaçma.
+        ${content.instructions ? `\n=== ÖZEL TALİMATLAR ===\n${content.instructions}` : ""}
+        
+        Kullanıcının dili neyse (Türkçe veya İngilizce) o dilde cevap ver.
+        `.trim()
+
+        return {
+            ...content,
+            systemPrompt: systemPrompt
+        }
+    }, [profile.blocks, profile.user.name, profile.occupation, profile.slogan, profile.bio, profile.services, profile.socialLinks])
 
     const t = translations[lang as keyof typeof translations] || translations.tr
 
@@ -339,6 +368,8 @@ END:VCARD`
     }
 
     const toneStyle = getToneStyle(profile.tone || "profesyonel")
+
+    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "")
 
     // Template Selector Logic
     const renderTemplate = () => {
@@ -2086,7 +2117,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
 
                 {theme.special === "ind_concrete" && (
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.2]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
+                    <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
                 )}
 
                 {theme.special === "vibe_bolt" && (
@@ -4064,9 +4095,12 @@ function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, m
             const data = await res.json()
             if (data.text) {
                 setMessages([...newMessages, { role: "assistant", content: data.text }])
+            } else if (data.error) {
+                setMessages([...newMessages, { role: "assistant", isError: true, content: (profile.lang === 'tr' || !profile.lang) ? "Üzgünüm, şu an yanıt veremiyorum. Lütfen sonra tekrar deneyin." : "Sorry, I can't respond right now. Please try again later." }])
             }
         } catch (error) {
             console.error("Chat Error:", error)
+            setMessages([...newMessages, { role: "assistant", isError: true, content: (profile.lang === 'tr' || !profile.lang) ? "Bir bağlantı hatası oluştu." : "A connection error occurred." }])
         } finally {
             setIsLoading(false)
         }
@@ -4122,9 +4156,9 @@ function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, m
                                 "max-w-[85%] p-4 text-xs font-medium leading-relaxed",
                                 m.role === "user"
                                     ? "ml-auto bg-white/5 text-white border border-white/5 " + (toneStyle?.rounded?.replace('[2.5rem]', '[1.2rem]') || "rounded-2xl")
-                                    : "bg-indigo-500/10 text-white/90 border border-indigo-500/10 " + (toneStyle?.rounded?.replace('[2.5rem]', '[1.2rem]') || "rounded-2xl")
+                                    : (m.isError ? "bg-rose-500/10 text-rose-500 border border-rose-500/20" : "bg-indigo-500/10 text-white/90 border border-indigo-500/10") + " " + (toneStyle?.rounded?.replace('[2.5rem]', '[1.2rem]') || "rounded-2xl")
                             )}
-                            style={m.role === "assistant" ? { borderColor: `${themeColor}20`, backgroundColor: `${themeColor}10` } : {}}
+                            style={m.role === "assistant" && !m.isError ? { borderColor: `${themeColor}20`, backgroundColor: `${themeColor}10` } : {}}
                         >
                             {m.content}
                         </motion.div>

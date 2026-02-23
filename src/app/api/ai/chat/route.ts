@@ -2,13 +2,15 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 import { NextResponse } from "next/server"
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-})
 
 export async function POST(req: Request) {
     try {
         const { messages, profile } = await req.json()
+
+        if (!process.env.GEMINI_API_KEY) {
+            console.error("GEMINI_API_KEY is missing")
+            return NextResponse.json({ error: "AI API Key is not configured" }, { status: 500 })
+        }
 
         if (!profile) {
             return NextResponse.json({ error: "Profile context is required" }, { status: 400 })
@@ -44,16 +46,15 @@ export async function POST(req: Request) {
         Kullanıcının dili neyse (Türkçe veya İngilizce) o dilde cevap ver.
         `.trim()
 
-        const history = [
-            {
-                role: "user",
-                parts: [{ text: systemPrompt + "\n\nSana profil sahibi hakkında bu bilgileri verdim. Şimdi bu bilgilere dayanarak ziyaretçiye nazikçe karşılık ver." }],
-            },
-            ...messages.slice(0, -1).map((m: any) => ({
-                role: m.role === "user" ? "user" : "model",
-                parts: [{ text: m.content }],
-            })),
-        ];
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            systemInstruction: systemPrompt
+        })
+
+        const history = messages.slice(0, -1).map((m: any) => ({
+            role: m.role === "user" ? "user" : "model",
+            parts: [{ text: m.content }],
+        }));
 
         const chat = model.startChat({ history });
 
@@ -63,8 +64,8 @@ export async function POST(req: Request) {
         const text = response.text();
 
         return NextResponse.json({ text })
-    } catch (error) {
+    } catch (error: any) {
         console.error("AI Chat Error:", error)
-        return NextResponse.json({ error: "Yapay zeka asistanı şu an yanıt veremiyor." }, { status: 500 })
+        return NextResponse.json({ error: error.message || "Yapay zeka asistanı şu an yanıt veremiyor." }, { status: 500 })
     }
 }
