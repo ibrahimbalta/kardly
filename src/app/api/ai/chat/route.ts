@@ -89,9 +89,25 @@ export async function POST(req: Request) {
         return NextResponse.json({ text })
     } catch (error: any) {
         console.error("AI Chat Error Details:", error);
+
+        const errorMsg = error.message || "";
+
+        // Quota exceeded
+        if (errorMsg.includes("429") || errorMsg.includes("quota") || errorMsg.includes("Too Many Requests")) {
+            return NextResponse.json({
+                error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
+            }, { status: 429 })
+        }
+
+        // API Key issue
+        if (errorMsg.includes("API_KEY") || errorMsg.includes("401") || errorMsg.includes("403")) {
+            return NextResponse.json({
+                error: "AI servisi geçici olarak kullanılamıyor. Yönetici bilgilendirildi."
+            }, { status: 500 })
+        }
+
         return NextResponse.json({
-            error: error.message || "Bilinmeyen bir hata oluştu.",
-            suggestion: "Vercel environment variables içinde GEMINI_API_KEY'in doğru olduğundan emin olun."
+            error: "Bir hata oluştu. Lütfen tekrar deneyin."
         }, { status: 500 })
     }
 }
