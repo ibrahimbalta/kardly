@@ -381,7 +381,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
