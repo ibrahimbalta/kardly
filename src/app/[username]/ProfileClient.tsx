@@ -236,7 +236,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, trackEvent, setReviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -326,66 +326,12 @@ END:VCARD`
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
-
-        const validPrefixes = ["pattern_", "pro_", "retro_", "luxury_", "life_", "future_", "dream_", "dark_", "light_", "cyber_", "antique_", "liquid_", "pop_", "zen_", "adventure_", "celestial_", "minimal_", "ind_", "vibe_", "royal_", "tech_", "meta_"];
-        if (validPrefixes.some(p => profile.templateId?.startsWith(p))) {
-            return <NeonModernTemplate {...props} colorScheme={profile.templateId} tone={tone} toneStyle={toneStyle} />;
-        }
-
-        return <NeonModernTemplate {...props} colorScheme="black" tone={tone} toneStyle={toneStyle} />;
+        return <NeonModernTemplate {...props} colorScheme={profile.templateId || "black"} tone={tone} toneStyle={toneStyle} />;
     }
 
     return (
         <>
             {renderTemplate()}
-
-            <ReviewModal
-                isOpen={isReviewModalOpen}
-                onClose={() => setIsReviewModalOpen(false)}
-                onSubmit={async (newReview: any) => {
-                    try {
-                        const res = await fetch("/api/review/create", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ ...newReview, profileId: profile.id })
-                        })
-                        if (res.ok) {
-                            setReviewStatus("Yorumunuz iletildi, onay sonrası yayınlanacaktır!")
-                            setTimeout(() => setReviewStatus(null), 5000)
-                        }
-                    } catch (err) {
-                        console.error(err)
-                    }
-                }}
-                themeColor={activeAccent}
-                t={t}
-                toneStyle={toneStyle}
-            />
-
-            <SocialProof t={t} />
-
-            <AnimatePresence>
-                {reviewStatus && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-emerald-500 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-emerald-400"
-                    >
-                        <CheckCircle2 size={20} /> {reviewStatus}
-                    </motion.div>
-                )}
-                {copied && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-white text-black px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-indigo-100"
-                    >
-                        <CheckCircle2 size={20} className="text-indigo-600" /> Link Kopyalandı!
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </>
     )
 }
@@ -429,7 +375,7 @@ function BackgroundMusicPlayer({ theme, tone }: any) {
     );
 }
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -3155,6 +3101,54 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 </motion.div>
             </main>
             <BackgroundMusicPlayer theme={theme} tone={tone} />
+
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={async (newReview: any) => {
+                    try {
+                        const res = await fetch("/api/review/create", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ ...newReview, profileId: profile.id })
+                        })
+                        if (res.ok) {
+                            setReviewStatus("Yorumunuz iletildi, onay sonrası yayınlanacaktır!")
+                            setTimeout(() => setReviewStatus(null), 5000)
+                        }
+                    } catch (err) {
+                        console.error(err)
+                    }
+                }}
+                themeColor={theme.accent}
+                t={t}
+                toneStyle={toneStyle}
+            />
+
+            <SocialProof t={t} />
+
+            <AnimatePresence>
+                {reviewStatus && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-emerald-500 text-white px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-emerald-400"
+                    >
+                        <CheckCircle2 size={20} /> {reviewStatus}
+                    </motion.div>
+                )}
+                {copied && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[100] bg-white text-black px-8 py-4 rounded-full font-black shadow-2xl flex items-center gap-3 border border-indigo-100"
+                    >
+                        <CheckCircle2 size={20} className="text-indigo-600" /> Link Kopyalandı!
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
