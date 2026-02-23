@@ -3981,6 +3981,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
+        email: "",
         message: ""
     })
 
@@ -3989,7 +3990,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
     const handleSubmit = () => {
         if (!formData.name || !formData.phone) return
         onSubmit(formData)
-        setFormData({ name: "", phone: "", message: "" })
+        setFormData({ name: "", phone: "", email: "", message: "" })
         onClose()
     }
 
@@ -4004,7 +4005,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
             <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 40 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className={cn("relative w-full max-w-[400px] p-8 overflow-hidden", toneStyle?.rounded || "rounded-[3rem]")}
+                className={cn("relative w-full max-w-[420px] p-8 overflow-hidden", toneStyle?.rounded || "rounded-[3rem]")}
                 style={{
                     background: `linear-gradient(180deg, ${themeColor}15 0%, #0a0a0f 40%, #050508 100%)`,
                     border: `2px solid ${themeColor}40`,
@@ -4019,10 +4020,10 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                     <div className="flex justify-between items-start mb-8">
                         <div>
                             <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none mb-2">
-                                {lang === 'tr' ? "İletişime Geç" : "Let's Talk"}
+                                {t('contactMeTitle')}
                             </h3>
                             <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
-                                {lang === 'tr' ? "Seninle tanışmak için sabırsızlanıyorum" : "I'm looking forward to meeting you"}
+                                {t('contactMeSub')}
                             </p>
                         </div>
                         <button onClick={onClose} className="p-2 rounded-full hover:bg-white/5 transition-colors" style={{ color: themeColor }}>
@@ -4032,29 +4033,41 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
 
                     <div className="space-y-4">
                         <div className="space-y-1.5">
-                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "İsim Soyisim" : "Full Name"}</label>
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('fullNameLabel')}</label>
                             <input
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
-                                placeholder={lang === 'tr' ? "Adınız..." : "Your name..."}
+                                placeholder={t('namePlaceholder') || "..."}
                             />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "Telefon Numarası" : "Phone Number"}</label>
-                            <input
-                                type="tel"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
-                                placeholder="+90 ..."
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('phoneNumberLabel')}</label>
+                                <input
+                                    type="tel"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
+                                    placeholder="+90 ..."
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('emailAddressLabel')}</label>
+                                <input
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm focus:outline-none focus:border-white/30 transition-all font-medium"
+                                    placeholder="mail@..."
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{lang === 'tr' ? "Mesajınız" : "Message"}</label>
+                            <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-4">{t('messageLabel')}</label>
                             <textarea
                                 value={formData.message}
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -4070,7 +4083,7 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                             style={{ background: themeColor, boxShadow: `0 10px 40px ${themeColor}40` }}
                         >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
-                            <span className="relative z-10">{lang === 'tr' ? "BİLGİLERİMİ GÖNDER" : "SEND MY INFO"}</span>
+                            <span className="relative z-10">{t('sendMyInfoBtn')}</span>
                         </button>
                     </div>
                 </div>

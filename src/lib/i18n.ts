@@ -422,7 +422,25 @@ export const translations: any = {
         proofVcard: "Birisi rehbere ekledi! 🚀",
         proofShare: "Bu profil az önce paylaşıldı.",
         proofLocation: (city: string) => `${city}'den bir ziyaretçi bağlandı.`,
-        justNow: "AZ ÖNCE"
+        justNow: "AZ ÖNCE",
+
+        // Lead Modal
+        contactMeTitle: "İletişime Geç",
+        contactMeSub: "Seninle tanışmak için sabırsızlanıyorum",
+        fullNameLabel: "İsim Soyisim",
+        phoneNumberLabel: "Telefon Numarası",
+        emailAddressLabel: "E-posta Adresi",
+        messageLabel: "Mesajınız",
+        sendMyInfoBtn: "BİLGİLERİMİ GÖNDER",
+        leadSuccessMsg: "Mesajınız iletildi! En kısa sürede döneceğim.",
+        statusNew: "YENİ",
+        statusContacted: "İLETİŞİME GEÇİLDİ",
+        statusCompleted: "TAMAMLANDI",
+        totalLeads: "Toplam Talep",
+        newLeads: "Yeni Gelen",
+        contactedLeads: "Görüşülen",
+        completedLeads: "Tamamlanan",
+        sendEmail: "E-posta Gönder"
     },
     en: {
         // Profile & Appointments
@@ -847,6 +865,24 @@ export const translations: any = {
         proofVcard: "Someone added to contacts! 🚀",
         proofShare: "This profile was just shared.",
         proofLocation: (city: string) => `A visitor from ${city} connected.`,
-        justNow: "JUST NOW"
+        justNow: "JUST NOW",
+
+        // Lead Modal
+        contactMeTitle: "Let's Talk",
+        contactMeSub: "I'm looking forward to meeting you",
+        fullNameLabel: "Full Name",
+        phoneNumberLabel: "Phone Number",
+        emailAddressLabel: "Email Address",
+        messageLabel: "Message",
+        sendMyInfoBtn: "SEND MY INFO",
+        leadSuccessMsg: "Message sent! I'll get back to you soon.",
+        statusNew: "NEW",
+        statusContacted: "CONTACTED",
+        statusCompleted: "COMPLETED",
+        totalLeads: "Total Leads",
+        newLeads: "New Incoming",
+        contactedLeads: "Contacted",
+        completedLeads: "Completed",
+        sendEmail: "Send Email"
     }
 }
