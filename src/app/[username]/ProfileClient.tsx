@@ -311,6 +311,7 @@ END:VCARD`
                 }}
                 themeColor={activeAccent}
                 t={t}
+                toneStyle={toneStyle}
             />
 
             <SocialProof t={t} />
@@ -3157,7 +3158,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     )
 }
 
-function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
+function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t, toneStyle }: any) {
     const [formData, setFormData] = useState({
         name: "",
         title: "",
@@ -3196,7 +3197,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
             <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                className="relative w-full max-w-[380px] rounded-[2.5rem] p-6 backdrop-blur-2xl overflow-y-auto max-h-[95vh] no-scrollbar"
+                className={cn("relative w-full max-w-[380px] p-6 backdrop-blur-2xl overflow-y-auto max-h-[95vh] no-scrollbar", toneStyle?.rounded || "rounded-[2.5rem]")}
                 style={{
                     background: `linear-gradient(180deg, ${themeColor}18 0%, #0a0a0f 30%, #050508 100%)`,
                     borderWidth: '2px',
@@ -3212,8 +3213,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                 <div className="relative z-10">
                     <div className="flex justify-between items-center mb-6">
                         <div className="space-y-0.5">
-                            <h3 className="text-xl font-black uppercase tracking-tighter" style={{ color: themeColor }}>{t.leaveComment}</h3>
-                            <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: `${themeColor}80` }}>{t.leaveCommentSub}</p>
+                            <h3 className={cn("text-xl font-black uppercase tracking-tighter", toneStyle?.font)} style={{ color: themeColor }}>{t.leaveComment}</h3>
+                            <p className={cn("text-[9px] font-bold uppercase tracking-widest", toneStyle?.font)} style={{ color: `${themeColor}80` }}>{t.leaveCommentSub}</p>
                         </div>
                         <button
                             onClick={onClose}
@@ -3227,8 +3228,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                     <div className="space-y-5">
                         {/* Rating */}
                         <div className="grid grid-cols-1 gap-4">
-                            <div className="flex flex-col items-center gap-2 py-3 rounded-2xl" style={{ backgroundColor: `${themeColor}10`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}40` }}>
-                                <span className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: `${themeColor}90` }}>Puan Ver</span>
+                            <div className={cn("flex flex-col items-center gap-2 py-3 border", toneStyle?.rounded?.replace('[4rem]', '[2rem]').replace('[3rem]', '[1.5rem]').replace('[2.5rem]', '[1.2rem]'))} style={{ backgroundColor: `${themeColor}10`, borderStyle: 'solid', borderColor: `${themeColor}40` }}>
+                                <span className={cn("text-[8px] font-black uppercase tracking-[0.2em]", toneStyle?.font)} style={{ color: `${themeColor}90` }}>{t.rate || "Puan Ver"}</span>
                                 <div className="flex gap-1.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <button
@@ -3252,40 +3253,40 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'male' })}
-                                    className="flex-1 relative flex items-center gap-3 p-3 rounded-2xl transition-all duration-300"
+                                    className={cn("flex-1 relative flex items-center gap-3 p-3 border transition-all duration-300", toneStyle?.rounded?.replace('[4rem]', '[2rem]').replace('[3rem]', '[1.5rem]').replace('[2.5rem]', '[1.2rem]'))}
                                     style={formData.gender === 'male' ? {
                                         backgroundColor: `${themeColor}15`,
-                                        borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}60`,
+                                        borderStyle: 'solid', borderColor: `${themeColor}60`,
                                         color: themeColor
                                     } : {
                                         backgroundColor: 'rgba(255,255,255,0.03)',
-                                        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.08)',
+                                        borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.08)',
                                         color: 'rgba(255,255,255,0.2)'
                                     }}
                                 >
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={formData.gender === 'male' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                                    <div className={cn("w-8 h-8 flex items-center justify-center rounded-lg", toneStyle?.rounded?.replace('[4rem]', '[1rem]').replace('[3rem]', '[0.8rem]').replace('[2.5rem]', '[0.6rem]'))} style={formData.gender === 'male' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
                                         <User size={16} />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-wider">{t.male}</span>
+                                    <span className={cn("text-[10px] font-black uppercase tracking-wider", toneStyle?.font)}>{t.male}</span>
                                 </button>
 
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'female' })}
-                                    className="flex-1 relative flex items-center gap-3 p-3 rounded-2xl transition-all duration-300"
+                                    className={cn("flex-1 relative flex items-center gap-3 p-3 border transition-all duration-300", toneStyle?.rounded?.replace('[4rem]', '[2rem]').replace('[3rem]', '[1.5rem]').replace('[2.5rem]', '[1.2rem]'))}
                                     style={formData.gender === 'female' ? {
                                         backgroundColor: `${themeColor}15`,
-                                        borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}60`,
+                                        borderStyle: 'solid', borderColor: `${themeColor}60`,
                                         color: themeColor
                                     } : {
                                         backgroundColor: 'rgba(255,255,255,0.03)',
-                                        borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.08)',
+                                        borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.08)',
                                         color: 'rgba(255,255,255,0.2)'
                                     }}
                                 >
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={formData.gender === 'female' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                                    <div className={cn("w-8 h-8 flex items-center justify-center rounded-lg", toneStyle?.rounded?.replace('[4rem]', '[1rem]').replace('[3rem]', '[0.8rem]').replace('[2.5rem]', '[0.6rem]'))} style={formData.gender === 'female' ? { backgroundColor: themeColor, color: 'white' } : { backgroundColor: 'rgba(255,255,255,0.05)' }}>
                                         <UserCircle size={16} />
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-wider">{t.female}</span>
+                                    <span className={cn("text-[10px] font-black uppercase tracking-wider", toneStyle?.font)}>{t.female}</span>
                                 </button>
                             </div>
                         </div>
@@ -3295,8 +3296,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                             <input
                                 type="text"
                                 placeholder={t.yourName}
-                                className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium"
-                                style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
+                                className={cn("w-full px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium border", toneStyle?.rounded?.replace('[4rem]', '[1.5rem]').replace('[3rem]', '[1rem]').replace('[2.5rem]', '[0.8rem]'))}
+                                style={{ backgroundColor: `${themeColor}08`, borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
                                 onBlur={(e) => { e.target.style.borderColor = `${themeColor}30`; e.target.style.boxShadow = 'none'; }}
                                 value={formData.name}
@@ -3305,8 +3306,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                             <input
                                 type="text"
                                 placeholder={t.yourTitle}
-                                className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium"
-                                style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
+                                className={cn("w-full px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium border", toneStyle?.rounded?.replace('[4rem]', '[1.5rem]').replace('[3rem]', '[1rem]').replace('[2.5rem]', '[0.8rem]'))}
+                                style={{ backgroundColor: `${themeColor}08`, borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
                                 onBlur={(e) => { e.target.style.borderColor = `${themeColor}30`; e.target.style.boxShadow = 'none'; }}
                                 value={formData.title}
@@ -3315,8 +3316,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                             <textarea
                                 rows={3}
                                 placeholder={t.yourMessage}
-                                className="w-full rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium resize-none"
-                                style={{ backgroundColor: `${themeColor}08`, borderWidth: '1px', borderStyle: 'solid', borderColor: `${themeColor}30` }}
+                                className={cn("w-full px-4 py-3 text-white placeholder:text-white/20 focus:outline-none transition-all text-xs font-medium resize-none border", toneStyle?.rounded?.replace('[4rem]', '[1.5rem]').replace('[3rem]', '[1rem]').replace('[2.5rem]', '[0.8rem]'))}
+                                style={{ backgroundColor: `${themeColor}08`, borderStyle: 'solid', borderColor: `${themeColor}30` }}
                                 onFocus={(e) => { e.target.style.borderColor = `${themeColor}80`; e.target.style.boxShadow = `0 0 15px ${themeColor}20`; }}
                                 onBlur={(e) => { e.target.style.borderColor = `${themeColor}30`; e.target.style.boxShadow = 'none'; }}
                                 value={formData.content}
@@ -3327,7 +3328,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, themeColor, t }: any) {
                         <button
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className="group relative w-full py-4 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-30 disabled:hover:scale-100 overflow-hidden"
+                            className={cn("group relative w-full py-4 text-white font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-30 disabled:hover:scale-100 overflow-hidden shadow-xl", toneStyle?.rounded, toneStyle?.font)}
                             style={{ boxShadow: `0 0 30px ${themeColor}30, 0 10px 30px -10px ${themeColor}40` }}
                         >
                             <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}aa)` }} />
