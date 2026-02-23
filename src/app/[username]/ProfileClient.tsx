@@ -369,8 +369,6 @@ END:VCARD`
 
     const toneStyle = getToneStyle(profile.tone || "profesyonel")
 
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "")
-
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
