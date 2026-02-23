@@ -3799,79 +3799,102 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts }: any) 
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/85 backdrop-blur-md"
             />
             <motion.div
                 initial={{ opacity: 0, y: 100, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 100, scale: 0.9 }}
-                className={cn("relative w-full max-w-sm bg-zinc-900 border border-white/10 p-8 rounded-[2.5rem] shadow-2xl overflow-hidden")}
+                className={cn("relative w-full max-w-[400px] p-10 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] overflow-hidden border border-white/5")}
+                style={{
+                    background: 'linear-gradient(180deg, #121214 0%, #050505 100%)'
+                }}
             >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+                {/* Top Inner Light Effect */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
 
-                <div className="flex flex-col items-center text-center space-y-6">
-                    <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 shadow-2xl shadow-indigo-500/20">
-                        <Smartphone size={32} />
+                <div className="flex flex-col items-center text-center space-y-8 relative z-10">
+                    {/* Header Icon */}
+                    <div className="relative">
+                        <div className="absolute inset-0 blur-3xl opacity-30 bg-indigo-500/50 rounded-full" />
+                        <div className="w-20 h-20 rounded-[2rem] bg-[#1a1a2e] flex items-center justify-center text-indigo-400 border border-indigo-500/20 shadow-inner relative overflow-hidden group">
+                            <motion.div
+                                animate={{ opacity: [0.1, 0.3, 0.1] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                                className="absolute inset-0 bg-indigo-500"
+                            />
+                            <Smartphone size={32} className="relative z-10" />
+                        </div>
                     </div>
-                    <div>
-                        <h3 className="text-xl font-black text-white uppercase tracking-tight">{t.addToWallet || "Cüzdana Ekle"}</h3>
-                        <p className="text-sm text-white/40 mt-1">{t.savePassDesc || "Dijital kartınızı telefonunuza kaydedin."}</p>
+
+                    <div className="space-y-3">
+                        <h3 className="text-3xl font-serif font-black text-white px-2 leading-tight">
+                            {t.addToWallet || "ADD TO WALLET"}
+                        </h3>
+                        <p className="text-xs font-bold text-white/30 tracking-[0.05em] uppercase">
+                            {t.savePassDesc || "Save your digital card to your phone."}
+                        </p>
                     </div>
 
                     <div className="w-full space-y-3">
+                        {/* Add to Contacts */}
                         <button
                             onClick={() => {
                                 handleAddToContacts()
                                 onClose()
                             }}
-                            className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
+                            className="w-full flex items-center justify-between p-5 bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 rounded-[1.8rem] transition-all group active:scale-[0.98]"
                         >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
-                                    <UserPlus size={20} />
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-[1.2rem] bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-all border border-indigo-500/10">
+                                    <UserPlus size={22} />
                                 </div>
-                                <span className="font-bold text-white tracking-tight">{t.vcfLabel || "Rehbere Kaydet (VCF)"}</span>
+                                <span className="font-serif text-lg font-bold text-white/80">{t.vcfLabel || "Add to Contacts (VCF)"}</span>
                             </div>
-                            <ArrowRight size={16} className="text-white/20" />
+                            <ArrowRight size={18} className="text-white/5 group-hover:text-white/20 transition-colors mr-1" />
                         </button>
 
+                        {/* Apple Wallet */}
                         <button
                             onClick={() => {
                                 handleAddToContacts()
                                 onClose()
                             }}
-                            className="w-full flex items-center justify-between p-4 bg-black border border-white/10 rounded-2xl transition-all group overflow-hidden relative"
+                            className="w-full flex items-center justify-between p-5 bg-black border border-white/10 rounded-[1.8rem] transition-all group relative overflow-hidden active:scale-[0.98] shadow-xl"
                         >
+                            <div className="flex items-center gap-4 z-10">
+                                <div className="w-12 h-12 rounded-[1.2rem] bg-white flex items-center justify-center text-black group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                                    <Smartphone size={22} />
+                                </div>
+                                <span className="font-serif text-lg font-bold text-white">Apple Wallet</span>
+                            </div>
                             <div className="flex items-center gap-3 z-10">
-                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-black group-hover:scale-110 transition-transform">
-                                    <Smartphone size={20} />
-                                </div>
-                                <span className="font-bold text-white tracking-tight">Apple Wallet</span>
+                                <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">{t.current || "GÜNCEL"}</span>
                             </div>
-                            <span className="text-[10px] font-black text-white/20 uppercase tracking-widest z-10">GÜNCEL</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
 
+                        {/* Google Wallet */}
                         <button
                             onClick={() => {
                                 handleAddToContacts()
                                 onClose()
                             }}
-                            className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
+                            className="w-full flex items-center justify-between p-5 bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 rounded-[1.8rem] transition-all group active:scale-[0.98]"
                         >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                                    <Globe size={20} />
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-[1.2rem] bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-all border border-indigo-500/10">
+                                    <Globe size={22} />
                                 </div>
-                                <span className="font-bold text-white tracking-tight">Google Wallet</span>
+                                <span className="font-serif text-lg font-bold text-white/80">Google Wallet</span>
                             </div>
-                            <ArrowRight size={16} className="text-white/20" />
+                            <ArrowRight size={18} className="text-white/5 group-hover:text-white/20 transition-colors mr-1" />
                         </button>
                     </div>
 
                     <button
                         onClick={onClose}
-                        className="text-xs font-black text-white/20 hover:text-white uppercase tracking-[0.2em] pt-4"
+                        className="text-[12px] font-black text-white/20 hover:text-white/60 uppercase tracking-[0.5em] transition-all pt-6"
                     >
                         {t.cancel || "VAZGEÇ"}
                     </button>
