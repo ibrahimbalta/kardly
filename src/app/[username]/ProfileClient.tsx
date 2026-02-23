@@ -2703,7 +2703,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         {layoutMode === 'marquee' ? (
                                             <div
                                                 className="relative h-16 flex items-center overflow-visible"
-                                                style={{ clipPath: 'inset(-300px -300px -300px -300px)' }} // Hem dikey hem yatay taşmaya izin verir
+                                                style={{ clipPath: 'inset(-300px 0 -300px 0)' }} // Sadece dikeyde taşmaya izin verir, yanları keser
                                             >
                                                 <div className="animate-marquee-right flex gap-6 h-full items-center overflow-visible">
                                                     {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
