@@ -1498,15 +1498,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         <button
                                                             onClick={() => toggleLinkAction(i)}
                                                             className={cn(
-                                                                "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all",
-                                                                link.isAction ? "bg-amber-500/20 text-amber-500 border border-amber-500/20" : "bg-white/5 text-white/30 border border-white/5 hover:bg-white/10"
+                                                                "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all shadow-sm",
+                                                                link.isAction ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-500 border border-slate-200 hover:bg-primary/10 hover:text-primary"
                                                             )}
                                                         >
                                                             {link.isAction ? t('buttonDone') : t('makeButton')}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteLink(i)}
-                                                            className="opacity-0 group-hover:opacity-100 w-7 h-7 flex items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
+                                                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
                                                         >
                                                             <X className="w-4 h-4" />
                                                         </button>
@@ -1844,7 +1844,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="absolute top-4 right-4">
                                             <button
                                                 onClick={() => handleDeleteProduct(product.id)}
-                                                className="p-2 bg-rose-500/20 text-rose-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="p-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-sm"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
@@ -1869,7 +1869,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     })
                                                     setShowProductModal(true)
                                                 }}
-                                                className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all"
+                                                className="flex-1 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-primary/10 hover:text-primary transition-all shadow-sm"
                                             >
                                                 {t('edit')}
                                             </button>
@@ -1925,14 +1925,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 setNewService(service)
                                                 setShowServiceModal(true)
                                             }}
-                                            className="p-3 bg-white/5 border border-white/10 text-white/40 rounded-xl hover:bg-white/10 hover:text-white transition-all shadow-sm"
+                                            className="p-3 bg-slate-50 border border-slate-200 text-slate-500 rounded-xl hover:bg-primary/10 hover:text-primary transition-all shadow-sm"
                                             title={t('edit')}
                                         >
                                             <Sparkles className="w-5 h-5" />
                                         </button>
                                         <button
                                             onClick={() => handleDeleteService(index)}
-                                            className="flex items-center gap-2 p-3 bg-rose-500/10 text-rose-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white"
+                                            className="flex items-center gap-2 p-3 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>
