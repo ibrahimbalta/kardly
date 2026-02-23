@@ -353,44 +353,6 @@ END:VCARD`
     )
 }
 
-function BackgroundMusicPlayer({ theme, tone }: any) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-
-    const togglePlay = () => {
-        if (!audioRef.current) return;
-        if (isPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play().catch(e => console.log("Audio play error:", e));
-        }
-        setIsPlaying(!isPlaying);
-    };
-
-    return (
-        <div className="fixed bottom-6 right-6 z-[60]">
-            <audio ref={audioRef} loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
-            <motion.button
-                onClick={togglePlay}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className={cn("w-12 h-12 flex items-center justify-center border shadow-2xl relative overflow-hidden backdrop-blur-xl transition-all", theme.btn, theme.border, "rounded-full")}
-            >
-                {isPlaying && (
-                    <motion.div
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.1, 0.3] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute inset-0"
-                        style={{ backgroundColor: theme.accent }}
-                    />
-                )}
-                <div className="relative z-10">
-                    {isPlaying ? <Volume2 size={20} style={{ color: theme.accent }} /> : <VolumeX size={20} className="opacity-40" />}
-                </div>
-            </motion.button>
-        </div>
-    );
-}
 
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
@@ -3044,7 +3006,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </div>
                 </motion.div>
             </main>
-            <BackgroundMusicPlayer theme={theme} tone={tone} />
 
             <ReviewModal
                 isOpen={isReviewModalOpen}
