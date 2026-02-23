@@ -50,7 +50,9 @@ import {
     Layout,
     TrendingUp,
     Brain,
-    Flame
+    Flame,
+    Bot,
+    Send
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -105,6 +107,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [isQrOpen, setIsQrOpen] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
+    const [isAIChatOpen, setIsAIChatOpen] = useState(false)
+    const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     useEffect(() => {
@@ -238,7 +242,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -3114,6 +3118,39 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* AI Floating Button */}
+            <motion.button
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsAIChatOpen(true)}
+                className="fixed bottom-8 right-8 z-[150] w-16 h-16 rounded-full flex items-center justify-center shadow-2xl overflow-hidden group"
+                style={{
+                    background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`,
+                    boxShadow: `0 0 30px ${theme.accent}60, 0 10px 40px -10px rgba(0,0,0,0.5)`
+                }}
+            >
+                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Bot size={28} className="text-white relative z-10" />
+                <motion.div
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 bg-white rounded-full"
+                />
+            </motion.button>
+
+            <AIChatAssistant
+                isOpen={isAIChatOpen}
+                onClose={() => setIsAIChatOpen(false)}
+                profile={profile}
+                t={t}
+                themeColor={theme.accent}
+                toneStyle={toneStyle}
+                messages={chatMessages}
+                setMessages={setChatMessages}
+            />
         </div>
     )
 }
@@ -4002,6 +4039,146 @@ function LeadModal({ isOpen, onClose, onSubmit, themeColor, t, lang, toneStyle }
                         >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
                             <span className="relative z-10">{t.sendMyInfoBtn}</span>
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    )
+}
+
+function AIChatAssistant({ isOpen, onClose, profile, t, themeColor, toneStyle, messages, setMessages }: any) {
+    const [input, setInput] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const scrollRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+        }
+    }, [messages, isLoading])
+
+    useEffect(() => {
+        if (isOpen && messages.length === 0) {
+            setMessages([{
+                role: "assistant",
+                content: (profile.lang === 'tr' || !profile.lang)
+                    ? `Merhaba! Ben ${profile.user.name}'in dijital asistanıyım. Size nasıl yardımcı olabilirim?`
+                    : `Hello! I'm ${profile.user.name}'s digital assistant. How can I help you?`
+            }])
+        }
+    }, [isOpen, messages, profile.user.name, profile.lang, setMessages])
+
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return
+
+        const userMsg = { role: "user", content: input }
+        const newMessages = [...messages, userMsg]
+        setMessages(newMessages)
+        setInput("")
+        setIsLoading(true)
+
+        try {
+            const res = await fetch("/api/ai/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ messages: newMessages, profile })
+            })
+            const data = await res.json()
+            if (data.text) {
+                setMessages([...newMessages, { role: "assistant", content: data.text }])
+            }
+        } catch (error) {
+            console.error("Chat Error:", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    if (!isOpen) return null
+
+    return (
+        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/40 backdrop-blur-md"
+                onClick={onClose}
+            />
+            <motion.div
+                initial={{ opacity: 0, y: 100, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 100, scale: 0.9 }}
+                className={cn("relative w-full max-w-[450px] h-[600px] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-white/10", toneStyle?.rounded || "rounded-[2.5rem]")}
+                style={{
+                    background: `linear-gradient(180deg, ${themeColor}15 0%, #0a0a0f 40%, #050508 100%)`,
+                }}
+            >
+                {/* Header */}
+                <div className="p-6 pb-4 flex items-center justify-between border-b border-white/5 relative z-10">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center animate-pulse" style={{ backgroundColor: `${themeColor}20`, color: themeColor }}>
+                            <Bot size={24} />
+                        </div>
+                        <div>
+                            <h3 className={cn("text-sm font-black text-white uppercase tracking-tighter", toneStyle?.font)}>Kardly AI</h3>
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">ÇEVRİMİÇİ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/40 hover:text-white transition-colors">
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Messages */}
+                <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative z-10">
+                    {messages.map((m: any, i: number) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            className={cn(
+                                "max-w-[85%] p-4 text-xs font-medium leading-relaxed",
+                                m.role === "user"
+                                    ? "ml-auto bg-white/5 text-white border border-white/5 " + (toneStyle?.rounded?.replace('[2.5rem]', '[1.2rem]') || "rounded-2xl")
+                                    : "bg-indigo-500/10 text-white/90 border border-indigo-500/10 " + (toneStyle?.rounded?.replace('[2.5rem]', '[1.2rem]') || "rounded-2xl")
+                            )}
+                            style={m.role === "assistant" ? { borderColor: `${themeColor}20`, backgroundColor: `${themeColor}10` } : {}}
+                        >
+                            {m.content}
+                        </motion.div>
+                    ))}
+                    {isLoading && (
+                        <div className="flex gap-1.5 p-4 bg-white/5 rounded-2xl w-16 items-center justify-center">
+                            <span className="w-1 h-1 bg-white/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                            <span className="w-1 h-1 bg-white/40 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                            <span className="w-1 h-1 bg-white/40 rounded-full animate-bounce" />
+                        </div>
+                    )}
+                </div>
+
+                {/* Input */}
+                <div className="p-6 pt-2 relative z-10">
+                    <div className={cn("relative flex items-center transition-all bg-white/5 border border-white/10 pr-2", toneStyle?.rounded?.replace('[2.5rem]', '[1.5rem]') || "rounded-full")}>
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                            placeholder="Bir şey sor..."
+                            className="bg-transparent border-none focus:ring-0 text-white text-xs p-4 flex-1 placeholder:text-white/20"
+                        />
+                        <button
+                            onClick={handleSend}
+                            disabled={!input.trim() || isLoading}
+                            className="w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30 disabled:hover:scale-100 hover:scale-105 active:scale-95"
+                            style={{ backgroundColor: themeColor, color: 'white' }}
+                        >
+                            <Send size={18} />
                         </button>
                     </div>
                 </div>
