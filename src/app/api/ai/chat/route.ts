@@ -105,8 +105,23 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             console.error("Gemini API Error:", JSON.stringify(data));
-            const errMsg = data?.error?.message || JSON.stringify(data);
-            return NextResponse.json({ error: `API Hatası: ${errMsg}` }, { status: response.status });
+            const errMsg = data?.error?.message || "";
+
+            // Quota / Rate limit error
+            if (response.status === 429 || errMsg.includes("quota") || errMsg.includes("429")) {
+                return NextResponse.json({
+                    error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
+                }, { status: 429 });
+            }
+
+            // API Key error
+            if (response.status === 401 || response.status === 403 || errMsg.includes("API_KEY")) {
+                return NextResponse.json({
+                    error: "AI servisi geçici olarak kullanılamıyor."
+                }, { status: 500 });
+            }
+
+            return NextResponse.json({ error: "Bir hata oluştu. Lütfen tekrar deneyin." }, { status: 500 });
         }
 
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -120,7 +135,7 @@ export async function POST(req: Request) {
     } catch (error: any) {
         console.error("AI Chat Full Error:", error);
         return NextResponse.json({
-            error: `Bağlantı Hatası: ${error.message || "Bilinmeyen hata"}`
+            error: "Bir bağlantı hatası oluştu. Lütfen tekrar deneyin."
         }, { status: 500 })
     }
 }
