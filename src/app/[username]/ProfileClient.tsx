@@ -1886,32 +1886,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-emerald-900",
             icon: "text-emerald-600",
             special: "nature_dawn"
-        },
-        cyber_glitch: {
-            bg: "bg-[#030303]",
-            card: "bg-black/80",
-            text: "text-white",
-            subtext: "text-cyan-400",
-            border: "border-cyan-500/30",
-            glow: "shadow-[0_0_40px_rgba(6,182,212,0.3)]",
-            accent: "#06b6d4",
-            btn: "bg-black border-cyan-500/20",
-            btnText: "text-cyan-100",
-            icon: "text-cyan-400",
-            special: "cyber_glitch"
-        },
-        cyber_vapor: {
-            bg: "bg-[#0b0b1a]",
-            card: "bg-black/40",
-            text: "text-[#ff71ce]",
-            subtext: "text-[#01cdfe]",
-            border: "border-[#ff71ce]/30",
-            glow: "shadow-[0_0_40px_rgba(255,113,206,0.3)]",
-            accent: "#ff71ce",
-            btn: "bg-black border-[#01cdfe]/20",
-            btnText: "text-[#01cdfe]",
-            icon: "text-[#ff71ce]",
-            special: "cyber_vapor"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
