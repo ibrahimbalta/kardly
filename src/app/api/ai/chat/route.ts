@@ -47,8 +47,8 @@ export async function POST(req: Request) {
         `.trim()
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash"
-        }, { apiVersion: 'v1' })
+            model: "gemini-1.5-flash-latest"
+        })
 
         // Filter out error messages
         const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
