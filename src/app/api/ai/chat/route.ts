@@ -44,8 +44,8 @@ export async function POST(req: Request) {
         `.trim()
 
         const API_KEY = process.env.GEMINI_API_KEY;
-        const MODEL = "gemini-2.0-flash";
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+        const MODEL = "gemini-1.5-flash";
+        const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${API_KEY}`;
 
         // Filter out error messages
         const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
@@ -105,24 +105,10 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             console.error("Gemini API Error:", JSON.stringify(data));
-            const errMsg = data?.error?.message || "";
-
-            // Quota / Rate limit error
-            if (response.status === 429 || errMsg.includes("quota") || errMsg.includes("429")) {
-                const keyHint = API_KEY ? `...${API_KEY.slice(-4)}` : "YOK";
-                return NextResponse.json({
-                    error: `AI kota aşıldı (Anahtar: ${keyHint}). Vercel env GEMINI_API_KEY güncelleyin ve Redeploy yapın.`
-                }, { status: 429 });
-            }
-
-            // API Key error
-            if (response.status === 401 || response.status === 403 || errMsg.includes("API_KEY")) {
-                return NextResponse.json({
-                    error: "AI servisi geçici olarak kullanılamıyor."
-                }, { status: 500 });
-            }
-
-            return NextResponse.json({ error: "Bir hata oluştu. Lütfen tekrar deneyin." }, { status: 500 });
+            const errMsg = data?.error?.message || JSON.stringify(data);
+            return NextResponse.json({
+                error: `SİSTEM MESAJI (DEBUG): ${errMsg}`
+            }, { status: response.status });
         }
 
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
