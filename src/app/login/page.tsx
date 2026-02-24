@@ -1,7 +1,7 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import { Layout, Mail, ArrowRight, Sparkles, AlertCircle } from "lucide-react"
+import { Layout, Mail, ArrowRight, Sparkles, AlertCircle, Zap } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState, Suspense } from "react"
 import Link from "next/link"
@@ -17,16 +17,33 @@ export default function LoginPage() {
 
 function LoginLogic() {
     const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [loginError, setLoginError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const searchParams = useSearchParams()
     const error = searchParams.get("error")
 
     const handleEmailLogin = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!email) return
+        if (!email || !password) return
         setIsLoading(true)
-        await signIn("credentials", { email, callbackUrl: "/dashboard" })
-        setIsLoading(false)
+        setLoginError("")
+
+        const result = await signIn("credentials", {
+            email,
+            password,
+            redirect: false,
+            callbackUrl: "/dashboard"
+        })
+
+        if (result?.error) {
+            setLoginError("Email veya şifre hatalı.")
+            setIsLoading(false)
+        } else if (result?.url) {
+            window.location.href = result.url
+        } else {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -112,6 +129,17 @@ function LoginLogic() {
                         </motion.div>
                     )}
 
+                    {loginError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-600"
+                        >
+                            <AlertCircle size={20} className="shrink-0" />
+                            <p className="text-xs font-bold leading-relaxed">{loginError}</p>
+                        </motion.div>
+                    )}
+
                     <div className="mb-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-100 mb-6">
                             <Sparkles size={12} className="text-rose-500" />
@@ -138,6 +166,24 @@ function LoginLogic() {
                                 />
                             </div>
                         </div>
+
+                        <div className="grid gap-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Şifreniz</label>
+                            <div className="relative group">
+                                <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
+                                    <Zap className="w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
+                                </div>
+                                <input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    required
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -148,7 +194,7 @@ function LoginLogic() {
                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                     Giriş Yapılıyor
                                 </div>
-                            ) : "Email İle Hızlı Giriş"}
+                            ) : "Email İle Giriş Yap"}
                         </button>
                         <p className="text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">Şifresiz ve Güvenli Erişim</p>
                     </form>

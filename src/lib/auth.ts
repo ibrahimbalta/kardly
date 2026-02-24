@@ -12,24 +12,32 @@ export const authOptions: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy",
             allowDangerousEmailAccountLinking: true,
         }),
-        // TEST İÇİN: Herhangi bir email ile giriş yapmayı sağlar
         CredentialsProvider({
-            name: "Test Girişi",
+            name: "Email Girişi",
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "test@example.com" }
+                email: { label: "Email", type: "text" },
+                password: { label: "Şifre", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.email) return null
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error("Email ve şifre gereklidir.")
+                }
 
-                // Kullanıcıyı bul veya oluştur
-                const user = await prisma.user.upsert({
-                    where: { email: credentials.email },
-                    update: {},
-                    create: {
-                        email: credentials.email,
-                        name: credentials.email.split('@')[0],
-                    }
+                const user = await prisma.user.findUnique({
+                    where: { email: credentials.email }
                 })
+
+                if (!user || !user.password) {
+                    throw new Error("Kullanıcı bulunamadı veya şifre ayarlanmamış.")
+                }
+
+                const bcrypt = await import("bcryptjs")
+                const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+
+                if (!isPasswordValid) {
+                    throw new Error("Hatalı şifre.")
+                }
+
                 return user
             }
         })
