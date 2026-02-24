@@ -897,7 +897,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-[#f43f5e]",
             icon: "text-[#f43f5e]"
         },
-        cyber: {
+        neon_cyber: {
             bg: "bg-[#00050a]",
             card: "bg-black/40",
             text: "text-[#0ef]",
@@ -910,7 +910,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-[#f0f]",
             special: "cyber"
         },
-        galaxy: {
+        neon_galaxy: {
             bg: "bg-[#050010]",
             card: "bg-black/40",
             text: "text-[#a855f7]",
@@ -923,7 +923,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-cyan-400",
             special: "galaxy"
         },
-        acid: {
+        neon_acid: {
             bg: "bg-[#051000]",
             card: "bg-black/40",
             text: "text-[#bef264]",
@@ -936,7 +936,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-yellow-400",
             special: "acid"
         },
-        candy: {
+        neon_candy: {
             bg: "bg-[#10000a]",
             card: "bg-black/40",
             text: "text-[#f472b6]",
@@ -949,7 +949,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-violet-400",
             special: "candy"
         },
-        aurora: {
+        neon_aurora: {
             bg: "bg-[#000a0a]",
             card: "bg-black/40",
             text: "text-[#2dd4bf]",
@@ -961,6 +961,45 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-white",
             icon: "text-indigo-400",
             special: "aurora"
+        },
+        neon_black: {
+            bg: "bg-[#020617]",
+            card: "bg-black/80",
+            text: "text-white",
+            subtext: "text-white/40",
+            border: "border-blue-500/30",
+            glow: "shadow-[0_0_40px_rgba(59,130,246,0.5)]",
+            accent: "#3b82f6",
+            btn: "bg-black/60 border-blue-500/40",
+            btnText: "text-white",
+            icon: "text-[#3b82f6]",
+            special: "neon_modern"
+        },
+        neon_blue: {
+            bg: "bg-[#0c1e35]",
+            card: "bg-[#0f2a4a]/40",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/20",
+            glow: "shadow-[0_0_20px_rgba(56,189,248,0.5)]",
+            accent: "#38bdf8",
+            btn: "bg-[#0f2a4a]/60 border-blue-500/30",
+            btnText: "text-white",
+            icon: "text-[#38bdf8]",
+            special: "neon_blue"
+        },
+        neon_purple: {
+            bg: "bg-[#13072e]",
+            card: "bg-[#1a0b3d]/40",
+            text: "text-white",
+            subtext: "text-purple-200/60",
+            border: "border-purple-500/20",
+            glow: "shadow-[0_0_20px_rgba(168,85,247,0.5)]",
+            accent: "#a855f7",
+            btn: "bg-[#1a0b3d]/60 border-purple-500/30",
+            btnText: "text-white",
+            icon: "text-[#a855f7]",
+            special: "neon_purple"
         },
         // Artistic & Patterned Themes
         pattern_ottoman: {
@@ -1821,6 +1860,58 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-white",
             icon: "text-[#0ea5e9]",
             special: "meta_pixel"
+        },
+        minimal_glass: {
+            bg: "bg-[#f8fafc]",
+            card: "bg-white/10",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-white/40",
+            glow: "shadow-[0_20px_50px_rgba(0,0,0,0.05)]",
+            accent: "#38bdf8",
+            btn: "bg-white/20 border-white/60",
+            btnText: "text-slate-900",
+            icon: "text-sky-500",
+            special: "minimal_glass"
+        },
+        nature_dawn: {
+            bg: "bg-[#fdfcf0]",
+            card: "bg-white/80",
+            text: "text-emerald-950",
+            subtext: "text-amber-800/60",
+            border: "border-emerald-100",
+            glow: "shadow-[0_0_40px_rgba(52,211,153,0.1)]",
+            accent: "#059669",
+            btn: "bg-emerald-50 border-emerald-100",
+            btnText: "text-emerald-900",
+            icon: "text-emerald-600",
+            special: "nature_dawn"
+        },
+        cyber_glitch: {
+            bg: "bg-[#030303]",
+            card: "bg-black/80",
+            text: "text-white",
+            subtext: "text-cyan-400",
+            border: "border-cyan-500/30",
+            glow: "shadow-[0_0_40px_rgba(6,182,212,0.3)]",
+            accent: "#06b6d4",
+            btn: "bg-black border-cyan-500/20",
+            btnText: "text-cyan-100",
+            icon: "text-cyan-400",
+            special: "cyber_glitch"
+        },
+        cyber_vapor: {
+            bg: "bg-[#0b0b1a]",
+            card: "bg-black/40",
+            text: "text-[#ff71ce]",
+            subtext: "text-[#01cdfe]",
+            border: "border-[#ff71ce]/30",
+            glow: "shadow-[0_0_40px_rgba(255,113,206,0.3)]",
+            accent: "#ff71ce",
+            btn: "bg-black border-[#01cdfe]/20",
+            btnText: "text-[#01cdfe]",
+            icon: "text-[#ff71ce]",
+            special: "cyber_vapor"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -1936,6 +2027,42 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "aurora" && (
                     <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
+                )}
+                {theme.special === "neon_modern" && (
+                    <div className="absolute inset-0 z-0">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#3b82f611_0%,transparent_70%)] animate-pulse" />
+                        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                    </div>
+                )}
+                {theme.special === "neon_blue" && (
+                    <div className="absolute inset-0 z-0">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf822_0%,transparent_50%),radial-gradient(circle_at_80%_80%,#38bdf811_0%,transparent_50%)]" />
+                        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')]" />
+                    </div>
+                )}
+                {theme.special === "neon_purple" && (
+                    <div className="absolute inset-0 z-0">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#a855f722_0%,transparent_80%)] animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,#a855f711_0%,transparent_40%),radial-gradient(circle_at_80%_70%,#ec489911_0%,transparent_40%)]" />
+                    </div>
+                )}
+                {theme.special === "nature_dawn" && (
+                    <div className="absolute inset-0 z-0 overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_0%_0%,#fef3c7_0%,transparent_50%),radial-gradient(circle_at_100%_0%,#d1fae5_0%,transparent_50%)] opacity-40" />
+                        <motion.div
+                            animate={{ opacity: [0.2, 0.4, 0.2] }}
+                            transition={{ duration: 8, repeat: Infinity }}
+                            className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-yellow-400/20 blur-[100px] rounded-full"
+                        />
+                    </div>
+                )}
+                {theme.special === "minimal_glass" && (
+                    <div className="absolute inset-0 z-0 overflow-hidden bg-white/20">
+                        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/10 blur-[100px] rounded-full" />
+                        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-400/10 blur-[100px] rounded-full" />
+                        <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px]" />
+                    </div>
                 )}
 
                 {/* ─── NEW UNIQUE TEMPLATE EFFECTS ─── */}
