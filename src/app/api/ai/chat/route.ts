@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         `.trim()
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash"
+            model: "gemini-1.5-flash"
         })
 
         // Filter out error messages
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
         // Quota exceeded
         if (errorMsg.includes("429") || errorMsg.includes("quota") || errorMsg.includes("Too Many Requests")) {
             return NextResponse.json({
-                error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
+                error: `AI asistanı şu an yoğun (Kota Dolu). Lütfen daha sonra tekrar deneyin veya farklı bir API anahtarı kullanın. Detay: ${errorMsg.substring(0, 50)}...`
             }, { status: 429 })
         }
 
