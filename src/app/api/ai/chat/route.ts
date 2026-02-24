@@ -109,8 +109,9 @@ export async function POST(req: Request) {
 
             // Quota / Rate limit error
             if (response.status === 429 || errMsg.includes("quota") || errMsg.includes("429")) {
+                const keyHint = API_KEY ? `...${API_KEY.slice(-4)}` : "YOK";
                 return NextResponse.json({
-                    error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
+                    error: `AI kota aşıldı (Anahtar: ${keyHint}). Vercel env GEMINI_API_KEY güncelleyin ve Redeploy yapın.`
                 }, { status: 429 });
             }
 
