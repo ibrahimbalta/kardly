@@ -44,8 +44,8 @@ export async function POST(req: Request) {
         `.trim()
 
         const API_KEY = process.env.GEMINI_API_KEY;
-        const MODEL = "gemini-2.0-flash";
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+        const MODEL = "llama-3.3-70b-versatile";
+        const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
         // Filter out error messages
         const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
@@ -53,58 +53,40 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "No messages to process" }, { status: 400 })
         }
 
-        const lastMessage = filteredMessages[filteredMessages.length - 1].content;
-        const historyData = filteredMessages.slice(0, -1);
-
-        const contents: any[] = [
-            {
-                role: "user",
-                parts: [{ text: systemPrompt + "\n\nYukarıdaki bilgilere dayanarak benimle bir asistan gibi konuş." }]
-            },
-            {
-                role: "model",
-                parts: [{ text: "Anladım, size yardımcı olmaya hazırım! 😊" }]
-            }
+        // Build OpenAI compatible messages array
+        const groqMessages = [
+            { role: "system", content: systemPrompt },
+            ...filteredMessages.map((m: any) => ({
+                role: m.role === "assistant" ? "assistant" : "user",
+                content: m.content
+            }))
         ];
-
-        let lastRole: string = "model";
-        for (const m of historyData) {
-            const role = m.role === "user" ? "user" : "model";
-            if (role !== lastRole) {
-                contents.push({ role, parts: [{ text: m.content }] });
-                lastRole = role;
-            }
-        }
-        if (lastRole === "user") contents.push({ role: "model", parts: [{ text: "Dinliyorum..." }] });
-        contents.push({ role: "user", parts: [{ text: lastMessage }] });
 
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
             body: JSON.stringify({
-                contents: contents,
-                generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+                model: MODEL,
+                messages: groqMessages,
+                temperature: 0.7,
+                max_tokens: 1024,
+                top_p: 1
             })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Gemini API Error:", JSON.stringify(data));
-            const errMsg = data?.error?.message || "";
-
-            if (response.status === 429 || errMsg.includes("quota")) {
-                return NextResponse.json({
-                    error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
-                }, { status: 429 });
-            }
-
+            console.error("Groq API Error:", JSON.stringify(data));
             return NextResponse.json({
-                error: `Sistem Meşgul (Hata: ${response.status}). Lütfen birazdan tekrar deneyin.`
+                error: "AI servisi şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
             }, { status: response.status });
         }
 
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const text = data?.choices?.[0]?.message?.content;
 
         if (!text) {
             console.error("No text in response:", JSON.stringify(data));
@@ -113,7 +95,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ text })
     } catch (error: any) {
-        console.error("AI Chat Full Error:", error);
+        console.error("AI Chat Error:", error);
         return NextResponse.json({
             error: "Bir bağlantı hatası oluştu. Lütfen tekrar deneyin."
         }, { status: 500 })
