@@ -1,12 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "missing_key")
-const model = genAI.getGenerativeModel({
-    model: "gemini-pro",
-    generationConfig: {
-        responseMimeType: "application/json",
-    }
-})
+const API_KEY = process.env.GEMINI_API_KEY;
+const MODEL = "llama-3.3-70b-versatile";
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 // Tone-specific style guides for AI prompt
 const toneGuides: Record<string, { style: string; colorGuide: string; sloganStyle: string; bioStyle: string; designGuide: string }> = {
@@ -123,16 +117,29 @@ export async function generateProfileData(data: {
 
     🚨 KESİNLİKLE her ton için FARKLI slogan, bio, hizmet açıklaması, renk ve ŞABLON üret. Her ton birbirinden belirgin şekilde ayırt edilebilir olmalı.
 
-    Lütfen SADECE JSON döndür. Başka bir metin ekleme.
+    Lütfen SADECE geçerli bir JSON döndür.
     `
 
     try {
-        const result = await model.generateContent(prompt)
-        const response = result.response
-        const text = response.text()
-        return JSON.parse(text)
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.7
+            })
+        });
+
+        const result = await response.json();
+        const content = result.choices?.[0]?.message?.content;
+        return JSON.parse(content);
     } catch (error) {
-        console.error("Gemini API Error:", error)
+        console.error("Groq Profile API Error:", error)
         // Tone-specific fallback data
         const fallback = fallbackConfigs[toneKey] || fallbackConfigs.profesyonel
         return {
@@ -171,18 +178,29 @@ export async function generateBio(data: {
     1. Metin 2 ya da 3 cümleden oluşmalı.
     2. Seçilen tona (${data.tone}) %100 sadık kalmalı.
     3. Hedef kitleye hitap etmeli.
-    4. Sadece metni döndür, başka açıklama ekleme.
-
-    Lütfen SADECE JSON formatında döndür: {"bio": "..."}
+    4. Lütfen SADECE JSON formatında döndür: {"bio": "..."}
     `
 
     try {
-        const result = await model.generateContent(prompt)
-        const response = result.response
-        const text = response.text()
-        return JSON.parse(text)
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.7
+            })
+        });
+
+        const result = await response.json();
+        const content = result.choices?.[0]?.message?.content;
+        return JSON.parse(content);
     } catch (error) {
-        console.error("Gemini Bio API Error:", error)
+        console.error("Groq Bio API Error:", error)
         const fallback = fallbackConfigs[toneKey] || fallbackConfigs.profesyonel
         return {
             bio: fallback.bioTemplate
