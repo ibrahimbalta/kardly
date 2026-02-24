@@ -1,7 +1,4 @@
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai"
 import { NextResponse } from "next/server"
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
 export async function POST(req: Request) {
     try {
@@ -46,9 +43,9 @@ export async function POST(req: Request) {
         Kullanıcının dili neyse (Türkçe veya İngilizce) o dilde cevap ver.
         `.trim()
 
-        const model = genAI.getGenerativeModel({
-            model: "gemini-pro"
-        })
+        const API_KEY = process.env.GEMINI_API_KEY;
+        const MODEL = "gemini-2.0-flash";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
         // Filter out error messages
         const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
@@ -59,15 +56,15 @@ export async function POST(req: Request) {
         const lastMessage = filteredMessages[filteredMessages.length - 1].content;
         const historyData = filteredMessages.slice(0, -1);
 
-        // Prepend system prompt to the first message to guide the AI
-        const history: any[] = [
+        // Build contents array with system prompt baked in
+        const contents: any[] = [
             {
                 role: "user",
                 parts: [{ text: systemPrompt + "\n\nYukarıdaki bilgilere dayanarak benimle bir asistan gibi konuş." }]
             },
             {
                 role: "model",
-                parts: [{ text: "Anladım. İbrahim Bey'in asistanı olarak size yardımcı olmaya hazırım." }]
+                parts: [{ text: "Anladım, size yardımcı olmaya hazırım! 😊" }]
             }
         ];
 
@@ -76,7 +73,7 @@ export async function POST(req: Request) {
         for (const m of historyData) {
             const role = m.role === "user" ? "user" : "model";
             if (role !== lastRole) {
-                history.push({
+                contents.push({
                     role: role,
                     parts: [{ text: m.content }]
                 });
@@ -84,21 +81,46 @@ export async function POST(req: Request) {
             }
         }
 
-        const chat = model.startChat({ history });
-        const result = await chat.sendMessage(lastMessage);
-        const response = await result.response;
-        const text = response.text();
+        // Add the current user message
+        if (lastRole === "user") {
+            // Need a model message before another user message
+            contents.push({ role: "model", parts: [{ text: "Devam edin, sizi dinliyorum." }] });
+        }
+        contents.push({ role: "user", parts: [{ text: lastMessage }] });
+
+        // Direct REST API call - no SDK version issues
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: contents,
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1024,
+                }
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Gemini API Error:", JSON.stringify(data));
+            const errMsg = data?.error?.message || JSON.stringify(data);
+            return NextResponse.json({ error: `API Hatası: ${errMsg}` }, { status: response.status });
+        }
+
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) {
+            console.error("No text in response:", JSON.stringify(data));
+            return NextResponse.json({ error: "AI yanıt üretemedi. Lütfen tekrar deneyin." }, { status: 500 });
+        }
 
         return NextResponse.json({ text })
     } catch (error: any) {
         console.error("AI Chat Full Error:", error);
-
-        const errorMsg = error.message || "Unknown error";
-
-        // Return full error to UI for final debugging
         return NextResponse.json({
-            error: `API Hatası: ${errorMsg}`,
-            details: error
+            error: `Bağlantı Hatası: ${error.message || "Bilinmeyen hata"}`
         }, { status: 500 })
     }
 }
