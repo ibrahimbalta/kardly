@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
         const API_KEY = process.env.GEMINI_API_KEY;
         const MODEL = "gemini-1.5-flash";
-        const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${API_KEY}`;
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
         // Filter out error messages
         const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
@@ -56,7 +56,6 @@ export async function POST(req: Request) {
         const lastMessage = filteredMessages[filteredMessages.length - 1].content;
         const historyData = filteredMessages.slice(0, -1);
 
-        // Build contents array with system prompt baked in
         const contents: any[] = [
             {
                 role: "user",
@@ -69,35 +68,22 @@ export async function POST(req: Request) {
         ];
 
         let lastRole: string = "model";
-
         for (const m of historyData) {
             const role = m.role === "user" ? "user" : "model";
             if (role !== lastRole) {
-                contents.push({
-                    role: role,
-                    parts: [{ text: m.content }]
-                });
+                contents.push({ role, parts: [{ text: m.content }] });
                 lastRole = role;
             }
         }
-
-        // Add the current user message
-        if (lastRole === "user") {
-            // Need a model message before another user message
-            contents.push({ role: "model", parts: [{ text: "Devam edin, sizi dinliyorum." }] });
-        }
+        if (lastRole === "user") contents.push({ role: "model", parts: [{ text: "Dinliyorum..." }] });
         contents.push({ role: "user", parts: [{ text: lastMessage }] });
 
-        // Direct REST API call - no SDK version issues
         const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 contents: contents,
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 1024,
-                }
+                generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
             })
         });
 
@@ -106,9 +92,19 @@ export async function POST(req: Request) {
         if (!response.ok) {
             console.error("Gemini API Error:", JSON.stringify(data));
             const errMsg = data?.error?.message || JSON.stringify(data);
-            return NextResponse.json({
-                error: `SİSTEM MESAJI (DEBUG): ${errMsg}`
-            }, { status: response.status });
+
+            // Try to find what models are actually available for this key
+            try {
+                const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
+                const listData = await listRes.json();
+                const availableModels = listData.models?.map((m: any) => m.name.replace("models/", "")).join(", ") || "Liste alınamadı";
+
+                return NextResponse.json({
+                    error: `SİSTEM HATASI: ${errMsg}. \n\nSenin için aktif olan modeller: ${availableModels}`
+                }, { status: response.status });
+            } catch (e) {
+                return NextResponse.json({ error: `Hata: ${errMsg}` }, { status: response.status });
+            }
         }
 
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
