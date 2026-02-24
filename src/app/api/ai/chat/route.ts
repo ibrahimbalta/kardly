@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai"
 import { NextResponse } from "next/server"
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
@@ -47,11 +47,21 @@ export async function POST(req: Request) {
         `.trim()
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash"
+            model: "gemini-1.5-flash",
+            safetySettings: [
+                { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+                { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
+                { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+                { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+            ]
         })
 
         // Filter out error messages
-        const filteredMessages = messages.filter((m: any) => !m.isError);
+        const filteredMessages = messages?.filter((m: any) => !m.isError) || [];
+        if (filteredMessages.length === 0) {
+            return NextResponse.json({ error: "No messages to process" }, { status: 400 })
+        }
+
         const lastMessage = filteredMessages[filteredMessages.length - 1].content;
         const historyData = filteredMessages.slice(0, -1);
 
@@ -71,7 +81,6 @@ export async function POST(req: Request) {
 
         for (const m of historyData) {
             const role = m.role === "user" ? "user" : "model";
-            // Gemini doesn't allow two messages from the same role to be adjacent
             if (role !== lastRole) {
                 history.push({
                     role: role,
@@ -88,26 +97,14 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ text })
     } catch (error: any) {
-        console.error("AI Chat Error Details:", error);
+        console.error("AI Chat Full Error:", error);
 
-        const errorMsg = error.message || "";
+        const errorMsg = error.message || "Unknown error";
 
-        // Quota exceeded
-        if (errorMsg.includes("429") || errorMsg.includes("quota") || errorMsg.includes("Too Many Requests")) {
-            return NextResponse.json({
-                error: `AI asistanı şu an yoğun (Kota Dolu). Lütfen daha sonra tekrar deneyin veya farklı bir API anahtarı kullanın. Detay: ${errorMsg.substring(0, 50)}...`
-            }, { status: 429 })
-        }
-
-        // API Key issue
-        if (errorMsg.includes("API_KEY") || errorMsg.includes("401") || errorMsg.includes("403")) {
-            return NextResponse.json({
-                error: "AI servisi geçici olarak kullanılamıyor. Yönetici bilgilendirildi."
-            }, { status: 500 })
-        }
-
+        // Return full error to UI for final debugging
         return NextResponse.json({
-            error: "Bir hata oluştu. Lütfen tekrar deneyin."
+            error: `API Hatası: ${errorMsg}`,
+            details: error
         }, { status: 500 })
     }
 }
