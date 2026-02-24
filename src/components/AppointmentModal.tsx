@@ -82,65 +82,65 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                     />
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.98, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        exit={{ opacity: 0, scale: 0.98, y: 10 }}
                         className={cn(
-                            "relative w-full max-w-md rounded-[2.5rem] border p-8 overflow-hidden backdrop-blur-2xl shadow-2xl",
+                            "relative w-full max-w-[340px] rounded-[2rem] border p-6 overflow-hidden backdrop-blur-3xl shadow-2xl transition-all",
                             modalTheme.card,
                             modalTheme.border,
                             toneStyle?.font
                         )}
                         style={{
-                            boxShadow: `0 30px 60px -12px rgba(0,0,0,0.5), 0 0 30px ${modalTheme.accent}20`
+                            boxShadow: `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 30px ${modalTheme.accent}15`
                         }}
                     >
-                        {/* Decorative background glow */}
+                        {/* Micro Glow */}
                         <div
-                            className="absolute -top-20 -right-20 w-40 h-40 blur-[80px] opacity-30 rounded-full"
+                            className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-20 rounded-full"
                             style={{ backgroundColor: modalTheme.accent }}
                         />
 
-                        <button onClick={onClose} className={cn("absolute top-6 right-6 transition-colors", modalTheme.text)} style={{ opacity: 0.4 }}>
-                            <X className="hover:opacity-100" />
+                        <button onClick={onClose} className={cn("absolute top-5 right-5 transition-colors z-20 opacity-30 hover:opacity-100", modalTheme.text)}>
+                            <X size={18} />
                         </button>
 
                         {step === 1 && (
-                            <div className="space-y-6 relative z-10">
-                                <div className="flex items-center gap-3 mb-2">
+                            <div className="space-y-5 relative z-10">
+                                <div className="flex flex-col items-center text-center gap-2 mb-1">
                                     <div
-                                        className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
-                                        style={{ backgroundColor: `${modalTheme.accent}20`, color: modalTheme.accent, border: `1px solid ${modalTheme.accent}40` }}
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm border"
+                                        style={{ backgroundColor: `${modalTheme.accent}15`, color: modalTheme.accent, borderColor: `${modalTheme.accent}20` }}
                                     >
-                                        <Calendar />
+                                        <Calendar size={18} />
                                     </div>
                                     <div>
-                                        <h2 className={cn("text-xl font-black tracking-tight", modalTheme.text)}>{labels.bookAppointment}</h2>
-                                        <p className={cn("text-sm opacity-50 font-medium", modalTheme.text)}>{labels.selectDateTime}</p>
+                                        <h2 className={cn("text-lg font-black tracking-tight uppercase", modalTheme.text)}>{labels.bookAppointment}</h2>
+                                        <p className={cn("text-[8px] font-bold opacity-40 uppercase tracking-[0.2em]", modalTheme.text)}>{labels.selectDateTime}</p>
                                     </div>
                                 </div>
 
-                                <div className="space-y-5">
+                                <div className="space-y-4">
                                     <div>
-                                        <label className={cn("block text-[10px] font-black uppercase tracking-[0.2em] mb-2 opacity-40", modalTheme.text)}>Tarih</label>
+                                        <label className={cn("block text-[8px] font-black uppercase tracking-[0.3em] mb-1.5 ml-1 opacity-40", modalTheme.text)}>Tarih</label>
                                         <input
                                             type="date"
                                             className={cn(
-                                                "w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all font-bold text-sm",
+                                                "w-full border rounded-xl px-4 py-3.5 focus:outline-none transition-all font-bold text-xs",
                                                 modalTheme.border,
                                                 modalTheme.text
                                             )}
                                             style={{
                                                 backgroundColor: `${modalTheme.accent}05`,
-                                                borderColor: `${modalTheme.accent}20`
+                                                borderColor: `${modalTheme.accent}15`
                                             }}
                                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                                             min={new Date().toISOString().split('T')[0]}
                                         />
                                     </div>
                                     <div>
-                                        <label className={cn("block text-[10px] font-black uppercase tracking-[0.2em] mb-2 opacity-40", modalTheme.text)}>Saat</label>
-                                        <div className="grid grid-cols-3 gap-2">
+                                        <label className={cn("block text-[8px] font-black uppercase tracking-[0.3em] mb-1.5 ml-1 opacity-40", modalTheme.text)}>Saat</label>
+                                        <div className="grid grid-cols-4 gap-1.5">
                                             {(profile.workingHours && (profile.workingHours as string[]).length > 0
                                                 ? (profile.workingHours as string[]).sort()
                                                 : ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
@@ -149,19 +149,18 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                                                     key={t_val}
                                                     onClick={() => setFormData({ ...formData, time: t_val })}
                                                     className={cn(
-                                                        "py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition-all",
+                                                        "py-2 rounded-lg text-[9px] font-black tracking-tighter border transition-all",
                                                         formData.time === t_val
-                                                            ? "shadow-lg scale-105"
-                                                            : "bg-white/5 opacity-60 hover:opacity-100"
+                                                            ? "shadow-md"
+                                                            : "bg-white/5 opacity-50 hover:opacity-100"
                                                     )}
                                                     style={formData.time === t_val ? {
                                                         backgroundColor: modalTheme.accent,
                                                         borderColor: modalTheme.accent,
-                                                        color: '#000',
-                                                        boxShadow: `0 10px 20px -5px ${modalTheme.accent}40`
+                                                        color: '#000'
                                                     } : {
-                                                        borderColor: `${modalTheme.accent}20`,
-                                                        color: modalTheme.accent
+                                                        borderColor: `${modalTheme.accent}15`,
+                                                        color: modalTheme.text.includes('white') ? 'rgba(255,255,255,0.8)' : modalTheme.accent
                                                     }}
                                                 >
                                                     {t_val}
@@ -174,129 +173,110 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                                 <button
                                     disabled={!formData.date || !formData.time}
                                     onClick={() => setStep(2)}
-                                    className="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all disabled:opacity-30 disabled:scale-100 hover:scale-[1.02] active:scale-95"
+                                    className="w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] shadow-lg transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95"
                                     style={{
                                         backgroundColor: modalTheme.accent,
                                         color: '#000',
-                                        boxShadow: `0 20px 30px -10px ${modalTheme.accent}50`
+                                        boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
                                     }}
                                 >
-                                    {labels.back === "Geri" ? "Devam Et" : "Next"}
+                                    {labels.back === "Geri" ? "DEVAM ET" : "NEXT"}
                                 </button>
                             </div>
                         )}
 
                         {step === 2 && (
-                            <form onSubmit={handleSubmit} className="space-y-6 relative z-10 font-sans">
-                                <div className="flex items-center gap-3 mb-2">
+                            <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+                                <div className="flex flex-col items-center text-center gap-2 mb-1">
                                     <div
-                                        className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
-                                        style={{ backgroundColor: `${modalTheme.accent}20`, color: modalTheme.accent, border: `1px solid ${modalTheme.accent}40` }}
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm border"
+                                        style={{ backgroundColor: `${modalTheme.accent}15`, color: modalTheme.accent, borderColor: `${modalTheme.accent}20` }}
                                     >
-                                        <User />
+                                        <User size={18} />
                                     </div>
                                     <div>
-                                        <h2 className={cn("text-xl font-black tracking-tight", modalTheme.text)}>{labels.contactInfo}</h2>
-                                        <p className={cn("text-sm opacity-50 font-medium", modalTheme.text)}>Son adım: Bilgilerinizi girin.</p>
+                                        <h2 className={cn("text-lg font-black tracking-tight uppercase", modalTheme.text)}>{labels.contactInfo}</h2>
+                                        <p className={cn("text-[8px] font-bold opacity-40 uppercase tracking-[0.2em]", modalTheme.text)}>Bilgilerinizi doğrulayın.</p>
                                     </div>
                                 </div>
 
                                 <div className="space-y-3">
-                                    <input
-                                        type="text"
-                                        placeholder={labels.name}
-                                        required
-                                        className={cn(
-                                            "w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all font-bold text-sm",
-                                            modalTheme.border,
-                                            modalTheme.text
-                                        )}
-                                        style={{
-                                            backgroundColor: `${modalTheme.accent}05`,
-                                            borderColor: `${modalTheme.accent}20`
-                                        }}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    />
-                                    <input
-                                        type="email"
-                                        placeholder={labels.email}
-                                        required
-                                        className={cn(
-                                            "w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all font-bold text-sm",
-                                            modalTheme.border,
-                                            modalTheme.text
-                                        )}
-                                        style={{
-                                            backgroundColor: `${modalTheme.accent}05`,
-                                            borderColor: `${modalTheme.accent}20`
-                                        }}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    />
-                                    <input
-                                        type="tel"
-                                        placeholder={labels.phone}
-                                        required
-                                        className={cn(
-                                            "w-full bg-white/5 border rounded-2xl px-5 py-4 focus:outline-none transition-all font-bold text-sm",
-                                            modalTheme.border,
-                                            modalTheme.text
-                                        )}
-                                        style={{
-                                            backgroundColor: `${modalTheme.accent}05`,
-                                            borderColor: `${modalTheme.accent}20`
-                                        }}
-                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    />
+                                    {[
+                                        { placeholder: labels.name, type: "text", key: "name", icon: <User size={14} /> },
+                                        { placeholder: labels.email, type: "email", key: "email", icon: <Mail size={14} /> },
+                                        { placeholder: labels.phone, type: "tel", key: "phone", icon: <Phone size={14} /> }
+                                    ].map((field) => (
+                                        <div key={field.key} className="relative group">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" style={{ color: modalTheme.accent }}>
+                                                {field.icon}
+                                            </div>
+                                            <input
+                                                type={field.type}
+                                                placeholder={field.placeholder}
+                                                required
+                                                className={cn(
+                                                    "w-full border rounded-xl pl-11 pr-4 py-3.5 focus:outline-none transition-all font-bold text-xs placeholder:opacity-30",
+                                                    modalTheme.border,
+                                                    modalTheme.text
+                                                )}
+                                                style={{
+                                                    backgroundColor: `${modalTheme.accent}05`,
+                                                    borderColor: `${modalTheme.accent}15`
+                                                }}
+                                                onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
 
-                                <div className="flex gap-4">
+                                <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setStep(1)}
-                                        className={cn("flex-1 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] border transition-all hover:bg-white/5 opacity-50 hover:opacity-100", modalTheme.border, modalTheme.text)}
+                                        className={cn("flex-1 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest border transition-all hover:bg-white/5 opacity-40 hover:opacity-80", modalTheme.border, modalTheme.text)}
                                     >
                                         {labels.back}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="flex-[2] py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
+                                        className="flex-[1.5] py-4 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
                                         style={{
                                             backgroundColor: modalTheme.accent,
                                             color: '#000',
-                                            boxShadow: `0 20px 30px -10px ${modalTheme.accent}50`
+                                            boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
                                         }}
                                     >
-                                        {isSubmitting ? <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" /> : labels.confirmBooking}
+                                        {isSubmitting ? <div className="w-3.5 h-3.5 border-2 border-black/20 border-t-black rounded-full animate-spin" /> : labels.confirmBooking}
                                     </button>
                                 </div>
                             </form>
                         )}
 
                         {step === 3 && (
-                            <div className="py-12 text-center space-y-8 relative z-10">
+                            <div className="py-8 text-center space-y-6 relative z-10">
                                 <motion.div
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
-                                    className="w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-2xl relative"
-                                    style={{ backgroundColor: `${modalTheme.accent}20`, color: modalTheme.accent }}
+                                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto shadow-xl relative"
+                                    style={{ backgroundColor: `${modalTheme.accent}15`, color: modalTheme.accent }}
                                 >
                                     <div className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ backgroundColor: modalTheme.accent }} />
-                                    <CheckCircle2 className="w-14 h-14 relative z-10" />
+                                    <CheckCircle2 size={32} className="relative z-10" />
                                 </motion.div>
-                                <div>
-                                    <h2 className={cn("text-3xl font-black tracking-tight mb-2", modalTheme.text)}>{labels.successBooking}</h2>
-                                    <p className={cn("text-sm opacity-50 font-medium px-4", modalTheme.text)}>
-                                        Randevu talebiniz başarıyla iletildi. Sizinle en kısa sürede iletişime geçeceğiz.
+                                <div className="space-y-2">
+                                    <h2 className={cn("text-xl font-black tracking-tighter uppercase", modalTheme.text)}>{labels.successBooking}</h2>
+                                    <p className={cn("text-[9px] font-medium opacity-50 px-4 leading-relaxed", modalTheme.text)}>
+                                        Randevu talebiniz başarıyla iletildi.<br />Sizinle en kısa sürede iletişime geçeceğiz.
                                     </p>
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:brightness-110 active:scale-95 shadow-xl"
+                                    className="w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-lg"
                                     style={{
                                         backgroundColor: modalTheme.accent,
                                         color: '#000',
-                                        boxShadow: `0 20px 30px -10px ${modalTheme.accent}50`
+                                        boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
                                     }}
                                 >
                                     {labels.close}
