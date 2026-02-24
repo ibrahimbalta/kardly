@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         `.trim()
 
         const API_KEY = process.env.GEMINI_API_KEY;
-        const MODEL = "gemini-1.5-flash";
+        const MODEL = "gemini-2.0-flash";
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
         // Filter out error messages
@@ -91,20 +91,17 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             console.error("Gemini API Error:", JSON.stringify(data));
-            const errMsg = data?.error?.message || JSON.stringify(data);
+            const errMsg = data?.error?.message || "";
 
-            // Try to find what models are actually available for this key
-            try {
-                const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
-                const listData = await listRes.json();
-                const availableModels = listData.models?.map((m: any) => m.name.replace("models/", "")).join(", ") || "Liste alınamadı";
-
+            if (response.status === 429 || errMsg.includes("quota")) {
                 return NextResponse.json({
-                    error: `SİSTEM HATASI: ${errMsg}. \n\nSenin için aktif olan modeller: ${availableModels}`
-                }, { status: response.status });
-            } catch (e) {
-                return NextResponse.json({ error: `Hata: ${errMsg}` }, { status: response.status });
+                    error: "AI asistanı şu an yoğun. Lütfen birkaç dakika sonra tekrar deneyin. 🕐"
+                }, { status: 429 });
             }
+
+            return NextResponse.json({
+                error: `Sistem Meşgul (Hata: ${response.status}). Lütfen birazdan tekrar deneyin.`
+            }, { status: response.status });
         }
 
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
