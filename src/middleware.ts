@@ -4,9 +4,9 @@ import type { NextRequest } from "next/server"
 export function middleware(request: NextRequest) {
     const { hostname, pathname, search } = request.nextUrl
 
-    // 1. www -> non-www redirect (prevents cookie duplication)
-    if (hostname === "www.kardly.site") {
-        const newUrl = new URL(`https://kardly.site${pathname}${search}`)
+    // 1. non-www -> www redirect (SSL cert is on www.kardly.site)
+    if (hostname === "kardly.site") {
+        const newUrl = new URL(`https://www.kardly.site${pathname}${search}`)
         return NextResponse.redirect(newUrl, 301)
     }
 
