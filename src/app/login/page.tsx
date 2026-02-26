@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { useTranslation } from "@/context/LanguageContext"
 
 export default function LoginPage() {
     return (
@@ -16,6 +17,7 @@ export default function LoginPage() {
 }
 
 function LoginLogic() {
+    const { t } = useTranslation()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loginError, setLoginError] = useState("")
@@ -37,7 +39,7 @@ function LoginLogic() {
         })
 
         if (result?.error) {
-            setLoginError("Email veya şifre hatalı.")
+            setLoginError(t('loginErrorInvalid'))
             setIsLoading(false)
         } else if (result?.url) {
             window.location.href = result.url
@@ -76,16 +78,15 @@ function LoginLogic() {
                         </div>
 
                         <h2 className="text-4xl font-black text-white leading-tight mb-6">
-                            Dijital kimliğinize<br />
-                            <span className="text-white/80">tekrar hoş geldiniz.</span>
+                            {t('loginBrandingTitle')}
                         </h2>
 
                         <p className="text-white/70 text-sm leading-relaxed mb-12">
-                            Profesyonel ağınızı yönetin, kartınızı paylaşın ve bağlantılarınızı güçlendirin.
+                            {t('loginBrandingDesc')}
                         </p>
 
                         <div className="space-y-4">
-                            {["Şifresiz güvenli giriş", "Anlık profil erişimi", "Tüm cihazlardan erişim"].map((item, i) => (
+                            {(t('loginFeatures') as unknown as string[]).map((item: string, i: number) => (
                                 <motion.div
                                     key={i}
                                     initial={{ opacity: 0, x: -20 }}
@@ -118,25 +119,16 @@ function LoginLogic() {
                         <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-rose-500">.</span></span>
                     </div>
 
-                    {error === "account_disabled" && (
+                    {(error === "account_disabled" || loginError) && (
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-600"
                         >
                             <AlertCircle size={20} className="shrink-0" />
-                            <p className="text-xs font-bold leading-relaxed">Hesabınız dondurulmuştur. Lütfen destek ile iletişime geçin.</p>
-                        </motion.div>
-                    )}
-
-                    {loginError && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-8 p-4 rounded-2xl bg-rose-50 border border-rose-100 flex items-center gap-3 text-rose-600"
-                        >
-                            <AlertCircle size={20} className="shrink-0" />
-                            <p className="text-xs font-bold leading-relaxed">{loginError}</p>
+                            <p className="text-xs font-bold leading-relaxed">
+                                {error === "account_disabled" ? t('loginErrorDisabled') : loginError}
+                            </p>
                         </motion.div>
                     )}
 
@@ -146,19 +138,19 @@ function LoginLogic() {
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500">Hoş Geldiniz</span>
                         </div>
                         <h1 className="text-3xl md:text-4xl font-black mb-3 tracking-tight text-slate-900">
-                            Giriş Yapın<span className="text-rose-500">.</span>
+                            {t('loginTitle')}<span className="text-rose-500">.</span>
                         </h1>
-                        <p className="text-slate-400 text-sm">Dijital kartınıza erişmek için devam edin.</p>
+                        <p className="text-slate-400 text-sm">{t('loginSubtitle')}</p>
                     </div>
 
                     <form onSubmit={handleEmailLogin} className="space-y-5 mb-8">
                         <div className="grid gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Email Adresiniz</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">{t('loginEmailLabel')}</label>
                             <div className="relative group">
                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                                 <input
                                     type="email"
-                                    placeholder="Örn: isim@mail.com"
+                                    placeholder={t('loginEmailPlaceholder')}
                                     required
                                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
                                     value={email}
@@ -168,14 +160,22 @@ function LoginLogic() {
                         </div>
 
                         <div className="grid gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Şifreniz</label>
+                            <div className="flex justify-between items-center ml-1">
+                                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('loginPasswordLabel')}</label>
+                                <Link
+                                    href="/forgot-password"
+                                    className="text-[9px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-600 transition-colors"
+                                >
+                                    {t('loginForgotBtn')}
+                                </Link>
+                            </div>
                             <div className="relative group">
                                 <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
                                     <Zap className="w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                                 </div>
                                 <input
                                     type="password"
-                                    placeholder="••••••••"
+                                    placeholder={t('loginPasswordPlaceholder')}
                                     required
                                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
                                     value={password}
@@ -192,16 +192,16 @@ function LoginLogic() {
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-3">
                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Giriş Yapılıyor
+                                    {t('loginInProcess')}
                                 </div>
-                            ) : "Email İle Giriş Yap"}
+                            ) : t('loginSubmitBtn')}
                         </button>
                         <p className="text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">Şifresiz ve Güvenli Erişim</p>
                     </form>
 
                     <div className="relative mb-8">
                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-                        <div className="relative flex justify-center"><span className="bg-white px-6 text-xs font-black text-slate-300">VEYA</span></div>
+                        <div className="relative flex justify-center"><span className="bg-white px-6 text-xs font-black text-slate-300">{t('loginOr')}</span></div>
                     </div>
 
                     <div className="grid gap-4">
@@ -215,13 +215,13 @@ function LoginLogic() {
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
-                            <span className="text-xs uppercase font-black tracking-widest">Google İle Devam Et</span>
+                            <span className="text-xs uppercase font-black tracking-widest">{t('loginGoogleBtn')}</span>
                         </button>
                     </div>
 
                     <div className="mt-10 text-center">
                         <p className="text-sm text-slate-400">
-                            Henüz hesabınız yok mu? <Link href="/register" className="text-rose-500 hover:text-rose-600 font-black uppercase text-xs tracking-widest ml-1 transition-colors">Kayıt Ol</Link>
+                            {t('loginNoAccount')} <Link href="/register" className="text-rose-500 hover:text-rose-600 font-black uppercase text-xs tracking-widest ml-1 transition-colors">{t('loginRegisterLink')}</Link>
                         </p>
                     </div>
                 </motion.div>

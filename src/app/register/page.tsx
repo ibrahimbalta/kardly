@@ -5,8 +5,10 @@ import { Layout, Mail, ArrowRight, Sparkles, Zap, Star, Users } from "lucide-rea
 import { motion } from "framer-motion"
 import { useState } from "react"
 import Link from "next/link"
+import { useTranslation } from "@/context/LanguageContext"
 
 export default function RegisterPage() {
+    const { t } = useTranslation()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
@@ -28,7 +30,7 @@ export default function RegisterPage() {
             const data = await res.json()
 
             if (!res.ok) {
-                setError(data.error || "Kayıt sırasında bir hata oluştu.")
+                setError(data.error || t('registerErrorGeneric'))
                 setIsLoading(false)
                 return
             }
@@ -41,7 +43,7 @@ export default function RegisterPage() {
                 redirect: true
             })
         } catch (err) {
-            setError("Bir bağlantı hatası oluştu.")
+            setError(t('registerErrorConnection'))
             setIsLoading(false)
         }
     }
@@ -76,12 +78,12 @@ export default function RegisterPage() {
                     <div className="mb-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-100 mb-6">
                             <Zap size={12} className="text-amber-500" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600">Ücretsiz Başla</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600">{t('registerInProcess')}</span>
                         </div>
                         <h1 className="text-3xl md:text-4xl font-black mb-3 tracking-tight text-slate-900">
-                            Hesap Oluştur<span className="text-rose-500">.</span>
+                            {t('registerTitle')}<span className="text-rose-500">.</span>
                         </h1>
-                        <p className="text-slate-400 text-sm">Kardly dünyasına katılmak için ilk adımı atın.</p>
+                        <p className="text-slate-400 text-sm">{t('registerSubtitle')}</p>
                     </div>
 
                     {error && (
@@ -92,12 +94,12 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleEmailRegister} className="space-y-5 mb-8">
                         <div className="grid gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Email Adresiniz</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">{t('loginEmailLabel')}</label>
                             <div className="relative group">
                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                                 <input
                                     type="email"
-                                    placeholder="Örn: isim@mail.com"
+                                    placeholder={t('loginEmailPlaceholder')}
                                     required
                                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
                                     value={email}
@@ -107,14 +109,14 @@ export default function RegisterPage() {
                         </div>
 
                         <div className="grid gap-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Şifreniz</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">{t('loginPasswordLabel')}</label>
                             <div className="relative group">
                                 <div className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center">
                                     <Zap className="w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                                 </div>
                                 <input
                                     type="password"
-                                    placeholder="••••••••"
+                                    placeholder={t('loginPasswordPlaceholder')}
                                     required
                                     minLength={6}
                                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
@@ -132,16 +134,16 @@ export default function RegisterPage() {
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-3">
                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Hesap Oluşturuluyor
+                                    {t('registerInProcess')}
                                 </div>
-                            ) : "Email ile Kayıt Ol"}
+                            ) : t('registerSubmitBtn')}
                         </button>
                         <p className="text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">Ücretsiz • Güvenli • 30 Saniye</p>
                     </form>
 
                     <div className="relative mb-8">
                         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-                        <div className="relative flex justify-center"><span className="bg-white px-6 text-xs font-black text-slate-300">VEYA</span></div>
+                        <div className="relative flex justify-center"><span className="bg-white px-6 text-xs font-black text-slate-300">{t('loginOr')}</span></div>
                     </div>
 
                     <div className="grid gap-4">
@@ -155,13 +157,13 @@ export default function RegisterPage() {
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
-                            <span className="text-xs uppercase font-black tracking-widest">Google ile Hızlı Kayıt</span>
+                            <span className="text-xs uppercase font-black tracking-widest">{t('registerGoogleBtn')}</span>
                         </button>
                     </div>
 
                     <div className="mt-10 text-center">
                         <p className="text-sm text-slate-400">
-                            Zaten hesabınız var mı? <Link href="/login" className="text-rose-500 hover:text-rose-600 font-black uppercase text-xs tracking-widest ml-1 transition-colors">Giriş Yap</Link>
+                            {t('registerHaveAccount')} <Link href="/login" className="text-rose-500 hover:text-rose-600 font-black uppercase text-xs tracking-widest ml-1 transition-colors">{t('registerLoginLink')}</Link>
                         </p>
                     </div>
                 </motion.div>
@@ -184,12 +186,11 @@ export default function RegisterPage() {
                         </div>
 
                         <h2 className="text-4xl font-black text-white leading-tight mb-6">
-                            Profesyonel dijital<br />
-                            <span className="text-white/80">kartvizitin adresi.</span>
+                            {t('registerBrandingTitle')}
                         </h2>
 
                         <p className="text-white/70 text-sm leading-relaxed mb-12">
-                            Saniyeler içinde size özel, canlı ve etkileyici bir dijital kartvizit oluşturun.
+                            {t('registerBrandingDesc')}
                         </p>
 
                         {/* Stats */}
@@ -197,12 +198,12 @@ export default function RegisterPage() {
                             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10">
                                 <Users className="w-6 h-6 text-white/80 mb-3" />
                                 <div className="text-2xl font-black text-white">2K+</div>
-                                <div className="text-[10px] text-white/60 font-bold uppercase tracking-wider">Kullanıcı</div>
+                                <div className="text-[10px] text-white/60 font-bold uppercase tracking-wider">{t('registerStatsUser')}</div>
                             </div>
                             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10">
                                 <Star className="w-6 h-6 text-white/80 mb-3 fill-current" />
                                 <div className="text-2xl font-black text-white">4.9</div>
-                                <div className="text-[10px] text-white/60 font-bold uppercase tracking-wider">Puan</div>
+                                <div className="text-[10px] text-white/60 font-bold uppercase tracking-wider">{t('registerStatsScore')}</div>
                             </div>
                         </div>
 
@@ -212,7 +213,7 @@ export default function RegisterPage() {
                                     <img key={i} src={`https://ui-avatars.com/api/?name=${i}&background=0d0d0e&color=fff`} className="w-8 h-8 rounded-full border-2 border-white/30" />
                                 ))}
                             </div>
-                            <span className="text-white/70 text-xs font-medium">Binlerce profesyonel Kardly kullanıyor</span>
+                            <span className="text-white/70 text-xs font-medium">{t('registerTrustText')}</span>
                         </div>
                     </div>
                 </motion.div>
