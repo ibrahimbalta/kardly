@@ -161,7 +161,11 @@ export default function GizlilikPage() {
                                 <p>{t('privacySection7Desc')}</p>
 
                                 <h2>{t('privacySection8Title')}</h2>
-                                <p>{t('privacySection8Desc')}</p>
+                                <p>
+                                    {t('privacySection8Desc1')}
+                                    <Link href="/iletisim" className="text-blue-600 font-bold hover:underline">{t('privacySection8Link')}</Link>
+                                    {t('privacySection8Desc2')}
+                                </p>
                             </div>
 
                             <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">

@@ -468,7 +468,9 @@ export const translations: any = {
         termsSection8Title: "8. Hesap Sonlandırma",
         termsSection8Desc: "Kullanım şartlarını, etik kuralları veya yasal mevzuatı ihlal eden kullanıcıların hesapları, Kardly tarafından önceden bildirimde bulunmaksızın askıya alınabilir veya kalıcı olarak sonlandırılabilir.",
         termsSection9Title: "9. İletişim ve Destek",
-        termsSection9Desc: "Bu şartlarla veya platformun kullanımıyla ilgili her türlü sorunuz için iletişim sayfamızdan veya destek ekibimizle doğrudan iletişime geçebilirsiniz.",
+        termsSection9Desc1: "Bu şartlarla veya platformun kullanımıyla ilgili her türlü sorunuz için ",
+        termsSection9Link: "iletişim sayfamızdan",
+        termsSection9Desc2: " veya destek ekibimizle doğrudan iletişime geçebilirsiniz.",
         termsPrintDoc: "Dokümanı Yazdır",
         termsProfessionalLegal: "Kardly Professional Legal Document",
 
@@ -510,7 +512,9 @@ export const translations: any = {
         privacySection7Title: "7. Değişiklikler",
         privacySection7Desc: "Gizlilik politikamız, yasal düzenlemeler veya hizmet güncellemeleri nedeniyle zaman zaman güncellenebilir. Güncel sürüm her zaman bu sayfa üzerinden erişilebilir olacaktır.",
         privacySection8Title: "8. İletişim",
-        privacySection8Desc: "Gizlilik ile ilgili tüm soru ve talepleriniz için iletişim formumuzu kullanabilir veya doğrudan privacy@kardly.app adresine yazabilirsiniz.",
+        privacySection8Desc1: "Gizlilik ile ilgili tüm soru ve talepleriniz için ",
+        privacySection8Link: "iletişim formumuzu",
+        privacySection8Desc2: " kullanabilir veya doğrudan privacy@kardly.app adresine yazabilirsiniz.",
         privacyFramework: "Kardly Privacy Framework v2.0"
     },
     en: {
@@ -982,7 +986,9 @@ export const translations: any = {
         termsSection8Title: "8. Account Termination",
         termsSection8Desc: "Accounts of users who violate terms of use, ethical rules, or legal legislation can be suspended or permanently terminated by Kardly without prior notice.",
         termsSection9Title: "9. Contact and Support",
-        termsSection9Desc: "For any questions regarding these terms or the use of the platform, you can contact us from our contact page or directly with our support team.",
+        termsSection9Desc1: "For any questions regarding these terms or the use of the platform, you can contact us from our ",
+        termsSection9Link: "contact page",
+        termsSection9Desc2: " or directly with our support team.",
         termsPrintDoc: "Print Document",
         termsProfessionalLegal: "Kardly Professional Legal Document",
 
@@ -1024,7 +1030,9 @@ export const translations: any = {
         privacySection7Title: "7. Changes",
         privacySection7Desc: "Our privacy policy may be updated from time to time due to legal regulations or service updates. The current version will always be accessible from this page.",
         privacySection8Title: "8. Contact",
-        privacySection8Desc: "For all your questions and requests regarding privacy, you can use our contact form or write directly to privacy@kardly.app.",
+        privacySection8Desc1: "For all your questions and requests regarding privacy, you can use our ",
+        privacySection8Link: "contact form",
+        privacySection8Desc2: " or write directly to privacy@kardly.app.",
         privacyFramework: "Kardly Privacy Framework v2.0"
     }
 }

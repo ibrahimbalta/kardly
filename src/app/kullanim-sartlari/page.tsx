@@ -141,7 +141,11 @@ export default function KullanimSartlariPage() {
                                 <p>{t('termsSection8Desc')}</p>
 
                                 <h2>{t('termsSection9Title')}</h2>
-                                <p>{t('termsSection9Desc')}</p>
+                                <p>
+                                    {t('termsSection9Desc1')}
+                                    <Link href="/iletisim" className="text-rose-600 font-bold hover:underline">{t('termsSection9Link')}</Link>
+                                    {t('termsSection9Desc2')}
+                                </p>
                             </div>
 
                             <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
