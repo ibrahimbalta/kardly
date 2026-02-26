@@ -64,33 +64,33 @@ export default function ForgotPasswordPage() {
                             <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <CheckCircle2 size={32} className="text-emerald-500" />
                             </div>
-                            <h2 className="text-2xl font-black text-slate-900 mb-3">E-posta Gönderildi</h2>
+                            <h2 className="text-2xl font-black text-slate-900 mb-3">{t('passwordResetEmailSent')}</h2>
                             <p className="text-slate-500 text-sm mb-10 leading-relaxed">
-                                Şifre sıfırlama talimatlarını içeren bir e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.
+                                {t('passwordResetEmailSentSub')}
                             </p>
                             <Link href="/login" className="inline-flex items-center gap-2 text-rose-500 font-black uppercase text-xs tracking-widest hover:gap-3 transition-all">
-                                <ArrowLeft size={14} /> Giriş Sayfasına Dön
+                                <ArrowLeft size={14} /> {t('backToLogin')}
                             </Link>
                         </div>
                     ) : (
                         <>
                             <div className="mb-10">
                                 <h1 className="text-3xl font-black mb-3 tracking-tight text-slate-900">
-                                    Şifremi Unuttum<span className="text-rose-500">.</span>
+                                    {t('forgotPassword')}<span className="text-rose-500">.</span>
                                 </h1>
                                 <p className="text-slate-400 text-sm leading-relaxed">
-                                    Hesabınıza bağlı e-posta adresinizi girin, size şifrenizi sıfırlamanız için bir bağlantı gönderelim.
+                                    {t('forgotPasswordSub')}
                                 </p>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid gap-2">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">Email Adresiniz</label>
+                                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-1">{t('loginEmailLabel')}</label>
                                     <div className="relative group">
                                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-rose-500 transition-colors" />
                                         <input
                                             type="email"
-                                            placeholder="Örn: isim@mail.com"
+                                            placeholder={t('loginEmailPlaceholder')}
                                             required
                                             className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
                                             value={email}
@@ -111,13 +111,13 @@ export default function ForgotPasswordPage() {
                                     {isLoading ? (
                                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                     ) : (
-                                        <>Gönder <Send size={16} /></>
+                                        <>{t('sendResetLink')} <Send size={16} /></>
                                     )}
                                 </button>
 
                                 <div className="text-center pt-4">
                                     <Link href="/login" className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-bold text-xs transition-colors">
-                                        <ArrowLeft size={14} /> Giriş Sayfasına Dön
+                                        <ArrowLeft size={14} /> {t('backToLogin')}
                                     </Link>
                                 </div>
                             </form>

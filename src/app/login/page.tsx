@@ -135,7 +135,7 @@ function LoginLogic() {
                     <div className="mb-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-100 mb-6">
                             <Sparkles size={12} className="text-rose-500" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500">Hoş Geldiniz</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500">{t('welcome')}</span>
                         </div>
                         <h1 className="text-3xl md:text-4xl font-black mb-3 tracking-tight text-slate-900">
                             {t('loginTitle')}<span className="text-rose-500">.</span>

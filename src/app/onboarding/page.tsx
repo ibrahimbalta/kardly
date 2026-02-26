@@ -166,10 +166,10 @@ export default function OnboardingPage() {
                                         <div>
                                             <label className="block text-sm font-medium mb-2">Profil Adresin</label>
                                             <div className="relative">
-                                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/30 font-bold">kardly.com/</span>
+                                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/30 font-bold">kardly.site/</span>
                                                 <input
                                                     type="text"
-                                                    placeholder="adiniz"
+                                                    placeholder="adınız"
                                                     className="w-full glass bg-white/5 border-white/10 rounded-xl pl-[110px] pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-bold text-primary"
                                                     value={formData.username}
                                                     onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '') })}
@@ -332,7 +332,7 @@ export default function OnboardingPage() {
 
                                 <div className="bg-white/5 rounded-2xl p-6 text-left mb-8 border border-white/10">
                                     <p className="text-primary font-bold text-sm mb-1">Profil Adresin:</p>
-                                    <p className="text-lg font-bold mb-4 opacity-80">kardly.com/{formData.username}</p>
+                                    <p className="text-lg font-bold mb-4 opacity-80">kardly.site/{formData.username}</p>
 
                                     <p className="text-primary font-bold text-sm mb-1">Slogan:</p>
                                     <p className="text-lg font-medium mb-4 italic opacity-80">"{generatedData.slogan}"</p>

@@ -613,7 +613,25 @@ export const translations: any = {
         registerStatsScore: "Puan",
         registerTrustText: "Binlerce profesyonel Kardly kullanıyor",
         registerErrorGeneric: "Kayıt sırasında bir hata oluştu.",
-        registerErrorConnection: "Bir bağlantı hatası oluştu."
+        registerErrorConnection: "Bir bağlantı hatası oluştu.",
+
+        // Forgot & Reset Password
+        forgotPassword: "Şifremi Unuttum",
+        forgotPasswordSub: "Hesabınıza bağlı e-posta adresinizi girin, size şifrenizi sıfırlamanız için bir bağlantı gönderelim.",
+        resetPassword: "Yeni Şifre Belirle",
+        resetPasswordSub: "Lütfen hesabınız için yeni ve güvenli bir şifre belirleyin.",
+        sendResetLink: "Gönder",
+        updatePassword: "Şifreyi Güncelle",
+        backToLogin: "Giriş Sayfasına Dön",
+        passwordResetEmailSent: "E-posta Gönderildi",
+        passwordResetEmailSentSub: "Şifre sıfırlama talimatlarını içeren bir e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.",
+        passwordUpdated: "Şifre Güncellendi",
+        passwordUpdatedSub: "Şifreniz başarıyla güncellendi. Giriş sayfasına yönlendiriliyorsunuz...",
+        newPasswordLabel: "Yeni Şifre",
+        confirmNewPasswordLabel: "Şifre Tekrar",
+        passwordsDoNotMatch: "Şifreler uyuşmuyor.",
+        passwordTooShort: "Şifre en az 6 karakter olmalıdır.",
+        invalidToken: "Geçersiz veya eksik token. Lütfen şifre sıfırlama talebini tekrar başlatın.",
     },
     en: {
         // Profile & Appointments
@@ -1229,6 +1247,24 @@ export const translations: any = {
         registerStatsScore: "Score",
         registerTrustText: "Thousands of professionals use Kardly",
         registerErrorGeneric: "An error occurred during registration.",
-        registerErrorConnection: "A connection error occurred."
+        registerErrorConnection: "A connection error occurred.",
+
+        // Forgot & Reset Password
+        forgotPassword: "Forgot Password",
+        forgotPasswordSub: "Enter the email associated with your account, and we'll send you a link to reset your password.",
+        resetPassword: "Set New Password",
+        resetPasswordSub: "Please set a new and secure password for your account.",
+        sendResetLink: "Send",
+        updatePassword: "Update Password",
+        backToLogin: "Back to Login",
+        passwordResetEmailSent: "Email Sent",
+        passwordResetEmailSentSub: "An email containing password reset instructions has been sent to your address. Please check your inbox.",
+        passwordUpdated: "Password Updated",
+        passwordUpdatedSub: "Your password has been successfully updated. Redirecting to the login page...",
+        newPasswordLabel: "New Password",
+        confirmNewPasswordLabel: "Confirm Password",
+        passwordsDoNotMatch: "Passwords do not match.",
+        passwordTooShort: "Password must be at least 6 characters.",
+        invalidToken: "Invalid or missing token. Please start the password reset request again.",
     }
 }

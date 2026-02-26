@@ -3698,7 +3698,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                                     </div>
                                     <div className={cn("flex items-center gap-2.5 text-[10px] font-bold text-white/60 px-3 py-2 border border-white/5 lowercase opacity-70", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
                                         <Globe size={11} style={{ color: accent }} />
-                                        <span className={toneStyle?.font}>kardly.com/{profile.username}</span>
+                                        <span className={toneStyle?.font}>kardly.site/{profile.username}</span>
                                     </div>
                                 </div>
                             </div>
