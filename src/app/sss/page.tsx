@@ -4,44 +4,12 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Layout, ArrowLeft, ChevronDown } from "lucide-react"
 import { useState } from "react"
-
-const faqs = [
-    {
-        q: "Kardly nedir?",
-        a: "Kardly, profesyonel dijital kartvizit ve kişisel profil oluşturma platformudur. Projelerinizi, uzmanlıklarınızı, iletişim bilgilerinizi ve hizmetlerinizi tek bir link altında toplayarak kolayca paylaşmanızı sağlar."
-    },
-    {
-        q: "Kardly ücretsiz mi?",
-        a: "Evet! Temel özellikler ücretsiz olarak kullanılabilir. Premium şablonlar ve gelişmiş özellikler için uygun fiyatlı planlarımız mevcuttur."
-    },
-    {
-        q: "QR kod nasıl oluşturuluyor?",
-        a: "Profilinizi oluşturduktan sonra otomatik olarak bir QR kod üretilir. Bu kodu kartvizitinize, sunumlarınıza veya sosyal medyanıza ekleyebilirsiniz."
-    },
-    {
-        q: "Ödeme almak için ne yapmalıyım?",
-        a: "Dashboard üzerinden Stripe veya PayTR entegrasyonunuzu aktifleştirin. Ardından profilinize ödeme butonu ekleyerek müşterilerinizden doğrudan ödeme alabilirsiniz."
-    },
-    {
-        q: "Profilimi özelleştirebilir miyim?",
-        a: "Evet. Farklı şablon temaları, renk paleti seçenekleri ve blok düzeni ile profilinizi tamamen kişiselleştirebilirsiniz."
-    },
-    {
-        q: "Verilerim güvende mi?",
-        a: "Kesinlikle. Tüm veriler şifrelenmiş bağlantılar üzerinden iletilir ve güvenli sunucularda saklanır. Kişisel bilgileriniz üçüncü taraflarla paylaşılmaz."
-    },
-    {
-        q: "Randevu sistemi nasıl çalışıyor?",
-        a: "Profilinizde randevu butonunu etkinleştirdikten sonra, ziyaretçileriniz sizinle doğrudan randevu talebi oluşturabilir. Gelen talepler dashboard üzerinden yönetilir."
-    },
-    {
-        q: "Kardly'yi hangi cihazlarda kullanabilirim?",
-        a: "Kardly tamamen responsive bir platformdur. Bilgisayar, tablet ve mobil cihazlarda sorunsuz çalışır."
-    },
-]
+import { useTranslation } from "@/context/LanguageContext"
 
 function FaqItem({ q, a }: { q: string, a: string }) {
+    const { language } = useTranslation()
     const [open, setOpen] = useState(false)
+
     return (
         <div className="border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors">
             <button
@@ -65,6 +33,9 @@ function FaqItem({ q, a }: { q: string, a: string }) {
 }
 
 export default function SSSPage() {
+    const { t, language } = useTranslation()
+    const faqs = t('faqs') as unknown as { q: string, a: string }[]
+
     return (
         <main className="min-h-screen bg-white">
             <div className="bg-slate-50 border-b border-slate-100">
@@ -76,20 +47,20 @@ export default function SSSPage() {
                         <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
                     </Link>
                     <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-900 transition-colors">
-                        <ArrowLeft size={16} /> Ana Sayfa
+                        <ArrowLeft size={16} /> {t('back')}
                     </Link>
                 </div>
             </div>
 
             <div className="max-w-3xl mx-auto px-6 py-20">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">SSS</p>
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">Sıkça Sorulan Sorular</h1>
-                    <p className="text-slate-500 text-lg mb-16">Merak ettiklerinizin yanıtlarını burada bulabilirsiniz.</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('faq')}</p>
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">{t('faqTitle')}</h1>
+                    <p className="text-slate-500 text-lg mb-16">{t('faqSubtitle')}</p>
                 </motion.div>
 
                 <div className="space-y-4">
-                    {faqs.map((faq, i) => (
+                    {Array.isArray(faqs) && faqs.map((faq, i) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 10 }}

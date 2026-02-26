@@ -515,7 +515,70 @@ export const translations: any = {
         privacySection8Desc1: "Gizlilik ile ilgili tüm soru ve talepleriniz için ",
         privacySection8Link: "iletişim formumuzu",
         privacySection8Desc2: " kullanabilir veya doğrudan privacy@kardly.app adresine yazabilirsiniz.",
-        privacyFramework: "Kardly Privacy Framework v2.0"
+        privacyFramework: "Kardly Privacy Framework v2.0",
+
+        // FAQ Page
+        faqTitle: "Sıkça Sorulan Sorular",
+        faqSubtitle: "Merak ettiklerinizin yanıtlarını burada bulabilirsiniz.",
+        faqs: [
+            {
+                q: "Kardly nedir?",
+                a: "Kardly, profesyonel dijital kartvizit ve kişisel profil oluşturma platformudur. Projelerinizi, uzmanlıklarınızı, iletişim bilgilerinizi ve hizmetlerinizi tek bir link altında toplayarak kolayca paylaşmanızı sağlar."
+            },
+            {
+                q: "Kardly ücretsiz mi?",
+                a: "Evet! Temel özellikler ücretsiz olarak kullanılabilir. Premium şablonlar ve gelişmiş özellikler için uygun fiyatlı planlarımız mevcuttur."
+            },
+            {
+                q: "QR kod nasıl oluşturuluyor?",
+                a: "Profilinizi oluşturduktan sonra otomatik olarak bir QR kod üretilir. Bu kodu kartvizitinize, sunumlarınıza veya sosyal medyanıza ekleyebilirsiniz."
+            },
+            {
+                q: "Ödeme almak için ne yapmalıyım?",
+                a: "Dashboard üzerinden Stripe veya PayTR entegrasyonunuzu aktifleştirin. Ardından profilinize ödeme butonu ekleyerek müşterilerinizden doğrudan ödeme alabilirsiniz."
+            },
+            {
+                q: "Profilimi özelleştirebilir miyim?",
+                a: "Evet. Farklı şablon temaları, renk paleti seçenekleri ve blok düzeni ile profilinizi tamamen kişiselleştirebilirsiniz."
+            },
+            {
+                q: "Verilerim güvende mi?",
+                a: "Kesinlikle. Tüm veriler şifrelenmiş bağlantılar üzerinden iletilir ve güvenli sunucularda saklanır. Kişisel bilgileriniz üçüncü taraflarla paylaşılmaz."
+            },
+            {
+                q: "Randevu sistemi nasıl çalışıyor?",
+                a: "Profilinizde randevu butonunu etkinleştirdikten sonra, ziyaretçileriniz sizinle doğrudan randevu talebi oluşturabilir. Gelen talepler dashboard üzerinden yönetilir."
+            },
+            {
+                q: "Kardly'yi hangi cihazlarda kullanabilirim?",
+                a: "Kardly tamamen responsive bir platformdur. Bilgisayar, tablet ve mobil cihazlarda sorunsuz çalışır."
+            }
+        ],
+
+        // Contact Page
+        contactTitle: "Bize Ulaşın",
+        contactSubtitle: "Sorularınız, önerileriniz veya iş birliği talepleriniz için bizimle iletişime geçin.",
+        contactLabelName: "Adınız",
+        contactPlaceholderName: "Adınız Soyadınız",
+        contactLabelEmail: "E-posta",
+        contactPlaceholderEmail: "ornek@email.com",
+        contactLabelSubject: "Konu",
+        contactPlaceholderSubject: "Konu başlığı",
+        contactLabelMessage: "Mesajınız",
+        contactPlaceholderMessage: "Mesajınızı buraya yazın...",
+        contactSendBtn: "Mesaj Gönder",
+        contactSuccessTitle: "Mesajınız Gönderildi!",
+        contactSuccessDesc: "En kısa sürede size geri dönüş yapacağız.",
+        contactError: "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+        contactGenericError: "Bir hata oluştu.",
+
+        // Blog Page
+        blogMainTitle: "Dijital Dünyanın Nabzı",
+        blogMainSubtitle: "Profesyonel ipuçları, güncellemeler ve dijital kimlik stratejileri.",
+        blogLoading: "Yükleniyor...",
+        blogNoPost: "Henüz blog yazısı yayınlanmadı.",
+        blogNoPostDesc: "Yakında harika içeriklerle burada olacağız!",
+        blogReadMore: "Devamını Oku"
     },
     en: {
         // Profile & Appointments
@@ -1033,6 +1096,69 @@ export const translations: any = {
         privacySection8Desc1: "For all your questions and requests regarding privacy, you can use our ",
         privacySection8Link: "contact form",
         privacySection8Desc2: " or write directly to privacy@kardly.app.",
-        privacyFramework: "Kardly Privacy Framework v2.0"
+        privacyFramework: "Kardly Privacy Framework v2.0",
+
+        // FAQ Page
+        faqTitle: "Frequently Asked Questions",
+        faqSubtitle: "Find answers to your questions here.",
+        faqs: [
+            {
+                q: "What is Kardly?",
+                a: "Kardly is a professional digital business card and personal profile platform. It allows you to gather and share your projects, expertise, contact information, and services under a single link."
+            },
+            {
+                q: "Is Kardly free?",
+                a: "Yes! Basic features are available for free. We have affordable plans for premium templates and advanced features."
+            },
+            {
+                q: "How is the QR code generated?",
+                a: "A QR code is automatically generated after you create your profile. You can add this code to your business cards, presentations, or social media."
+            },
+            {
+                q: "What should I do to receive payments?",
+                a: "Activate your Stripe or PayTR integration via the Dashboard. Then you can receive payments directly from your customers by adding a payment button to your profile."
+            },
+            {
+                q: "Can I customize my profile?",
+                a: "Yes. You can fully personalize your profile with different template themes, color palette options, and block layout."
+            },
+            {
+                q: "Is my data safe?",
+                a: "Absolutely. All data is transmitted over encrypted connections and stored on secure servers. Your personal information is not shared with third parties."
+            },
+            {
+                q: "How does the appointment system work?",
+                a: "After you activate the appointment button on your profile, your visitors can create appointment requests directly with you. Incoming requests are managed via the dashboard."
+            },
+            {
+                q: "On which devices can I use Kardly?",
+                a: "Kardly is a fully responsive platform. It works seamlessly on computers, tablets, and mobile devices."
+            }
+        ],
+
+        // Contact Page
+        contactTitle: "Contact Us",
+        contactSubtitle: "Get in touch with us for your questions, suggestions, or collaboration requests.",
+        contactLabelName: "Your Name",
+        contactPlaceholderName: "Your Full Name",
+        contactLabelEmail: "Email",
+        contactPlaceholderEmail: "example@email.com",
+        contactLabelSubject: "Subject",
+        contactPlaceholderSubject: "Subject title",
+        contactLabelMessage: "Your Message",
+        contactPlaceholderMessage: "Write your message here...",
+        contactSendBtn: "Send Message",
+        contactSuccessTitle: "Message Sent!",
+        contactSuccessDesc: "We will get back to you as soon as possible.",
+        contactError: "Message could not be sent. Please try again.",
+        contactGenericError: "An error occurred.",
+
+        // Blog Page
+        blogMainTitle: "Pulse of the Digital World",
+        blogMainSubtitle: "Professional tips, updates, and digital identity strategies.",
+        blogLoading: "Loading...",
+        blogNoPost: "No blog posts published yet.",
+        blogNoPostDesc: "We will be here soon with great content!",
+        blogReadMore: "Read More"
     }
 }

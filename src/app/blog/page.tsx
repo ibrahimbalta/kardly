@@ -4,8 +4,10 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Layout, ArrowLeft, Calendar, ArrowRight } from "lucide-react"
+import { useTranslation } from "@/context/LanguageContext"
 
 export default function BlogPage() {
+    const { t, language } = useTranslation()
     const [posts, setPosts] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -27,16 +29,16 @@ export default function BlogPage() {
                         <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
                     </Link>
                     <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-900 transition-colors">
-                        <ArrowLeft size={16} /> Ana Sayfa
+                        <ArrowLeft size={16} /> {t('back')}
                     </Link>
                 </div>
             </div>
 
             <div className="max-w-4xl mx-auto px-6 py-20">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">Blog</p>
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">Dijital Dünyanın Nabzı</h1>
-                    <p className="text-slate-500 text-lg mb-16">Profesyonel ipuçları, güncellemeler ve dijital kimlik stratejileri.</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('blog')}</p>
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">{t('blogMainTitle')}</h1>
+                    <p className="text-slate-500 text-lg mb-16">{t('blogMainSubtitle')}</p>
                 </motion.div>
 
                 {loading ? (
@@ -45,8 +47,8 @@ export default function BlogPage() {
                     </div>
                 ) : posts.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-slate-300 text-lg font-medium">Henüz blog yazısı yayınlanmadı.</p>
-                        <p className="text-slate-400 text-sm mt-2">Yakında harika içeriklerle burada olacağız!</p>
+                        <p className="text-slate-300 text-lg font-medium">{t('blogNoPost')}</p>
+                        <p className="text-slate-400 text-sm mt-2">{t('blogNoPostDesc')}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -66,12 +68,12 @@ export default function BlogPage() {
                                     <div className="p-8">
                                         <div className="flex items-center gap-2 text-xs text-slate-400 font-medium mb-4">
                                             <Calendar size={12} />
-                                            {new Date(post.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                            {new Date(post.createdAt).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                         </div>
                                         <h2 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-rose-500 transition-colors">{post.title}</h2>
                                         {post.excerpt && <p className="text-sm text-slate-500 leading-relaxed mb-4">{post.excerpt}</p>}
                                         <span className="text-xs font-semibold text-rose-500 flex items-center gap-2">
-                                            Devamını Oku <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                            {t('blogReadMore')} <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                         </span>
                                     </div>
                                 </Link>
