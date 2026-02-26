@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kardly - Oturum Temizleniyor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .container {
+            text-align: center;
+            padding: 3rem;
+            max-width: 420px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #f43f5e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .success {
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .done-icon {
+            width: 48px;
+            height: 48px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+        }
+
+        .done-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="content">
+        <div class="spinner"></div>
+        <h1>Oturum Temizleniyor...</h1>
+        <p>Lütfen bekleyin, tarayıcı verileri temizleniyor ve giriş sayfasına yönlendiriliyorsunuz.</p>
+    </div>
+
+    <script>
+        (function () {
+            // Clear ALL cookies for every possible domain/path combination
+            function clearAllCookies() {
+                var cookies = document.cookie.split(';');
+                var domains = [
+                    '',
+                    'kardly.site',
+                    '.kardly.site',
+                    'www.kardly.site',
+                    '.www.kardly.site',
+                    'kardly.vercel.app',
+                    '.kardly.vercel.app'
+                ];
+                var paths = ['/', '/api', '/api/auth', '/dashboard', '/login', '/admin'];
+
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    var name = cookie.split('=')[0];
+                    if (!name) continue;
+
+                    for (var d = 0; d < domains.length; d++) {
+                        for (var p = 0; p < paths.length; p++) {
+                            var domainPart = domains[d] ? '; domain=' + domains[d] : '';
+                            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=' + paths[p] + domainPart;
+                            document.cookie = name + '=; max-age=0; path=' + paths[p] + domainPart;
+                        }
+                    }
+                }
+            }
+
+            // Clear cookies
+            clearAllCookies();
+
+            // Clear storage too
+            try { localStorage.clear(); } catch (e) { }
+            try { sessionStorage.clear(); } catch (e) { }
+
+            // Wait and then clear again to be sure
+            setTimeout(function () {
+                clearAllCookies();
+            }, 500);
+
+            // Show success and redirect
+            setTimeout(function () {
+                document.getElementById('content').innerHTML =
+                    '<div class="done-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' +
+                    '<h1>Temizlendi! ✓</h1>' +
+                    '<p class="success">Giriş sayfasına yönlendiriliyorsunuz...</p>';
+
+                setTimeout(function () {
+                    window.location.href = '/login';
+                }, 1000);
+            }, 1500);
+        })();
+    </script>
+</body>
+
+</html>

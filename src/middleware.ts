@@ -10,41 +10,22 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(newUrl, 301)
     }
 
-    // 2. Check cookie header size - if too large, clear all cookies and redirect to login
+    // 2. Check cookie header size - if too large, clear all cookies and redirect to clear page
     const cookieHeader = request.headers.get("cookie") || ""
     const cookieSize = new TextEncoder().encode(cookieHeader).length
 
-    // If cookies exceed 12KB (well under the 16KB limit), clear them
-    if (cookieSize > 12000) {
-        const loginUrl = new URL("/login", request.url)
-        const response = NextResponse.redirect(loginUrl)
+    // If cookies exceed 8KB, clear them aggressively (Vercel limit is 16KB per header)
+    if (cookieSize > 8000) {
+        // Redirect to the static clear.html page which handles cleanup client-side
+        const clearUrl = new URL("/clear.html", request.url)
+        const response = NextResponse.redirect(clearUrl)
 
-        // Delete all known auth cookies
-        const cookiesToClear = [
-            "kardly-session-token",
-            "kardly-callback-url",
-            "kardly-csrf-token",
-            "__Secure-next-auth.session-token",
-            "__Host-next-auth.csrf-token",
-            "next-auth.session-token",
-            "next-auth.callback-url",
-            "next-auth.csrf-token",
-            "__Secure-next-auth.callback-url",
-        ]
-
-        for (const name of cookiesToClear) {
-            // Clear for all possible domain variations
-            response.cookies.set(name, "", { maxAge: 0, path: "/" })
-            response.cookies.set(name, "", { maxAge: 0, path: "/", domain: ".kardly.site" })
-            response.cookies.set(name, "", { maxAge: 0, path: "/", domain: "kardly.site" })
-            response.cookies.set(name, "", { maxAge: 0, path: "/", domain: "www.kardly.site" })
-        }
-
-        // Also try to clear any cookie that starts with common prefixes
+        // Also try server-side cookie clearing
         const allCookies = request.cookies.getAll()
         for (const cookie of allCookies) {
             response.cookies.set(cookie.name, "", { maxAge: 0, path: "/" })
             response.cookies.set(cookie.name, "", { maxAge: 0, path: "/", domain: ".kardly.site" })
+            response.cookies.set(cookie.name, "", { maxAge: 0, path: "/", domain: "www.kardly.site" })
         }
 
         return response
@@ -56,12 +37,9 @@ export function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         /*
-         * Match all paths except:
-         * - api routes (they handle their own auth)
-         * - static files
-         * - images
-         * - favicon
+         * Match ALL paths except static assets.
+         * This ensures cookie checking works everywhere including api routes.
          */
-        "/((?!api|_next/static|_next/image|favicon.ico|icons|sw.js|manifest.json).*)",
+        "/((?!_next/static|_next/image|favicon.ico|icons|sw.js|manifest.json|clear.html).*)",
     ],
 }
