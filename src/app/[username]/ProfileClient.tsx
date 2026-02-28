@@ -2478,9 +2478,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 <div className="absolute bottom-0 left-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
 
                 {/* Particle Systems Mapping */}
-                {tone === 'yaratıcı' && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
+                {theme.special === "software" && <ParticleBackground type="matrix" color="#10b981" />}
+                {theme.special === "finance" && <ParticleBackground type="finance" color="#334155" />}
+                {theme.special === "cyber_glitch" && <ParticleBackground type="matrix" color="#0ef" />}
+                {theme.special === "gamer" && <ParticleBackground type="matrix" color="#00ff9f" />}
+
+                {tone === 'yaratıcı' && !["software", "finance", "gamer"].includes(theme.special) && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
                 {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
-                {tone === 'profesyonel' && <ParticleBackground type="bubbles" color={theme.accent || "#3b82f6"} />}
+                {tone === 'profesyonel' && !["software", "finance"].includes(theme.special) && <ParticleBackground type="bubbles" color={theme.accent || "#3b82f6"} />}
             </div>
 
             <style>{`
@@ -3912,7 +3917,7 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
     )
 }
 
-function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'bubbles', color: string }) {
+function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'bubbles' | 'finance', color: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -3930,22 +3935,66 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
         let particles: any[] = []
 
         if (type === 'matrix') {
-            const columns = Math.floor(w / 20)
+            const columns = Math.floor(w / 15)
             const drops: number[] = new Array(columns).fill(1)
-            const chars = "0101010101010101"
+            const chars = "ｦｱｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890"
 
             const draw = () => {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
                 ctx.fillRect(0, 0, w, h)
                 ctx.fillStyle = color
-                ctx.font = '15px monospace'
+                ctx.font = '12px monospace'
 
                 for (let i = 0; i < drops.length; i++) {
                     const text = chars[Math.floor(Math.random() * chars.length)]
-                    ctx.fillText(text, i * 20, drops[i] * 20)
-                    if (drops[i] * 20 > h && Math.random() > 0.975) drops[i] = 0
+                    ctx.fillText(text, i * 15, drops[i] * 15)
+                    if (drops[i] * 15 > h && Math.random() > 0.98) drops[i] = 0
                     drops[i]++
                 }
+                animationFrameId = requestAnimationFrame(draw)
+            }
+            draw()
+        } else if (type === 'finance') {
+            // Real-time scrolling charts
+            let ticker = 0
+            const data: number[] = Array.from({ length: 100 }, () => Math.random() * 200 + 100)
+
+            const draw = () => {
+                ctx.clearRect(0, 0, w, h)
+                ctx.strokeStyle = color
+                ctx.lineWidth = 1
+                ctx.beginPath()
+
+                ticker++
+                if (ticker % 10 === 0) {
+                    data.shift()
+                    const last = data[data.length - 1]
+                    data.push(Math.max(50, Math.min(h - 50, last + (Math.random() - 0.5) * 40)))
+                }
+
+                const spacing = w / (data.length - 1)
+                for (let i = 0; i < data.length; i++) {
+                    const x = i * spacing
+                    const y = data[i]
+                    if (i === 0) ctx.moveTo(x, y)
+                    else ctx.lineTo(x, y)
+
+                    // Draw "candles" occasionally
+                    if (i % 5 === 0) {
+                        ctx.fillStyle = i % 10 === 0 ? '#10b98122' : '#ef444422'
+                        ctx.fillRect(x - 2, y - 20, 4, 40)
+                    }
+                }
+                ctx.stroke()
+
+                // Add glowing endpoint
+                ctx.fillStyle = color
+                const lastX = w
+                const lastY = data[data.length - 1]
+                ctx.beginPath()
+                ctx.arc(lastX, lastY, 4, 0, Math.PI * 2)
+                ctx.fill()
+
                 animationFrameId = requestAnimationFrame(draw)
             }
             draw()
