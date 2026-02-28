@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
                 httpOnly: true,
                 sameSite: 'lax',
                 path: '/',
-                domain: process.env.NODE_ENV === "production" ? ".kardly.site" : undefined,
+                domain: process.env.NODE_ENV === "production" ? "www.kardly.site" : undefined,
                 secure: process.env.NODE_ENV === "production"
             }
         },
@@ -89,7 +89,7 @@ export const authOptions: NextAuthOptions = {
             options: {
                 sameSite: 'lax',
                 path: '/',
-                domain: process.env.NODE_ENV === "production" ? ".kardly.site" : undefined,
+                domain: process.env.NODE_ENV === "production" ? "www.kardly.site" : undefined,
                 secure: process.env.NODE_ENV === "production"
             }
         },
@@ -99,7 +99,7 @@ export const authOptions: NextAuthOptions = {
                 httpOnly: true,
                 sameSite: 'lax',
                 path: '/',
-                domain: process.env.NODE_ENV === "production" ? ".kardly.site" : undefined,
+                domain: process.env.NODE_ENV === "production" ? "www.kardly.site" : undefined,
                 secure: process.env.NODE_ENV === "production"
             }
         }
