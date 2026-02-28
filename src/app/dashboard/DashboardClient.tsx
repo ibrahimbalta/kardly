@@ -92,7 +92,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const { t, language } = useTranslation()
     const TEMPLATE_CATEGORIES = [
         { id: "all", name: t('catAll'), icon: <Layout size={14} /> },
-        { id: "elite", name: "✨ Elite Premium", icon: <Gem size={14} /> },
         { id: "pro", name: t('catPro'), icon: <Briefcase size={14} /> },
         { id: "retro", name: t('catRetro'), icon: <History size={14} /> },
         { id: "luxury", name: t('catLuxury'), icon: <Award size={14} /> },
@@ -308,11 +307,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const ALL_TEMPLATES = [
-        // Elite Premium
-        { id: "elite_spatial", category: "elite", name: "💎 Elite: Spatial Glass", description: "Apple Vision Pro estetiği, cam katmanlar ve derinlik hissi.", isNew: true, isPremium: true },
-        { id: "elite_cyber", category: "elite", name: "📟 Elite: Cyber HUD", description: "Fütüristik siberpunk arayüzü, tarama çizgileri ve siber nabız.", isNew: true, isPremium: true },
-        { id: "elite_royal", category: "elite", name: "👑 Elite: Royal Velvet", description: "Kraliyet asaleti, altın varaklar ve özel monogram deseni.", isNew: true, isPremium: true },
-
         // Mesleki
         { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
         { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
