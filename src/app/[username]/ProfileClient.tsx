@@ -372,7 +372,19 @@ END:VCARD`
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
-        return <NeonModernTemplate {...props} colorScheme={profile.templateId || "black"} tone={tone} toneStyle={toneStyle} />;
+        const templateId = profile.templateId || "black"
+
+        if (templateId === "elite_spatial") {
+            return <EliteSpatialTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+        }
+        if (templateId === "elite_cyber") {
+            return <EliteCyberTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+        }
+        if (templateId === "elite_royal") {
+            return <EliteRoyalTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+        }
+
+        return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
     }
 
     return (
@@ -382,6 +394,456 @@ END:VCARD`
     )
 }
 
+
+function EliteSpatialTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const socialLinks = profile.socialLinks || [];
+
+    // Mouse Parallax for "Spatial" feel
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 });
+    const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 });
+
+    const rotateX = useTransform(smoothMouseY, [-300, 300], [5, -5]);
+    const rotateY = useTransform(smoothMouseX, [-300, 300], [-5, 5]);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        mouseX.set(x);
+        mouseY.set(y);
+    };
+
+    const handleMouseLeave = () => {
+        mouseX.set(0);
+        mouseY.set(0);
+    };
+
+    const phoneNumber = profile.phone || socialLinks.find((l: any) => l.platform === 'phone')?.url || "";
+
+    return (
+        <div
+            className="min-h-screen w-full bg-[#000] text-white flex items-center justify-center p-4 relative overflow-hidden font-sans"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            {/* Background Orbs - Moving & Blurred */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <motion.div
+                    animate={{
+                        x: [0, 100, -50, 0],
+                        y: [0, -150, 50, 0],
+                        scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-sky-500/20 rounded-full blur-[100px]"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -100, 80, 0],
+                        y: [0, 100, -100, 0],
+                        scale: [1, 1.3, 1]
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px]"
+                />
+                <motion.div
+                    animate={{
+                        opacity: [0.3, 0.6, 0.3],
+                        scale: [1, 1.1, 1]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_70%)]"
+                />
+            </div>
+
+            {/* Main Spatial Container */}
+            <motion.div
+                style={{ rotateX, rotateY, perspective: 1000 }}
+                className="relative z-10 w-full max-w-[420px]"
+            >
+                {/* Frosted Main Card */}
+                <div
+                    className="relative bg-white/[0.03] backdrop-blur-[40px] border border-white/10 rounded-[3rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden group"
+                    style={{
+                        boxShadow: '0 40px 100px -20px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.05)'
+                    }}
+                >
+                    {/* Inner Glow / Reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.05] to-transparent pointer-events-none" />
+                    <div className="absolute -top-[50%] -left-[50%] w-full h-full bg-white/[0.01] rotate-12 pointer-events-none transition-transform group-hover:translate-x-10 group-hover:translate-y-10" />
+
+                    {/* Profile Header */}
+                    <div className="relative flex flex-col items-center text-center space-y-6">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="relative"
+                        >
+                            <div className="w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-sky-400/50 via-white/20 to-purple-500/50">
+                                <img
+                                    src={profile.user.image || "https://ui-avatars.com/api/?name=" + profile.user.name}
+                                    alt={profile.user.name}
+                                    className="w-full h-full rounded-full object-cover border-4 border-black/40 backdrop-blur-md"
+                                />
+                            </div>
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full border-4 border-[#070707] z-10 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                            />
+                        </motion.div>
+
+                        <div className="space-y-2">
+                            <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                                {profile.user.name}
+                            </h1>
+                            <div className="flex items-center justify-center gap-2">
+                                <span className="h-[1px] w-4 bg-sky-500/50" />
+                                <p className="text-[10px] font-black text-sky-400 uppercase tracking-[0.4em]">
+                                    {profile.occupation || "Profession"}
+                                </p>
+                                <span className="h-[1px] w-4 bg-sky-500/50" />
+                            </div>
+                        </div>
+
+                        {/* Social Quick Bar */}
+                        <div className="flex gap-4 pt-2">
+                            {socialLinks.slice(0, 4).filter((l: any) => l.url).map((link: any, i: number) => (
+                                <motion.a
+                                    key={i}
+                                    whileHover={{ y: -5, scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+                                    whileTap={{ scale: 0.95 }}
+                                    href={link.url}
+                                    target="_blank"
+                                    className="w-12 h-12 rounded-[1.2rem] bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all shadow-xl backdrop-blur-md"
+                                >
+                                    {getSocialIcon(link.platform)}
+                                </motion.a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Bio & Intro */}
+                    <div className="mt-10 space-y-4">
+                        <div className="bg-white/5 rounded-[2rem] p-6 border border-white/5 relative overflow-hidden group/bio">
+                            <Quote className="absolute -top-1 -right-1 w-12 h-12 text-white/[0.02] rotate-12 transition-transform group-hover/bio:scale-110" />
+                            <p className="text-xs text-white/60 leading-relaxed italic text-center relative z-10">
+                                "{profile.bio || profile.slogan || "Digital impact through visual excellence."}"
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Main Actions - Spatial Buttons */}
+                    <div className="mt-8 space-y-3">
+                        <button
+                            onClick={() => setIsLeadModalOpen(true)}
+                            className="w-full py-4.5 bg-white text-black font-black text-xs uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-2 hover:bg-white/90 active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)]"
+                        >
+                            <MessageSquare size={16} />
+                            <span>{t.contactMeTitle || "Hemen İletişime Geç"}</span>
+                        </button>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                onClick={handleAddToContacts}
+                                className="py-4 bg-white/[0.04] border border-white/10 text-white font-bold text-[10px] uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 hover:bg-white/10 active:scale-[0.98] transition-all backdrop-blur-md"
+                            >
+                                <UserPlus size={14} />
+                                <span>{t.saveMyInfoBtn || "Kaydet"}</span>
+                            </button>
+                            <button
+                                onClick={handleShare}
+                                className="py-4 bg-white/[0.04] border border-white/10 text-white font-bold text-[10px] uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 hover:bg-white/10 active:scale-[0.98] transition-all backdrop-blur-md"
+                            >
+                                <Share2 size={14} />
+                                <span>{t.shareCardBtn || "Paylaş"}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Floating Assistant Control */}
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setIsAIChatOpen(true)}
+                        className="mt-8 w-full p-4 rounded-2xl bg-gradient-to-r from-sky-600/10 via-white/[0.02] to-purple-600/10 border border-white/10 flex items-center justify-between group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-sky-500/20 flex items-center justify-center text-sky-400 relative overflow-hidden">
+                                <Bot size={18} className="relative z-10" />
+                                <div className="absolute inset-0 bg-sky-400/10 animate-pulse" />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-sky-400">Kardly AI Asistan</p>
+                                <p className="text-[10px] text-white/40 font-bold uppercase tracking-tighter">İbrahim Bey hakkında sor...</p>
+                            </div>
+                        </div>
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                            <ArrowRight size={14} className="text-white/20 group-hover:text-white transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                    </motion.button>
+                </div>
+
+                {/* Secondary Cards (Bottom) */}
+                <div className="mt-4 flex gap-4">
+                    <motion.button
+                        whileHover={{ y: -5, backgroundColor: 'rgba(255,255,255,0.05)' }}
+                        onClick={() => setIsQrOpen(true)}
+                        className="flex-1 p-5 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] flex flex-col items-center gap-3 group transition-colors"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:text-sky-400 transition-colors">
+                            <QrCode size={20} />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 group-hover:text-white/40 transition-colors">QR Kod</span>
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ y: -5, backgroundColor: 'rgba(255,255,255,0.05)' }}
+                        onClick={() => setIsWalletModalOpen(true)}
+                        className="flex-1 p-5 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] flex flex-col items-center gap-3 group transition-colors"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:text-purple-400 transition-colors">
+                            <Smartphone size={20} />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 group-hover:text-white/40 transition-colors">Wallet</span>
+                    </motion.button>
+                </div>
+
+                {/* Branding Footer */}
+                <div className="mt-8 text-center pb-8">
+                    <div className="inline-flex items-center gap-3 opacity-20">
+                        <span className="h-[1px] w-8 bg-white" />
+                        <p className="text-[8px] font-black uppercase tracking-[0.6em]">KARDLY ELITE</p>
+                        <span className="h-[1px] w-8 bg-white" />
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+// Helper to get platform icons for the new template
+function getSocialIcon(platform: string) {
+    switch (platform.toLowerCase()) {
+        case 'instagram': return <Instagram size={20} />;
+        case 'twitter': case 'x': return <Twitter size={20} />;
+        case 'linkedin': return <Linkedin size={20} />;
+        case 'github': return <Github size={20} />;
+        case 'youtube': return <Youtube size={20} />;
+        case 'mail': case 'email': return <Mail size={20} />;
+        case 'phone': return <Phone size={20} />;
+        case 'website': return <Globe size={20} />;
+        default: return <ArrowRight size={20} />;
+    }
+}
+
+
+function EliteCyberTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
+    const socialLinks = profile.socialLinks || [];
+
+    return (
+        <div className="min-h-screen w-full bg-[#050505] text-[#0ff] flex items-center justify-center p-4 relative overflow-hidden font-mono">
+            {/* Cyber Grid & Scanline Background */}
+            <div className="absolute inset-0 z-0 opacity-20" style={{ backgroundImage: `linear-gradient(#0ff 1px, transparent 1px), linear-gradient(90deg, #0ff 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-[#0ff01] to-transparent animate-scanline pointer-events-none" />
+            <ParticleBackground type="matrix" color="#0ff" />
+
+            {/* Corner Decorative Elements */}
+            <div className="absolute top-10 left-10 w-20 h-20 border-t-2 border-l-2 border-[#0ff] opacity-40" />
+            <div className="absolute bottom-10 right-10 w-20 h-20 border-b-2 border-r-2 border-[#0ff] opacity-40" />
+
+            {/* Main HUD Container */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-[420px] bg-black/80 border-2 border-[#0ff]/30 p-8 clip-path-cyber overflow-hidden"
+                style={{
+                    clipPath: 'polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%)'
+                }}
+            >
+                {/* HUD Header */}
+                <div className="relative border-b-2 border-[#0ff]/20 pb-6 mb-6">
+                    <div className="flex items-center gap-6">
+                        <div className="relative">
+                            <div className="w-20 h-20 border-2 border-[#0ff] p-1 rotate-45">
+                                <img
+                                    src={profile.user.image}
+                                    className="w-full h-full object-cover -rotate-45"
+                                    alt="User"
+                                />
+                            </div>
+                            <div className="absolute -top-2 -right-2 bg-[#0ff] text-black text-[8px] font-black px-1">ACTIVE</div>
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-black tracking-tighter uppercase italic">{profile.user.name}</h1>
+                            <p className="text-[10px] text-[#0ff]/60 uppercase tracking-[0.3em]">ID: {profile.username || "USER_UNKNOWN"}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Status Bar */}
+                <div className="flex justify-between text-[9px] mb-6 bg-[#0ff]/10 p-2">
+                    <span className="animate-pulse">SYSTEM: ONLINE</span>
+                    <span>LOC: {profile.location || "UNKNOWN"}</span>
+                    <span>LVL: 99</span>
+                </div>
+
+                {/* Capability Matrix */}
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                        {socialLinks.filter((l: any) => l.url).slice(0, 4).map((link: any, i: number) => (
+                            <motion.a
+                                key={i}
+                                whileHover={{ x: 5, backgroundColor: 'rgba(0, 255, 255, 0.2)' }}
+                                href={link.url}
+                                target="_blank"
+                                className="flex items-center gap-3 border border-[#0ff]/20 p-3 bg-black/40 group transition-all"
+                            >
+                                <div className="text-[#0ff] group-hover:animate-glitch">{getSocialIcon(link.platform)}</div>
+                                <span className="text-[10px] uppercase font-bold text-[#0ff]/80">{link.platform}</span>
+                            </motion.a>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Mission Objective (Bio) */}
+                <div className="mt-6 border-l-4 border-[#0ff] pl-4 py-2 bg-[#0ff]/5">
+                    <p className="text-xs uppercase leading-relaxed text-[#0ff]/90">
+                        {"> OBJ: "}{profile.bio || "Executing high-level digital directives."}
+                    </p>
+                </div>
+
+                {/* Action Sequencer */}
+                <div className="mt-8 grid gap-4">
+                    <button
+                        onClick={() => setIsLeadModalOpen(true)}
+                        className="w-full py-4 bg-[#0ff] text-black font-black uppercase text-xs tracking-[0.2em] shadow-[0_0_20px_rgba(0,255,255,0.4)] hover:shadow-[0_0_30px_rgba(0,255,255,0.6)] transition-all"
+                    >
+                        INITIATE CONTACT
+                    </button>
+                    <div className="grid grid-cols-2 gap-4">
+                        <button onClick={handleAddToContacts} className="py-3 border border-[#0ff] text-[10px] font-black hover:bg-[#0ff]/10 transition-all">SYNC DEVICE</button>
+                        <button onClick={handleShare} className="py-3 border border-[#0ff] text-[10px] font-black hover:bg-[#0ff]/10 transition-all">UPLINK DATA</button>
+                    </div>
+                </div>
+
+                <style>{`
+                    @keyframes scanline {
+                        0% { transform: translateY(-100%); }
+                        100% { transform: translateY(100%); }
+                    }
+                    .animate-scanline {
+                        animation: scanline 8s linear infinite;
+                    }
+                    .clip-path-cyber {
+                        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+                    }
+                `}</style>
+            </motion.div>
+        </div>
+    );
+}
+
+
+function EliteRoyalTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
+    const socialLinks = profile.socialLinks || [];
+    const initials = profile.user.name.split(' ').map((n: any) => n[0]).join('');
+
+    return (
+        <div className="min-h-screen w-full bg-[#0a0a0a] text-[#d4af37] flex items-center justify-center p-4 relative overflow-hidden font-serif">
+            {/* Royal Monogram Background */}
+            <div className="absolute inset-0 z-0 opacity-[0.03] select-none pointer-events-none flex flex-wrap gap-10 justify-center items-center overflow-hidden">
+                {Array(200).fill(0).map((_, i) => (
+                    <span key={i} className="text-4xl font-black rotate-[-30deg] italic">{initials}</span>
+                ))}
+            </div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#d4af3711_0%,transparent_70%)]" />
+
+            {/* Main Royal Container */}
+            <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="relative z-10 w-full max-w-[440px] bg-[#111] border border-[#d4af37]/30 p-1 rounded-none shadow-[0_30px_60px_rgba(0,0,0,0.8)]"
+            >
+                <div className="border border-[#d4af37]/20 p-8">
+                    {/* Emblem Section */}
+                    <div className="flex flex-col items-center text-center space-y-8">
+                        <div className="relative">
+                            <div className="absolute -inset-4 border border-[#d4af37]/20 animate-spin-slow rounded-full" />
+                            <div className="w-24 h-24 rounded-full border-2 border-[#d4af37] p-1.5 overflow-hidden">
+                                <img
+                                    src={profile.user.image}
+                                    className="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700"
+                                    alt="Royal"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            <h1 className="text-4xl font-light tracking-[0.2em] uppercase text-[#d4af37]">{profile.user.name}</h1>
+                            <div className="flex items-center justify-center gap-4">
+                                <div className="h-[0.5px] w-8 bg-[#d4af37]/40" />
+                                <p className="text-[10px] uppercase tracking-[0.6em] text-[#d4af37]/60 font-medium">
+                                    {profile.occupation || "Consultant"}
+                                </p>
+                                <div className="h-[0.5px] w-8 bg-[#d4af37]/40" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Social List - Elegant Grid */}
+                    <div className="mt-12 grid grid-cols-4 gap-4 pb-12 border-b border-[#d4af37]/10">
+                        {socialLinks.filter((l: any) => l.url).slice(0, 4).map((link: any, i: number) => (
+                            <motion.a
+                                key={i}
+                                whileHover={{ scale: 1.1, color: '#fff' }}
+                                href={link.url}
+                                target="_blank"
+                                className="flex flex-col items-center gap-2"
+                            >
+                                {getSocialIcon(link.platform)}
+                                <span className="text-[8px] uppercase tracking-widest opacity-40">{link.platform}</span>
+                            </motion.a>
+                        ))}
+                    </div>
+
+                    {/* About Section */}
+                    <div className="mt-10 text-center px-4">
+                        <p className="text-sm italic leading-relaxed text-[#d4af37]/70 font-light">
+                            {profile.bio || "Excellence in every detail."}
+                        </p>
+                    </div>
+
+                    {/* Royal Actions */}
+                    <div className="mt-12 space-y-4">
+                        <button
+                            onClick={() => setIsLeadModalOpen(true)}
+                            className="w-full py-4 border border-[#d4af37] text-[#d4af37] text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-[#d4af37] hover:text-black transition-all duration-500"
+                        >
+                            Request Consultation
+                        </button>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button onClick={handleAddToContacts} className="py-4 border border-[#d4af37]/30 text-[9px] uppercase tracking-[0.3em] hover:border-[#d4af37] transition-colors">Digital VCF</button>
+                            <button onClick={handleShare} className="py-4 border border-[#d4af37]/30 text-[9px] uppercase tracking-[0.3em] hover:border-[#d4af37] transition-colors">Manifesto</button>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+
+            <style>{`
+                .animate-spin-slow {
+                    animation: spin 20s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
+        </div>
+    );
+}
 
 function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
