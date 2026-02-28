@@ -3627,18 +3627,98 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                         animate={{ scale: 1, opacity: 1 }}
                         ref={cardRef}
                         data-card-capture
-                        className={cn("relative w-full overflow-hidden flex-shrink-0", toneStyle?.rounded || "rounded-[2rem]")}
+                        className={cn(
+                            "relative w-full overflow-hidden flex-shrink-0 border shadow-2xl transition-all",
+                            theme.card,
+                            theme.border,
+                            toneStyle?.rounded || "rounded-[2rem]"
+                        )}
                         style={{
-                            background: `linear-gradient(165deg, ${cardBg} 0%, #0a0a0c 50%, ${cardBg} 100%)`,
-                            boxShadow: `0 30px 60px -15px rgba(0,0,0,0.7), 0 0 40px ${accent}15`
+                            boxShadow: theme.glow !== "none" ? theme.glow : `0 30px 60px -15px rgba(0,0,0,0.7), 0 0 40px ${accent}15`
                         }}
                     >
                         {/* Background Design */}
-                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                            <div className="absolute top-0 inset-x-0 h-40 opacity-20" style={{ background: `linear-gradient(to bottom, ${accent}, transparent)` }} />
-                            <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-[80px] opacity-10" style={{ background: accent }} />
-                            <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full blur-[80px] opacity-10" style={{ background: accent }} />
-                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px)`, backgroundSize: '15px 15px' }} />
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+                            {/* Base Theme Background Class if any */}
+                            <div className={cn("absolute inset-0", theme.bg)} />
+
+                            {/* Special Theme Effects */}
+                            {theme.special === "cyber" && (
+                                <>
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#0ff2_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#f0f2_0%,transparent_50%)]" />
+                                    <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,#000_25%,#111_25%,#111_50%,#000_50%,#000_75%,#111_75%)] bg-[length:20px_20px] opacity-[0.03]" />
+                                </>
+                            )}
+                            {theme.special === "galaxy" && (
+                                <>
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#a855f722_0%,transparent_70%)]" />
+                                    <div className="absolute top-0 left-0 w-full h-full opacity-20" style={{ background: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0))', backgroundSize: '100px 100px' }} />
+                                </>
+                            )}
+                            {theme.special === "retro_mac" && (
+                                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%23000'/%3E%3C/svg%3E")` }} />
+                            )}
+                            {theme.special === "retro_news" && (
+                                <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")` }} />
+                            )}
+                            {theme.special === "luxury_gold" && (
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#fbbf2411_0%,transparent_50%)]" />
+                            )}
+                            {theme.special === "future_holo" && (
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)]" />
+                            )}
+                            {theme.special === "retro_synth" && (
+                                <>
+                                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_bottom,transparent,#8b5cf633)]" />
+                                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(#f472b6 1px, transparent 1px), linear-gradient(90deg, #f472b6 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-100px)' }} />
+                                </>
+                            )}
+                            {theme.special === "dream_mist" && (
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-blue-500/10 blur-3xl opacity-40" />
+                            )}
+                            {theme.special === "pop_comic" && (
+                                <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='5' fill='%23000'/%3E%3C/svg%3E")`, backgroundSize: '10px 10px' }} />
+                            )}
+                            {theme.special === "minimal_pure" && (
+                                <div className="absolute inset-0 bg-white" />
+                            )}
+
+                            {/* Tone Specific Effects */}
+                            {profile.tone === 'lüks' && (
+                                <>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-amber-600/10 via-transparent to-yellow-600/10 opacity-30" />
+                                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25 0 L75 0 L100 50 L75 100 L25 100 L0 50 Z' fill='none' stroke='%23d4af37' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                                </>
+                            )}
+                            {profile.tone === 'yaratıcı' && (
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#ff00ff10_0%,transparent_50%),radial-gradient(circle_at_bottom_right,#00ffff10_0%,transparent_50%)]" />
+                            )}
+
+                            {/* Base Theme Patterns Rendering (Shared for special themes) */}
+                            {["ottoman", "geometric", "marble", "topo", "circuit", "dietitian", "lawyer", "architect", "realestate", "artistic", "software", "doctor", "chef", "fitness", "musician", "finance", "gamer"].includes(theme.special) && (
+                                <div className="absolute inset-0 opacity-[0.05]" style={{
+                                    backgroundImage:
+                                        theme.special === 'ottoman' ? `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50 L100 0 L100 100 Z M50 50 L0 0 L0 100 Z' fill='%23d4af37' fill-opacity='0.4'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%23d4af37'/%3E%3Cpath d='M0 50 L50 0 L100 50 L50 100 Z' fill='none' stroke='%23d4af37' stroke-width='1'/%3E%3C/svg%3E")` :
+                                            theme.special === 'geometric' ? `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23ffffff' stroke-width='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 30V20h10V10h10V0h10v10h10v10h10v10H50v10H40v10H30v10H20V50H10V40H0V30h6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` :
+                                                theme.special === 'circuit' ? `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 H 90 V 90 H 10 Z' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='10' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='90' cy='90' r='1' fill='%2306b6d4'/%3E%3Ccircle cx='10' cy='90' r='1' fill='%2306b6d4'/%3E%3C/svg%3E")` :
+                                                    theme.special === 'dietitian' ? `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 20 Q 60 40, 50 60 Q 40 40, 50 20 Z M50 60 L 50 80' stroke='%2322c55e' fill='none' stroke-width='1.5'/%3E%3C/svg%3E")` :
+                                                        theme.special === 'lawyer' ? `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 H 100 V 100 H 20 Z M60 20 V 100 M20 60 H 100' stroke='%23d4af37' fill='none' stroke-width='2'/%3E%3C/svg%3E")` :
+                                                            theme.special === 'architect' ? `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L 0 60 M 0 0 L 60 0 M 30 0 L 30 60 M 0 30 L 60 30' stroke='%230ea5e9' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")` :
+                                                                theme.special === 'realestate' ? `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 V 40 L 50 20 L 80 40 V 100' stroke='%23fbbf24' fill='none' stroke-width='2'/%3E%3C/svg%3E")` :
+                                                                    undefined,
+                                    backgroundSize: ['lawyer', 'dietitian', 'realestate'].includes(theme.special) ? '80px 80px' : '40px 40px'
+                                }} />
+                            )}
+
+                            {/* Default Fallback Glows if not a special theme */}
+                            {!theme.special && (
+                                <>
+                                    <div className="absolute top-0 inset-x-0 h-40 opacity-20" style={{ background: `linear-gradient(to bottom, ${accent}, transparent)` }} />
+                                    <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-[80px] opacity-10" style={{ background: accent }} />
+                                    <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full blur-[80px] opacity-10" style={{ background: accent }} />
+                                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px)`, backgroundSize: '15px 15px' }} />
+                                </>
+                            )}
                         </div>
 
                         <div className="relative z-10 p-5 pt-8 pb-6 flex flex-col items-center">
@@ -3655,7 +3735,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                                         crossOrigin="anonymous"
                                     />
                                 </div>
-                                <h3 className={cn("text-lg font-black text-white uppercase tracking-tight mb-1 leading-none", toneStyle?.font)}>{profile.user.name}</h3>
+                                <h3 className={cn("text-lg font-black uppercase tracking-tight mb-1 leading-none transition-colors", theme.text || "text-white", toneStyle?.font)}>{profile.user.name}</h3>
                                 <div className={cn("inline-block px-2.5 py-0.5 rounded-full border border-white/5", toneStyle?.rounded)} style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
                                     <span className={cn("text-[8px] font-bold uppercase tracking-[0.2em]", toneStyle?.font)} style={{ color: accent }}>{profile.occupation || "PROFESSIONAL"}</span>
                                 </div>
@@ -3683,20 +3763,29 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
                             {/* Contact Details */}
                             <div className="w-full space-y-2 text-center">
-                                <h4 className={cn("text-[8px] font-black text-white/20 uppercase tracking-[0.5em] mb-2", toneStyle?.font)}>DİJİTAL KARTVİZİT</h4>
+                                <h4 className={cn("text-[8px] font-black uppercase tracking-[0.5em] mb-2 opacity-30", theme.text || "text-white", toneStyle?.font)}>DİJİTAL KARTVİZİT</h4>
 
                                 <div className="space-y-2">
                                     {phoneNumber && (
-                                        <div className={cn("flex items-center gap-2.5 text-[10px] font-bold text-white/70 px-3 py-2 border border-white/5 uppercase", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                                        <div
+                                            className={cn("flex items-center gap-2.5 text-[10px] font-bold px-3 py-2 border border-white/5 uppercase", theme.text || "text-white/70", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))}
+                                            style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+                                        >
                                             <Phone size={11} style={{ color: accent }} />
                                             <span className={toneStyle?.font}>{phoneNumber}</span>
                                         </div>
                                     )}
-                                    <div className={cn("flex items-center gap-2.5 text-[10px] font-bold text-white/70 px-3 py-2 border border-white/5 lowercase", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                                    <div
+                                        className={cn("flex items-center gap-2.5 text-[10px] font-bold px-3 py-2 border border-white/5 lowercase", theme.text || "text-white/70", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))}
+                                        style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+                                    >
                                         <Mail size={11} style={{ color: accent }} />
                                         <span className={cn("truncate", toneStyle?.font)}>{profile.user.email}</span>
                                     </div>
-                                    <div className={cn("flex items-center gap-2.5 text-[10px] font-bold text-white/60 px-3 py-2 border border-white/5 lowercase opacity-70", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))} style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                                    <div
+                                        className={cn("flex items-center gap-2.5 text-[10px] font-bold px-3 py-2 border border-white/5 lowercase opacity-70", theme.text || "text-white/60", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))}
+                                        style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+                                    >
                                         <Globe size={11} style={{ color: accent }} />
                                         <span className={toneStyle?.font}>kardly.site/{profile.username}</span>
                                     </div>
@@ -3705,7 +3794,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
                             {/* Footer Branding */}
                             <div className="mt-6 pt-1 opacity-20">
-                                <span className={cn("text-[6px] font-black text-white tracking-[0.6em] uppercase", toneStyle?.font)}>KARDLY PREMIUM</span>
+                                <span className={cn("text-[6px] font-black tracking-[0.6em] uppercase", theme.text || "text-white", toneStyle?.font)}>KARDLY PREMIUM</span>
                             </div>
                         </div>
                     </motion.div>
