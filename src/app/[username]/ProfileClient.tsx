@@ -4599,6 +4599,7 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
             booking: { icon: <Calendar size={22} />, label: 'Randevu Al' },
             lead: { icon: <MessageSquare size={22} />, label: 'İletişime Geç' },
             chat: { icon: <Bot size={22} />, label: 'AI Asistan' },
+            ai: { icon: <Bot size={22} />, label: 'AI Asistan' },
             video: { icon: <Play size={22} />, label: 'Video İzle' },
             skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
             countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
