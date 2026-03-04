@@ -3144,6 +3144,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         </button>
                     </div>
                 </motion.div>
+
+                {/* External Widgets (Inline/Block) */}
+                {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline').map((block: any) => (
+                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
+                ))}
             </main>
 
             <ReviewModal
@@ -3274,6 +3279,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
+
+            {/* External Widgets (Floating) */}
+            {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'floating').map((block: any) => (
+                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
+            ))}
         </div>
     )
 }
@@ -4387,4 +4397,49 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
             </motion.div>
         </div>
     )
+}
+
+function ExternalWidget({ block, theme, toneStyle }: any) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const scriptInjected = useRef(false);
+
+    useEffect(() => {
+        if (!block?.content?.code || scriptInjected.current || !containerRef.current) return;
+
+        const range = document.createRange();
+        const documentFragment = range.createContextualFragment(block.content.code);
+
+        // Extract and run scripts
+        const scripts = Array.from(documentFragment.querySelectorAll('script'));
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            document.body.appendChild(newScript);
+        });
+
+        // Append non-script elements to container
+        documentFragment.querySelectorAll(':not(script)').forEach(node => {
+            containerRef.current?.appendChild(node);
+        });
+
+        scriptInjected.current = true;
+    }, [block]);
+
+    if (!block?.content?.code || !block.isActive) return null;
+
+    if (block.content.position === 'floating') {
+        return (
+            <div className="fixed bottom-24 right-6 z-[170]" id="external-floating-widget">
+                <div ref={containerRef} />
+            </div>
+        );
+    }
+
+    return (
+        <div className={cn("w-full p-6 border text-center relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div ref={containerRef} className="w-full" />
+        </div>
+    );
 }

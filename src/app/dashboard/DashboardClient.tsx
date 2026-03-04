@@ -147,6 +147,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isGeneratingBio, setIsGeneratingBio] = useState(false)
     const [activeWidget, setActiveWidget] = useState("booking")
     const [widgetStyle, setWidgetStyle] = useState("floating")
+    const [externalWidget, setExternalWidget] = useState({
+        title: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.title || "",
+        code: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.code || "",
+        position: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.position || "floating"
+    })
 
     const handleGenerateBio = async () => {
         if (!profileData.occupation) {
@@ -949,6 +954,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {/* Widget Configurator */}
                             <div className="space-y-8">
                                 <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
+                                    <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                            <Zap size={20} />
+                                        </div>
+                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Standard Araçlar</h3>
+                                    </div>
+
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÇ SEÇİN"}</label>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -1005,16 +1017,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <Download size={12} /> {t('widgetCopyCode')}
                                             </button>
                                         </div>
-                                        <div className="p-6 bg-slate-900 rounded-[2rem] relative group">
+                                        <div className="p-6 bg-slate-900 rounded-[2rem] relative group text-left">
                                             <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all">
                                                 {`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.me/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
                                             </code>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
+                                    <div className="space-y-4 border-b border-slate-50 pb-8">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetShareLink')}</label>
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-2 text-left">
                                             <input
                                                 type="text"
                                                 readOnly
@@ -1029,25 +1041,121 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </button>
                                         </div>
                                     </div>
+
+                                    {/* External Widget Setup */}
+                                    <div className="space-y-6 pt-2">
+                                        <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
+                                            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                                <Globe size={20} />
+                                            </div>
+                                            <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Dış Site Aracı (Zeynovia vb.)</h3>
+                                        </div>
+
+                                        <div className="space-y-4 text-left">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Araç Başlığı</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Örn: Zeynovia Randevu"
+                                                    className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-slate-900 focus:outline-none focus:border-emerald-500 transition-all font-bold text-xs"
+                                                    value={externalWidget.title}
+                                                    onChange={(e) => setExternalWidget({ ...externalWidget, title: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Embed / Gömme Kodu</label>
+                                                <textarea
+                                                    rows={4}
+                                                    placeholder="<script src='...' data-id='...'></script>"
+                                                    className="w-full bg-slate-900 border border-slate-800 p-4 rounded-2xl text-emerald-400 focus:outline-none focus:border-emerald-500 transition-all font-mono text-xs overflow-x-auto"
+                                                    value={externalWidget.code}
+                                                    onChange={(e) => setExternalWidget({ ...externalWidget, code: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <button
+                                                    onClick={() => setExternalWidget({ ...externalWidget, position: 'floating' })}
+                                                    className={cn(
+                                                        "p-4 rounded-2xl border transition-all text-center space-y-2",
+                                                        externalWidget.position === 'floating' ? "bg-emerald-50 border-emerald-500 text-emerald-600 shadow-sm" : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
+                                                    )}
+                                                >
+                                                    <MousePointer2 size={24} className="mx-auto" />
+                                                    <span className="text-[10px] font-black uppercase block tracking-widest">Yüzen Buton</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => setExternalWidget({ ...externalWidget, position: 'inline' })}
+                                                    className={cn(
+                                                        "p-4 rounded-2xl border transition-all text-center space-y-2",
+                                                        externalWidget.position === 'inline' ? "bg-emerald-50 border-emerald-500 text-emerald-600 shadow-sm" : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
+                                                    )}
+                                                >
+                                                    <Layout size={24} className="mx-auto" />
+                                                    <span className="text-[10px] font-black uppercase block tracking-widest">Blok Olarak</span>
+                                                </button>
+                                            </div>
+
+                                            <button
+                                                onClick={async () => {
+                                                    const newBlocks = [...(profile?.blocks || [])];
+                                                    const existingIdx = newBlocks.findIndex(b => b.type === 'external_widget');
+                                                    if (existingIdx > -1) {
+                                                        newBlocks[existingIdx] = { ...newBlocks[existingIdx], content: externalWidget };
+                                                    } else {
+                                                        newBlocks.push({ id: Date.now().toString(), type: 'external_widget', content: externalWidget, order: 99, isActive: true });
+                                                    }
+                                                    await handleSyncBlocks(newBlocks);
+                                                    setShowToast("Dış araç başarıyla kaydedildi!");
+                                                    setTimeout(() => setShowToast(null), 3000);
+                                                }}
+                                                className="w-full py-4 bg-emerald-500 text-white font-black uppercase tracking-widest rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20"
+                                            >
+                                                GÜNCELLE VE YAYINLA
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Live Preview Sim */}
                             <div className="space-y-6">
-                                <div className="bg-slate-50 rounded-[3rem] border-4 border-white shadow-inner p-8 relative overflow-hidden min-h-[500px] flex flex-col items-center justify-center">
+                                <div className="bg-slate-50 rounded-[3rem] border-4 border-white shadow-inner p-8 relative overflow-hidden min-h-[600px] flex flex-col items-center justify-center">
                                     <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center">
                                         <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{t('widgetPreview')}</span>
-                                        <div className="flex gap-1.5">
+                                        <div className="flex gap-1.5 text-left">
                                             <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
                                             <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
                                             <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
                                         </div>
                                     </div>
 
-                                    {widgetStyle === "floating" ? (
+                                    {externalWidget.code && externalWidget.position === 'floating' ? (
                                         <div className="w-full h-full flex items-end justify-end p-6">
                                             <div className="space-y-4 flex flex-col items-end">
-                                                <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100 max-w-[280px] animate-in slide-in-from-bottom-4 duration-500">
+                                                <div className="w-16 h-16 bg-emerald-500 rounded-2xl shadow-2xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform relative group">
+                                                    <div className="absolute -top-12 right-0 bg-black text-white text-[8px] font-black px-3 py-1.5 rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        {externalWidget.title || "DIŞ ARAÇ"}
+                                                    </div>
+                                                    <MousePointer2 size={24} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : externalWidget.code && externalWidget.position === 'inline' ? (
+                                        <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-4 text-center">
+                                            <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto">
+                                                <Globe size={20} />
+                                            </div>
+                                            <h4 className="font-black text-slate-900 uppercase tracking-tighter text-sm">{externalWidget.title || "Dış Seçili Araç"}</h4>
+                                            <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-[10px] font-bold">
+                                                WIDGET BURADA<br />GÖMÜLÜ OLARAK GÖRÜNECEK
+                                            </div>
+                                        </div>
+                                    ) : widgetStyle === "floating" ? (
+                                        <div className="w-full h-full flex items-end justify-end p-6">
+                                            <div className="space-y-4 flex flex-col items-end">
+                                                <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100 max-w-[280px] animate-in slide-in-from-bottom-4 duration-500 text-left">
                                                     <p className="text-sm font-bold text-slate-900 mb-2">
                                                         {activeWidget === "booking" ? "📆 Randevu talep edin" : activeWidget === "lead" ? "👋 Bizimle iletişime geçin" : "✨ Size nasıl yardımcı olabilirim?"}
                                                     </p>
@@ -1064,7 +1172,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-6">
+                                        <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-6 text-center">
                                             <div className="text-center space-y-2">
                                                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto">
                                                     {activeWidget === "booking" ? <Calendar size={20} /> : activeWidget === "lead" ? <MessageSquare size={20} /> : <Sparkles size={20} />}
@@ -1085,10 +1193,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="absolute -bottom-24 -right-24 w-60 h-60 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
                                 </div>
 
-                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group text-left">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">{t('widgetCustomization')}</h4>
                                     <p className="text-xs text-white/50 leading-relaxed font-medium">
-                                        Kardly profili üzerinde yaptığınız renk, yazı ve içerik değişiklikleri widget üzerinde de anlık olarak güncellenir. Ekstra kod değişikliği gerektirmez.
+                                        Kardly profili üzerinde yaptığınız renk, yazı ve içerik değişiklikleri widget üzerinde de anlık olarak güncellenir. Ekstra kod değişikliği gerektirmez. Dış site araçları ise kendi panelindeki ayarlarınıza göre şekillenir.
                                     </p>
                                     <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-[60px] rounded-full group-hover:bg-primary/30 transition-all" />
                                 </div>
