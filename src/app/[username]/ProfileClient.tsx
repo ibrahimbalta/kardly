@@ -57,7 +57,8 @@ import {
     ChevronRight,
     Image,
     Dribbble,
-    Monitor
+    Monitor,
+    Rss
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -2658,6 +2659,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 return <PortfolioWidget images={images} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} theme={theme} toneStyle={toneStyle} />;
                             }
 
+                            if (requestedWidget === 'blog') {
+                                const rssUrl = urlParams?.get('rssUrl') || "";
+                                return <BlogWidget rssUrl={rssUrl} theme={theme} toneStyle={toneStyle} />;
+                            }
+
                             if (requestedWidget === 'tech') {
                                 const tech = urlParams?.get('tList') || "";
                                 return <TechStackWidget technologies={tech} theme={theme} toneStyle={toneStyle} />;
@@ -4569,6 +4575,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     const dribbbleUrl = extractAttr('data-drUrl');
     const behanceUrl = extractAttr('data-bhUrl');
     const tList = extractAttr('data-tList');
+    const rss = extractAttr('data-rss');
 
     useEffect(() => {
         if (!codeStr || scriptInjected.current || !containerRef.current) return;
@@ -4603,6 +4610,8 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
                 return <SkillsWidget skills={sList} {...commonProps} />;
             case 'portfolio':
                 return <PortfolioWidget images={pImages} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} {...commonProps} />;
+            case 'blog':
+                return <BlogWidget rssUrl={rss} {...commonProps} />;
             case 'tech':
                 return <TechStackWidget technologies={tList} {...commonProps} />;
             case 'countdown':
@@ -5003,6 +5012,94 @@ function TechStackWidget({ technologies, theme, toneStyle }: any) {
                 <span className={cn("text-[8px] font-bold uppercase tracking-[0.3em]", theme.text)}>Kardly Dev Tools</span>
                 <Github size={12} className={theme.text} />
             </div>
+        </div>
+    );
+}
+
+function BlogWidget({ rssUrl, theme, toneStyle }: any) {
+    const [posts, setPosts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const getSafeUrl = (url: string) => {
+        if (!url) return "";
+        try {
+            const decoded = decodeURIComponent(url);
+            return decoded.startsWith('http') ? decoded : `https://${decoded}`;
+        } catch {
+            return url.startsWith('http') ? url : `https://${url}`;
+        }
+    };
+
+    useEffect(() => {
+        const fetchRss = async () => {
+            if (!rssUrl) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const safeUrl = getSafeUrl(rssUrl);
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(safeUrl)}`);
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    setPosts(data.items.slice(0, 3));
+                }
+            } catch (err) {
+                console.error('RSS fetch error:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchRss();
+    }, [rssUrl]);
+
+    return (
+        <div className={cn("w-full p-6 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <Rss size={18} className="text-primary" style={{ color: theme.accent }} />
+                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>Son Yazılar</h3>
+                </div>
+            </div>
+
+            {loading ? (
+                <div className="space-y-4 animate-pulse">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="flex gap-4">
+                            <div className="w-16 h-16 bg-slate-200/50 rounded-xl shrink-0" />
+                            <div className="space-y-2 flex-1 pt-1">
+                                <div className="h-3 w-full bg-slate-200/50 rounded-full" />
+                                <div className="h-3 w-2/3 bg-slate-200/50 rounded-full" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : posts.length > 0 ? (
+                <div className="space-y-4">
+                    {posts.map((post, i) => (
+                        <a key={i} href={post.link} target="_blank" rel="noopener noreferrer" className={cn("group flex flex-col p-4 rounded-2xl border transition-all hover:scale-[1.02]", theme.bg, theme.border)}>
+                            <div className="flex gap-4 items-center">
+                                {post.thumbnail && !post.thumbnail.includes('medium.com/v2/') && (
+                                    <div className="w-12 h-12 shrink-0 rounded-xl overflow-hidden bg-slate-100 hidden sm:block">
+                                        <img src={post.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    </div>
+                                )}
+                                <div className="flex-1 space-y-1 overflow-hidden">
+                                    <h4 className={cn("text-xs font-bold line-clamp-2 leading-snug", theme.text)}>{post.title}</h4>
+                                    <p className={cn("text-[8px] opacity-60 uppercase tracking-widest font-black truncate", theme.text)}>
+                                        {new Date(post.pubDate).toLocaleDateString('tr-TR')} • {post.author || "Yazar"}
+                                    </p>
+                                </div>
+                                <ArrowRight size={14} className={cn("opacity-40 group-hover:opacity-100 transition-opacity shrink-0", theme.text)} />
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-6">
+                    <p className={cn("text-xs font-medium opacity-60", theme.text)}>Henüz yazı bulunmuyor.</p>
+                </div>
+            )}
         </div>
     );
 }

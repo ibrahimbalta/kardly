@@ -82,7 +82,8 @@ import {
     ArrowUp,
     ArrowDown,
     Bot,
-    Dribbble
+    Dribbble,
+    Rss
 } from "lucide-react"
 
 import Link from "next/link"
@@ -169,6 +170,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         githubUrl: "",
         dribbbleUrl: "",
         behanceUrl: "",
+        blogRssUrl: "",
         techStack: "React,Next.js,TypeScript,Tailwind CSS"
     })
 
@@ -992,7 +994,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
                                                 { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> },
                                                 { id: "portfolio", name: "Portfolyo", icon: <Image size={18} /> },
-                                                { id: "tech", name: "Yazılımcı Seti", icon: <Code size={18} /> }
+                                                { id: "tech", name: "Yazılımcı Seti", icon: <Code size={18} /> },
+                                                { id: "blog", name: "Otomatik Blog", icon: <Rss size={18} /> }
                                             ].map(w => (
                                                 <button
                                                     key={w.id}
@@ -1274,6 +1277,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     )}
 
+                                    {activeWidget === 'blog' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Medium / Substack / RSS URL</label>
+                                                <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
+                                                    <div className="px-3 text-slate-400"><Rss size={16} /></div>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full bg-white p-3.5 text-xs font-bold focus:outline-none"
+                                                        placeholder="https://medium.com/feed/@kullaniciadi"
+                                                        value={extraWidgetConfig.blogRssUrl || ""}
+                                                        onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, blogRssUrl: e.target.value })}
+                                                    />
+                                                </div>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1 pt-2">
+                                                    Medium için: https://medium.com/feed/@kullaniciadi<br />
+                                                    Substack için: https://kullanici.substack.com/feed<br />
+                                                    Herhangi bir RSS bağlantısı da kullanılabilir.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetStyle')}</label>
                                         <div className="flex gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-100">
@@ -1311,11 +1337,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (extraWidgetConfig.behanceUrl) scriptAttrs += ` data-bhUrl="${encodeURIComponent(extraWidgetConfig.behanceUrl)}"`;
                                                     }
                                                     if (activeWidget === 'tech') scriptAttrs += ` data-tList="${extraWidgetConfig.techStack}"`;
+                                                    if (activeWidget === 'blog') scriptAttrs += ` data-rss="${encodeURIComponent(extraWidgetConfig.blogRssUrl)}"`;
 
                                                     const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
                                                     copyToClipboard(code);
                                                     // Otomatik olarak harici araç koduna da yerleştir
-                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'Yazılımcı Seti' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
+                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'Yazılımcı Seti' : activeWidget === 'blog' ? 'Blog Akışı' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
                                                 }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
@@ -1336,6 +1363,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (extraWidgetConfig.behanceUrl) urlParams += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
                                                     }
                                                     if (activeWidget === 'tech') urlParams += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
+                                                    if (activeWidget === 'blog') urlParams += `&rssUrl=${encodeURIComponent(extraWidgetConfig.blogRssUrl)}`;
 
                                                     let portfolioDataAttrs = '';
                                                     if (activeWidget === 'portfolio') {
@@ -1345,7 +1373,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (extraWidgetConfig.behanceUrl) portfolioDataAttrs += ` data-bhUrl="${extraWidgetConfig.behanceUrl}"`;
                                                     }
 
-                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${portfolioDataAttrs}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
+                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${portfolioDataAttrs}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}${activeWidget === 'blog' ? ` data-rss="${extraWidgetConfig.blogRssUrl}"` : ""}></script>`;
                                                 })()}
                                             </code>
                                         </div>
@@ -1369,6 +1397,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (extraWidgetConfig.behanceUrl) link += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
                                                     }
                                                     if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
+                                                    if (activeWidget === 'blog') link += `&rssUrl=${encodeURIComponent(extraWidgetConfig.blogRssUrl)}`;
                                                     return link;
                                                 })()}
                                                 className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold text-slate-600 focus:outline-none"
@@ -1386,6 +1415,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (extraWidgetConfig.behanceUrl) link += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
                                                     }
                                                     if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
+                                                    if (activeWidget === 'blog') link += `&rssUrl=${encodeURIComponent(extraWidgetConfig.blogRssUrl)}`;
                                                     copyToClipboard(link);
                                                 }}
                                                 className="px-5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-slate-600"
@@ -1646,13 +1676,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         if (activeWidget === "video") return <Youtube {...props} />;
                                                         if (activeWidget === "skills") return <Award {...props} />;
                                                         if (activeWidget === "tech") return <Code {...props} />;
+                                                        if (activeWidget === "blog") return <Rss {...props} />;
                                                         if (activeWidget === "booking") return <Calendar {...props} />;
                                                         if (activeWidget === "lead") return <MessageSquare {...props} />;
                                                         return <Sparkles {...props} />;
                                                     })()}
                                                 </div>
                                                 <h4 className="font-black text-slate-900 uppercase tracking-tighter">
-                                                    {activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'tech' ? 'Teknoloji Seti' : activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}
+                                                    {activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'tech' ? 'Teknoloji Seti' : activeWidget === 'blog' ? 'Blog Akışı' : activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}
                                                 </h4>
                                             </div>
 
