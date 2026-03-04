@@ -81,9 +81,9 @@ import {
     Edit2,
     ArrowUp,
     ArrowDown,
-    Bot
+    Bot,
+    Dribbble
 } from "lucide-react"
-
 
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -166,6 +166,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         countdownDate: "",
         countdownTitle: "Özel Teklif",
         portfolioImages: "",
+        githubUrl: "",
+        dribbbleUrl: "",
+        behanceUrl: "",
         techStack: "React,Next.js,TypeScript,Tailwind CSS"
     })
 
@@ -1210,6 +1213,48 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     />
                                                 </details>
                                                 <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yükleyin veya URL'leri dikey çizgi (|) ile ayırarak girin.</p>
+
+                                                <div className="space-y-4 pt-4 border-t border-slate-100">
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">GitHub Profili (İsteğe Bağlı)</label>
+                                                        <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
+                                                            <div className="px-3 text-slate-400"><Github size={16} /></div>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-white p-3.5 text-xs font-bold focus:outline-none"
+                                                                placeholder="https://github.com/..."
+                                                                value={extraWidgetConfig.githubUrl || ""}
+                                                                onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, githubUrl: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Dribbble Profili (İsteğe Bağlı)</label>
+                                                        <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
+                                                            <div className="px-3 text-slate-400"><Dribbble size={16} /></div>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-white p-3.5 text-xs font-bold focus:outline-none"
+                                                                placeholder="https://dribbble.com/..."
+                                                                value={extraWidgetConfig.dribbbleUrl || ""}
+                                                                onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, dribbbleUrl: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Behance Profili (İsteğe Bağlı)</label>
+                                                        <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
+                                                            <div className="px-3 text-slate-400"><Palette size={16} /></div>
+                                                            <input
+                                                                type="text"
+                                                                className="w-full bg-white p-3.5 text-xs font-bold focus:outline-none"
+                                                                placeholder="https://behance.net/..."
+                                                                value={extraWidgetConfig.behanceUrl || ""}
+                                                                onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, behanceUrl: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -1259,7 +1304,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') scriptAttrs += ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"`;
                                                     if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
                                                     if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
-                                                    if (activeWidget === 'portfolio') scriptAttrs += ` data-pImages="${extraWidgetConfig.portfolioImages}"`;
+                                                    if (activeWidget === 'portfolio') {
+                                                        scriptAttrs += ` data-pImages="${extraWidgetConfig.portfolioImages}"`;
+                                                        if (extraWidgetConfig.githubUrl) scriptAttrs += ` data-ghUrl="${encodeURIComponent(extraWidgetConfig.githubUrl)}"`;
+                                                        if (extraWidgetConfig.dribbbleUrl) scriptAttrs += ` data-drUrl="${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}"`;
+                                                        if (extraWidgetConfig.behanceUrl) scriptAttrs += ` data-bhUrl="${encodeURIComponent(extraWidgetConfig.behanceUrl)}"`;
+                                                    }
                                                     if (activeWidget === 'tech') scriptAttrs += ` data-tList="${extraWidgetConfig.techStack}"`;
 
                                                     const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
@@ -1279,10 +1329,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') urlParams += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') urlParams += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') urlParams += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
-                                                    if (activeWidget === 'portfolio') urlParams += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'portfolio') {
+                                                        urlParams += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                        if (extraWidgetConfig.githubUrl) urlParams += `&ghUrl=${encodeURIComponent(extraWidgetConfig.githubUrl)}`;
+                                                        if (extraWidgetConfig.dribbbleUrl) urlParams += `&drUrl=${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}`;
+                                                        if (extraWidgetConfig.behanceUrl) urlParams += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
+                                                    }
                                                     if (activeWidget === 'tech') urlParams += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
 
-                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${activeWidget === 'portfolio' ? ` data-pImages="${(extraWidgetConfig.portfolioImages || "").length > 50 ? extraWidgetConfig.portfolioImages.substring(0, 50) + "..." : extraWidgetConfig.portfolioImages}"` : ""}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
+                                                    let portfolioDataAttrs = '';
+                                                    if (activeWidget === 'portfolio') {
+                                                        portfolioDataAttrs = ` data-pImages="${(extraWidgetConfig.portfolioImages || "").length > 50 ? extraWidgetConfig.portfolioImages.substring(0, 50) + "..." : extraWidgetConfig.portfolioImages}"`;
+                                                        if (extraWidgetConfig.githubUrl) portfolioDataAttrs += ` data-ghUrl="${extraWidgetConfig.githubUrl}"`;
+                                                        if (extraWidgetConfig.dribbbleUrl) portfolioDataAttrs += ` data-drUrl="${extraWidgetConfig.dribbbleUrl}"`;
+                                                        if (extraWidgetConfig.behanceUrl) portfolioDataAttrs += ` data-bhUrl="${extraWidgetConfig.behanceUrl}"`;
+                                                    }
+
+                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${portfolioDataAttrs}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
                                                 })()}
                                             </code>
                                         </div>
@@ -1299,7 +1362,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
-                                                    if (activeWidget === 'portfolio') link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'portfolio') {
+                                                        link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                        if (extraWidgetConfig.githubUrl) link += `&ghUrl=${encodeURIComponent(extraWidgetConfig.githubUrl)}`;
+                                                        if (extraWidgetConfig.dribbbleUrl) link += `&drUrl=${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}`;
+                                                        if (extraWidgetConfig.behanceUrl) link += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
+                                                    }
                                                     if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
                                                     return link;
                                                 })()}
@@ -1311,7 +1379,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
-                                                    if (activeWidget === 'portfolio') link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'portfolio') {
+                                                        link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                        if (extraWidgetConfig.githubUrl) link += `&ghUrl=${encodeURIComponent(extraWidgetConfig.githubUrl)}`;
+                                                        if (extraWidgetConfig.dribbbleUrl) link += `&drUrl=${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}`;
+                                                        if (extraWidgetConfig.behanceUrl) link += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
+                                                    }
                                                     if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
                                                     copyToClipboard(link);
                                                 }}
@@ -1583,9 +1656,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </h4>
                                             </div>
 
+                                            {activeWidget === 'portfolio' && (
+                                                <div className="flex items-center justify-center gap-3">
+                                                    {extraWidgetConfig.githubUrl && <Github size={16} className="text-slate-400" />}
+                                                    {extraWidgetConfig.dribbbleUrl && <Dribbble size={16} className="text-slate-400" />}
+                                                    {extraWidgetConfig.behanceUrl && <Palette size={16} className="text-slate-400" />}
+                                                </div>
+                                            )}
+
                                             {activeWidget === 'portfolio' && extraWidgetConfig.portfolioImages ? (
                                                 <div className="grid grid-cols-2 gap-2">
-                                                    {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).slice(0, 4).map((img, i) => (
+                                                    {extraWidgetConfig.portfolioImages.split('|').filter(Boolean).slice(0, 4).map((img, i) => (
                                                         <div key={i} className="aspect-square rounded-xl bg-slate-50 overflow-hidden border border-slate-100">
                                                             <img src={img} className="w-full h-full object-cover opacity-80" alt="" />
                                                         </div>

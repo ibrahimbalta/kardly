@@ -55,7 +55,9 @@ import {
     Send,
     ChevronLeft,
     ChevronRight,
-    Image
+    Image,
+    Dribbble,
+    Monitor
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -2650,7 +2652,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             if (requestedWidget === 'portfolio') {
                                 const images = urlParams?.get('pImages') || "";
-                                return <PortfolioWidget images={images} theme={theme} toneStyle={toneStyle} />;
+                                const githubUrl = urlParams?.get('ghUrl') || "";
+                                const dribbbleUrl = urlParams?.get('drUrl') || "";
+                                const behanceUrl = urlParams?.get('bhUrl') || "";
+                                return <PortfolioWidget images={images} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} theme={theme} toneStyle={toneStyle} />;
                             }
 
                             if (requestedWidget === 'tech') {
@@ -4560,6 +4565,9 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     const date = extractAttr('data-date');
     const title = extractAttr('data-title');
     const pImages = extractAttr('data-pImages');
+    const githubUrl = extractAttr('data-ghUrl');
+    const dribbbleUrl = extractAttr('data-drUrl');
+    const behanceUrl = extractAttr('data-bhUrl');
     const tList = extractAttr('data-tList');
 
     useEffect(() => {
@@ -4594,7 +4602,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
             case 'skills':
                 return <SkillsWidget skills={sList} {...commonProps} />;
             case 'portfolio':
-                return <PortfolioWidget images={pImages} {...commonProps} />;
+                return <PortfolioWidget images={pImages} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} {...commonProps} />;
             case 'tech':
                 return <TechStackWidget technologies={tList} {...commonProps} />;
             case 'countdown':
@@ -4878,7 +4886,9 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
     );
 }
 
-function PortfolioWidget({ images, theme, toneStyle }: any) {
+// ─── COMPONENT DEFINITIONS FOR EMBED & NORMAL BLOCKS ─────────────────────────────────────────────
+
+function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, toneStyle }: any) {
     const imagesList = images.split('|').filter((i: string) => i.trim());
     const [activeIdx, setActiveIdx] = useState(0);
 
@@ -4890,11 +4900,31 @@ function PortfolioWidget({ images, theme, toneStyle }: any) {
                     <Image size={18} className="text-primary" style={{ color: theme.accent }} />
                     <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>Portfolyo Galeri</h3>
                 </div>
-                <div className="flex gap-1">
-                    {imagesList.map((_: any, idx: number) => (
-                        <div key={idx} className="w-1 h-1 rounded-full transition-all" style={{ background: idx === activeIdx ? theme.accent : `${theme.accent}15`, width: idx === activeIdx ? '12px' : '4px' }} />
-                    ))}
+
+                {/* İsteğe bağlı sosyal medya / portfolyo bağlantıları */}
+                <div className="flex items-center gap-2">
+                    {githubUrl && (
+                        <a href={githubUrl} target="_blank" title="GitHub" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                            <Github size={14} />
+                        </a>
+                    )}
+                    {dribbbleUrl && (
+                        <a href={dribbbleUrl} target="_blank" title="Dribbble" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                            <Dribbble size={14} />
+                        </a>
+                    )}
+                    {behanceUrl && (
+                        <a href={behanceUrl} target="_blank" title="Behance" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                            <Palette size={14} />
+                        </a>
+                    )}
                 </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-1">
+                {imagesList.map((_: any, idx: number) => (
+                    <div key={idx} className="w-1 h-1 rounded-full transition-all" style={{ background: idx === activeIdx ? theme.accent : `${theme.accent}15`, width: idx === activeIdx ? '12px' : '4px' }} />
+                ))}
             </div>
 
             <div className="relative aspect-square w-full rounded-2xl overflow-hidden group">
