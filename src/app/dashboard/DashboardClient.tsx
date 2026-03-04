@@ -145,6 +145,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isQuickTplMenuOpen, setIsQuickTplMenuOpen] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [isGeneratingBio, setIsGeneratingBio] = useState(false)
+    const [activeWidget, setActiveWidget] = useState("booking")
+    const [widgetStyle, setWidgetStyle] = useState("floating")
 
     const handleGenerateBio = async () => {
         if (!profileData.occupation) {
@@ -485,6 +487,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 body: JSON.stringify({ blocks: newBlocks })
             })
         } catch (err) { console.error("Blocks sync error:", err) }
+    }
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text)
+        setShowToast(t('widgetCopied') || "Kopyalandı!")
+        setTimeout(() => setShowToast(null), 2000)
     }
 
     const handleSave = async (overrides?: any) => {
@@ -858,6 +866,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     />
 
                     <NavItem
+                        icon={<Boxes className="w-5 h-5" />}
+                        label={t('widgets') || "Araçlar"}
+                        active={activeTab === "widgets"}
+                        onClick={() => {
+                            setActiveTab("widgets")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+
+                    <NavItem
                         icon={<MessageSquare className="w-5 h-5" />}
                         label={t('reviews')}
                         active={activeTab === "reviews"}
@@ -920,7 +938,165 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     )}
                 </header>
 
-                {activeTab === "overview" ? (
+                {activeTab === "widgets" ? (
+                    <div className="space-y-10">
+                        <header>
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t('widgets')}</h2>
+                            <p className="text-sm text-slate-500 font-medium tracking-wide">{t('widgetsSub')}</p>
+                        </header>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                            {/* Widget Configurator */}
+                            <div className="space-y-8">
+                                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÇ SEÇİN"}</label>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            {[
+                                                { id: "booking", name: t('widgetBooking'), icon: <Calendar size={18} /> },
+                                                { id: "lead", name: t('widgetLead'), icon: <MessageSquare size={18} /> },
+                                                { id: "ai", name: t('widgetAI'), icon: <Sparkles size={18} /> }
+                                            ].map(w => (
+                                                <button
+                                                    key={w.id}
+                                                    onClick={() => setActiveWidget(w.id)}
+                                                    className={cn(
+                                                        "flex items-center gap-3 p-4 rounded-2xl border transition-all text-left",
+                                                        activeWidget === w.id ? "bg-primary/5 border-primary text-primary shadow-sm" : "bg-white border-slate-100 text-slate-500 hover:border-slate-300"
+                                                    )}
+                                                >
+                                                    <div className={cn("p-2 rounded-xl", activeWidget === w.id ? "bg-primary/10" : "bg-slate-50")}>
+                                                        {w.icon}
+                                                    </div>
+                                                    <span className="text-xs font-black uppercase tracking-wider">{w.name}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetStyle')}</label>
+                                        <div className="flex gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-100">
+                                            {[
+                                                { id: "floating", name: t('widgetFloating'), icon: <Zap size={14} /> },
+                                                { id: "embedded", name: t('widgetEmbedded'), icon: <Monitor size={14} /> }
+                                            ].map(s => (
+                                                <button
+                                                    key={s.id}
+                                                    onClick={() => setWidgetStyle(s.id)}
+                                                    className={cn(
+                                                        "flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all",
+                                                        widgetStyle === s.id ? "bg-white text-slate-900 shadow-md" : "text-slate-400 hover:text-slate-600"
+                                                    )}
+                                                >
+                                                    {s.icon} {s.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                                        <div className="flex justify-between items-center">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetEmbedCode')}</label>
+                                            <button
+                                                onClick={() => copyToClipboard(`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.me/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
+                                                className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
+                                            >
+                                                <Download size={12} /> {t('widgetCopyCode')}
+                                            </button>
+                                        </div>
+                                        <div className="p-6 bg-slate-900 rounded-[2rem] relative group">
+                                            <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all">
+                                                {`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.me/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
+                                            </code>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetShareLink')}</label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                readOnly
+                                                value={`https://kardly.me/${profile?.username}?widget=${activeWidget}`}
+                                                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold text-slate-600 focus:outline-none"
+                                            />
+                                            <button
+                                                onClick={() => copyToClipboard(`https://kardly.me/${profile?.username}?widget=${activeWidget}`)}
+                                                className="px-5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-slate-600"
+                                            >
+                                                <ExternalLink size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Live Preview Sim */}
+                            <div className="space-y-6">
+                                <div className="bg-slate-50 rounded-[3rem] border-4 border-white shadow-inner p-8 relative overflow-hidden min-h-[500px] flex flex-col items-center justify-center">
+                                    <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center">
+                                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{t('widgetPreview')}</span>
+                                        <div className="flex gap-1.5">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                                            <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                                            <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                                        </div>
+                                    </div>
+
+                                    {widgetStyle === "floating" ? (
+                                        <div className="w-full h-full flex items-end justify-end p-6">
+                                            <div className="space-y-4 flex flex-col items-end">
+                                                <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100 max-w-[280px] animate-in slide-in-from-bottom-4 duration-500">
+                                                    <p className="text-sm font-bold text-slate-900 mb-2">
+                                                        {activeWidget === "booking" ? "📆 Randevu talep edin" : activeWidget === "lead" ? "👋 Bizimle iletişime geçin" : "✨ Size nasıl yardımcı olabilirim?"}
+                                                    </p>
+                                                    <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
+                                                        {activeWidget === "booking" ? "Size en uygun saati seçerek hemen randevu oluşturun." : activeWidget === "lead" ? "Mesajınızı bırakın, en kısa sürede size geri dönelim." : "Yapay zeka asistanımız her türlü sorunuz için burada."}
+                                                    </p>
+                                                    <button className="w-full mt-4 py-3 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20">
+                                                        {activeWidget === "booking" ? "RANDEVU AL" : activeWidget === "lead" ? "MESAJ GÖNDER" : "SOHBETE BAŞLA"}
+                                                    </button>
+                                                </div>
+                                                <div className="w-16 h-16 bg-primary rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform">
+                                                    {activeWidget === "booking" ? <Calendar size={24} /> : activeWidget === "lead" ? <MessageSquare size={24} /> : <Sparkles size={24} />}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-6">
+                                            <div className="text-center space-y-2">
+                                                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto">
+                                                    {activeWidget === "booking" ? <Calendar size={20} /> : activeWidget === "lead" ? <MessageSquare size={20} /> : <Sparkles size={20} />}
+                                                </div>
+                                                <h4 className="font-black text-slate-900 uppercase tracking-tighter">{activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                                <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                                <div className="h-24 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                            </div>
+                                            <button className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
+                                                {t('confirmBooking') || "GÖNDER"}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="absolute -bottom-24 -right-24 w-60 h-60 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+                                </div>
+
+                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">{t('widgetCustomization')}</h4>
+                                    <p className="text-xs text-white/50 leading-relaxed font-medium">
+                                        Kardly profili üzerinde yaptığınız renk, yazı ve içerik değişiklikleri widget üzerinde de anlık olarak güncellenir. Ekstra kod değişikliği gerektirmez.
+                                    </p>
+                                    <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-[60px] rounded-full group-hover:bg-primary/30 transition-all" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                ) : activeTab === "overview" ? (
                     <div className="space-y-10">
                         {/* Summary Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
