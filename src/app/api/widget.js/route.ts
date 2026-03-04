@@ -1,4 +1,4 @@
-// Last Updated: 2026-03-04 11:06
+// Last Updated: 2026-03-04 11:25
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -39,7 +39,6 @@ export async function GET() {
 
     if (style === 'embedded' && container) {
         // Create Iframe for Inline/Embedded
-        // Clear container first to avoid duplicates
         container.innerHTML = '';
         const iframe = document.createElement('iframe');
         iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
@@ -50,42 +49,49 @@ export async function GET() {
         iframe.style.overflow = 'hidden';
         container.appendChild(iframe);
     } else if (style === 'floating') {
-        // Floating Button Mode (only if not already present)
-        if (document.getElementById('kardly-floating-trigger')) return;
+        const triggerId = 'kardly-floating-trigger-' + type;
+        if (document.getElementById(triggerId)) return;
 
         const button = document.createElement('div');
-        button.id = 'kardly-floating-trigger';
-        button.innerHTML = type === 'booking' ? '📅' : '💬';
+        button.id = triggerId;
+        
+        // SVG Icons
+        const icons = {
+            booking: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>',
+            lead: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+            chat: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>'
+        };
+
+        button.innerHTML = icons[type] || icons.lead;
         
         const styles = {
             position: 'fixed',
             bottom: '24px',
-            right: '24px',
+            right: type === 'booking' ? '24px' : '100px', // Offset if multiple
             width: '64px',
             height: '64px',
-            backgroundColor: '#6366f1',
+            background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
             borderRadius: '20px',
-            boxShadow: '0 10px 25px rgba(99, 102, 241, 0.3)',
+            boxShadow: '0 10px 25px rgba(99, 102, 241, 0.4), 0 0 0 4px white',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '24px',
             cursor: 'pointer',
             zIndex: '9999',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            border: '4px solid white',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
             color: 'white'
         };
         
         Object.assign(button.style, styles);
         
         button.onmouseover = () => {
-            button.style.transform = 'scale(1.1) rotate(5deg)';
-            button.style.boxShadow = '0 15px 35px rgba(99, 102, 241, 0.4)';
+            button.style.transform = 'scale(1.1) rotate(5deg) translateY(-5px)';
+            button.style.boxShadow = '0 15px 35px rgba(99, 102, 241, 0.5), 0 0 0 4px white';
         };
         
         button.onmouseout = () => {
-            button.style.transform = 'scale(1) rotate(0deg)';
+            button.style.transform = 'scale(1) rotate(0deg) translateY(0)';
+            button.style.boxShadow = '0 10px 25px rgba(99, 102, 241, 0.4), 0 0 0 4px white';
         };
 
         // Modal/Iframe container
@@ -102,9 +108,9 @@ export async function GET() {
         modalContainer.style.zIndex = '9998';
         modalContainer.style.overflow = 'hidden';
         modalContainer.style.border = '1px solid #f1f5f9';
-        modalContainer.style.transition = 'all 0.4s ease';
+        modalContainer.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
         modalContainer.style.opacity = '0';
-        modalContainer.style.transform = 'translateY(20px)';
+        modalContainer.style.transform = 'translateY(30px) scale(0.9)';
 
         const iframe = document.createElement('iframe');
         iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
@@ -123,18 +129,20 @@ export async function GET() {
                 modalContainer.style.display = 'block';
                 setTimeout(() => {
                     modalContainer.style.opacity = '1';
-                    modalContainer.style.transform = 'translateY(0)';
+                    modalContainer.style.transform = 'translateY(0) scale(1)';
                 }, 10);
-                button.innerHTML = '✕';
-                button.style.backgroundColor = '#f43f5e';
+                button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+                button.style.background = 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)';
+                button.style.boxShadow = '0 10px 25px rgba(244, 63, 94, 0.4), 0 0 0 4px white';
             } else {
                 modalContainer.style.opacity = '0';
-                modalContainer.style.transform = 'translateY(20px)';
+                modalContainer.style.transform = 'translateY(30px) scale(0.9)';
                 setTimeout(() => {
                     modalContainer.style.display = 'none';
                 }, 400);
-                button.innerHTML = type === 'booking' ? '📅' : '💬';
-                button.style.backgroundColor = '#6366f1';
+                button.innerHTML = icons[type] || icons.lead;
+                button.style.background = 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)';
+                button.style.boxShadow = '0 10px 25px rgba(99, 102, 241, 0.4), 0 0 0 4px white';
             }
         };
     }
