@@ -4879,7 +4879,7 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
 }
 
 function PortfolioWidget({ images, theme, toneStyle }: any) {
-    const imagesList = images.split(',').filter((i: string) => i.trim());
+    const imagesList = images.split('|').filter((i: string) => i.trim());
     const [activeIdx, setActiveIdx] = useState(0);
 
     return (

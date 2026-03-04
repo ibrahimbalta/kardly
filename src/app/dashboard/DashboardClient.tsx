@@ -1117,8 +1117,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                                 if (processedUrls.length > 0) {
                                                                     setExtraWidgetConfig(prev => {
-                                                                        const currentImages = prev.portfolioImages ? prev.portfolioImages.split(',').filter(Boolean) : [];
-                                                                        const newImages = [...currentImages, ...processedUrls].join(',');
+                                                                        const currentImages = prev.portfolioImages ? prev.portfolioImages.split('|').filter(Boolean) : [];
+                                                                        const newImages = [...currentImages, ...processedUrls].join('|');
                                                                         return { ...prev, portfolioImages: newImages };
                                                                     });
                                                                     setShowToast(`${processedUrls.length} resim eklendi.`);
@@ -1137,7 +1137,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 {/* Portfolio Gallery Preview */}
                                                 {extraWidgetConfig.portfolioImages ? (
                                                     <div className="grid grid-cols-4 gap-2 border border-dashed border-slate-200 p-2 rounded-2xl bg-white max-h-[400px] overflow-y-auto">
-                                                        {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).map((img, idx, all) => (
+                                                        {extraWidgetConfig.portfolioImages.split('|').filter(Boolean).map((img, idx, all) => (
                                                             <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shadow-sm">
                                                                 <img src={img} className="w-full h-full object-cover" alt="" />
 
@@ -1147,9 +1147,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         <button
                                                                             onClick={() => {
                                                                                 setExtraWidgetConfig(prev => {
-                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    const images = prev.portfolioImages.split('|').filter(Boolean);
                                                                                     images.splice(idx, 1);
-                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                    return { ...prev, portfolioImages: images.join('|') };
                                                                                 });
                                                                             }}
                                                                             className="p-1 px-1.5 bg-rose-500 text-white rounded-lg hover:scale-110 active:scale-95 transition-all shadow-lg"
@@ -1164,9 +1164,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                             disabled={idx === 0}
                                                                             onClick={() => {
                                                                                 setExtraWidgetConfig(prev => {
-                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    const images = prev.portfolioImages.split('|').filter(Boolean);
                                                                                     [images[idx - 1], images[idx]] = [images[idx], images[idx - 1]];
-                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                    return { ...prev, portfolioImages: images.join('|') };
                                                                                 });
                                                                             }}
                                                                             className="p-1 bg-white/20 backdrop-blur-md text-white rounded-md hover:bg-white/40 disabled:opacity-30 disabled:hover:bg-white/20 transition-all font-bold"
@@ -1177,9 +1177,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                             disabled={idx === all.length - 1}
                                                                             onClick={() => {
                                                                                 setExtraWidgetConfig(prev => {
-                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    const images = prev.portfolioImages.split('|').filter(Boolean);
                                                                                     [images[idx + 1], images[idx]] = [images[idx], images[idx + 1]];
-                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                    return { ...prev, portfolioImages: images.join('|') };
                                                                                 });
                                                                             }}
                                                                             className="p-1 bg-white/20 backdrop-blur-md text-white rounded-md hover:bg-white/40 disabled:opacity-30 disabled:hover:bg-white/20 transition-all font-bold"
@@ -1205,11 +1205,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <textarea
                                                         className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-[10px] font-mono focus:outline-none focus:border-primary min-h-[80px] mt-2 shadow-inner"
                                                         value={extraWidgetConfig.portfolioImages}
-                                                        placeholder="https://...base64_veya_url, https://..."
+                                                        placeholder="https://...base64_veya_url|https://..."
                                                         onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
                                                     />
                                                 </details>
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yükleyin veya URL'leri virgülle ayırarak girin.</p>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yükleyin veya URL'leri dikey çizgi (|) ile ayırarak girin.</p>
                                             </div>
                                         </div>
                                     )}
