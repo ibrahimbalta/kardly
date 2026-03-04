@@ -1089,7 +1089,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
                                                     if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
 
-                                                    copyToClipboard(`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`)
+                                                    const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
+                                                    copyToClipboard(code);
+                                                    // Otomatik olarak harici araç koduna da yerleştir
+                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
                                                 }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
@@ -1116,11 +1119,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <input
                                                 type="text"
                                                 readOnly
-                                                value={`https://kardly.site/${profile?.username}?widget=${activeWidget}`}
+                                                value={(() => {
+                                                    let link = `https://kardly.site/${profile?.username}?widget=${activeWidget}`;
+                                                    if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
+                                                    if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
+                                                    if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+                                                    return link;
+                                                })()}
                                                 className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold text-slate-600 focus:outline-none"
                                             />
                                             <button
-                                                onClick={() => copyToClipboard(`https://kardly.site/${profile?.username}?widget=${activeWidget}`)}
+                                                onClick={() => {
+                                                    let link = `https://kardly.site/${profile?.username}?widget=${activeWidget}`;
+                                                    if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
+                                                    if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
+                                                    if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+                                                    copyToClipboard(link);
+                                                }}
                                                 className="px-5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-slate-600"
                                             >
                                                 <ExternalLink size={16} />

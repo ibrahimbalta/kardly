@@ -4587,6 +4587,11 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         const codeStr = block.content.code;
         const typeMatch = codeStr.match(/data-type="([^"]+)"/);
         const userMatch = codeStr.match(/data-user="([^"]+)"/);
+        const vUrlMatch = codeStr.match(/data-vUrl="([^"]+)"/);
+        const btnMatch = codeStr.match(/data-btn="([^"]+)"/);
+        const sListMatch = codeStr.match(/data-sList="([^"]+)"/);
+        const dateMatch = codeStr.match(/data-date="([^"]+)"/);
+        const titleMatch = codeStr.match(/data-title="([^"]+)"/);
         const widgetType = typeMatch ? typeMatch[1] : 'booking';
         const widgetUser = userMatch ? userMatch[1] : '';
 
@@ -4600,7 +4605,14 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
-        const iframeUrl = `https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`;
+
+        // Tüm parametreleri iframe URL'sine ekle
+        let iframeUrl = `https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`;
+        if (vUrlMatch?.[1]) iframeUrl += `&vUrl=${encodeURIComponent(vUrlMatch[1])}`;
+        if (btnMatch?.[1]) iframeUrl += `&btn=${encodeURIComponent(btnMatch[1])}`;
+        if (sListMatch?.[1]) iframeUrl += `&sList=${encodeURIComponent(sListMatch[1])}`;
+        if (dateMatch?.[1]) iframeUrl += `&date=${encodeURIComponent(dateMatch[1])}`;
+        if (titleMatch?.[1]) iframeUrl += `&title=${encodeURIComponent(titleMatch[1])}`;
 
         return (
             <>
