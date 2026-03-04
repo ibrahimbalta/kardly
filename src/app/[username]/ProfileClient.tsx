@@ -3265,12 +3265,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             >
                                 <FileText size={20} /> {profile.isCatalog ? (t.viewCatalog || "Katalog Görüntüle") : (t.viewCV || "CV Görüntüle")}
                             </button>
+
+                            {/* Floating Widget Icon Buttons - Profil kartı içinde */}
+                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
+                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
+                            ))}
                         </div>
                     </motion.div>
                 )}
 
-                {/* External Widgets (Inline/Block) - Only show if not in focused embed mode */}
-                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline').map((block: any) => (
+                {/* External Widgets (Embedded/Inline Block) - Only show non-floating ones */}
+                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && !b.content?.code?.includes('data-style="floating"')).map((block: any) => (
                     <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
                 ))}
             </main>
@@ -4585,13 +4590,13 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         const widgetType = typeMatch ? typeMatch[1] : 'booking';
         const widgetUser = userMatch ? userMatch[1] : '';
 
-        const typeConfig: Record<string, { icon: any; label: string; color: string }> = {
-            booking: { icon: <Calendar size={18} />, label: 'Randevu Al', color: theme.accent },
-            lead: { icon: <MessageSquare size={18} />, label: 'İletişime Geç', color: theme.accent },
-            chat: { icon: <Bot size={18} />, label: 'AI Asistan', color: theme.accent },
-            video: { icon: <Play size={18} />, label: 'Video İzle', color: theme.accent },
-            skills: { icon: <Zap size={18} />, label: 'Yetenekler', color: theme.accent },
-            countdown: { icon: <Target size={18} />, label: 'Geri Sayım', color: theme.accent },
+        const typeConfig: Record<string, { icon: any; label: string }> = {
+            booking: { icon: <Calendar size={22} />, label: 'Randevu Al' },
+            lead: { icon: <MessageSquare size={22} />, label: 'İletişime Geç' },
+            chat: { icon: <Bot size={22} />, label: 'AI Asistan' },
+            video: { icon: <Play size={22} />, label: 'Video İzle' },
+            skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
+            countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
@@ -4600,21 +4605,18 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         return (
             <>
                 <motion.button
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.15, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsModalOpen(true)}
-                    className={cn(
-                        "w-full py-4 px-6 flex items-center justify-center gap-3 border font-black text-xs uppercase tracking-widest transition-all shadow-lg",
-                        theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl"
-                    )}
+                    className="w-14 h-14 flex items-center justify-center text-white shadow-xl transition-all cursor-pointer"
                     style={{
-                        borderColor: `${config.color}30`,
-                        background: `linear-gradient(135deg, ${config.color}15, ${config.color}08)`,
-                        color: config.color
+                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
+                        borderRadius: '18px',
+                        boxShadow: `0 8px 24px ${theme.accent}50`
                     }}
+                    title={block.content?.title || config.label}
                 >
                     {config.icon}
-                    {block.content?.title || config.label}
                 </motion.button>
 
                 <AnimatePresence>
