@@ -4542,15 +4542,32 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     const scriptInjected = useRef(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const isFloating = block?.content?.code?.includes('data-style="floating"');
+    const codeStr = block.content.code || "";
+    const isFloating = codeStr.includes('data-style="floating"');
+    const isKardlyWidget = codeStr.includes('/api/widget.js');
+
+    // Extract attributes for Kardly widgets
+    const extractAttr = (attr: string) => {
+        const match = codeStr.match(new RegExp(`${attr}="([^"]*)"`));
+        return match ? match[1] : "";
+    };
+
+    const widgetType = extractAttr('data-type') || 'booking';
+    const widgetUser = extractAttr('data-user');
+    const vUrl = extractAttr('data-vUrl');
+    const btnText = extractAttr('data-btn');
+    const sList = extractAttr('data-sList');
+    const date = extractAttr('data-date');
+    const title = extractAttr('data-title');
+    const pImages = extractAttr('data-pImages');
+    const tList = extractAttr('data-tList');
 
     useEffect(() => {
-        if (!block?.content?.code || scriptInjected.current || !containerRef.current) return;
-        // Yüzen butonlar için script enjekte etme - kendi inline butonumuzu kullanıyoruz
-        if (isFloating) return;
+        if (!codeStr || scriptInjected.current || !containerRef.current) return;
+        if (isFloating || isKardlyWidget) return; // Don't inject script for floating or internal widgets
 
         const range = document.createRange();
-        const documentFragment = range.createContextualFragment(block.content.code);
+        const documentFragment = range.createContextualFragment(codeStr);
 
         const scripts = Array.from(documentFragment.querySelectorAll('script'));
         scripts.forEach(oldScript => {
@@ -4565,24 +4582,45 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
         });
 
         scriptInjected.current = true;
-    }, [block, isFloating]);
+    }, [block, isFloating, isKardlyWidget, codeStr]);
 
-    if (!block?.content?.code || !block.isActive) return null;
+    if (!codeStr || !block.isActive) return null;
 
-    // Yüzen buton seçilmişse kart İÇİNDE şık bir buton olarak göster
+    const renderInternalWidget = (isModal = false) => {
+        const commonProps = { theme, toneStyle };
+        switch (widgetType) {
+            case 'video':
+                return <VideoWidget url={vUrl} btnText={btnText || "İzle"} {...commonProps} />;
+            case 'skills':
+                return <SkillsWidget skills={sList} {...commonProps} />;
+            case 'portfolio':
+                return <PortfolioWidget images={pImages} {...commonProps} />;
+            case 'tech':
+                return <TechStackWidget technologies={tList} {...commonProps} />;
+            case 'countdown':
+                return <CountdownWidget targetDate={date} title={title} {...commonProps} />;
+            case 'lead':
+                // For lead/booking/chat we might still use iframe or show components directly
+                // For now, iframes are fine for these as they don't have large data strings
+                return (
+                    <iframe
+                        src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                        className="w-full h-full border-none"
+                        allow="autoplay; fullscreen"
+                    />
+                );
+            default:
+                return (
+                    <iframe
+                        src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                        className="w-full h-full border-none"
+                        allow="autoplay; fullscreen"
+                    />
+                );
+        }
+    };
+
     if (isFloating) {
-        // Script tag'inden data attribute'ları çıkar
-        const codeStr = block.content.code;
-        const typeMatch = codeStr.match(/data-type="([^"]+)"/);
-        const userMatch = codeStr.match(/data-user="([^"]+)"/);
-        const vUrlMatch = codeStr.match(/data-vUrl="([^"]+)"/);
-        const btnMatch = codeStr.match(/data-btn="([^"]+)"/);
-        const sListMatch = codeStr.match(/data-sList="([^"]+)"/);
-        const dateMatch = codeStr.match(/data-date="([^"]+)"/);
-        const titleMatch = codeStr.match(/data-title="([^"]+)"/);
-        const widgetType = typeMatch ? typeMatch[1] : 'booking';
-        const widgetUser = userMatch ? userMatch[1] : '';
-
         const typeConfig: Record<string, { icon: any; label: string }> = {
             booking: { icon: <Calendar size={22} />, label: 'Randevu Al' },
             lead: { icon: <MessageSquare size={22} />, label: 'İletişime Geç' },
@@ -4596,19 +4634,6 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
-
-        // Tüm parametreleri iframe URL'sine ekle
-        let iframeUrl = `https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`;
-        if (vUrlMatch?.[1]) iframeUrl += `&vUrl=${encodeURIComponent(vUrlMatch[1])}`;
-        if (btnMatch?.[1]) iframeUrl += `&btn=${encodeURIComponent(btnMatch[1])}`;
-        if (sListMatch?.[1]) iframeUrl += `&sList=${encodeURIComponent(sListMatch[1])}`;
-        if (dateMatch?.[1]) iframeUrl += `&date=${encodeURIComponent(dateMatch[1])}`;
-        if (titleMatch?.[1]) iframeUrl += `&title=${encodeURIComponent(titleMatch[1])}`;
-
-        const pImagesMatch = codeStr.match(/data-pImages="([^"]+)"/);
-        const tListMatch = codeStr.match(/data-tList="([^"]+)"/);
-        if (pImagesMatch?.[1]) iframeUrl += `&pImages=${encodeURIComponent(pImagesMatch[1])}`;
-        if (tListMatch?.[1]) iframeUrl += `&tList=${encodeURIComponent(tListMatch[1])}`;
 
         return (
             <>
@@ -4651,22 +4676,26 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
                                 exit={{ opacity: 0, y: 50, scale: 0.95 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 className={cn(
-                                    "relative w-full max-w-[400px] h-[600px] max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
+                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
                                     theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]"
                                 )}
                             >
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                                    className="absolute top-4 right-4 z-[600] w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
                                     style={{ background: `${theme.accent}20`, color: theme.accent }}
                                 >
                                     <X size={16} />
                                 </button>
-                                <iframe
-                                    src={iframeUrl}
-                                    className="w-full h-full border-none"
-                                    allow="autoplay; fullscreen"
-                                />
+                                <div className="w-full h-full overflow-y-auto no-scrollbar">
+                                    {isKardlyWidget ? renderInternalWidget(true) : (
+                                        <iframe
+                                            src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                                            className="w-full h-[600px] border-none"
+                                            allow="autoplay; fullscreen"
+                                        />
+                                    )}
+                                </div>
                             </motion.div>
                         </motion.div>
                     )}
@@ -4676,19 +4705,28 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     }
 
     return (
-        <div className={cn("w-full p-8 border text-center relative overflow-hidden flex flex-col items-center gap-4", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">
-            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
-
-            {block.content?.title && (
-                <div className="space-y-1 mb-2">
-                    <h4 className={cn("text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1", theme.text)}>
-                        {block.content.title}
-                    </h4>
-                    <div className="w-8 h-[2px] mx-auto rounded-full opacity-40" style={{ background: theme.accent }} />
-                </div>
+        <div className={cn("w-full p-0 flex flex-col items-center gap-4 relative overflow-hidden", isKardlyWidget ? "" : cn("p-8 border text-center", theme.card, theme.border, toneStyle.rounded))} id="external-inline-widget">
+            {!isKardlyWidget && (
+                <>
+                    <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+                    {block.content?.title && (
+                        <div className="space-y-1 mb-2">
+                            <h4 className={cn("text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1", theme.text)}>
+                                {block.content.title}
+                            </h4>
+                            <div className="w-8 h-[2px] mx-auto rounded-full opacity-40" style={{ background: theme.accent }} />
+                        </div>
+                    )}
+                </>
             )}
 
-            <div ref={containerRef} className="w-full flex justify-center" />
+            {isKardlyWidget ? (
+                <div className="w-full">
+                    {renderInternalWidget()}
+                </div>
+            ) : (
+                <div ref={containerRef} className="w-full flex justify-center" />
+            )}
         </div>
     );
 }

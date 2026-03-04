@@ -30,6 +30,8 @@ export async function GET() {
     const sList = scriptTag.getAttribute('data-sList') || '';
     const date = scriptTag.getAttribute('data-date') || '';
     const title = scriptTag.getAttribute('data-title') || '';
+    const pImages = scriptTag.getAttribute('data-pImages') || '';
+    const tList = scriptTag.getAttribute('data-tList') || '';
 
     // Dynamic baseUrl
     let baseUrl = 'https://www.kardly.site';
@@ -46,6 +48,8 @@ export async function GET() {
     if(sList) iframeUrl += '&sList=' + encodeURIComponent(sList);
     if(date) iframeUrl += '&date=' + encodeURIComponent(date);
     if(title) iframeUrl += '&title=' + encodeURIComponent(title);
+    if(pImages) iframeUrl += '&pImages=' + encodeURIComponent(pImages);
+    if(tList) iframeUrl += '&tList=' + encodeURIComponent(tList);
 
     // Container Check
     const containerId = 'kardly-widget-' + type;
@@ -57,9 +61,9 @@ export async function GET() {
         const iframe = document.createElement('iframe');
         iframe.src = iframeUrl;
         iframe.style.width = '100%';
-        iframe.style.height = (type === 'skills' || type === 'countdown') ? 'auto' : '600px';
-        if(type === 'skills' || type === 'countdown') {
-            iframe.style.minHeight = '300px';
+        iframe.style.height = (type === 'skills' || type === 'countdown' || type === 'portfolio' || type === 'tech') ? 'auto' : '600px';
+        if(type === 'skills' || type === 'countdown' || type === 'portfolio' || type === 'tech') {
+            iframe.style.minHeight = '400px';
         }
         iframe.style.border = 'none';
         iframe.style.borderRadius = '24px';
@@ -80,6 +84,8 @@ export async function GET() {
             ai: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>',
             video: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>',
             skills: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+            tech: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+            portfolio: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
             countdown: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
         };
 
@@ -90,7 +96,9 @@ export async function GET() {
         if (type === 'chat' || type === 'ai') rightPos = '176px';
         if (type === 'video') rightPos = '252px';
         if (type === 'skills') rightPos = '328px';
-        if (type === 'countdown') rightPos = '404px';
+        if (type === 'portfolio') rightPos = '404px';
+        if (type === 'tech') rightPos = '480px';
+        if (type === 'countdown') rightPos = '556px';
 
         const styles = {
             position: 'fixed',
@@ -129,8 +137,8 @@ export async function GET() {
         modalContainer.style.bottom = '100px';
         modalContainer.style.right = '24px';
         modalContainer.style.width = 'min(400px, 90vw)';
-        modalContainer.style.height = (type === 'skills' || type === 'countdown') ? 'auto' : 'min(600px, 80vh)';
-        if(type === 'skills' || type === 'countdown') {
+        modalContainer.style.height = (type === 'skills' || type === 'countdown' || type === 'portfolio' || type === 'tech') ? 'auto' : 'min(600px, 80vh)';
+        if(type === 'skills' || type === 'countdown' || type === 'portfolio' || type === 'tech') {
             modalContainer.style.minHeight = '300px';
         }
         modalContainer.style.backgroundColor = 'white';
@@ -146,7 +154,7 @@ export async function GET() {
         const iframe = document.createElement('iframe');
         iframe.src = iframeUrl;
         iframe.style.width = '100%';
-        iframe.style.height = (type === 'skills' || type === 'countdown') ? '400px' : '100%';
+        iframe.style.height = (type === 'skills' || type === 'countdown' || type === 'portfolio' || type === 'tech') ? '400px' : '100%';
         iframe.style.border = 'none';
         
         modalContainer.appendChild(iframe);

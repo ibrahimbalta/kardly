@@ -1134,22 +1134,58 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                 {/* Portfolio Gallery Preview */}
                                                 {extraWidgetConfig.portfolioImages ? (
-                                                    <div className="grid grid-cols-4 gap-2 border border-dashed border-slate-200 p-2 rounded-2xl bg-white max-h-[300px] overflow-y-auto">
-                                                        {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).map((img, idx) => (
+                                                    <div className="grid grid-cols-4 gap-2 border border-dashed border-slate-200 p-2 rounded-2xl bg-white max-h-[400px] overflow-y-auto">
+                                                        {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).map((img, idx, all) => (
                                                             <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shadow-sm">
                                                                 <img src={img} className="w-full h-full object-cover" alt="" />
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setExtraWidgetConfig(prev => {
-                                                                            const images = prev.portfolioImages.split(',').filter(Boolean);
-                                                                            images.splice(idx, 1);
-                                                                            return { ...prev, portfolioImages: images.join(',') };
-                                                                        });
-                                                                    }}
-                                                                    className="absolute top-1 right-1 p-1.5 bg-rose-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95"
-                                                                >
-                                                                    <Trash2 size={10} />
-                                                                </button>
+
+                                                                {/* Controls Overlay */}
+                                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-1">
+                                                                    <div className="flex justify-end">
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                setExtraWidgetConfig(prev => {
+                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    images.splice(idx, 1);
+                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                });
+                                                                            }}
+                                                                            className="p-1 px-1.5 bg-rose-500 text-white rounded-lg hover:scale-110 active:scale-95 transition-all shadow-lg"
+                                                                            title="Sil"
+                                                                        >
+                                                                            <Trash2 size={12} />
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <div className="flex justify-center gap-1 pb-1">
+                                                                        <button
+                                                                            disabled={idx === 0}
+                                                                            onClick={() => {
+                                                                                setExtraWidgetConfig(prev => {
+                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    [images[idx - 1], images[idx]] = [images[idx], images[idx - 1]];
+                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                });
+                                                                            }}
+                                                                            className="p-1 bg-white/20 backdrop-blur-md text-white rounded-md hover:bg-white/40 disabled:opacity-30 disabled:hover:bg-white/20 transition-all font-bold"
+                                                                        >
+                                                                            <ChevronLeft size={14} />
+                                                                        </button>
+                                                                        <button
+                                                                            disabled={idx === all.length - 1}
+                                                                            onClick={() => {
+                                                                                setExtraWidgetConfig(prev => {
+                                                                                    const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                                    [images[idx + 1], images[idx]] = [images[idx], images[idx + 1]];
+                                                                                    return { ...prev, portfolioImages: images.join(',') };
+                                                                                });
+                                                                            }}
+                                                                            className="p-1 bg-white/20 backdrop-blur-md text-white rounded-md hover:bg-white/40 disabled:opacity-30 disabled:hover:bg-white/20 transition-all font-bold"
+                                                                        >
+                                                                            <ChevronRight size={14} />
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         ))}
                                                     </div>
