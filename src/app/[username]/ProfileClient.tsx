@@ -3281,7 +3281,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             {/* Sadece İLK Floating Widget - Ana satırda */}
                             {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(0, 1).map((block: any) => (
-                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] flex-shrink-0" />
+                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
                             ))}
                         </div>
 
