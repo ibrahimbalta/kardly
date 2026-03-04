@@ -1134,13 +1134,106 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         }}
                                                     />
                                                 </div>
-                                                <textarea
-                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
-                                                    value={extraWidgetConfig.portfolioImages}
-                                                    placeholder="https://...base64_veya_url, https://..."
-                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
-                                                />
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resim URL'lerini virgülle ayırarak ekleyin veya 'RESİM YÜKLE' butonunu kullanın.</p>
+                                                <div className="flex items-center justify-between">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
+                                                    <button
+                                                        onClick={() => document.getElementById('portfolio-upload')?.click()}
+                                                        disabled={isUploadingPortfolio}
+                                                        className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
+                                                    >
+                                                        {isUploadingPortfolio ? <Clock className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                                                        RESİM YÜKLE
+                                                    </button>
+                                                    <input
+                                                        id="portfolio-upload"
+                                                        type="file"
+                                                        multiple
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={async (e) => {
+                                                            const files = Array.from(e.target.files || []);
+                                                            if (files.length === 0) return;
+
+                                                            setIsUploadingPortfolio(true);
+                                                            try {
+                                                                const processedUrls: string[] = [];
+
+                                                                for (const file of files) {
+                                                                    if (!file.type.startsWith('image/')) continue;
+
+                                                                    if (file.size > 2 * 1024 * 1024) {
+                                                                        setShowToast(`${file.name} çok büyük (Max 2MB).`);
+                                                                        continue;
+                                                                    }
+
+                                                                    const base64 = await new Promise<string>((resolve, reject) => {
+                                                                        const reader = new FileReader();
+                                                                        reader.onload = () => resolve(reader.result as string);
+                                                                        reader.onerror = reject;
+                                                                        reader.readAsDataURL(file);
+                                                                    });
+                                                                    processedUrls.push(base64);
+                                                                }
+
+                                                                if (processedUrls.length > 0) {
+                                                                    setExtraWidgetConfig(prev => {
+                                                                        const currentImages = prev.portfolioImages ? prev.portfolioImages.split(',').filter(Boolean) : [];
+                                                                        const newImages = [...currentImages, ...processedUrls].join(',');
+                                                                        return { ...prev, portfolioImages: newImages };
+                                                                    });
+                                                                    setShowToast(`${processedUrls.length} resim eklendi.`);
+                                                                }
+                                                                setTimeout(() => setShowToast(null), 3000);
+                                                            } catch (err) {
+                                                                console.error("Processing error:", err);
+                                                                setShowToast("İşlem sırasında bir hata oluştu.");
+                                                            } finally {
+                                                                setIsUploadingPortfolio(false);
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                {/* Portfolio Gallery Preview */}
+                                                {extraWidgetConfig.portfolioImages ? (
+                                                    <div className="grid grid-cols-4 gap-2 border border-dashed border-slate-200 p-2 rounded-2xl bg-white max-h-[300px] overflow-y-auto">
+                                                        {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).map((img, idx) => (
+                                                            <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-100 shadow-sm">
+                                                                <img src={img} className="w-full h-full object-cover" alt="" />
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setExtraWidgetConfig(prev => {
+                                                                            const images = prev.portfolioImages.split(',').filter(Boolean);
+                                                                            images.splice(idx, 1);
+                                                                            return { ...prev, portfolioImages: images.join(',') };
+                                                                        });
+                                                                    }}
+                                                                    className="absolute top-1 right-1 p-1.5 bg-rose-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95"
+                                                                >
+                                                                    <Trash2 size={10} />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="py-8 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-slate-400 bg-white/50">
+                                                        <Image size={24} className="opacity-20" />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest italic">Henüz resim eklenmedi</span>
+                                                    </div>
+                                                )}
+
+                                                <details className="group">
+                                                    <summary className="text-[9px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-primary transition-colors flex items-center gap-1 list-none outline-none">
+                                                        <Code size={10} /> Ham Veri (Düzenle)
+                                                    </summary>
+                                                    <textarea
+                                                        className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-[10px] font-mono focus:outline-none focus:border-primary min-h-[80px] mt-2 shadow-inner"
+                                                        value={extraWidgetConfig.portfolioImages}
+                                                        placeholder="https://...base64_veya_url, https://..."
+                                                        onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
+                                                    />
+                                                </details>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yükleyin veya URL'leri virgülle ayırarak girin.</p>
                                             </div>
                                         </div>
                                     )}
@@ -1213,7 +1306,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'portfolio') urlParams += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
                                                     if (activeWidget === 'tech') urlParams += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
 
-                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${activeWidget === 'portfolio' ? ` data-pImages="${extraWidgetConfig.portfolioImages}"` : ""}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
+                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${activeWidget === 'portfolio' ? ` data-pImages="${(extraWidgetConfig.portfolioImages || "").length > 50 ? extraWidgetConfig.portfolioImages.substring(0, 50) + "..." : extraWidgetConfig.portfolioImages}"` : ""}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
                                                 })()}
                                             </code>
                                         </div>
@@ -1498,17 +1591,40 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-6 text-center">
                                             <div className="text-center space-y-2">
                                                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto">
-                                                    {activeWidget === "booking" ? <Calendar size={20} /> : activeWidget === "lead" ? <MessageSquare size={20} /> : <Sparkles size={20} />}
+                                                    {(() => {
+                                                        const props = { size: 20 };
+                                                        if (activeWidget === "portfolio") return <Image {...props} />;
+                                                        if (activeWidget === "video") return <Youtube {...props} />;
+                                                        if (activeWidget === "skills") return <Award {...props} />;
+                                                        if (activeWidget === "tech") return <Code {...props} />;
+                                                        if (activeWidget === "booking") return <Calendar {...props} />;
+                                                        if (activeWidget === "lead") return <MessageSquare {...props} />;
+                                                        return <Sparkles {...props} />;
+                                                    })()}
                                                 </div>
-                                                <h4 className="font-black text-slate-900 uppercase tracking-tighter">{activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}</h4>
+                                                <h4 className="font-black text-slate-900 uppercase tracking-tighter">
+                                                    {activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'tech' ? 'Teknoloji Seti' : activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}
+                                                </h4>
                                             </div>
-                                            <div className="space-y-3">
-                                                <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
-                                                <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
-                                                <div className="h-24 w-full bg-slate-50 rounded-xl border border-slate-100" />
-                                            </div>
+
+                                            {activeWidget === 'portfolio' && extraWidgetConfig.portfolioImages ? (
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {extraWidgetConfig.portfolioImages.split(',').filter(Boolean).slice(0, 4).map((img, i) => (
+                                                        <div key={i} className="aspect-square rounded-xl bg-slate-50 overflow-hidden border border-slate-100">
+                                                            <img src={img} className="w-full h-full object-cover opacity-80" alt="" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-3">
+                                                    <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                                    <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                                    <div className="h-24 w-full bg-slate-50 rounded-xl border border-slate-100" />
+                                                </div>
+                                            )}
+
                                             <button className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
-                                                {t('confirmBooking') || "GÖNDER"}
+                                                {activeWidget === 'video' ? (extraWidgetConfig.videoBtnText || 'GÖRÜNTÜLE') : activeWidget === 'portfolio' ? 'İNCELE' : (t('confirmBooking') || "GÖNDER")}
                                             </button>
                                         </div>
                                     )}
