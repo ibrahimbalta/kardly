@@ -3281,7 +3281,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             {/* Sadece İLK Floating Widget - Ana satırda */}
                             {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(0, 1).map((block: any) => (
-                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="flex-1" />
+                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] flex-shrink-0" />
                             ))}
                         </div>
 
@@ -3289,7 +3289,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         {!isEmbedMode && (profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 1) && (
                             <div className="mt-4 flex flex-wrap justify-center gap-3">
                                 {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(1).map((block: any) => (
-                                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="px-10" />
+                                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
                                 ))}
                             </div>
                         )}
@@ -4584,15 +4584,15 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
         const widgetUser = userMatch ? userMatch[1] : '';
 
         const typeConfig: Record<string, { icon: any; label: string }> = {
-            booking: { icon: <Calendar size={20} />, label: 'Randevu Al' },
-            lead: { icon: <MessageSquare size={20} />, label: 'İletişime Geç' },
-            chat: { icon: <Bot size={20} />, label: 'AI Asistan' },
-            ai: { icon: <Bot size={20} />, label: 'AI Asistan' },
-            video: { icon: <Play size={20} />, label: 'Video İzle' },
-            skills: { icon: <Zap size={20} />, label: 'Yetenekler' },
-            portfolio: { icon: <Image size={20} />, label: 'Portfolyo' },
-            tech: { icon: <Code size={20} />, label: 'Yeteneklerim' },
-            countdown: { icon: <Target size={20} />, label: 'Geri Sayım' },
+            booking: { icon: <Calendar size={22} />, label: 'Randevu Al' },
+            lead: { icon: <MessageSquare size={22} />, label: 'İletişime Geç' },
+            chat: { icon: <Bot size={22} />, label: 'AI Asistan' },
+            ai: { icon: <Bot size={22} />, label: 'AI Asistan' },
+            video: { icon: <Play size={22} />, label: 'Video İzle' },
+            skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
+            portfolio: { icon: <Image size={22} />, label: 'Portfolyo' },
+            tech: { icon: <Code size={22} />, label: 'Yeteneklerim' },
+            countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
@@ -4617,7 +4617,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
                     whileTap={{ scale: 0.94 }}
                     onClick={() => setIsModalOpen(true)}
                     className={cn(
-                        "py-4 flex items-center justify-center text-white shadow-lg transition-all cursor-pointer",
+                        "h-full flex items-center justify-center text-white shadow-lg transition-all cursor-pointer",
                         toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl",
                         className
                     )}
