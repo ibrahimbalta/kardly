@@ -210,6 +210,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isProductSaving, setIsProductSaving] = useState(false)
     const [editingProduct, setEditingProduct] = useState<any>(null)
     const [statsRange, setStatsRange] = useState("30")
+    const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
 
     // Reviews Management
     const [reviewList, setReviewList] = useState(reviews || [])
@@ -1069,15 +1070,62 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                     {activeWidget === 'portfolio' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
-                                            <div className="space-y-1 text-left">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
+                                            <div className="space-y-3 text-left">
+                                                <div className="flex items-center justify-between">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
+                                                    <button
+                                                        onClick={() => document.getElementById('portfolio-upload')?.click()}
+                                                        disabled={isUploadingPortfolio}
+                                                        className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
+                                                    >
+                                                        {isUploadingPortfolio ? <Clock className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
+                                                        RESİM YÜKLE
+                                                    </button>
+                                                    <input
+                                                        id="portfolio-upload"
+                                                        type="file"
+                                                        multiple
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={async (e) => {
+                                                            const files = Array.from(e.target.files || []);
+                                                            if (files.length === 0) return;
+
+                                                            setIsUploadingPortfolio(true);
+                                                            try {
+                                                                const uploadedUrls = [];
+                                                                for (const file of files) {
+                                                                    const formData = new FormData();
+                                                                    formData.append("file", file);
+                                                                    const res = await fetch("/api/upload", {
+                                                                        method: "POST",
+                                                                        body: formData
+                                                                    });
+                                                                    const data = await res.json();
+                                                                    if (data.url) uploadedUrls.push(data.url);
+                                                                }
+
+                                                                const currentImages = extraWidgetConfig.portfolioImages ? extraWidgetConfig.portfolioImages.split(',').filter(Boolean) : [];
+                                                                const newImages = [...currentImages, ...uploadedUrls].join(',');
+                                                                setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: newImages });
+                                                                setShowToast(`${uploadedUrls.length} resim başarıyla yüklendi.`);
+                                                                setTimeout(() => setShowToast(null), 3000);
+                                                            } catch (err) {
+                                                                console.error("Upload error:", err);
+                                                                setShowToast("Yükleme sırasında bir hata oluştu.");
+                                                            } finally {
+                                                                setIsUploadingPortfolio(false);
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
                                                 <textarea
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
                                                     value={extraWidgetConfig.portfolioImages}
                                                     placeholder="https://...base64_veya_url, https://..."
                                                     onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
                                                 />
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resim URL'lerini virgülle ayırarak ekleyin.</p>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resim URL'lerini virgülle ayırarak ekleyin veya 'RESİM YÜKLE' butonunu kullanın.</p>
                                             </div>
                                         </div>
                                     )}
