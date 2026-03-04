@@ -4556,6 +4556,13 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
 
     if (!block?.content?.code || !block.isActive) return null;
 
+    // Yüzen buton seçilmişse sadece kodu çalıştır, kartı gösterme
+    const isFloating = block.content.code.includes('data-style="floating"');
+
+    if (isFloating) {
+        return <div ref={containerRef} className="hidden" />;
+    }
+
     return (
         <div className={cn("w-full p-8 border text-center relative overflow-hidden flex flex-col items-center gap-4", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />

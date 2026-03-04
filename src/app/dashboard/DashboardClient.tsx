@@ -1075,9 +1075,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
 
                                             <div className="space-y-4 text-left">
-                                                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-500 text-emerald-600 flex items-center gap-3">
-                                                    <Layout size={20} />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Bu araç profilinizde blok olarak görünecektir.</span>
+                                                <div className={cn("p-4 rounded-2xl flex items-center gap-3 border transition-all",
+                                                    externalWidget.code.includes('data-style="floating"')
+                                                        ? "bg-blue-50 border-blue-500 text-blue-600"
+                                                        : "bg-emerald-50 border-emerald-500 text-emerald-600")}>
+                                                    {externalWidget.code.includes('data-style="floating"') ? <Zap size={20} /> : <Layout size={20} />}
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">
+                                                        {externalWidget.code.includes('data-style="floating"')
+                                                            ? "Bu araç yüzen buton olarak çalışacaktır (Blok gözükmeyecektir)."
+                                                            : "Bu araç profilinizde blok olarak görünecektir."}
+                                                    </span>
                                                 </div>
                                             </div>
 
