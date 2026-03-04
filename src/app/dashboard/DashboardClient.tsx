@@ -146,7 +146,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isSaving, setIsSaving] = useState(false)
     const [isGeneratingBio, setIsGeneratingBio] = useState(false)
     const [activeWidget, setActiveWidget] = useState("booking")
-    const [widgetStyle, setWidgetStyle] = useState("floating")
+    const [widgetStyle, setWidgetStyle] = useState("embedded")
     const [externalWidget, setExternalWidget] = useState({
         title: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.title || "",
         code: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.code || "",
@@ -1011,15 +1011,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="flex justify-between items-center">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetEmbedCode')}</label>
                                             <button
-                                                onClick={() => copyToClipboard(`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
+                                                onClick={() => copyToClipboard(`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
                                                 <Download size={12} /> {t('widgetCopyCode')}
                                             </button>
                                         </div>
                                         <div className="p-6 bg-slate-900 rounded-[2rem] relative group text-left">
-                                            <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all">
-                                                {`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
+                                            <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all whitespace-pre-wrap">
+                                                {`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
                                             </code>
                                         </div>
                                     </div>
