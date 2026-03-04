@@ -148,6 +148,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [activeWidget, setActiveWidget] = useState("booking")
     const [widgetStyle, setWidgetStyle] = useState("embedded")
     const [externalWidget, setExternalWidget] = useState({
+        title: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.title || "",
+        code: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.code || "",
         position: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.position || "floating"
     })
     const [extraWidgetConfig, setExtraWidgetConfig] = useState({
@@ -970,12 +972,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÇ SEÇİN"}</label>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {[
-                                                { id: "booking", name: t.widgetBooking, icon: <Calendar size={18} /> },
-                                                { id: "lead", name: t.widgetLead, icon: <MessageSquare size={18} /> },
-                                                { id: "ai", name: t.widgetAI, icon: <Sparkles size={18} /> },
-                                                { id: "video", name: t.widgetVideo, icon: <Monitor size={18} /> },
-                                                { id: "skills", name: t.widgetSkills, icon: <Zap size={18} /> },
-                                                { id: "countdown", name: t.widgetCountdown, icon: <Clock size={18} /> }
+                                                { id: "booking", name: t('widgetBooking'), icon: <Calendar size={18} /> },
+                                                { id: "lead", name: t('widgetLead'), icon: <MessageSquare size={18} /> },
+                                                { id: "ai", name: t('widgetAI'), icon: <Sparkles size={18} /> },
+                                                { id: "video", name: t('widgetVideo'), icon: <Monitor size={18} /> },
+                                                { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
+                                                { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> }
                                             ].map(w => (
                                                 <button
                                                     key={w.id}
@@ -998,7 +1000,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     {activeWidget === 'video' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetVideoUrl}</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetVideoUrl')}</label>
                                                 <input
                                                     type="text"
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
@@ -1008,7 +1010,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetBtnText}</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetBtnText')}</label>
                                                 <input
                                                     type="text"
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
@@ -1022,13 +1024,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     {activeWidget === 'skills' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
                                             <div className="space-y-2 text-left">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetSkillsList}</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSkillsList')}</label>
                                                 <textarea
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
                                                     value={extraWidgetConfig.skills}
                                                     onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, skills: e.target.value })}
                                                 />
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">{t.widgetSkillsHint}</p>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">{t('widgetSkillsHint')}</p>
                                             </div>
                                         </div>
                                     )}
@@ -1036,7 +1038,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     {activeWidget === 'countdown' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetTargetDate}</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetTargetDate')}</label>
                                                 <input
                                                     type="datetime-local"
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
@@ -1045,7 +1047,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetCtdTitle}</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetCtdTitle')}</label>
                                                 <input
                                                     type="text"
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
