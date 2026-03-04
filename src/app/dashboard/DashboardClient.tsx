@@ -76,7 +76,10 @@ import {
     ChevronDown,
     ChevronUp,
     Quote,
-    Edit2
+    Edit2,
+    ArrowUp,
+    ArrowDown,
+    Bot
 } from "lucide-react"
 
 
@@ -1304,32 +1307,78 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            setExternalWidget(block.content);
-                                                                            setEditingWidgetId(block.id);
-                                                                            window.scrollTo({ top: 300, behavior: 'smooth' });
-                                                                        }}
-                                                                        className="p-2 text-indigo-500 hover:bg-white rounded-lg transition-all"
-                                                                        title="Düzenle"
-                                                                    >
-                                                                        <Edit2 size={16} />
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={async () => {
-                                                                            if (confirm("Bu aracı silmek istediğinize emin misiniz?")) {
-                                                                                const newBlocks = (blocks || []).filter((b: any) => b.id !== block.id);
-                                                                                await handleSyncBlocks(newBlocks);
-                                                                                setShowToast("Araç başarıyla silindi.");
-                                                                                setTimeout(() => setShowToast(null), 3000);
-                                                                            }
-                                                                        }}
-                                                                        className="p-2 text-rose-500 hover:bg-white rounded-lg transition-all"
-                                                                        title="Sil"
-                                                                    >
-                                                                        <Trash2 size={16} />
-                                                                    </button>
+                                                                <div className="flex gap-2">
+                                                                    <div className="flex flex-col border-r border-slate-100 pr-2 mr-1">
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                const newBlocks = [...blocks];
+                                                                                const idx = newBlocks.findIndex(b => b.id === block.id);
+                                                                                // Find previous external_widget
+                                                                                let prevIdx = -1;
+                                                                                for (let i = idx - 1; i >= 0; i--) {
+                                                                                    if (newBlocks[i].type === 'external_widget') { prevIdx = i; break; }
+                                                                                }
+                                                                                if (prevIdx !== -1) {
+                                                                                    [newBlocks[idx], newBlocks[prevIdx]] = [newBlocks[prevIdx], newBlocks[idx]];
+                                                                                    await handleSyncBlocks(newBlocks);
+                                                                                    setShowToast("Sıralama güncellendi.");
+                                                                                    setTimeout(() => setShowToast(null), 2000);
+                                                                                }
+                                                                            }}
+                                                                            className="p-1 text-slate-400 hover:text-indigo-500 transition-colors"
+                                                                            title="Yukarı Taşı"
+                                                                        >
+                                                                            <ChevronUp size={16} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                const newBlocks = [...blocks];
+                                                                                const idx = newBlocks.findIndex(b => b.id === block.id);
+                                                                                // Find next external_widget
+                                                                                let nextIdx = -1;
+                                                                                for (let i = idx + 1; i < newBlocks.length; i++) {
+                                                                                    if (newBlocks[i].type === 'external_widget') { nextIdx = i; break; }
+                                                                                }
+                                                                                if (nextIdx !== -1) {
+                                                                                    [newBlocks[idx], newBlocks[nextIdx]] = [newBlocks[nextIdx], newBlocks[idx]];
+                                                                                    await handleSyncBlocks(newBlocks);
+                                                                                    setShowToast("Sıralama güncellendi.");
+                                                                                    setTimeout(() => setShowToast(null), 2000);
+                                                                                }
+                                                                            }}
+                                                                            className="p-1 text-slate-400 hover:text-indigo-500 transition-colors"
+                                                                            title="Aşağı Taşı"
+                                                                        >
+                                                                            <ChevronDown size={16} />
+                                                                        </button>
+                                                                    </div>
+                                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                setExternalWidget(block.content);
+                                                                                setEditingWidgetId(block.id);
+                                                                                window.scrollTo({ top: 300, behavior: 'smooth' });
+                                                                            }}
+                                                                            className="p-2 text-indigo-500 hover:bg-white rounded-lg transition-all"
+                                                                            title="Düzenle"
+                                                                        >
+                                                                            <Edit2 size={16} />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                if (confirm("Bu aracı silmek istediğinize emin misiniz?")) {
+                                                                                    const newBlocks = (blocks || []).filter((b: any) => b.id !== block.id);
+                                                                                    await handleSyncBlocks(newBlocks);
+                                                                                    setShowToast("Araç başarıyla silindi.");
+                                                                                    setTimeout(() => setShowToast(null), 3000);
+                                                                                }
+                                                                            }}
+                                                                            className="p-2 text-rose-500 hover:bg-white rounded-lg transition-all"
+                                                                            title="Sil"
+                                                                        >
+                                                                            <Trash2 size={16} />
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))}
