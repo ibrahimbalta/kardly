@@ -474,8 +474,34 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                             {u.isActive !== false ? 'AKTİF' : 'PASİF'}
                                                         </button>
                                                     </td>
-                                                    <td className="px-8 py-6 text-right">
-                                                        <div className="text-[10px] font-mono text-slate-300 group-hover:text-slate-500 transition-colors uppercase italic font-bold">#USR-{u.id.substring(0, 6)}</div>
+                                                    <td className="px-8 py-6 text-right space-x-2">
+                                                        <button
+                                                            onClick={async () => {
+                                                                if (window.confirm(`${u.name || u.email} kullanıcısını ve tüm verilerini (profil, randevular, mesajlar) silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.`)) {
+                                                                    setLoadingUserId(u.id)
+                                                                    try {
+                                                                        const res = await fetch('/api/admin/users/delete', {
+                                                                            method: 'DELETE',
+                                                                            headers: { 'Content-Type': 'application/json' },
+                                                                            body: JSON.stringify({ userId: u.id })
+                                                                        })
+                                                                        if (res.ok) {
+                                                                            setLocalUsers(localUsers.filter((user: any) => user.id !== u.id))
+                                                                        }
+                                                                    } catch (err) {
+                                                                        console.error("User deletion error:", err)
+                                                                    } finally {
+                                                                        setLoadingUserId(null)
+                                                                    }
+                                                                }
+                                                            }}
+                                                            disabled={loadingUserId === u.id}
+                                                            className="p-3 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100 disabled:opacity-30"
+                                                            title="Kullanıcıyı Tamamen Sil"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                        <div className="text-[10px] font-mono text-slate-300 group-hover:text-slate-500 transition-colors uppercase italic font-bold mt-1">#USR-{u.id.substring(0, 6)}</div>
                                                     </td>
                                                 </tr>
                                             ))}
