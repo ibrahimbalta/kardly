@@ -1071,69 +1071,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     {activeWidget === 'portfolio' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
                                             <div className="space-y-3 text-left">
-                                                <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
-                                                    <button
-                                                        onClick={() => document.getElementById('portfolio-upload')?.click()}
-                                                        disabled={isUploadingPortfolio}
-                                                        className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
-                                                    >
-                                                        {isUploadingPortfolio ? <Clock className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
-                                                        RESİM YÜKLE
-                                                    </button>
-                                                    <input
-                                                        id="portfolio-upload"
-                                                        type="file"
-                                                        multiple
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={async (e) => {
-                                                            const files = Array.from(e.target.files || []);
-                                                            if (files.length === 0) return;
 
-                                                            setIsUploadingPortfolio(true);
-                                                            try {
-                                                                const processedUrls: string[] = [];
-
-                                                                for (const file of files) {
-                                                                    // Sadece resim dosyalarını kabul et
-                                                                    if (!file.type.startsWith('image/')) continue;
-
-                                                                    // Dosya boyutu kontrolü (2MB'dan büyükse uyar veya atla)
-                                                                    if (file.size > 2 * 1024 * 1024) {
-                                                                        console.warn("Dosya çok büyük: ", file.name);
-                                                                        continue;
-                                                                    }
-
-                                                                    const base64 = await new Promise<string>((resolve, reject) => {
-                                                                        const reader = new FileReader();
-                                                                        reader.onload = () => resolve(reader.result as string);
-                                                                        reader.onerror = reject;
-                                                                        reader.readAsDataURL(file);
-                                                                    });
-                                                                    processedUrls.push(base64);
-                                                                }
-
-                                                                if (processedUrls.length > 0) {
-                                                                    setExtraWidgetConfig(prev => {
-                                                                        const currentImages = prev.portfolioImages ? prev.portfolioImages.split(',').filter(Boolean) : [];
-                                                                        const newImages = [...currentImages, ...processedUrls].join(',');
-                                                                        return { ...prev, portfolioImages: newImages };
-                                                                    });
-                                                                    setShowToast(`${processedUrls.length} resim eklendi.`);
-                                                                } else {
-                                                                    setShowToast("Uygun resim seçilmedi veya dosyalar çok büyük (Max 2MB).");
-                                                                }
-                                                                setTimeout(() => setShowToast(null), 3000);
-                                                            } catch (err) {
-                                                                console.error("Processing error:", err);
-                                                                setShowToast("İşlem sırasında bir hata oluştu.");
-                                                            } finally {
-                                                                setIsUploadingPortfolio(false);
-                                                            }
-                                                        }}
-                                                    />
-                                                </div>
                                                 <div className="flex items-center justify-between">
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
                                                     <button
