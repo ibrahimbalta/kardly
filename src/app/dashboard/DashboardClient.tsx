@@ -1094,6 +1094,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             setIsUploadingPortfolio(true);
                                                             try {
                                                                 const uploadedUrls = [];
+                                                                let errorMsg = null;
+
                                                                 for (const file of files) {
                                                                     const formData = new FormData();
                                                                     formData.append("file", file);
@@ -1102,17 +1104,28 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         body: formData
                                                                     });
                                                                     const data = await res.json();
-                                                                    if (data.url) uploadedUrls.push(data.url);
+
+                                                                    if (res.ok && data.url) {
+                                                                        uploadedUrls.push(data.url);
+                                                                    } else {
+                                                                        errorMsg = data.error || "Yükleme başarısız.";
+                                                                    }
                                                                 }
 
-                                                                const currentImages = extraWidgetConfig.portfolioImages ? extraWidgetConfig.portfolioImages.split(',').filter(Boolean) : [];
-                                                                const newImages = [...currentImages, ...uploadedUrls].join(',');
-                                                                setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: newImages });
-                                                                setShowToast(`${uploadedUrls.length} resim başarıyla yüklendi.`);
+                                                                if (uploadedUrls.length > 0) {
+                                                                    setExtraWidgetConfig(prev => {
+                                                                        const currentImages = prev.portfolioImages ? prev.portfolioImages.split(',').filter(Boolean) : [];
+                                                                        const newImages = [...currentImages, ...uploadedUrls].join(',');
+                                                                        return { ...prev, portfolioImages: newImages };
+                                                                    });
+                                                                    setShowToast(`${uploadedUrls.length} resim başarıyla yüklendi.`);
+                                                                } else if (errorMsg) {
+                                                                    setShowToast(`Hata: ${errorMsg}`);
+                                                                }
                                                                 setTimeout(() => setShowToast(null), 3000);
                                                             } catch (err) {
                                                                 console.error("Upload error:", err);
-                                                                setShowToast("Yükleme sırasında bir hata oluştu.");
+                                                                setShowToast("Bağlantı hatası: Resim yüklenemedi.");
                                                             } finally {
                                                                 setIsUploadingPortfolio(false);
                                                             }
