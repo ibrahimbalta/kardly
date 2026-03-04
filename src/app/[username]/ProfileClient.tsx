@@ -3373,41 +3373,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
             </AnimatePresence>
 
-            {/* AI Floating Button */}
-            {aiConfig?.isEnabled !== false && !isEmbedMode && (
-                <motion.button
-                    initial={{ scale: 0, rotate: -20, opacity: 0 }}
-                    animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsAIChatOpen(true)}
-                    className="fixed bottom-6 right-6 z-[180] w-14 h-14 rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden group transition-all"
-                    style={{
-                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}dd)`,
-                        boxShadow: `0 10px 30px -5px ${theme.accent}50, 0 0 20px ${theme.accent}20`
-                    }}
-                >
-                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Bot size={24} className="text-[#000] relative z-10" />
-                    <motion.div
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0, 0.2] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="absolute inset-0 bg-white rounded-full"
-                    />
-                </motion.button>
-            )}
-
-            <AIChatAssistant
-                isOpen={isAIChatOpen}
-                onClose={() => setIsAIChatOpen(false)}
-                profile={profile}
-                t={t}
-                theme={theme}
-                toneStyle={toneStyle}
-                messages={chatMessages}
-                setMessages={setChatMessages}
-                aiConfig={aiConfig}
-            />
+            <SocialProof t={t} theme={theme} />
         </div>
     )
 }
