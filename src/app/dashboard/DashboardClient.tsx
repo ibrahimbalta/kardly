@@ -1011,7 +1011,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="flex justify-between items-center">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetEmbedCode')}</label>
                                             <button
-                                                onClick={() => copyToClipboard(`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.me/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
+                                                onClick={() => copyToClipboard(`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
                                                 <Download size={12} /> {t('widgetCopyCode')}
@@ -1019,7 +1019,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <div className="p-6 bg-slate-900 rounded-[2rem] relative group text-left">
                                             <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all">
-                                                {`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.me/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
+                                                {`<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
                                             </code>
                                         </div>
                                     </div>
@@ -1030,11 +1030,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <input
                                                 type="text"
                                                 readOnly
-                                                value={`https://kardly.me/${profile?.username}?widget=${activeWidget}`}
+                                                value={`https://kardly.site/${profile?.username}?widget=${activeWidget}`}
                                                 className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold text-slate-600 focus:outline-none"
                                             />
                                             <button
-                                                onClick={() => copyToClipboard(`https://kardly.me/${profile?.username}?widget=${activeWidget}`)}
+                                                onClick={() => copyToClipboard(`https://kardly.site/${profile?.username}?widget=${activeWidget}`)}
                                                 className="px-5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-slate-600"
                                             >
                                                 <ExternalLink size={16} />

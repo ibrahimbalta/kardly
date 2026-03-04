@@ -109,6 +109,16 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const [isAIChatOpen, setIsAIChatOpen] = useState(false)
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
+    const [isEmbedMode, setIsEmbedMode] = useState(false)
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search)
+            if (params.get('embed') === 'true') {
+                setIsEmbedMode(true)
+            }
+        }
+    }, [])
 
     const aiConfig = useMemo(() => {
         const block = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
@@ -282,7 +292,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -387,7 +397,7 @@ END:VCARD`
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -2541,253 +2551,349 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             </AnimatePresence>
 
             <main className="relative z-10 w-full max-w-[420px] space-y-6" style={{ perspective: "1000px" }}>
-                <motion.div
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                        rotateX,
-                        rotateY,
-                        ...(profile.profileBgImage ? {
-                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${profile.profileBgImage})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
-                        } : {})
-                    }}
-                    className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
-                >
-                    {/* Floating Buttons: QA (Top Left) & Share (Top Right) */}
-                    <div className="absolute top-6 left-6 z-30">
-                        <motion.button
-                            whileHover={{ scale: 1.1, rotate: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setIsQrOpen(true)}
-                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                        >
-                            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
-                            <QrCode size={18} className={theme.icon} />
-                        </motion.button>
-                    </div>
+                {isEmbedMode ? (
+                    <div className="flex flex-col gap-6 w-full px-4">
+                        {/* In embed mode, we prioritize showing the requested widget */}
+                        {(() => {
+                            const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+                            const requestedWidget = urlParams?.get('widget');
 
-                    <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
-                        <button
-                            onClick={() => {
-                                const newLang = lang === 'tr' ? 'en' : 'tr';
-                                setLang(newLang);
-                                localStorage.setItem('lang', newLang);
-                            }}
-                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95 text-[10px] font-black uppercase", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                        >
-                            {lang === 'tr' ? 'EN' : 'TR'}
-                        </button>
-                        <button
-                            onClick={() => setIsWalletModalOpen(true)}
-                            className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                        >
-                            <UserPlus size={18} className={theme.icon} />
-                        </button>
-                    </div>
+                            if (requestedWidget === 'booking') {
+                                return (
+                                    <div className={cn("p-8 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+                                        <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+                                        <h2 className={cn("text-lg font-black mb-6 uppercase tracking-tight text-center", theme.text)}>
+                                            {t.widgetBooking || "Randevu Al"}
+                                        </h2>
+                                        <AppointmentModal
+                                            isOpen={true}
+                                            onClose={() => { }}
+                                            profile={profile}
+                                            lang={lang}
+                                            t={t}
+                                            theme={theme}
+                                            toneStyle={toneStyle}
+                                            isEmbed={true}
+                                        />
+                                    </div>
+                                )
+                            }
 
-                    {/* Profile Section */}
-                    <div className="flex flex-col items-center text-center space-y-6">
-                        <div className="relative w-32 h-32 group">
-                            {/* Expertise Icons Container */}
-                            {toneStyle.expertiseStyle !== 'minimal' && (
-                                <motion.div
-                                    className="absolute inset-0 z-20 pointer-events-none"
-                                    animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
-                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                                >
-                                    {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
-                                        const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                        const radius = 95;
-                                        const x = Math.cos(angle) * radius;
-                                        const y = Math.sin(angle) * radius;
+                            if (requestedWidget === 'lead') {
+                                return (
+                                    <div className={cn("p-8 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+                                        <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+                                        <LeadModal
+                                            isOpen={true}
+                                            onClose={() => { }}
+                                            onSubmit={async (leadData: any) => {
+                                                try {
+                                                    const res = await fetch("/api/leads/create", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({ ...leadData, profileId: profile.id })
+                                                    })
+                                                    if (res.ok) {
+                                                        setLeadStatus(t.leadSuccessMsg)
+                                                        setTimeout(() => setLeadStatus(null), 5000)
+                                                    }
+                                                } catch (err) {
+                                                    console.error(err)
+                                                }
+                                            }}
+                                            theme={theme}
+                                            t={t}
+                                            lang={lang}
+                                            toneStyle={toneStyle}
+                                            isEmbed={true}
+                                        />
+                                    </div>
+                                )
+                            }
 
-                                        return (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ opacity: 0, scale: 0 }}
-                                                animate={toneStyle.expertiseStyle === 'floating' ? {
-                                                    opacity: 1, scale: 1,
-                                                    y: [0, -10, 0],
-                                                    transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
-                                                } : { opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.5 + i * 0.1 }}
-                                                className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
-                                                style={{
-                                                    left: `calc(50% + ${x}px)`,
-                                                    top: `calc(50% + ${y}px)`,
-                                                    transform: 'translate(-50%, -50%)'
-                                                }}
-                                            >
-                                                <motion.div
-                                                    animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
-                                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                                                    className={cn("w-10 h-10 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative rounded-full")}
-                                                    style={{
-                                                        color: theme.accent,
-                                                        backgroundColor: 'rgba(255,255,255,0.05)',
-                                                        backdropFilter: 'blur(10px)'
-                                                    }}
-                                                >
-                                                    {getIcon(service.title)}
-
-                                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-[#0a0a0a]/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[11px] font-bold text-white pointer-events-none border border-white/20 shadow-[0_10px_25px_rgba(0,0,0,0.5)] scale-50 group-hover/icon:scale-100 z-50">
-                                                        {service.title}
-                                                    </div>
-                                                </motion.div>
-                                            </motion.div>
-                                        );
-                                    })}
-                                </motion.div>
-                            )}
-
-                            <motion.div
-                                animate={{
-                                    boxShadow: [
-                                        `0 0 0px ${theme.accent}00`,
-                                        `0 0 20px ${theme.accent}40`,
-                                        `0 0 0px ${theme.accent}00`
-                                    ]
-                                }}
-                                transition={{ duration: 3, repeat: Infinity }}
-                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden",
-                                    theme.special === 'software' ? 'rounded-xl' :
-                                        theme.special === 'photographer' ? 'rounded-sm border-white' :
-                                            'rounded-full'
-                                )}
-                                style={{ borderColor: theme.accent }}
-                            >
-                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
-                                    <iframe
-                                        className="w-full h-full object-cover scale-[1.8] pointer-events-none"
-                                        src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)}
-                                        allow="autoplay; encrypted-media"
-                                        frameBorder="0"
+                            if (requestedWidget === 'chat' || requestedWidget === 'ai') {
+                                return (
+                                    <AIChatAssistant
+                                        isOpen={true}
+                                        onClose={() => { }}
+                                        profile={profile}
+                                        t={t}
+                                        theme={theme}
+                                        toneStyle={toneStyle}
+                                        messages={chatMessages}
+                                        setMessages={setChatMessages}
+                                        aiConfig={aiConfig}
+                                        isEmbed={true}
                                     />
-                                ) : (
-                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover")} />
-                                )}
+                                )
+                            }
 
-                                {/* Profession Overlays */}
-                                {theme.special === 'software' && (
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <div className="absolute top-0 left-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">DIV</div>
-                                        <div className="absolute bottom-0 right-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">/DIV</div>
+                            return (
+                                <div className={cn("text-center p-8 border", theme.card, theme.border, toneStyle.rounded)}>
+                                    <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2" style={{ borderColor: theme.accent }}>
+                                        <img src={profile.user.image} className="w-full h-full object-cover" alt="" />
                                     </div>
-                                )}
-                                {theme.special === 'photographer' && (
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <div className="w-full h-[1px] bg-red-500/30 absolute top-1/2" />
-                                        <div className="h-full w-[1px] bg-red-500/30 absolute left-1/2" />
-                                        <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white" />
-                                        <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-white" />
-                                        <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white" />
-                                        <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white" />
-                                    </div>
-                                )}
-                                {theme.special === 'lawyer' && (
-                                    <div className="absolute inset-0 border-2 border-amber-500/20 rounded-full scale-90" />
-                                )}
-                                {theme.special === 'architect' && (
-                                    <div className="absolute inset-0 border border-sky-500/30">
-                                        <div className="absolute top-0 left-1/2 w-[1px] h-full bg-sky-500/10" />
-                                        <div className="absolute left-0 top-1/2 w-full h-[1px] bg-sky-500/10" />
-                                    </div>
-                                )}
-                                {theme.special === 'barber' && (
-                                    <div className="absolute inset-0 border-4 border-double border-white/10" />
-                                )}
-                            </motion.div>
-
-                            {/* External Profession Icons */}
-                            {theme.special === 'doctor' && (
-                                <div className="absolute -top-4 -right-4 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center border border-sky-100 z-20">
-                                    <Activity size={20} className="text-sky-500 animate-pulse" />
+                                    <h2 className={cn("text-xl font-black mb-1", theme.text)}>{profile.user.name}</h2>
+                                    <p className={cn("text-xs opacity-60 mb-8 uppercase tracking-widest font-bold", theme.text)}>{profile.occupation}</p>
+                                    <button
+                                        onClick={() => setIsAppointmentOpen(true)}
+                                        className={cn("w-full py-4 px-8 font-black uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 active:scale-95", toneStyle.rounded)}
+                                        style={{ background: theme.accent }}
+                                    >
+                                        {t.bookAppointment}
+                                    </button>
                                 </div>
-                            )}
-                            {theme.special === 'chef' && (
-                                <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
-                                    <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#f97316">
-                                            <path d="M12 3c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9 4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zM8.5 15h7c.28 0 .5.22.5.5s-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z" />
-                                        </svg>
-                                    </motion.div>
-                                </div>
-                            )}
-                            {theme.special === 'gamer' && (
-                                <div className="absolute -bottom-2 inset-x-0 flex justify-center z-20">
-                                    <div className="bg-black border border-[#00ff9f]/50 px-2 py-0.5 rounded text-[8px] font-mono text-[#00ff9f] tracking-tighter shadow-[0_0_10px_#00ff9f50]">LVL 99 PRO</div>
-                                </div>
-                            )}
-                            {theme.special === 'dietitian' && (
-                                <div className="absolute -top-4 left-0 z-20 opacity-60">
-                                    <motion.div animate={{ rotate: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
-                                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
-                                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-7 7" />
-                                        </svg>
-                                    </motion.div>
-                                </div>
-                            )}
-                            {theme.special === 'beauty' && (
-                                <div className="absolute -top-2 -right-2 z-20">
-                                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
-                                        <Sparkles size={24} className="text-rose-400" />
-                                    </motion.div>
-                                </div>
-                            )}
-                            {theme.special === 'musician' && (
-                                <div className="absolute top-1/2 -right-8 -translate-y-1/2 z-20 opacity-20 flex flex-col gap-1">
-                                    <div className="w-12 h-[1px] bg-indigo-500" />
-                                    <div className="w-12 h-[1px] bg-indigo-500" />
-                                    <div className="w-12 h-[1px] bg-indigo-500" />
-                                </div>
-                            )}
-
-                            <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
+                            )
+                        })()}
+                    </div>
+                ) : (
+                    <motion.div
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        style={{
+                            rotateX,
+                            rotateY,
+                            ...(profile.profileBgImage ? {
+                                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${profile.profileBgImage})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            } : {})
+                        }}
+                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                    >
+                        {/* Floating Buttons: QA (Top Left) & Share (Top Right) */}
+                        <div className="absolute top-6 left-6 z-30">
+                            <motion.button
+                                whileHover={{ scale: 1.1, rotate: -5 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setIsQrOpen(true)}
+                                className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                            >
+                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
+                                <QrCode size={18} className={theme.icon} />
+                            </motion.button>
                         </div>
 
-                        <div>
-                            <div className="flex items-center justify-center gap-3">
-                                {theme.special === 'software' && <Code size={20} className="text-emerald-500 opacity-50" />}
-                                {theme.special === 'doctor' && <Shield size={20} className="text-sky-500 opacity-50" />}
-                                {theme.special === 'chef' && <Zap size={20} className="text-orange-500 opacity-50" />}
-                                {theme.special === 'artistic' && <Palette size={20} className="text-pink-500 opacity-50" />}
-                                <h1 className={cn("font-black tracking-tight", theme.text, toneStyle.headerSize)}>{profile.user.name}</h1>
-                                {theme.special === 'realestate' && <Briefcase size={20} className="text-amber-500 opacity-50" />}
-                                {theme.special === 'architect' && <Layers size={20} className="text-sky-500 opacity-50" />}
-                                {theme.special === 'barber' && <Star size={20} className="text-white opacity-50" />}
-                            </div>
+                        <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
+                            <button
+                                onClick={() => {
+                                    const newLang = lang === 'tr' ? 'en' : 'tr';
+                                    setLang(newLang);
+                                    localStorage.setItem('lang', newLang);
+                                }}
+                                className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95 text-[10px] font-black uppercase", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                            >
+                                {lang === 'tr' ? 'EN' : 'TR'}
+                            </button>
+                            <button
+                                onClick={() => setIsWalletModalOpen(true)}
+                                className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                            >
+                                <UserPlus size={18} className={theme.icon} />
+                            </button>
+                        </div>
 
-                            <div className="flex items-center justify-center gap-2 mt-2 relative">
-                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
-                                <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
-                                    {profile.occupation || "PROFESSIONAL"}
-                                    {theme.special === 'software' && <span className="animate-pulse">_</span>}
-                                </p>
-                                <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                        {/* Profile Section */}
+                        <div className="flex flex-col items-center text-center space-y-6">
+                            <div className="relative w-32 h-32 group">
+                                {/* Expertise Icons Container */}
+                                {toneStyle.expertiseStyle !== 'minimal' && (
+                                    <motion.div
+                                        className="absolute inset-0 z-20 pointer-events-none"
+                                        animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
+                                        transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                            const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                            const radius = 95;
+                                            const x = Math.cos(angle) * radius;
+                                            const y = Math.sin(angle) * radius;
 
-                                {theme.special === 'fitness' && (
-                                    <div className="absolute -right-12 top-0 flex gap-0.5">
-                                        <div className="w-1 h-3 bg-lime-500" />
-                                        <div className="w-1 h-3 bg-lime-500" />
-                                        <div className="w-1 h-3 bg-lime-500/30" />
+                                            return (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, scale: 0 }}
+                                                    animate={toneStyle.expertiseStyle === 'floating' ? {
+                                                        opacity: 1, scale: 1,
+                                                        y: [0, -10, 0],
+                                                        transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
+                                                    } : { opacity: 1, scale: 1 }}
+                                                    transition={{ delay: 0.5 + i * 0.1 }}
+                                                    className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
+                                                    style={{
+                                                        left: `calc(50% + ${x}px)`,
+                                                        top: `calc(50% + ${y}px)`,
+                                                        transform: 'translate(-50%, -50%)'
+                                                    }}
+                                                >
+                                                    <motion.div
+                                                        animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
+                                                        transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                                        className={cn("w-10 h-10 glass border border-white/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.2)] transition-all hover:scale-125 hover:border-white hover:bg-white/10 relative rounded-full")}
+                                                        style={{
+                                                            color: theme.accent,
+                                                            backgroundColor: 'rgba(255,255,255,0.05)',
+                                                            backdropFilter: 'blur(10px)'
+                                                        }}
+                                                    >
+                                                        {getIcon(service.title)}
+
+                                                        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-[#0a0a0a]/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[11px] font-bold text-white pointer-events-none border border-white/20 shadow-[0_10px_25px_rgba(0,0,0,0.5)] scale-50 group-hover/icon:scale-100 z-50">
+                                                            {service.title}
+                                                        </div>
+                                                    </motion.div>
+                                                </motion.div>
+                                            );
+                                        })}
+                                    </motion.div>
+                                )}
+
+                                <motion.div
+                                    animate={{
+                                        boxShadow: [
+                                            `0 0 0px ${theme.accent}00`,
+                                            `0 0 20px ${theme.accent}40`,
+                                            `0 0 0px ${theme.accent}00`
+                                        ]
+                                    }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                    className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden",
+                                        theme.special === 'software' ? 'rounded-xl' :
+                                            theme.special === 'photographer' ? 'rounded-sm border-white' :
+                                                'rounded-full'
+                                    )}
+                                    style={{ borderColor: theme.accent }}
+                                >
+                                    {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                        <iframe
+                                            className="w-full h-full object-cover scale-[1.8] pointer-events-none"
+                                            src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)}
+                                            allow="autoplay; encrypted-media"
+                                            frameBorder="0"
+                                        />
+                                    ) : (
+                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover")} />
+                                    )}
+
+                                    {/* Profession Overlays */}
+                                    {theme.special === 'software' && (
+                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <div className="absolute top-0 left-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">DIV</div>
+                                            <div className="absolute bottom-0 right-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">/DIV</div>
+                                        </div>
+                                    )}
+                                    {theme.special === 'photographer' && (
+                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <div className="w-full h-[1px] bg-red-500/30 absolute top-1/2" />
+                                            <div className="h-full w-[1px] bg-red-500/30 absolute left-1/2" />
+                                            <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white" />
+                                            <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-white" />
+                                            <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white" />
+                                            <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white" />
+                                        </div>
+                                    )}
+                                    {theme.special === 'lawyer' && (
+                                        <div className="absolute inset-0 border-2 border-amber-500/20 rounded-full scale-90" />
+                                    )}
+                                    {theme.special === 'architect' && (
+                                        <div className="absolute inset-0 border border-sky-500/30">
+                                            <div className="absolute top-0 left-1/2 w-[1px] h-full bg-sky-500/10" />
+                                            <div className="absolute left-0 top-1/2 w-full h-[1px] bg-sky-500/10" />
+                                        </div>
+                                    )}
+                                    {theme.special === 'barber' && (
+                                        <div className="absolute inset-0 border-4 border-double border-white/10" />
+                                    )}
+                                </motion.div>
+
+                                {/* External Profession Icons */}
+                                {theme.special === 'doctor' && (
+                                    <div className="absolute -top-4 -right-4 w-10 h-10 bg-white shadow-xl rounded-full flex items-center justify-center border border-sky-100 z-20">
+                                        <Activity size={20} className="text-sky-500 animate-pulse" />
                                     </div>
                                 )}
+                                {theme.special === 'chef' && (
+                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
+                                        <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="#f97316">
+                                                <path d="M12 3c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9 4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zM8.5 15h7c.28 0 .5.22.5.5s-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z" />
+                                            </svg>
+                                        </motion.div>
+                                    </div>
+                                )}
+                                {theme.special === 'gamer' && (
+                                    <div className="absolute -bottom-2 inset-x-0 flex justify-center z-20">
+                                        <div className="bg-black border border-[#00ff9f]/50 px-2 py-0.5 rounded text-[8px] font-mono text-[#00ff9f] tracking-tighter shadow-[0_0_10px_#00ff9f50]">LVL 99 PRO</div>
+                                    </div>
+                                )}
+                                {theme.special === 'dietitian' && (
+                                    <div className="absolute -top-4 left-0 z-20 opacity-60">
+                                        <motion.div animate={{ rotate: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+                                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
+                                                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-7 7" />
+                                            </svg>
+                                        </motion.div>
+                                    </div>
+                                )}
+                                {theme.special === 'beauty' && (
+                                    <div className="absolute -top-2 -right-2 z-20">
+                                        <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
+                                            <Sparkles size={24} className="text-rose-400" />
+                                        </motion.div>
+                                    </div>
+                                )}
+                                {theme.special === 'musician' && (
+                                    <div className="absolute top-1/2 -right-8 -translate-y-1/2 z-20 opacity-20 flex flex-col gap-1">
+                                        <div className="w-12 h-[1px] bg-indigo-500" />
+                                        <div className="w-12 h-[1px] bg-indigo-500" />
+                                        <div className="w-12 h-[1px] bg-indigo-500" />
+                                    </div>
+                                )}
+
+                                <div className="absolute inset-[-10px] rounded-full blur-2xl opacity-20 animate-pulse" style={{ background: theme.accent }} />
                             </div>
 
-                            {theme.special === 'finance' && (
-                                <div className="flex items-center justify-center gap-1 mt-1 text-[8px] font-bold text-emerald-500">
-                                    <TrendingUp size={10} /> MARKET ACTIVE +4.2%
+                            <div>
+                                <div className="flex items-center justify-center gap-3">
+                                    {theme.special === 'software' && <Code size={20} className="text-emerald-500 opacity-50" />}
+                                    {theme.special === 'doctor' && <Shield size={20} className="text-sky-500 opacity-50" />}
+                                    {theme.special === 'chef' && <Zap size={20} className="text-orange-500 opacity-50" />}
+                                    {theme.special === 'artistic' && <Palette size={20} className="text-pink-500 opacity-50" />}
+                                    <h1 className={cn("font-black tracking-tight", theme.text, toneStyle.headerSize)}>{profile.user.name}</h1>
+                                    {theme.special === 'realestate' && <Briefcase size={20} className="text-amber-500 opacity-50" />}
+                                    {theme.special === 'architect' && <Layers size={20} className="text-sky-500 opacity-50" />}
+                                    {theme.special === 'barber' && <Star size={20} className="text-white opacity-50" />}
                                 </div>
-                            )}
 
-                            {/* Project Marquee Section */}
-                            {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                                <div className="mt-6 space-y-4 group/marquee">
-                                    <style>{`
+                                <div className="flex items-center justify-center gap-2 mt-2 relative">
+                                    <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+                                    <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
+                                        {profile.occupation || "PROFESSIONAL"}
+                                        {theme.special === 'software' && <span className="animate-pulse">_</span>}
+                                    </p>
+                                    <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
+
+                                    {theme.special === 'fitness' && (
+                                        <div className="absolute -right-12 top-0 flex gap-0.5">
+                                            <div className="w-1 h-3 bg-lime-500" />
+                                            <div className="w-1 h-3 bg-lime-500" />
+                                            <div className="w-1 h-3 bg-lime-500/30" />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {theme.special === 'finance' && (
+                                    <div className="flex items-center justify-center gap-1 mt-1 text-[8px] font-bold text-emerald-500">
+                                        <TrendingUp size={10} /> MARKET ACTIVE +4.2%
+                                    </div>
+                                )}
+
+                                {/* Project Marquee Section */}
+                                {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
+                                    <div className="mt-6 space-y-4 group/marquee">
+                                        <style>{`
                                         @keyframes marquee-right {
                                             0% { transform: translateX(-50%); }
                                             100% { transform: translateX(0); }
@@ -2801,352 +2907,353 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                    <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem] overflow-visible", theme.card, theme.border)}>
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                                                <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white")}>
-                                                    {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
-                                                </h3>
+                                        <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem] overflow-visible", theme.card, theme.border)}>
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                                                    <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white")}>
+                                                        {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
+                                                    </h3>
+                                                </div>
+                                                <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
+                                                    <button
+                                                        onClick={() => setLayoutMode('marquee')}
+                                                        className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'marquee' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
+                                                        title={t.standardView}
+                                                    >
+                                                        <Layers size={14} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setLayoutMode('grid')}
+                                                        className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'grid' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
+                                                        title={t.portfolioView}
+                                                    >
+                                                        <Layout size={14} />
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
-                                                <button
-                                                    onClick={() => setLayoutMode('marquee')}
-                                                    className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'marquee' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
-                                                    title={t.standardView}
-                                                >
-                                                    <Layers size={14} />
-                                                </button>
-                                                <button
-                                                    onClick={() => setLayoutMode('grid')}
-                                                    className={cn("p-1.5 rounded-lg transition-all", layoutMode === 'grid' ? "bg-white/20 text-white shadow-lg" : "text-white/40 hover:text-white/60")}
-                                                    title={t.portfolioView}
-                                                >
-                                                    <Layout size={14} />
-                                                </button>
-                                            </div>
-                                        </div>
 
-                                        {layoutMode === 'marquee' ? (
-                                            <div
-                                                className="relative h-16 flex items-center overflow-visible"
-                                                style={{ clipPath: 'inset(-300px 0 -300px 0)' }} // Sadece dikeyde taşmaya izin verir, yanları keser
-                                            >
-                                                <div className="animate-marquee-right flex gap-6 h-full items-center overflow-visible">
-                                                    {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
-                                                        <a
-                                                            key={i}
-                                                            href={formatUrl(project.link) || "#"}
-                                                            target="_blank"
-                                                            onClick={() => trackEvent("product", project.name)}
-                                                            className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
-                                                        >
-                                                            <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
-
-                                                            <div
-                                                                className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
-                                                                style={{
-                                                                    borderColor: `${theme.accent}60`,
-                                                                    boxShadow: `0 20px 50px -10px ${theme.accent}40`
-                                                                }}
+                                            {layoutMode === 'marquee' ? (
+                                                <div
+                                                    className="relative h-16 flex items-center overflow-visible"
+                                                    style={{ clipPath: 'inset(-300px 0 -300px 0)' }} // Sadece dikeyde taşmaya izin verir, yanları keser
+                                                >
+                                                    <div className="animate-marquee-right flex gap-6 h-full items-center overflow-visible">
+                                                        {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                                            <a
+                                                                key={i}
+                                                                href={formatUrl(project.link) || "#"}
+                                                                target="_blank"
+                                                                onClick={() => trackEvent("product", project.name)}
+                                                                className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
                                                             >
-                                                                <div className="absolute inset-0 opacity-[0.15] rounded-2xl" style={{ backgroundColor: theme.accent }} />
+                                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
 
                                                                 <div
-                                                                    className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-black"
-                                                                    style={{ borderColor: `${theme.accent}60` }}
-                                                                />
+                                                                    className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
+                                                                    style={{
+                                                                        borderColor: `${theme.accent}60`,
+                                                                        boxShadow: `0 20px 50px -10px ${theme.accent}40`
+                                                                    }}
+                                                                >
+                                                                    <div className="absolute inset-0 opacity-[0.15] rounded-2xl" style={{ backgroundColor: theme.accent }} />
 
-                                                                <div className="relative z-10">
-                                                                    <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
-                                                                    {project.description ? (
-                                                                        <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
-                                                                    ) : (
-                                                                        <p className="text-[10px] text-white/40 italic font-medium">{t.noProjectDesc}</p>
-                                                                    )}
+                                                                    <div
+                                                                        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-black"
+                                                                        style={{ borderColor: `${theme.accent}60` }}
+                                                                    />
+
+                                                                    <div className="relative z-10">
+                                                                        <h4 className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5 line-clamp-1">{project.name}</h4>
+                                                                        {project.description ? (
+                                                                            <p className="text-[10px] text-white/80 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
+                                                                        ) : (
+                                                                            <p className="text-[10px] text-white/40 italic font-medium">{t.noProjectDesc}</p>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </a>
-                                                    ))}
-                                                </div>
-
-                                                <div className="absolute inset-y-0 left-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
-                                                <div className="absolute inset-y-0 right-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
-                                            </div>
-                                        ) : (
-                                            <div className="grid grid-cols-3 gap-2 pb-2">
-                                                {profile.products.filter((p: any) => p.image).map((project: any, i: number) => (
-                                                    <motion.div
-                                                        key={i}
-                                                        initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                                                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                                                        transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
-                                                        className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl border border-white/10 shadow-lg"
-                                                        onClick={() => {
-                                                            trackEvent("product_grid", project.name);
-                                                            if (project.link) window.open(formatUrl(project.link), "_blank");
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src={project.image}
-                                                            alt={project.name}
-                                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125 group-hover:rotate-3"
-                                                        />
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-2 text-center pb-3">
-                                                            <p className="text-[7px] font-black text-white uppercase tracking-tighter leading-tight line-clamp-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                                                                {project.name}
-                                                            </p>
-                                                            <div className="w-4 h-[1px] bg-white/40 mt-1 transform scale-x-0 group-hover:scale-x-100 transition-transform" />
-                                                        </div>
-
-                                                        {/* Premium Glass Shine Effect */}
-                                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-
-                            {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
-                        </div>
-
-                        {(() => {
-                            const links = customLinks.filter((l: any) => !l.isAction);
-                            if (links.length === 0) return null;
-                            return (
-                                <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
-                                    {links.map((link: any, i: number) => (
-                                        <motion.a
-                                            key={i}
-                                            href={formatUrl(link.url)}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            initial={{ opacity: 0, scale: 0 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.3 + i * 0.1 }}
-                                            whileHover={{ scale: 1.2, y: -3 }}
-                                            className="relative group/link"
-                                            onClick={() => trackEvent("custom_link", link.title)}
-                                        >
-                                            <div
-                                                className={cn("w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all", theme.border)}
-                                                style={{
-                                                    backgroundColor: `${theme.accent}15`,
-                                                    borderColor: `${theme.accent}40`,
-                                                    color: theme.accent
-                                                }}
-                                            >
-                                                <Globe size={18} />
-                                            </div>
-                                            <div
-                                                className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/link:opacity-100 transition-all duration-300 whitespace-nowrap px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider pointer-events-none scale-75 group-hover/link:scale-100 z-50"
-                                                style={{
-                                                    backgroundColor: theme.accent,
-                                                    color: '#000',
-                                                    boxShadow: `0 0 15px ${theme.accent}40`
-                                                }}
-                                            >
-                                                {link.title}
-                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45" style={{ backgroundColor: theme.accent }} />
-                                            </div>
-                                        </motion.a>
-                                    ))}
-                                </div>
-                            );
-                        })()}
-                    </div >
-
-                    <div className="space-y-3">
-                        {
-                            actions.map((action, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    whileHover={{ scale: 1.02, x: 5 }}
-                                >
-                                    {action.href ? (
-                                        <a
-                                            href={formatUrl(action.href)}
-                                            target="_blank"
-                                            onClick={() => {
-                                                if (action.onClick) action.onClick()
-                                            }}
-                                            className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                        >
-                                            <div style={{ color: theme.accent }}>{action.icon}</div>
-                                            <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                                        </a>
-                                    ) : (
-                                        <button
-                                            onClick={action.onClick}
-                                            className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                        >
-                                            <div style={{ color: theme.accent }}>{action.icon}</div>
-                                            <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                                        </button>
-                                    )}
-                                </motion.div>
-                            ))
-                        }
-                    </div>
-
-                    {/* Bio */}
-                    {
-                        profile.bio && (
-                            <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
-                                {profile.bio}
-                            </p>
-                        )
-                    }
-
-                    {/* Testimonials */}
-                    <div className="pt-4 overflow-hidden relative">
-                        <div className="flex items-center justify-between mb-4 px-2">
-                            <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
-                            <button
-                                onClick={() => setIsReviewModalOpen(true)}
-                                className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
-                                style={{ color: theme.accent }}
-                            >
-                                {t.writeReview}
-                            </button>
-                        </div>
-
-                        <div className="relative h-32">
-                            {reviews.length > 0 ? (
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={currentReviewIndex}
-                                        initial={{ opacity: 0, x: 50 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -50 }}
-                                        className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
-                                    >
-                                        <div className="flex gap-4">
-                                            <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
-                                                <img
-                                                    src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
-                                                    className="w-full h-full object-cover"
-                                                    onError={(e: any) => {
-                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                        <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
-                                                    </div>
-                                                    <div className="flex gap-0.5">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                            </a>
                                                         ))}
                                                     </div>
+
+                                                    <div className="absolute inset-y-0 left-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-r from-black/20 to-transparent" />
+                                                    <div className="absolute inset-y-0 right-0 w-20 z-10 pointer-events-none opacity-40 bg-gradient-to-l from-black/20 to-transparent" />
                                                 </div>
-                                                <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
-                                                    "{reviews[currentReviewIndex].content}"
-                                                </p>
-                                            </div>
+                                            ) : (
+                                                <div className="grid grid-cols-3 gap-2 pb-2">
+                                                    {profile.products.filter((p: any) => p.image).map((project: any, i: number) => (
+                                                        <motion.div
+                                                            key={i}
+                                                            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                                                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                                                            transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
+                                                            className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl border border-white/10 shadow-lg"
+                                                            onClick={() => {
+                                                                trackEvent("product_grid", project.name);
+                                                                if (project.link) window.open(formatUrl(project.link), "_blank");
+                                                            }}
+                                                        >
+                                                            <img
+                                                                src={project.image}
+                                                                alt={project.name}
+                                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125 group-hover:rotate-3"
+                                                            />
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-2 text-center pb-3">
+                                                                <p className="text-[7px] font-black text-white uppercase tracking-tighter leading-tight line-clamp-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                                                                    {project.name}
+                                                                </p>
+                                                                <div className="w-4 h-[1px] bg-white/40 mt-1 transform scale-x-0 group-hover:scale-x-100 transition-transform" />
+                                                            </div>
+
+                                                            {/* Premium Glass Shine Effect */}
+                                                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-gradient-to-tr from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                                                        </motion.div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
+                                    </div>
+                                )}
+
+
+                                {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
+                            </div>
+
+                            {(() => {
+                                const links = customLinks.filter((l: any) => !l.isAction);
+                                if (links.length === 0) return null;
+                                return (
+                                    <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
+                                        {links.map((link: any, i: number) => (
+                                            <motion.a
+                                                key={i}
+                                                href={formatUrl(link.url)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                initial={{ opacity: 0, scale: 0 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: 0.3 + i * 0.1 }}
+                                                whileHover={{ scale: 1.2, y: -3 }}
+                                                className="relative group/link"
+                                                onClick={() => trackEvent("custom_link", link.title)}
+                                            >
+                                                <div
+                                                    className={cn("w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all", theme.border)}
+                                                    style={{
+                                                        backgroundColor: `${theme.accent}15`,
+                                                        borderColor: `${theme.accent}40`,
+                                                        color: theme.accent
+                                                    }}
+                                                >
+                                                    <Globe size={18} />
+                                                </div>
+                                                <div
+                                                    className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/link:opacity-100 transition-all duration-300 whitespace-nowrap px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider pointer-events-none scale-75 group-hover/link:scale-100 z-50"
+                                                    style={{
+                                                        backgroundColor: theme.accent,
+                                                        color: '#000',
+                                                        boxShadow: `0 0 15px ${theme.accent}40`
+                                                    }}
+                                                >
+                                                    {link.title}
+                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45" style={{ backgroundColor: theme.accent }} />
+                                                </div>
+                                            </motion.a>
+                                        ))}
+                                    </div>
+                                );
+                            })()}
+                        </div >
+
+                        <div className="space-y-3">
+                            {
+                                actions.map((action, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        whileHover={{ scale: 1.02, x: 5 }}
+                                    >
+                                        {action.href ? (
+                                            <a
+                                                href={formatUrl(action.href)}
+                                                target="_blank"
+                                                onClick={() => {
+                                                    if (action.onClick) action.onClick()
+                                                }}
+                                                className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                            >
+                                                <div style={{ color: theme.accent }}>{action.icon}</div>
+                                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                            </a>
+                                        ) : (
+                                            <button
+                                                onClick={action.onClick}
+                                                className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                            >
+                                                <div style={{ color: theme.accent }}>{action.icon}</div>
+                                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                            </button>
+                                        )}
                                     </motion.div>
-                                </AnimatePresence>
-                            ) : (
-                                <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                    {t.noReviewsYet}
-                                </div>
-                            )}
+                                ))
+                            }
                         </div>
 
-                        {/* Pagination Dots */}
-                        <div className="flex justify-center gap-1.5 mt-4">
-                            {reviews.map((_: any, i: number) => (
-                                <div
-                                    key={i}
-                                    className="h-1 transition-all"
-                                    style={{
-                                        width: i === currentReviewIndex ? '16px' : '4px',
-                                        background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
-                                        borderRadius: '99px'
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-
-                    {/* Social Icons */}
-                    <div className="flex justify-center flex-wrap gap-6 pt-2">
-                        {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
-                            const platform = l.platform.toLowerCase()
-                            return (
-                                <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
-                                    {platform === 'instagram' && <Instagram size={24} />}
-                                    {platform === 'linkedin' && <Linkedin size={24} />}
-                                    {platform === 'twitter' && <Twitter size={24} />}
-                                    {platform === 'github' && <Github size={24} />}
-                                    {platform === 'youtube' && <Youtube size={24} />}
-                                    {platform === 'whatsapp' && <MessageCircle size={24} />}
-                                    {platform === 'mail' && <Mail size={24} />}
-                                    {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail'].includes(platform)) && <Globe size={24} />}
-                                </a>
+                        {/* Bio */}
+                        {
+                            profile.bio && (
+                                <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
+                                    {profile.bio}
+                                </p>
                             )
-                        })}
-                    </div>
+                        }
 
-                    {profile.paymentLink && (
-                        <div className="pt-8 w-full">
-                            <motion.a
-                                href={formatUrl(profile.paymentLink)}
-                                target="_blank"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-sm uppercase tracking-[0.2em] transition-all text-white shadow-[0_20px_40px_-15px_rgba(245,158,11,0.5)] relative overflow-hidden group", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
-                                style={{
-                                    background: `linear-gradient(135deg, #f59e0b, #ea580c)`,
-                                }}
-                                onClick={() => trackEvent("payment_click")}
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                                <Zap className="w-5 h-5 fill-white" />
-                                {profile.paymentType === 'consulting' ? t.consultingBtn :
-                                    profile.paymentType === 'support' ? t.supportBtn :
-                                        profile.paymentType === 'pay' ? t.payBtn :
-                                            t.coffeeBtn}
-                            </motion.a>
+                        {/* Testimonials */}
+                        <div className="pt-4 overflow-hidden relative">
+                            <div className="flex items-center justify-between mb-4 px-2">
+                                <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
+                                <button
+                                    onClick={() => setIsReviewModalOpen(true)}
+                                    className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                    style={{ color: theme.accent }}
+                                >
+                                    {t.writeReview}
+                                </button>
+                            </div>
+
+                            <div className="relative h-32">
+                                {reviews.length > 0 ? (
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={currentReviewIndex}
+                                            initial={{ opacity: 0, x: 50 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -50 }}
+                                            className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                        >
+                                            <div className="flex gap-4">
+                                                <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
+                                                    <img
+                                                        src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e: any) => {
+                                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                            <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
+                                                        </div>
+                                                        <div className="flex gap-0.5">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
+                                                        "{reviews[currentReviewIndex].content}"
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    </AnimatePresence>
+                                ) : (
+                                    <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
+                                        {t.noReviewsYet}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Pagination Dots */}
+                            <div className="flex justify-center gap-1.5 mt-4">
+                                {reviews.map((_: any, i: number) => (
+                                    <div
+                                        key={i}
+                                        className="h-1 transition-all"
+                                        style={{
+                                            width: i === currentReviewIndex ? '16px' : '4px',
+                                            background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
+                                            borderRadius: '99px'
+                                        }}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    )}
 
-                    <div className="pt-8 border-t border-white/5 text-center flex gap-4">
-                        <button
-                            onClick={handleShare}
-                            className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                        >
-                            <Share2 size={20} /> Paylaş
-                        </button>
 
-                        <button
-                            onClick={handleCVView}
-                            className={cn("flex-1 py-5 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                            style={{
-                                background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
-                            }}
-                        >
-                            <FileText size={20} /> {profile.isCatalog ? (t.viewCatalog || "Katalog Görüntüle") : (t.viewCV || "CV Görüntüle")}
-                        </button>
-                    </div>
-                </motion.div>
+                        {/* Social Icons */}
+                        <div className="flex justify-center flex-wrap gap-6 pt-2">
+                            {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
+                                const platform = l.platform.toLowerCase()
+                                return (
+                                    <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
+                                        {platform === 'instagram' && <Instagram size={24} />}
+                                        {platform === 'linkedin' && <Linkedin size={24} />}
+                                        {platform === 'twitter' && <Twitter size={24} />}
+                                        {platform === 'github' && <Github size={24} />}
+                                        {platform === 'youtube' && <Youtube size={24} />}
+                                        {platform === 'whatsapp' && <MessageCircle size={24} />}
+                                        {platform === 'mail' && <Mail size={24} />}
+                                        {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail'].includes(platform)) && <Globe size={24} />}
+                                    </a>
+                                )
+                            })}
+                        </div>
 
-                {/* External Widgets (Inline/Block) */}
-                {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline').map((block: any) => (
+                        {profile.paymentLink && (
+                            <div className="pt-8 w-full">
+                                <motion.a
+                                    href={formatUrl(profile.paymentLink)}
+                                    target="_blank"
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-sm uppercase tracking-[0.2em] transition-all text-white shadow-[0_20px_40px_-15px_rgba(245,158,11,0.5)] relative overflow-hidden group", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                    style={{
+                                        background: `linear-gradient(135deg, #f59e0b, #ea580c)`,
+                                    }}
+                                    onClick={() => trackEvent("payment_click")}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                                    <Zap className="w-5 h-5 fill-white" />
+                                    {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                        profile.paymentType === 'support' ? t.supportBtn :
+                                            profile.paymentType === 'pay' ? t.payBtn :
+                                                t.coffeeBtn}
+                                </motion.a>
+                            </div>
+                        )}
+
+                        <div className="pt-8 border-t border-white/5 text-center flex gap-4">
+                            <button
+                                onClick={handleShare}
+                                className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                            >
+                                <Share2 size={20} /> Paylaş
+                            </button>
+
+                            <button
+                                onClick={handleCVView}
+                                className={cn("flex-1 py-5 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                style={{
+                                    background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
+                                    boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
+                                }}
+                            >
+                                <FileText size={20} /> {profile.isCatalog ? (t.viewCatalog || "Katalog Görüntüle") : (t.viewCV || "CV Görüntüle")}
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* External Widgets (Inline/Block) - Only show if not in focused embed mode */}
+                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline').map((block: any) => (
                     <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
                 ))}
             </main>
@@ -3245,7 +3352,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             </AnimatePresence>
 
             {/* AI Floating Button */}
-            {aiConfig?.isEnabled !== false && (
+            {aiConfig?.isEnabled !== false && !isEmbedMode && (
                 <motion.button
                     initial={{ scale: 0, rotate: -20, opacity: 0 }}
                     animate={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -4148,7 +4255,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
         </div>
     )
 }
-function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle }: any) {
+function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmbed = false }: any) {
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -4156,13 +4263,83 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle }: any
         message: ""
     })
 
-    if (!isOpen) return null
+    if (!isOpen && !isEmbed) return null
 
     const handleSubmit = () => {
         if (!formData.name || !formData.phone) return
         onSubmit(formData)
         setFormData({ name: "", phone: "", email: "", message: "" })
-        onClose()
+        if (onClose) onClose()
+    }
+
+    const content = (
+        <div className="relative z-10 w-full">
+            <div className="flex justify-between items-start mb-6">
+                <div className="flex flex-col items-center text-center w-full gap-1">
+                    <h3 className={cn("text-lg font-black uppercase tracking-tight leading-none mb-1", theme.text, toneStyle?.font)}>
+                        {t.contactMeTitle}
+                    </h3>
+                    <p className={cn("text-[8px] font-bold uppercase tracking-[0.3em] opacity-40", theme.text)}>
+                        {t.contactMeSub}
+                    </p>
+                </div>
+                {!isEmbed && (
+                    <button onClick={onClose} className={cn("absolute top-0 right-0 p-1.5 rounded-full hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
+                        <X size={18} />
+                    </button>
+                )}
+            </div>
+
+            <div className="space-y-3">
+                <div className="space-y-1">
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.fullNameLabel}</label>
+                    <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium rounded-xl", theme.btn, theme.border, theme.text)}
+                        placeholder="..."
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1">
+                        <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
+                        <input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium rounded-xl", theme.btn, theme.border, theme.text)}
+                            placeholder="+90 ..."
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-1">
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.messageLabel}</label>
+                    <textarea
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium min-h-[80px] resize-none rounded-xl", theme.btn, theme.border, theme.text)}
+                        placeholder={lang === 'tr' ? "Nasıl yardımcı olabilirim?" : "How can I help you?"}
+                    />
+                </div>
+
+                <button
+                    onClick={handleSubmit}
+                    disabled={!formData.name || !formData.phone}
+                    className={cn("w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-lg text-white")}
+                    style={{ background: theme.accent, boxShadow: `0 8px 25px ${theme.accent}30` }}
+                >
+                    <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
+                    <span className="relative z-10">{t.sendMyInfoBtn}</span>
+                </button>
+            </div>
+        </div>
+    )
+
+    if (isEmbed) {
+        return content
     }
 
     return (
@@ -4185,73 +4362,13 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle }: any
                 <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)` }} />
                 <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full blur-3xl opacity-10" style={{ background: theme.accent }} />
 
-                <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-6">
-                        <div>
-                            <h3 className={cn("text-lg font-black uppercase tracking-tight leading-none mb-1", theme.text, toneStyle?.font)}>
-                                {t.contactMeTitle}
-                            </h3>
-                            <p className={cn("text-[8px] font-bold uppercase tracking-[0.3em] opacity-40", theme.text)}>
-                                {t.contactMeSub}
-                            </p>
-                        </div>
-                        <button onClick={onClose} className={cn("p-1.5 rounded-full hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
-                            <X size={18} />
-                        </button>
-                    </div>
-
-                    <div className="space-y-3">
-                        <div className="space-y-1">
-                            <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.fullNameLabel}</label>
-                            <input
-                                type="text"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium rounded-xl", theme.btn, theme.border, theme.text)}
-                                placeholder="..."
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-3">
-                            <div className="space-y-1">
-                                <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
-                                <input
-                                    type="tel"
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium rounded-xl", theme.btn, theme.border, theme.text)}
-                                    placeholder="+90 ..."
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1">
-                            <label className={cn("text-[8px] font-black uppercase tracking-widest ml-2 opacity-40", theme.text)}>{t.messageLabel}</label>
-                            <textarea
-                                value={formData.message}
-                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium min-h-[80px] resize-none rounded-xl", theme.btn, theme.border, theme.text)}
-                                placeholder={lang === 'tr' ? "Nasıl yardımcı olabilirim?" : "How can I help you?"}
-                            />
-                        </div>
-
-                        <button
-                            onClick={handleSubmit}
-                            disabled={!formData.name || !formData.phone}
-                            className={cn("w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-lg text-white")}
-                            style={{ background: theme.accent, boxShadow: `0 8px 25px ${theme.accent}30` }}
-                        >
-                            <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
-                            <span className="relative z-10">{t.sendMyInfoBtn}</span>
-                        </button>
-                    </div>
-                </div>
+                {content}
             </motion.div>
         </div>
     )
 }
 
-function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messages, setMessages, aiConfig }: any) {
+function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messages, setMessages, aiConfig, isEmbed = false }: any) {
     const [input, setInput] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -4263,7 +4380,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
     }, [messages, isLoading])
 
     useEffect(() => {
-        if (isOpen && messages.length === 0) {
+        if ((isOpen || isEmbed) && messages.length === 0) {
             const defaultGreeting = (profile.lang === 'tr' || !profile.lang)
                 ? `Merhaba! Ben ${profile.user.name}'in dijital asistanıyım. Size nasıl yardımcı olabilirim?`
                 : `Hello! I'm ${profile.user.name}'s digital assistant. How can I help you?`
@@ -4273,7 +4390,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                 content: aiConfig?.greeting || defaultGreeting
             }])
         }
-    }, [isOpen, messages, profile.user.name, profile.lang, setMessages, aiConfig])
+    }, [isOpen, isEmbed, messages, profile.user.name, profile.lang, setMessages, aiConfig])
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return
@@ -4304,10 +4421,93 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
         }
     }
 
-    if (!isOpen) return null
+    if (!isOpen && !isEmbed) return null
+
+    const content = (
+        <div className={cn("flex flex-col h-full w-full relative z-10", isEmbed ? "" : "")}>
+            {/* Header */}
+            <div className={cn("p-5 pb-3 flex items-center justify-between border-b relative z-10", theme.border)}>
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+                        <Bot size={20} />
+                        <div className="absolute inset-0 animate-pulse opacity-20" style={{ background: theme.accent }} />
+                    </div>
+                    <div className="text-left">
+                        <h3 className={cn("text-[11px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
+                        <div className="flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className={cn("text-[7px] font-bold uppercase tracking-widest opacity-40", theme.text)}>ÇEVRİMİÇİ</span>
+                        </div>
+                    </div>
+                </div>
+                {!isEmbed && (
+                    <button onClick={onClose} className={cn("w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
+                        <X size={16} />
+                    </button>
+                )}
+            </div>
+
+            {/* Messages */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-3 no-scrollbar relative z-10">
+                {messages.map((m: any, i: number) => (
+                    <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        className={cn(
+                            "max-w-[85%] p-3.5 text-[11px] font-medium leading-relaxed",
+                            m.role === "user"
+                                ? cn("ml-auto border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tr-none text-right")
+                                : cn("border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tl-none text-left")
+                        )}
+                        style={m.role === "assistant" && !m.isError ? { borderColor: `${theme.accent}20`, backgroundColor: `${theme.accent}10` } : {}}
+                    >
+                        {m.content}
+                    </motion.div>
+                ))}
+                {isLoading && (
+                    <div className={cn("flex gap-1 p-3 border rounded-2xl w-14 items-center justify-center text-left", theme.btn, theme.border)}>
+                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
+                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
+                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce" />
+                    </div>
+                )}
+            </div>
+
+            {/* Input */}
+            <div className="p-5 pt-2 relative z-10">
+                <div className={cn("relative flex items-center border transition-all pr-1.5 rounded-2xl", theme.btn, theme.border)}>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        placeholder="Bir şey sor..."
+                        className={cn("bg-transparent border-none focus:ring-0 text-[11px] p-3.5 flex-1 placeholder:opacity-20", theme.text)}
+                    />
+                    <button
+                        onClick={handleSend}
+                        disabled={!input.trim() || isLoading}
+                        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 hover:scale-105 active:scale-95 shadow-lg"
+                        style={{ backgroundColor: theme.accent, color: 'white' }}
+                    >
+                        <Send size={16} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+
+    if (isEmbed) {
+        return (
+            <div className={cn("relative w-full h-[500px] flex flex-col overflow-hidden", theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]")}>
+                {content}
+            </div>
+        )
+    }
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4">
+        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4 text-left">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -4321,74 +4521,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                 exit={{ opacity: 0, y: 30, scale: 0.98 }}
                 className={cn("relative w-full max-w-[380px] h-[540px] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border backdrop-blur-3xl transition-all", theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]")}
             >
-                {/* Header */}
-                <div className={cn("p-5 pb-3 flex items-center justify-between border-b relative z-10", theme.border)}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-                            <Bot size={20} />
-                            <div className="absolute inset-0 animate-pulse opacity-20" style={{ background: theme.accent }} />
-                        </div>
-                        <div>
-                            <h3 className={cn("text-[11px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
-                            <div className="flex items-center gap-1">
-                                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className={cn("text-[7px] font-bold uppercase tracking-widest opacity-40", theme.text)}>ÇEVRİMİÇİ</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onClick={onClose} className={cn("w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
-                        <X size={16} />
-                    </button>
-                </div>
-
-                {/* Messages */}
-                <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-3 no-scrollbar relative z-10">
-                    {messages.map((m: any, i: number) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            className={cn(
-                                "max-w-[85%] p-3.5 text-[11px] font-medium leading-relaxed",
-                                m.role === "user"
-                                    ? cn("ml-auto border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tr-none")
-                                    : cn("border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tl-none")
-                            )}
-                            style={m.role === "assistant" && !m.isError ? { borderColor: `${theme.accent}20`, backgroundColor: `${theme.accent}10` } : {}}
-                        >
-                            {m.content}
-                        </motion.div>
-                    ))}
-                    {isLoading && (
-                        <div className={cn("flex gap-1 p-3 border rounded-2xl w-14 items-center justify-center", theme.btn, theme.border)}>
-                            <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
-                            <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
-                            <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce" />
-                        </div>
-                    )}
-                </div>
-
-                {/* Input */}
-                <div className="p-5 pt-2 relative z-10">
-                    <div className={cn("relative flex items-center border transition-all pr-1.5 rounded-2xl", theme.btn, theme.border)}>
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                            placeholder="Bir şey sor..."
-                            className={cn("bg-transparent border-none focus:ring-0 text-[11px] p-3.5 flex-1 placeholder:opacity-20", theme.text)}
-                        />
-                        <button
-                            onClick={handleSend}
-                            disabled={!input.trim() || isLoading}
-                            className="w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 hover:scale-105 active:scale-95 shadow-lg"
-                            style={{ backgroundColor: theme.accent, color: 'white' }}
-                        >
-                            <Send size={16} />
-                        </button>
-                    </div>
-                </div>
+                {content}
             </motion.div>
         </div>
     )
@@ -4429,10 +4562,10 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
 
             {block.content?.title && (
                 <div className="space-y-1 mb-2">
-                    <h4 className={cn("text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-1", theme.text)}>
+                    <h4 className={cn("text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1", theme.text)}>
                         {block.content.title}
                     </h4>
-                    <div className="w-8 h-[2px] mx-auto rounded-full opacity-20" style={{ background: theme.accent }} />
+                    <div className="w-8 h-[2px] mx-auto rounded-full opacity-40" style={{ background: theme.accent }} />
                 </div>
             )}
 

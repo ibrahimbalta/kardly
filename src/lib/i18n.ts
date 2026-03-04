@@ -25,6 +25,9 @@ export const translations: any = {
         successBooking: "Randevu Talebi Gönderildi!",
         errorBooking: "Bir hata oluştu.",
         back: "Geri",
+        next: "Devam Et",
+        confirmInfo: "Bilgilerinizi doğrulayın.",
+        successBookingSub: "Randevu talebiniz başarıyla iletildi. Sizinle en kısa sürede iletişime geçeceğiz.",
         close: "Kapat",
 
         // Dashboard General
@@ -279,6 +282,7 @@ export const translations: any = {
         noLeadsYet: "Henüz talep gelmemiş",
         message: "Mesaj",
         date: "Tarih",
+        time: "Saat",
         publish: "Yayına Al",
         hide: "Gizle",
         new: "YENİ",
@@ -673,6 +677,9 @@ export const translations: any = {
         successBooking: "Booking Request Sent!",
         errorBooking: "An error occurred.",
         back: "Back",
+        next: "Next",
+        confirmInfo: "Please confirm your details.",
+        successBookingSub: "Your appointment request has been sent. We will contact you as soon as possible.",
         close: "Close",
 
         // Dashboard General
@@ -927,6 +934,7 @@ export const translations: any = {
         noLeadsYet: "No requests yet",
         message: "Message",
         date: "Date",
+        time: "Time",
         publish: "Publish",
         hide: "Hide",
         new: "NEW",
