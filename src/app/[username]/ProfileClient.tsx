@@ -3247,23 +3247,23 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             </div>
                         )}
 
-                        <div className="pt-8 border-t border-white/5 text-center flex gap-4">
+                        <div className="pt-8 border-t border-white/5 text-center flex items-stretch gap-3">
                             <button
                                 onClick={handleShare}
-                                className={cn("flex-1 py-5 border flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-xl", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] shadow-lg", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
-                                <Share2 size={20} /> Paylaş
+                                <Share2 size={16} /> Paylaş
                             </button>
 
                             <button
                                 onClick={handleCVView}
-                                className={cn("flex-1 py-5 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                className={cn("flex-1 py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-lg", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                 style={{
-                                    background: `linear-gradient(45deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                    boxShadow: `0 10px 30px -10px ${(theme as any).cvAccent || theme.accent}60`
+                                    background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
+                                    boxShadow: `0 8px 24px -8px ${(theme as any).cvAccent || theme.accent}50`
                                 }}
                             >
-                                <FileText size={20} /> {profile.isCatalog ? (t.viewCatalog || "Katalog Görüntüle") : (t.viewCV || "CV Görüntüle")}
+                                <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
                             </button>
 
                             {/* Floating Widget Icon Buttons - Profil kartı içinde */}
@@ -4617,14 +4617,16 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         return (
             <>
                 <motion.button
-                    whileHover={{ scale: 1.15, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.06, y: -2 }}
+                    whileTap={{ scale: 0.94 }}
                     onClick={() => setIsModalOpen(true)}
-                    className="w-14 h-14 flex items-center justify-center text-white shadow-xl transition-all cursor-pointer"
+                    className={cn(
+                        "w-[52px] flex items-center justify-center text-white shadow-lg transition-all cursor-pointer",
+                        toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl"
+                    )}
                     style={{
-                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                        borderRadius: '18px',
-                        boxShadow: `0 8px 24px ${theme.accent}50`
+                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}bb)`,
+                        boxShadow: `0 8px 20px -6px ${theme.accent}50`
                     }}
                     title={block.content?.title || config.label}
                 >
