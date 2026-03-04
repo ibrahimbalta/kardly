@@ -4424,9 +4424,19 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
     if (!block?.content?.code || !block.isActive) return null;
 
     return (
-        <div className={cn("w-full p-6 border text-center relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">
+        <div className={cn("w-full p-8 border text-center relative overflow-hidden flex flex-col items-center gap-4", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
-            <div ref={containerRef} className="w-full" />
+
+            {block.content?.title && (
+                <div className="space-y-1 mb-2">
+                    <h4 className={cn("text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-1", theme.text)}>
+                        {block.content.title}
+                    </h4>
+                    <div className="w-8 h-[2px] mx-auto rounded-full opacity-20" style={{ background: theme.accent }} />
+                </div>
+            )}
+
+            <div ref={containerRef} className="w-full flex justify-center" />
         </div>
     );
 }
