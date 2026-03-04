@@ -4547,14 +4547,18 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
 function ExternalWidget({ block, theme, toneStyle }: any) {
     const containerRef = useRef<HTMLDivElement>(null);
     const scriptInjected = useRef(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const isFloating = block?.content?.code?.includes('data-style="floating"');
 
     useEffect(() => {
         if (!block?.content?.code || scriptInjected.current || !containerRef.current) return;
+        // Yüzen butonlar için script enjekte etme - kendi inline butonumuzu kullanıyoruz
+        if (isFloating) return;
 
         const range = document.createRange();
         const documentFragment = range.createContextualFragment(block.content.code);
 
-        // Extract and run scripts
         const scripts = Array.from(documentFragment.querySelectorAll('script'));
         scripts.forEach(oldScript => {
             const newScript = document.createElement('script');
@@ -4563,21 +4567,99 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
             document.body.appendChild(newScript);
         });
 
-        // Append non-script elements to container
         documentFragment.querySelectorAll(':not(script)').forEach(node => {
             containerRef.current?.appendChild(node);
         });
 
         scriptInjected.current = true;
-    }, [block]);
+    }, [block, isFloating]);
 
     if (!block?.content?.code || !block.isActive) return null;
 
-    // Yüzen buton seçilmişse sadece kodu çalıştır, kartı gösterme
-    const isFloating = block.content.code.includes('data-style="floating"');
-
+    // Yüzen buton seçilmişse kart İÇİNDE şık bir buton olarak göster
     if (isFloating) {
-        return <div ref={containerRef} className="hidden" />;
+        // Script tag'inden data attribute'ları çıkar
+        const codeStr = block.content.code;
+        const typeMatch = codeStr.match(/data-type="([^"]+)"/);
+        const userMatch = codeStr.match(/data-user="([^"]+)"/);
+        const widgetType = typeMatch ? typeMatch[1] : 'booking';
+        const widgetUser = userMatch ? userMatch[1] : '';
+
+        const typeConfig: Record<string, { icon: any; label: string; color: string }> = {
+            booking: { icon: <Calendar size={18} />, label: 'Randevu Al', color: theme.accent },
+            lead: { icon: <MessageSquare size={18} />, label: 'İletişime Geç', color: theme.accent },
+            chat: { icon: <Bot size={18} />, label: 'AI Asistan', color: theme.accent },
+            video: { icon: <Play size={18} />, label: 'Video İzle', color: theme.accent },
+            skills: { icon: <Zap size={18} />, label: 'Yetenekler', color: theme.accent },
+            countdown: { icon: <Target size={18} />, label: 'Geri Sayım', color: theme.accent },
+        };
+
+        const config = typeConfig[widgetType] || typeConfig.booking;
+        const iframeUrl = `https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`;
+
+        return (
+            <>
+                <motion.button
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setIsModalOpen(true)}
+                    className={cn(
+                        "w-full py-4 px-6 flex items-center justify-center gap-3 border font-black text-xs uppercase tracking-widest transition-all shadow-lg",
+                        theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl"
+                    )}
+                    style={{
+                        borderColor: `${config.color}30`,
+                        background: `linear-gradient(135deg, ${config.color}15, ${config.color}08)`,
+                        color: config.color
+                    }}
+                >
+                    {config.icon}
+                    {block.content?.title || config.label}
+                </motion.button>
+
+                <AnimatePresence>
+                    {isModalOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center p-4"
+                        >
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                                onClick={() => setIsModalOpen(false)}
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 50, scale: 0.95 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                className={cn(
+                                    "relative w-full max-w-[400px] h-[600px] max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
+                                    theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]"
+                                )}
+                            >
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                                    style={{ background: `${theme.accent}20`, color: theme.accent }}
+                                >
+                                    <X size={16} />
+                                </button>
+                                <iframe
+                                    src={iframeUrl}
+                                    className="w-full h-full border-none"
+                                    allow="autoplay; fullscreen"
+                                />
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </>
+        );
     }
 
     return (
