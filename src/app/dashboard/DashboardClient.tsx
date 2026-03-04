@@ -75,7 +75,8 @@ import {
     Boxes,
     ChevronDown,
     ChevronUp,
-    Quote
+    Quote,
+    Edit2
 } from "lucide-react"
 
 
@@ -147,10 +148,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isGeneratingBio, setIsGeneratingBio] = useState(false)
     const [activeWidget, setActiveWidget] = useState("booking")
     const [widgetStyle, setWidgetStyle] = useState("embedded")
+    const [editingWidgetId, setEditingWidgetId] = useState<string | null>(null)
     const [externalWidget, setExternalWidget] = useState({
-        title: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.title || "",
-        code: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.code || "",
-        position: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.position || "floating"
+        title: "",
+        code: "",
+        position: "inline"
     })
     const [extraWidgetConfig, setExtraWidgetConfig] = useState({
         videoUrl: "",
@@ -1233,22 +1235,107 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                             <button
                                                 onClick={async () => {
+                                                    if (!externalWidget.code) {
+                                                        setShowToast("Lütfen bir gömme kodu girin!");
+                                                        return;
+                                                    }
                                                     const newBlocks = [...(profile?.blocks || [])];
                                                     const externalWidgetWithPos = { ...externalWidget, position: 'inline' };
-                                                    const existingIdx = newBlocks.findIndex(b => b.type === 'external_widget');
-                                                    if (existingIdx > -1) {
-                                                        newBlocks[existingIdx] = { ...newBlocks[existingIdx], content: externalWidgetWithPos };
+
+                                                    if (editingWidgetId) {
+                                                        const idx = newBlocks.findIndex(b => b.id === editingWidgetId);
+                                                        if (idx > -1) {
+                                                            newBlocks[idx] = { ...newBlocks[idx], content: externalWidgetWithPos };
+                                                        }
                                                     } else {
-                                                        newBlocks.push({ id: Date.now().toString(), type: 'external_widget', content: externalWidgetWithPos, order: 99, isActive: true });
+                                                        newBlocks.push({
+                                                            id: Date.now().toString(),
+                                                            type: 'external_widget',
+                                                            content: externalWidgetWithPos,
+                                                            order: 99,
+                                                            isActive: true
+                                                        });
                                                     }
+
                                                     await handleSyncBlocks(newBlocks);
-                                                    setShowToast("Dış araç başarıyla kaydedildi!");
+                                                    setShowToast(editingWidgetId ? "Araç başarıyla güncellendi!" : "Yeni araç başarıyla eklendi!");
+                                                    setEditingWidgetId(null);
+                                                    setExternalWidget({ title: "", code: "", position: "inline" });
                                                     setTimeout(() => setShowToast(null), 3000);
                                                 }}
                                                 className="w-full py-4 bg-emerald-500 text-white font-black uppercase tracking-widest rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20"
                                             >
-                                                GÜNCELLE VE YAYINLA
+                                                {editingWidgetId ? "GÜNCELLE VE KAYDET" : "YENİ ARAÇ OLARAK EKLE"}
                                             </button>
+
+                                            {editingWidgetId && (
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingWidgetId(null);
+                                                        setExternalWidget({ title: "", code: "", position: "inline" });
+                                                    }}
+                                                    className="w-full py-4 bg-slate-100 text-slate-500 font-black uppercase tracking-widest rounded-2xl hover:bg-slate-200 transition-all"
+                                                >
+                                                    İPTAL ET
+                                                </button>
+                                            )}
+
+                                            {/* Existing Widgets List */}
+                                            {(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').length > 0 && (
+                                                <div className="space-y-6 pt-10 border-t border-slate-100">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                                                            <Boxes size={20} />
+                                                        </div>
+                                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Mevcut Araçlar ({(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').length})</h3>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 gap-4">
+                                                        {(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                                                            <div key={block.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-indigo-200 transition-all">
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-500 transition-colors">
+                                                                        {block.content?.code?.includes('data-style="floating"') ? <Zap size={18} /> : <Layout size={18} />}
+                                                                    </div>
+                                                                    <div className="text-left">
+                                                                        <h5 className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{block.content?.title || "İsimsiz Araç"}</h5>
+                                                                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+                                                                            {block.content?.code?.includes('data-style="floating"') ? "Yüzen Buton" : "Blok (Gömülü)"}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setExternalWidget(block.content);
+                                                                            setEditingWidgetId(block.id);
+                                                                            window.scrollTo({ top: 300, behavior: 'smooth' });
+                                                                        }}
+                                                                        className="p-2 text-indigo-500 hover:bg-white rounded-lg transition-all"
+                                                                        title="Düzenle"
+                                                                    >
+                                                                        <Edit2 size={16} />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            if (confirm("Bu aracı silmek istediğinize emin misiniz?")) {
+                                                                                const newBlocks = (profile?.blocks || []).filter((b: any) => b.id !== block.id);
+                                                                                await handleSyncBlocks(newBlocks);
+                                                                                setShowToast("Araç başarıyla silindi.");
+                                                                                setTimeout(() => setShowToast(null), 3000);
+                                                                            }
+                                                                        }}
+                                                                        className="p-2 text-rose-500 hover:bg-white rounded-lg transition-all"
+                                                                        title="Sil"
+                                                                    >
+                                                                        <Trash2 size={16} />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
