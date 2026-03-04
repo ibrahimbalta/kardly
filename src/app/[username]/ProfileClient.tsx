@@ -3279,11 +3279,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
-
-            {/* External Widgets (Floating) */}
-            {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'floating').map((block: any) => (
-                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
-            ))}
         </div>
     )
 }
@@ -4427,14 +4422,6 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
     }, [block]);
 
     if (!block?.content?.code || !block.isActive) return null;
-
-    if (block.content.position === 'floating') {
-        return (
-            <div className="fixed bottom-24 right-6 z-[170]" id="external-floating-widget">
-                <div ref={containerRef} />
-            </div>
-        );
-    }
 
     return (
         <div className={cn("w-full p-6 border text-center relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)} id="external-inline-widget">

@@ -1074,37 +1074,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 />
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <button
-                                                    onClick={() => setExternalWidget({ ...externalWidget, position: 'floating' })}
-                                                    className={cn(
-                                                        "p-4 rounded-2xl border transition-all text-center space-y-2",
-                                                        externalWidget.position === 'floating' ? "bg-emerald-50 border-emerald-500 text-emerald-600 shadow-sm" : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
-                                                    )}
-                                                >
-                                                    <MousePointer2 size={24} className="mx-auto" />
-                                                    <span className="text-[10px] font-black uppercase block tracking-widest">Yüzen Buton</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => setExternalWidget({ ...externalWidget, position: 'inline' })}
-                                                    className={cn(
-                                                        "p-4 rounded-2xl border transition-all text-center space-y-2",
-                                                        externalWidget.position === 'inline' ? "bg-emerald-50 border-emerald-500 text-emerald-600 shadow-sm" : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
-                                                    )}
-                                                >
-                                                    <Layout size={24} className="mx-auto" />
-                                                    <span className="text-[10px] font-black uppercase block tracking-widest">Blok Olarak</span>
-                                                </button>
+                                            <div className="space-y-4 text-left">
+                                                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-500 text-emerald-600 flex items-center gap-3">
+                                                    <Layout size={20} />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">Bu araç profilinizde blok olarak görünecektir.</span>
+                                                </div>
                                             </div>
 
                                             <button
                                                 onClick={async () => {
                                                     const newBlocks = [...(profile?.blocks || [])];
+                                                    const externalWidgetWithPos = { ...externalWidget, position: 'inline' };
                                                     const existingIdx = newBlocks.findIndex(b => b.type === 'external_widget');
                                                     if (existingIdx > -1) {
-                                                        newBlocks[existingIdx] = { ...newBlocks[existingIdx], content: externalWidget };
+                                                        newBlocks[existingIdx] = { ...newBlocks[existingIdx], content: externalWidgetWithPos };
                                                     } else {
-                                                        newBlocks.push({ id: Date.now().toString(), type: 'external_widget', content: externalWidget, order: 99, isActive: true });
+                                                        newBlocks.push({ id: Date.now().toString(), type: 'external_widget', content: externalWidgetWithPos, order: 99, isActive: true });
                                                     }
                                                     await handleSyncBlocks(newBlocks);
                                                     setShowToast("Dış araç başarıyla kaydedildi!");
@@ -1131,18 +1116,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
 
-                                    {externalWidget.code && externalWidget.position === 'floating' ? (
-                                        <div className="w-full h-full flex items-end justify-end p-6">
-                                            <div className="space-y-4 flex flex-col items-end">
-                                                <div className="w-16 h-16 bg-emerald-500 rounded-2xl shadow-2xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform relative group">
-                                                    <div className="absolute -top-12 right-0 bg-black text-white text-[8px] font-black px-3 py-1.5 rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        {externalWidget.title || "DIŞ ARAÇ"}
-                                                    </div>
-                                                    <MousePointer2 size={24} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : externalWidget.code && externalWidget.position === 'inline' ? (
+                                    {externalWidget.code ? (
                                         <div className="bg-white w-full max-w-[340px] rounded-[3rem] shadow-xl border border-slate-100 p-8 space-y-4 text-center">
                                             <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto">
                                                 <Globe size={20} />
