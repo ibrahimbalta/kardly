@@ -52,7 +52,10 @@ import {
     Brain,
     Flame,
     Bot,
-    Send
+    Send,
+    ChevronLeft,
+    ChevronRight,
+    Image
 } from "lucide-react"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
@@ -2645,6 +2648,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 return <CountdownWidget targetDate={date} title={title} theme={theme} toneStyle={toneStyle} />;
                             }
 
+                            if (requestedWidget === 'portfolio') {
+                                const images = urlParams?.get('pImages') || "";
+                                return <PortfolioWidget images={images} theme={theme} toneStyle={toneStyle} />;
+                            }
+
+                            if (requestedWidget === 'tech') {
+                                const tech = urlParams?.get('tList') || "";
+                                return <TechStackWidget technologies={tech} theme={theme} toneStyle={toneStyle} />;
+                            }
+
                             return (
                                 <div className={cn("text-center p-8 border", theme.card, theme.border, toneStyle.rounded)}>
                                     <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2" style={{ borderColor: theme.accent }}>
@@ -3266,11 +3279,20 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
                             </button>
 
-                            {/* Floating Widget Icon Buttons - Profil kartı içinde */}
-                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
+                            {/* Sadece İLK Floating Widget - Ana satırda */}
+                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(0, 1).map((block: any) => (
                                 <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
                             ))}
                         </div>
+
+                        {/* Diğer (2. ve sonrası) Floating Widgetlar - Alt satırda yan yana */}
+                        {!isEmbedMode && (profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 1) && (
+                            <div className="mt-4 flex flex-wrap justify-center gap-3">
+                                {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(1).map((block: any) => (
+                                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
+                                ))}
+                            </div>
+                        )}
                     </motion.div>
                 )}
 
@@ -4568,6 +4590,8 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
             ai: { icon: <Bot size={22} />, label: 'AI Asistan' },
             video: { icon: <Play size={22} />, label: 'Video İzle' },
             skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
+            portfolio: { icon: <Image size={22} />, label: 'Portfolyo' },
+            tech: { icon: <Code size={22} />, label: 'Yeteneklerim' },
             countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
         };
 
@@ -4580,6 +4604,11 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
         if (sListMatch?.[1]) iframeUrl += `&sList=${encodeURIComponent(sListMatch[1])}`;
         if (dateMatch?.[1]) iframeUrl += `&date=${encodeURIComponent(dateMatch[1])}`;
         if (titleMatch?.[1]) iframeUrl += `&title=${encodeURIComponent(titleMatch[1])}`;
+
+        const pImagesMatch = codeStr.match(/data-pImages="([^"]+)"/);
+        const tListMatch = codeStr.match(/data-tList="([^"]+)"/);
+        if (pImagesMatch?.[1]) iframeUrl += `&pImages=${encodeURIComponent(pImagesMatch[1])}`;
+        if (tListMatch?.[1]) iframeUrl += `&tList=${encodeURIComponent(tListMatch[1])}`;
 
         return (
             <>
@@ -4800,11 +4829,101 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
                     ))}
                 </div>
             ) : (
-                <div className={cn("text-lg font-black uppercase tracking-widest animate-pulse", theme.text)}>SÜRE DOLDU!</div>
+                <div className="space-y-2">
+                    <p className={cn("text-2xl font-black", theme.text)}>SÜRE DOLDU!</p>
+                    <div className="w-8 h-[2px] mx-auto opacity-20" style={{ background: theme.accent }} />
+                    <p className={cn("text-[8px] font-bold uppercase tracking-[0.4em] opacity-40", theme.text)}>KARDLY URGENCY TOOL</p>
+                </div>
             )}
+        </div>
+    );
+}
 
-            <div className="w-full h-px opacity-10 bg-current mt-2" />
-            <p className={cn("text-[9px] font-bold uppercase tracking-[0.2em] opacity-40", theme.text)}>Kardly Urgency Tool</p>
+function PortfolioWidget({ images, theme, toneStyle }: any) {
+    const imagesList = images.split(',').filter((i: string) => i.trim());
+    const [activeIdx, setActiveIdx] = useState(0);
+
+    return (
+        <div className={cn("w-full p-6 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <Image size={18} className="text-primary" style={{ color: theme.accent }} />
+                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>Portfolyo Galeri</h3>
+                </div>
+                <div className="flex gap-1">
+                    {imagesList.map((_: any, idx: number) => (
+                        <div key={idx} className="w-1 h-1 rounded-full transition-all" style={{ background: idx === activeIdx ? theme.accent : `${theme.accent}15`, width: idx === activeIdx ? '12px' : '4px' }} />
+                    ))}
+                </div>
+            </div>
+
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden group">
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={activeIdx}
+                        src={imagesList[activeIdx]}
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full h-full object-cover"
+                    />
+                </AnimatePresence>
+
+                {imagesList.length > 1 && (
+                    <>
+                        <button
+                            onClick={() => setActiveIdx((prev) => (prev === 0 ? imagesList.length - 1 : prev - 1))}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                            <ChevronLeft size={16} />
+                        </button>
+                        <button
+                            onClick={() => setActiveIdx((prev) => (prev === imagesList.length - 1 ? 0 : prev + 1))}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                            <ChevronRight size={16} />
+                        </button>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function TechStackWidget({ technologies, theme, toneStyle }: any) {
+    const techList = technologies.split(',').map((t: string) => t.trim()).filter(Boolean);
+
+    return (
+        <div className={cn("w-full p-8 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}15`, color: theme.accent }}>
+                    <Code size={18} />
+                </div>
+                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>Teknoloji Yığını</h3>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+                {techList.map((tech: string, idx: number) => (
+                    <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className={cn("px-4 py-2 text-[10px] font-black uppercase tracking-widest border transition-all hover:scale-105", theme.card, theme.border)}
+                        style={{ borderColor: `${theme.accent}20` }}
+                    >
+                        <span style={{ color: theme.accent }}>{tech}</span>
+                    </motion.div>
+                ))}
+            </div>
+
+            <div className="pt-4 border-t border-white/5 flex items-center justify-between opacity-40">
+                <span className={cn("text-[8px] font-bold uppercase tracking-[0.3em]", theme.text)}>Kardly Dev Tools</span>
+                <Github size={12} className={theme.text} />
+            </div>
         </div>
     );
 }

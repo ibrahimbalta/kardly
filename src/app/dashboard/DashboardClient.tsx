@@ -157,7 +157,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         videoBtnText: "Tanıtım Videosu",
         skills: "Design:95,Marketing:80,Coding:85",
         countdownDate: "",
-        countdownTitle: "Özel Teklif"
+        countdownTitle: "Özel Teklif",
+        portfolioImages: "",
+        techStack: "React,Next.js,TypeScript,Tailwind CSS"
     })
 
     const handleGenerateBio = async () => {
@@ -977,7 +979,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 { id: "ai", name: t('widgetAI'), icon: <Sparkles size={18} /> },
                                                 { id: "video", name: t('widgetVideo'), icon: <Monitor size={18} /> },
                                                 { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
-                                                { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> }
+                                                { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> },
+                                                { id: "portfolio", name: "Portfolyo", icon: <Image size={18} /> },
+                                                { id: "tech", name: "Yazılımcı Seti", icon: <Code size={18} /> }
                                             ].map(w => (
                                                 <button
                                                     key={w.id}
@@ -1058,6 +1062,36 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     )}
 
+                                    {activeWidget === 'portfolio' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-1 text-left">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
+                                                <textarea
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
+                                                    value={extraWidgetConfig.portfolioImages}
+                                                    placeholder="https://...base64_veya_url, https://..."
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
+                                                />
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resim URL'lerini virgülle ayırarak ekleyin.</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeWidget === 'tech' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-1 text-left">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">KULLANDIĞINIZ TEKNOLOJİLER</label>
+                                                <textarea
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
+                                                    value={extraWidgetConfig.techStack}
+                                                    placeholder="React, Next.js, TypeScript, Node.js"
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, techStack: e.target.value })}
+                                                />
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Teknolojileri virgülle ayırarak ekleyin.</p>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetStyle')}</label>
                                         <div className="flex gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-100">
@@ -1088,11 +1122,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') scriptAttrs += ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"`;
                                                     if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
                                                     if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
+                                                    if (activeWidget === 'portfolio') scriptAttrs += ` data-pImages="${extraWidgetConfig.portfolioImages}"`;
+                                                    if (activeWidget === 'tech') scriptAttrs += ` data-tList="${extraWidgetConfig.techStack}"`;
 
                                                     const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
                                                     copyToClipboard(code);
                                                     // Otomatik olarak harici araç koduna da yerleştir
-                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
+                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'Yazılımcı Seti' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
                                                 }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
@@ -1106,8 +1142,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') urlParams += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') urlParams += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') urlParams += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+                                                    if (activeWidget === 'portfolio') urlParams += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'tech') urlParams += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
 
-                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}></script>`;
+                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${activeWidget === 'portfolio' ? ` data-pImages="${extraWidgetConfig.portfolioImages}"` : ""}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}></script>`;
                                                 })()}
                                             </code>
                                         </div>
@@ -1124,6 +1162,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+                                                    if (activeWidget === 'portfolio') link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
                                                     return link;
                                                 })()}
                                                 className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold text-slate-600 focus:outline-none"
@@ -1134,6 +1174,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     if (activeWidget === 'video') link += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
                                                     if (activeWidget === 'skills') link += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
                                                     if (activeWidget === 'countdown') link += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+                                                    if (activeWidget === 'portfolio') link += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
+                                                    if (activeWidget === 'tech') link += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
                                                     copyToClipboard(link);
                                                 }}
                                                 className="px-5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-slate-600"
