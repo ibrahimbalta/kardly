@@ -1239,7 +1239,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         setShowToast("Lütfen bir gömme kodu girin!");
                                                         return;
                                                     }
-                                                    const newBlocks = [...(profile?.blocks || [])];
+                                                    const newBlocks = [...(blocks || [])];
                                                     const externalWidgetWithPos = { ...externalWidget, position: 'inline' };
 
                                                     if (editingWidgetId) {
@@ -1281,17 +1281,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             )}
 
                                             {/* Existing Widgets List */}
-                                            {(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').length > 0 && (
+                                            {(blocks || []).filter((b: any) => b.type === 'external_widget').length > 0 && (
                                                 <div className="space-y-6 pt-10 border-t border-slate-100">
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
                                                             <Boxes size={20} />
                                                         </div>
-                                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Mevcut Araçlar ({(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').length})</h3>
+                                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Mevcut Araçlar ({(blocks || []).filter((b: any) => b.type === 'external_widget').length})</h3>
                                                     </div>
 
                                                     <div className="grid grid-cols-1 gap-4">
-                                                        {(profile?.blocks || []).filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                                                        {(blocks || []).filter((b: any) => b.type === 'external_widget').map((block: any) => (
                                                             <div key={block.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-indigo-200 transition-all">
                                                                 <div className="flex items-center gap-4">
                                                                     <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-500 transition-colors">
@@ -1319,7 +1319,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     <button
                                                                         onClick={async () => {
                                                                             if (confirm("Bu aracı silmek istediğinize emin misiniz?")) {
-                                                                                const newBlocks = (profile?.blocks || []).filter((b: any) => b.id !== block.id);
+                                                                                const newBlocks = (blocks || []).filter((b: any) => b.id !== block.id);
                                                                                 await handleSyncBlocks(newBlocks);
                                                                                 setShowToast("Araç başarıyla silindi.");
                                                                                 setTimeout(() => setShowToast(null), 3000);
