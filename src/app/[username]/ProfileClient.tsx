@@ -4892,6 +4892,16 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
     const imagesList = images.split('|').filter((i: string) => i.trim());
     const [activeIdx, setActiveIdx] = useState(0);
 
+    const getSafeUrl = (url: string) => {
+        if (!url) return "";
+        try {
+            const decoded = decodeURIComponent(url);
+            return decoded.startsWith('http') ? decoded : `https://${decoded}`;
+        } catch {
+            return url.startsWith('http') ? url : `https://${url}`;
+        }
+    };
+
     return (
         <div className={cn("w-full p-6 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
@@ -4904,17 +4914,17 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
                 {/* İsteğe bağlı sosyal medya / portfolyo bağlantıları */}
                 <div className="flex items-center gap-2">
                     {githubUrl && (
-                        <a href={githubUrl} target="_blank" title="GitHub" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                        <a href={getSafeUrl(githubUrl)} target="_blank" title="GitHub" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
                             <Github size={14} />
                         </a>
                     )}
                     {dribbbleUrl && (
-                        <a href={dribbbleUrl} target="_blank" title="Dribbble" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                        <a href={getSafeUrl(dribbbleUrl)} target="_blank" title="Dribbble" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
                             <Dribbble size={14} />
                         </a>
                     )}
                     {behanceUrl && (
-                        <a href={behanceUrl} target="_blank" title="Behance" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
+                        <a href={getSafeUrl(behanceUrl)} target="_blank" title="Behance" className={cn("opacity-60 hover:opacity-100 hover:scale-110 transition-all", theme.text)}>
                             <Palette size={14} />
                         </a>
                     )}
