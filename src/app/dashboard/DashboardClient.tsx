@@ -75,6 +75,8 @@ import {
     Boxes,
     ChevronDown,
     ChevronUp,
+    ChevronLeft,
+    ChevronRight,
     Quote,
     Edit2,
     ArrowUp,
