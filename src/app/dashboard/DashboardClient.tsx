@@ -1093,7 +1093,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                             setIsUploadingPortfolio(true);
                                                             try {
-                                                                const uploadedUrls = [];
+                                                                const uploadedUrls: string[] = [];
                                                                 let errorMsg = null;
 
                                                                 for (const file of files) {
