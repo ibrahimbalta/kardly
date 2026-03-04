@@ -3,11 +3,34 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const script = `
 (function() {
-    const scriptTag = document.currentScript;
+    // Robust way to find the script element
+    let scriptTag = document.currentScript;
+    if (!scriptTag) {
+        const scripts = document.getElementsByTagName('script');
+        for (let i = 0; i < scripts.length; i++) {
+            if (scripts[i].src && scripts[i].src.includes('/api/widget.js')) {
+                scriptTag = scripts[i];
+                break;
+            }
+        }
+    }
+
+    if (!scriptTag) return;
+
     const username = scriptTag.getAttribute('data-user');
+    if (!username) return;
+
     const type = scriptTag.getAttribute('data-type') || 'booking';
     const style = scriptTag.getAttribute('data-style') || 'floating';
-    const baseUrl = 'https://www.kardly.site';
+    
+    // Dynamic baseUrl
+    let baseUrl = 'https://www.kardly.site';
+    if (scriptTag.src) {
+        try {
+            const url = new URL(scriptTag.src);
+            baseUrl = url.origin;
+        } catch(e) {}
+    }
 
     // Container Check
     const containerId = 'kardly-widget-' + type;
@@ -15,16 +38,20 @@ export async function GET() {
 
     if (style === 'embedded' && container) {
         // Create Iframe for Inline/Embedded
+        // Clear container first to avoid duplicates
+        container.innerHTML = '';
         const iframe = document.createElement('iframe');
-        iframe.src = \`\${baseUrl}/\${username}?widget=\${type}&embed=true\`;
+        iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
         iframe.style.width = '100%';
         iframe.style.height = '600px';
         iframe.style.border = 'none';
         iframe.style.borderRadius = '24px';
         iframe.style.overflow = 'hidden';
         container.appendChild(iframe);
-    } else {
-        // Floating Button Mode
+    } else if (style === 'floating') {
+        // Floating Button Mode (only if not already present)
+        if (document.getElementById('kardly-floating-trigger')) return;
+
         const button = document.createElement('div');
         button.id = 'kardly-floating-trigger';
         button.innerHTML = type === 'booking' ? '📅' : '💬';
@@ -45,7 +72,8 @@ export async function GET() {
             cursor: 'pointer',
             zIndex: '9999',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-            border: '4px solid white'
+            border: '4px solid white',
+            color: 'white'
         };
         
         Object.assign(button.style, styles);
@@ -65,8 +93,8 @@ export async function GET() {
         modalContainer.style.position = 'fixed';
         modalContainer.style.bottom = '100px';
         modalContainer.style.right = '24px';
-        modalContainer.style.width = '400px';
-        modalContainer.style.height = '600px';
+        modalContainer.style.width = 'min(400px, 90vw)';
+        modalContainer.style.height = 'min(600px, 80vh)';
         modalContainer.style.backgroundColor = 'white';
         modalContainer.style.borderRadius = '32px';
         modalContainer.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
@@ -78,7 +106,7 @@ export async function GET() {
         modalContainer.style.transform = 'translateY(20px)';
 
         const iframe = document.createElement('iframe');
-        iframe.src = \`\${baseUrl}/\${username}?widget=\${type}&embed=true\`;
+        iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
