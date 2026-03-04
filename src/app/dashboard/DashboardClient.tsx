@@ -1048,7 +1048,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                                                 <Globe size={20} />
                                             </div>
-                                            <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Dış Site Aracı (Zeynovia vb.)</h3>
+                                            <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Harici Servis Aracı</h3>
                                         </div>
 
                                         <div className="space-y-4 text-left">
@@ -1056,7 +1056,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Araç Başlığı</label>
                                                 <input
                                                     type="text"
-                                                    placeholder="Örn: Zeynovia Randevu"
+                                                    placeholder="Örn: Randevu / İletişim Butonu"
                                                     className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-slate-900 focus:outline-none focus:border-emerald-500 transition-all font-bold text-xs"
                                                     value={externalWidget.title}
                                                     onChange={(e) => setExternalWidget({ ...externalWidget, title: e.target.value })}
