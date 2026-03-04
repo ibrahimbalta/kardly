@@ -1093,39 +1093,41 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                             setIsUploadingPortfolio(true);
                                                             try {
-                                                                const uploadedUrls: string[] = [];
-                                                                let errorMsg = null;
+                                                                const processedUrls: string[] = [];
 
                                                                 for (const file of files) {
-                                                                    const formData = new FormData();
-                                                                    formData.append("file", file);
-                                                                    const res = await fetch("/api/upload", {
-                                                                        method: "POST",
-                                                                        body: formData
-                                                                    });
-                                                                    const data = await res.json();
+                                                                    // Sadece resim dosyalarını kabul et
+                                                                    if (!file.type.startsWith('image/')) continue;
 
-                                                                    if (res.ok && data.url) {
-                                                                        uploadedUrls.push(data.url);
-                                                                    } else {
-                                                                        errorMsg = data.error || "Yükleme başarısız.";
+                                                                    // Dosya boyutu kontrolü (2MB'dan büyükse uyar veya atla)
+                                                                    if (file.size > 2 * 1024 * 1024) {
+                                                                        console.warn("Dosya çok büyük: ", file.name);
+                                                                        continue;
                                                                     }
+
+                                                                    const base64 = await new Promise<string>((resolve, reject) => {
+                                                                        const reader = new FileReader();
+                                                                        reader.onload = () => resolve(reader.result as string);
+                                                                        reader.onerror = reject;
+                                                                        reader.readAsDataURL(file);
+                                                                    });
+                                                                    processedUrls.push(base64);
                                                                 }
 
-                                                                if (uploadedUrls.length > 0) {
+                                                                if (processedUrls.length > 0) {
                                                                     setExtraWidgetConfig(prev => {
                                                                         const currentImages = prev.portfolioImages ? prev.portfolioImages.split(',').filter(Boolean) : [];
-                                                                        const newImages = [...currentImages, ...uploadedUrls].join(',');
+                                                                        const newImages = [...currentImages, ...processedUrls].join(',');
                                                                         return { ...prev, portfolioImages: newImages };
                                                                     });
-                                                                    setShowToast(`${uploadedUrls.length} resim başarıyla yüklendi.`);
-                                                                } else if (errorMsg) {
-                                                                    setShowToast(`Hata: ${errorMsg}`);
+                                                                    setShowToast(`${processedUrls.length} resim eklendi.`);
+                                                                } else {
+                                                                    setShowToast("Uygun resim seçilmedi veya dosyalar çok büyük (Max 2MB).");
                                                                 }
                                                                 setTimeout(() => setShowToast(null), 3000);
                                                             } catch (err) {
-                                                                console.error("Upload error:", err);
-                                                                setShowToast("Bağlantı hatası: Resim yüklenemedi.");
+                                                                console.error("Processing error:", err);
+                                                                setShowToast("İşlem sırasında bir hata oluştu.");
                                                             } finally {
                                                                 setIsUploadingPortfolio(false);
                                                             }
