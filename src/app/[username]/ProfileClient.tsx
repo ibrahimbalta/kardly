@@ -2628,6 +2628,23 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 )
                             }
 
+                            if (requestedWidget === 'video') {
+                                const vUrl = urlParams?.get('vUrl') || "";
+                                const btnText = urlParams?.get('btn') || "İzle";
+                                return <VideoWidget url={vUrl} btnText={btnText} theme={theme} toneStyle={toneStyle} />;
+                            }
+
+                            if (requestedWidget === 'skills') {
+                                const sList = urlParams?.get('sList') || "";
+                                return <SkillsWidget skills={sList} theme={theme} toneStyle={toneStyle} />;
+                            }
+
+                            if (requestedWidget === 'countdown') {
+                                const date = urlParams?.get('date') || "";
+                                const title = urlParams?.get('title') || "";
+                                return <CountdownWidget targetDate={date} title={title} theme={theme} toneStyle={toneStyle} />;
+                            }
+
                             return (
                                 <div className={cn("text-center p-8 border", theme.card, theme.border, toneStyle.rounded)}>
                                     <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2" style={{ borderColor: theme.accent }}>
@@ -4577,6 +4594,152 @@ function ExternalWidget({ block, theme, toneStyle }: any) {
             )}
 
             <div ref={containerRef} className="w-full flex justify-center" />
+        </div>
+    );
+}
+
+function VideoWidget({ url, btnText, theme, toneStyle }: any) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const getEmbedUrl = (url: string) => {
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            const id = url.split('v=')[1] || url.split('/').pop();
+            return `https://www.youtube.com/embed/${id}?autoplay=1`;
+        }
+        if (url.includes('vimeo.com')) {
+            const id = url.split('/').pop();
+            return `https://player.vimeo.com/video/${id}?autoplay=1`;
+        }
+        return url;
+    };
+
+    return (
+        <div className={cn("w-full p-8 flex flex-col items-center justify-center gap-6 text-center border shadow-xl relative overflow-hidden h-[300px]", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2 animate-pulse" style={{ background: `${theme.accent}15`, color: theme.accent }}>
+                <Play size={32} fill="currentColor" />
+            </div>
+            <h3 className={cn("text-lg font-black uppercase tracking-widest", theme.text)}>{btnText}</h3>
+            <button
+                onClick={() => setIsOpen(true)}
+                className={cn("px-8 py-4 text-white font-black uppercase tracking-[0.2em] shadow-2xl transition-all hover:scale-105 active:scale-95", toneStyle.rounded)}
+                style={{ background: theme.accent }}
+            >
+                HEMEN İZLE
+            </button>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl"
+                    >
+                        <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors">
+                            <X size={32} />
+                        </button>
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="w-full max-w-4xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+                        >
+                            <iframe src={getEmbedUrl(url)} className="w-full h-full" allow="autoplay; fullscreen" />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
+
+function SkillsWidget({ skills, theme, toneStyle }: any) {
+    const skillList = skills.split(',').map((s: string) => {
+        const [name, percent] = s.split(':');
+        return { name: name?.trim(), percent: parseInt(percent) || 0 };
+    }).filter((s: any) => s.name);
+
+    return (
+        <div className={cn("w-full p-8 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}15`, color: theme.accent }}>
+                    <Zap size={18} />
+                </div>
+                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>Uzmanlık Alanları</h3>
+            </div>
+            <div className="space-y-6">
+                {skillList.map((skill: any, idx: number) => (
+                    <div key={idx} className="space-y-2">
+                        <div className="flex justify-between items-center px-1">
+                            <span className={cn("text-[10px] font-black uppercase tracking-widest opacity-60", theme.text)}>{skill.name}</span>
+                            <span className={cn("text-[10px] font-black tracking-widest", theme.text)} style={{ color: theme.accent }}>%{skill.percent}</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${skill.percent}%` }}
+                                transition={{ duration: 1.5, delay: idx * 0.1, ease: "easeOut" }}
+                                className="h-full rounded-full"
+                                style={{ background: `linear-gradient(90deg, ${theme.accent}dd, ${theme.accent})` }}
+                            />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
+    const [timeLeft, setTimeLeft] = useState<any>(null);
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            const difference = +new Date(targetDate) - +new Date();
+            if (difference > 0) {
+                return {
+                    gün: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    saat: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    dk: Math.floor((difference / 1000 / 60) % 60),
+                    sn: Math.floor((difference / 1000) % 60)
+                };
+            }
+            return null;
+        };
+
+        const timer = setInterval(() => {
+            setTimeLeft(calculateTimeLeft());
+        }, 1000);
+        setTimeLeft(calculateTimeLeft());
+        return () => clearInterval(timer);
+    }, [targetDate]);
+
+    return (
+        <div className={cn("w-full p-8 flex flex-col items-center justify-center gap-6 text-center border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+            <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
+            <div className="space-y-1">
+                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{title || "FIRSATI KAÇIRMA"}</h3>
+                <div className="w-12 h-1 mx-auto rounded-full" style={{ background: theme.accent }} />
+            </div>
+
+            {timeLeft ? (
+                <div className="flex gap-4 sm:gap-6">
+                    {Object.entries(timeLeft).map(([label, value]: any) => (
+                        <div key={label} className="flex flex-col items-center">
+                            <div className={cn("text-3xl sm:text-4xl font-black tabular-nums transition-all", theme.text)} style={{ color: theme.accent }}>
+                                {value.toString().padStart(2, '0')}
+                            </div>
+                            <span className={cn("text-[8px] font-black uppercase tracking-widest opacity-40", theme.text)}>{label}</span>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className={cn("text-lg font-black uppercase tracking-widest animate-pulse", theme.text)}>SÜRE DOLDU!</div>
+            )}
+
+            <div className="w-full h-px opacity-10 bg-current mt-2" />
+            <p className={cn("text-[9px] font-bold uppercase tracking-[0.2em] opacity-40", theme.text)}>Kardly Urgency Tool</p>
         </div>
     );
 }

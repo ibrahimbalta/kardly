@@ -1,4 +1,4 @@
-// Last Updated: 2026-03-04 11:25
+// Last Updated: 2026-03-04 12:25
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -24,6 +24,13 @@ export async function GET() {
     const type = scriptTag.getAttribute('data-type') || 'booking';
     const style = scriptTag.getAttribute('data-style') || 'floating';
     
+    // Extra Configs
+    const vUrl = scriptTag.getAttribute('data-vUrl') || '';
+    const btn = scriptTag.getAttribute('data-btn') || '';
+    const sList = scriptTag.getAttribute('data-sList') || '';
+    const date = scriptTag.getAttribute('data-date') || '';
+    const title = scriptTag.getAttribute('data-title') || '';
+
     // Dynamic baseUrl
     let baseUrl = 'https://www.kardly.site';
     if (scriptTag.src) {
@@ -33,6 +40,13 @@ export async function GET() {
         } catch(e) {}
     }
 
+    let iframeUrl = baseUrl + '/' + username + '?widget=' + type + '&embed=true&style=' + style;
+    if(vUrl) iframeUrl += '&vUrl=' + encodeURIComponent(vUrl);
+    if(btn) iframeUrl += '&btn=' + encodeURIComponent(btn);
+    if(sList) iframeUrl += '&sList=' + encodeURIComponent(sList);
+    if(date) iframeUrl += '&date=' + encodeURIComponent(date);
+    if(title) iframeUrl += '&title=' + encodeURIComponent(title);
+
     // Container Check
     const containerId = 'kardly-widget-' + type;
     const container = document.getElementById(containerId);
@@ -41,9 +55,12 @@ export async function GET() {
         // Create Iframe for Inline/Embedded
         container.innerHTML = '';
         const iframe = document.createElement('iframe');
-        iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
+        iframe.src = iframeUrl;
         iframe.style.width = '100%';
-        iframe.style.height = '600px';
+        iframe.style.height = (type === 'skills' || type === 'countdown') ? 'auto' : '600px';
+        if(type === 'skills' || type === 'countdown') {
+            iframe.style.minHeight = '300px';
+        }
         iframe.style.border = 'none';
         iframe.style.borderRadius = '24px';
         iframe.style.overflow = 'hidden';
@@ -59,15 +76,25 @@ export async function GET() {
         const icons = {
             booking: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>',
             lead: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-            chat: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>'
+            chat: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>',
+            video: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>',
+            skills: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+            countdown: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
         };
 
         button.innerHTML = icons[type] || icons.lead;
         
+        let rightPos = '24px';
+        if (type === 'lead') rightPos = '100px';
+        if (type === 'chat' || type === 'ai') rightPos = '176px';
+        if (type === 'video') rightPos = '252px';
+        if (type === 'skills') rightPos = '328px';
+        if (type === 'countdown') rightPos = '404px';
+
         const styles = {
             position: 'fixed',
             bottom: '24px',
-            right: type === 'booking' ? '24px' : '100px', // Offset if multiple
+            right: rightPos,
             width: '64px',
             height: '64px',
             background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)',
@@ -101,7 +128,10 @@ export async function GET() {
         modalContainer.style.bottom = '100px';
         modalContainer.style.right = '24px';
         modalContainer.style.width = 'min(400px, 90vw)';
-        modalContainer.style.height = 'min(600px, 80vh)';
+        modalContainer.style.height = (type === 'skills' || type === 'countdown') ? 'auto' : 'min(600px, 80vh)';
+        if(type === 'skills' || type === 'countdown') {
+            modalContainer.style.minHeight = '300px';
+        }
         modalContainer.style.backgroundColor = 'white';
         modalContainer.style.borderRadius = '32px';
         modalContainer.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
@@ -113,9 +143,9 @@ export async function GET() {
         modalContainer.style.transform = 'translateY(30px) scale(0.9)';
 
         const iframe = document.createElement('iframe');
-        iframe.src = baseUrl + '/' + username + '?widget=' + type + '&embed=true';
+        iframe.src = iframeUrl;
         iframe.style.width = '100%';
-        iframe.style.height = '100%';
+        iframe.style.height = (type === 'skills' || type === 'countdown') ? '400px' : '100%';
         iframe.style.border = 'none';
         
         modalContainer.appendChild(iframe);

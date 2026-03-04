@@ -148,9 +148,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [activeWidget, setActiveWidget] = useState("booking")
     const [widgetStyle, setWidgetStyle] = useState("embedded")
     const [externalWidget, setExternalWidget] = useState({
-        title: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.title || "",
-        code: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.code || "",
         position: profile?.blocks?.find((b: any) => b.type === 'external_widget')?.content?.position || "floating"
+    })
+    const [extraWidgetConfig, setExtraWidgetConfig] = useState({
+        videoUrl: "",
+        videoBtnText: "Tanıtım Videosu",
+        skills: "Design:95,Marketing:80,Coding:85",
+        countdownDate: "",
+        countdownTitle: "Özel Teklif"
     })
 
     const handleGenerateBio = async () => {
@@ -965,9 +970,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÇ SEÇİN"}</label>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {[
-                                                { id: "booking", name: t('widgetBooking'), icon: <Calendar size={18} /> },
-                                                { id: "lead", name: t('widgetLead'), icon: <MessageSquare size={18} /> },
-                                                { id: "ai", name: t('widgetAI'), icon: <Sparkles size={18} /> }
+                                                { id: "booking", name: t.widgetBooking, icon: <Calendar size={18} /> },
+                                                { id: "lead", name: t.widgetLead, icon: <MessageSquare size={18} /> },
+                                                { id: "ai", name: t.widgetAI, icon: <Sparkles size={18} /> },
+                                                { id: "video", name: t.widgetVideo, icon: <Monitor size={18} /> },
+                                                { id: "skills", name: t.widgetSkills, icon: <Zap size={18} /> },
+                                                { id: "countdown", name: t.widgetCountdown, icon: <Clock size={18} /> }
                                             ].map(w => (
                                                 <button
                                                     key={w.id}
@@ -980,11 +988,73 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <div className={cn("p-2 rounded-xl", activeWidget === w.id ? "bg-primary/10" : "bg-slate-50")}>
                                                         {w.icon}
                                                     </div>
-                                                    <span className="text-xs font-black uppercase tracking-wider">{w.name}</span>
+                                                    <span className="text-[10px] font-black uppercase tracking-wider">{w.name}</span>
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* Widget Specific Config */}
+                                    {activeWidget === 'video' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetVideoUrl}</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
+                                                    value={extraWidgetConfig.videoUrl}
+                                                    placeholder="https://youtube.com/..."
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, videoUrl: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetBtnText}</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
+                                                    value={extraWidgetConfig.videoBtnText}
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, videoBtnText: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeWidget === 'skills' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-2 text-left">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetSkillsList}</label>
+                                                <textarea
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
+                                                    value={extraWidgetConfig.skills}
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, skills: e.target.value })}
+                                                />
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">{t.widgetSkillsHint}</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeWidget === 'countdown' && (
+                                        <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetTargetDate}</label>
+                                                <input
+                                                    type="datetime-local"
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
+                                                    value={extraWidgetConfig.countdownDate}
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, countdownDate: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t.widgetCtdTitle}</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary"
+                                                    value={extraWidgetConfig.countdownTitle}
+                                                    onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, countdownTitle: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetStyle')}</label>
@@ -1011,7 +1081,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="flex justify-between items-center">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetEmbedCode')}</label>
                                             <button
-                                                onClick={() => copyToClipboard(`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`)}
+                                                onClick={() => {
+                                                    let scriptAttrs = `data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"`;
+                                                    if (activeWidget === 'video') scriptAttrs += ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"`;
+                                                    if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
+                                                    if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
+
+                                                    copyToClipboard(`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`)
+                                                }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
                                                 <Download size={12} /> {t('widgetCopyCode')}
@@ -1019,7 +1096,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <div className="p-6 bg-slate-900 rounded-[2rem] relative group text-left">
                                             <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all whitespace-pre-wrap">
-                                                {`<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"></script>`}
+                                                {(() => {
+                                                    let urlParams = `?widget=${activeWidget}&embed=true&style=${widgetStyle}`;
+                                                    if (activeWidget === 'video') urlParams += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
+                                                    if (activeWidget === 'skills') urlParams += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
+                                                    if (activeWidget === 'countdown') urlParams += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
+
+                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}></script>`;
+                                                })()}
                                             </code>
                                         </div>
                                     </div>
