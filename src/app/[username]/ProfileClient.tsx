@@ -3735,7 +3735,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.restore();
 
                 // Load profile image
-                const profileImg = new Image();
+                const profileImg = document.createElement('img');
                 profileImg.crossOrigin = 'anonymous';
                 const imgSrc = (!profile.user.image || profile.user.image.includes('avatar.iran.liara.run'))
                     ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=256&bold=true`
@@ -3817,7 +3817,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 // ─── 6. QR CODE ─────────────────────────────────
                 curY += 35;
                 if (qrDataUrl) {
-                    const qrImg = new Image();
+                    const qrImg = document.createElement('img');
                     await new Promise<void>((resolve) => {
                         qrImg.onload = () => resolve();
                         qrImg.onerror = () => resolve();
