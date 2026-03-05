@@ -3644,6 +3644,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
         const accent = theme.accent || "#0ea5e9";
         const phoneNum = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
+        const locationStr = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
 
         const timer = setTimeout(async () => {
             try {
@@ -3661,6 +3662,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
                 const contacts: { symbol: string; text: string }[] = [];
                 if (phoneNum) contacts.push({ symbol: '✆', text: phoneNum });
+                if (locationStr) contacts.push({ symbol: '⚲', text: locationStr });
                 if (profile.user.email) contacts.push({ symbol: '✉', text: profile.user.email });
                 contacts.push({ symbol: '⊕', text: `kardly.site/${profile.username}` });
 
@@ -3937,6 +3939,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
 
     const phoneNumber = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
+    const location = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
     const accent = theme.accent || "#0ea5e9";
 
     const hexToRgb = (hex: string) => {
@@ -4166,6 +4169,15 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                                         >
                                             <Phone size={11} style={{ color: accent }} />
                                             <span className={toneStyle?.font}>{phoneNumber}</span>
+                                        </div>
+                                    )}
+                                    {location && (
+                                        <div
+                                            className={cn("flex items-center gap-2.5 text-[10px] font-bold px-3 py-2 border border-white/5 uppercase", theme.text || "text-white/70", toneStyle?.rounded?.replace('[3rem]', '[0.8rem]'))}
+                                            style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}
+                                        >
+                                            <MapPin size={11} style={{ color: accent }} />
+                                            <span className={toneStyle?.font}>{location}</span>
                                         </div>
                                     )}
                                     <div

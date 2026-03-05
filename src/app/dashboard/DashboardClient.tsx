@@ -2089,15 +2089,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('locationLabel')}</label>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('phoneNumberLabel')}</label>
                                         <input
                                             type="text"
                                             value={profileData?.phone || ""}
                                             onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                            placeholder={t('locationPlaceholder')}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                            placeholder="Örn: +90 5XX XXX XX XX"
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                                         />
                                     </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('locationLabel')}</label>
+                                        <input
+                                            type="text"
+                                            value={getSocialUrl("location")}
+                                            onChange={(e) => updateSocialLink("location", e.target.value)}
+                                            placeholder={t('locationPlaceholder')}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        />
+                                    </div>
+
                                 </div>
 
                                 <div>
