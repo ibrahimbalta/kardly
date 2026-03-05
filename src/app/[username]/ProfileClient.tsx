@@ -3240,7 +3240,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         {platform === 'youtube' && <Youtube size={24} />}
                                         {platform === 'whatsapp' && <MessageCircle size={24} />}
                                         {platform === 'mail' && <Mail size={24} />}
-                                        {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail'].includes(platform)) && <Globe size={24} />}
+                                        {platform === 'medium' && <FileText size={24} />}
+                                        {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'medium'].includes(platform)) && <Globe size={24} />}
                                     </a>
                                 )
                             })}
@@ -3644,7 +3645,9 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
         const accent = theme.accent || "#0ea5e9";
         const phoneNum = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
-        const locationStr = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
+        const cityStr = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'city')?.url || "";
+        const mapStr = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
+        const locationStr = cityStr || mapStr || "";
 
         const timer = setTimeout(async () => {
             try {
@@ -3939,7 +3942,9 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
 
     const phoneNumber = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
-    const location = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
+    const cityText = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'city')?.url || "";
+    const mapLink = (profile.socialLinks as any[])?.find((l: any) => l.platform === 'location')?.url || "";
+    const location = cityText || mapLink || "";
     const accent = theme.accent || "#0ea5e9";
 
     const hexToRgb = (hex: string) => {

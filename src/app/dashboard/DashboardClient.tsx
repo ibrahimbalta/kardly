@@ -2102,8 +2102,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <label className="block text-sm font-medium mb-2 opacity-60">{t('locationLabel')}</label>
                                         <input
                                             type="text"
-                                            value={getSocialUrl("location")}
-                                            onChange={(e) => updateSocialLink("location", e.target.value)}
+                                            value={getSocialUrl("city")}
+                                            onChange={(e) => updateSocialLink("city", e.target.value)}
                                             placeholder={t('locationPlaceholder')}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                                         />
@@ -2283,6 +2283,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 placeholder="YouTube URL"
                                                 value={getSocialUrl("youtube")}
                                                 onChange={(e) => updateSocialLink("youtube", e.target.value)}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                            />
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
+                                                <FileText className="w-5 h-5" />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder={t('mediumLabel')}
+                                                value={getSocialUrl("medium")}
+                                                onChange={(e) => updateSocialLink("medium", e.target.value)}
                                                 className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
                                             />
                                         </div>
