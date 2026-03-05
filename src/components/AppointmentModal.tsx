@@ -65,10 +65,10 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
             if (res.ok) {
                 setStep(3)
             } else {
-                alert("Bir hata oluştu, lütfen tekrar deneyin.")
+                alert(labels.genericError)
             }
         } catch (err) {
-            alert("Bağlantı hatası.")
+            alert(labels.connectionError)
         } finally {
             setIsSubmitting(false)
         }

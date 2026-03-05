@@ -1964,9 +1964,20 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
     const customLinks = customLinksEntry?.links || [];
 
+    const translateText = (text: string) => {
+        if (lang === 'tr' || !text) return text;
+        const mapping: Record<string, string> = {
+            "Dış Doktoru": "Dentist",
+            "Gülüşünüzü Aydınlatın": "Brighten Your Smile",
+            "Yazılım Mimarı": "Software Architect",
+            "Tasarımcı": "Designer"
+        };
+        return mapping[text] || text;
+    };
+
     const actions = [
-        { label: "Ara", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: t.phoneCallsBtn || "Call", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        { label: t.waMessagesBtn || "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
         {
             label: t.contactMeTitle,
             icon: <MessageSquare size={20} />,
@@ -1976,9 +1987,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             },
             active: true
         },
-        { label: "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
+        { label: t.emailBtn || "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
         {
-            label: "Randevu Al", icon: <Calendar size={20} />, onClick: () => {
+            label: t.bookAppointment, icon: <Calendar size={20} />, onClick: () => {
                 trackEvent("appointment")
                 setIsAppointmentOpen(true)
             }, active: !!profile.showAppointmentBtn
@@ -1990,8 +2001,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             onClick: () => trackEvent("custom_action", l.title),
             active: true
         })),
-        { label: "Web Site", icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: "Konum", icon: <MapPin size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
+        { label: t.website, icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: t.locationsBtn, icon: <MapPin size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
 
     return (
@@ -2643,19 +2654,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             if (requestedWidget === 'video') {
                                 const vUrl = urlParams?.get('vUrl') || "";
-                                const btnText = urlParams?.get('btn') || "İzle";
+                                const btnText = urlParams?.get('btn') || t.izleLabel;
                                 return <VideoWidget url={vUrl} btnText={btnText} theme={theme} toneStyle={toneStyle} />;
                             }
 
                             if (requestedWidget === 'skills') {
                                 const sList = urlParams?.get('sList') || "";
-                                return <SkillsWidget skills={sList} theme={theme} toneStyle={toneStyle} />;
+                                return <SkillsWidget skills={sList} theme={theme} toneStyle={toneStyle} t={t} />;
                             }
 
                             if (requestedWidget === 'countdown') {
                                 const date = urlParams?.get('date') || "";
                                 const title = urlParams?.get('title') || "";
-                                return <CountdownWidget targetDate={date} title={title} theme={theme} toneStyle={toneStyle} />;
+                                return <CountdownWidget targetDate={date} title={title} theme={theme} toneStyle={toneStyle} t={t} />;
                             }
 
                             if (requestedWidget === 'portfolio') {
@@ -2663,17 +2674,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 const githubUrl = urlParams?.get('ghUrl') || "";
                                 const dribbbleUrl = urlParams?.get('drUrl') || "";
                                 const behanceUrl = urlParams?.get('bhUrl') || "";
-                                return <PortfolioWidget images={images} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} theme={theme} toneStyle={toneStyle} />;
+                                return <PortfolioWidget images={images} githubUrl={githubUrl} dribbbleUrl={dribbbleUrl} behanceUrl={behanceUrl} theme={theme} toneStyle={toneStyle} t={t} />;
                             }
 
                             if (requestedWidget === 'blog') {
                                 const rssUrl = urlParams?.get('rssUrl') || "";
-                                return <BlogWidget rssUrl={rssUrl} theme={theme} toneStyle={toneStyle} />;
+                                return <BlogWidget rssUrl={rssUrl} theme={theme} toneStyle={toneStyle} t={t} lang={lang} />;
                             }
 
                             if (requestedWidget === 'tech') {
                                 const tech = urlParams?.get('tList') || "";
-                                return <TechStackWidget technologies={tech} theme={theme} toneStyle={toneStyle} />;
+                                return <TechStackWidget technologies={tech} theme={theme} toneStyle={toneStyle} t={t} />;
                             }
 
                             return (
@@ -2682,7 +2693,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <img src={profile.user.image} className="w-full h-full object-cover" alt="" />
                                     </div>
                                     <h2 className={cn("text-xl font-black mb-1", theme.text)}>{profile.user.name}</h2>
-                                    <p className={cn("text-xs opacity-60 mb-8 uppercase tracking-widest font-bold", theme.text)}>{profile.occupation}</p>
+                                    <p className={cn("text-xs opacity-60 mb-8 uppercase tracking-widest font-bold", theme.text)}>{translateText(profile.occupation)}</p>
                                     <button
                                         onClick={() => setIsAppointmentOpen(true)}
                                         className={cn("w-full py-4 px-8 font-black uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 active:scale-95", toneStyle.rounded)}
@@ -2789,7 +2800,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                         {getIcon(service.title)}
 
                                                         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-[#0a0a0a]/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[11px] font-bold text-white pointer-events-none border border-white/20 shadow-[0_10px_25px_rgba(0,0,0,0.5)] scale-50 group-hover/icon:scale-100 z-50">
-                                                            {service.title}
+                                                            {translateText(service.title)}
                                                         </div>
                                                     </motion.div>
                                                 </motion.div>
@@ -2918,7 +2929,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 <div className="flex items-center justify-center gap-2 mt-2 relative">
                                     <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
                                     <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
-                                        {profile.occupation || "PROFESSIONAL"}
+                                        {translateText(profile.occupation) || "PROFESSIONAL"}
                                         {theme.special === 'software' && <span className="animate-pulse">_</span>}
                                     </p>
                                     <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
@@ -3064,7 +3075,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 )}
 
 
-                                {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{profile.slogan}”</p>}
+                                {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{translateText(profile.slogan)}”</p>}
                             </div>
 
                             {(() => {
@@ -3195,7 +3206,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     <div className="flex justify-between items-start">
                                                         <div>
                                                             <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                            <p className={cn("text-[10px] opacity-40", theme.text)}>{reviews[currentReviewIndex].title}</p>
+                                                            <p className={cn("text-[10px] opacity-40", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
                                                         </div>
                                                         <div className="flex gap-0.5">
                                                             {[...Array(5)].map((_, i) => (
@@ -3204,7 +3215,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                         </div>
                                                     </div>
                                                     <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
-                                                        "{reviews[currentReviewIndex].content}"
+                                                        "{translateText(reviews[currentReviewIndex].content)}"
                                                     </p>
                                                 </div>
                                             </div>
@@ -3290,7 +3301,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:scale-[0.97] backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                     style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
                                 >
-                                    <Share2 size={16} className="opacity-60" /> Paylaş
+                                    <Share2 size={16} className="opacity-60" /> {t.shareLabel}
                                 </button>
 
                                 <button
@@ -3301,7 +3312,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         boxShadow: `0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
                                     }}
                                 >
-                                    <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
+                                    <FileText size={16} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
                                 </button>
 
                                 {/* Sabit AI Assistant Butonu */}
@@ -3349,7 +3360,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             body: JSON.stringify({ ...newReview, profileId: profile.id })
                         })
                         if (res.ok) {
-                            setReviewStatus("Yorumunuz iletildi, onay sonrası yayınlanacaktır!")
+                            setReviewStatus(t.reviewSuccessMsg)
                             setTimeout(() => setReviewStatus(null), 5000)
                         }
                     } catch (err) {
@@ -3426,7 +3437,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                             <CheckCircle2 size={14} />
                         </div>
-                        <span className={theme.text}>KOPYALANDI!</span>
+                        <span className={theme.text}>{t.copiedLabel}</span>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -3520,7 +3531,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                         {/* Rating */}
                         <div className="space-y-4">
                             <div className={cn("flex flex-col items-center gap-2 py-3 rounded-2xl border bg-white/5", theme.border)} style={{ borderColor: `${theme.accent}15` }}>
-                                <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.rate || "Puan Ver"}</span>
+                                <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.rateLabel}</span>
                                 <div className="flex gap-1.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <button
@@ -3884,7 +3895,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.fillStyle = accent;
                 ctx.globalAlpha = 0.4;
                 ctx.font = '900 8px "Inter", sans-serif';
-                ctx.fillText('D İ J İ T A L   K A R T V İ Z İ T', W / 2, curY);
+                ctx.fillText(t.digitalBusinessCard, W / 2, curY);
                 ctx.globalAlpha = 1;
                 curY += 24;
 
@@ -3975,7 +3986,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 link.download = `${profile.username}-kartvizit.png`;
                 link.click();
             } else {
-                alert("Görsel henüz hazırlanıyor, lütfen birkaç saniye bekleyip tekrar deneyin.");
+                alert(t.generatingImage);
             }
         } catch (err) {
             console.error(err);
@@ -4246,7 +4257,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     </div>
                 </div>
             </div>
-            <button onClick={onClose} className="hidden" aria-label="Kapat" />
+            <button onClick={onClose} className="hidden" aria-label={t.close} />
         </div>
     );
 }
@@ -4256,10 +4267,10 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
     const [currentProof, setCurrentProof] = useState<any>(null)
 
     const proofs = [
-        { type: 'visit', icon: <Eye size={12} />, text: (count: number) => typeof t.proofVisit === 'function' ? t.proofVisit(count) : `${count} kişi...` },
-        { type: 'vcard', icon: <UserPlus size={12} />, text: () => t.proofVcard || "Birisi rehbere ekledi! 🚀" },
-        { type: 'share', icon: <Share2 size={12} />, text: () => t.proofShare || "Bu profil az önce paylaşıldı." },
-        { type: 'location', icon: <MapPin size={12} />, text: (city: string) => typeof t.proofLocation === 'function' ? t.proofLocation(city) : `${city}'den...` }
+        { type: 'visit', icon: <Eye size={12} />, text: (count: number) => typeof t.proofVisit === 'function' ? t.proofVisit(count) : `${count} views` },
+        { type: 'vcard', icon: <UserPlus size={12} />, text: () => t.proofVcard || "Saved to contacts! 🚀" },
+        { type: 'share', icon: <Share2 size={12} />, text: () => t.proofShare || "Profile just shared." },
+        { type: 'location', icon: <MapPin size={12} />, text: (city: string) => typeof t.proofLocation === 'function' ? t.proofLocation(city) : `Visit from ${city}` }
     ]
 
     const cities = ["İstanbul", "Ankara", "İzmir", "Berlin", "London", "New York", "Dubai", "Bursa", "Antalya"]
@@ -4304,7 +4315,7 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
                             {currentProof.displayedText}
                         </p>
                         <p className={cn("text-[7px] uppercase tracking-widest mt-0.5 font-black opacity-30", theme.text)}>
-                            {t.justNow || "AZ ÖNCE"}
+                            {t.justNow}
                         </p>
                     </div>
                     <button onClick={() => setIsVisible(false)} className={cn("ml-1 transition-colors opacity-20 hover:opacity-100", theme.text)}>
@@ -4502,17 +4513,17 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
 
                     <div className="space-y-1">
                         <h3 className={cn("text-lg font-black px-2 leading-tight uppercase tracking-tight", theme.text, toneStyle?.font)}>
-                            {t.addToWallet || "CÜZDANA EKLE"}
+                            {t.addToWallet}
                         </h3>
                         <p className={cn("text-[8px] font-bold tracking-[0.2em] uppercase opacity-40", theme.text)}>
-                            {t.savePassDesc || "Kartınızı telefonunuza kaydedin."}
+                            {t.savePassDesc}
                         </p>
                     </div>
 
                     <div className="w-full space-y-1.5">
                         {[
-                            { icon: <UserPlus size={16} />, label: t.vcfLabel || "Rehbere Kaydet (VCF)", action: handleAddToContacts },
-                            { icon: <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={16} /></div>, label: "Apple Wallet", action: handleAddToContacts, badge: t.current || "GÜNCEL" },
+                            { icon: <UserPlus size={16} />, label: t.vcfLabel, action: handleAddToContacts },
+                            { icon: <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={16} /></div>, label: "Apple Wallet", action: handleAddToContacts, badge: t.current },
                             { icon: <Globe size={16} />, label: "Google Wallet", action: handleAddToContacts }
                         ].map((btn, idx) => (
                             <button
@@ -4543,7 +4554,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                         onClick={onClose}
                         className={cn("text-[8px] font-black uppercase tracking-[0.5em] transition-all pt-2 opacity-30 hover:opacity-100", theme.text)}
                     >
-                        {t.cancel || "VAZGEÇ"}
+                        {t.cancel}
                     </button>
                 </div>
             </motion.div>
@@ -4616,7 +4627,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className={cn("w-full border px-4 py-3 text-xs focus:outline-none transition-all font-medium min-h-[80px] resize-none rounded-xl", theme.btn, theme.border, theme.text)}
-                        placeholder={lang === 'tr' ? "Nasıl yardımcı olabilirim?" : "How can I help you?"}
+                        placeholder={t.helpMessagePlaceholder}
                     />
                 </div>
 
@@ -4676,9 +4687,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
 
     useEffect(() => {
         if ((isOpen || isEmbed) && messages.length === 0) {
-            const defaultGreeting = (profile.lang === 'tr' || !profile.lang)
-                ? `Merhaba! Ben ${profile.user.name}'in dijital asistanıyım. Size nasıl yardımcı olabilirim?`
-                : `Hello! I'm ${profile.user.name}'s digital assistant. How can I help you?`
+            const defaultGreeting = t.aiGreetingTemplate(profile.user.name)
 
             setMessages([{
                 role: "assistant",
@@ -4710,7 +4719,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
             }
         } catch (error) {
             console.error("Chat Error:", error)
-            setMessages([...newMessages, { role: "assistant", isError: true, content: (profile.lang === 'tr' || !profile.lang) ? "Bir bağlantı hatası oluştu." : "A connection error occurred." }])
+            setMessages([...newMessages, { role: "assistant", isError: true, content: t.connectionError }])
         } finally {
             setIsLoading(false)
         }
@@ -4731,7 +4740,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                         <h3 className={cn("text-[11px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
                         <div className="flex items-center gap-1">
                             <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className={cn("text-[7px] font-bold uppercase tracking-widest opacity-40", theme.text)}>ÇEVRİMİÇİ</span>
+                            <span className={cn("text-[7px] font-bold uppercase tracking-widest opacity-40", theme.text)}>{t.onlineStatus}</span>
                         </div>
                     </div>
                 </div>
@@ -4777,7 +4786,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                        placeholder="Bir şey sor..."
+                        placeholder={t.askSomething}
                         className={cn("bg-transparent border-none focus:ring-0 text-[11px] p-3.5 flex-1 placeholder:opacity-20", theme.text)}
                     />
                     <button
@@ -4876,11 +4885,11 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     if (!codeStr || !block.isActive) return null;
 
     const renderInternalWidget = (isModal = false) => {
-        const commonProps = { theme, toneStyle };
+        const commonProps = { theme, toneStyle, t };
         const iframeHeight = isModal ? 'h-[600px]' : 'min-h-[650px]';
         switch (widgetType) {
             case 'video':
-                return <VideoWidget url={vUrl} btnText={btnText || "İzle"} {...commonProps} />;
+                return <VideoWidget url={vUrl} btnText={btnText || t.izleLabel} {...commonProps} />;
             case 'skills':
                 return <SkillsWidget skills={sList} {...commonProps} />;
             case 'portfolio':
@@ -4917,16 +4926,16 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
 
     if (isFloating) {
         const typeConfig: Record<string, { icon: any; label: string }> = {
-            booking: { icon: <Calendar size={22} />, label: 'Randevu Al' },
-            lead: { icon: <MessageSquare size={22} />, label: 'İletişime Geç' },
-            chat: { icon: <Bot size={22} />, label: 'AI Asistan' },
-            ai: { icon: <Bot size={22} />, label: 'AI Asistan' },
-            video: { icon: <Play size={22} />, label: 'Video İzle' },
-            skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
-            portfolio: { icon: <Image size={22} />, label: 'Portfolyo' },
-            tech: { icon: <Code size={22} />, label: 'Yazılımcı Seti' },
-            countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
-            blog: { icon: <Rss size={22} />, label: 'Blog Akışı' },
+            booking: { icon: <Calendar size={22} />, label: t.bookingLabel },
+            lead: { icon: <MessageSquare size={22} />, label: t.leadLabel },
+            chat: { icon: <Bot size={22} />, label: t.aiLabel },
+            ai: { icon: <Bot size={22} />, label: t.aiLabel },
+            video: { icon: <Play size={22} />, label: t.videoLabel },
+            skills: { icon: <Zap size={22} />, label: t.skillsLabel },
+            portfolio: { icon: <Image size={22} />, label: t.portfolioLabel },
+            tech: { icon: <Code size={22} />, label: t.techLabel },
+            countdown: { icon: <Target size={22} />, label: t.countdownLabel },
+            blog: { icon: <Rss size={22} />, label: t.blogLabel },
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
@@ -5031,7 +5040,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     );
 }
 
-function VideoWidget({ url, btnText, theme, toneStyle }: any) {
+function VideoWidget({ url, btnText, theme, toneStyle, t }: any) {
     const [isOpen, setIsOpen] = useState(false);
 
     const getEmbedUrl = (url: string) => {
@@ -5058,7 +5067,7 @@ function VideoWidget({ url, btnText, theme, toneStyle }: any) {
                 className={cn("px-8 py-4 text-white font-black uppercase tracking-[0.2em] shadow-2xl transition-all hover:scale-105 active:scale-95", toneStyle.rounded)}
                 style={{ background: theme.accent }}
             >
-                HEMEN İZLE
+                {t.watchNow}
             </button>
 
             <AnimatePresence>
@@ -5086,7 +5095,7 @@ function VideoWidget({ url, btnText, theme, toneStyle }: any) {
     );
 }
 
-function SkillsWidget({ skills, theme, toneStyle }: any) {
+function SkillsWidget({ skills, theme, toneStyle, t }: any) {
     const skillList = skills.split(',').map((s: string) => {
         const [name, percent] = s.split(':');
         return { name: name?.trim(), percent: parseInt(percent) || 0 };
@@ -5099,7 +5108,7 @@ function SkillsWidget({ skills, theme, toneStyle }: any) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}15`, color: theme.accent }}>
                     <Zap size={18} />
                 </div>
-                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>Uzmanlık Alanları</h3>
+                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>{t.skillsTitle}</h3>
             </div>
             <div className="space-y-6">
                 {skillList.map((skill: any, idx: number) => (
@@ -5124,7 +5133,7 @@ function SkillsWidget({ skills, theme, toneStyle }: any) {
     );
 }
 
-function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
+function CountdownWidget({ targetDate, title, theme, toneStyle, t }: any) {
     const [timeLeft, setTimeLeft] = useState<any>(null);
 
     useEffect(() => {
@@ -5132,10 +5141,10 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
             const difference = +new Date(targetDate) - +new Date();
             if (difference > 0) {
                 return {
-                    gün: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    saat: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                    dk: Math.floor((difference / 1000 / 60) % 60),
-                    sn: Math.floor((difference / 1000) % 60)
+                    [t.days]: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    [t.hours]: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    [t.minutes]: Math.floor((difference / 1000 / 60) % 60),
+                    [t.seconds]: Math.floor((difference / 1000) % 60)
                 };
             }
             return null;
@@ -5152,7 +5161,7 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
         <div className={cn("w-full p-8 flex flex-col items-center justify-center gap-6 text-center border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
             <div className="space-y-1">
-                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{title || "FIRSATI KAÇIRMA"}</h3>
+                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{title || t.dontMissOut}</h3>
                 <div className="w-12 h-1 mx-auto rounded-full" style={{ background: theme.accent }} />
             </div>
 
@@ -5169,7 +5178,7 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
                 </div>
             ) : (
                 <div className="space-y-2">
-                    <p className={cn("text-2xl font-black", theme.text)}>SÜRE DOLDU!</p>
+                    <p className={cn("text-2xl font-black", theme.text)}>{t.timeIsUp}</p>
                     <div className="w-8 h-[2px] mx-auto opacity-20" style={{ background: theme.accent }} />
                     <p className={cn("text-[8px] font-bold uppercase tracking-[0.4em] opacity-40", theme.text)}>KARDLY URGENCY TOOL</p>
                 </div>
@@ -5180,7 +5189,7 @@ function CountdownWidget({ targetDate, title, theme, toneStyle }: any) {
 
 // ─── COMPONENT DEFINITIONS FOR EMBED & NORMAL BLOCKS ─────────────────────────────────────────────
 
-function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, toneStyle }: any) {
+function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, toneStyle, t }: any) {
     const imagesList = images.split('|').filter((i: string) => i.trim());
     const [activeIdx, setActiveIdx] = useState(0);
 
@@ -5200,7 +5209,7 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Image size={18} className="text-primary" style={{ color: theme.accent }} />
-                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>Portfolyo Galeri</h3>
+                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>{t.portfolioGallery}</h3>
                 </div>
 
                 {/* İsteğe bağlı sosyal medya / portfolyo bağlantıları */}
@@ -5263,7 +5272,7 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
     );
 }
 
-function TechStackWidget({ technologies, theme, toneStyle }: any) {
+function TechStackWidget({ technologies, theme, toneStyle, t }: any) {
     const techList = technologies.split(',').map((t: string) => t.trim()).filter(Boolean);
 
     return (
@@ -5273,7 +5282,7 @@ function TechStackWidget({ technologies, theme, toneStyle }: any) {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}15`, color: theme.accent }}>
                     <Code size={18} />
                 </div>
-                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>Teknoloji Yığını</h3>
+                <h3 className={cn("text-sm font-black uppercase tracking-widest", theme.text)}>{t.techStack}</h3>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -5299,7 +5308,7 @@ function TechStackWidget({ technologies, theme, toneStyle }: any) {
     );
 }
 
-function BlogWidget({ rssUrl, theme, toneStyle }: any) {
+function BlogWidget({ rssUrl, theme, toneStyle, t, lang }: any) {
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -5330,7 +5339,7 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Rss size={18} className="text-primary" style={{ color: theme.accent }} />
-                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>Son Yazılar</h3>
+                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme.text)}>{t.latestPosts}</h3>
                 </div>
             </div>
 
@@ -5359,7 +5368,7 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
                                 <div className="flex-1 space-y-1 overflow-hidden">
                                     <h4 className={cn("text-xs font-bold line-clamp-2 leading-snug", theme.text)}>{post.title}</h4>
                                     <p className={cn("text-[8px] opacity-60 uppercase tracking-widest font-black truncate", theme.text)}>
-                                        {new Date(post.pubDate).toLocaleDateString('tr-TR')} • {post.author || "Yazar"}
+                                        {new Date(post.pubDate).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US')} • {post.author || t.authorLabel}
                                     </p>
                                 </div>
                                 <ArrowRight size={14} className={cn("opacity-40 group-hover:opacity-100 transition-opacity shrink-0", theme.text)} />
@@ -5369,7 +5378,7 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
                 </div>
             ) : (
                 <div className="text-center py-6">
-                    <p className={cn("text-xs font-medium opacity-60", theme.text)}>Henüz yazı bulunmuyor.</p>
+                    <p className={cn("text-xs font-medium opacity-60", theme.text)}>{t.noPostsYet}</p>
                 </div>
             )}
         </div>
