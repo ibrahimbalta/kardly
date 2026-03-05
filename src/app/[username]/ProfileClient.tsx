@@ -3839,9 +3839,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
                     // Glow behind QR
                     ctx.save();
-                    ctx.shadowColor = accent;
+                    ctx.shadowColor = hexRgba(accent, 0.2);
                     ctx.shadowBlur = 30;
-                    ctx.shadowOpacity = 0.1;
                     ctx.fillStyle = '#ffffff';
                     rrect(qrBoxX, curY, qrBoxW, qrBoxW, 12);
                     ctx.fill();
