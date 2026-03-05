@@ -2731,7 +2731,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     setLang(newLang);
                                     localStorage.setItem('lang', newLang);
                                 }}
-                                className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95 text-[10px] font-black uppercase", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95 text-[10px] font-black uppercase", theme.btn, theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
                                 {lang === 'tr' ? 'EN' : 'TR'}
                             </button>
