@@ -3271,39 +3271,51 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             </div>
                         )}
 
-                        <div className="pt-8 border-t border-white/5 text-center flex items-stretch gap-3">
-                            <button
-                                onClick={handleShare}
-                                className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] shadow-lg", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                            >
-                                <Share2 size={16} /> Paylaş
-                            </button>
+                        <div className="pt-8 border-t border-white/5 text-center flex flex-col gap-4">
+                            <div className="flex items-stretch gap-3">
+                                <button
+                                    onClick={handleShare}
+                                    className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] shadow-lg", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                >
+                                    <Share2 size={16} /> Paylaş
+                                </button>
 
-                            <button
-                                onClick={handleCVView}
-                                className={cn("flex-1 py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-lg", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                style={{
-                                    background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                    boxShadow: `0 8px 24px -8px ${(theme as any).cvAccent || theme.accent}50`
-                                }}
-                            >
-                                <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
-                            </button>
+                                <button
+                                    onClick={handleCVView}
+                                    className={cn("flex-1 py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-lg", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                    style={{
+                                        background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
+                                        boxShadow: `0 8px 24px -8px ${(theme as any).cvAccent || theme.accent}50`
+                                    }}
+                                >
+                                    <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
+                                </button>
 
-                            {/* Sadece İLK Floating Widget - Ana satırda */}
-                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(0, 1).map((block: any) => (
-                                <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
-                            ))}
-                        </div>
-
-                        {/* Diğer (2. ve sonrası) Floating Widgetlar - Alt satırda yan yana */}
-                        {!isEmbedMode && (profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 1) && (
-                            <div className="mt-4 flex flex-wrap justify-center gap-3">
-                                {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).slice(1).map((block: any) => (
-                                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
-                                ))}
+                                {/* Sabit AI Assistant Butonu */}
+                                {aiConfig?.isEnabled && (
+                                    <button
+                                        onClick={() => setIsAIChatOpen(true)}
+                                        className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-lg transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        style={{
+                                            background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
+                                            boxShadow: `0 8px 24px -8px ${theme.accent}50`
+                                        }}
+                                        title={aiConfig.assistantName}
+                                    >
+                                        <Bot size={24} />
+                                    </button>
+                                )}
                             </div>
-                        )}
+
+                            {/* Tüm Floating Widgetlar - Alt satırda yan yana */}
+                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
+                                <div className="flex flex-wrap justify-center gap-3">
+                                    {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
+                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </motion.div>
                 )}
 
@@ -4603,7 +4615,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
 
     const renderInternalWidget = (isModal = false) => {
         const commonProps = { theme, toneStyle };
-        const iframeHeight = isModal ? 'h-[600px]' : 'min-h-[500px]';
+        const iframeHeight = isModal ? 'h-[600px]' : 'min-h-[650px]';
         switch (widgetType) {
             case 'video':
                 return <VideoWidget url={vUrl} btnText={btnText || "İzle"} {...commonProps} />;
@@ -4727,7 +4739,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
     }
 
     return (
-        <div className={cn("w-full p-0 flex flex-col items-center gap-4 relative overflow-hidden", isKardlyWidget ? "" : cn("p-8 border text-center", theme.card, theme.border, toneStyle.rounded))} id="external-inline-widget">
+        <div className={cn("w-full p-0 flex flex-col items-center gap-4 relative", isKardlyWidget ? "" : cn("p-8 border text-center", theme.card, theme.border, toneStyle.rounded))} id="external-inline-widget">
             {!isKardlyWidget && (
                 <>
                     <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />

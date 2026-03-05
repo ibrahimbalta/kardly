@@ -2856,9 +2856,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <Sparkles size={20} />
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-sm">Asistan Durumu</h3>
+                                                <h3 className="font-bold text-sm">Asistan Görünürlüğü</h3>
                                                 <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest">
-                                                    {aiConfig.isEnabled ? "Aktif - Ziyaretçilerle Konuşuyor" : "Pasif - Profilde Gizli"}
+                                                    {aiConfig.isEnabled ? "Profilde Gözüküyor (CV'nin yanında)" : "Profilde Gizli (Gizlendi)"}
                                                 </p>
                                             </div>
                                         </div>
@@ -2866,10 +2866,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             onClick={() => setAiConfig({ ...aiConfig, isEnabled: !aiConfig.isEnabled })}
                                             className={cn(
                                                 "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
-                                                aiConfig.isEnabled ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/20" : "bg-rose-500/20 text-rose-500 border border-rose-500/20"
+                                                aiConfig.isEnabled ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "bg-rose-500/20 text-rose-500 border border-rose-500/20"
                                             )}
                                         >
-                                            {aiConfig.isEnabled ? "KAPAT" : "AÇ"}
+                                            {aiConfig.isEnabled ? "Görünür" : "Gizli"}
                                         </button>
                                     </div>
 
