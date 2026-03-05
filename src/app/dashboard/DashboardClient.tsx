@@ -989,8 +989,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             {[
                                                 { id: "booking", name: t('widgetBooking'), icon: <Calendar size={18} /> },
                                                 { id: "lead", name: t('widgetLead'), icon: <MessageSquare size={18} /> },
-                                                { id: "ai", name: t('widgetAI'), icon: <Sparkles size={18} /> },
-                                                { id: "video", name: t('widgetVideo'), icon: <Monitor size={18} /> },
+                                                { id: "ai", name: t('widgetAI'), icon: <Bot size={18} /> },
+                                                { id: "video", name: t('widgetVideo'), icon: <Play size={18} /> },
                                                 { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
                                                 { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> },
                                                 { id: "portfolio", name: "Portfolyo", icon: <Image size={18} /> },
@@ -1673,13 +1673,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     {(() => {
                                                         const props = { size: 20 };
                                                         if (activeWidget === "portfolio") return <Image {...props} />;
-                                                        if (activeWidget === "video") return <Youtube {...props} />;
-                                                        if (activeWidget === "skills") return <Award {...props} />;
+                                                        if (activeWidget === "video") return <Play {...props} />;
+                                                        if (activeWidget === "skills") return <Zap {...props} />;
                                                         if (activeWidget === "tech") return <Code {...props} />;
                                                         if (activeWidget === "blog") return <Rss {...props} />;
                                                         if (activeWidget === "booking") return <Calendar {...props} />;
                                                         if (activeWidget === "lead") return <MessageSquare {...props} />;
-                                                        return <Sparkles {...props} />;
+                                                        if (activeWidget === "countdown") return <Clock {...props} />;
+                                                        if (activeWidget === "ai") return <Bot {...props} />;
+                                                        return <Bot {...props} />;
                                                     })()}
                                                 </div>
                                                 <h4 className="font-black text-slate-900 uppercase tracking-tighter">

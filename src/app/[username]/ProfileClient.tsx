@@ -4646,8 +4646,9 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
             video: { icon: <Play size={22} />, label: 'Video İzle' },
             skills: { icon: <Zap size={22} />, label: 'Yetenekler' },
             portfolio: { icon: <Image size={22} />, label: 'Portfolyo' },
-            tech: { icon: <Code size={22} />, label: 'Yeteneklerim' },
+            tech: { icon: <Code size={22} />, label: 'Yazılımcı Seti' },
             countdown: { icon: <Target size={22} />, label: 'Geri Sayım' },
+            blog: { icon: <Rss size={22} />, label: 'Blog Akışı' },
         };
 
         const config = typeConfig[widgetType] || typeConfig.booking;
