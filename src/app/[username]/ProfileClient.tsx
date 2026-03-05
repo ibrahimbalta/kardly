@@ -5022,12 +5022,21 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
 
     const getSafeUrl = (url: string) => {
         if (!url) return "";
+        let finalUrl = url;
         try {
-            const decoded = decodeURIComponent(url);
-            return decoded.startsWith('http') ? decoded : `https://${decoded}`;
-        } catch {
-            return url.startsWith('http') ? url : `https://${url}`;
+            finalUrl = decodeURIComponent(url);
+        } catch { }
+
+        finalUrl = finalUrl.startsWith('http') ? finalUrl : `https://${finalUrl}`;
+
+        // Auto convert common profile URLs to RSS feeds
+        if (finalUrl.includes('medium.com/') && !finalUrl.includes('/feed/')) {
+            finalUrl = finalUrl.replace('medium.com/', 'medium.com/feed/');
+        } else if (finalUrl.includes('.substack.com') && !finalUrl.endsWith('/feed') && !finalUrl.includes('/feed/')) {
+            finalUrl = finalUrl.replace(/\/$/, '') + '/feed';
         }
+
+        return finalUrl;
     };
 
     useEffect(() => {
