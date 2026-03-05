@@ -378,6 +378,7 @@ export const translations: any = {
         catRoyal: "Hanedan",
         catTech: "Yüksek Teknoloji",
         catMeta: "Metaverse",
+        cat3D: "3D Sürükleyici",
 
         // Steps
         howItWorks: "Nasıl Çalışır?",
@@ -1071,6 +1072,7 @@ export const translations: any = {
         catRoyal: "Dynasty",
         catTech: "High Tech",
         catMeta: "Metaverse",
+        cat3D: "3D Immersive",
 
         // Steps
         howItWorks: "How It Works",

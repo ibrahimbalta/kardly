@@ -1906,6 +1906,47 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-emerald-900",
             icon: "text-emerald-600",
             special: "nature_dawn"
+        },
+
+        // 3D Immersive Series
+        "3d_frost": {
+            bg: "bg-[#0a1628]",
+            card: "bg-[#0d1f3c]/80",
+            text: "text-[#c8e6ff]",
+            subtext: "text-[#7eb8e0]/60",
+            border: "border-[#38bdf8]/20",
+            glow: "shadow-[0_0_60px_rgba(56,189,248,0.25),0_0_120px_rgba(147,197,253,0.1)]",
+            accent: "#38bdf8",
+            btn: "bg-[#0c1a2e]/90 border-[#38bdf8]/25",
+            btnText: "text-[#93c5fd]",
+            icon: "text-[#60a5fa]",
+            special: "3d_frost"
+        },
+        "3d_magma": {
+            bg: "bg-[#1a0a1e]",
+            card: "bg-[#2d1035]/70",
+            text: "text-[#fcd6ff]",
+            subtext: "text-[#d946ef]/50",
+            border: "border-[#d946ef]/25",
+            glow: "shadow-[0_0_60px_rgba(217,70,239,0.3),0_0_120px_rgba(249,115,22,0.15)]",
+            accent: "#d946ef",
+            btn: "bg-gradient-to-r from-[#7c3aed]/80 to-[#db2777]/80 border-[#d946ef]/30",
+            btnText: "text-white",
+            icon: "text-[#f0abfc]",
+            special: "3d_magma"
+        },
+        "3d_cyber": {
+            bg: "bg-[#020a14]",
+            card: "bg-[#071320]/80",
+            text: "text-[#22d3ee]",
+            subtext: "text-[#06b6d4]/40",
+            border: "border-[#06b6d4]/20",
+            glow: "shadow-[0_0_60px_rgba(6,182,212,0.25),0_0_120px_rgba(139,92,246,0.1)]",
+            accent: "#06b6d4",
+            btn: "bg-[#050e1a]/90 border-[#06b6d4]/25",
+            btnText: "text-[#67e8f9]",
+            icon: "text-[#22d3ee]",
+            special: "3d_cyber"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -2490,6 +2531,40 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%2300ff9f' fill-opacity='0.2'/%3E%3C/svg%3E")` }} />
                 )}
 
+                {/* 3D Frost Background */}
+                {theme.special === "3d_frost" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a1628 0%, #0d2847 30%, #1a3a5c 50%, #2d5a7b 70%, #c8dce8 100%)' }} />
+                        <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(56,189,248,0.3) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(147,197,253,0.2) 0%, transparent 50%)' }} />
+                        <div className="absolute bottom-0 left-0 right-0 h-[40%] opacity-30" style={{ background: 'linear-gradient(to top, rgba(200,230,255,0.3), transparent)', filter: 'blur(20px)' }} />
+                        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%2393c5fd' fill-opacity='0.4'/%3E%3C/svg%3E")`, backgroundSize: '12px 12px' }} />
+                    </>
+                )}
+
+                {/* 3D Magma Background */}
+                {theme.special === "3d_magma" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #1a0a1e 0%, #2d1035 25%, #4a1942 45%, #8b3a62 65%, #c4564a 80%, #f97316 100%)' }} />
+                        <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(ellipse at 50% 70%, rgba(249,115,22,0.4) 0%, transparent 60%), radial-gradient(ellipse at 30% 30%, rgba(168,85,247,0.3) 0%, transparent 50%)' }} />
+                        <div className="absolute bottom-0 left-0 right-0 h-[35%] animate-pulse opacity-40" style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(249,115,22,0.6) 0%, transparent 70%)' }} />
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%23d946ef' fill-opacity='0.3'/%3E%3C/svg%3E")`, backgroundSize: '8px 8px' }} />
+                    </>
+                )}
+
+                {/* 3D Cyber Background */}
+                {theme.special === "3d_cyber" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #020a14 0%, #071520 30%, #0a2035 50%, #0d2a4a 70%, #102040 100%)' }} />
+                        <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 50% 60%, rgba(6,182,212,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.2) 0%, transparent 50%)' }} />
+                        <div className="absolute bottom-0 left-0 right-0 h-[40%] opacity-20" style={{ background: 'linear-gradient(to top, rgba(6,182,212,0.4), transparent)' }} />
+                        <div className="absolute inset-0 opacity-[0.04]" style={{
+                            backgroundImage: `linear-gradient(rgba(6,182,212,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.15) 1px, transparent 1px)`,
+                            backgroundSize: '40px 40px'
+                        }} />
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='3' height='3' viewBox='0 0 3 3' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%2306b6d4' fill-opacity='0.3'/%3E%3C/svg%3E")`, backgroundSize: '6px 6px' }} />
+                    </>
+                )}
+
                 {/* New Premium Vibe Backgrounds */}
                 {tone === 'lüks' && (
                     <>
@@ -2520,6 +2595,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "finance" && <ParticleBackground type="finance" color={theme.accent || "#334155"} />}
                 {theme.special === "cyber_glitch" && <ParticleBackground type="matrix" color={theme.accent || "#0ef"} />}
                 {theme.special === "gamer" && <ParticleBackground type="matrix" color={theme.accent || "#00ff9f"} />}
+                {theme.special === "3d_frost" && <ParticleBackground type="starfield" color={"#93c5fd"} />}
+                {theme.special === "3d_magma" && <ParticleBackground type="bubbles" color={"#d946ef"} />}
+                {theme.special === "3d_cyber" && <ParticleBackground type="matrix" color={"#06b6d4"} />}
 
                 {tone === 'yaratıcı' && !["software", "finance", "gamer"].includes(theme.special) && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
                 {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
@@ -2864,6 +2942,46 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     )}
                                     {theme.special === 'barber' && (
                                         <div className="absolute inset-0 border-4 border-double border-white/10" />
+                                    )}
+                                    {/* 3D Glowing Ring Effects */}
+                                    {theme.special === '3d_frost' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #93c5fd, #dbeafe, #38bdf8)', animationDuration: '4s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#0a1628]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_magma' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #d946ef, #f97316, #ec4899, #8b5cf6, #d946ef)', animationDuration: '3s', opacity: 0.7, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#1a0a1e]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_cyber' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #06b6d4, #8b5cf6, #22d3ee, #06b6d4)', animationDuration: '5s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#020a14]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
                                     )}
                                 </motion.div>
 

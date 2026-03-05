@@ -123,7 +123,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "vibrant", name: t('catVibrant'), icon: <Zap size={14} /> },
         { id: "royal", name: t('catRoyal'), icon: <Gem size={14} /> },
         { id: "tech", name: t('catTech'), icon: <Atom size={14} /> },
-        { id: "meta", name: t('catMeta'), icon: <Boxes size={14} /> }
+        { id: "meta", name: t('catMeta'), icon: <Boxes size={14} /> },
+        { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> }
     ]
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -451,7 +452,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
         // Metaverse & 3D
         { id: "meta_portal", category: "meta", name: "🌀 Metaverse Portal", description: "3D derinlik hissi veren parlayan bir geçit.", isNew: true },
-        { id: "meta_pixel", category: "meta", name: "👾 8-Bit Evren", description: "Piksel piksel bir dünya ve retro dijital parıltılar.", isNew: true }
+        { id: "meta_pixel", category: "meta", name: "👾 8-Bit Evren", description: "Piksel piksel bir dünya ve retro dijital parıltılar.", isNew: true },
+
+        // 3D Sürükleyici (Immersive)
+        { id: "3d_frost", category: "3d", name: "❄️ 3D Buzul", description: "Buz kristalleri, neon mavi halka ve karlı dağ atmosferi.", isNew: true },
+        { id: "3d_magma", category: "3d", name: "🌋 3D Volkan", description: "Lavanta-tur. gradient butonlar, kor ateşi parıltısı ve sıcak enerji.", isNew: true },
+        { id: "3d_cyber", category: "3d", name: "🌃 3D Siber Şehir", description: "Matrix yağmuru, neon ızgara ve cyberpunk gece atmosferi.", isNew: true }
     ]
 
     // Working Hours Management
