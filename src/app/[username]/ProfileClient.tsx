@@ -3419,6 +3419,18 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             </AnimatePresence>
 
             <SocialProof t={t} theme={theme} />
+
+            <AIChatAssistant
+                isOpen={isAIChatOpen}
+                onClose={() => setIsAIChatOpen(false)}
+                profile={profile}
+                t={t}
+                theme={theme}
+                toneStyle={toneStyle}
+                messages={chatMessages}
+                setMessages={setChatMessages}
+                aiConfig={aiConfig}
+            />
         </div>
     )
 }
