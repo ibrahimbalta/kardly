@@ -1911,8 +1911,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const baseTheme = themes[colorScheme as string] || themes.black;
     const theme = { ...baseTheme };
 
-    // Override accent color with custom selection if available (except for rainbow/special patterns)
-    if (profile.themeColor && !theme.special) {
+    // Override accent color with custom selection if available
+    if (profile.themeColor) {
         theme.accent = profile.themeColor;
     }
 
@@ -2003,42 +2003,42 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(255,255,255,0.08)_100%)]" />
                 {theme.special === "cyber" && (
                     <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,#0ff2_0%,transparent_50%),radial-gradient(circle_at_80%_70%,#f0f2_0%,transparent_50%)] animate-pulse" />
+                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}22 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${theme.accent}22 0%, transparent 50%)` }} />
                         <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,#000_25%,#111_25%,#111_50%,#000_50%,#000_75%,#111_75%)] bg-[length:20px_20px] opacity-[0.03]" />
                     </>
                 )}
                 {theme.special === "galaxy" && (
                     <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#a855f722_0%,transparent_70%)] animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-full opacity-20" style={{ background: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0))', backgroundSize: '100px 100px' }} />
+                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 70%)` }} />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-20" style={{ background: `radial-gradient(2px 2px at 20px 30px, ${theme.accent}, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, white, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, ${theme.accent}, rgba(0,0,0,0))`, backgroundSize: '100px 100px' }} />
                     </>
                 )}
                 {theme.special === "acid" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#bef26422_0%,transparent_60%),radial-gradient(circle_at_70%_80%,#eab30822_0%,transparent_60%)] animate-pulse" />
+                    <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 30% 20%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 70% 80%, ${theme.accent}11 0%, transparent 60%)` }} />
                 )}
                 {theme.special === "candy" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,#f472b622_0%,transparent_60%),radial-gradient(circle_at_80%_20%,#8b5cf622_0%,transparent_60%)] animate-pulse" />
+                    <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 20% 80%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 80% 20%, ${theme.accent}22 0%, transparent 60%)` }} />
                 )}
                 {theme.special === "aurora" && (
                     <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
                 )}
                 {theme.special === "neon_modern" && (
                     <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#3b82f611_0%,transparent_70%)] animate-pulse" />
-                        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}11 0%, transparent 70%)` }} />
+                        <div className="absolute inset-x-0 top-0 h-[2px] opacity-50" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
+                        <div className="absolute inset-x-0 bottom-0 h-[2px] opacity-50" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
                     </div>
                 )}
                 {theme.special === "neon_blue" && (
                     <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf822_0%,transparent_50%),radial-gradient(circle_at_80%_80%,#38bdf811_0%,transparent_50%)]" />
+                        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 20% 20%, ${theme.accent}22 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${theme.accent}11 0%, transparent 50%)` }} />
                         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')]" />
                     </div>
                 )}
                 {theme.special === "neon_purple" && (
                     <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#a855f722_0%,transparent_80%)] animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,#a855f711_0%,transparent_40%),radial-gradient(circle_at_80%_70%,#ec489911_0%,transparent_40%)]" />
+                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 80%)` }} />
+                        <div className="absolute top-0 left-0 w-full h-full" style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}11 0%, transparent 40%), radial-gradient(circle at 80% 70%, ${theme.accent}11 0%, transparent 40%)` }} />
                     </div>
                 )}
                 {theme.special === "nature_dawn" && (
@@ -2108,7 +2108,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         <motion.div
                             animate={{ y: ['-100%', '100%'] }}
                             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-x-0 h-[20%] bg-gradient-to-b from-transparent via-red-500/10 to-transparent z-10"
+                            className="absolute inset-x-0 h-[20%] z-10"
+                            style={{ background: `linear-gradient(to bottom, transparent, ${theme.accent}15, transparent)` }}
                         />
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
                     </div>
@@ -2117,8 +2118,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "dark_onyx" && (
                     <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1e293b_0%,black_100%)]" />
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
+                        <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}80, transparent)` }} />
+                        <div className="absolute bottom-0 left-0 w-full h-[1px]" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}80, transparent)` }} />
                     </div>
                 )}
 
@@ -2269,8 +2270,12 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     opacity: [0, 0.3, 0]
                                 }}
                                 transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#38bdf8] to-transparent shadow-[0_0_20px_#38bdf8]"
-                                style={{ top: `${i * 20}%` }}
+                                className="absolute inset-x-0 h-1 z-10"
+                                style={{
+                                    top: `${i * 20}%`,
+                                    background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)`,
+                                    boxShadow: `0 0 20px ${theme.accent}`
+                                }}
                             />
                         ))}
                     </div>
@@ -2282,7 +2287,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-indigo-500/10 rounded-full"
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border rounded-full"
+                            style={{ borderColor: `${theme.accent}15` }}
                         />
                     </div>
                 )}
@@ -2303,7 +2309,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
 
                 {theme.special === "meta_pixel" && (
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%230ea5e9'/%3E%3Crect width='2' height='2' x='10' y='10' fill='%236366f1'/%3E%3C/svg%3E")` }} />
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='${encodeURIComponent(theme.accent)}'/%3E%3Crect width='2' height='2' x='10' y='10' fill='${encodeURIComponent(theme.accent)}'/%3E%3C/svg%3E")` }} />
                 )}
 
                 {/* ─── RESTORED PATTERNS ─── */}
@@ -2371,24 +2377,24 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {/* Profession-Specific Design Extensions */}
                 {theme.special === "realestate" && (
                     <div className="absolute inset-x-0 bottom-0 h-[400px] opacity-[0.03] select-none pointer-events-none z-0 overflow-hidden">
-                        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full fill-amber-500">
+                        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: theme.accent }}>
                             <path d="M0,100 L0,80 L50,80 L50,40 L100,40 L100,70 L150,70 L150,20 L200,20 L200,80 L250,80 L250,40 L300,40 L300,60 L350,60 L350,10 L400,10 L400,80 L450,80 L450,30 L500,30 L500,70 L550,70 L550,0 L600,0 L600,80 L650,80 L650,40 L700,40 L700,60 L750,60 L750,20 L800,20 L800,80 L850,80 L850,50 L900,50 L900,80 L950,80 L950,30 L1000,30 L1000,100 Z" />
                         </svg>
                     </div>
                 )}
                 {theme.special === "lawyer" && (
                     <div className="absolute inset-0 opacity-[0.02] pointer-events-none select-none flex items-center justify-center">
-                        <svg width="600" height="600" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="0.1">
+                        <svg width="600" height="600" viewBox="0 0 24 24" fill="none" style={{ stroke: theme.accent }} strokeWidth="0.1">
                             <path d="M12 3v18M12 3l7 3M12 3L5 6m7 15l7-3m-7 3l-7-3M5 6v12m14-12v12M5 10h14M5 14h14" />
                         </svg>
                     </div>
                 )}
                 {theme.special === "architect" && (
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none select-none">
-                        <div className="absolute top-10 left-10 text-[10px] font-mono text-[#0ea5e9]">R: 12.5m</div>
-                        <div className="absolute bottom-20 right-10 text-[10px] font-mono text-[#0ea5e9]">θ: 45°</div>
-                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[#0ea5e9]/20" />
-                        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-[#0ea5e9]/20" />
+                        <div className="absolute top-10 left-10 text-[10px] font-mono" style={{ color: theme.accent }}>R: 12.5m</div>
+                        <div className="absolute bottom-20 right-10 text-[10px] font-mono" style={{ color: theme.accent }}>θ: 45°</div>
+                        <div className="absolute top-1/2 left-0 w-full h-[1px]" style={{ background: `${theme.accent}33` }} />
+                        <div className="absolute left-1/2 top-0 h-full w-[1px]" style={{ background: `${theme.accent}33` }} />
                     </div>
                 )}
                 {theme.special === "dietitian" && (
@@ -2408,7 +2414,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     left: `${15 * i}%`,
                                 }}
                             >
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style={{ stroke: theme.accent }} strokeWidth="1">
                                     <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8a7 7 0 0 1-7 7c-.67 0-1.32-.1-1.94-.27" />
                                     <path d="M11 20c-2.33 0-4.32-1.45-5.12-3.5M11 20c.56 0 1.1-.1 1.6-.3" />
                                 </svg>
@@ -2418,18 +2424,18 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "artistic" && (
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-l from-pink-500/20 to-transparent blur-[100px] rounded-full" />
-                        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-r from-purple-500/20 to-transparent blur-[100px] rounded-full" />
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] blur-[100px] rounded-full" style={{ background: `linear-gradient(to left, ${theme.accent}33, transparent)` }} />
+                        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] blur-[100px] rounded-full" style={{ background: `linear-gradient(to right, ${theme.accent}33, transparent)` }} />
                     </div>
                 )}
                 {theme.special === "software" && (
-                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none font-mono text-[10px] text-emerald-500/50 p-10 overflow-hidden leading-relaxed">
+                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none font-mono text-[10px] p-10 overflow-hidden leading-relaxed" style={{ color: `${theme.accent}80` }}>
                         {`function init() {\n  const system = "Kardly";\n  console.log("Welcome " + user);\n}\n`.repeat(100)}
                     </div>
                 )}
                 {theme.special === "doctor" && (
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none flex items-center justify-center">
-                        <svg width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" strokeWidth="0.5">
+                        <svg width="400" height="400" viewBox="0 0 24 24" fill="none" style={{ stroke: theme.accent }} strokeWidth="0.5">
                             <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                         </svg>
                     </div>
@@ -2455,7 +2461,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 key={i}
                                 animate={{ height: [10, 100, 20] }}
                                 transition={{ duration: 0.5 + Math.random(), repeat: Infinity, ease: "easeInOut" }}
-                                className="w-2 bg-indigo-500/30 rounded-full"
+                                className="w-2 rounded-full"
+                                style={{ backgroundColor: `${theme.accent}4D` }}
                             />
                         ))}
                     </div>
@@ -2498,10 +2505,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 <div className="absolute bottom-0 left-0 w-72 h-72 blur-[100px] opacity-15 rounded-full" style={{ background: theme.accent }} />
 
                 {/* Particle Systems Mapping */}
-                {theme.special === "software" && <ParticleBackground type="matrix" color="#10b981" />}
-                {theme.special === "finance" && <ParticleBackground type="finance" color="#334155" />}
-                {theme.special === "cyber_glitch" && <ParticleBackground type="matrix" color="#0ef" />}
-                {theme.special === "gamer" && <ParticleBackground type="matrix" color="#00ff9f" />}
+                {theme.special === "software" && <ParticleBackground type="matrix" color={theme.accent || "#10b981"} />}
+                {theme.special === "finance" && <ParticleBackground type="finance" color={theme.accent || "#334155"} />}
+                {theme.special === "cyber_glitch" && <ParticleBackground type="matrix" color={theme.accent || "#0ef"} />}
+                {theme.special === "gamer" && <ParticleBackground type="matrix" color={theme.accent || "#00ff9f"} />}
 
                 {tone === 'yaratıcı' && !["software", "finance", "gamer"].includes(theme.special) && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
                 {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
@@ -2713,7 +2720,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
                                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
-                                <QrCode size={18} className={theme.icon} />
+                                <QrCode size={18} style={{ color: theme.accent }} />
                             </motion.button>
                         </div>
 
@@ -2732,7 +2739,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 onClick={() => setIsWalletModalOpen(true)}
                                 className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
-                                <UserPlus size={18} className={theme.icon} />
+                                <UserPlus size={18} style={{ color: theme.accent }} />
                             </button>
                         </div>
 
@@ -3227,12 +3234,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         </div>
 
 
-                        {/* Social Icons */}
                         <div className="flex justify-center flex-wrap gap-6 pt-2">
                             {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
                                 const platform = l.platform.toLowerCase()
                                 return (
-                                    <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100", theme.text)}>
+                                    <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
                                         {platform === 'instagram' && <Instagram size={24} />}
                                         {platform === 'linkedin' && <Linkedin size={24} />}
                                         {platform === 'twitter' && <Twitter size={24} />}
