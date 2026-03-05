@@ -3656,6 +3656,17 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     allowTaint: true,
                     imageTimeout: 10000, // Increased timeout
                     onclone: (clonedDoc: Document) => {
+                        // Extreme color sanitization for Tailwind 4 / html2canvas compatibility
+                        // Clean all style tags in the head/body to prevent CSS parsing errors
+                        const styleSheets = clonedDoc.querySelectorAll('style');
+                        styleSheets.forEach(sheet => {
+                            if (sheet.innerHTML.includes('oklch') || sheet.innerHTML.includes('oklab')) {
+                                sheet.innerHTML = sheet.innerHTML
+                                    .replace(/oklch\([^)]+\)/g, 'rgba(255,255,255,0.1)')
+                                    .replace(/oklab\([^)]+\)/g, 'rgba(255,255,255,0.1)');
+                            }
+                        });
+
                         const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
                         if (el) {
                             el.style.transform = 'none';
@@ -3674,13 +3685,28 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                                     }
                                 }
 
-                                const cs = window.getComputedStyle(htmlNode);
-                                ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke'].forEach(prop => {
+                                // Aggressive color sanitization for html2canvas compatibility
+                                ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke', 'stopColor', 'outlineColor', 'columnRuleColor', 'textDecorationColor'].forEach(prop => {
+                                    const cs = window.getComputedStyle(htmlNode);
                                     const val = (cs as any)[prop];
                                     if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab(') || val.includes('lch('))) {
                                         htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
                                     }
                                 });
+
+                                // Check backgrounds which might have gradients with problematic colors
+                                const bg = window.getComputedStyle(htmlNode).background;
+                                if (bg && (bg.includes('oklab') || bg.includes('oklch') || bg.includes('lab(') || bg.includes('lch('))) {
+                                    htmlNode.style.setProperty('background', 'none', 'important');
+                                    htmlNode.style.setProperty('backgroundColor', 'rgba(0,0,0,0.5)', 'important');
+                                }
+
+                                // Check style attribute directly (inline styles)
+                                const inlineStyle = htmlNode.getAttribute('style') || '';
+                                if (inlineStyle.includes('oklab') || inlineStyle.includes('oklch') || inlineStyle.includes('lab(') || inlineStyle.includes('lch(')) {
+                                    const sanitized = inlineStyle.replace(/oklab\([^)]+\)|oklch\([^)]+\)|lab\([^)]+\)|lch\([^)]+\)/g, 'rgba(255,255,255,0.1)');
+                                    htmlNode.setAttribute('style', sanitized);
+                                }
                             });
                         }
                     }
