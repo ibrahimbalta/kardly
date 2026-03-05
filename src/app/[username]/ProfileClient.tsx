@@ -5020,25 +5020,6 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const getSafeUrl = (url: string) => {
-        if (!url) return "";
-        let finalUrl = url;
-        try {
-            finalUrl = decodeURIComponent(url);
-        } catch { }
-
-        finalUrl = finalUrl.startsWith('http') ? finalUrl : `https://${finalUrl}`;
-
-        // Auto convert common profile URLs to RSS feeds
-        if (finalUrl.includes('medium.com/') && !finalUrl.includes('/feed/')) {
-            finalUrl = finalUrl.replace('medium.com/', 'medium.com/feed/');
-        } else if (finalUrl.includes('.substack.com') && !finalUrl.endsWith('/feed') && !finalUrl.includes('/feed/')) {
-            finalUrl = finalUrl.replace(/\/$/, '') + '/feed';
-        }
-
-        return finalUrl;
-    };
-
     useEffect(() => {
         const fetchRss = async () => {
             if (!rssUrl) {
@@ -5046,10 +5027,9 @@ function BlogWidget({ rssUrl, theme, toneStyle }: any) {
                 return;
             }
             try {
-                const safeUrl = getSafeUrl(rssUrl);
-                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(safeUrl)}`);
+                const res = await fetch(`/api/rss?url=${encodeURIComponent(rssUrl)}`);
                 const data = await res.json();
-                if (data.status === 'ok') {
+                if (data.status === 'ok' && data.items) {
                     setPosts(data.items.slice(0, 3));
                 }
             } catch (err) {
