@@ -3335,7 +3335,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
                                 <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
                                     {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[54px] h-[54px] flex-shrink-0" />
+                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[54px] h-[54px] flex-shrink-0" />
                                     ))}
                                 </div>
                             )}
@@ -3345,7 +3345,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {/* External Widgets (Embedded/Inline Block) - Only show non-floating ones */}
                 {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && !b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} />
+                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} />
                 ))}
             </main>
 
@@ -4831,7 +4831,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
     )
 }
 
-function ExternalWidget({ block, theme, toneStyle, className }: any) {
+function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
     const containerRef = useRef<HTMLDivElement>(null);
     const scriptInjected = useRef(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
