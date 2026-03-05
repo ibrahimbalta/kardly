@@ -3253,39 +3253,45 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     target="_blank"
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-sm uppercase tracking-[0.2em] transition-all text-white shadow-[0_20px_40px_-15px_rgba(245,158,11,0.5)] relative overflow-hidden group", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-xs uppercase tracking-[0.3em] transition-all text-white relative overflow-hidden group border border-white/10", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
                                     style={{
-                                        background: `linear-gradient(135deg, #f59e0b, #ea580c)`,
+                                        background: `linear-gradient(135deg, #f59e0b, #f97316, #ea580c)`,
+                                        boxShadow: `0 20px 40px -15px rgba(234, 88, 12, 0.4), inset 0 0 20px rgba(255,255,255,0.1)`
                                     }}
                                     onClick={() => trackEvent("payment_click")}
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                                    <Zap className="w-5 h-5 fill-white" />
-                                    {profile.paymentType === 'consulting' ? t.consultingBtn :
-                                        profile.paymentType === 'support' ? t.supportBtn :
-                                            profile.paymentType === 'pay' ? t.payBtn :
-                                                t.coffeeBtn}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/20">
+                                        <Zap className="w-5 h-5 fill-white" />
+                                    </div>
+                                    <span className="drop-shadow-md">
+                                        {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                            profile.paymentType === 'support' ? t.supportBtn :
+                                                profile.paymentType === 'pay' ? t.payBtn :
+                                                    t.coffeeBtn}
+                                    </span>
                                 </motion.a>
                             </div>
                         )}
 
-                        <div className="pt-8 border-t border-white/5 text-center flex flex-col gap-4">
+                        <div className="pt-10 border-t border-white/5 text-center flex flex-col gap-6">
                             <div className="flex items-stretch gap-3">
                                 <button
                                     onClick={handleShare}
-                                    className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] shadow-lg", theme.btn, theme.btnText, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                    className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:scale-[0.97] backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                    style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
                                 >
-                                    <Share2 size={16} /> Paylaş
+                                    <Share2 size={16} className="opacity-60" /> Paylaş
                                 </button>
 
                                 <button
                                     onClick={handleCVView}
-                                    className={cn("flex-1 py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-lg", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                    className={cn("flex-[1.5] py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                     style={{
                                         background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                        boxShadow: `0 8px 24px -8px ${(theme as any).cvAccent || theme.accent}50`
+                                        boxShadow: `0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
                                     }}
                                 >
                                     <FileText size={16} /> {profile.isCatalog ? (t.viewCatalog || "Katalog") : (t.viewCV || "CV Görüntüle")}
@@ -3295,10 +3301,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 {aiConfig?.isEnabled && (
                                     <button
                                         onClick={() => setIsAIChatOpen(true)}
-                                        className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-lg transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         style={{
                                             background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                                            boxShadow: `0 8px 24px -8px ${theme.accent}50`
+                                            boxShadow: `0 12px 24px -10px ${theme.accent}70`
                                         }}
                                         title={aiConfig.assistantName}
                                     >
@@ -3307,11 +3313,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 )}
                             </div>
 
-                            {/* Tüm Floating Widgetlar - Alt satırda yan yana */}
+                            {/* Widget Dock - Daha Estetik ve Derli Toplu */}
                             {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
-                                <div className="flex flex-wrap justify-center gap-3">
+                                <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
                                     {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[62px] h-[54px] flex-shrink-0" />
+                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} className="w-[54px] h-[54px] flex-shrink-0" />
                                     ))}
                                 </div>
                             )}
@@ -4684,21 +4690,25 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
         return (
             <>
                 <motion.button
-                    whileHover={{ scale: 1.06, y: -2 }}
-                    whileTap={{ scale: 0.94 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setIsModalOpen(true)}
                     className={cn(
-                        "h-full flex items-center justify-center text-white shadow-lg transition-all cursor-pointer",
+                        "h-full flex items-center justify-center transition-all cursor-pointer backdrop-blur-xl border border-white/10",
                         toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl",
                         className
                     )}
                     style={{
-                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}bb)`,
-                        boxShadow: `0 8px 20px -6px ${theme.accent}50`
+                        background: `linear-gradient(135deg, ${theme.accent}33, ${theme.accent}11)`,
+                        boxShadow: `0 8px 25px -10px ${theme.accent}30`,
+                        color: theme.accent
                     }}
                     title={block.content?.title || config.label}
                 >
-                    {config.icon}
+                    <div className="relative">
+                        <div className="absolute inset-0 blur-md opacity-40 scale-150" style={{ color: theme.accent }}>{config.icon}</div>
+                        <div className="relative z-10">{config.icon}</div>
+                    </div>
                 </motion.button>
 
                 <AnimatePresence>
