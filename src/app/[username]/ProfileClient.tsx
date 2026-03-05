@@ -3633,128 +3633,94 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
     const cachedBlobRef = useRef<Blob | null>(null);
     const cachedDataUrlRef = useRef<string | null>(null);
 
-    // Pre-generate image when modal opens - MUST be before conditional return
+    // Pre-generate image when modal opens
     useEffect(() => {
         if (!isOpen) {
-            console.log('QrModal: Modal closed, resetting');
             setImageReady(false);
             cachedBlobRef.current = null;
             cachedDataUrlRef.current = null;
             return;
         }
 
-        console.log('QrModal: Starting generation process...');
+        const accent = theme.accent || "#0ea5e9";
         const timer = setTimeout(async () => {
             if (!cardRef.current) return;
             try {
                 console.log('QrModal: Capturing card with html2canvas');
                 const canvas = await html2canvas(cardRef.current, {
                     useCORS: true,
-                    scale: 2,
+                    scale: 3, // High quality
                     backgroundColor: "#0d0d0e",
                     logging: false,
                     allowTaint: true,
-                    imageTimeout: 10000, // Increased timeout
+                    imageTimeout: 15000,
                     onclone: (clonedDoc: Document) => {
-                        console.log('QrModal: Manual style transfer starting...');
+                        // 1. Sanitize all <style> tags to prevent html2canvas parsing crash
+                        const styleSheets = clonedDoc.querySelectorAll('style');
+                        styleSheets.forEach(sheet => {
+                            if (sheet.innerHTML.includes('oklch') || sheet.innerHTML.includes('oklab')) {
+                                // Replace modern color functions with the theme's accent color
+                                sheet.innerHTML = sheet.innerHTML
+                                    .replace(/oklch\([^)]+\)/g, accent)
+                                    .replace(/oklab\([^)]+\)/g, accent);
+                            }
+                        });
 
-                        // 1. Identify the card in the clone
-                        const clonedCard = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                        const originalCard = cardRef.current;
+                        // 2. Fix the card container in the clone
+                        const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
+                        if (el) {
+                            el.style.transform = 'none';
+                            el.style.borderRadius = '2rem';
 
-                        if (!clonedCard || !originalCard) return;
+                            // 3. Clean up all elements inside the card
+                            const allNodes = el.querySelectorAll('*');
+                            allNodes.forEach((node) => {
+                                const htmlNode = node as HTMLElement;
 
-                        // 2. Helper to transfer styles from original to clone
-                        const transferStyles = (orig: Element, cloned: Element) => {
-                            const style = window.getComputedStyle(orig);
-                            const htmlCloned = cloned as HTMLElement;
-
-                            // Critical props for the card appearance
-                            const props = [
-                                'backgroundColor', 'color', 'borderColor', 'borderRadius',
-                                'padding', 'margin', 'display', 'flexDirection',
-                                'alignItems', 'justifyContent', 'gap', 'fontSize',
-                                'fontWeight', 'textAlign', 'backgroundImage', 'backgroundSize',
-                                'backgroundPosition', 'opacity', 'boxShadow', 'width', 'height',
-                                'position', 'top', 'left', 'right', 'bottom', 'zIndex',
-                                'borderWidth', 'borderStyle', 'flex', 'flexGrow', 'flexShrink',
-                                'lineHeight', 'letterSpacing', 'textTransform', 'overflow'
-                            ];
-
-                            props.forEach(prop => {
-                                let val = (style as any)[prop];
-                                // Sanitize color if browser returns oklab/oklch string
-                                if (val && (val.includes('oklch') || val.includes('oklab') || val.includes('lab(') || val.includes('lch('))) {
-                                    if (prop.toLowerCase().includes('background')) {
-                                        // Use background color fallback or just accent
-                                        val = prop === 'backgroundColor' ? accent : 'transparent';
-                                    } else {
-                                        val = accent;
-                                    }
+                                // Handle images - essential for html2canvas
+                                if (htmlNode.tagName === 'IMG') {
+                                    const img = htmlNode as HTMLImageElement;
+                                    img.crossOrigin = "anonymous";
                                 }
-                                htmlCloned.style.setProperty(prop, val, 'important');
+
+                                // Sanitize inline style attributes
+                                const inlineStyle = htmlNode.getAttribute('style') || '';
+                                if (inlineStyle.includes('oklch') || inlineStyle.includes('oklab')) {
+                                    const sanitized = inlineStyle
+                                        .replace(/oklch\([^)]+\)/g, accent)
+                                        .replace(/oklab\([^)]+\)/g, accent);
+                                    htmlNode.setAttribute('style', sanitized);
+                                }
+
+                                // Special handling for SVG fills/strokes
+                                if (htmlNode.tagName.toLowerCase() === 'svg' || htmlNode.tagName.toLowerCase() === 'path') {
+                                    const style = window.getComputedStyle(htmlNode);
+                                    if (style.fill.includes('okl')) htmlNode.style.fill = accent;
+                                    if (style.stroke.includes('okl')) htmlNode.style.stroke = accent;
+                                }
                             });
-
-                            // Special handling for SVG
-                            if (orig.tagName.toLowerCase() === 'svg') {
-                                const fill = style.fill;
-                                const stroke = style.stroke;
-                                if (fill.includes('okl')) htmlCloned.style.fill = accent;
-                                if (stroke.includes('okl')) htmlCloned.style.stroke = accent;
-                            }
-
-                            // Recurring through children
-                            for (let i = 0; i < orig.children.length; i++) {
-                                if (cloned.children[i]) {
-                                    transferStyles(orig.children[i], cloned.children[i]);
-                                }
-                            }
-                        };
-
-                        // 3. Perform the transfer
-                        transferStyles(originalCard, clonedCard);
-
-                        // 4. Clean the cloned element itself
-                        clonedCard.style.transform = 'none';
-                        clonedCard.style.position = 'relative';
-                        clonedCard.style.top = '0';
-                        clonedCard.style.left = '0';
-
-                        // 5. REMOVE ALL STYLESHEETS to prevent html2canvas parsing crash
-                        // This is the most important step for Tailwind 4 compatibility
-                        clonedDoc.querySelectorAll('link[rel="stylesheet"]').forEach(l => l.remove());
-                        clonedDoc.querySelectorAll('style').forEach(s => s.remove());
-
-                        console.log('QrModal: Manual style transfer complete.');
+                        }
                     }
                 });
 
-                console.log('QrModal: Canvas generated, converting to dataURL');
                 const dataUrl = canvas.toDataURL('image/png', 1.0);
                 cachedDataUrlRef.current = dataUrl;
 
-                console.log('QrModal: Converting to blob');
                 const blob = await new Promise<Blob | null>((resolve) => {
-                    const timeout = setTimeout(() => resolve(null), 5000);
-                    canvas.toBlob((b) => {
-                        clearTimeout(timeout);
-                        resolve(b);
-                    }, 'image/png', 0.95);
+                    canvas.toBlob((b) => resolve(b), 'image/png', 0.95);
                 });
 
                 if (blob) {
                     cachedBlobRef.current = blob;
                     setImageReady(true);
-                    console.log('QrModal: SUCCESS - Image generated and ready');
-                } else {
-                    console.error('QrModal: Blob generation failed or timed out');
+                    console.log('QrModal: SUCCESS - Image ready');
                 }
             } catch (err) {
                 console.error('QrModal: CAPTURE FAILED:', err);
             }
-        }, 1000); // Wait for animations to settle
+        }, 800);
         return () => clearTimeout(timer);
-    }, [isOpen]);
+    }, [isOpen, theme.accent]);
 
     if (!isOpen) return null;
 
