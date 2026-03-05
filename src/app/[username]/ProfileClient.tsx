@@ -3633,7 +3633,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
     const cachedBlobRef = useRef<Blob | null>(null);
     const cachedDataUrlRef = useRef<string | null>(null);
 
-    // Pre-generate image when modal opens
+    // Pre-generate image using Canvas API (bypasses html2canvas Tailwind 4 oklch/oklab crash)
     useEffect(() => {
         if (!isOpen) {
             setImageReady(false);
@@ -3643,84 +3643,293 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
         }
 
         const accent = theme.accent || "#0ea5e9";
+        const phoneNum = profile.phone || (profile.socialLinks as any[])?.find((l: any) => l.platform === 'phone')?.url || "";
+
         const timer = setTimeout(async () => {
-            if (!cardRef.current) return;
             try {
-                console.log('QrModal: Capturing card with html2canvas');
-                const canvas = await html2canvas(cardRef.current, {
-                    useCORS: true,
-                    scale: 3, // High quality
-                    backgroundColor: "#0d0d0e",
-                    logging: false,
-                    allowTaint: true,
-                    imageTimeout: 15000,
-                    onclone: (clonedDoc: Document) => {
-                        // 1. Sanitize all <style> tags to prevent html2canvas parsing crash
-                        const styleSheets = clonedDoc.querySelectorAll('style');
-                        styleSheets.forEach(sheet => {
-                            if (sheet.innerHTML.includes('oklch') || sheet.innerHTML.includes('oklab')) {
-                                // Replace modern color functions with the theme's accent color
-                                sheet.innerHTML = sheet.innerHTML
-                                    .replace(/oklch\([^)]+\)/g, accent)
-                                    .replace(/oklab\([^)]+\)/g, accent);
-                            }
-                        });
+                const W = 640;
+                let H = 1050;
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d')!;
+                canvas.width = W * 2;
+                canvas.height = H * 2;
+                ctx.scale(2, 2);
 
-                        // 2. Fix the card container in the clone
-                        const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                        if (el) {
-                            el.style.transform = 'none';
-                            el.style.borderRadius = '2rem';
+                // Helper: rounded rectangle path
+                const rrect = (x: number, y: number, w: number, h: number, r: number) => {
+                    ctx.beginPath();
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + w - r, y);
+                    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+                    ctx.lineTo(x + w, y + h - r);
+                    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                    ctx.lineTo(x + r, y + h);
+                    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+                    ctx.lineTo(x, y + r);
+                    ctx.quadraticCurveTo(x, y, x + r, y);
+                    ctx.closePath();
+                };
 
-                            // 3. Clean up all elements inside the card
-                            const allNodes = el.querySelectorAll('*');
-                            allNodes.forEach((node) => {
-                                const htmlNode = node as HTMLElement;
+                // Helper: hex to rgba
+                const hexRgba = (hex: string, a: number) => {
+                    const c = hex.replace('#', '');
+                    const r = parseInt(c.substring(0, 2), 16);
+                    const g = parseInt(c.substring(2, 4), 16);
+                    const b = parseInt(c.substring(4, 6), 16);
+                    return `rgba(${r},${g},${b},${a})`;
+                };
 
-                                // Handle images - essential for html2canvas
-                                if (htmlNode.tagName === 'IMG') {
-                                    const img = htmlNode as HTMLImageElement;
-                                    img.crossOrigin = "anonymous";
-                                }
+                // ─── 1. CARD BACKGROUND ─────────────────────────────────
+                rrect(0, 0, W, H, 32);
+                ctx.fillStyle = '#0d0d0e';
+                ctx.fill();
 
-                                // Sanitize inline style attributes
-                                const inlineStyle = htmlNode.getAttribute('style') || '';
-                                if (inlineStyle.includes('oklch') || inlineStyle.includes('oklab')) {
-                                    const sanitized = inlineStyle
-                                        .replace(/oklch\([^)]+\)/g, accent)
-                                        .replace(/oklab\([^)]+\)/g, accent);
-                                    htmlNode.setAttribute('style', sanitized);
-                                }
+                // Card border
+                rrect(0, 0, W, H, 32);
+                ctx.strokeStyle = hexRgba(accent, 0.15);
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
 
-                                // Special handling for SVG fills/strokes
-                                if (htmlNode.tagName.toLowerCase() === 'svg' || htmlNode.tagName.toLowerCase() === 'path') {
-                                    const style = window.getComputedStyle(htmlNode);
-                                    if (style.fill.includes('okl')) htmlNode.style.fill = accent;
-                                    if (style.stroke.includes('okl')) htmlNode.style.stroke = accent;
-                                }
-                            });
-                        }
+                // Top accent gradient
+                ctx.save();
+                rrect(0, 0, W, H, 32);
+                ctx.clip();
+                const topGrad = ctx.createLinearGradient(0, 0, 0, 350);
+                topGrad.addColorStop(0, hexRgba(accent, 0.18));
+                topGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = topGrad;
+                ctx.fillRect(0, 0, W, 350);
+
+                // Subtle radial glow top-right
+                const radGrad = ctx.createRadialGradient(W * 0.8, 0, 0, W * 0.8, 0, 300);
+                radGrad.addColorStop(0, hexRgba(accent, 0.1));
+                radGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = radGrad;
+                ctx.fillRect(0, 0, W, 350);
+
+                // Dot pattern overlay
+                ctx.globalAlpha = 0.03;
+                for (let px = 0; px < W; px += 15) {
+                    for (let py = 0; py < H; py += 15) {
+                        ctx.beginPath();
+                        ctx.arc(px, py, 1, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fill();
                     }
+                }
+                ctx.globalAlpha = 1;
+                ctx.restore();
+
+                // ─── 2. PROFILE IMAGE ─────────────────────────────────
+                const imgSize = 112;
+                const imgX = (W - imgSize) / 2;
+                const imgY = 55;
+
+                // Glow behind image
+                ctx.save();
+                ctx.shadowColor = accent;
+                ctx.shadowBlur = 35;
+                ctx.fillStyle = hexRgba(accent, 0.5);
+                rrect(imgX + 4, imgY + 4, imgSize - 8, imgSize - 8, 20);
+                ctx.fill();
+                ctx.restore();
+
+                // Load profile image
+                const profileImg = new Image();
+                profileImg.crossOrigin = 'anonymous';
+                const imgSrc = (!profile.user.image || profile.user.image.includes('avatar.iran.liara.run'))
+                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=256&bold=true`
+                    : profile.user.image;
+
+                await new Promise<void>((resolve) => {
+                    profileImg.onload = () => resolve();
+                    profileImg.onerror = () => resolve();
+                    profileImg.src = imgSrc;
                 });
 
-                const dataUrl = canvas.toDataURL('image/png', 1.0);
+                // Draw image clipped to rounded rect
+                ctx.save();
+                rrect(imgX, imgY, imgSize, imgSize, 20);
+                ctx.clip();
+                if (profileImg.complete && profileImg.naturalWidth > 0) {
+                    ctx.drawImage(profileImg, imgX, imgY, imgSize, imgSize);
+                } else {
+                    ctx.fillStyle = '#1a1a2e';
+                    ctx.fillRect(imgX, imgY, imgSize, imgSize);
+                }
+                ctx.restore();
+
+                // Image border
+                rrect(imgX, imgY, imgSize, imgSize, 20);
+                ctx.strokeStyle = hexRgba(accent, 0.45);
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // ─── 3. NAME ─────────────────────────────────
+                let curY = imgY + imgSize + 38;
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 28px "Inter", "Segoe UI", system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(profile.user.name?.toUpperCase() || 'USER', W / 2, curY);
+
+                // ─── 4. OCCUPATION BADGE ─────────────────────────────────
+                curY += 32;
+                const occText = (profile.occupation || 'Professional').toUpperCase();
+                ctx.font = 'bold 10px "Inter", "Segoe UI", system-ui, sans-serif';
+                const occMetrics = ctx.measureText(occText);
+                const occW = occMetrics.width + 28;
+                const occH = 24;
+                const occX = W / 2 - occW / 2;
+                const occY = curY - occH / 2;
+
+                // Badge bg
+                rrect(occX, occY, occW, occH, 12);
+                ctx.fillStyle = hexRgba(accent, 0.12);
+                ctx.fill();
+                rrect(occX, occY, occW, occH, 12);
+                ctx.strokeStyle = hexRgba(accent, 0.3);
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+
+                ctx.fillStyle = accent;
+                ctx.fillText(occText, W / 2, curY);
+
+                // ─── 5. DIVIDER ─────────────────────────────────
+                curY += 28;
+                ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(W * 0.12, curY);
+                ctx.lineTo(W * 0.44, curY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(W * 0.56, curY);
+                ctx.lineTo(W * 0.88, curY);
+                ctx.stroke();
+
+                // Center dot
+                ctx.fillStyle = accent;
+                ctx.beginPath();
+                ctx.arc(W / 2, curY, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // ─── 6. QR CODE ─────────────────────────────────
+                curY += 35;
+                if (qrDataUrl) {
+                    const qrImg = new Image();
+                    await new Promise<void>((resolve) => {
+                        qrImg.onload = () => resolve();
+                        qrImg.onerror = () => resolve();
+                        qrImg.src = qrDataUrl;
+                    });
+
+                    const qrSize = 150;
+                    const qrPad = 14;
+                    const qrBoxW = qrSize + qrPad * 2;
+                    const qrBoxX = (W - qrBoxW) / 2;
+
+                    // QR glow
+                    ctx.save();
+                    ctx.shadowColor = accent;
+                    ctx.shadowBlur = 40;
+                    ctx.fillStyle = '#ffffff';
+                    rrect(qrBoxX, curY, qrBoxW, qrBoxW, 18);
+                    ctx.fill();
+                    ctx.restore();
+
+                    // QR white background
+                    ctx.fillStyle = '#ffffff';
+                    rrect(qrBoxX, curY, qrBoxW, qrBoxW, 18);
+                    ctx.fill();
+
+                    // QR image
+                    if (qrImg.complete && qrImg.naturalWidth > 0) {
+                        ctx.drawImage(qrImg, qrBoxX + qrPad, curY + qrPad, qrSize, qrSize);
+                    }
+                    curY += qrBoxW + 28;
+                }
+
+                // ─── 7. "DİJİTAL KARTVİZİT" LABEL ─────────────────────────────────
+                ctx.fillStyle = 'rgba(255,255,255,0.22)';
+                ctx.font = 'bold 9px "Inter", "Segoe UI", system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                const labelText = 'D İ J İ T A L   K A R T V İ Z İ T';
+                ctx.fillText(labelText, W / 2, curY);
+                curY += 32;
+
+                // ─── 8. CONTACT ITEMS ─────────────────────────────────
+                const contacts: { symbol: string; text: string }[] = [];
+                if (phoneNum) contacts.push({ symbol: '✆', text: phoneNum });
+                contacts.push({ symbol: '✉', text: profile.user.email || '' });
+                contacts.push({ symbol: '⊕', text: `kardly.site/${profile.username}` });
+
+                for (const c of contacts) {
+                    if (!c.text) continue;
+                    const rowX = 50;
+                    const rowW = W - 100;
+                    const rowH = 42;
+
+                    // Row background
+                    rrect(rowX, curY, rowW, rowH, 10);
+                    ctx.fillStyle = 'rgba(255,255,255,0.025)';
+                    ctx.fill();
+                    rrect(rowX, curY, rowW, rowH, 10);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+
+                    // Icon
+                    ctx.fillStyle = accent;
+                    ctx.font = '14px "Segoe UI Symbol", "Apple Symbols", sans-serif';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(c.symbol, rowX + 16, curY + rowH / 2);
+
+                    // Text
+                    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                    ctx.font = 'bold 12px "Inter", "Segoe UI", system-ui, sans-serif';
+                    ctx.fillText(c.text, rowX + 44, curY + rowH / 2);
+
+                    curY += rowH + 8;
+                }
+
+                // ─── 9. FOOTER BRANDING ─────────────────────────────────
+                curY += 18;
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                ctx.font = 'bold 7px "Inter", "Segoe UI", system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('K A R D L Y   P R E M I U M', W / 2, curY);
+
+                // ─── TRIM CANVAS TO ACTUAL CONTENT HEIGHT ─────────────────
+                const finalH = curY + 40;
+                const trimmedCanvas = document.createElement('canvas');
+                trimmedCanvas.width = W * 2;
+                trimmedCanvas.height = Math.ceil(finalH * 2);
+                const tctx = trimmedCanvas.getContext('2d')!;
+                // Copy the drawn portion from original canvas
+                tctx.drawImage(canvas, 0, 0, W * 2, Math.ceil(finalH * 2), 0, 0, W * 2, Math.ceil(finalH * 2));
+
+                // ─── OUTPUT ─────────────────────────────────
+                const dataUrl = trimmedCanvas.toDataURL('image/png', 1.0);
                 cachedDataUrlRef.current = dataUrl;
 
                 const blob = await new Promise<Blob | null>((resolve) => {
-                    canvas.toBlob((b) => resolve(b), 'image/png', 0.95);
+                    trimmedCanvas.toBlob((b) => resolve(b), 'image/png', 1.0);
                 });
 
                 if (blob) {
                     cachedBlobRef.current = blob;
                     setImageReady(true);
-                    console.log('QrModal: SUCCESS - Image ready');
+                    console.log('QrModal: SUCCESS - Canvas image generated');
                 }
             } catch (err) {
-                console.error('QrModal: CAPTURE FAILED:', err);
+                console.error('QrModal: Canvas generation failed:', err);
             }
-        }, 800);
+        }, 500);
         return () => clearTimeout(timer);
-    }, [isOpen, theme.accent]);
+    }, [isOpen, theme.accent, qrDataUrl]);
 
     if (!isOpen) return null;
 
