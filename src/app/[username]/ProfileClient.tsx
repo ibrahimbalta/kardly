@@ -3648,9 +3648,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
         const timer = setTimeout(async () => {
             try {
                 const DPR = 2;
-                const W = 640;
-                const PAD = 50; // side padding
-                const CARD_RAD = 36;
+                const W = 320; // Match modal max-width precisely
+                const PAD = 20;
 
                 // Helper: hex to rgba
                 const hexRgba = (hex: string, a: number) => {
@@ -3661,22 +3660,22 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     return `rgba(${r},${g},${b},${a})`;
                 };
 
-                // ── PASS 1: Calculate content height ──────────────────────
+                // ── PASS 1: Calculate content height (match modal proportions) ──
                 const contacts: { symbol: string; text: string }[] = [];
                 if (phoneNum) contacts.push({ symbol: '✆', text: phoneNum });
                 if (profile.user.email) contacts.push({ symbol: '✉', text: profile.user.email });
                 contacts.push({ symbol: '⊕', text: `kardly.site/${profile.username}` });
 
-                let calcH = 70;       // top padding
-                calcH += 120;         // profile image
-                calcH += 45;          // name
-                calcH += 35;          // occupation badge
-                calcH += 35;          // divider
-                calcH += 45;          // qr top space
-                calcH += 178 + 30;    // qr box + spacing
-                calcH += 35;          // label
-                calcH += contacts.filter(c => c.text).length * 52; // contacts
-                calcH += 55;          // footer
+                let calcH = 32;       // top padding
+                calcH += 56;          // profile image area (w-14)
+                calcH += 40;          // name
+                calcH += 30;          // occupation badge
+                calcH += 30;          // divider
+                calcH += 20;          // qr top spacing
+                calcH += 120;         // qr box (100px + padding)
+                calcH += 30;          // label
+                calcH += contacts.filter(c => c.text).length * 48; // contact rows
+                calcH += 40;          // footer branding
                 const H = calcH;
 
                 // ── CREATE CANVAS ──────────────────────────────────────────
@@ -3701,136 +3700,59 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     ctx.closePath();
                 };
 
-                // ══════════════════════════════════════════════════════════
-                // ══  BACKGROUND & EFFECTS  ════════════════════════════════
-                // ══════════════════════════════════════════════════════════
-
-                // 1. Base dark fill
+                // ── BACKGROUND ─────────────────────────────────────────────
+                // Base dark fill (pure black like the UI)
+                const CARD_RAD = 32;
                 rrect(0, 0, W, H, CARD_RAD);
-                ctx.fillStyle = '#090909';
+                ctx.fillStyle = '#050505';
                 ctx.fill();
 
-                // Clip everything to card shape
                 ctx.save();
                 rrect(0, 0, W, H, CARD_RAD);
                 ctx.clip();
 
-                // 2. Large accent gradient orb (top)
-                const orbGrad1 = ctx.createRadialGradient(W * 0.5, -50, 0, W * 0.5, -50, H * 0.55);
-                orbGrad1.addColorStop(0, hexRgba(accent, 0.2));
-                orbGrad1.addColorStop(0.5, hexRgba(accent, 0.05));
-                orbGrad1.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = orbGrad1;
-                ctx.fillRect(0, 0, W, H);
+                // Subtle background accent glow (top)
+                const gradTop = ctx.createLinearGradient(0, 0, 0, 160);
+                gradTop.addColorStop(0, hexRgba(accent, 0.15));
+                gradTop.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = gradTop;
+                ctx.fillRect(0, 0, W, 160);
 
-                // 3. Secondary orb (bottom-right)
-                const orbGrad2 = ctx.createRadialGradient(W * 0.85, H * 0.8, 0, W * 0.85, H * 0.8, 250);
-                orbGrad2.addColorStop(0, hexRgba(accent, 0.08));
-                orbGrad2.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = orbGrad2;
-                ctx.fillRect(0, 0, W, H);
-
-                // 4. Geometric grid lines (premium effect)
-                ctx.globalAlpha = 0.04;
-                ctx.strokeStyle = accent;
-                ctx.lineWidth = 0.5;
-                for (let i = 0; i < W; i += 40) {
-                    ctx.beginPath();
-                    ctx.moveTo(i, 0);
-                    ctx.lineTo(i, H);
-                    ctx.stroke();
-                }
-                for (let i = 0; i < H; i += 40) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, i);
-                    ctx.lineTo(W, i);
-                    ctx.stroke();
-                }
-                ctx.globalAlpha = 1;
-
-                // 5. Light streak diagonal (modern effect)
-                ctx.save();
+                // Grid/dot pattern (same as UI)
                 ctx.globalAlpha = 0.03;
-                const streakGrad = ctx.createLinearGradient(0, 0, W, H * 0.6);
-                streakGrad.addColorStop(0, 'rgba(255,255,255,0)');
-                streakGrad.addColorStop(0.3, 'rgba(255,255,255,1)');
-                streakGrad.addColorStop(0.5, 'rgba(255,255,255,0)');
-                streakGrad.addColorStop(0.7, 'rgba(255,255,255,1)');
-                streakGrad.addColorStop(1, 'rgba(255,255,255,0)');
-                ctx.fillStyle = streakGrad;
-                ctx.translate(0, -100);
-                ctx.rotate(0.3);
-                ctx.fillRect(-50, 0, W + 100, 150);
-                ctx.restore();
-
-                // 6. Particle dots (scattered sparkle)
-                ctx.globalAlpha = 0.06;
-                for (let i = 0; i < 60; i++) {
-                    const px = Math.random() * W;
-                    const py = Math.random() * H;
-                    const pr = Math.random() * 1.5 + 0.3;
-                    ctx.beginPath();
-                    ctx.arc(px, py, pr, 0, Math.PI * 2);
-                    ctx.fillStyle = i % 3 === 0 ? accent : '#ffffff';
-                    ctx.fill();
-                }
-                ctx.globalAlpha = 1;
-
-                // 7. Subtle noise/grain texture
-                ctx.globalAlpha = 0.02;
-                for (let px = 0; px < W; px += 4) {
-                    for (let py = 0; py < H; py += 4) {
-                        if (Math.random() > 0.5) {
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillRect(px, py, 1, 1);
-                        }
+                for (let px = 0; px < W; px += 15) {
+                    for (let py = 0; py < H; py += 15) {
+                        ctx.beginPath();
+                        ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fill();
                     }
                 }
                 ctx.globalAlpha = 1;
 
-                ctx.restore(); // End clip
+                ctx.restore();
 
-                // 8. Card border with accent glow
-                rrect(0, 0, W, H, CARD_RAD);
-                ctx.strokeStyle = hexRgba(accent, 0.2);
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                // ── CONTENT ────────────────────────────────────────────────
 
-                // Inner subtle border
-                rrect(1.5, 1.5, W - 3, H - 3, CARD_RAD - 1);
-                ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-                ctx.lineWidth = 0.5;
-                ctx.stroke();
-
-                // Re-clip for content
-                ctx.save();
-                rrect(0, 0, W, H, CARD_RAD);
-                ctx.clip();
-
-                // ══════════════════════════════════════════════════════════
-                // ══  CONTENT  ═════════════════════════════════════════════
-                // ══════════════════════════════════════════════════════════
-
-                // ─── PROFILE IMAGE ─────────────────────────────────
-                const imgSize = 112;
+                // 1. Profile Image
+                const imgSize = 56; // 14 * 4
                 const imgX = (W - imgSize) / 2;
-                const imgY = 55;
+                const imgY = 32;
 
-                // Accent glow behind image
+                // Image glow
                 ctx.save();
                 ctx.shadowColor = accent;
-                ctx.shadowBlur = 50;
-                ctx.shadowOffsetY = 8;
-                ctx.fillStyle = hexRgba(accent, 0.4);
-                rrect(imgX + 10, imgY + 10, imgSize - 20, imgSize - 20, 16);
+                ctx.shadowBlur = 20;
+                ctx.fillStyle = hexRgba(accent, 0.3);
+                rrect(imgX, imgY, imgSize, imgSize, 12);
                 ctx.fill();
                 ctx.restore();
 
-                // Load & draw profile image
+                // Profile Img Load
                 const profileImg = document.createElement('img');
                 profileImg.crossOrigin = 'anonymous';
                 const imgSrc = (!profile.user.image || profile.user.image.includes('avatar.iran.liara.run'))
-                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=256&bold=true`
+                    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=${accent.replace('#', '')}&size=128&bold=true`
                     : profile.user.image;
 
                 await new Promise<void>((resolve) => {
@@ -3840,102 +3762,70 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 });
 
                 ctx.save();
-                rrect(imgX, imgY, imgSize, imgSize, 22);
+                rrect(imgX, imgY, imgSize, imgSize, 12);
                 ctx.clip();
                 if (profileImg.complete && profileImg.naturalWidth > 0) {
                     ctx.drawImage(profileImg, imgX, imgY, imgSize, imgSize);
                 } else {
-                    ctx.fillStyle = '#1a1a2e';
+                    ctx.fillStyle = '#000';
                     ctx.fillRect(imgX, imgY, imgSize, imgSize);
                 }
                 ctx.restore();
 
-                // Image border ring
-                rrect(imgX - 1, imgY - 1, imgSize + 2, imgSize + 2, 23);
-                ctx.strokeStyle = hexRgba(accent, 0.5);
+                // Image Border
+                rrect(imgX, imgY, imgSize, imgSize, 12);
+                ctx.strokeStyle = hexRgba(accent, 0.4);
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Secondary thin ring
-                rrect(imgX - 4, imgY - 4, imgSize + 8, imgSize + 8, 26);
-                ctx.strokeStyle = hexRgba(accent, 0.12);
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                // ─── NAME ─────────────────────────────────
-                let curY = imgY + imgSize + 40;
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 30px "Inter", "Segoe UI", system-ui, sans-serif';
+                // 2. Name (Exact match to screenshot - use accent color)
+                let curY = imgY + imgSize + 30;
+                ctx.fillStyle = accent; // MATCH SCREENSHOT
+                ctx.font = 'black 18px "Inter", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                const nameText = profile.user.name?.toUpperCase() || 'USER';
-                ctx.fillText(nameText, W / 2, curY);
+                ctx.fillText(profile.user.name?.toUpperCase() || 'USER', W / 2, curY);
 
-                // Subtle text shadow
-                ctx.save();
-                ctx.globalAlpha = 0.15;
-                ctx.fillStyle = accent;
-                ctx.filter = 'blur(8px)';
-                ctx.fillText(nameText, W / 2, curY + 2);
-                ctx.restore();
-
-                // ─── OCCUPATION BADGE ─────────────────────────────────
-                curY += 34;
-                const occText = (profile.occupation || 'Professional').toUpperCase();
-                ctx.font = 'bold 11px "Inter", "Segoe UI", system-ui, sans-serif';
+                // 3. Occupation Badge
+                curY += 24;
+                const occText = (profile.occupation || 'PROFESSIONAL').toUpperCase();
+                ctx.font = 'bold 8px "Inter", sans-serif';
                 const occMetrics = ctx.measureText(occText);
-                const occW = occMetrics.width + 32;
-                const occH = 26;
+                const occW = occMetrics.width + 16;
+                const occH = 18;
                 const occX = W / 2 - occW / 2;
-                const occBadgeY = curY - occH / 2;
+                const occBY = curY - occH / 2;
 
-                // Badge gradient bg
-                const badgeGrad = ctx.createLinearGradient(occX, occBadgeY, occX + occW, occBadgeY + occH);
-                badgeGrad.addColorStop(0, hexRgba(accent, 0.15));
-                badgeGrad.addColorStop(1, hexRgba(accent, 0.08));
-                rrect(occX, occBadgeY, occW, occH, 13);
-                ctx.fillStyle = badgeGrad;
+                rrect(occX, occBY, occW, occH, 9);
+                ctx.fillStyle = 'rgba(255,255,255,0.05)';
                 ctx.fill();
-                rrect(occX, occBadgeY, occW, occH, 13);
-                ctx.strokeStyle = hexRgba(accent, 0.35);
-                ctx.lineWidth = 0.8;
+                rrect(occX, occBY, occW, occH, 9);
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 0.5;
                 ctx.stroke();
 
                 ctx.fillStyle = accent;
-                ctx.fillText(occText, W / 2, curY + 1);
+                ctx.fillText(occText, W / 2, curY);
 
-                // ─── DIVIDER ─────────────────────────────────
-                curY += 30;
-                // Gradient line left
-                const divGrad1 = ctx.createLinearGradient(PAD, curY, W / 2 - 12, curY);
-                divGrad1.addColorStop(0, 'rgba(255,255,255,0)');
-                divGrad1.addColorStop(1, hexRgba(accent, 0.2));
-                ctx.strokeStyle = divGrad1;
+                // 4. Divider
+                curY += 24;
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(PAD, curY);
-                ctx.lineTo(W / 2 - 12, curY);
+                ctx.moveTo(W * 0.2, curY);
+                ctx.lineTo(W * 0.45, curY);
                 ctx.stroke();
-                // Gradient line right
-                const divGrad2 = ctx.createLinearGradient(W / 2 + 12, curY, W - PAD, curY);
-                divGrad2.addColorStop(0, hexRgba(accent, 0.2));
-                divGrad2.addColorStop(1, 'rgba(255,255,255,0)');
-                ctx.strokeStyle = divGrad2;
                 ctx.beginPath();
-                ctx.moveTo(W / 2 + 12, curY);
-                ctx.lineTo(W - PAD, curY);
+                ctx.moveTo(W * 0.55, curY);
+                ctx.lineTo(W * 0.8, curY);
                 ctx.stroke();
-
-                // Center diamond
-                ctx.save();
-                ctx.translate(W / 2, curY);
-                ctx.rotate(Math.PI / 4);
                 ctx.fillStyle = accent;
-                ctx.fillRect(-3, -3, 6, 6);
-                ctx.restore();
+                ctx.beginPath();
+                ctx.arc(W / 2, curY, 2, 0, Math.PI * 2);
+                ctx.fill();
 
-                // ─── QR CODE ─────────────────────────────────
-                curY += 40;
+                // 5. QR Code
+                curY += 30;
                 if (qrDataUrl) {
                     const qrImg = document.createElement('img');
                     await new Promise<void>((resolve) => {
@@ -3944,97 +3834,71 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                         qrImg.src = qrDataUrl;
                     });
 
-                    const qrSize = 150;
-                    const qrPad = 14;
-                    const qrBoxW = qrSize + qrPad * 2;
+                    const qrBoxW = 114; // p-2.5 on 100px img
                     const qrBoxX = (W - qrBoxW) / 2;
 
-                    // QR outer glow
+                    // Glow behind QR
                     ctx.save();
                     ctx.shadowColor = accent;
-                    ctx.shadowBlur = 50;
-                    ctx.fillStyle = hexRgba(accent, 0.15);
-                    rrect(qrBoxX - 5, curY - 5, qrBoxW + 10, qrBoxW + 10, 22);
+                    ctx.shadowBlur = 30;
+                    ctx.shadowOpacity = 0.1;
+                    ctx.fillStyle = '#ffffff';
+                    rrect(qrBoxX, curY, qrBoxW, qrBoxW, 12);
                     ctx.fill();
                     ctx.restore();
 
-                    // QR white container
-                    ctx.fillStyle = '#ffffff';
-                    rrect(qrBoxX, curY, qrBoxW, qrBoxW, 18);
-                    ctx.fill();
-
-                    // QR image
                     if (qrImg.complete && qrImg.naturalWidth > 0) {
-                        ctx.drawImage(qrImg, qrBoxX + qrPad, curY + qrPad, qrSize, qrSize);
+                        ctx.drawImage(qrImg, qrBoxX + 7, curY + 7, 100, 100);
                     }
-                    curY += qrBoxW + 30;
+                    curY += qrBoxW + 24;
                 }
 
-                // ─── "DİJİTAL KARTVİZİT" LABEL ─────────────────
-                ctx.fillStyle = hexRgba(accent, 0.25);
-                ctx.font = 'bold 9px "Inter", "Segoe UI", system-ui, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                // 6. Label
+                ctx.fillStyle = accent;
+                ctx.globalAlpha = 0.4;
+                ctx.font = 'black 8px "Inter", sans-serif';
                 ctx.fillText('D İ J İ T A L   K A R T V İ Z İ T', W / 2, curY);
-                curY += 30;
+                ctx.globalAlpha = 1;
+                curY += 24;
 
-                // ─── CONTACT ITEMS ─────────────────────────────────
+                // 7. Contacts
                 for (const c of contacts) {
                     if (!c.text) continue;
-                    const rowX = PAD;
-                    const rowW = W - PAD * 2;
-                    const rowH = 44;
+                    const cW = W - 64;
+                    const cH = 36;
+                    const cX = 32;
 
-                    // Row bg with gradient
-                    const rowGrad = ctx.createLinearGradient(rowX, curY, rowX + rowW, curY);
-                    rowGrad.addColorStop(0, hexRgba(accent, 0.04));
-                    rowGrad.addColorStop(0.5, 'rgba(255,255,255,0.02)');
-                    rowGrad.addColorStop(1, 'rgba(255,255,255,0.01)');
-                    rrect(rowX, curY, rowW, rowH, 12);
-                    ctx.fillStyle = rowGrad;
+                    rrect(cX, curY, cW, cH, 10);
+                    ctx.fillStyle = 'rgba(255,255,255,0.03)';
                     ctx.fill();
-
-                    // Row border
-                    rrect(rowX, curY, rowW, rowH, 12);
-                    ctx.strokeStyle = hexRgba(accent, 0.08);
-                    ctx.lineWidth = 0.5;
+                    rrect(cX, curY, cW, cH, 10);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
                     ctx.stroke();
 
-                    // Icon circle
-                    const iconCX = rowX + 28;
-                    const iconCY = curY + rowH / 2;
-                    ctx.beginPath();
-                    ctx.arc(iconCX, iconCY, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = hexRgba(accent, 0.1);
-                    ctx.fill();
-
-                    // Icon text
+                    // Icon
                     ctx.fillStyle = accent;
-                    ctx.font = '12px "Segoe UI Symbol", "Apple Symbols", sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(c.symbol, iconCX, iconCY);
-
-                    // Contact text
-                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                    ctx.font = 'bold 13px "Inter", "Segoe UI", system-ui, sans-serif';
+                    ctx.font = '12px "Segoe UI Symbol"';
                     ctx.textAlign = 'left';
-                    ctx.fillText(c.text, rowX + 50, curY + rowH / 2);
+                    ctx.fillText(c.symbol, cX + 12, curY + cH / 2);
 
-                    curY += rowH + 8;
+                    // Text
+                    ctx.fillStyle = accent; // MATCH SCREENSHOT - All text is themed
+                    ctx.font = 'bold 10px "Inter", sans-serif';
+                    ctx.fillText(c.text, cX + 34, curY + cH / 2);
+
+                    curY += cH + 8;
                 }
 
-                // ─── FOOTER BRANDING ─────────────────────────────────
+                // 8. Footer
                 curY += 10;
-                ctx.fillStyle = 'rgba(255,255,255,0.1)';
-                ctx.font = 'bold 7px "Inter", "Segoe UI", system-ui, sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.globalAlpha = 0.2;
+                ctx.font = 'bold 6px "Inter", sans-serif';
                 ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
                 ctx.fillText('K A R D L Y   P R E M I U M', W / 2, curY);
+                ctx.globalAlpha = 1;
 
-                ctx.restore(); // End clip
-
-                // ── OUTPUT ──────────────────────────────────────────
+                // ── OUTPUT ─────────────────────────────────────────────────
                 const dataUrl = canvas.toDataURL('image/png', 1.0);
                 cachedDataUrlRef.current = dataUrl;
 
@@ -4045,10 +3909,10 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 if (blob) {
                     cachedBlobRef.current = blob;
                     setImageReady(true);
-                    console.log('QrModal: SUCCESS - Premium card image generated');
+                    console.log('QrModal: Premium card generated successfully.');
                 }
             } catch (err) {
-                console.error('QrModal: Canvas generation failed:', err);
+                console.error('QrModal: Generation failed:', err);
             }
         }, 500);
         return () => clearTimeout(timer);
