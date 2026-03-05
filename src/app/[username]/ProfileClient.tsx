@@ -4603,6 +4603,7 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
 
     const renderInternalWidget = (isModal = false) => {
         const commonProps = { theme, toneStyle };
+        const iframeHeight = isModal ? 'h-[600px]' : 'min-h-[500px]';
         switch (widgetType) {
             case 'video':
                 return <VideoWidget url={vUrl} btnText={btnText || "İzle"} {...commonProps} />;
@@ -4617,21 +4618,24 @@ function ExternalWidget({ block, theme, toneStyle, className }: any) {
             case 'countdown':
                 return <CountdownWidget targetDate={date} title={title} {...commonProps} />;
             case 'lead':
-                // For lead/booking/chat we might still use iframe or show components directly
-                // For now, iframes are fine for these as they don't have large data strings
+            case 'booking':
+            case 'ai':
+            case 'chat':
                 return (
                     <iframe
                         src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
-                        className="w-full h-full border-none"
+                        className={`w-full ${iframeHeight} border-none`}
                         allow="autoplay; fullscreen"
+                        style={{ borderRadius: 'inherit' }}
                     />
                 );
             default:
                 return (
                     <iframe
                         src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
-                        className="w-full h-full border-none"
+                        className={`w-full ${iframeHeight} border-none`}
                         allow="autoplay; fullscreen"
+                        style={{ borderRadius: 'inherit' }}
                     />
                 );
         }
