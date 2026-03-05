@@ -3656,59 +3656,76 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     allowTaint: true,
                     imageTimeout: 10000, // Increased timeout
                     onclone: (clonedDoc: Document) => {
-                        // Extreme color sanitization for Tailwind 4 / html2canvas compatibility
-                        // Clean all style tags in the head/body to prevent CSS parsing errors
-                        const styleSheets = clonedDoc.querySelectorAll('style');
-                        styleSheets.forEach(sheet => {
-                            if (sheet.innerHTML.includes('oklch') || sheet.innerHTML.includes('oklab')) {
-                                sheet.innerHTML = sheet.innerHTML
-                                    .replace(/oklch\([^)]+\)/g, 'rgba(255,255,255,0.1)')
-                                    .replace(/oklab\([^)]+\)/g, 'rgba(255,255,255,0.1)');
-                            }
-                        });
+                        console.log('QrModal: Manual style transfer starting...');
 
-                        const el = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
-                        if (el) {
-                            el.style.transform = 'none';
-                            el.style.borderRadius = '2.5rem';
+                        // 1. Identify the card in the clone
+                        const clonedCard = clonedDoc.querySelector('[data-card-capture]') as HTMLElement;
+                        const originalCard = cardRef.current;
 
-                            // Sanitize both styles AND images in the clone
-                            const allNodes = el.querySelectorAll('*');
-                            allNodes.forEach((node) => {
-                                const htmlNode = node as HTMLElement;
+                        if (!clonedCard || !originalCard) return;
 
-                                // Intercept broken images in clone
-                                if (htmlNode.tagName === 'IMG') {
-                                    const img = htmlNode as HTMLImageElement;
-                                    if (img.src.includes('avatar.iran.liara.run')) {
-                                        img.src = `https://ui-avatars.com/api/?name=User&background=0d0d0e&color=fff&size=128`;
+                        // 2. Helper to transfer styles from original to clone
+                        const transferStyles = (orig: Element, cloned: Element) => {
+                            const style = window.getComputedStyle(orig);
+                            const htmlCloned = cloned as HTMLElement;
+
+                            // Critical props for the card appearance
+                            const props = [
+                                'backgroundColor', 'color', 'borderColor', 'borderRadius',
+                                'padding', 'margin', 'display', 'flexDirection',
+                                'alignItems', 'justifyContent', 'gap', 'fontSize',
+                                'fontWeight', 'textAlign', 'backgroundImage', 'backgroundSize',
+                                'backgroundPosition', 'opacity', 'boxShadow', 'width', 'height',
+                                'position', 'top', 'left', 'right', 'bottom', 'zIndex',
+                                'borderWidth', 'borderStyle', 'flex', 'flexGrow', 'flexShrink',
+                                'lineHeight', 'letterSpacing', 'textTransform', 'overflow'
+                            ];
+
+                            props.forEach(prop => {
+                                let val = (style as any)[prop];
+                                // Sanitize color if browser returns oklab/oklch string
+                                if (val && (val.includes('oklch') || val.includes('oklab') || val.includes('lab(') || val.includes('lch('))) {
+                                    if (prop.toLowerCase().includes('background')) {
+                                        // Use background color fallback or just accent
+                                        val = prop === 'backgroundColor' ? accent : 'transparent';
+                                    } else {
+                                        val = accent;
                                     }
                                 }
-
-                                // Aggressive color sanitization for html2canvas compatibility
-                                ['backgroundColor', 'color', 'borderColor', 'fill', 'stroke', 'stopColor', 'outlineColor', 'columnRuleColor', 'textDecorationColor'].forEach(prop => {
-                                    const cs = window.getComputedStyle(htmlNode);
-                                    const val = (cs as any)[prop];
-                                    if (val && (val.includes('oklab') || val.includes('oklch') || val.includes('lab(') || val.includes('lch('))) {
-                                        htmlNode.style.setProperty(prop, 'rgba(255,255,255,0.1)', 'important');
-                                    }
-                                });
-
-                                // Check backgrounds which might have gradients with problematic colors
-                                const bg = window.getComputedStyle(htmlNode).background;
-                                if (bg && (bg.includes('oklab') || bg.includes('oklch') || bg.includes('lab(') || bg.includes('lch('))) {
-                                    htmlNode.style.setProperty('background', 'none', 'important');
-                                    htmlNode.style.setProperty('backgroundColor', 'rgba(0,0,0,0.5)', 'important');
-                                }
-
-                                // Check style attribute directly (inline styles)
-                                const inlineStyle = htmlNode.getAttribute('style') || '';
-                                if (inlineStyle.includes('oklab') || inlineStyle.includes('oklch') || inlineStyle.includes('lab(') || inlineStyle.includes('lch(')) {
-                                    const sanitized = inlineStyle.replace(/oklab\([^)]+\)|oklch\([^)]+\)|lab\([^)]+\)|lch\([^)]+\)/g, 'rgba(255,255,255,0.1)');
-                                    htmlNode.setAttribute('style', sanitized);
-                                }
+                                htmlCloned.style.setProperty(prop, val, 'important');
                             });
-                        }
+
+                            // Special handling for SVG
+                            if (orig.tagName.toLowerCase() === 'svg') {
+                                const fill = style.fill;
+                                const stroke = style.stroke;
+                                if (fill.includes('okl')) htmlCloned.style.fill = accent;
+                                if (stroke.includes('okl')) htmlCloned.style.stroke = accent;
+                            }
+
+                            // Recurring through children
+                            for (let i = 0; i < orig.children.length; i++) {
+                                if (cloned.children[i]) {
+                                    transferStyles(orig.children[i], cloned.children[i]);
+                                }
+                            }
+                        };
+
+                        // 3. Perform the transfer
+                        transferStyles(originalCard, clonedCard);
+
+                        // 4. Clean the cloned element itself
+                        clonedCard.style.transform = 'none';
+                        clonedCard.style.position = 'relative';
+                        clonedCard.style.top = '0';
+                        clonedCard.style.left = '0';
+
+                        // 5. REMOVE ALL STYLESHEETS to prevent html2canvas parsing crash
+                        // This is the most important step for Tailwind 4 compatibility
+                        clonedDoc.querySelectorAll('link[rel="stylesheet"]').forEach(l => l.remove());
+                        clonedDoc.querySelectorAll('style').forEach(s => s.remove());
+
+                        console.log('QrModal: Manual style transfer complete.');
                     }
                 });
 
