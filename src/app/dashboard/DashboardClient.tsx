@@ -83,7 +83,8 @@ import {
     ArrowDown,
     Bot,
     Dribbble,
-    Rss
+    Rss,
+    Play
 } from "lucide-react"
 
 import Link from "next/link"
