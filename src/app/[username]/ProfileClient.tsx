@@ -4124,16 +4124,27 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 };
 
                 // ── BACKGROUND ─────────────────────────────────────────────
+                // Extract base color from theme.bg (e.g., bg-[#123456])
+                let baseBg = "#050505";
+                if (theme.bg && theme.bg.includes('#')) {
+                    const match = theme.bg.match(/#([a-fA-F0-9]+)/);
+                    if (match) baseBg = `#${match[1]}`;
+                } else if (!theme.bg || theme.bg.includes('white') || theme.bg.includes('slate-50') || theme.bg.includes('purple-50')) {
+                    baseBg = "#ffffff";
+                }
+
+                const isDark = !baseBg.includes('ffff') && !baseBg.includes('fafafa') && baseBg !== '#fff';
+
                 const CARD_RAD = 32;
                 rrect(0, 0, W, H, CARD_RAD);
-                ctx.fillStyle = '#050505';
+                ctx.fillStyle = baseBg;
                 ctx.fill();
 
                 ctx.save();
                 rrect(0, 0, W, H, CARD_RAD);
                 ctx.clip();
 
-                // MODERN WAVES EFFECT (Inspired by the professional card image)
+                // MODERN WAVES EFFECT (Theme aware)
                 // 1. Top Wave 1
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
@@ -4142,7 +4153,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.bezierCurveTo(W * 0.7, 80, W * 0.3, 20, 0, 60);
                 ctx.closePath();
                 const waveGrad1 = ctx.createLinearGradient(0, 0, W, 80);
-                waveGrad1.addColorStop(0, hexRgba(accent, 0.2));
+                waveGrad1.addColorStop(0, hexRgba(accent, isDark ? 0.2 : 0.1));
                 waveGrad1.addColorStop(1, hexRgba(accent, 0.05));
                 ctx.fillStyle = waveGrad1;
                 ctx.fill();
@@ -4154,7 +4165,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.bezierCurveTo(W * 0.6, 120, W * 0.9, 20, W, 70);
                 ctx.lineTo(W, 0);
                 ctx.closePath();
-                ctx.fillStyle = hexRgba(accent, 0.1);
+                ctx.fillStyle = hexRgba(accent, isDark ? 0.1 : 0.05);
                 ctx.fill();
 
                 // 3. Bottom Wave 1
@@ -4165,8 +4176,8 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.bezierCurveTo(W * 0.7, H - 20, W * 0.3, H - 90, 0, H - 40);
                 ctx.closePath();
                 const waveGrad2 = ctx.createLinearGradient(0, H - 100, W, H);
-                waveGrad2.addColorStop(0, hexRgba(accent, 0.08));
-                waveGrad2.addColorStop(1, hexRgba(accent, 0.2));
+                waveGrad2.addColorStop(0, hexRgba(accent, isDark ? 0.08 : 0.04));
+                waveGrad2.addColorStop(1, hexRgba(accent, isDark ? 0.2 : 0.1));
                 ctx.fillStyle = waveGrad2;
                 ctx.fill();
 
@@ -4174,7 +4185,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.beginPath();
                 ctx.moveTo(W, H - 30);
                 ctx.bezierCurveTo(W * 0.8, H - 10, W * 0.4, H - 70, 0, H - 20);
-                ctx.strokeStyle = hexRgba(accent, 0.3);
+                ctx.strokeStyle = hexRgba(accent, isDark ? 0.3 : 0.2);
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
@@ -4223,9 +4234,9 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                // 2. Name (Accent Color)
+                // 2. Name
                 let curY = imgY + imgSize + 30;
-                ctx.fillStyle = accent;
+                ctx.fillStyle = isDark ? accent : "#000";
                 ctx.font = '900 18px "Inter", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -4242,14 +4253,14 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 const occBY = curY - occH / 2;
 
                 rrect(occX, occBY, occW, occH, 9);
-                ctx.fillStyle = hexRgba(accent, 0.1);
+                ctx.fillStyle = isDark ? hexRgba(accent, 0.1) : hexRgba(accent, 0.08);
                 ctx.fill();
                 rrect(occX, occBY, occW, occH, 9);
-                ctx.strokeStyle = hexRgba(accent, 0.2);
+                ctx.strokeStyle = isDark ? hexRgba(accent, 0.2) : hexRgba(accent, 0.15);
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
 
-                ctx.fillStyle = accent;
+                ctx.fillStyle = isDark ? accent : hexRgba(accent, 1);
                 ctx.fillText(occText, W / 2, curY);
 
                 // 4. Divider
@@ -4297,10 +4308,10 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                 }
 
                 // 6. Label
-                ctx.fillStyle = accent;
+                ctx.fillStyle = isDark ? accent : "#000";
                 ctx.globalAlpha = 0.4;
                 ctx.font = '900 8px "Inter", sans-serif';
-                ctx.fillText(t.digitalBusinessCard, W / 2, curY);
+                ctx.fillText(t.digitalBusinessCard || "DİJİTAL KARTVİZİT", W / 2, curY);
                 ctx.globalAlpha = 1;
                 curY += 24;
 
@@ -4312,18 +4323,18 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                     const cX = 32;
 
                     rrect(cX, curY, cW, cH, 10);
-                    ctx.fillStyle = hexRgba(accent, 0.05);
+                    ctx.fillStyle = isDark ? hexRgba(accent, 0.05) : "rgba(0,0,0,0.03)";
                     ctx.fill();
                     rrect(cX, curY, cW, cH, 10);
-                    ctx.strokeStyle = hexRgba(accent, 0.1);
+                    ctx.strokeStyle = isDark ? hexRgba(accent, 0.1) : "rgba(0,0,0,0.05)";
                     ctx.stroke();
 
-                    ctx.fillStyle = accent;
+                    ctx.fillStyle = isDark ? accent : "#000";
                     ctx.font = '12px "Segoe UI Symbol"';
                     ctx.textAlign = 'left';
                     ctx.fillText(c.symbol, cX + 12, curY + cH / 2);
 
-                    ctx.fillStyle = accent;
+                    ctx.fillStyle = isDark ? (theme.text && theme.text.includes('#') ? theme.text.match(/#([a-fA-F0-9]+)/) ? `#${theme.text.match(/#([a-fA-F0-9]+)/)[1]}` : accent : accent) : "#000";
                     ctx.font = 'bold 10px "Inter", sans-serif';
                     ctx.fillText(c.text, cX + 34, curY + cH / 2);
 
@@ -4332,7 +4343,7 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
 
                 // 8. Footer
                 curY += 10;
-                ctx.fillStyle = accent;
+                ctx.fillStyle = isDark ? accent : "#000";
                 ctx.globalAlpha = 0.2;
                 ctx.font = 'bold 6px "Inter", sans-serif';
                 ctx.textAlign = 'center';
@@ -4504,6 +4515,89 @@ function QrModal({ isOpen, onClose, qrDataUrl, theme, profile, t, toneStyle }: a
                             )}
                             {theme.special === "minimal_pure" && (
                                 <div className="absolute inset-0 bg-white" />
+                            )}
+
+                            {/* 3D Templates Backgrounds for Card Export */}
+                            {theme.special === "3d_frost" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a1628 0%, #0d2847 30%, #1a3a5c 50%, #2d5a7b 70%, #c8dce8 100%)' }} />
+                                    <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(56,189,248,0.3) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(147,197,253,0.2) 0%, transparent 50%)' }} />
+                                    <div className="absolute bottom-0 left-0 right-0 h-[40%] opacity-30" style={{ background: 'linear-gradient(to top, rgba(200,230,255,0.3), transparent)', filter: 'blur(20px)' }} />
+                                    <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%2393c5fd' fill-opacity='0.4'/%3E%3C/svg%3E")`, backgroundSize: '12px 12px' }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_magma" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #1a0a1e 0%, #2d1035 25%, #4a1942 45%, #8b3a62 65%, #c4564a 80%, #f97316 100%)' }} />
+                                    <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(ellipse at 50% 70%, rgba(249,115,22,0.4) 0%, transparent 60%), radial-gradient(ellipse at 30% 30%, rgba(168,85,247,0.3) 0%, transparent 50%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%23d946ef' fill-opacity='0.3'/%3E%3C/svg%3E")`, backgroundSize: '8px 8px' }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_cyber" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #020a14 0%, #071520 30%, #0a2035 50%, #0d2a4a 70%, #102040 100%)' }} />
+                                    <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 50% 60%, rgba(6,182,212,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.2) 0%, transparent 50%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.04]" style={{
+                                        backgroundImage: `linear-gradient(rgba(6,182,212,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.15) 1px, transparent 1px)`,
+                                        backgroundSize: '40px 40px'
+                                    }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_aurora" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #020818 0%, #051530 25%, #0a2540 50%, #082838 75%, #0d3530 100%)' }} />
+                                    <div className="absolute inset-0 opacity-60" style={{ background: 'radial-gradient(ellipse at 40% 30%, rgba(52,211,153,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 50%, rgba(139,92,246,0.25) 0%, transparent 50%), radial-gradient(ellipse at 20% 70%, rgba(56,189,248,0.2) 0%, transparent 40%)' }} />
+                                    <div className="absolute top-[15%] left-0 right-0 h-[40%] opacity-40" style={{ background: 'linear-gradient(90deg, transparent, rgba(52,211,153,0.3) 20%, rgba(139,92,246,0.3) 50%, rgba(56,189,248,0.3) 80%, transparent)', filter: 'blur(30px)', transform: 'skewY(-5deg)' }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_neoncity" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a0012 0%, #150020 30%, #1a0030 50%, #200040 70%, #0a0015 100%)' }} />
+                                    <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(ellipse at 30% 70%, rgba(255,45,149,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 30%, rgba(0,200,255,0.2) 0%, transparent 50%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.03]" style={{
+                                        backgroundImage: `linear-gradient(rgba(255,45,149,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.2) 1px, transparent 1px)`,
+                                        backgroundSize: '60px 60px'
+                                    }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_galaxy" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, #0d0520 0%, #030108 100%)' }} />
+                                    <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(168,85,247,0.3) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(56,189,248,0.2) 0%, transparent 35%), radial-gradient(circle at 50% 20%, rgba(236,72,153,0.15) 0%, transparent 30%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='0.5' fill='white' fill-opacity='0.5'/%3E%3C/svg%3E")`, backgroundSize: '40px 40px' }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_luxegold" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #080604 0%, #0f0c06 30%, #1a150a 50%, #0f0c06 70%, #080604 100%)' }} />
+                                    <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(251,191,36,0.15) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(217,119,6,0.1) 0%, transparent 40%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='none' stroke='%23fbbf24' stroke-width='0.3'/%3E%3C/svg%3E")`, backgroundSize: '60px 60px' }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_hologram" && (
+                                <>
+                                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #050510 0%, #0a0520 25%, #050510 50%, #050515 75%, #050510 100%)' }} />
+                                    <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 30% 30%, rgba(56,189,248,0.2) 0%, transparent 40%), radial-gradient(circle at 70% 70%, rgba(236,72,153,0.2) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(168,85,247,0.15) 0%, transparent 30%)' }} />
+                                    <div className="absolute inset-0 opacity-[0.03]" style={{
+                                        backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+                                        backgroundSize: '30px 30px'
+                                    }} />
+                                </>
+                            )}
+
+                            {theme.special === "3d_quantum" && (
+                                <>
+                                    <div className="absolute inset-0 bg-[#020205]" />
+                                    <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(99,102,241,0.2) 0%, transparent 70%), radial-gradient(circle at 20% 20%, rgba(168,85,247,0.1) 0%, transparent 50%)' }} />
+                                    <div className="absolute inset-0 mix-blend-overlay opacity-[0.02]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/carbon-fibre.png")` }} />
+                                </>
                             )}
 
                             {/* Tone Specific Effects */}
