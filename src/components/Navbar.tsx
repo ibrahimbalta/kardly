@@ -23,7 +23,7 @@ export function Navbar() {
                         <span className="text-xl font-black tracking-tighter leading-none text-slate-900 uppercase">
                             KARDLY<span className="text-rose-500">.site</span>
                         </span>
-                        <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">Smart Networking</span>
+                        <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">LINK TO SUCCESS</span>
                     </div>
                 </Link>
 
