@@ -416,10 +416,15 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
             <div className="col-span-2 md:col-span-4">
               <Link href="/" className="flex items-center gap-3 mb-6 group">
-                <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200">
+                <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200/50">
                   <Layout className="text-white w-5 h-5" />
                 </div>
-                <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-black tracking-tight text-slate-900 uppercase">
+                    Kardly<span className="text-rose-500">.site</span>
+                  </span>
+                  <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">Professional UI</span>
+                </div>
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
             </div>

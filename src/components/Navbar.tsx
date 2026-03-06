@@ -16,12 +16,14 @@ export function Navbar() {
         <nav className="fixed top-0 w-full z-50 px-6 py-6 transition-all duration-300">
             <div className="max-w-7xl mx-auto flex items-center justify-between glass rounded-[2rem] px-8 py-3.5 border-white shadow-xl shadow-rose-100/20 bg-white/80">
                 <Link href="/" className="flex items-center gap-3 group">
-                    <div className="w-11 h-11 bg-rose-500 rounded-2xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-rose-200">
+                    <div className="w-11 h-11 bg-rose-500 rounded-[1.2rem] flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-rose-200/50">
                         <Layout className="text-white w-6 h-6" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-xl font-black tracking-tighter leading-none text-slate-900">KARDLY<span className="text-rose-500">.</span></span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-0.5">Professional UI</span>
+                        <span className="text-xl font-black tracking-tighter leading-none text-slate-900 uppercase">
+                            KARDLY<span className="text-rose-500">.site</span>
+                        </span>
+                        <span className="text-[7px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1 pr-1">Professional UI</span>
                     </div>
                 </Link>
 
