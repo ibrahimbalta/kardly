@@ -423,7 +423,7 @@ export default function Home() {
                   <span className="text-lg font-black tracking-tight text-slate-900 uppercase">
                     Kardly<span className="text-rose-500">.site</span>
                   </span>
-                  <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">Professional UI</span>
+                  <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">Smart Networking</span>
                 </div>
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
