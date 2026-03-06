@@ -1947,6 +1947,71 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-[#67e8f9]",
             icon: "text-[#22d3ee]",
             special: "3d_cyber"
+        },
+        "3d_aurora": {
+            bg: "bg-[#020818]",
+            card: "bg-[#0a1a2e]/70",
+            text: "text-white",
+            subtext: "text-emerald-300/50",
+            border: "border-emerald-400/15",
+            glow: "shadow-[0_0_80px_rgba(52,211,153,0.2),0_0_160px_rgba(139,92,246,0.15)]",
+            accent: "#34d399",
+            btn: "bg-gradient-to-r from-emerald-500/20 to-violet-500/20 border-emerald-400/20 backdrop-blur-xl",
+            btnText: "text-white",
+            icon: "text-emerald-400",
+            special: "3d_aurora"
+        },
+        "3d_neoncity": {
+            bg: "bg-[#0a0012]",
+            card: "bg-[#150025]/60",
+            text: "text-[#ff2d95]",
+            subtext: "text-[#ff2d95]/40",
+            border: "border-[#ff2d95]/15",
+            glow: "shadow-[0_0_60px_rgba(255,45,149,0.25),0_0_120px_rgba(0,200,255,0.15)]",
+            accent: "#ff2d95",
+            btn: "bg-[#12001f]/80 border-[#ff2d95]/30 shadow-[inset_0_1px_0_rgba(255,45,149,0.2),0_4px_20px_rgba(255,45,149,0.15)]",
+            btnText: "text-[#ff6db8]",
+            icon: "text-[#ff2d95]",
+            special: "3d_neoncity"
+        },
+        "3d_galaxy": {
+            bg: "bg-[#030108]",
+            card: "bg-[#0d0520]/70",
+            text: "text-white",
+            subtext: "text-purple-300/50",
+            border: "border-purple-500/15",
+            glow: "shadow-[0_0_80px_rgba(168,85,247,0.3),0_0_160px_rgba(56,189,248,0.1)]",
+            accent: "#a855f7",
+            btn: "bg-gradient-to-r from-purple-900/40 to-indigo-900/40 border-purple-500/20 backdrop-blur-md shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+            btnText: "text-purple-200",
+            icon: "text-purple-400",
+            special: "3d_galaxy"
+        },
+        "3d_luxegold": {
+            bg: "bg-[#080604]",
+            card: "bg-[#141008]/80",
+            text: "text-[#fbbf24]",
+            subtext: "text-[#d4a017]/40",
+            border: "border-[#fbbf24]/15",
+            glow: "shadow-[0_0_60px_rgba(251,191,36,0.2),0_0_120px_rgba(217,119,6,0.1)]",
+            accent: "#fbbf24",
+            btn: "bg-gradient-to-r from-[#b8860b]/30 to-[#d4a017]/20 border-[#fbbf24]/25 shadow-[inset_0_1px_0_rgba(251,191,36,0.3),0_4px_15px_rgba(251,191,36,0.1)]",
+            btnText: "text-[#fcd34d]",
+            icon: "text-[#fbbf24]",
+            special: "3d_luxegold"
+        },
+        "3d_hologram": {
+            bg: "bg-[#050510]",
+            card: "bg-white/[0.03]",
+            text: "text-white",
+            subtext: "text-sky-300/40",
+            border: "border-white/10",
+            glow: "shadow-[0_0_60px_rgba(56,189,248,0.15),0_0_120px_rgba(236,72,153,0.1)]",
+            accent: "#38bdf8",
+            btn: "bg-gradient-to-r from-sky-500/10 via-purple-500/10 to-pink-500/10 border-white/10 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]",
+            btnText: "text-white",
+            icon: "text-sky-400",
+            special: "3d_hologram"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -2565,6 +2630,89 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </>
                 )}
 
+                {/* 3D Aurora Background */}
+                {theme.special === "3d_aurora" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #020818 0%, #051530 25%, #0a2540 50%, #082838 75%, #0d3530 100%)' }} />
+                        <div className="absolute inset-0 opacity-60" style={{ background: 'radial-gradient(ellipse at 40% 30%, rgba(52,211,153,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 50%, rgba(139,92,246,0.25) 0%, transparent 50%), radial-gradient(ellipse at 20% 70%, rgba(56,189,248,0.2) 0%, transparent 40%)' }} />
+                        <div className="absolute top-[15%] left-0 right-0 h-[40%] opacity-40 animate-pulse" style={{ background: 'linear-gradient(90deg, transparent, rgba(52,211,153,0.3) 20%, rgba(139,92,246,0.3) 50%, rgba(56,189,248,0.3) 80%, transparent)', filter: 'blur(30px)', transform: 'skewY(-5deg)' }} />
+                        <div className="absolute top-[25%] left-0 right-0 h-[30%] opacity-25" style={{ background: 'linear-gradient(90deg, transparent, rgba(167,243,208,0.4) 30%, rgba(196,181,253,0.3) 60%, transparent)', filter: 'blur(20px)', transform: 'skewY(3deg)', animation: 'pulse 4s ease-in-out infinite alternate' }} />
+                    </>
+                )}
+
+                {/* 3D Neon City Background */}
+                {theme.special === "3d_neoncity" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a0012 0%, #150020 30%, #1a0030 50%, #200040 70%, #0a0015 100%)' }} />
+                        <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(ellipse at 30% 70%, rgba(255,45,149,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 30%, rgba(0,200,255,0.2) 0%, transparent 50%)' }} />
+                        <div className="absolute bottom-0 left-0 right-0 h-[50%] opacity-30" style={{ background: 'linear-gradient(to top, rgba(255,45,149,0.3), transparent)' }} />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{
+                            backgroundImage: `linear-gradient(rgba(255,45,149,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.2) 1px, transparent 1px)`,
+                            backgroundSize: '60px 60px'
+                        }} />
+                        <style>{`
+                            @keyframes neonrain {
+                                0% { transform: translateY(-100%); opacity: 0; }
+                                10% { opacity: 1; }
+                                90% { opacity: 1; }
+                                100% { transform: translateY(100vh); opacity: 0; }
+                            }
+                        `}</style>
+                        {Array(8).fill(0).map((_, i) => (
+                            <div key={`neonrain-${i}`} className="absolute w-[1px] opacity-20" style={{
+                                left: `${10 + i * 12}%`,
+                                height: '30%',
+                                background: i % 2 === 0 ? 'linear-gradient(to bottom, transparent, #ff2d95, transparent)' : 'linear-gradient(to bottom, transparent, #00c8ff, transparent)',
+                                animation: `neonrain ${3 + i * 0.5}s ease-in-out ${i * 0.8}s infinite`
+                            }} />
+                        ))}
+                    </>
+                )}
+
+                {/* 3D Galaxy Background */}
+                {theme.special === "3d_galaxy" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, #0d0520 0%, #030108 100%)' }} />
+                        <div className="absolute inset-0 opacity-50" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(168,85,247,0.3) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(56,189,248,0.2) 0%, transparent 35%), radial-gradient(circle at 50% 20%, rgba(236,72,153,0.15) 0%, transparent 30%)' }} />
+                        <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='0.5' fill='white' fill-opacity='0.5'/%3E%3C/svg%3E")`, backgroundSize: '40px 40px' }} />
+                        <div className="absolute top-[20%] left-[10%] w-[80%] h-[60%] opacity-20 animate-spin" style={{ background: 'conic-gradient(from 0deg, transparent, rgba(168,85,247,0.3) 25%, transparent 50%, rgba(56,189,248,0.2) 75%, transparent)', animationDuration: '60s', filter: 'blur(40px)' }} />
+                    </>
+                )}
+
+                {/* 3D Luxe Gold Background */}
+                {theme.special === "3d_luxegold" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #080604 0%, #0f0c06 30%, #1a150a 50%, #0f0c06 70%, #080604 100%)' }} />
+                        <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(251,191,36,0.15) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(217,119,6,0.1) 0%, transparent 40%)' }} />
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='none' stroke='%23fbbf24' stroke-width='0.3'/%3E%3C/svg%3E")`, backgroundSize: '60px 60px' }} />
+                        <div className="absolute top-0 left-0 right-0 h-[1px] opacity-30" style={{ background: 'linear-gradient(90deg, transparent, #fbbf24, transparent)' }} />
+                        <div className="absolute bottom-0 left-0 right-0 h-[1px] opacity-30" style={{ background: 'linear-gradient(90deg, transparent, #fbbf24, transparent)' }} />
+                    </>
+                )}
+
+                {/* 3D Hologram Background */}
+                {theme.special === "3d_hologram" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #050510 0%, #0a0520 25%, #050510 50%, #050515 75%, #050510 100%)' }} />
+                        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 30% 30%, rgba(56,189,248,0.2) 0%, transparent 40%), radial-gradient(circle at 70% 70%, rgba(236,72,153,0.2) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(168,85,247,0.15) 0%, transparent 30%)' }} />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{
+                            backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+                            backgroundSize: '30px 30px'
+                        }} />
+                        <style>{`
+                            @keyframes holoshift {
+                                0%, 100% { opacity: 0.15; background-position: 0% 0%; }
+                                50% { opacity: 0.25; background-position: 100% 100%; }
+                            }
+                        `}</style>
+                        <div className="absolute inset-0" style={{
+                            background: 'linear-gradient(45deg, rgba(56,189,248,0.05) 0%, rgba(168,85,247,0.05) 25%, rgba(236,72,153,0.05) 50%, rgba(52,211,153,0.05) 75%, rgba(56,189,248,0.05) 100%)',
+                            backgroundSize: '200% 200%',
+                            animation: 'holoshift 8s ease-in-out infinite'
+                        }} />
+                    </>
+                )}
+
                 {/* New Premium Vibe Backgrounds */}
                 {tone === 'lüks' && (
                     <>
@@ -2598,6 +2746,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "3d_frost" && <ParticleBackground type="starfield" color={"#93c5fd"} />}
                 {theme.special === "3d_magma" && <ParticleBackground type="bubbles" color={"#d946ef"} />}
                 {theme.special === "3d_cyber" && <ParticleBackground type="matrix" color={"#06b6d4"} />}
+                {theme.special === "3d_aurora" && <ParticleBackground type="bubbles" color={"#34d399"} />}
+                {theme.special === "3d_neoncity" && <ParticleBackground type="matrix" color={"#ff2d95"} />}
+                {theme.special === "3d_galaxy" && <ParticleBackground type="starfield" color={"#a855f7"} />}
+                {theme.special === "3d_luxegold" && <ParticleBackground type="starfield" color={"#fbbf24"} />}
+                {theme.special === "3d_hologram" && <ParticleBackground type="starfield" color={"#38bdf8"} />}
 
                 {tone === 'yaratıcı' && !["software", "finance", "gamer"].includes(theme.special) && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
                 {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
@@ -2974,6 +3127,71 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <>
                                             <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #06b6d4, #8b5cf6, #22d3ee, #06b6d4)', animationDuration: '5s', opacity: 0.6, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#020a14]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_aurora' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #34d399, #8b5cf6, #3b82f6, #34d399)', animationDuration: '6s', opacity: 0.6, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#020818]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_neoncity' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #ff2d95, #00c8ff, #ff2d95)', animationDuration: '4s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#0a0012]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_galaxy' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #a855f7, #6366f1, #d946ef, #a855f7)', animationDuration: '8s', opacity: 0.6, filter: 'blur(6px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#030108]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_luxegold' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #fbbf24, #d4a017, #fef3c7, #fbbf24)', animationDuration: '5s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#080604]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_hologram' && (
+                                        <>
+                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #ec4899, #a855f7, #34d399, #38bdf8)', animationDuration: '7s', opacity: 0.5, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#050510]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />

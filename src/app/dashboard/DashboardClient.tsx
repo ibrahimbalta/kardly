@@ -457,7 +457,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
         // 3D Sürükleyici (Immersive)
         { id: "3d_frost", category: "3d", name: "❄️ 3D Buzul", description: "Buz kristalleri, neon mavi halka ve karlı dağ atmosferi.", isNew: true },
         { id: "3d_magma", category: "3d", name: "🌋 3D Volkan", description: "Lavanta-tur. gradient butonlar, kor ateşi parıltısı ve sıcak enerji.", isNew: true },
-        { id: "3d_cyber", category: "3d", name: "🌃 3D Siber Şehir", description: "Matrix yağmuru, neon ızgara ve cyberpunk gece atmosferi.", isNew: true }
+        { id: "3d_cyber", category: "3d", name: "🌃 3D Siber Şehir", description: "Matrix yağmuru, neon ızgara ve cyberpunk gece atmosferi.", isNew: true },
+        { id: "3d_aurora", category: "3d", name: "✨ 3D Aurora", description: "Kuzey ışıkları geçişleri, shimmer efektli butonlar ve mistik atmosfer.", isNew: true },
+        { id: "3d_neoncity", category: "3d", name: "🌆 3D Neon City", description: "Tokyo gecesi, dikey neon yağmuru ve parlayan tabela butonlar.", isNew: true },
+        { id: "3d_galaxy", category: "3d", name: "🌌 3D Galaxy", description: "Derin uzay nebulası, dönen galaksi bulutu ve yıldız tozu butonlar.", isNew: true },
+        { id: "3d_luxegold", category: "3d", name: "🏆 3D Luxe Gold", description: "Sıvı altın efekti, metalik gold butonlar ve premium lüks doku.", isNew: true },
+        { id: "3d_hologram", category: "3d", name: "💿 3D Hologram", description: "İridyum gökkuşağı yansıması, krom butonlar ve prizmatik ızgara.", isNew: true }
     ]
 
     // Working Hours Management
