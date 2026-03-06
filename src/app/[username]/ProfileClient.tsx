@@ -2006,12 +2006,25 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             text: "text-white",
             subtext: "text-sky-300/40",
             border: "border-white/10",
-            glow: "shadow-[0_0_60px_rgba(56,189,248,0.15),0_0_120px_rgba(236,72,153,0.1)]",
+            glow: "shadow-[0_0_60px_rgba(56,189,248,0.15),0_0_120px_rgba(236,72,153,0.15)]",
             accent: "#38bdf8",
             btn: "bg-gradient-to-r from-sky-500/10 via-purple-500/10 to-pink-500/10 border-white/10 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]",
             btnText: "text-white",
             icon: "text-sky-400",
             special: "3d_hologram"
+        },
+        "3d_quantum": {
+            bg: "bg-[#020205]",
+            card: "bg-white/[0.01] backdrop-blur-3xl",
+            text: "text-white",
+            subtext: "text-indigo-300/40",
+            border: "border-indigo-500/20",
+            glow: "shadow-[0_30px_100px_rgba(99,102,241,0.15)]",
+            accent: "#6366f1",
+            btn: "rounded-full bg-indigo-500/10 border-indigo-500/30 backdrop-blur-2xl shadow-[0_10px_30px_rgba(99,102,241,0.1)] hover:bg-indigo-500/20 transition-all",
+            btnText: "text-indigo-100",
+            icon: "text-indigo-400",
+            special: "3d_quantum"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -2713,6 +2726,47 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </>
                 )}
 
+                {/* 3D Quantum Liquid Background */}
+                {theme.special === "3d_quantum" && (
+                    <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute inset-0 bg-[#020205]" />
+                        {[...Array(6)].map((_, i) => (
+                            <motion.div
+                                key={`quantum-${i}`}
+                                animate={{
+                                    x: [
+                                        Math.random() * 200 - 100,
+                                        Math.random() * 400 - 200,
+                                        Math.random() * 200 - 100,
+                                    ],
+                                    y: [
+                                        Math.random() * 200 - 100,
+                                        Math.random() * 500 - 250,
+                                        Math.random() * 200 - 100,
+                                    ],
+                                    scale: [1, 1.5, 0.8, 1.2, 1],
+                                    rotate: [0, 90, 180, 270, 360],
+                                }}
+                                transition={{
+                                    duration: 20 + i * 10,
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
+                                }}
+                                className="absolute rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-[120px] opacity-[0.15]"
+                                style={{
+                                    width: `${400 + i * 100}px`,
+                                    height: `${400 + i * 100}px`,
+                                    left: `${Math.random() * 100}%`,
+                                    top: `${Math.random() * 100}%`,
+                                    background: i % 2 === 0 ? '#4f46e5' : '#818cf8',
+                                }}
+                            />
+                        ))}
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
+                        <div className="absolute inset-0 mix-blend-overlay opacity-[0.02]" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/carbon-fibre.png")` }} />
+                    </div>
+                )}
+
                 {/* New Premium Vibe Backgrounds */}
                 {tone === 'lüks' && (
                     <>
@@ -2751,6 +2805,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "3d_galaxy" && <ParticleBackground type="starfield" color={"#a855f7"} />}
                 {theme.special === "3d_luxegold" && <ParticleBackground type="starfield" color={"#fbbf24"} />}
                 {theme.special === "3d_hologram" && <ParticleBackground type="starfield" color={"#38bdf8"} />}
+                {theme.special === "3d_quantum" && <ParticleBackground type="bubbles" color={"#6366f1"} />}
 
                 {tone === 'yaratıcı' && !["software", "finance", "gamer"].includes(theme.special) && <ParticleBackground type="matrix" color={theme.accent || "#0f0"} />}
                 {tone === 'lüks' && <ParticleBackground type="starfield" color={theme.accent || "#fff"} />}
@@ -3192,6 +3247,20 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <>
                                             <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #ec4899, #a855f7, #34d399, #38bdf8)', animationDuration: '7s', opacity: 0.5, filter: 'blur(5px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#050510]" />
+                                            <div className="absolute inset-0 rounded-full overflow-hidden">
+                                                {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
+                                                    <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
+                                                ) : (
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {theme.special === '3d_quantum' && (
+                                        <>
+                                            <div className="absolute -inset-[12px] rounded-full animate-spin-slow" style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #6366f1)', opacity: 0.8, filter: 'blur(8px)' }} />
+                                            <div className="absolute -inset-[6px] rounded-full animate-pulse" style={{ background: 'linear-gradient(45deg, #6366f1, #a855f7)', opacity: 0.4, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-1 rounded-full bg-[#020205]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />

@@ -462,7 +462,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "3d_neoncity", category: "3d", name: "🌆 3D Neon City", description: "Tokyo gecesi, dikey neon yağmuru ve parlayan tabela butonlar.", isNew: true },
         { id: "3d_galaxy", category: "3d", name: "🌌 3D Galaxy", description: "Derin uzay nebulası, dönen galaksi bulutu ve yıldız tozu butonlar.", isNew: true },
         { id: "3d_luxegold", category: "3d", name: "🏆 3D Luxe Gold", description: "Sıvı altın efekti, metalik gold butonlar ve premium lüks doku.", isNew: true },
-        { id: "3d_hologram", category: "3d", name: "💿 3D Hologram", description: "İridyum gökkuşağı yansıması, krom butonlar ve prizmatik ızgara.", isNew: true }
+        { id: "3d_hologram", category: "3d", name: "💿 3D Hologram", description: "İridyum gökkuşağı yansıması, krom butonlar ve prizmatik ızgara.", isNew: true },
+        { id: "3d_quantum", category: "3d", name: "🧬 3D Quantum Liquid", description: "Oval (pill) butonlar, hareketli akışkanlar ve ileri seviye derinlik.", isNew: true }
     ]
 
     // Working Hours Management
