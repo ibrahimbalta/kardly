@@ -72,7 +72,7 @@ export default function RegisterPage() {
                         <div className="w-11 h-11 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-200">
                             <Layout className="text-white w-6 h-6" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-rose-500">.</span></span>
+                        <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-rose-500">.SİTE</span></span>
                     </div>
 
                     <div className="mb-10">
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                             <div className="w-12 h-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center">
                                 <Layout className="text-white w-7 h-7" />
                             </div>
-                            <span className="text-2xl font-black text-white tracking-tighter">KARDLY<span className="text-white/60">.</span></span>
+                            <span className="text-2xl font-black text-white tracking-tighter">KARDLY<span className="text-white/60">.SİTE</span></span>
                         </div>
 
                         <h2 className="text-4xl font-black text-white leading-tight mb-6">
