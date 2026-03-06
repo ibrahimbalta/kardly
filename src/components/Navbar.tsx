@@ -19,11 +19,11 @@ export function Navbar() {
                     <div className="w-11 h-11 bg-rose-500 rounded-[1.2rem] flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-rose-200/50">
                         <Layout className="text-white w-6 h-6" />
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col items-center">
                         <span className="text-xl font-black tracking-tighter leading-none text-slate-900 uppercase">
                             KARDLY<span className="text-rose-500">.site</span>
                         </span>
-                        <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">LINK TO SUCCESS</span>
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">LINK TO SUCCESS</span>
                     </div>
                 </Link>
 

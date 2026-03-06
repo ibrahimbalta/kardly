@@ -419,11 +419,11 @@ export default function Home() {
                 <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200/50">
                   <Layout className="text-white w-5 h-5" />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-center">
                   <span className="text-lg font-black tracking-tight text-slate-900 uppercase">
                     Kardly<span className="text-rose-500">.site</span>
                   </span>
-                  <span className="text-[6px] font-black text-slate-400 uppercase tracking-[0.4em] mt-0.5 pr-1">LINK TO SUCCESS</span>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">LINK TO SUCCESS</span>
                 </div>
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
