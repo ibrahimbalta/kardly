@@ -321,96 +321,94 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             <div className={cn(
-                "flex-1 p-6 flex flex-col relative z-20 justify-start pt-10"
+                "flex-1 p-6 flex flex-col relative z-20 justify-start pt-6"
             )}>
-                {/* Profile Image & Header Area */}
-                <div className="flex flex-col items-center text-center mb-6">
+                {/* Profile Image & Header Area - Reduced Spacing */}
+                <div className="flex flex-col items-center text-center mb-4">
                     <div className={cn(
-                        "w-20 h-20 mb-3 p-1 relative z-10 overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.3)] rounded-[1.75rem] border-2 ring-4 ring-white/5",
+                        "w-16 h-16 mb-2 p-1 relative z-10 overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.3)] rounded-2xl border-2 ring-4 ring-white/5",
                         tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
                     )}>
-                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" />
+                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
                     </div>
-                    <div>
+                    <div className="space-y-0.5">
                         <h1 className={cn(
-                            "font-black tracking-tighter mb-1 line-clamp-1 leading-[1.1] text-2xl uppercase",
+                            "font-black tracking-tighter line-clamp-1 leading-none text-xl uppercase",
                             tp.text
                         )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
-                        <div className={cn("inline-block py-0.5 px-3 rounded-xl bg-white/5 border border-white/10")}>
-                            <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
+                        <div className={cn("inline-block py-0.5 px-2 rounded-lg bg-white/5 border border-white/10")}>
+                            <p className={cn("text-[7px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
                                 {profileData?.occupation || user.occupation || "DIGITAL EXPERT"}
                             </p>
                         </div>
                     </div>
-                    {/* Minimal Separator */}
-                    <div className="w-20 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mt-6" />
                 </div>
 
-                {/* QR Code Container */}
-                <div className="flex items-center justify-center mb-6">
-                    <div className="p-4 bg-white rounded-[2.75rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-[12px] ring-white/5">
+                {/* QR Code Container - Compact */}
+                <div className="flex items-center justify-center mb-4">
+                    <div className="p-3 bg-white rounded-[2.25rem] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-[8px] ring-white/5">
                         {qrDataUrl ? (
-                            <img src={qrDataUrl} alt="QR Code" className="w-[125px] h-[125px]" />
+                            <img src={qrDataUrl} alt="QR Code" className="w-[110px] h-[110px]" />
                         ) : (
-                            <div className="w-[125px] h-[125px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
+                            <div className="w-[110px] h-[110px] animate-pulse bg-slate-50 rounded-2xl flex items-center justify-center" >
                                 <RefreshCw className="animate-spin text-slate-200" />
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className="text-center mb-6">
-                    <span className={cn("text-[7px] font-black uppercase tracking-[0.5em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
+                <div className="text-center mb-4">
+                    <span className={cn("text-[6px] font-black uppercase tracking-[0.5em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
                 </div>
 
-                {/* Info Cards List */}
-                <div className="space-y-1.5 overflow-hidden">
+                {/* Info Cards List - More compact */}
+                <div className="space-y-1">
                     {(profileData?.phone || user.phone) && (
-                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
-                                <Phone size={12} strokeWidth={2.5} />
+                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <Phone size={10} strokeWidth={3} />
                             </div>
-                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
+                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
                         </div>
                     )}
 
                     {whatsappData && (
-                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-emerald-500/10 text-emerald-400 shadow-inner")}>
-                                <MessageCircle size={12} strokeWidth={2.5} />
+                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-400")}>
+                                <MessageCircle size={10} strokeWidth={3} />
                             </div>
-                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{whatsappData}</span>
+                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{whatsappData}</span>
                         </div>
                     )}
 
                     {locationData && (
-                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
-                                <MapPin size={12} strokeWidth={2.5} />
+                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <MapPin size={10} strokeWidth={3} />
                             </div>
-                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
+                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
                         </div>
                     )}
 
                     {(profileData?.email || user.email) && (
-                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
-                                <Mail size={12} strokeWidth={2.5} />
+                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <Mail size={10} strokeWidth={3} />
                             </div>
-                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
+                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
                         </div>
                     )}
 
-                    <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
-                        <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
-                            <Globe size={12} strokeWidth={2.5} />
+                    <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
+                        <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
+                            <Globe size={10} strokeWidth={3} />
                         </div>
-                        <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
+                        <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
                     </div>
                 </div>
 
-                <div className="mt-auto pt-6 text-center pb-4">
-                    <span className={cn("text-[8px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
+                <div className="mt-auto pt-4 text-center pb-2">
+                    <span className={cn("text-[7px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
                 </div>
             </div>
         </div>
