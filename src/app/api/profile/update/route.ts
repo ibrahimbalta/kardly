@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         const body = await req.json()
-        const { slogan, bio, phone, socialLinks, themeColor, templateId, tone, services, workingHours, occupation, displayName, image, cvUrl, showAppointmentBtn, youtubeVideoUrl, showVideoAsProfile, isCatalog, paymentLink, paymentType, animationStyle, profileBgImage, businessCardTemplateId, qrColorDark, qrColorLight } = body
+        const { slogan, bio, phone, socialLinks, themeColor, templateId, tone, services, workingHours, occupation, displayName, image, cvUrl, showAppointmentBtn, youtubeVideoUrl, showVideoAsProfile, isCatalog, paymentLink, paymentType, animationStyle, profileBgImage, businessCardTemplateId, businessCardOrientation, qrColorDark, qrColorLight } = body
 
         // Update User name & image if provided
         if (displayName || image) {
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
                 animationStyle,
                 profileBgImage,
                 businessCardTemplateId,
+                businessCardOrientation,
                 qrColorDark,
                 qrColorLight
             }

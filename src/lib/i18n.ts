@@ -235,6 +235,11 @@ export const translations: any = {
         downloaded: "İNDİRİLDİ",
         businessCardTitle: "Dijital Kartvizit Şablonları",
         businessCardSub: "Kameranızla okutunca açılan profilinizi, şimdi de fiziksel kartvizit tadında indirin ve paylaşın.",
+        landscape: "YATAY",
+        portrait: "DİKEY",
+        ultraHighQuality: "Vektörel Kalite (600DPI)",
+        selectTemplate: "ŞABLON SEÇİMİ",
+        downloadError: "İndirme sırasında bir hata oluştu.",
 
         // Landing Page
         heroTitle: "Profesyonel Dünyanı",
@@ -936,6 +941,11 @@ export const translations: any = {
         downloaded: "DOWNLOADED",
         businessCardTitle: "Digital Business Card Templates",
         businessCardSub: "Download and share your profile as a professional business card, perfect for physical and digital networking.",
+        landscape: "LANDSCAPE",
+        portrait: "PORTRAIT",
+        ultraHighQuality: "Vector Quality (600DPI)",
+        selectTemplate: "SELECT TEMPLATE",
+        downloadError: "An error occurred during download.",
 
         // Landing Page
         heroTitle: "Bring Your Professional",

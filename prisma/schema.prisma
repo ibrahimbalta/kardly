@@ -94,6 +94,7 @@ model Profile {
   animationStyle     String?     @default("none")
   profileBgImage     String?
   businessCardTemplateId String? @default("minimal_white")
+  businessCardOrientation String? @default("landscape")
   qrColorDark        String? @default("#0f172a")
   qrColorLight       String? @default("#ffffff")
   createdAt      DateTime    @default(now())

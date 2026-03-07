@@ -4053,42 +4053,50 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/95 backdrop-blur-2xl flex items-start sm:items-center justify-center p-4 py-12">
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/80 backdrop-blur-3xl flex items-center justify-center p-4">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
+
             <div className="w-full max-w-2xl relative">
                 <div className="fixed inset-0" onClick={onClose} />
 
                 <div className="relative z-10 w-full flex flex-col items-center">
-                    <div className="w-full flex justify-end mb-8 max-w-[500px]">
+                    {/* Floating Close Button */}
+                    <div className="w-full flex justify-end mb-6 max-w-[540px]">
                         <button
                             onClick={onClose}
-                            className="w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all backdrop-blur-md"
+                            className="w-11 h-11 rounded-3xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all backdrop-blur-xl group"
                         >
-                            <X size={24} />
+                            <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
 
-                    <div className="bg-[#020617] border border-white/10 rounded-[2.5rem] sm:rounded-[3.5rem] p-4 sm:p-12 backdrop-blur-3xl shadow-2xl relative overflow-hidden group w-full">
-                        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                    <div className="bg-white/5 border border-white/10 rounded-[3rem] sm:rounded-[4rem] p-6 sm:p-14 backdrop-blur-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] relative overflow-hidden group w-full">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
-                        <BusinessCardGenerator
-                            mode="full"
-                            selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                            user={{
-                                name: profile.user.name,
-                                username: profile.username,
-                                occupation: profile.occupation,
-                                phone: profile.phone,
-                                email: profile.user.email,
-                                image: profile.user.image
-                            }}
-                            profileData={profile}
-                        />
+                        <div className="relative z-10">
+                            <BusinessCardGenerator
+                                mode="full"
+                                selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                                orientation={profile.businessCardOrientation || 'landscape'}
+                                user={{
+                                    name: profile.user.name,
+                                    username: profile.username,
+                                    occupation: profile.occupation,
+                                    phone: profile.phone,
+                                    email: profile.user.email,
+                                    image: profile.user.image
+                                }}
+                                profileData={profile}
+                            />
+                        </div>
 
                         <button
                             onClick={onClose}
-                            className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-white/20 hover:text-white/60 transition-all mx-auto block"
+                            className="mt-12 text-[10px] font-black uppercase tracking-[0.6em] text-white/20 hover:text-white/80 transition-all mx-auto block"
                         >
-                            {t.closeLabel || 'KAPAT'}
+                            {t.closeLabel || 'ESC TO CLOSE'}
                         </button>
                     </div>
                 </div>

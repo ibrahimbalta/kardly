@@ -149,7 +149,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         profileBgImage: profile?.profileBgImage || "",
         qrColorDark: profile?.qrColorDark || "#0f172a",
         qrColorLight: profile?.qrColorLight || "#ffffff",
-        businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white"
+        businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
+        businessCardOrientation: profile?.businessCardOrientation || "landscape"
     })
 
     const [selectedTplCat, setSelectedTplCat] = useState("all")
@@ -567,6 +568,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     animationStyle: overrides?.animationStyle ?? profileData.animationStyle,
                     profileBgImage: overrides?.profileBgImage ?? profileData.profileBgImage,
                     businessCardTemplateId: overrides?.businessCardTemplateId ?? profileData.businessCardTemplateId,
+                    businessCardOrientation: overrides?.businessCardOrientation ?? profileData.businessCardOrientation,
                     qrColorDark: overrides?.qrColorDark ?? profileData.qrColorDark,
                     qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight
                 })
@@ -3107,7 +3109,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <BusinessCardGenerator
                                 mode="selector"
                                 selectedTemplateId={profileData.businessCardTemplateId}
+                                orientation={profileData.businessCardOrientation as any}
                                 onSelect={(id) => setProfileData({ ...profileData, businessCardTemplateId: id })}
+                                onOrientationChange={(o) => setProfileData({ ...profileData, businessCardOrientation: o })}
                                 user={{
                                     name: profileData.name || session?.user?.name || "Kullanıcı",
                                     username: profile?.username || "demo",
