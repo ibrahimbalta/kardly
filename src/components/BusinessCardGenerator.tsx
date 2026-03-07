@@ -84,6 +84,56 @@ const TEMPLATES = [
         accentText: 'text-indigo-300',
         secondary: 'text-white/50',
         hex: 'linear-gradient(135deg, #0f172a, #312e81, #581c87)'
+    },
+    {
+        id: 'cyber_neon',
+        name: 'Cyber Neon',
+        bg: 'bg-black',
+        text: 'text-cyan-400',
+        accent: 'bg-fuchsia-500',
+        accentText: 'text-fuchsia-400',
+        secondary: 'text-cyan-400/50',
+        hex: '#000000'
+    },
+    {
+        id: 'minimal_glass',
+        name: 'Pure Glass',
+        bg: 'bg-slate-800/40 backdrop-blur-xl',
+        text: 'text-white',
+        accent: 'bg-white',
+        accentText: 'text-white',
+        secondary: 'text-white/60',
+        hex: 'rgba(51, 65, 85, 0.4)'
+    },
+    {
+        id: 'deep_purple',
+        name: 'Deep Purple',
+        bg: 'bg-[#1e1432]',
+        text: 'text-white',
+        accent: 'bg-[#9d58ff]',
+        accentText: 'text-[#9d58ff]',
+        secondary: 'text-white/50',
+        hex: '#1e1432'
+    },
+    {
+        id: 'titanium_gray',
+        name: 'Titanium',
+        bg: 'bg-[#1c1c1c]',
+        text: 'text-[#e0e0e0]',
+        accent: 'bg-[#ff5722]',
+        accentText: 'text-[#ff5722]',
+        secondary: 'text-[#e0e0e0]/40',
+        hex: '#1c1c1c'
+    },
+    {
+        id: 'midnight_emerald',
+        name: 'Emerald Dark',
+        bg: 'bg-[#062016]',
+        text: 'text-[#d4af37]',
+        accent: 'bg-[#d4af37]',
+        accentText: 'text-[#d4af37]',
+        secondary: 'text-[#d4af37]/60',
+        hex: '#062016'
     }
 ]
 
@@ -116,9 +166,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const cardHeight = isPortrait ? 500 : 280
 
     // Scale logic
-    const cardScale = Math.min(1, containerWidth / (cardWidth + 40))
+    const cardScale = Math.min(1, containerWidth / (cardWidth + 20))
     const [isDownloading, setIsDownloading] = useState(false)
-    const [showSuccess, setShowSuccess] = useState(false)
+    const [downloadSuccess, setDownloadSuccess] = useState(false)
+    const [shareSuccess, setShareSuccess] = useState(false)
     const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : ''
 
     const handleDownload = async () => {
@@ -129,18 +180,17 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             await new Promise(r => setTimeout(r, 500))
 
             const canvas = await html2canvas(cardRef.current, {
-                scale: 3, // Higher quality
+                scale: 4, // Ultra high quality
                 useCORS: true,
                 backgroundColor: null,
                 logging: false,
-                width: cardWidth,
-                height: cardHeight,
                 onclone: (clonedDoc) => {
                     const el = clonedDoc.querySelector('[data-card-actual]') as HTMLElement
                     if (el) {
                         el.style.transform = 'none'
                         el.style.margin = '0'
                         el.style.position = 'static'
+                        el.style.borderRadius = '0' // Better for square download
                     }
                 }
             })
@@ -149,8 +199,8 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             link.href = image
             link.download = `kardly-${user.username}-${orientation}.jpg`
             link.click()
-            setShowSuccess(true)
-            setTimeout(() => setShowSuccess(false), 3000)
+            setDownloadSuccess(true)
+            setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
             console.error('Error generating card:', error)
             alert(t('downloadError') || 'İndirme sırasında bir hata oluştu.')
@@ -172,8 +222,8 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             }
         } else {
             navigator.clipboard.writeText(profileUrl)
-            setShowSuccess(true)
-            setTimeout(() => setShowSuccess(false), 2000)
+            setShareSuccess(true)
+            setTimeout(() => setShareSuccess(false), 2000)
         }
     }
 
@@ -263,7 +313,17 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 0% 0%, #ec4899 0%, transparent 50%), radial-gradient(circle at 100% 100%, #881337 0%, transparent 50%)` }} />
                         )}
                         {tp.id === 'gradient_mesh' && (
-                            <div className="absolute inset-0 opacity-40" style={{ backgroundImage: tp.hex }} />
+                            <div className="absolute inset-0 opacity-40 shadow-[inset_0_0_100px_rgba(255,255,255,0.1)]" style={{ backgroundImage: tp.hex }} />
+                        )}
+                        {tp.id === 'cyber_neon' && (
+                            <>
+                                <div className="absolute top-0 left-0 w-full h-px bg-cyan-400 opacity-50" />
+                                <div className="absolute bottom-0 right-0 w-full h-px bg-fuchsia-500 opacity-50" />
+                                <div className="absolute top-0 right-0 w-1/4 h-full bg-cyan-400/5 blur-3xl" />
+                            </>
+                        )}
+                        {tp.id === 'midnight_emerald' && (
+                            <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 0h20v20H0V0z' fill='%23d4af37' fill-opacity='1'/%3E%3C/svg%3E")` }} />
                         )}
 
                         <div className={cn(
@@ -310,14 +370,16 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             {mode === 'full' && (
-                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-md px-6 relative z-30">
-                    <button onClick={handleDownload} disabled={isDownloading} className="flex-1 flex items-center justify-center gap-3 px-8 py-5 bg-primary text-white rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50">
-                        {isDownloading ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : showSuccess ? <><Check size={20} /> {t('downloaded') || 'İNDİRİLDİ'}</> : <><Download size={20} /> {t('downloadJpeg') || 'KARTI İNDİR'}</>}
+                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-sm px-6 relative z-30">
+                    <button onClick={handleDownload} disabled={isDownloading} className="flex-1 flex items-center justify-center gap-3 px-8 py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 min-w-[200px]">
+                        {isDownloading ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : downloadSuccess ? <><Check size={20} /> {t('downloaded') || 'İNDİRİLDİ'}</> : <><Download size={20} /> {t('downloadJpeg') || 'GÖRSEL İNDİR'}</>}
                     </button>
-                    <button onClick={handleShare} className="px-6 py-5 bg-white/10 text-white/70 border border-white/10 rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all flex items-center justify-center backdrop-blur-md"><Share2 size={20} /></button>
+                    <button onClick={handleShare} className="px-6 py-5 bg-white/10 text-white/70 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all flex items-center justify-center backdrop-blur-md min-w-[70px]">
+                        {shareSuccess ? <Check size={20} className="text-emerald-400" /> : <Share2 size={20} />}
+                    </button>
                 </div>
             )}
-            {mode === 'full' && <p className="mt-4 text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">{t('ultraHighQuality') || 'Vektörel Kalite (600DPI)'}</p>}
+            {mode === 'full' && <p className="mt-4 text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">{t('ultraHighQuality') || 'BASKI KALİTESİ (Ultra HD)'}</p>}
         </div>
     )
 }

@@ -4053,27 +4053,25 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/80 backdrop-blur-3xl flex items-center justify-center p-4">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/40 backdrop-blur-xl flex items-center justify-center p-4">
 
-            <div className="w-full max-w-2xl relative">
+            <div className="w-full max-w-[440px] relative animate-in fade-in zoom-in duration-300">
                 <div className="fixed inset-0" onClick={onClose} />
 
                 <div className="relative z-10 w-full flex flex-col items-center">
                     {/* Floating Close Button */}
-                    <div className="w-full flex justify-end mb-6 max-w-[540px]">
+                    <div className="w-full flex justify-end mb-4 pr-1">
                         <button
                             onClick={onClose}
-                            className="w-11 h-11 rounded-3xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all backdrop-blur-xl group"
+                            className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-md group shadow-xl"
                         >
-                            <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                            <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                         </button>
                     </div>
 
-                    <div className="bg-white/5 border border-white/10 rounded-[3rem] sm:rounded-[4rem] p-6 sm:p-14 backdrop-blur-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] relative overflow-hidden group w-full">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+                    <div className="bg-[#020617] border border-white/5 rounded-[2.5rem] p-4 sm:p-8 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] relative overflow-hidden group w-full ring-1 ring-white/5">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/20 blur-[60px] rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
 
                         <div className="relative z-10">
                             <BusinessCardGenerator
@@ -4094,9 +4092,9 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
 
                         <button
                             onClick={onClose}
-                            className="mt-12 text-[10px] font-black uppercase tracking-[0.6em] text-white/20 hover:text-white/80 transition-all mx-auto block"
+                            className="mt-8 text-[8px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all mx-auto block"
                         >
-                            {t.closeLabel || 'ESC TO CLOSE'}
+                            {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
                         </button>
                     </div>
                 </div>
