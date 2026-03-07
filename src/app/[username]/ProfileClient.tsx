@@ -4053,9 +4053,9 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/95 backdrop-blur-2xl flex items-start sm:items-center justify-center p-4 py-12">
             <div className="w-full max-w-2xl relative">
-                <div className="absolute inset-0 -m-20" onClick={onClose} />
+                <div className="fixed inset-0" onClick={onClose} />
 
                 <div className="relative z-10 w-full flex flex-col items-center">
                     <div className="w-full flex justify-end mb-8 max-w-[500px]">
@@ -4067,7 +4067,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                         </button>
                     </div>
 
-                    <div className="bg-[#020617] border border-white/10 rounded-[3.5rem] p-4 sm:p-12 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+                    <div className="bg-[#020617] border border-white/10 rounded-[2.5rem] sm:rounded-[3.5rem] p-4 sm:p-12 backdrop-blur-3xl shadow-2xl relative overflow-hidden group w-full">
                         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
                         <BusinessCardGenerator
