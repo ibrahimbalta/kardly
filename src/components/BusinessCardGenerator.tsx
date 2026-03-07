@@ -138,7 +138,7 @@ const TEMPLATES = [
     }
 ]
 
-export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'landscape', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
+export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
     const { t } = useTranslation()
     const cardRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -184,9 +184,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         generateQr()
     }, [profileUrl])
 
-    const isPortrait = orientation === 'portrait'
-    const cardWidth = isPortrait ? 320 : 500
-    const cardHeight = isPortrait ? 540 : 280
+    // Always portrait
+    const cardWidth = 320
+    const cardHeight = 540
 
     // Scale logic
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
@@ -204,9 +204,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             await new Promise(r => setTimeout(r, 600))
 
             const canvas = await html2canvas(cardRef.current, {
-                scale: 3, // Superior clarity for text/icons
+                scale: 2, // Stable high res
                 useCORS: true,
-                allowTaint: true,
+                allowTaint: false,
                 backgroundColor: null,
                 logging: false,
                 width: cardWidth,
@@ -225,10 +225,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 }
             })
 
-            const image = canvas.toDataURL('image/jpeg', 0.98)
+            const image = canvas.toDataURL('image/jpeg', 0.95)
             const link = document.createElement('a')
             link.href = image
-            link.download = `kardly-${user.username}.jpg`
+            link.download = `kardly-card-${user.username}.jpg`
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)
@@ -273,8 +273,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     const CardContent = (
         <div ref={cardRef} data-card-actual className={cn(
-            "flex overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] relative group/card",
-            isPortrait ? "flex-col" : "flex-row",
+            "flex flex-col overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] relative group/card",
             tp.bg
         )} style={{
             width: `${cardWidth}px`,
@@ -308,45 +307,40 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             )}
 
             <div className={cn(
-                "flex-1 p-8 sm:p-10 flex flex-col relative z-20",
-                isPortrait ? "justify-start text-center pt-14" : "justify-between"
+                "flex-1 p-8 sm:p-10 flex flex-col relative z-20 justify-start text-center pt-14"
             )}>
-                <div className={isPortrait ? "mb-10" : ""}>
+                <div className="mb-10">
                     <h1 className={cn(
-                        "font-black tracking-tighter mb-1 line-clamp-2 leading-none",
-                        tp.text,
-                        isPortrait ? "text-4xl" : "text-3xl"
-                    )}>{(profileData?.displayName || user.name || "İsim Soyisim").toUpperCase()}</h1>
+                        "font-black tracking-tighter mb-1 line-clamp-2 leading-none text-4xl",
+                        tp.text
+                    )}>{(profileData?.displayName || user.name || "İSİM SOYİSİM").toUpperCase()}</h1>
                     <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-80", tp.accentText)}>{profileData?.occupation || user.occupation || "MESLEK ÜNVANI"}</p>
                 </div>
 
-                <div className={cn("space-y-4", isPortrait ? "mt-4" : "")}>
-                    <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
+                <div className="space-y-4 mt-4">
+                    <div className="flex items-center gap-3 justify-center">
                         <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
                         <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>kardly.site/{user.username}</span>
                     </div>
                     {(profileData?.phone || user.phone) && (
-                        <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
+                        <div className="flex items-center gap-3 justify-center">
                             <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
                             <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
                         </div>
                     )}
                 </div>
 
-                <div className={cn("flex mt-6 transition-all group-hover/card:tracking-[0.8em]", isPortrait ? "justify-center opacity-40" : "opacity-30")}>
-                    <span className={cn("text-[9px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY.SİTE</span>
+                <div className="flex mt-8 justify-center opacity-40 transition-all group-hover/card:tracking-[0.6em]">
+                    <span className={cn("text-[9px] font-black tracking-[0.4em] uppercase", tp.text)}>KARDLY.SİTE</span>
                 </div>
             </div>
 
-            <div className={cn(
-                "flex items-center justify-center relative z-20",
-                isPortrait ? "pb-14" : "w-[200px] pr-12"
-            )}>
-                <div className="p-3.5 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95">
+            <div className="flex items-center justify-center relative z-20 pb-14">
+                <div className="p-4 bg-white rounded-[2.5rem] shadow-2xl flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95">
                     {qrDataUrl ? (
-                        <img src={qrDataUrl} alt="QR Code" className={isPortrait ? "w-[120px] h-[120px]" : "w-[110px] h-[110px]"} />
+                        <img src={qrDataUrl} alt="QR Code" className="w-[130px] h-[130px]" />
                     ) : (
-                        <div className={cn(isPortrait ? "w-[120px] h-[120px]" : "w-[110px] h-[110px]", "animate-pulse bg-slate-100 rounded-2xl flex items-center justify-center")} >
+                        <div className="w-[130px] h-[130px] animate-pulse bg-slate-100 rounded-3xl flex items-center justify-center" >
                             <RefreshCw className="animate-spin text-slate-300" />
                         </div>
                     )}
@@ -387,7 +381,6 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         <div className="space-y-8 w-full flex flex-col items-center">
             {mode === 'selector' && (
                 <div className="w-full flex flex-col items-center gap-8">
-                    {/* View Switcher omitted for space, keep original selector if needed or simplified */}
                     <div className="w-full text-center">
                         <div className="flex flex-wrap gap-4 justify-center px-4 max-w-sm mx-auto">
                             {TEMPLATES.map((tpl) => (
@@ -396,7 +389,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                     onClick={() => onSelect?.(tpl.id)}
                                     className={cn(
                                         "relative shrink-0 w-12 h-12 rounded-full border-2 transition-all p-0.5",
-                                        tp.id === tpl.id ? "border-primary ring-4 ring-primary/20 scale-110" : "border-slate-200 opacity-60"
+                                        tp.id === tpl.id ? "border-primary ring-4 ring-primary/20 scale-110" : "border-slate-200 opacity-60 hover:opacity-100"
                                     )}
                                 >
                                     <div className="w-full h-full rounded-full shadow-inner" style={{ background: tpl.hex }} />
@@ -422,18 +415,23 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 </div>
             </div>
 
-            {mode === 'full' && (
-                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-sm px-6">
-                    <button onClick={handleDownload} disabled={isDownloading} className="flex-1 h-16 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3">
-                        {isDownloading ? <RefreshCw className="animate-spin" /> : <Download size={20} />}
-                        {t('downloadJpeg') || 'GÖRSEL İNDİR'}
-                    </button>
-                    <button onClick={handleShare} disabled={isSharing} className="w-16 h-16 bg-white/10 text-white rounded-3xl flex items-center justify-center">
-                        <Share2 size={20} />
-                    </button>
-                </div>
-            )}
+            <div className="w-full max-w-[320px] flex gap-3 mt-8 px-6">
+                <button
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    className="flex-1 h-14 flex items-center justify-center gap-3 bg-primary text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                >
+                    {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : downloadSuccess ? <Check size={16} /> : <Download size={16} />}
+                    {downloadSuccess ? 'İNDİRİLDİ' : 'GÖRSELİ İNDİR'}
+                </button>
+                <button
+                    onClick={handleShare}
+                    disabled={isSharing}
+                    className="w-14 h-14 flex items-center justify-center bg-slate-100 text-slate-400 rounded-[2rem] hover:bg-slate-200 hover:text-slate-600 transition-all active:scale-95 border border-slate-200"
+                >
+                    {shareSuccess ? <Check size={16} className="text-emerald-500" /> : <Share2 size={16} />}
+                </button>
+            </div>
         </div>
     )
 }
-
