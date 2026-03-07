@@ -100,8 +100,8 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     }, [profileUrl])
 
     // Scale logic
-    const cardWidth = 320
-    const cardHeight = 600
+    const cardWidth = orientation === 'landscape' ? 600 : 320
+    const cardHeight = orientation === 'landscape' ? 320 : 600
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
 
     const [isDownloading, setIsDownloading] = useState(false)
