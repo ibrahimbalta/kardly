@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+// Build trigger: 2026-03-07T09:22:00
 import { Navbar } from "@/components/Navbar"
 import { Hero } from "@/components/Hero"
 import {
