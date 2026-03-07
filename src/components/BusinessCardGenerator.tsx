@@ -145,6 +145,39 @@ const TEMPLATES = [
         secondary: 'text-purple-100/60',
         hex: '#1a0b2e',
         pattern: 'nebula'
+    },
+    {
+        id: 'layered_blue',
+        name: 'Layered Ocean',
+        bg: 'bg-[#0f172a]',
+        text: 'text-blue-50',
+        accent: 'bg-blue-500',
+        accentText: 'text-blue-400',
+        secondary: 'text-blue-300',
+        hex: '#0f172a',
+        pattern: 'layered'
+    },
+    {
+        id: 'layered_orange',
+        name: 'Layered Flame',
+        bg: 'bg-white',
+        text: 'text-slate-900',
+        accent: 'bg-orange-500',
+        accentText: 'text-orange-500',
+        secondary: 'text-slate-600',
+        hex: '#ffffff',
+        pattern: 'layered'
+    },
+    {
+        id: 'layered_dark',
+        name: 'Layered Onyx',
+        bg: 'bg-[#111111]',
+        text: 'text-white',
+        accent: 'bg-slate-500',
+        accentText: 'text-white',
+        secondary: 'text-slate-400',
+        hex: '#111111',
+        pattern: 'layered'
     }
 ]
 
@@ -259,7 +292,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         )} style={{
             width: `${cardWidth}px`,
             height: `${cardHeight}px`,
-            borderRadius: mode === 'modal' ? '3rem' : '2.5rem',
+            borderRadius: mode === 'modal' ? '2.5rem' : '1.5rem',
         }}>
 
             {/* Premium Background Graphics */}
@@ -282,6 +315,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-0 left-0 w-full h-full opacity-30" style={{ background: `radial-gradient(circle at 0% 0%, ${tp.accentText}33 0%, transparent 60%), radial-gradient(circle at 100% 100%, #000 0%, transparent 60%)` }} />
                         <svg className="absolute bottom-0 left-0 w-full opacity-20" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill={tp.hex === '#ffffff' ? '#000' : '#fff'} d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,138.7C960,160,1056,224,1152,240C1248,256,1344,224,1392,208L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
                     </>
+                )}
+                {tp.pattern === 'layered' && (
+                    <div className="absolute inset-0">
+                        <div className="absolute top-0 left-0 w-full h-2/5 opacity-10" style={{ background: tp.hex === '#ffffff' ? '#000' : tp.accentText, maskImage: 'linear-gradient(to bottom, black, transparent)' }} />
+                        <div className="absolute bottom-0 right-0 w-full h-1/4 opacity-10" style={{ background: tp.accentText, maskImage: 'linear-gradient(to top, black, transparent)' }} />
+                    </div>
                 )}
                 {tp.pattern === 'cyber' && (
                     <>
@@ -321,94 +360,82 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             <div className={cn(
-                "flex-1 p-6 flex flex-col relative z-20 justify-start pt-6"
+                "flex-1 p-5 flex flex-col relative z-20 justify-start pt-8"
             )}>
-                {/* Profile Image & Header Area - Reduced Spacing */}
-                <div className="flex flex-col items-center text-center mb-4">
+                {/* QR Code Container - AT THE TOP as per references */}
+                <div className="flex items-center justify-center mb-6">
                     <div className={cn(
-                        "w-16 h-16 mb-2 p-1 relative z-10 overflow-hidden shadow-[0_10px_25px_rgba(0,0,0,0.3)] rounded-2xl border-2 ring-4 ring-white/5",
-                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
-                    )}>
-                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
-                    </div>
-                    <div className="space-y-0.5">
-                        <h1 className={cn(
-                            "font-black tracking-tighter line-clamp-1 leading-none text-xl uppercase",
-                            tp.text
-                        )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
-                        <div className={cn("inline-block py-0.5 px-2 rounded-lg bg-white/5 border border-white/10")}>
-                            <p className={cn("text-[7px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
-                                {profileData?.occupation || user.occupation || "DIGITAL EXPERT"}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* QR Code Container - Compact */}
-                <div className="flex items-center justify-center mb-4">
-                    <div className="p-3 bg-white rounded-[2.25rem] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-[8px] ring-white/5">
+                        "p-3 bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all ring-[6px] ring-white/10",
+                        tp.pattern === 'layered' ? 'rounded-3xl border-2' : 'rounded-[2.25rem]'
+                    )} style={{ borderColor: tp.accentText }}>
                         {qrDataUrl ? (
-                            <img src={qrDataUrl} alt="QR Code" className="w-[110px] h-[110px]" />
+                            <img src={qrDataUrl} alt="QR Code" className="w-[100px] h-[100px]" />
                         ) : (
-                            <div className="w-[110px] h-[110px] animate-pulse bg-slate-50 rounded-2xl flex items-center justify-center" >
+                            <div className="w-[100px] h-[100px] animate-pulse bg-slate-50 rounded-2xl flex items-center justify-center" >
                                 <RefreshCw className="animate-spin text-slate-200" />
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className="text-center mb-4">
-                    <span className={cn("text-[6px] font-black uppercase tracking-[0.5em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
-                </div>
-
-                {/* Info Cards List - More compact */}
-                <div className="space-y-1">
-                    {(profileData?.phone || user.phone) && (
-                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <Phone size={10} strokeWidth={3} />
-                            </div>
-                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
-                        </div>
-                    )}
-
-                    {whatsappData && (
-                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-emerald-500/10 text-emerald-400")}>
-                                <MessageCircle size={10} strokeWidth={3} />
-                            </div>
-                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{whatsappData}</span>
-                        </div>
-                    )}
-
-                    {locationData && (
-                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <MapPin size={10} strokeWidth={3} />
-                            </div>
-                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
-                        </div>
-                    )}
-
-                    {(profileData?.email || user.email) && (
-                        <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
-                            <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <Mail size={10} strokeWidth={3} />
-                            </div>
-                            <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
-                        </div>
-                    )}
-
-                    <div className={cn("flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] border-white/5 backdrop-blur-xl transition-all hover:bg-white/[0.08]")}>
-                        <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center bg-white/5", tp.accentText)}>
-                            <Globe size={10} strokeWidth={3} />
-                        </div>
-                        <span className={cn("text-[9px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
+                {/* Profile Section - Under QR */}
+                <div className="flex flex-col items-center text-center mb-6">
+                    <div className={cn(
+                        "w-14 h-14 mb-2 p-1 relative z-10 overflow-hidden shadow-xl rounded-2xl border-2 ring-4 ring-white/5",
+                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
+                    )}>
+                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
                     </div>
+                    <div className="space-y-0.5">
+                        <h1 className={cn(
+                            "font-black tracking-tighter line-clamp-1 leading-none text-lg uppercase",
+                            tp.text
+                        )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+                        <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
+                            {profileData?.occupation || user.occupation || "DIGITAL EXPERT"}
+                        </p>
+                    </div>
+
+                    {tp.pattern === 'layered' && (
+                        <div className="w-full flex items-center justify-center gap-2 mt-4">
+                            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
+                            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tp.accentText }} />
+                            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
+                        </div>
+                    )}
                 </div>
 
-                <div className="mt-auto pt-4 text-center pb-2">
-                    <span className={cn("text-[7px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
+                {/* Info Fields - Infographic Style */}
+                <div className="space-y-1.5">
+                    {[
+                        { icon: Phone, value: profileData?.phone || user.phone, label: 'PHONE' },
+                        { icon: MessageCircle, value: whatsappData, label: 'WHATSAPP', color: 'text-emerald-400' },
+                        { icon: MapPin, value: locationData, label: 'LOCATION' },
+                        { icon: Mail, value: profileData?.email || user.email, label: 'EMAIL' },
+                        { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB' }
+                    ].filter(item => item.value).map((item, idx) => (
+                        <div key={idx} className={cn(
+                            "flex items-center gap-3 p-2 rounded-xl transition-all border",
+                            tp.pattern === 'layered'
+                                ? "bg-white/[0.05] border-white/5 shadow-sm"
+                                : "bg-white/[0.03] border-white/5 backdrop-blur-md"
+                        )}>
+                            <div className={cn(
+                                "w-7 h-7 rounded-lg flex items-center justify-center shadow-inner shrink-0",
+                                item.color || tp.accentText,
+                                tp.pattern === 'layered' ? "bg-white/5" : "bg-white/5"
+                            )}>
+                                <item.icon size={11} strokeWidth={2.5} />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                                <span className={cn("text-[9px] font-bold tracking-tight truncate", tp.text)}>{item.value}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-auto pt-4 text-center pb-1">
+                    <span className={cn("text-[6px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
                 </div>
             </div>
         </div>

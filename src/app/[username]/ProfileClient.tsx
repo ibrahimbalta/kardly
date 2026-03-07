@@ -4080,20 +4080,19 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[120px] opacity-20 pointer-events-none" style={{ backgroundColor: theme.accent }} />
 
                 {/* Top Header/Action Bar */}
-                <div className="w-full max-w-[320px] flex justify-between items-center mb-6 px-2">
+                <div className="w-full max-w-[320px] flex justify-between items-center mb-2 px-2">
                     <div className="flex flex-col">
-                        <h2 className="text-white font-black text-sm uppercase tracking-[0.2em]">{t.digitalCard || 'DİJİTAL KARTVİZİT'}</h2>
-                        <div className="h-1 w-8 rounded-full mt-1" style={{ backgroundColor: theme.accent }} />
+                        <h2 className="text-white font-black text-[10px] uppercase tracking-[0.2em] opacity-40">{t.digitalCard || 'DİJİTAL KARTVİZİT'}</h2>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group active:scale-90"
+                        className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group active:scale-95"
                     >
-                        <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+                        <X size={16} className="group-hover:rotate-90 transition-transform duration-300" />
                     </button>
                 </div>
 
-                <div className="w-full flex justify-center scale-[0.9] sm:scale-100 transition-transform">
+                <div className="w-full flex justify-center scale-[0.75] sm:scale-90 transition-all origin-top">
                     <BusinessCardGenerator
                         mode="modal"
                         selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
