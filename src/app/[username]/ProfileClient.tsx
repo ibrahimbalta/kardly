@@ -4053,52 +4053,41 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/40 backdrop-blur-xl flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/80 backdrop-blur-2xl flex items-center justify-center p-6">
+            <div className="fixed inset-0" onClick={onClose} />
 
-            <div className="w-full max-w-[440px] relative animate-in fade-in zoom-in duration-300">
-                <div className="fixed inset-0" onClick={onClose} />
-
-                <div className="relative z-10 w-full flex flex-col items-center">
-                    {/* Floating Close Button */}
-                    <div className="w-full flex justify-end mb-4 pr-1">
-                        <button
-                            onClick={onClose}
-                            className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-md group shadow-xl"
-                        >
-                            <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
-                        </button>
-                    </div>
-
-                    <div className={cn("border border-white/5 rounded-[2.5rem] p-4 sm:p-6 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] relative overflow-hidden group w-full ring-1 ring-white/5", theme.bg)}>
-                        <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" style={{ backgroundColor: theme.accent }} />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 opacity-20 blur-[60px] rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s', backgroundColor: theme.accent }} />
-
-                        <div className="relative z-10 scale-[0.95] sm:scale-100 flex justify-center origin-top">
-                            <BusinessCardGenerator
-                                mode="full"
-                                selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                                orientation={profile.businessCardOrientation || 'landscape'}
-                                user={{
-                                    name: profile.user.name,
-                                    username: profile.username,
-                                    occupation: profile.occupation,
-                                    phone: profile.phone,
-                                    email: profile.user.email,
-                                    image: profile.user.image
-                                }}
-                                profileData={profile}
-                            />
-                        </div>
-
-                        <button
-                            onClick={onClose}
-                            className="mt-4 text-[8px] font-black uppercase tracking-[0.5em] opacity-20 hover:opacity-100 transition-all mx-auto block"
-                            style={{ color: theme.text === 'text-white' ? '#fff' : '#000' }}
-                        >
-                            {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
-                        </button>
-                    </div>
+            <div className="relative z-10 w-full flex flex-col items-center animate-in fade-in zoom-in slide-in-from-bottom-8 duration-500">
+                {/* Top Close Bar */}
+                <div className="w-full max-w-[320px] sm:max-w-[500px] flex justify-end mb-6">
+                    <button
+                        onClick={onClose}
+                        className="w-12 h-12 rounded-3xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group shadow-2xl"
+                    >
+                        <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                    </button>
                 </div>
+
+                <BusinessCardGenerator
+                    mode="modal"
+                    selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                    orientation={profile.businessCardOrientation || 'landscape'}
+                    user={{
+                        name: profile.user.name,
+                        username: profile.username,
+                        occupation: profile.occupation,
+                        phone: profile.phone,
+                        email: profile.user.email,
+                        image: profile.user.image
+                    }}
+                    profileData={profile}
+                />
+
+                <button
+                    onClick={onClose}
+                    className="mt-12 text-[10px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all px-8 py-4"
+                >
+                    {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
+                </button>
             </div>
         </div>
     );

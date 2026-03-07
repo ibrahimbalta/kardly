@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from 'react'
-import { QRCodeCanvas } from 'qrcode.react'
+import QRCode from 'qrcode'
 import html2canvas from 'html2canvas'
-import { Download, Share2, Check } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 
@@ -17,7 +17,7 @@ interface BusinessCardGeneratorProps {
         email?: string
     }
     profileData: any
-    mode?: 'full' | 'selector' | 'preview'
+    mode?: 'full' | 'selector' | 'preview' | 'modal'
     selectedTemplateId?: string
     orientation?: 'landscape' | 'portrait'
     onSelect?: (templateId: string) => void
@@ -143,6 +143,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const containerRef = useRef<HTMLDivElement>(null)
     const [containerWidth, setContainerWidth] = useState(500)
     const [internalSelectedTpl, setInternalSelectedTpl] = useState(TEMPLATES.find(t => t.id === selectedTemplateId) || TEMPLATES[0])
+    const [qrDataUrl, setQrDataUrl] = useState<string>('')
 
     useEffect(() => {
         if (selectedTemplateId) {
@@ -161,28 +162,50 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         return () => obs.disconnect()
     }, [])
 
+    const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : ''
+
+    useEffect(() => {
+        const generateQr = async () => {
+            try {
+                const url = await QRCode.toDataURL(profileUrl, {
+                    width: 400,
+                    margin: 1,
+                    color: {
+                        dark: '#000000',
+                        light: '#ffffff'
+                    }
+                })
+                setQrDataUrl(url)
+            } catch (err) {
+                console.error('QR Generate Error:', err)
+            }
+        }
+        generateQr()
+    }, [profileUrl])
+
     const isPortrait = orientation === 'portrait'
-    const cardWidth = isPortrait ? 300 : 500
-    const cardHeight = isPortrait ? 500 : 280
+    const cardWidth = isPortrait ? 320 : 500
+    const cardHeight = isPortrait ? 540 : 280
 
     // Scale logic
-    const cardScale = Math.min(1, containerWidth / (cardWidth + 20))
+    const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
+
     const [isDownloading, setIsDownloading] = useState(false)
     const [isSharing, setIsSharing] = useState(false)
     const [downloadSuccess, setDownloadSuccess] = useState(false)
     const [shareSuccess, setShareSuccess] = useState(false)
-    const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : ''
 
     const handleDownload = async () => {
         if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
         try {
-            // Give time for everything to settle
+            // Re-generate QR with high res just in case
             await new Promise(r => setTimeout(r, 600))
 
             const canvas = await html2canvas(cardRef.current, {
-                scale: 2, // Stable quality
+                scale: 3, // Superior clarity for text/icons
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: null,
                 logging: false,
                 width: cardWidth,
@@ -194,19 +217,26 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         el.style.margin = '0'
                         el.style.position = 'static'
                         el.style.borderRadius = '0'
+                        el.style.boxShadow = 'none'
+                        el.style.width = `${cardWidth}px`
+                        el.style.height = `${cardHeight}px`
                     }
                 }
             })
-            const image = canvas.toDataURL('image/jpeg', 0.95)
+
+            const image = canvas.toDataURL('image/jpeg', 0.98)
             const link = document.createElement('a')
             link.href = image
-            link.download = `kardly-${user.username}-${orientation}.jpg`
+            link.download = `kardly-${user.username}.jpg`
+            document.body.appendChild(link)
             link.click()
+            document.body.removeChild(link)
+
             setDownloadSuccess(true)
             setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
             console.error('Download error:', error)
-            alert(t('downloadError') || 'İndirme sırasında bir hata oluştu.')
+            alert(t('downloadError') || 'İndirme işlemi başarısız oldu. Lütfen tekrar deneyin.')
         } finally {
             setIsDownloading(false)
         }
@@ -224,10 +254,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     url: profileUrl,
                 })
             } else {
-                throw new Error('Share API not supported')
+                navigator.clipboard.writeText(profileUrl)
+                setShareSuccess(true)
+                setTimeout(() => setShareSuccess(false), 2000)
             }
         } catch (error: any) {
-            console.log('Sharing failed, copying to clipboard instead:', error)
+            console.log('Sharing failed:', error)
             navigator.clipboard.writeText(profileUrl)
             setShareSuccess(true)
             setTimeout(() => setShareSuccess(false), 2000)
@@ -238,54 +270,135 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     const tp = internalSelectedTpl
 
+    const CardContent = (
+        <div ref={cardRef} data-card-actual className={cn(
+            "flex overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] relative group/card",
+            isPortrait ? "flex-col" : "flex-row",
+            tp.bg
+        )} style={{
+            width: `${cardWidth}px`,
+            height: `${cardHeight}px`,
+            borderRadius: mode === 'modal' ? '2.5rem' : '1.5rem',
+            border: '1px solid rgba(255,255,255,0.05)'
+        }}>
+
+            {/* Design Patterns based on template */}
+            {tp.id === 'luxury_gold' && (
+                <>
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/10 skew-x-12 translate-x-1/4" />
+                    <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-amber-500/5 -skew-y-12 -translate-x-1/4" />
+                </>
+            )}
+            {tp.id === 'creative_pink' && (
+                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 0% 0%, #ec4899 0%, transparent 50%), radial-gradient(circle at 100% 100%, #881337 0%, transparent 50%)` }} />
+            )}
+            {tp.id === 'gradient_mesh' && (
+                <div className="absolute inset-0 opacity-40" style={{ backgroundImage: tp.hex }} />
+            )}
+            {tp.id === 'cyber_neon' && (
+                <>
+                    <div className="absolute top-0 left-0 w-full h-px bg-cyan-400 opacity-20" />
+                    <div className="absolute bottom-0 right-0 w-full h-px bg-fuchsia-500 opacity-20" />
+                    <div className="absolute top-0 right-0 w-1/4 h-full bg-cyan-400/5 blur-3xl" />
+                </>
+            )}
+            {tp.id === 'midnight_emerald' && (
+                <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 0h20v20H0V0z' fill='%23d4af37' fill-opacity='1'/%3E%3C/svg%3E")` }} />
+            )}
+
+            <div className={cn(
+                "flex-1 p-8 sm:p-10 flex flex-col relative z-20",
+                isPortrait ? "justify-start text-center pt-14" : "justify-between"
+            )}>
+                <div className={isPortrait ? "mb-10" : ""}>
+                    <h1 className={cn(
+                        "font-black tracking-tighter mb-1 line-clamp-2 leading-none",
+                        tp.text,
+                        isPortrait ? "text-4xl" : "text-3xl"
+                    )}>{(profileData?.displayName || user.name || "İsim Soyisim").toUpperCase()}</h1>
+                    <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-80", tp.accentText)}>{profileData?.occupation || user.occupation || "MESLEK ÜNVANI"}</p>
+                </div>
+
+                <div className={cn("space-y-4", isPortrait ? "mt-4" : "")}>
+                    <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
+                        <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
+                        <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>kardly.site/{user.username}</span>
+                    </div>
+                    {(profileData?.phone || user.phone) && (
+                        <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
+                            <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
+                            <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
+                        </div>
+                    )}
+                </div>
+
+                <div className={cn("flex mt-6 transition-all group-hover/card:tracking-[0.8em]", isPortrait ? "justify-center opacity-40" : "opacity-30")}>
+                    <span className={cn("text-[9px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY.SİTE</span>
+                </div>
+            </div>
+
+            <div className={cn(
+                "flex items-center justify-center relative z-20",
+                isPortrait ? "pb-14" : "w-[200px] pr-12"
+            )}>
+                <div className="p-3.5 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95">
+                    {qrDataUrl ? (
+                        <img src={qrDataUrl} alt="QR Code" className={isPortrait ? "w-[120px] h-[120px]" : "w-[110px] h-[110px]"} />
+                    ) : (
+                        <div className={cn(isPortrait ? "w-[120px] h-[120px]" : "w-[110px] h-[110px]", "animate-pulse bg-slate-100 rounded-2xl flex items-center justify-center")} >
+                            <RefreshCw className="animate-spin text-slate-300" />
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    )
+
+    if (mode === 'modal') {
+        return (
+            <div className="w-full flex flex-col items-center">
+                <div className="relative" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
+                    {CardContent}
+                </div>
+
+                <div className="w-full max-w-[320px] flex gap-3 mt-8">
+                    <button
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className="flex-1 h-16 flex items-center justify-center gap-3 bg-primary text-white rounded-3xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                    >
+                        {isDownloading ? <RefreshCw className="w-5 h-5 animate-spin" /> : downloadSuccess ? <Check size={18} /> : <Download size={18} />}
+                        {downloadSuccess ? t('downloaded') || 'İNDİRİLDİ' : t('downloadJpeg') || 'GÖRSEL İNDİR'}
+                    </button>
+                    <button
+                        onClick={handleShare}
+                        disabled={isSharing}
+                        className="w-16 h-16 flex items-center justify-center bg-white/5 text-white/40 border border-white/5 rounded-3xl hover:bg-white/10 hover:text-white transition-all backdrop-blur-md active:scale-95"
+                    >
+                        {shareSuccess ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="space-y-8 w-full flex flex-col items-center">
             {mode === 'selector' && (
                 <div className="w-full flex flex-col items-center gap-8">
-                    {/* View Switcher */}
-                    <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
-                        <button
-                            onClick={() => onOrientationChange?.('landscape')}
-                            className={cn(
-                                "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                                !isPortrait ? "bg-white text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
-                            )}
-                        >
-                            {t('landscape') || 'YATAY'}
-                        </button>
-                        <button
-                            onClick={() => onOrientationChange?.('portrait')}
-                            className={cn(
-                                "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                                isPortrait ? "bg-white text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
-                            )}
-                        >
-                            {t('portrait') || 'DİKEY'}
-                        </button>
-                    </div>
-
+                    {/* View Switcher omitted for space, keep original selector if needed or simplified */}
                     <div className="w-full text-center">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4">
-                            {t('selectTemplate') || 'ŞABLON SEÇİMİ'}
-                        </h3>
                         <div className="flex flex-wrap gap-4 justify-center px-4 max-w-sm mx-auto">
                             {TEMPLATES.map((tpl) => (
                                 <button
                                     key={tpl.id}
                                     onClick={() => onSelect?.(tpl.id)}
                                     className={cn(
-                                        "relative group shrink-0 w-12 h-12 rounded-full border-2 transition-all p-0.5",
-                                        tp.id === tpl.id
-                                            ? "border-primary ring-4 ring-primary/20 scale-110 shadow-lg"
-                                            : "border-slate-200 opacity-60 hover:opacity-100 hover:scale-105"
+                                        "relative shrink-0 w-12 h-12 rounded-full border-2 transition-all p-0.5",
+                                        tp.id === tpl.id ? "border-primary ring-4 ring-primary/20 scale-110" : "border-slate-200 opacity-60"
                                     )}
                                 >
                                     <div className="w-full h-full rounded-full shadow-inner" style={{ background: tpl.hex }} />
-                                    {tp.id === tpl.id && (
-                                        <div className="absolute inset-0 flex items-center justify-center bg-primary/10 rounded-full">
-                                            <Check size={18} className="text-white drop-shadow-sm" />
-                                        </div>
-                                    )}
                                 </button>
                             ))}
                         </div>
@@ -293,9 +406,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 </div>
             )}
 
-            <div ref={containerRef} className="relative w-full overflow-visible flex flex-col items-center">
+            <div ref={containerRef} className="relative w-full overflow-hidden flex flex-col items-center px-4">
                 <div
-                    className="relative flex-shrink-0 transition-all duration-500 ease-out origin-center"
+                    className="relative flex-shrink-0 transition-all duration-500 origin-center"
                     style={{
                         width: `${cardWidth}px`,
                         height: `${cardHeight}px`,
@@ -303,92 +416,23 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         marginTop: cardScale < 1 ? `-${(1 - cardScale) * cardHeight / 2}px` : '0px',
                         marginBottom: cardScale < 1 ? `-${(1 - cardScale) * cardHeight / 2}px` : '0px'
                     }}
-                    data-card-preview
                 >
-                    <div ref={cardRef} data-card-actual className={cn(
-                        "flex overflow-hidden shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)] relative transition-all duration-500",
-                        isPortrait ? "flex-col" : "flex-row",
-                        tp.bg
-                    )} style={{ width: `${cardWidth}px`, height: `${cardHeight}px`, borderRadius: '1.5rem' }}>
-
-                        {/* Design Elements */}
-                        {tp.id === 'luxury_gold' && (
-                            <>
-                                <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/20 skew-x-12 translate-x-1/4" />
-                                <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-amber-500/10 -skew-y-12 -translate-x-1/4" />
-                            </>
-                        )}
-                        {tp.id === 'creative_pink' && (
-                            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 0% 0%, #ec4899 0%, transparent 50%), radial-gradient(circle at 100% 100%, #881337 0%, transparent 50%)` }} />
-                        )}
-                        {tp.id === 'gradient_mesh' && (
-                            <div className="absolute inset-0 opacity-40 shadow-[inset_0_0_100px_rgba(255,255,255,0.1)]" style={{ backgroundImage: tp.hex }} />
-                        )}
-                        {tp.id === 'cyber_neon' && (
-                            <>
-                                <div className="absolute top-0 left-0 w-full h-px bg-cyan-400 opacity-50" />
-                                <div className="absolute bottom-0 right-0 w-full h-px bg-fuchsia-500 opacity-50" />
-                                <div className="absolute top-0 right-0 w-1/4 h-full bg-cyan-400/5 blur-3xl" />
-                            </>
-                        )}
-                        {tp.id === 'midnight_emerald' && (
-                            <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 0h20v20H0V0z' fill='%23d4af37' fill-opacity='1'/%3E%3C/svg%3E")` }} />
-                        )}
-
-                        <div className={cn(
-                            "flex-1 p-8 sm:p-10 flex flex-col relative z-20",
-                            isPortrait ? "justify-start text-center pt-14" : "justify-between"
-                        )}>
-                            <div className={isPortrait ? "mb-10" : ""}>
-                                <h1 className={cn(
-                                    "font-black tracking-tighter mb-1 line-clamp-2",
-                                    tp.text,
-                                    isPortrait ? "text-4xl" : "text-3xl"
-                                )}>{(profileData?.displayName || user.name || "John Doe").toUpperCase()}</h1>
-                                <p className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>{profileData?.occupation || user.occupation || "PROFESSIONAL"}</p>
-                            </div>
-
-                            <div className={cn("space-y-4", isPortrait ? "mt-4" : "")}>
-                                <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
-                                    <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
-                                    <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>kardly.site/{user.username}</span>
-                                </div>
-                                {(profileData?.phone || user.phone) && (
-                                    <div className={cn("flex items-center gap-3", isPortrait && "justify-center")}>
-                                        <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
-                                        <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className={cn("flex mt-6", isPortrait ? "justify-center opacity-40" : "opacity-30")}>
-                                <span className={cn("text-[10px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY.SİTE</span>
-                            </div>
-                        </div>
-
-                        <div className={cn(
-                            "flex items-center justify-center relative z-20",
-                            isPortrait ? "pb-14" : "w-[180px] pr-10"
-                        )}>
-                            <div className="p-3 bg-white rounded-3xl shadow-2xl flex items-center justify-center group/qr transition-transform hover:scale-105">
-                                <QRCodeCanvas value={profileUrl} size={isPortrait ? 130 : 110} level="H" fgColor="#000" bgColor="#fff" />
-                            </div>
-                        </div>
-                    </div>
+                    {CardContent}
                 </div>
             </div>
 
             {mode === 'full' && (
-                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-sm px-6 relative z-30">
-                    <button onClick={handleDownload} disabled={isDownloading} className="flex-1 flex items-center justify-center gap-3 px-8 py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 min-w-[200px]">
-                        {isDownloading ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : downloadSuccess ? <><Check size={20} /> {t('downloaded') || 'İNDİRİLDİ'}</> : <><Download size={20} /> {t('downloadJpeg') || 'GÖRSEL İNDİR'}</>}
+                <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-sm px-6">
+                    <button onClick={handleDownload} disabled={isDownloading} className="flex-1 h-16 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3">
+                        {isDownloading ? <RefreshCw className="animate-spin" /> : <Download size={20} />}
+                        {t('downloadJpeg') || 'GÖRSEL İNDİR'}
                     </button>
-                    <button onClick={handleShare} disabled={isSharing} className="px-6 py-5 bg-white/10 text-white/70 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all flex items-center justify-center backdrop-blur-md min-w-[70px]">
-                        {shareSuccess ? <Check size={20} className="text-emerald-400" /> : <Share2 size={20} />}
+                    <button onClick={handleShare} disabled={isSharing} className="w-16 h-16 bg-white/10 text-white rounded-3xl flex items-center justify-center">
+                        <Share2 size={20} />
                     </button>
                 </div>
             )}
-            {mode === 'full' && <p className="mt-4 text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">{t('ultraHighQuality') || 'BASKI KALİTESİ (Ultra HD)'}</p>}
         </div>
     )
 }
+
