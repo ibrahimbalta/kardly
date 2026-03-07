@@ -94,6 +94,8 @@ interface Profile {
     isCatalog?: boolean;
     paymentLink?: string;
     paymentType?: string;
+    businessCardTemplateId?: string;
+    businessCardOrientation?: string;
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -4168,7 +4170,8 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                         <BusinessCardGenerator
                             mode="modal"
                             profileData={profile}
-                            orientation="portrait"
+                            selectedTemplateId={profile.businessCardTemplateId}
+                            orientation={profile.businessCardOrientation || "portrait"}
                             user={{
                                 name: profile.displayName || profile.user?.name || 'Kullanıcı',
                                 occupation: profile.occupation || '',
