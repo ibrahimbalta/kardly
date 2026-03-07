@@ -4069,11 +4069,11 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                         </button>
                     </div>
 
-                    <div className="bg-[#020617] border border-white/5 rounded-[2.5rem] p-4 sm:p-8 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] relative overflow-hidden group w-full ring-1 ring-white/5">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/20 blur-[60px] rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
+                    <div className={cn("border border-white/5 rounded-[2.5rem] p-4 sm:p-6 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] relative overflow-hidden group w-full ring-1 ring-white/5", theme.bg)}>
+                        <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" style={{ backgroundColor: theme.accent }} />
+                        <div className="absolute bottom-0 left-0 w-32 h-32 opacity-20 blur-[60px] rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s', backgroundColor: theme.accent }} />
 
-                        <div className="relative z-10">
+                        <div className="relative z-10 scale-[0.95] sm:scale-100 flex justify-center origin-top">
                             <BusinessCardGenerator
                                 mode="full"
                                 selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
@@ -4092,7 +4092,8 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
 
                         <button
                             onClick={onClose}
-                            className="mt-8 text-[8px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all mx-auto block"
+                            className="mt-4 text-[8px] font-black uppercase tracking-[0.5em] opacity-20 hover:opacity-100 transition-all mx-auto block"
+                            style={{ color: theme.text === 'text-white' ? '#fff' : '#000' }}
                         >
                             {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
                         </button>
