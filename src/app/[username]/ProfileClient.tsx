@@ -4168,7 +4168,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                         <BusinessCardGenerator
                             mode="modal"
                             profileData={profile}
-                            theme={theme}
+                            orientation="portrait"
                             user={{
                                 name: profile.displayName || profile.user?.name || 'Kullanıcı',
                                 occupation: profile.occupation || '',
