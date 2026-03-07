@@ -2852,11 +2852,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <QrModal
                         isOpen={isQrOpen}
                         onClose={() => setIsQrOpen(false)}
-                        qrDataUrl={qrDataUrl}
                         theme={theme}
                         profile={profile}
                         t={t}
-                        toneStyle={toneStyle}
                     />
                 )}
             </AnimatePresence>
@@ -3863,14 +3861,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
-
-            <QrModal
-                isOpen={isQrOpen}
-                onClose={() => setIsQrOpen(false)}
-                theme={theme}
-                profile={profile}
-                t={t}
-            />
         </div>
     )
 }
@@ -4064,6 +4054,23 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isSharing, setIsSharing] = useState(false);
     const [actionDone, setActionDone] = useState<string | null>(null);
+    const [scale, setScale] = useState(0.8);
+
+    // Dynamic scaling based on window height
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleResize = () => {
+            const h = window.innerHeight;
+            if (h < 650) setScale(0.55);
+            else if (h < 750) setScale(0.65);
+            else if (h < 850) setScale(0.75);
+            else if (h < 950) setScale(0.85);
+            else setScale(0.95);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -4111,145 +4118,106 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 setTimeout(() => setActionDone(null), 2500);
             }
         } catch (err) {
-            console.log('Share cancelled or failed:', err);
+            console.log('Share error:', err);
         } finally {
             setIsSharing(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[1000] flex flex-col" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(15,15,30,0.98) 0%, rgba(5,5,12,0.995) 100%)' }}>
-            {/* Ambient glow effects */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] blur-[180px] opacity-[0.07] pointer-events-none rounded-full" style={{ backgroundColor: theme.accent }} />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[300px] blur-[140px] opacity-[0.04] pointer-events-none rounded-full" style={{ backgroundColor: theme.accent }} />
+        <div className="fixed inset-0 z-[1000] flex flex-col bg-[#05050a] backdrop-blur-3xl overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[120px] opacity-[0.15] rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[120px] opacity-[0.1] rounded-full" style={{ backgroundColor: theme.accent }} />
+            </div>
 
-            {/* Top bar - always visible */}
+            {/* Top Bar with Close Button */}
             <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="relative z-50 flex items-center justify-between px-5 py-4 shrink-0"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="relative z-[1001] flex items-center justify-between p-6 shrink-0"
             >
-                <div className="flex items-center gap-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
-                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-white/30">Kartvizit</span>
+                <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ backgroundColor: theme.accent }} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Dijital Kartvizit</span>
                 </div>
                 <button
                     onClick={onClose}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.08] text-white/50 hover:text-white hover:bg-white/[0.12] transition-all active:scale-90 backdrop-blur-xl"
+                    className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white/[0.05] border border-white/[0.1] text-white/50 hover:text-white hover:bg-white/[0.1] transition-all active:scale-90 backdrop-blur-xl group"
                 >
-                    <X size={16} />
+                    <X size={20} className="transition-transform group-hover:rotate-90" />
                 </button>
             </motion.div>
 
-            {/* Card area - fills remaining space, perfectly centered */}
-            <div className="flex-1 relative flex items-center justify-center overflow-hidden px-4 min-h-0">
+            {/* Main Content Area */}
+            <div className="flex-1 relative flex flex-col items-center justify-center p-4 min-h-0">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.92, y: 20 }}
-                    transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-                    ref={cardExportRef}
-                    className="relative"
-                    style={{
-                        transform: 'scale(var(--card-scale, 0.78))',
-                        transformOrigin: 'center center',
-                    }}
+                    initial={{ scale: 0.9, opacity: 0, y: 30 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    className="relative flex flex-col items-center"
                 >
-                    {/* Card shadow glow */}
-                    <div className="absolute -inset-6 blur-[80px] opacity-[0.12] rounded-[3rem] pointer-events-none" style={{ backgroundColor: theme.accent }} />
-
-                    <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7)]">
+                    {/* Card Wrapper with Scale */}
+                    <div
+                        ref={cardExportRef}
+                        style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}
+                        className="transition-transform duration-500 ease-out"
+                    >
                         <BusinessCardGenerator
                             mode="modal"
-                            selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                            orientation="portrait"
-                            user={profile.user}
                             profileData={profile}
+                            theme={theme}
+                            user={{
+                                name: profile.displayName || profile.user?.name || 'Kullanıcı',
+                                occupation: profile.occupation || '',
+                                phone: profile.phone || '',
+                                email: profile.email || profile.user?.email || '',
+                                username: profile.username
+                            }}
                         />
                     </div>
+
+                    {/* Quick Action Overlay Success */}
+                    <AnimatePresence>
+                        {actionDone && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.1 }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black px-6 py-3 rounded-full font-black text-[10px] uppercase tracking-widest shadow-2xl z-50 flex items-center gap-2"
+                            >
+                                <CheckCircle2 size={16} className="text-emerald-500" />
+                                {actionDone === 'download' ? 'Görsel Kaydedildi' : 'Bağlantı Kopyalandı'}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
             </div>
 
-            {/* Bottom action bar */}
+            {/* Bottom Floating Island Action Bar */}
             <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, type: 'spring', damping: 25 }}
-                className="relative z-50 px-5 pb-6 pt-3 shrink-0"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="relative z-[1001] p-8 pb-12 shrink-0 flex items-center justify-center"
             >
-                <div className="max-w-[340px] mx-auto flex items-center gap-3">
-                    {/* Download button */}
+                <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-2xl rounded-[2.5rem] p-3 flex items-center gap-3 shadow-2xl">
                     <button
                         onClick={handleDownloadCard}
                         disabled={isDownloading}
-                        className="flex-1 h-[52px] flex items-center justify-center gap-2.5 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] disabled:opacity-40 relative overflow-hidden group"
-                        style={{
-                            background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                            boxShadow: `0 12px 30px -8px ${theme.accent}50`
-                        }}
+                        className="flex items-center gap-3 pl-6 pr-5 py-3.5 bg-white text-black rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50 group"
                     >
-                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <span className="relative z-10 flex items-center gap-2.5">
-                            {isDownloading ? (
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : actionDone === 'download' ? (
-                                <CheckCircle2 size={15} />
-                            ) : (
-                                <Download size={15} />
-                            )}
-                            {actionDone === 'download' ? 'Kaydedildi' : 'İndir'}
-                        </span>
+                        {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Download size={16} className="group-hover:-translate-y-0.5 transition-transform" />}
+                        İndir
                     </button>
-
-                    {/* Share button */}
                     <button
                         onClick={handleShareCard}
-                        disabled={isSharing}
-                        className="w-[52px] h-[52px] flex items-center justify-center rounded-2xl bg-white/[0.07] border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all active:scale-[0.93] backdrop-blur-xl disabled:opacity-40"
+                        className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.1] transition-all hover:scale-110 active:scale-90"
                     >
-                        {actionDone === 'share' ? (
-                            <CheckCircle2 size={18} style={{ color: theme.accent }} />
-                        ) : (
-                            <Share2 size={18} />
-                        )}
+                        <Share2 size={20} />
                     </button>
                 </div>
-
-                {/* Success feedback toast */}
-                <AnimatePresence>
-                    {actionDone && (
-                        <motion.p
-                            initial={{ opacity: 0, y: 6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 6 }}
-                            className="text-center mt-3 text-[8px] font-bold uppercase tracking-[0.3em]"
-                            style={{ color: theme.accent }}
-                        >
-                            {actionDone === 'download' ? '✓ Görsel galeriye kaydedildi' : '✓ Link kopyalandı'}
-                        </motion.p>
-                    )}
-                </AnimatePresence>
             </motion.div>
-
-            {/* CSS for responsive card scaling */}
-            <style>{`
-                @media (max-height: 700px) {
-                    :root { --card-scale: 0.62; }
-                }
-                @media (min-height: 700px) and (max-height: 800px) {
-                    :root { --card-scale: 0.72; }
-                }
-                @media (min-height: 800px) and (max-height: 900px) {
-                    :root { --card-scale: 0.82; }
-                }
-                @media (min-height: 900px) {
-                    :root { --card-scale: 0.9; }
-                }
-                @media (min-height: 1000px) {
-                    :root { --card-scale: 1; }
-                }
-            `}</style>
         </div>
     );
 }
