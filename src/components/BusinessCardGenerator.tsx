@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from 'react'
+// High-res business card generator with base64 QR support
 import QRCode from 'qrcode'
 import html2canvas from 'html2canvas'
 import { Download, Share2, Check, RefreshCw } from 'lucide-react'
