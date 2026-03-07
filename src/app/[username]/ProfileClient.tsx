@@ -4300,6 +4300,9 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
     )
 }
 
+// Vercel redeploy trigger: 2026-03-07 21:02
+
+
 function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'bubbles' | 'finance', color: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
