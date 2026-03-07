@@ -4081,24 +4081,69 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
         if (isDownloading) return;
         setIsDownloading(true);
         try {
-            const cardEl = cardExportRef.current?.querySelector('[data-card-actual]') as HTMLElement;
-            if (!cardEl) return;
-            await new Promise(r => setTimeout(r, 600));
+            const wrapperEl = cardExportRef.current;
+            if (!wrapperEl) { setIsDownloading(false); return; }
+
+            const cardEl = wrapperEl.querySelector('[data-card-actual]') as HTMLElement;
+            if (!cardEl) { setIsDownloading(false); return; }
+
+            // Temporarily reset scale to 1 for clean capture
+            const originalTransform = wrapperEl.style.transform;
+            wrapperEl.style.transform = 'scale(1)';
+            wrapperEl.style.transition = 'none';
+
+            // Wait for browser to repaint
+            await new Promise(r => setTimeout(r, 500));
+
             const htmlToImage = await import('html-to-image');
-            const dataUrl = await htmlToImage.toJpeg(cardEl, {
-                quality: 0.98,
-                pixelRatio: 3,
-                backgroundColor: '#000000',
-                cacheBust: true,
-            });
+
+            // Try toJpeg first, then toPng as fallback
+            let dataUrl: string;
+            try {
+                dataUrl = await htmlToImage.toJpeg(cardEl, {
+                    quality: 0.95,
+                    pixelRatio: 2,
+                    backgroundColor: '#000000',
+                    cacheBust: true,
+                    skipAutoScale: true,
+                    filter: (node: any) => {
+                        // Skip elements that cause CORS issues
+                        if (node.tagName === 'LINK' || node.tagName === 'STYLE') return true;
+                        return true;
+                    }
+                });
+            } catch (jpegErr) {
+                console.warn('JPEG failed, trying PNG:', jpegErr);
+                dataUrl = await htmlToImage.toPng(cardEl, {
+                    pixelRatio: 2,
+                    backgroundColor: '#000000',
+                    cacheBust: true,
+                    skipAutoScale: true,
+                });
+            }
+
+            // Restore scale
+            wrapperEl.style.transform = originalTransform;
+            wrapperEl.style.transition = '';
+
+            // Trigger download
             const link = document.createElement('a');
             link.href = dataUrl;
             link.download = `kardly-${profile.username || 'card'}.jpg`;
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
+
             setActionDone('download');
             setTimeout(() => setActionDone(null), 2500);
         } catch (err) {
             console.error('Card download error:', err);
+            // Restore scale even on error
+            if (cardExportRef.current) {
+                cardExportRef.current.style.transform = `scale(${scale})`;
+                cardExportRef.current.style.transition = '';
+            }
+            alert('İndirme hatası oluştu. Lütfen tekrar deneyin.');
         } finally {
             setIsDownloading(false);
         }
