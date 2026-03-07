@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 // High-res business card generator with base64 QR support
 import QRCode from 'qrcode'
-import html2canvas from 'html2canvas'
+import * as htmlToImage from 'html-to-image'
 import { Download, Share2, Check, RefreshCw } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
@@ -169,7 +169,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         const generateQr = async () => {
             try {
                 const url = await QRCode.toDataURL(profileUrl, {
-                    width: 400,
+                    width: 480,
                     margin: 1,
                     color: {
                         dark: '#000000',
@@ -200,34 +200,23 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
         try {
-            // Re-generate QR with high res just in case
+            // Modern capture approach using html-to-image (supports oklch, lab etc)
             await new Promise(r => setTimeout(r, 600))
 
-            const canvas = await html2canvas(cardRef.current, {
-                scale: 2, // Stable high res
-                useCORS: true,
-                allowTaint: false,
-                backgroundColor: null,
-                logging: false,
-                width: cardWidth,
-                height: cardHeight,
-                onclone: (clonedDoc) => {
-                    const el = clonedDoc.querySelector('[data-card-actual]') as HTMLElement
-                    if (el) {
-                        el.style.transform = 'none'
-                        el.style.margin = '0'
-                        el.style.position = 'static'
-                        el.style.borderRadius = '0'
-                        el.style.boxShadow = 'none'
-                        el.style.width = `${cardWidth}px`
-                        el.style.height = `${cardHeight}px`
-                    }
+            const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
+                quality: 0.95,
+                pixelRatio: 2,
+                backgroundColor: '#ffffff',
+                cacheBust: true,
+                style: {
+                    borderRadius: '0',
+                    transform: 'none',
+                    margin: '0'
                 }
             })
 
-            const image = canvas.toDataURL('image/jpeg', 0.95)
             const link = document.createElement('a')
-            link.href = image
+            link.href = dataUrl
             link.download = `kardly-card-${user.username}.jpg`
             document.body.appendChild(link)
             link.click()
@@ -237,7 +226,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
             console.error('Download error:', error)
-            alert(t('downloadError') || 'İndirme işlemi başarısız oldu. Lütfen tekrar deneyin.')
+            alert(t('downloadError') || 'İndirme işlemi sırasında bir hata oluştu. Lütfen tarayıcınızın modern CSS özelliklerini desteklediğinden emin olun.')
         } finally {
             setIsDownloading(false)
         }
