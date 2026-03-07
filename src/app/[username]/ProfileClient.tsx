@@ -3528,223 +3528,225 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     </div>
                                 );
                             })()}
-                        </div >
-
-                        <div className="space-y-3">
-                            {
-                                actions.map((action, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.1 }}
-                                        whileHover={{ scale: 1.02, x: 5 }}
-                                    >
-                                        {action.href ? (
-                                            <a
-                                                href={formatUrl(action.href)}
-                                                target="_blank"
-                                                onClick={() => {
-                                                    if (action.onClick) action.onClick()
-                                                }}
-                                                className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                            >
-                                                <div style={{ color: theme.accent }}>{action.icon}</div>
-                                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                                            </a>
-                                        ) : (
-                                            <button
-                                                onClick={action.onClick}
-                                                className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                            >
-                                                <div style={{ color: theme.accent }}>{action.icon}</div>
-                                                <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
-                                            </button>
-                                        )}
-                                    </motion.div>
-                                ))
-                            }
-                        </div>
-
-                        {/* Bio */}
-                        {
-                            profile.bio && (
-                                <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
-                                    {profile.bio}
-                                </p>
-                            )
-                        }
-
-                        {/* Testimonials */}
-                        <div className="pt-4 overflow-hidden relative">
-                            <div className="flex items-center justify-between mb-4 px-2">
-                                <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
-                                <button
-                                    onClick={() => setIsReviewModalOpen(true)}
-                                    className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
-                                    style={{ color: theme.accent }}
-                                >
-                                    {t.writeReview}
-                                </button>
-                            </div>
-
-                            <div className="relative h-32">
-                                {reviews.length > 0 ? (
-                                    <AnimatePresence mode="wait">
+                            <div className="space-y-3">
+                                {
+                                    actions.map((action, i) => (
                                         <motion.div
-                                            key={currentReviewIndex}
-                                            initial={{ opacity: 0, x: 50 }}
+                                            key={i}
+                                            initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            exit={{ opacity: 0, x: -50 }}
-                                            className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                            transition={{ delay: i * 0.1 }}
+                                            whileHover={{ scale: 1.02, x: 5 }}
                                         >
-                                            <div className="flex gap-4">
-                                                <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
-                                                    <img
-                                                        src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
-                                                        className="w-full h-full object-cover"
-                                                        onError={(e: any) => {
-                                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                            <p className={cn("text-[10px] opacity-40", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
-                                                        </div>
-                                                        <div className="flex gap-0.5">
-                                                            {[...Array(5)].map((_, i) => (
-                                                                <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                    <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
-                                                        "{translateText(reviews[currentReviewIndex].content)}"
-                                                    </p>
-                                                </div>
-                                            </div>
+                                            {action.href ? (
+                                                <a
+                                                    href={formatUrl(action.href)}
+                                                    target="_blank"
+                                                    onClick={() => {
+                                                        if (action.onClick) action.onClick()
+                                                    }}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                                >
+                                                    <div style={{ color: theme.accent }}>{action.icon}</div>
+                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                                </a>
+                                            ) : (
+                                                <button
+                                                    onClick={action.onClick}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                                >
+                                                    <div style={{ color: theme.accent }}>{action.icon}</div>
+                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                                </button>
+                                            )}
                                         </motion.div>
-                                    </AnimatePresence>
-                                ) : (
-                                    <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                        {t.noReviewsYet}
-                                    </div>
-                                )}
+                                    ))
+                                }
                             </div>
 
-                            {/* Pagination Dots */}
-                            <div className="flex justify-center gap-1.5 mt-4">
-                                {reviews.map((_: any, i: number) => (
-                                    <div
-                                        key={i}
-                                        className="h-1 transition-all"
-                                        style={{
-                                            width: i === currentReviewIndex ? '16px' : '4px',
-                                            background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
-                                            borderRadius: '99px'
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-
-                        <div className="flex justify-center flex-wrap gap-6 pt-2">
-                            {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
-                                const platform = l.platform.toLowerCase()
-                                return (
-                                    <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
-                                        {platform === 'instagram' && <Instagram size={24} />}
-                                        {platform === 'linkedin' && <Linkedin size={24} />}
-                                        {platform === 'twitter' && <Twitter size={24} />}
-                                        {platform === 'github' && <Github size={24} />}
-                                        {platform === 'youtube' && <Youtube size={24} />}
-                                        {platform === 'whatsapp' && <MessageCircle size={24} />}
-                                        {platform === 'mail' && <Mail size={24} />}
-                                        {platform === 'medium' && <FileText size={24} />}
-                                        {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'medium'].includes(platform)) && <Globe size={24} />}
-                                    </a>
+                            {/* Bio */}
+                            {
+                                profile.bio && (
+                                    <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
+                                        {profile.bio}
+                                    </p>
                                 )
-                            })}
-                        </div>
+                            }
 
-                        {profile.paymentLink && (
-                            <div className="pt-8 w-full">
-                                <motion.a
-                                    href={formatUrl(profile.paymentLink)}
-                                    target="_blank"
-                                    initial={{ scale: 0.9, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    whileHover={{ scale: 1.02, y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-xs uppercase tracking-[0.3em] transition-all text-white relative overflow-hidden group border border-white/10", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
-                                    style={{
-                                        background: `linear-gradient(135deg, #f59e0b, #f97316, #ea580c)`,
-                                        boxShadow: `0 20px 40px -15px rgba(234, 88, 12, 0.4), inset 0 0 20px rgba(255,255,255,0.1)`
-                                    }}
-                                    onClick={() => trackEvent("payment_click")}
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/20">
-                                        <Zap className="w-5 h-5 fill-white" />
-                                    </div>
-                                    <span className="drop-shadow-md">
-                                        {profile.paymentType === 'consulting' ? t.consultingBtn :
-                                            profile.paymentType === 'support' ? t.supportBtn :
-                                                profile.paymentType === 'pay' ? t.payBtn :
-                                                    t.coffeeBtn}
-                                    </span>
-                                </motion.a>
-                            </div>
-                        )}
 
-                        <div className="pt-10 border-t border-white/5 text-center flex flex-col gap-6">
-                            <div className="flex items-stretch gap-3">
-                                <button
-                                    onClick={handleShare}
-                                    className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:scale-[0.97] backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                    style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
-                                >
-                                    <Share2 size={16} className="opacity-60" /> {t.shareLabel}
-                                </button>
-
-                                <button
-                                    onClick={handleCVView}
-                                    className={cn("flex-[1.5] py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                    style={{
-                                        background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                        boxShadow: `0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
-                                    }}
-                                >
-                                    <FileText size={16} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
-                                </button>
-
-                                {/* Sabit AI Assistant Butonu */}
-                                {aiConfig?.isEnabled && (
+                            {/* Testimonials */}
+                            <div className="pt-4 overflow-hidden relative">
+                                <div className="flex items-center justify-between mb-4 px-2">
+                                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
                                     <button
-                                        onClick={() => setIsAIChatOpen(true)}
-                                        className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                        style={{
-                                            background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                                            boxShadow: `0 12px 24px -10px ${theme.accent}70`
-                                        }}
-                                        title={aiConfig.assistantName}
+                                        onClick={() => setIsReviewModalOpen(true)}
+                                        className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                        style={{ color: theme.accent }}
                                     >
-                                        <Bot size={24} />
+                                        {t.writeReview}
                                     </button>
-                                )}
-                            </div>
+                                </div>
 
-                            {/* Widget Dock - Daha Estetik ve Derli Toplu */}
-                            {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
-                                <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                    {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                                        <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[54px] h-[54px] flex-shrink-0" />
+                                <div className="relative h-32">
+                                    {reviews.length > 0 ? (
+                                        <AnimatePresence mode="wait">
+                                            <motion.div
+                                                key={currentReviewIndex}
+                                                initial={{ opacity: 0, x: 50 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: -50 }}
+                                                className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                            >
+                                                <div className="flex gap-4">
+                                                    <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
+                                                        <img
+                                                            src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e: any) => {
+                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className="flex justify-between items-start">
+                                                            <div>
+                                                                <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                                <p className={cn("text-[10px] opacity-40", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
+                                                            </div>
+                                                            <div className="flex gap-0.5">
+                                                                {[...Array(5)].map((_, i) => (
+                                                                    <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
+                                                            "{translateText(reviews[currentReviewIndex].content)}"
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        </AnimatePresence>
+                                    ) : (
+                                        <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
+                                            {t.noReviewsYet}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Pagination Dots */}
+                                <div className="flex justify-center gap-1.5 mt-4">
+                                    {reviews.map((_: any, i: number) => (
+                                        <div
+                                            key={i}
+                                            className="h-1 transition-all"
+                                            style={{
+                                                width: i === currentReviewIndex ? '16px' : '4px',
+                                                background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
+                                                borderRadius: '99px'
+                                            }}
+                                        />
                                     ))}
                                 </div>
-                            )}
+                            </div>
+
+
+                            <div className="flex justify-center flex-wrap gap-6 pt-2">
+                                {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
+                                    const platform = l.platform.toLowerCase()
+                                    return (
+                                        <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
+                                            {platform === 'instagram' && <Instagram size={24} />}
+                                            {platform === 'linkedin' && <Linkedin size={24} />}
+                                            {platform === 'twitter' && <Twitter size={24} />}
+                                            {platform === 'github' && <Github size={24} />}
+                                            {platform === 'youtube' && <Youtube size={24} />}
+                                            {platform === 'whatsapp' && <MessageCircle size={24} />}
+                                            {platform === 'mail' && <Mail size={24} />}
+                                            {platform === 'medium' && <FileText size={24} />}
+                                            {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'medium'].includes(platform)) && <Globe size={24} />}
+                                        </a>
+                                    )
+                                })}
+                            </div>
+
+                            {
+                                profile.paymentLink && (
+                                    <div className="pt-8 w-full">
+                                        <motion.a
+                                            href={formatUrl(profile.paymentLink)}
+                                            target="_blank"
+                                            initial={{ scale: 0.9, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            whileHover={{ scale: 1.02, y: -2 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-xs uppercase tracking-[0.3em] transition-all text-white relative overflow-hidden group border border-white/10", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
+                                            style={{
+                                                background: `linear-gradient(135deg, #f59e0b, #f97316, #ea580c)`,
+                                                boxShadow: `0 20px 40px -15px rgba(234, 88, 12, 0.4), inset 0 0 20px rgba(255,255,255,0.1)`
+                                            }}
+                                            onClick={() => trackEvent("payment_click")}
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/20">
+                                                <Zap className="w-5 h-5 fill-white" />
+                                            </div>
+                                            <span className="drop-shadow-md">
+                                                {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                                    profile.paymentType === 'support' ? t.supportBtn :
+                                                        profile.paymentType === 'pay' ? t.payBtn :
+                                                            t.coffeeBtn}
+                                            </span>
+                                        </motion.a>
+                                    </div>
+                                )
+                            }
+
+                            <div className="pt-10 border-t border-white/5 text-center flex flex-col gap-6" >
+                                <div className="flex items-stretch gap-3">
+                                    <button
+                                        onClick={handleShare}
+                                        className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:scale-[0.97] backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
+                                    >
+                                        <Share2 size={16} className="opacity-60" /> {t.shareLabel}
+                                    </button>
+
+                                    <button
+                                        onClick={handleCVView}
+                                        className={cn("flex-[1.5] py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        style={{
+                                            background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
+                                            boxShadow: `0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
+                                        }}
+                                    >
+                                        <FileText size={16} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
+                                    </button>
+
+                                    {/* Sabit AI Assistant Butonu */}
+                                    {aiConfig?.isEnabled && (
+                                        <button
+                                            onClick={() => setIsAIChatOpen(true)}
+                                            className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                            style={{
+                                                background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
+                                                boxShadow: `0 12px 24px -10px ${theme.accent}70`
+                                            }}
+                                            title={aiConfig.assistantName}
+                                        >
+                                            <Bot size={24} />
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Widget Dock - Daha Estetik ve Derli Toplu */}
+                                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
+                                    <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
+                                        {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
+                                            <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[54px] h-[54px] flex-shrink-0" />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </motion.div>
                 )}
@@ -4061,50 +4063,40 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[500] flex flex-col items-center justify-start overflow-y-auto p-4 pt-16">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-slate-950/80 backdrop-blur-3xl"
+                className="fixed inset-0 bg-slate-950/95 backdrop-blur-3xl"
                 onClick={onClose}
             />
+
+            {/* Fixed Close Button - Top Right with safe area */}
+            <div className="fixed top-4 right-4 z-[510]">
+                <button
+                    onClick={onClose}
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-xl group active:scale-95 shadow-2xl"
+                >
+                    <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+            </div>
 
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                className="relative z-10 w-full flex flex-col items-center"
+                className="relative z-10 w-full flex flex-col items-center max-w-[400px]"
             >
                 {/* Floating Glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[120px] opacity-20 pointer-events-none" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[120px] opacity-10 pointer-events-none" style={{ backgroundColor: theme.accent }} />
 
-                {/* Top Header/Action Bar */}
-                <div className="w-full max-w-[320px] flex justify-between items-center mb-2 px-2">
-                    <div className="flex flex-col">
-                        <h2 className="text-white font-black text-[10px] uppercase tracking-[0.2em] opacity-40">{t.digitalCard || 'DİJİTAL KARTVİZİT'}</h2>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group active:scale-95"
-                    >
-                        <X size={16} className="group-hover:rotate-90 transition-transform duration-300" />
-                    </button>
-                </div>
-
-                <div className="w-full flex justify-center scale-[0.75] sm:scale-90 transition-all origin-top">
+                <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-10">
                     <BusinessCardGenerator
                         mode="modal"
                         selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
                         orientation="portrait"
-                        user={{
-                            name: profile.user.name,
-                            username: profile.username,
-                            occupation: profile.occupation,
-                            phone: profile.phone,
-                            email: profile.user.email,
-                            image: profile.user.image
-                        }}
+                        user={profile.user}
                         profileData={profile}
                     />
                 </div>

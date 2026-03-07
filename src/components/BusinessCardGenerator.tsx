@@ -408,10 +408,11 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {/* Info Fields - Infographic Style */}
                 <div className="space-y-1.5">
                     {[
-                        { icon: Phone, value: profileData?.phone || user.phone, label: 'PHONE' },
+                        { icon: Phone, value: profileData?.phone || user.phone, label: 'TELEFON' },
+                        { icon: MapPin, value: profileData?.address, label: 'ADRES' },
+                        { icon: MapPin, value: locationData, label: 'ŞEHİR / KONUM' },
                         { icon: MessageCircle, value: whatsappData, label: 'WHATSAPP', color: 'text-emerald-400' },
-                        { icon: MapPin, value: locationData, label: 'LOCATION' },
-                        { icon: Mail, value: profileData?.email || user.email, label: 'EMAIL' },
+                        { icon: Mail, value: profileData?.email || user.email, label: 'E-POSTA' },
                         { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB' }
                     ].filter(item => item.value).map((item, idx) => (
                         <div key={idx} className={cn(
@@ -428,6 +429,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 <item.icon size={11} strokeWidth={2.5} />
                             </div>
                             <div className="flex flex-col min-w-0">
+                                <span className={cn("text-[8px] font-black uppercase tracking-widest opacity-30 mb-0.5", tp.text)}>{item.label}</span>
                                 <span className={cn("text-[9px] font-bold tracking-tight truncate", tp.text)}>{item.value}</span>
                             </div>
                         </div>
