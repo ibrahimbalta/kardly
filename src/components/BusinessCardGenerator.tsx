@@ -1,10 +1,9 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from 'react'
-// High-res business card generator with base64 QR support
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 
@@ -181,7 +180,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             try {
                 const url = await QRCode.toDataURL(profileUrl, {
                     width: 512,
-                    margin: 1,
+                    margin: 2,
                     color: {
                         dark: '#000000',
                         light: '#ffffff'
@@ -197,7 +196,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     // Scale logic
     const cardWidth = 320
-    const cardHeight = 540
+    const cardHeight = 560
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
 
     const [isDownloading, setIsDownloading] = useState(false)
@@ -208,7 +207,6 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const handleDownload = async () => {
         if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
-        console.log('DEBUG: Modern download triggered (v3-premium)')
         try {
             await new Promise(r => setTimeout(r, 800))
             const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
@@ -250,6 +248,8 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     }
 
     const tp = internalSelectedTpl
+
+    const locationData = profileData?.socialLinks?.find((l: any) => l.platform.toLowerCase() === 'location')?.url || profileData?.location || ""
 
     const CardContent = (
         <div ref={cardRef} data-card-actual className={cn(
@@ -320,48 +320,85 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             <div className={cn(
-                "flex-1 p-10 flex flex-col relative z-20 justify-start text-center pt-16 sm:pt-20"
+                "flex-1 p-8 flex flex-col relative z-20 justify-start pt-12"
             )}>
-                <div className="mb-12 relative">
-                    <div className={cn("absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full opacity-20", tp.accent)} />
-                    <h1 className={cn(
-                        "font-black tracking-tighter mb-2 line-clamp-2 leading-[0.9] text-5xl",
-                        tp.text
-                    )}>{(profileData?.displayName || user.name || "KARDLY USER").toUpperCase()}</h1>
-                    <p className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-90", tp.accentText)}>{profileData?.occupation || user.occupation || "DIGITAL EXPERT"}</p>
+                {/* Profile Image & Header */}
+                <div className="flex flex-col items-center text-center mb-8">
+                    <div className={cn("w-20 h-20 mb-4 p-1 border-2 relative z-10 overflow-hidden shadow-2xl rounded-2xl", tp.accent === 'bg-white' ? "border-slate-200" : `border-${tp.accent.replace('bg-', '')}`)} style={{ borderColor: tp.hex === '#ffffff' ? '#e2e8f0' : undefined }}>
+                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
+                    </div>
+                    <div>
+                        <h1 className={cn(
+                            "font-black tracking-tighter mb-1 line-clamp-1 leading-[1] text-3xl",
+                            tp.text
+                        )}>{(profileData?.displayName || user.name || "KARDLY USER").toUpperCase()}</h1>
+                        <div className={cn("inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 mt-1")}>
+                            <p className={cn("text-[9px] font-black uppercase tracking-[0.2em] opacity-90", tp.accentText)}>{profileData?.occupation || user.occupation || "DIGITAL EXPERT"}</p>
+                        </div>
+                    </div>
+                    {/* Divider with small dot */}
+                    <div className="w-24 h-px bg-white/10 mt-6 relative flex items-center justify-center">
+                        <div className={cn("w-1 h-1 rounded-full", tp.accent)} />
+                    </div>
                 </div>
 
-                <div className="space-y-5 mt-4">
-                    <div className="flex flex-col items-center gap-1">
-                        <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", tp.text)}>profile</span>
-                        <span className={cn("text-xs font-bold tracking-wider truncate", tp.secondary)}>kardly.site/{user.username}</span>
+                {/* Main QR Code Centerpiece */}
+                <div className="flex items-center justify-center mb-8">
+                    <div className="p-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-1 ring-black/5">
+                        {qrDataUrl ? (
+                            <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px]" />
+                        ) : (
+                            <div className="w-[140px] h-[140px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
+                                <RefreshCw className="animate-spin text-slate-200" />
+                            </div>
+                        )}
                     </div>
+                </div>
 
+                {/* Subtext after QR */}
+                <div className="text-center mb-6">
+                    <span className={cn("text-[8px] font-black uppercase tracking-[0.4em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
+                </div>
+
+                {/* Info Fields with background effects */}
+                <div className="space-y-2">
                     {(profileData?.phone || user.phone) && (
-                        <div className="flex flex-col items-center gap-1">
-                            <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", tp.text)}>contact</span>
-                            <span className={cn("text-xs font-bold tracking-wider truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
+                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
+                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <Phone size={14} />
+                            </div>
+                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
                         </div>
                     )}
-                </div>
 
-                <div className="flex mt-14 justify-center border-t border-white/5 pt-8">
-                    <div className="flex flex-col items-center gap-2">
-                        <span className={cn("text-[10px] font-black tracking-[0.5em] uppercase opacity-30", tp.text)}>KARDLY • SİTE</span>
-                        <div className={cn("h-1 w-4 rounded-full", tp.accent)} />
+                    {locationData && (
+                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
+                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <MapPin size={14} />
+                            </div>
+                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
+                        </div>
+                    )}
+
+                    {(profileData?.email || user.email) && (
+                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
+                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
+                                <Mail size={14} />
+                            </div>
+                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
+                        </div>
+                    )}
+
+                    <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
+                        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
+                            <Globe size={14} />
+                        </div>
+                        <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
                     </div>
                 </div>
-            </div>
 
-            <div className="flex items-center justify-center relative z-20 pb-16">
-                <div className="p-5 bg-white rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95 ring-1 ring-black/5">
-                    {qrDataUrl ? (
-                        <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px]" />
-                    ) : (
-                        <div className="w-[140px] h-[140px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
-                            <RefreshCw className="animate-spin text-slate-200" />
-                        </div>
-                    )}
+                <div className="mt-auto pt-6 text-center opacity-30 pb-4">
+                    <span className={cn("text-[9px] font-black tracking-[0.3em] uppercase", tp.text)}>KARDLY PREMIUM</span>
                 </div>
             </div>
         </div>
@@ -416,11 +453,6 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 )}
                             >
                                 <div className="w-full h-full rounded-xl shadow-inner border border-white/10" style={{ background: tpl.hex }} />
-                                <div className="absolute -bottom-1 -right-1 opacity-0 group-hover/tpl:opacity-100 transition-opacity">
-                                    <div className="bg-primary text-white p-1 rounded-lg">
-                                        <Check size={8} />
-                                    </div>
-                                </div>
                             </button>
                         ))}
                     </div>
