@@ -57,7 +57,19 @@ const TEMPLATES = [
     { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', secondary: 'text-fuchsia-200/40', hex: '#000000', pattern: 'mesh', category: 'Ultimate' },
     { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', secondary: 'text-blue-100/40', hex: '#0f172a', pattern: 'frosty', category: 'Ultimate' },
     { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', secondary: 'text-amber-200/40', hex: '#1a0b0b', pattern: 'elite_royal', category: 'Ultimate' },
-    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', secondary: 'text-purple-200/40', hex: '#000000', pattern: 'nebula', category: 'Ultimate' }
+    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', secondary: 'text-purple-200/40', hex: '#000000', pattern: 'nebula', category: 'Ultimate' },
+
+    // New 10 Modern Tech Templates
+    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', hex: '#0a0a0f', pattern: 'cyber_pulse', category: 'Ultimate' },
+    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', hex: '#0c0c0c', pattern: 'hud_command', category: 'Ultimate' },
+    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', hex: '#050505', pattern: 'circuitry', category: 'Ultimate' },
+    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', hex: '#0f172a', pattern: 'abstract_flow', category: 'Ultimate' },
+    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', hex: '#020617', pattern: 'quantum_grid', category: 'Ultimate' },
+    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', hex: '#0f0f0f', pattern: 'holo_shard', category: 'Ultimate' },
+    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', hex: '#020617', pattern: 'prism_shift', category: 'Ultimate' },
+    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', hex: '#000000', pattern: 'minimal_edge', category: 'Ultimate' },
+    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', hex: '#030712', pattern: 'data_rain', category: 'Ultimate' },
+    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', hex: '#020617', pattern: 'liquid_neon', category: 'Ultimate' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -265,6 +277,94 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute top-0 left-0 w-full h-6 bg-[#e67e22]" />
                         <div className="absolute bottom-0 left-0 w-full h-16 bg-[#e67e22]" />
+                    </>
+                )}
+                {tp.pattern === 'cyber_pulse' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0a0a0f]" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(34,211,238,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                        <div className="absolute inset-0 border-[3px] border-cyan-500/30 rounded-[2.5rem]" />
+                        <div className="absolute inset-0 border border-cyan-400/10 rounded-[2.5rem] animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.15)_0%,transparent_70%)]" />
+                    </>
+                )}
+                {tp.pattern === 'hud_command' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0c0c0c]" />
+                        <div className="absolute top-0 left-0 w-full h-full border-[10px] border-emerald-500/5 rounded-[2.5rem]" />
+                        <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-emerald-500/40" />
+                        <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-emerald-500/40" />
+                        <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-emerald-500/40" />
+                        <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-emerald-500/40" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(52,211,153,0.1)_0%,transparent_60%)]" />
+                    </>
+                )}
+                {tp.pattern === 'circuitry' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#050505]" />
+                        <svg className="absolute inset-0 w-full h-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 100h100v100h100v-100h100M50 200v100h150v-50h100" stroke="#f0f" strokeWidth="2" fill="none" />
+                            <circle cx="100" cy="100" r="3" fill="#f0f" />
+                            <circle cx="200" cy="200" r="3" fill="#f0f" />
+                            <circle cx="340" cy="250" r="3" fill="#f0f" />
+                        </svg>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/10 via-transparent to-transparent" />
+                    </>
+                )}
+                {tp.pattern === 'abstract_flow' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0f172a]" />
+                        <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-blue-600/20 rounded-full blur-[100px]" />
+                        <div className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-indigo-600/20 rounded-full blur-[100px]" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-1/2 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12" />
+                    </>
+                )}
+                {tp.pattern === 'quantum_grid' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#020617]" />
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
+                        <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_0_100px_rgba(99,102,241,0.1)]" />
+                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-indigo-500/20" />
+                        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-indigo-500/20" />
+                    </>
+                )}
+                {tp.pattern === 'holo_shard' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0f0f0f]" />
+                        <div className="absolute top-[10%] left-[10%] w-40 h-40 bg-purple-500/10 rotate-45 skew-x-12 blur-[40px]" />
+                        <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-blue-500/10 -rotate-12 skew-y-12 blur-[40px]" />
+                        <div className="absolute inset-x-8 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    </>
+                )}
+                {tp.pattern === 'prism_shift' && (
+                    <>
+                        <div className="absolute inset-0 bg-slate-950" />
+                        <div className="absolute inset-0 opacity-10" style={{ background: 'linear-gradient(135deg, #f43f5e 0%, transparent 40%), linear-gradient(225deg, #3b82f6 0%, transparent 40%)' }} />
+                        <div className="absolute top-0 left-0 w-full h-full border-[1px] border-white/5 rounded-[2.5rem]" />
+                    </>
+                )}
+                {tp.pattern === 'minimal_edge' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-2 border-[1px] border-white/10 rounded-[2rem]" />
+                        <div className="absolute top-4 left-4 right-4 h-[1px] bg-white/5" />
+                        <div className="absolute bottom-4 left-4 right-4 h-[1px] bg-white/5" />
+                    </>
+                )}
+                {tp.pattern === 'data_rain' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#030712]" />
+                        <div className="absolute top-0 left-10 w-[2px] h-20 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
+                        <div className="absolute top-20 right-20 w-[2px] h-32 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
+                        <div className="absolute bottom-10 left-1/2 w-[2px] h-24 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.05)_0%,transparent_70%)]" />
+                    </>
+                )}
+                {tp.pattern === 'liquid_neon' && (
+                    <>
+                        <div className="absolute inset-0 bg-slate-950" />
+                        <div className="absolute -top-[10%] -left-[10%] w-[120%] h-[40%] bg-amber-500/10 blur-[60px] rounded-full rotate-6" />
+                        <div className="absolute top-[30%] -right-[10%] w-60 h-60 bg-blue-500/10 blur-[80px] rounded-full" />
                     </>
                 )}
             </div>
