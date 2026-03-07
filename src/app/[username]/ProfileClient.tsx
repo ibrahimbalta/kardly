@@ -4064,11 +4064,11 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
         if (!isOpen) return;
         const handleResize = () => {
             const h = window.innerHeight;
-            if (h < 650) setScale(0.55);
-            else if (h < 750) setScale(0.65);
-            else if (h < 850) setScale(0.75);
-            else if (h < 950) setScale(0.85);
-            else setScale(0.95);
+            const w = window.innerWidth;
+            // Portrait card is 340x600, scale to fit
+            const scaleH = (h - 250) / 600;
+            const scaleW = (w - 80) / 340;
+            setScale(Math.min(scaleH, scaleW, 1));
         };
         handleResize();
         window.addEventListener('resize', handleResize);
@@ -4128,40 +4128,45 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     };
 
     return (
-        <div className="fixed inset-0 z-[1000] flex flex-col bg-[#05050a] backdrop-blur-3xl overflow-hidden">
-            {/* Background Glow */}
+        <div className="fixed inset-0 z-[1000] flex flex-col bg-[#030308]/95 backdrop-blur-3xl overflow-hidden">
+            {/* Ambient Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[120px] opacity-[0.15] rounded-full" style={{ backgroundColor: theme.accent }} />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[120px] opacity-[0.1] rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute top-[10%] left-[20%] w-[35%] h-[35%] blur-[150px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute bottom-[10%] right-[15%] w-[30%] h-[30%] blur-[120px] opacity-[0.06] rounded-full bg-purple-500" />
+                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] blur-[200px] opacity-[0.04] rounded-full bg-indigo-500" />
             </div>
 
-            {/* Top Bar with Close Button */}
+            {/* Top Bar */}
             <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="relative z-[1001] flex items-center justify-between p-7 pt-12 shrink-0"
+                transition={{ delay: 0.1 }}
+                className="relative z-[1001] flex items-center justify-between px-8 py-6 pt-10 shrink-0"
             >
                 <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_15px_rgba(255,255,255,0.6)]" style={{ backgroundColor: theme.accent }} />
-                    <span className="text-[11px] font-black uppercase tracking-[0.5em] text-white/50">Dijital Kartvizit v2</span>
+                    <div className="relative">
+                        <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+                        <div className="absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-30" style={{ backgroundColor: theme.accent }} />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">DİJİTAL KARTVİZİT</span>
                 </div>
                 <button
                     onClick={onClose}
-                    className="fixed top-8 right-8 w-14 h-14 flex items-center justify-center rounded-full bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 transition-all active:scale-95 backdrop-blur-3xl shadow-2xl z-[2000] group"
+                    className="fixed top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all active:scale-90 backdrop-blur-2xl z-[2000] group"
                 >
-                    <X size={28} className="transition-transform group-hover:rotate-90" />
+                    <X size={22} className="transition-transform group-hover:rotate-90 duration-300" />
                 </button>
             </motion.div>
 
-            {/* Main Content Area */}
-            <div className="flex-1 relative flex flex-col items-center justify-center p-4 min-h-0">
+            {/* Main Content Area - Card Centered */}
+            <div className="flex-1 relative flex flex-col items-center justify-center min-h-0 px-4">
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0, y: 30 }}
+                    initial={{ scale: 0.85, opacity: 0, y: 40 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
-                    transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    transition={{ type: 'spring', damping: 28, stiffness: 250, delay: 0.15 }}
                     className="relative flex flex-col items-center"
                 >
-                    {/* Card Wrapper with Scale */}
+                    {/* Card Wrapper - Portrait Only */}
                     <div
                         ref={cardExportRef}
                         style={{ transform: `scale(${scale})`, transformOrigin: 'center center' }}
@@ -4171,27 +4176,28 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                             mode="modal"
                             profileData={profile}
                             selectedTemplateId={profile.businessCardTemplateId}
-                            orientation={profile.businessCardOrientation || "portrait"}
+                            orientation="portrait"
                             user={{
                                 name: profile.displayName || profile.user?.name || 'Kullanıcı',
                                 occupation: profile.occupation || '',
                                 phone: profile.phone || '',
                                 email: profile.email || profile.user?.email || '',
-                                username: profile.username
+                                username: profile.username,
+                                image: profile.image || profile.user?.image || ''
                             }}
                         />
                     </div>
 
-                    {/* Quick Action Overlay Success */}
+                    {/* Success Toast Overlay */}
                     <AnimatePresence>
                         {actionDone && (
                             <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                                initial={{ opacity: 0, y: 15, scale: 0.9 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, scale: 1.1 }}
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black px-6 py-3 rounded-full font-black text-[10px] uppercase tracking-widest shadow-2xl z-50 flex items-center gap-2"
+                                exit={{ opacity: 0, y: -10, scale: 1.05 }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl z-50 flex items-center gap-3"
                             >
-                                <CheckCircle2 size={16} className="text-emerald-500" />
+                                <CheckCircle2 size={18} className="text-emerald-500" />
                                 {actionDone === 'download' ? 'Görsel Kaydedildi' : 'Bağlantı Kopyalandı'}
                             </motion.div>
                         )}
@@ -4199,26 +4205,27 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 </motion.div>
             </div>
 
-            {/* Bottom Floating Island Action Bar */}
+            {/* Modern Floating Action Bar */}
             <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="relative z-[1001] p-8 pb-12 shrink-0 flex items-center justify-center"
+                transition={{ delay: 0.3 }}
+                className="relative z-[1001] p-6 pb-10 shrink-0 flex items-center justify-center"
             >
-                <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-2xl rounded-[2.5rem] p-3 flex items-center gap-3 shadow-2xl">
+                <div className="bg-white/[0.04] border border-white/[0.06] backdrop-blur-3xl rounded-full p-2 flex items-center gap-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]">
                     <button
                         onClick={handleDownloadCard}
                         disabled={isDownloading}
-                        className="flex items-center gap-3 pl-6 pr-5 py-3.5 bg-white text-black rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50 group"
+                        className="flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-black text-[11px] uppercase tracking-[0.15em] hover:scale-[1.03] active:scale-[0.97] transition-all disabled:opacity-50 group shadow-lg"
                     >
-                        {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Download size={16} className="group-hover:-translate-y-0.5 transition-transform" />}
-                        İndir
+                        {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Download size={17} className="group-hover:-translate-y-0.5 transition-transform" />}
+                        Görsel İndir
                     </button>
                     <button
                         onClick={handleShareCard}
-                        className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.1] transition-all hover:scale-110 active:scale-90"
+                        className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/[0.06] border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all hover:scale-110 active:scale-90"
                     >
-                        <Share2 size={20} />
+                        <Share2 size={19} />
                     </button>
                 </div>
             </motion.div>
