@@ -32,7 +32,13 @@ const TEMPLATES = [
     { id: 'standard_waves', name: 'Soft Waves', bg: 'bg-indigo-50', text: 'text-indigo-950', accent: 'bg-indigo-500', accentText: 'text-indigo-500', secondary: 'text-indigo-700/60', hex: '#eef2ff', pattern: 'waves', category: 'Standard' },
 
     // Premium
-    { id: 'vibe_wave', name: 'Vibe Wave', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium' },
+    { id: 'vibe_wave', name: 'Vibe Wave', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#24292e' },
+    { id: 'vibe_wave_blue', name: 'Wave Ocean', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#2563eb]', accentText: 'text-[#2563eb]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#1e3a5f' },
+    { id: 'vibe_wave_emerald', name: 'Wave Emerald', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#059669]', accentText: 'text-[#059669]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#064e3b' },
+    { id: 'vibe_wave_purple', name: 'Wave Royal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#7c3aed]', accentText: 'text-[#7c3aed]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#2e1065' },
+    { id: 'vibe_wave_ruby', name: 'Wave Ruby', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#dc2626]', accentText: 'text-[#dc2626]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#7f1d1d' },
+    { id: 'vibe_wave_teal', name: 'Wave Teal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#0d9488]', accentText: 'text-[#0d9488]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#134e4a' },
+    { id: 'vibe_wave_rose', name: 'Wave Rosé', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c0519' },
     { id: 'vibe_geometric', name: 'Vibe Geometric', bg: 'bg-[#1a1a1a]', text: 'text-white', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-300', hex: '#1a1a1a', pattern: 'vibe_geo', category: 'Premium' },
     { id: 'vibe_elegant', name: 'Vibe Elegant', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium' },
     { id: 'premium_glass', name: 'Glass Frost', bg: 'bg-white/10', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-[#60a5fa]', secondary: 'text-white/40', hex: '#1e293b', pattern: 'glass', category: 'Premium' },
@@ -236,9 +242,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 )}
                 {tp.pattern === 'vibe_wave' && (
                     <>
-                        <div className="absolute top-0 left-0 w-full h-[40%] bg-[#24292e]" />
+                        <div className="absolute top-0 left-0 w-full h-[40%]" style={{ backgroundColor: (tp as any).waveColor || '#24292e' }} />
                         <svg className="absolute top-[35%] left-0 w-full h-24" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                            <path fill="#24292e" d="M0,160L80,181.3C160,203,320,245,480,245.3C640,245,800,203,960,176C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+                            <path fill={(tp as any).waveColor || '#24292e'} d="M0,160L80,181.3C160,203,320,245,480,245.3C640,245,800,203,960,176C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
                         </svg>
                     </>
                 )}
@@ -385,7 +391,11 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             : "border-white/5 hover:border-white/10 hover:scale-105"
                                     )}
                                 >
-                                    <div className="w-full h-full rounded-xl" style={{ background: tpl.hex }} />
+                                    <div className="w-full h-full rounded-xl overflow-hidden" style={{ background: (tpl as any).waveColor || tpl.hex }}>
+                                        {tpl.pattern === 'vibe_wave' && (
+                                            <div className="w-full h-[55%]" style={{ backgroundColor: (tpl as any).waveColor || '#24292e' }} />
+                                        )}
+                                    </div>
                                     {internalSelectedTplId === tpl.id && (
                                         <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-2xl">
                                             <Check size={20} className="text-white" strokeWidth={5} />
