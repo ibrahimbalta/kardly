@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 
@@ -196,7 +196,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     // Scale logic
     const cardWidth = 320
-    const cardHeight = 560
+    const cardHeight = 600
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
 
     const [isDownloading, setIsDownloading] = useState(false)
@@ -250,6 +250,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const tp = internalSelectedTpl
 
     const locationData = profileData?.socialLinks?.find((l: any) => l.platform.toLowerCase() === 'location')?.url || profileData?.location || ""
+    const whatsappData = profileData?.socialLinks?.find((l: any) => l.platform.toLowerCase() === 'whatsapp')?.url || ""
 
     const CardContent = (
         <div ref={cardRef} data-card-actual className={cn(
@@ -258,7 +259,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         )} style={{
             width: `${cardWidth}px`,
             height: `${cardHeight}px`,
-            borderRadius: mode === 'modal' ? '2.5rem' : '1.5rem',
+            borderRadius: mode === 'modal' ? '3rem' : '2.5rem',
         }}>
 
             {/* Premium Background Graphics */}
@@ -320,91 +321,104 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             <div className={cn(
-                "flex-1 p-8 flex flex-col relative z-20 justify-start pt-12"
+                "flex-1 p-6 flex flex-col relative z-20 justify-start pt-10"
             )}>
-                {/* Profile Image & Header */}
-                <div className="flex flex-col items-center text-center mb-8">
-                    <div className={cn("w-20 h-20 mb-4 p-1 border-2 relative z-10 overflow-hidden shadow-2xl rounded-2xl", tp.accent === 'bg-white' ? "border-slate-200" : `border-${tp.accent.replace('bg-', '')}`)} style={{ borderColor: tp.hex === '#ffffff' ? '#e2e8f0' : undefined }}>
-                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
+                {/* Profile Image & Header Area */}
+                <div className="flex flex-col items-center text-center mb-6">
+                    <div className={cn(
+                        "w-20 h-20 mb-3 p-1 relative z-10 overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.3)] rounded-[1.75rem] border-2 ring-4 ring-white/5",
+                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
+                    )}>
+                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" />
                     </div>
                     <div>
                         <h1 className={cn(
-                            "font-black tracking-tighter mb-1 line-clamp-1 leading-[1] text-3xl",
+                            "font-black tracking-tighter mb-1 line-clamp-1 leading-[1.1] text-2xl uppercase",
                             tp.text
-                        )}>{(profileData?.displayName || user.name || "KARDLY USER").toUpperCase()}</h1>
-                        <div className={cn("inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 mt-1")}>
-                            <p className={cn("text-[9px] font-black uppercase tracking-[0.2em] opacity-90", tp.accentText)}>{profileData?.occupation || user.occupation || "DIGITAL EXPERT"}</p>
+                        )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+                        <div className={cn("inline-block py-0.5 px-3 rounded-xl bg-white/5 border border-white/10")}>
+                            <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
+                                {profileData?.occupation || user.occupation || "DIGITAL EXPERT"}
+                            </p>
                         </div>
                     </div>
-                    {/* Divider with small dot */}
-                    <div className="w-24 h-px bg-white/10 mt-6 relative flex items-center justify-center">
-                        <div className={cn("w-1 h-1 rounded-full", tp.accent)} />
-                    </div>
+                    {/* Minimal Separator */}
+                    <div className="w-20 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mt-6" />
                 </div>
 
-                {/* Main QR Code Centerpiece */}
-                <div className="flex items-center justify-center mb-8">
-                    <div className="p-4 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-1 ring-black/5">
+                {/* QR Code Container */}
+                <div className="flex items-center justify-center mb-6">
+                    <div className="p-4 bg-white rounded-[2.75rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-[12px] ring-white/5">
                         {qrDataUrl ? (
-                            <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px]" />
+                            <img src={qrDataUrl} alt="QR Code" className="w-[125px] h-[125px]" />
                         ) : (
-                            <div className="w-[140px] h-[140px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
+                            <div className="w-[125px] h-[125px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
                                 <RefreshCw className="animate-spin text-slate-200" />
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* Subtext after QR */}
                 <div className="text-center mb-6">
-                    <span className={cn("text-[8px] font-black uppercase tracking-[0.4em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
+                    <span className={cn("text-[7px] font-black uppercase tracking-[0.5em] opacity-40", tp.text)}>DİJİTAL KARTVİZİT</span>
                 </div>
 
-                {/* Info Fields with background effects */}
-                <div className="space-y-2">
+                {/* Info Cards List */}
+                <div className="space-y-1.5 overflow-hidden">
                     {(profileData?.phone || user.phone) && (
-                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
-                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <Phone size={14} />
+                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
+                                <Phone size={12} strokeWidth={2.5} />
                             </div>
-                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
+                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{profileData?.phone || user.phone}</span>
+                        </div>
+                    )}
+
+                    {whatsappData && (
+                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-emerald-500/10 text-emerald-400 shadow-inner")}>
+                                <MessageCircle size={12} strokeWidth={2.5} />
+                            </div>
+                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{whatsappData}</span>
                         </div>
                     )}
 
                     {locationData && (
-                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
-                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <MapPin size={14} />
+                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
+                                <MapPin size={12} strokeWidth={2.5} />
                             </div>
-                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
+                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{locationData}</span>
                         </div>
                     )}
 
                     {(profileData?.email || user.email) && (
-                        <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
-                            <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
-                                <Mail size={14} />
+                        <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
+                            <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
+                                <Mail size={12} strokeWidth={2.5} />
                             </div>
-                            <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
+                            <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>{profileData?.email || user.email}</span>
                         </div>
                     )}
 
-                    <div className={cn("flex items-center gap-3 p-3 rounded-2xl border bg-white/5 border-white/5 backdrop-blur-md")}>
-                        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", tp.accentText)}>
-                            <Globe size={14} />
+                    <div className={cn("flex items-center gap-3 p-2.5 rounded-2xl border bg-white/[0.03] border-white/5 backdrop-blur-xl group/item transition-all hover:bg-white/[0.08]")}>
+                        <div className={cn("w-7 h-7 rounded-xl flex items-center justify-center bg-white/5 shadow-inner", tp.accentText)}>
+                            <Globe size={12} strokeWidth={2.5} />
                         </div>
-                        <span className={cn("text-[11px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
+                        <span className={cn("text-[10px] font-bold tracking-wider truncate", tp.text)}>kardly.site/{user.username}</span>
                     </div>
                 </div>
 
-                <div className="mt-auto pt-6 text-center opacity-30 pb-4">
-                    <span className={cn("text-[9px] font-black tracking-[0.3em] uppercase", tp.text)}>KARDLY PREMIUM</span>
+                <div className="mt-auto pt-6 text-center pb-4">
+                    <span className={cn("text-[8px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
                 </div>
             </div>
         </div>
     )
 
     if (mode === 'modal') {
+        const accentHex = tp.hex === '#ffffff' ? '#6366f1' : tp.hex;
+
         return (
             <div className="w-full flex flex-col items-center">
                 <div className="relative group/modal-card" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
@@ -416,15 +430,20 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <button
                         onClick={handleDownload}
                         disabled={isDownloading}
-                        className="flex-1 h-16 flex items-center justify-center gap-3 bg-primary text-white rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                        className="flex-1 h-16 relative flex items-center justify-center gap-3 text-white rounded-[2.25rem] font-black text-xs uppercase tracking-widest shadow-2xl transition-all disabled:opacity-50 overflow-hidden group/dl"
+                        style={{
+                            background: `linear-gradient(135deg, ${accentHex}, ${accentHex}dd)`,
+                            boxShadow: `0 20px 40px -10px ${accentHex}66`
+                        }}
                     >
+                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/dl:opacity-100 transition-opacity" />
                         {isDownloading ? <RefreshCw className="w-5 h-5 animate-spin" /> : downloadSuccess ? <Check size={18} /> : <Download size={18} />}
                         {downloadSuccess ? 'KAYDEDİLDİ' : 'GÖRSELİ İNDİR'}
                     </button>
                     <button
                         onClick={handleShare}
                         disabled={isSharing}
-                        className="w-16 h-16 flex items-center justify-center bg-white/5 text-white/40 border border-white/5 rounded-[2rem] hover:bg-white/10 hover:text-white transition-all backdrop-blur-md active:scale-95"
+                        className="w-16 h-16 flex items-center justify-center bg-white/10 text-white border border-white/10 rounded-[2.25rem] hover:bg-white/20 transition-all backdrop-blur-md active:scale-95 shadow-xl"
                     >
                         {shareSuccess ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
                     </button>
