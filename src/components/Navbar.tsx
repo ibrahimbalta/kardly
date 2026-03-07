@@ -21,9 +21,9 @@ export function Navbar() {
                     </div>
                     <div className="flex flex-col items-center">
                         <span className="text-xl font-black tracking-tighter leading-none text-slate-900 uppercase">
-                            KARDLY<span className="text-rose-500">.site</span>
+                            KARDLY<span className="text-rose-500">.SİTE</span>
                         </span>
-                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">LINK TO SUCCESS</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1 text-center w-full">LINK TO SUCCESS</span>
                     </div>
                 </Link>
 

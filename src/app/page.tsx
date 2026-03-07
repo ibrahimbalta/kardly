@@ -421,9 +421,9 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col items-center">
                   <span className="text-lg font-black tracking-tight text-slate-900 uppercase">
-                    Kardly<span className="text-rose-500">.site</span>
+                    KARDLY<span className="text-rose-500">.SİTE</span>
                   </span>
-                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">LINK TO SUCCESS</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1 text-center w-full">LINK TO SUCCESS</span>
                 </div>
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
@@ -461,7 +461,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-300 font-medium">© 2026 Kardly. {t('allRights')}</p>
+            <p className="text-xs text-slate-300 font-medium">© 2026 KARDLY.SİTE {t('allRights')}</p>
             <p className="text-xs text-slate-300 font-medium">{t('designedIn')}</p>
           </div>
         </div>

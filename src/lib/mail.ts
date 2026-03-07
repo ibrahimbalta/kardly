@@ -18,12 +18,12 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
         });
 
         await transporter.sendMail({
-            from: `"Kardly" <${process.env.SMTP_USER}>`,
+            from: `"KARDLY.SİTE" <${process.env.SMTP_USER}>`,
             to: email,
             subject: "Şifre Sıfırlama İsteği",
             html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                    <h2 style="color: #FF3B6B;">Kardly.</h2>
+                    <h2 style="color: #FF3B6B;">KARDLY.SİTE</h2>
                     <p>Şifrenizi sıfırlamak istediniz.</p>
                     <p>Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz:</p>
                     <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #FF3B6B; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 20px;">Şifremi Sıfırla</a>
