@@ -4063,52 +4063,62 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-start overflow-y-auto bg-slate-950/95 backdrop-blur-3xl p-4 sm:p-8">
+        <div className="fixed inset-0 z-[1000] overflow-y-auto flex flex-col items-center bg-slate-950/98 backdrop-blur-3xl sm:pt-12">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0"
+                className="fixed inset-0 bg-transparent cursor-pointer"
                 onClick={onClose}
             />
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                className="relative z-10 w-full flex flex-col items-center max-w-[400px] pt-20 sm:pt-24"
-            >
-                {/* Header with Title and Close Button */}
-                <div className="w-full flex items-center justify-between mb-8 px-2">
-                    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 ml-4">KARTVİZİT</h2>
-                    <button
-                        onClick={onClose}
-                        className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-xl group active:scale-95 shadow-2xl mr-2"
-                    >
-                        <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-                    </button>
-                </div>
-
-                {/* Floating Glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[120px] opacity-10 pointer-events-none" style={{ backgroundColor: theme.accent }} />
-
-                <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-10">
-                    <BusinessCardGenerator
-                        mode="modal"
-                        selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                        orientation="portrait"
-                        user={profile.user}
-                        profileData={profile}
-                    />
-                </div>
-
-                <button
-                    onClick={onClose}
-                    className="mt-8 mb-12 text-[10px] font-black uppercase tracking-[0.5em] text-white/20 hover:text-white/60 transition-all px-8 py-4 border border-white/5 hover:border-white/10 rounded-full"
+            {/* Scrollable Content Area */}
+            <div className="relative z-10 w-full flex flex-col items-center p-4 py-20 pointer-events-none">
+                <motion.div
+                    initial={{ opacity: 0, y: 100 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 100 }}
+                    className="w-full flex flex-col items-center max-w-[400px] pointer-events-auto"
                 >
-                    {t.closeLabel || 'Kapatmak için tıkla'}
-                </button>
-            </motion.div>
+                    {/* Header: Title and Big Close Button */}
+                    <div className="w-full flex items-center justify-between mb-10 px-4 bg-white/5 p-4 rounded-3xl border border-white/10 backdrop-blur-xl">
+                        <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60">KARTVİZİT ŞABLONU</h2>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="w-14 h-14 rounded-2xl bg-white/10 hover:bg-white/20 border-2 border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-3xl group active:scale-95 shadow-2xl"
+                            style={{ borderColor: `${theme.accent}40` }}
+                        >
+                            <X size={28} className="group-hover:rotate-90 transition-transform duration-300" />
+                        </button>
+                    </div>
+
+                    {/* Floating Glow Effect */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[140px] opacity-20 pointer-events-none" style={{ backgroundColor: theme.accent }} />
+
+                    <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-12 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] rounded-3xl overflow-hidden">
+                        <BusinessCardGenerator
+                            mode="modal"
+                            selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                            orientation="portrait"
+                            user={profile.user}
+                            profileData={profile}
+                        />
+                    </div>
+
+                    <div className="flex flex-col items-center gap-4 w-full px-10">
+                        <button
+                            onClick={onClose}
+                            className="w-full py-5 text-[11px] font-black uppercase tracking-[0.5em] text-white/40 hover:text-white transition-all bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl active:scale-95"
+                        >
+                            {t.closeLabel || 'MODALI KAPAT'}
+                        </button>
+                        <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Kapatmak için ekranın herhangi bir yerine tıklayabilirsiniz</p>
+                    </div>
+                </motion.div>
+            </div>
         </div>
     );
 }
