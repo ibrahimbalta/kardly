@@ -444,36 +444,11 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     )
 
     if (mode === 'modal') {
-        const accentHex = tp.hex === '#ffffff' ? '#6366f1' : tp.hex;
-
         return (
             <div className="w-full flex flex-col items-center">
                 <div className="relative group/modal-card" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
                     <div className={cn("absolute inset-2 blur-[60px] opacity-20 transition-all group-hover/modal-card:opacity-40", tp.accent)} />
                     {CardContent}
-                </div>
-
-                <div className="w-full max-w-[320px] flex gap-3 mt-10">
-                    <button
-                        onClick={handleDownload}
-                        disabled={isDownloading}
-                        className="flex-1 h-16 relative flex items-center justify-center gap-3 text-white rounded-[2.25rem] font-black text-xs uppercase tracking-widest shadow-2xl transition-all disabled:opacity-50 overflow-hidden group/dl"
-                        style={{
-                            background: `linear-gradient(135deg, ${accentHex}, ${accentHex}dd)`,
-                            boxShadow: `0 20px 40px -10px ${accentHex}66`
-                        }}
-                    >
-                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/dl:opacity-100 transition-opacity" />
-                        {isDownloading ? <RefreshCw className="w-5 h-5 animate-spin" /> : downloadSuccess ? <Check size={18} /> : <Download size={18} />}
-                        {downloadSuccess ? 'KAYDEDİLDİ' : 'GÖRSELİ İNDİR'}
-                    </button>
-                    <button
-                        onClick={handleShare}
-                        disabled={isSharing}
-                        className="w-16 h-16 flex items-center justify-center bg-white/10 text-white border border-white/10 rounded-[2.25rem] hover:bg-white/20 transition-all backdrop-blur-md active:scale-95 shadow-xl"
-                    >
-                        {shareSuccess ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
-                    </button>
                 </div>
             </div>
         )

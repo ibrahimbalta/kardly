@@ -4060,61 +4060,196 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
 }
 
 function QrModal({ isOpen, onClose, theme, profile, t }: any) {
+    const cardExportRef = useRef<HTMLDivElement>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [isSharing, setIsSharing] = useState(false);
+    const [actionDone, setActionDone] = useState<string | null>(null);
+
     if (!isOpen) return null;
 
+    const handleDownloadCard = async () => {
+        if (isDownloading) return;
+        setIsDownloading(true);
+        try {
+            const cardEl = cardExportRef.current?.querySelector('[data-card-actual]') as HTMLElement;
+            if (!cardEl) return;
+            await new Promise(r => setTimeout(r, 600));
+            const htmlToImage = await import('html-to-image');
+            const dataUrl = await htmlToImage.toJpeg(cardEl, {
+                quality: 0.98,
+                pixelRatio: 3,
+                backgroundColor: '#000000',
+                cacheBust: true,
+            });
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = `kardly-${profile.username || 'card'}.jpg`;
+            link.click();
+            setActionDone('download');
+            setTimeout(() => setActionDone(null), 2500);
+        } catch (err) {
+            console.error('Card download error:', err);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
+    const handleShareCard = async () => {
+        if (isSharing) return;
+        setIsSharing(true);
+        try {
+            const profileUrl = `${window.location.origin}/${profile.username}`;
+            if (navigator.share) {
+                await navigator.share({
+                    title: profile.displayName || profile.user?.name || 'Kardly',
+                    text: `${profile.displayName || profile.user?.name}'in dijital kartviziti`,
+                    url: profileUrl
+                });
+            } else {
+                await navigator.clipboard.writeText(profileUrl);
+                setActionDone('share');
+                setTimeout(() => setActionDone(null), 2500);
+            }
+        } catch (err) {
+            console.log('Share cancelled or failed:', err);
+        } finally {
+            setIsSharing(false);
+        }
+    };
+
     return (
-        <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/98 backdrop-blur-3xl">
+        <div className="fixed inset-0 z-[1000] flex flex-col" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(15,15,30,0.98) 0%, rgba(5,5,12,0.995) 100%)' }}>
+            {/* Ambient glow effects */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] blur-[180px] opacity-[0.07] pointer-events-none rounded-full" style={{ backgroundColor: theme.accent }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[300px] blur-[140px] opacity-[0.04] pointer-events-none rounded-full" style={{ backgroundColor: theme.accent }} />
+
+            {/* Top bar - always visible */}
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-transparent cursor-pointer"
-                onClick={onClose}
-            />
-
-            {/* Scrollable Content Area */}
-            <div className="relative z-10 w-full min-h-screen flex flex-col items-center p-4 py-12 pointer-events-none">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    className="w-full flex flex-col items-center max-w-[400px] pointer-events-auto"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="relative z-50 flex items-center justify-between px-5 py-4 shrink-0"
+            >
+                <div className="flex items-center gap-2.5">
+                    <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-white/30">Kartvizit</span>
+                </div>
+                <button
+                    onClick={onClose}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.07] border border-white/[0.08] text-white/50 hover:text-white hover:bg-white/[0.12] transition-all active:scale-90 backdrop-blur-xl"
                 >
-                    <div className="w-full flex flex-col items-center">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
-                            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">KARTVİZİT ÖNİZLEME</h2>
-                        </div>
+                    <X size={16} />
+                </button>
+            </motion.div>
 
-                        {/* Floating Glow Effect */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[140px] opacity-10 pointer-events-none" style={{ backgroundColor: theme.accent }} />
+            {/* Card area - fills remaining space, perfectly centered */}
+            <div className="flex-1 relative flex items-center justify-center overflow-hidden px-4 min-h-0">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.92, y: 20 }}
+                    transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+                    ref={cardExportRef}
+                    className="relative"
+                    style={{
+                        transform: 'scale(var(--card-scale, 0.78))',
+                        transformOrigin: 'center center',
+                    }}
+                >
+                    {/* Card shadow glow */}
+                    <div className="absolute -inset-6 blur-[80px] opacity-[0.12] rounded-[3rem] pointer-events-none" style={{ backgroundColor: theme.accent }} />
 
-                        <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden">
-                            <BusinessCardGenerator
-                                mode="modal"
-                                selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                                orientation="portrait"
-                                user={profile.user}
-                                profileData={profile}
-                            />
-                        </div>
-
-                        {/* HUGE CLOSE BUTTON AT THE BOTTOM */}
-                        <div className="w-full mt-4 pb-20">
-                            <button
-                                onClick={onClose}
-                                className="w-full h-20 bg-white/10 hover:bg-white/20 border-2 border-white/10 rounded-[2rem] flex items-center justify-center gap-4 text-white transition-all backdrop-blur-2xl group active:scale-95 shadow-2xl"
-                            >
-                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                                    <X size={24} />
-                                </div>
-                                <span className="text-xs font-black uppercase tracking-[0.3em]">MODALI KAPAT</span>
-                            </button>
-                            <p className="text-center mt-6 text-[9px] font-bold text-white/20 uppercase tracking-widest">veya ekranın boş bir yerine tıklayın</p>
-                        </div>
+                    <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7)]">
+                        <BusinessCardGenerator
+                            mode="modal"
+                            selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                            orientation="portrait"
+                            user={profile.user}
+                            profileData={profile}
+                        />
                     </div>
                 </motion.div>
             </div>
+
+            {/* Bottom action bar */}
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, type: 'spring', damping: 25 }}
+                className="relative z-50 px-5 pb-6 pt-3 shrink-0"
+            >
+                <div className="max-w-[340px] mx-auto flex items-center gap-3">
+                    {/* Download button */}
+                    <button
+                        onClick={handleDownloadCard}
+                        disabled={isDownloading}
+                        className="flex-1 h-[52px] flex items-center justify-center gap-2.5 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] disabled:opacity-40 relative overflow-hidden group"
+                        style={{
+                            background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
+                            boxShadow: `0 12px 30px -8px ${theme.accent}50`
+                        }}
+                    >
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <span className="relative z-10 flex items-center gap-2.5">
+                            {isDownloading ? (
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : actionDone === 'download' ? (
+                                <CheckCircle2 size={15} />
+                            ) : (
+                                <Download size={15} />
+                            )}
+                            {actionDone === 'download' ? 'Kaydedildi' : 'İndir'}
+                        </span>
+                    </button>
+
+                    {/* Share button */}
+                    <button
+                        onClick={handleShareCard}
+                        disabled={isSharing}
+                        className="w-[52px] h-[52px] flex items-center justify-center rounded-2xl bg-white/[0.07] border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all active:scale-[0.93] backdrop-blur-xl disabled:opacity-40"
+                    >
+                        {actionDone === 'share' ? (
+                            <CheckCircle2 size={18} style={{ color: theme.accent }} />
+                        ) : (
+                            <Share2 size={18} />
+                        )}
+                    </button>
+                </div>
+
+                {/* Success feedback toast */}
+                <AnimatePresence>
+                    {actionDone && (
+                        <motion.p
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 6 }}
+                            className="text-center mt-3 text-[8px] font-bold uppercase tracking-[0.3em]"
+                            style={{ color: theme.accent }}
+                        >
+                            {actionDone === 'download' ? '✓ Görsel galeriye kaydedildi' : '✓ Link kopyalandı'}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+
+            {/* CSS for responsive card scaling */}
+            <style>{`
+                @media (max-height: 700px) {
+                    :root { --card-scale: 0.62; }
+                }
+                @media (min-height: 700px) and (max-height: 800px) {
+                    :root { --card-scale: 0.72; }
+                }
+                @media (min-height: 800px) and (max-height: 900px) {
+                    :root { --card-scale: 0.82; }
+                }
+                @media (min-height: 900px) {
+                    :root { --card-scale: 0.9; }
+                }
+                @media (min-height: 1000px) {
+                    :root { --card-scale: 1; }
+                }
+            `}</style>
         </div>
     );
 }
