@@ -58,7 +58,8 @@ import {
     Image,
     Dribbble,
     Monitor,
-    Rss
+    Rss,
+    RefreshCw
 } from "lucide-react"
 import BusinessCardGenerator from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
@@ -4136,17 +4137,17 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
             <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="relative z-[1001] flex items-center justify-between p-6 shrink-0"
+                className="relative z-[1001] flex items-center justify-between p-7 pt-10 shrink-0"
             >
                 <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ backgroundColor: theme.accent }} />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Dijital Kartvizit</span>
+                    <div className="w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_15px_rgba(255,255,255,0.6)]" style={{ backgroundColor: theme.accent }} />
+                    <span className="text-[11px] font-black uppercase tracking-[0.5em] text-white/50">Dijital Kartvizit</span>
                 </div>
                 <button
                     onClick={onClose}
-                    className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white/[0.05] border border-white/[0.1] text-white/50 hover:text-white hover:bg-white/[0.1] transition-all active:scale-90 backdrop-blur-xl group"
+                    className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all active:scale-90 backdrop-blur-2xl shadow-2xl group"
                 >
-                    <X size={20} className="transition-transform group-hover:rotate-90" />
+                    <X size={24} className="transition-transform group-hover:rotate-90" />
                 </button>
             </motion.div>
 
