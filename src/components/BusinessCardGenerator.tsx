@@ -180,37 +180,37 @@ const TEMPLATES = [
         pattern: 'layered'
     },
     {
-        id: 'elite_spatial',
-        name: 'Elite Spatial',
-        bg: 'bg-[#050510]',
+        id: 'vibe_wave',
+        name: 'Vibe Wave',
+        bg: 'bg-white',
+        text: 'text-slate-900',
+        accent: 'bg-[#e67e22]',
+        accentText: 'text-[#e67e22]',
+        secondary: 'text-slate-500',
+        hex: '#ffffff',
+        pattern: 'vibe_wave'
+    },
+    {
+        id: 'vibe_geometric',
+        name: 'Vibe Geometric',
+        bg: 'bg-[#1a1a1a]',
         text: 'text-white',
-        accent: 'bg-cyan-500',
-        accentText: 'text-cyan-400',
-        secondary: 'text-slate-400',
-        hex: '#050510',
-        pattern: 'elite_spatial'
+        accent: 'bg-[#e67e22]',
+        accentText: 'text-[#e67e22]',
+        secondary: 'text-slate-300',
+        hex: '#1a1a1a',
+        pattern: 'vibe_geo'
     },
     {
-        id: 'elite_cyber',
-        name: 'Elite Cyber',
-        bg: 'bg-black',
-        text: 'text-fuchsia-100',
-        accent: 'bg-fuchsia-600',
-        accentText: 'text-fuchsia-400',
-        secondary: 'text-fuchsia-200/40',
-        hex: '#000000',
-        pattern: 'elite_cyber'
-    },
-    {
-        id: 'elite_royal',
-        name: 'Elite Royal',
-        bg: 'bg-[#1a0b0b]',
-        text: 'text-amber-100',
-        accent: 'bg-amber-600',
-        accentText: 'text-amber-500',
-        secondary: 'text-amber-200/40',
-        hex: '#1a0b0b',
-        pattern: 'elite_royal'
+        id: 'vibe_elegant',
+        name: 'Vibe Elegant',
+        bg: 'bg-white',
+        text: 'text-slate-900',
+        accent: 'bg-[#e67e22]',
+        accentText: 'text-[#e67e22]',
+        secondary: 'text-slate-500',
+        hex: '#ffffff',
+        pattern: 'vibe_elegant'
     }
 ]
 
@@ -417,6 +417,35 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-1/2 right-0 w-32 h-64 bg-amber-500/5 blur-[60px] rounded-full" />
                     </>
                 )}
+                {tp.pattern === 'vibe_wave' && (
+                    <div className="absolute inset-0">
+                        <div className="absolute top-0 left-0 w-full h-[45%] bg-[#24292e]" />
+                        <svg className="absolute top-[38%] left-0 w-full h-32" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                            <path fill="#24292e" d="M0,160L80,181.3C160,203,320,245,480,245.3C640,245,800,203,960,176C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+                        </svg>
+                        <div className="absolute top-[42%] left-0 w-full h-[2px] bg-[#e67e22]/30 blur-[4px]" />
+                        <div className="absolute bottom-4 left-4 right-4 h-12 bg-[#24292e] rounded-xl flex items-center px-4">
+                            <span className="text-[9px] text-white/50 tracking-widest font-bold">ADDRESS HERE, STREET, CITY 4320</span>
+                        </div>
+                    </div>
+                )}
+                {tp.pattern === 'vibe_geo' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0a0a0a]" />
+                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L50 50 L100 0 Z' fill='%23e67e22'/%3E%3C/svg%3E")`, backgroundSize: '150px 150px' }} />
+                        <div className="absolute -top-10 -left-10 w-48 h-48 bg-[#e67e22]/20 rounded-full blur-[60px]" />
+                        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#e67e22]/10 rounded-full blur-[60px]" />
+                        <div className="absolute top-0 left-0 w-full h-full border-[16px] border-[#e67e22]/5 pointer-events-none" />
+                    </>
+                )}
+                {tp.pattern === 'vibe_elegant' && (
+                    <>
+                        <div className="absolute top-0 left-0 w-full h-6 bg-[#e67e22]" />
+                        <div className="absolute bottom-0 left-0 w-full h-20 bg-[#e67e22]" />
+                        <div className="absolute top-0 right-0 w-12 h-full bg-[#24292e]/5" />
+                        <div className="absolute top-32 right-0 w-1 h-32 bg-[#e67e22]" />
+                    </>
+                )}
             </div>
 
             <div className={cn(
@@ -441,14 +470,23 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {/* Profile Section - Under QR */}
                 <div className="flex flex-col items-center text-center mb-6">
                     <div className={cn(
-                        "w-14 h-14 mb-2 p-1 relative z-10 overflow-hidden shadow-xl rounded-2xl border-2 ring-4 ring-white/5",
+                        "relative z-10 overflow-hidden shadow-2xl transition-transform group-hover/card:scale-105 mb-3",
+                        tp.pattern === 'vibe_wave'
+                            ? "w-28 h-28 p-2 rounded-full border-[6px] border-[#e67e22] bg-white ring-8 ring-[#24292e]"
+                            : tp.pattern === 'vibe_geo'
+                                ? "w-24 h-24 p-1 rounded-[2rem] border-2 border-[#e67e22] bg-[#0a0a0a] ring-4 ring-white/5"
+                                : "w-20 h-20 p-1 rounded-2xl border-2 ring-4 ring-white/5",
                         tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
                     )}>
-                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className="w-full h-full object-cover rounded-xl" alt="" />
+                        <img src={user.image || `https://ui-avatars.com/api/?name=${user.name}`} className={cn(
+                            "w-full h-full object-cover",
+                            tp.pattern === 'vibe_wave' ? "rounded-full" : tp.pattern === 'vibe_geo' ? "rounded-[1.75rem]" : "rounded-xl"
+                        )} alt="" />
                     </div>
-                    <div className="space-y-0.5">
+                    <div className="space-y-1">
                         <h1 className={cn(
-                            "font-black tracking-tighter line-clamp-1 leading-none text-lg uppercase",
+                            "font-black tracking-tighter line-clamp-1 leading-none uppercase",
+                            tp.pattern === 'vibe_wave' ? "text-xl mt-2" : "text-lg",
                             tp.text
                         )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
                         <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-80", tp.accentText)}>
