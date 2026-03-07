@@ -3,9 +3,10 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface BusinessCardGeneratorProps {
     user: {
@@ -25,193 +26,21 @@ interface BusinessCardGeneratorProps {
 }
 
 const TEMPLATES = [
-    {
-        id: 'minimal_white',
-        name: 'Zen White',
-        bg: 'bg-white',
-        text: 'text-slate-900',
-        accent: 'bg-indigo-600',
-        accentText: 'text-indigo-600',
-        secondary: 'text-slate-500',
-        hex: '#ffffff',
-        pattern: 'dots'
-    },
-    {
-        id: 'modern_dark',
-        name: 'Obsidian',
-        bg: 'bg-slate-950',
-        text: 'text-white',
-        accent: 'bg-emerald-400',
-        accentText: 'text-emerald-400',
-        secondary: 'text-slate-400',
-        hex: '#020617',
-        pattern: 'grid'
-    },
-    {
-        id: 'luxury_gold',
-        name: 'Royal Gold',
-        bg: 'bg-[#0a0a05]',
-        text: 'text-amber-100',
-        accent: 'bg-amber-500',
-        accentText: 'text-amber-500',
-        secondary: 'text-amber-100/60',
-        hex: '#0a0a05',
-        pattern: 'luxury'
-    },
-    {
-        id: 'creative_pink',
-        name: 'Silk Rose',
-        bg: 'bg-[#2d0a1a]',
-        text: 'text-rose-100',
-        accent: 'bg-rose-500',
-        accentText: 'text-rose-400',
-        secondary: 'text-rose-100/60',
-        hex: '#2d0a1a',
-        pattern: 'waves'
-    },
-    {
-        id: 'cyber_neon',
-        name: 'Cyberpunk',
-        bg: 'bg-black',
-        text: 'text-cyan-400',
-        accent: 'bg-fuchsia-600',
-        accentText: 'text-fuchsia-400',
-        secondary: 'text-cyan-400/50',
-        hex: '#000000',
-        pattern: 'cyber'
-    },
-    {
-        id: 'midnight_emerald',
-        name: 'Deep Forest',
-        bg: 'bg-[#021c12]',
-        text: 'text-[#e2d5a5]',
-        accent: 'bg-[#d4af37]',
-        accentText: 'text-[#d4af37]',
-        secondary: 'text-[#e2d5a5]/50',
-        hex: '#021c12',
-        pattern: 'leaf'
-    },
-    {
-        id: 'sapphire_blue',
-        name: 'Sapphire',
-        bg: 'bg-[#0a1a4a]',
-        text: 'text-blue-50',
-        accent: 'bg-blue-400',
-        accentText: 'text-blue-300',
-        secondary: 'text-blue-50/50',
-        hex: '#0a1a4a',
-        pattern: 'glass'
-    },
-    {
-        id: 'titanium_tech',
-        name: 'Titanium',
-        bg: 'bg-[#121212]',
-        text: 'text-slate-200',
-        accent: 'bg-slate-500',
-        accentText: 'text-slate-400',
-        secondary: 'text-slate-500/60',
-        hex: '#121212',
-        pattern: 'tech'
-    },
-    {
-        id: 'abstract_sunset',
-        name: 'Sunset Glow',
-        bg: 'bg-[#3b120c]',
-        text: 'text-orange-100',
-        accent: 'bg-orange-500',
-        accentText: 'text-orange-400',
-        secondary: 'text-orange-100/60',
-        hex: '#3b120c',
-        pattern: 'sunset'
-    },
-    {
-        id: 'minimal_noir',
-        name: 'Noir Luxe',
-        bg: 'bg-neutral-900',
-        text: 'text-neutral-100',
-        accent: 'bg-white',
-        accentText: 'text-white',
-        secondary: 'text-neutral-500',
-        hex: '#171717',
-        pattern: 'lines'
-    },
-    {
-        id: 'ethereal_purple',
-        name: 'Ethereal',
-        bg: 'bg-[#1a0b2e]',
-        text: 'text-purple-100',
-        accent: 'bg-purple-500',
-        accentText: 'text-purple-400',
-        secondary: 'text-purple-100/60',
-        hex: '#1a0b2e',
-        pattern: 'nebula'
-    },
-    {
-        id: 'layered_blue',
-        name: 'Layered Ocean',
-        bg: 'bg-[#0f172a]',
-        text: 'text-blue-50',
-        accent: 'bg-blue-500',
-        accentText: 'text-blue-400',
-        secondary: 'text-blue-300',
-        hex: '#0f172a',
-        pattern: 'layered'
-    },
-    {
-        id: 'layered_orange',
-        name: 'Layered Flame',
-        bg: 'bg-white',
-        text: 'text-slate-900',
-        accent: 'bg-orange-500',
-        accentText: 'text-orange-500',
-        secondary: 'text-slate-600',
-        hex: '#ffffff',
-        pattern: 'layered'
-    },
-    {
-        id: 'layered_dark',
-        name: 'Layered Onyx',
-        bg: 'bg-[#111111]',
-        text: 'text-white',
-        accent: 'bg-slate-500',
-        accentText: 'text-white',
-        secondary: 'text-slate-400',
-        hex: '#111111',
-        pattern: 'layered'
-    },
-    {
-        id: 'vibe_wave',
-        name: 'Vibe Wave',
-        bg: 'bg-white',
-        text: 'text-slate-900',
-        accent: 'bg-[#e67e22]',
-        accentText: 'text-[#e67e22]',
-        secondary: 'text-slate-500',
-        hex: '#ffffff',
-        pattern: 'vibe_wave'
-    },
-    {
-        id: 'vibe_geometric',
-        name: 'Vibe Geometric',
-        bg: 'bg-[#1a1a1a]',
-        text: 'text-white',
-        accent: 'bg-[#e67e22]',
-        accentText: 'text-[#e67e22]',
-        secondary: 'text-slate-300',
-        hex: '#1a1a1a',
-        pattern: 'vibe_geo'
-    },
-    {
-        id: 'vibe_elegant',
-        name: 'Vibe Elegant',
-        bg: 'bg-white',
-        text: 'text-slate-900',
-        accent: 'bg-[#e67e22]',
-        accentText: 'text-[#e67e22]',
-        secondary: 'text-slate-500',
-        hex: '#ffffff',
-        pattern: 'vibe_elegant'
-    }
+    // Standard
+    { id: 'minimal_white', name: 'Zen White', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-600', accentText: 'text-indigo-600', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'dots', category: 'Standard' },
+    { id: 'modern_dark', name: 'Obsidian', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-emerald-400', accentText: 'text-emerald-400', secondary: 'text-slate-400', hex: '#020617', pattern: 'grid', category: 'Standard' },
+    { id: 'minimal_noir', name: 'Noir Luxe', bg: 'bg-neutral-900', text: 'text-neutral-100', accent: 'bg-white', accentText: 'text-white', secondary: 'text-neutral-500', hex: '#171717', pattern: 'lines', category: 'Standard' },
+
+    // Premium
+    { id: 'vibe_wave', name: 'Vibe Wave', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: '#e67e22', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium' },
+    { id: 'vibe_geometric', name: 'Vibe Geometric', bg: 'bg-[#1a1a1a]', text: 'text-white', accent: 'bg-[#e67e22]', accentText: '#e67e22', secondary: 'text-slate-300', hex: '#1a1a1a', pattern: 'vibe_geo', category: 'Premium' },
+    { id: 'vibe_elegant', name: 'Vibe Elegant', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: '#e67e22', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium' },
+
+    // Ultimate (Elite)
+    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: '#22d3ee', secondary: 'text-slate-400', hex: '#050510', pattern: 'aurora', category: 'Ultimate' },
+    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: '#d946ef', secondary: 'text-fuchsia-200/40', hex: '#000000', pattern: 'mesh', category: 'Ultimate' },
+    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: '#3b82f6', secondary: 'text-blue-100/40', hex: '#0f172a', pattern: 'frosty', category: 'Ultimate' },
+    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: '#d97706', secondary: 'text-amber-200/40', hex: '#1a0b0b', pattern: 'elite_royal', category: 'Ultimate' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -221,11 +50,15 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const [containerWidth, setContainerWidth] = useState(500)
     const [internalSelectedTpl, setInternalSelectedTpl] = useState(TEMPLATES.find(t => t.id === selectedTemplateId) || TEMPLATES[0])
     const [qrDataUrl, setQrDataUrl] = useState<string>('')
+    const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate'>('Ultimate')
 
     useEffect(() => {
         if (selectedTemplateId) {
             const tpl = TEMPLATES.find(t => t.id === selectedTemplateId)
-            if (tpl) setInternalSelectedTpl(tpl)
+            if (tpl) {
+                setInternalSelectedTpl(tpl)
+                setActiveTab(tpl.category as any)
+            }
         }
     }, [selectedTemplateId])
 
@@ -417,6 +250,29 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-1/2 right-0 w-32 h-64 bg-amber-500/5 blur-[60px] rounded-full" />
                     </>
                 )}
+                {tp.pattern === 'aurora' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#050510]" />
+                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] opacity-50 blur-[100px]" style={{ background: `radial-gradient(circle at 30% 30%, #4facfe 0%, transparent 40%), radial-gradient(circle at 70% 60%, #00f2fe 0%, transparent 40%), radial-gradient(circle at 50% 10%, #667eea 0%, transparent 40%)` }} />
+                        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
+                        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#050510] to-transparent z-1" />
+                    </>
+                )}
+                {tp.pattern === 'mesh' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-0 opacity-30 animate-pulse-slow" style={{ background: `radial-gradient(circle at 20% 50%, #d946ef 0%, transparent 50%), radial-gradient(circle at 80% 20%, #8b5cf6 0%, transparent 50%), radial-gradient(circle at 50% 80%, #ec4899 0%, transparent 50%)`, filter: 'blur(60px)' }} />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle, #ffffff 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+                    </>
+                )}
+                {tp.pattern === 'frosty' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#0f172a]" />
+                        <div className="absolute top-[10%] right-[10%] w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full animate-bounce-slow" />
+                        <div className="absolute bottom-[20%] left-[-10%] w-80 h-80 bg-indigo-600/15 blur-[120px] rounded-full" />
+                        <div className="absolute inset-0 backdrop-blur-[2px] opacity-40 bg-[url('https://www.transparenttextures.com/patterns/snow.png')]" />
+                    </>
+                )}
                 {tp.pattern === 'vibe_wave' && (
                     <div className="absolute inset-0">
                         <div className="absolute top-0 left-0 w-full h-[45%] bg-[#24292e]" />
@@ -515,7 +371,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     ].filter(item => item.value).map((item, idx) => (
                         <div key={idx} className={cn(
                             "flex items-center gap-3 p-2 rounded-xl transition-all border",
-                            tp.pattern.startsWith('elite_')
+                            tp.category === 'Ultimate'
                                 ? "bg-white/[0.08] border-white/10 backdrop-blur-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                                 : tp.pattern === 'layered'
                                     ? "bg-white/[0.05] border-white/5 shadow-sm"
@@ -524,7 +380,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             <div className={cn(
                                 "w-7 h-7 rounded-lg flex items-center justify-center shadow-inner shrink-0",
                                 item.color || tp.accentText,
-                                tp.pattern.startsWith('elite_') ? "bg-white/10" : "bg-white/5"
+                                tp.category === 'Ultimate' ? "bg-white/10" : "bg-white/5"
                             )}>
                                 <item.icon size={11} strokeWidth={2.5} />
                             </div>
@@ -547,9 +403,21 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     50% { opacity: 1; }
                     100% { top: 100%; opacity: 0; }
                 }
-                .animate-scan {
-                    animation: scan 3s linear infinite;
+                @keyframes pulse-slow {
+                    0%, 100% { transform: scale(1); opacity: 0.3; }
+                    50% { transform: scale(1.1); opacity: 0.5; }
                 }
+                @keyframes bounce-slow {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    50% { transform: translateY(-30px) scale(1.05); }
+                }
+                @keyframes shimmer {
+                    100% { transform: translateX(100%); }
+                }
+                .animate-scan { animation: scan 3s linear infinite; }
+                .animate-pulse-slow { animation: pulse-slow 8s ease-in-out infinite; }
+                .animate-bounce-slow { animation: bounce-slow 6s ease-in-out infinite; }
+                .animate-shimmer { animation: shimmer 2s infinite; }
             `}</style>
         </div>
     )
@@ -568,29 +436,72 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     return (
         <div className="space-y-12 w-full flex flex-col items-center">
             {mode === 'selector' && (
-                <div className="w-full">
-                    <div className="mb-6 flex items-center justify-center gap-3">
-                        <div className="h-px w-8 bg-white/10" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">ELİTE ŞABLON SEÇİMİ</span>
-                        <div className="h-px w-8 bg-white/10" />
-                    </div>
-                    <div className="flex flex-wrap gap-4 justify-center px-4 max-w-lg mx-auto">
-                        {TEMPLATES.map((tpl) => (
-                            <button
-                                key={tpl.id}
-                                title={tpl.name}
-                                onClick={() => onSelect?.(tpl.id)}
-                                className={cn(
-                                    "relative shrink-0 w-12 h-12 rounded-2xl border-2 transition-all p-1 group/tpl",
-                                    tp.id === tpl.id ? "border-primary ring-offset-4 ring-offset-slate-950 ring-2 ring-primary scale-110" : "border-white/5 opacity-40 hover:opacity-100 hover:border-white/10"
-                                )}
-                            >
-                                <div className="w-full h-full rounded-xl shadow-inner border border-white/10" style={{ background: tpl.hex }} />
-                                {tpl.id.startsWith('elite_') && (
-                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-slate-950 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-                                )}
-                            </button>
-                        ))}
+                <div className="w-full bg-slate-900/40 backdrop-blur-3xl rounded-[2.5rem] p-6 border border-white/5 shadow-2xl">
+                    <div className="flex flex-col gap-6">
+                        {/* Tabs */}
+                        <div className="flex bg-slate-950/50 p-1.5 rounded-2xl border border-white/5 w-fit mx-auto">
+                            {(['Standard', 'Premium', 'Ultimate'] as const).map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={cn(
+                                        "flex items-center gap-2 px-6 py-2.5 rounded-xl transition-all font-black text-[10px] uppercase tracking-widest",
+                                        activeTab === tab
+                                            ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
+                                            : "text-slate-400 hover:text-white"
+                                    )}
+                                >
+                                    {tab === 'Standard' && <Palette size={14} />}
+                                    {tab === 'Premium' && <Star size={14} />}
+                                    {tab === 'Ultimate' && <Crown size={14} />}
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Template Grid */}
+                        <div className="w-full relative overflow-hidden min-h-[100px]">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeTab}
+                                    initial={{ opacity: 0, y: 10, filter: 'blur(10px)' }}
+                                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                    exit={{ opacity: 0, y: -10, filter: 'blur(10px)' }}
+                                    transition={{ duration: 0.4, ease: "circOut" }}
+                                    className="flex flex-wrap gap-4 justify-center"
+                                >
+                                    {TEMPLATES.filter(t => t.category === activeTab).map((tpl) => (
+                                        <button
+                                            key={tpl.id}
+                                            onClick={() => onSelect?.(tpl.id)}
+                                            className={cn(
+                                                "group/tpl relative w-20 h-28 rounded-2xl border-2 transition-all overflow-hidden flex flex-col",
+                                                tp.id === tpl.id
+                                                    ? "border-primary ring-4 ring-primary/20 scale-105 shadow-xl"
+                                                    : "border-white/5 hover:border-white/20 hover:scale-[1.02]"
+                                            )}
+                                        >
+                                            <div className="flex-1 w-full" style={{ background: tpl.hex }}>
+                                                {/* Mini Preview Placeholder */}
+                                                <div className="w-full h-full opacity-30 flex items-center justify-center">
+                                                    <div className="w-8 h-8 rounded-full border border-white/20 animate-pulse" />
+                                                </div>
+                                            </div>
+                                            <div className="h-8 bg-slate-950/80 backdrop-blur-md flex items-center justify-center px-1">
+                                                <span className="text-[7px] font-black uppercase tracking-tighter text-white truncate max-w-full">{tpl.name}</span>
+                                            </div>
+                                            {tp.id === tpl.id && (
+                                                <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                                                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="bg-primary text-white p-1 rounded-full">
+                                                        <Check size={10} />
+                                                    </motion.div>
+                                                </div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
             )}
@@ -611,22 +522,33 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 </div>
             </div>
 
-            <div className="w-full max-w-[320px] flex gap-3 mt-4 px-6">
-                <button
-                    onClick={handleDownload}
-                    disabled={isDownloading}
-                    className="flex-1 h-14 flex items-center justify-center gap-3 bg-primary text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                >
-                    {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : downloadSuccess ? <Check size={16} /> : <Download size={16} />}
-                    {downloadSuccess ? 'İNDİRİLDİ' : 'GÖRSELİ İNDİR'}
-                </button>
-                <button
-                    onClick={handleShare}
-                    disabled={isSharing}
-                    className="w-14 h-14 flex items-center justify-center bg-slate-100 text-slate-400 rounded-[2rem] hover:bg-slate-200 hover:text-slate-600 transition-all active:scale-95 border border-slate-200"
-                >
-                    {shareSuccess ? <Check size={16} className="text-emerald-500" /> : <Share2 size={16} />}
-                </button>
+            <div className="w-full max-w-[340px] flex flex-col gap-4 mt-8 px-6">
+                <div className="flex gap-3">
+                    <button
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className={cn(
+                            "flex-1 h-14 flex items-center justify-center gap-3 rounded-3xl font-black text-[10px] uppercase tracking-widest transition-all relative overflow-hidden group/btn",
+                            isDownloading ? "bg-slate-100 text-slate-400" : "bg-primary text-white shadow-xl shadow-primary/30 hover:shadow-primary/40 active:scale-95"
+                        )}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:animate-shimmer" />
+                        {isDownloading ? <RefreshCw className="w-4 h-4 animate-spin" /> : downloadSuccess ? <Check size={18} /> : <Download size={18} />}
+                        <span>{downloadSuccess ? 'BAŞARILI' : 'GÖRSELİ İNDİR'}</span>
+                    </button>
+
+                    <button
+                        onClick={handleShare}
+                        disabled={isSharing}
+                        className="w-14 h-14 flex items-center justify-center bg-white text-slate-900 rounded-3xl shadow-xl shadow-slate-200 transition-all hover:bg-slate-50 active:scale-90 border border-slate-100"
+                    >
+                        {shareSuccess ? <Check size={18} className="text-emerald-500" /> : <Share2 size={18} />}
+                    </button>
+                </div>
+
+                <p className="text-[9px] text-center text-slate-400 font-bold uppercase tracking-[0.2em] opacity-40">
+                    KARDLY • SİZİN İÇİN TASARLANDI
+                </p>
             </div>
         </div>
     )
