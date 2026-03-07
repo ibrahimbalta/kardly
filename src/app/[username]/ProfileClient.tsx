@@ -4076,7 +4076,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                className="relative z-10 w-full flex flex-col items-center max-w-[400px] pt-4"
+                className="relative z-10 w-full flex flex-col items-center max-w-[400px] pt-20 sm:pt-24"
             >
                 {/* Header with Title and Close Button */}
                 <div className="w-full flex items-center justify-between mb-8 px-2">
