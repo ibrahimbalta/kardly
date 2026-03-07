@@ -28,113 +28,124 @@ interface BusinessCardGeneratorProps {
 const TEMPLATES = [
     {
         id: 'minimal_white',
-        name: 'Minimal White',
+        name: 'Zen White',
         bg: 'bg-white',
         text: 'text-slate-900',
         accent: 'bg-indigo-600',
         accentText: 'text-indigo-600',
         secondary: 'text-slate-500',
-        hex: '#ffffff'
+        hex: '#ffffff',
+        pattern: 'dots'
     },
     {
         id: 'modern_dark',
-        name: 'Modern Dark',
-        bg: 'bg-slate-900',
+        name: 'Obsidian',
+        bg: 'bg-slate-950',
         text: 'text-white',
-        accent: 'bg-emerald-500',
-        accentText: 'text-emerald-500',
+        accent: 'bg-emerald-400',
+        accentText: 'text-emerald-400',
         secondary: 'text-slate-400',
-        hex: '#0f172a'
+        hex: '#020617',
+        pattern: 'grid'
     },
     {
         id: 'luxury_gold',
-        name: 'Luxury Gold',
-        bg: 'bg-neutral-900',
+        name: 'Royal Gold',
+        bg: 'bg-[#0a0a05]',
         text: 'text-amber-100',
         accent: 'bg-amber-500',
         accentText: 'text-amber-500',
         secondary: 'text-amber-100/60',
-        hex: '#171717'
+        hex: '#0a0a05',
+        pattern: 'luxury'
     },
     {
         id: 'creative_pink',
-        name: 'Creative Waves',
-        bg: 'bg-[#4c0519]',
-        text: 'text-white',
-        accent: 'bg-pink-500',
-        accentText: 'text-pink-400',
-        secondary: 'text-white/60',
-        hex: '#4c0519'
-    },
-    {
-        id: 'royal_blue',
-        name: 'Royal Blue',
-        bg: 'bg-indigo-950',
-        text: 'text-white',
-        accent: 'bg-yellow-400',
-        accentText: 'text-yellow-400',
-        secondary: 'text-indigo-200/60',
-        hex: '#1e1b4b'
-    },
-    {
-        id: 'gradient_mesh',
-        name: 'Nebula',
-        bg: 'bg-slate-950',
-        text: 'text-white',
-        accent: 'bg-white',
-        accentText: 'text-indigo-300',
-        secondary: 'text-white/50',
-        hex: 'linear-gradient(135deg, #0f172a, #312e81, #581c87)'
+        name: 'Silk Rose',
+        bg: 'bg-[#2d0a1a]',
+        text: 'text-rose-100',
+        accent: 'bg-rose-500',
+        accentText: 'text-rose-400',
+        secondary: 'text-rose-100/60',
+        hex: '#2d0a1a',
+        pattern: 'waves'
     },
     {
         id: 'cyber_neon',
-        name: 'Cyber Neon',
+        name: 'Cyberpunk',
         bg: 'bg-black',
         text: 'text-cyan-400',
-        accent: 'bg-fuchsia-500',
+        accent: 'bg-fuchsia-600',
         accentText: 'text-fuchsia-400',
         secondary: 'text-cyan-400/50',
-        hex: '#000000'
-    },
-    {
-        id: 'minimal_glass',
-        name: 'Pure Glass',
-        bg: 'bg-slate-800/40 backdrop-blur-xl',
-        text: 'text-white',
-        accent: 'bg-white',
-        accentText: 'text-white',
-        secondary: 'text-white/60',
-        hex: 'rgba(51, 65, 85, 0.4)'
-    },
-    {
-        id: 'deep_purple',
-        name: 'Deep Purple',
-        bg: 'bg-[#1e1432]',
-        text: 'text-white',
-        accent: 'bg-[#9d58ff]',
-        accentText: 'text-[#9d58ff]',
-        secondary: 'text-white/50',
-        hex: '#1e1432'
-    },
-    {
-        id: 'titanium_gray',
-        name: 'Titanium',
-        bg: 'bg-[#1c1c1c]',
-        text: 'text-[#e0e0e0]',
-        accent: 'bg-[#ff5722]',
-        accentText: 'text-[#ff5722]',
-        secondary: 'text-[#e0e0e0]/40',
-        hex: '#1c1c1c'
+        hex: '#000000',
+        pattern: 'cyber'
     },
     {
         id: 'midnight_emerald',
-        name: 'Emerald Dark',
-        bg: 'bg-[#062016]',
-        text: 'text-[#d4af37]',
+        name: 'Deep Forest',
+        bg: 'bg-[#021c12]',
+        text: 'text-[#e2d5a5]',
         accent: 'bg-[#d4af37]',
         accentText: 'text-[#d4af37]',
-        secondary: 'text-[#d4af37]/60',
-        hex: '#062016'
+        secondary: 'text-[#e2d5a5]/50',
+        hex: '#021c12',
+        pattern: 'leaf'
+    },
+    {
+        id: 'sapphire_blue',
+        name: 'Sapphire',
+        bg: 'bg-[#0a1a4a]',
+        text: 'text-blue-50',
+        accent: 'bg-blue-400',
+        accentText: 'text-blue-300',
+        secondary: 'text-blue-50/50',
+        hex: '#0a1a4a',
+        pattern: 'glass'
+    },
+    {
+        id: 'titanium_tech',
+        name: 'Titanium',
+        bg: 'bg-[#121212]',
+        text: 'text-slate-200',
+        accent: 'bg-slate-500',
+        accentText: 'text-slate-400',
+        secondary: 'text-slate-500/60',
+        hex: '#121212',
+        pattern: 'tech'
+    },
+    {
+        id: 'abstract_sunset',
+        name: 'Sunset Glow',
+        bg: 'bg-[#3b120c]',
+        text: 'text-orange-100',
+        accent: 'bg-orange-500',
+        accentText: 'text-orange-400',
+        secondary: 'text-orange-100/60',
+        hex: '#3b120c',
+        pattern: 'sunset'
+    },
+    {
+        id: 'minimal_noir',
+        name: 'Noir Luxe',
+        bg: 'bg-neutral-900',
+        text: 'text-neutral-100',
+        accent: 'bg-white',
+        accentText: 'text-white',
+        secondary: 'text-neutral-500',
+        hex: '#171717',
+        pattern: 'lines'
+    },
+    {
+        id: 'ethereal_purple',
+        name: 'Ethereal',
+        bg: 'bg-[#1a0b2e]',
+        text: 'text-purple-100',
+        accent: 'bg-purple-500',
+        accentText: 'text-purple-400',
+        secondary: 'text-purple-100/60',
+        hex: '#1a0b2e',
+        pattern: 'nebula'
     }
 ]
 
@@ -169,7 +180,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         const generateQr = async () => {
             try {
                 const url = await QRCode.toDataURL(profileUrl, {
-                    width: 480,
+                    width: 512,
                     margin: 1,
                     color: {
                         dark: '#000000',
@@ -184,11 +195,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         generateQr()
     }, [profileUrl])
 
-    // Always portrait
+    // Scale logic
     const cardWidth = 320
     const cardHeight = 540
-
-    // Scale logic
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
 
     const [isDownloading, setIsDownloading] = useState(false)
@@ -199,35 +208,24 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const handleDownload = async () => {
         if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
-        console.log('DEBUG: Modern download triggered (html-to-image v2)')
+        console.log('DEBUG: Modern download triggered (v3-premium)')
         try {
-            // Modern capture approach using html-to-image (supports oklch, lab etc)
             await new Promise(r => setTimeout(r, 800))
-
             const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
-                quality: 0.95,
-                pixelRatio: 2,
-                backgroundColor: '#ffffff',
+                quality: 0.98,
+                pixelRatio: 3,
+                backgroundColor: '#000000',
                 cacheBust: true,
-                style: {
-                    borderRadius: '0',
-                    transform: 'none',
-                    margin: '0'
-                }
             })
-
             const link = document.createElement('a')
             link.href = dataUrl
-            link.download = `kardly-card-${user.username}.jpg`
-            document.body.appendChild(link)
+            link.download = `kardly-${user.username}.jpg`
             link.click()
-            document.body.removeChild(link)
-
             setDownloadSuccess(true)
             setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
             console.error('Download error:', error)
-            alert(t('downloadError') || 'İndirme işlemi sırasında bir hata oluştu. Lütfen tarayıcınızın modern CSS özelliklerini desteklediğinden emin olun.')
+            alert('İndirme hatası. Tarayıcı uyumsuzluğu olabilir.')
         } finally {
             setIsDownloading(false)
         }
@@ -236,24 +234,16 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const handleShare = async () => {
         if (isSharing) return
         setIsSharing(true)
-
         try {
             if (navigator.share) {
-                await navigator.share({
-                    title: `${user.name} - Kardly`,
-                    text: `Check out my digital business card!`,
-                    url: profileUrl,
-                })
+                await navigator.share({ title: user.name, url: profileUrl })
             } else {
                 navigator.clipboard.writeText(profileUrl)
                 setShareSuccess(true)
                 setTimeout(() => setShareSuccess(false), 2000)
             }
-        } catch (error: any) {
-            console.log('Sharing failed:', error)
-            navigator.clipboard.writeText(profileUrl)
-            setShareSuccess(true)
-            setTimeout(() => setShareSuccess(false), 2000)
+        } catch (error) {
+            console.log('Sharing failed', error)
         } finally {
             setIsSharing(false)
         }
@@ -263,75 +253,113 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     const CardContent = (
         <div ref={cardRef} data-card-actual className={cn(
-            "flex flex-col overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] relative group/card",
+            "flex flex-col overflow-hidden relative group/card",
             tp.bg
         )} style={{
             width: `${cardWidth}px`,
             height: `${cardHeight}px`,
             borderRadius: mode === 'modal' ? '2.5rem' : '1.5rem',
-            border: '1px solid rgba(255,255,255,0.05)'
         }}>
 
-            {/* Design Patterns based on template */}
-            {tp.id === 'luxury_gold' && (
-                <>
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/10 skew-x-12 translate-x-1/4" />
-                    <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-amber-500/5 -skew-y-12 -translate-x-1/4" />
-                </>
-            )}
-            {tp.id === 'creative_pink' && (
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle at 0% 0%, #ec4899 0%, transparent 50%), radial-gradient(circle at 100% 100%, #881337 0%, transparent 50%)` }} />
-            )}
-            {tp.id === 'gradient_mesh' && (
-                <div className="absolute inset-0 opacity-40" style={{ backgroundImage: tp.hex }} />
-            )}
-            {tp.id === 'cyber_neon' && (
-                <>
-                    <div className="absolute top-0 left-0 w-full h-px bg-cyan-400 opacity-20" />
-                    <div className="absolute bottom-0 right-0 w-full h-px bg-fuchsia-500 opacity-20" />
-                    <div className="absolute top-0 right-0 w-1/4 h-full bg-cyan-400/5 blur-3xl" />
-                </>
-            )}
-            {tp.id === 'midnight_emerald' && (
-                <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 0h20v20H0V0z' fill='%23d4af37' fill-opacity='1'/%3E%3C/svg%3E")` }} />
-            )}
+            {/* Premium Background Graphics */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                {tp.pattern === 'grid' && (
+                    <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: `linear-gradient(${tp.accentText} 1px, transparent 1px), linear-gradient(90deg, ${tp.accentText} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+                )}
+                {tp.pattern === 'dots' && (
+                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `radial-gradient(${tp.accentText} 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                )}
+                {tp.pattern === 'luxury' && (
+                    <>
+                        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-500/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-500/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
+                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%23d4af37' fill-opacity='0.4'/%3E%3C/svg%3E")` }} />
+                    </>
+                )}
+                {tp.pattern === 'waves' && (
+                    <>
+                        <div className="absolute top-0 left-0 w-full h-full opacity-30" style={{ background: `radial-gradient(circle at 0% 0%, ${tp.accentText}33 0%, transparent 60%), radial-gradient(circle at 100% 100%, #000 0%, transparent 60%)` }} />
+                        <svg className="absolute bottom-0 left-0 w-full opacity-20" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill={tp.hex === '#ffffff' ? '#000' : '#fff'} d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,138.7C960,160,1056,224,1152,240C1248,256,1344,224,1392,208L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+                    </>
+                )}
+                {tp.pattern === 'cyber' && (
+                    <>
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#111_0%,_#000_100%)]" />
+                        <div className="absolute top-0 left-0 w-full h-px bg-cyan-400 opacity-50 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+                        <div className="absolute bottom-0 right-0 w-full h-px bg-fuchsia-500 opacity-50 shadow-[0_0_15px_rgba(192,38,211,0.5)]" />
+                        <div className="absolute -left-20 top-40 w-60 h-px bg-cyan-400 rotate-45 opacity-20" />
+                        <div className="absolute -right-20 bottom-40 w-60 h-px bg-fuchsia-500 rotate-45 opacity-20" />
+                    </>
+                )}
+                {tp.pattern === 'leaf' && (
+                    <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 C70 30 70 70 50 100 C30 70 30 30 50 0' fill='none' stroke='%23fff' stroke-width='1'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                )}
+                {tp.pattern === 'glass' && (
+                    <>
+                        <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-blue-500/20 blur-[80px] rounded-full" />
+                        <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-indigo-500/10 blur-[80px] rounded-full" />
+                    </>
+                )}
+                {tp.pattern === 'tech' && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%)`, backgroundSize: '40px 40px' }} />
+                )}
+                {tp.pattern === 'sunset' && (
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,_#f9731633_0%,_transparent_50%),_radial-gradient(circle_at_100%_100%,_#3b120c_0%,_#000_100%)]" />
+                )}
+                {tp.pattern === 'lines' && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 40px)` }} />
+                )}
+                {tp.pattern === 'nebula' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#000]" />
+                        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-600/20 blur-[100px] rounded-full" />
+                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-600/20 blur-[100px] rounded-full" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")` }} />
+                    </>
+                )}
+            </div>
 
             <div className={cn(
-                "flex-1 p-8 sm:p-10 flex flex-col relative z-20 justify-start text-center pt-14"
+                "flex-1 p-10 flex flex-col relative z-20 justify-start text-center pt-16 sm:pt-20"
             )}>
-                <div className="mb-10">
+                <div className="mb-12 relative">
+                    <div className={cn("absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full opacity-20", tp.accent)} />
                     <h1 className={cn(
-                        "font-black tracking-tighter mb-1 line-clamp-2 leading-none text-4xl",
+                        "font-black tracking-tighter mb-2 line-clamp-2 leading-[0.9] text-5xl",
                         tp.text
-                    )}>{(profileData?.displayName || user.name || "İSİM SOYİSİM").toUpperCase()}</h1>
-                    <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-80", tp.accentText)}>{profileData?.occupation || user.occupation || "MESLEK ÜNVANI"}</p>
+                    )}>{(profileData?.displayName || user.name || "KARDLY USER").toUpperCase()}</h1>
+                    <p className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-90", tp.accentText)}>{profileData?.occupation || user.occupation || "DIGITAL EXPERT"}</p>
                 </div>
 
-                <div className="space-y-4 mt-4">
-                    <div className="flex items-center gap-3 justify-center">
-                        <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
-                        <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>kardly.site/{user.username}</span>
+                <div className="space-y-5 mt-4">
+                    <div className="flex flex-col items-center gap-1">
+                        <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", tp.text)}>profile</span>
+                        <span className={cn("text-xs font-bold tracking-wider truncate", tp.secondary)}>kardly.site/{user.username}</span>
                     </div>
+
                     {(profileData?.phone || user.phone) && (
-                        <div className="flex items-center gap-3 justify-center">
-                            <div className={cn("w-2 h-2 rounded-full shrink-0", tp.accent)} />
-                            <span className={cn("text-[10px] font-bold tracking-widest truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
+                        <div className="flex flex-col items-center gap-1">
+                            <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", tp.text)}>contact</span>
+                            <span className={cn("text-xs font-bold tracking-wider truncate", tp.secondary)}>{profileData?.phone || user.phone}</span>
                         </div>
                     )}
                 </div>
 
-                <div className="flex mt-8 justify-center opacity-40 transition-all group-hover/card:tracking-[0.6em]">
-                    <span className={cn("text-[9px] font-black tracking-[0.4em] uppercase", tp.text)}>KARDLY.SİTE</span>
+                <div className="flex mt-14 justify-center border-t border-white/5 pt-8">
+                    <div className="flex flex-col items-center gap-2">
+                        <span className={cn("text-[10px] font-black tracking-[0.5em] uppercase opacity-30", tp.text)}>KARDLY • SİTE</span>
+                        <div className={cn("h-1 w-4 rounded-full", tp.accent)} />
+                    </div>
                 </div>
             </div>
 
-            <div className="flex items-center justify-center relative z-20 pb-14">
-                <div className="p-4 bg-white rounded-[2.5rem] shadow-2xl flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95">
+            <div className="flex items-center justify-center relative z-20 pb-16">
+                <div className="p-5 bg-white rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center group/qr transition-all hover:scale-105 active:scale-95 ring-1 ring-black/5">
                     {qrDataUrl ? (
-                        <img src={qrDataUrl} alt="QR Code" className="w-[130px] h-[130px]" />
+                        <img src={qrDataUrl} alt="QR Code" className="w-[140px] h-[140px]" />
                     ) : (
-                        <div className="w-[130px] h-[130px] animate-pulse bg-slate-100 rounded-3xl flex items-center justify-center" >
-                            <RefreshCw className="animate-spin text-slate-300" />
+                        <div className="w-[140px] h-[140px] animate-pulse bg-slate-50 rounded-3xl flex items-center justify-center" >
+                            <RefreshCw className="animate-spin text-slate-200" />
                         </div>
                     )}
                 </div>
@@ -342,23 +370,24 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     if (mode === 'modal') {
         return (
             <div className="w-full flex flex-col items-center">
-                <div className="relative" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
+                <div className="relative group/modal-card" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
+                    <div className={cn("absolute inset-2 blur-[60px] opacity-20 transition-all group-hover/modal-card:opacity-40", tp.accent)} />
                     {CardContent}
                 </div>
 
-                <div className="w-full max-w-[320px] flex gap-3 mt-8">
+                <div className="w-full max-w-[320px] flex gap-3 mt-10">
                     <button
                         onClick={handleDownload}
                         disabled={isDownloading}
-                        className="flex-1 h-16 flex items-center justify-center gap-3 bg-primary text-white rounded-3xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                        className="flex-1 h-16 flex items-center justify-center gap-3 bg-primary text-white rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                     >
                         {isDownloading ? <RefreshCw className="w-5 h-5 animate-spin" /> : downloadSuccess ? <Check size={18} /> : <Download size={18} />}
-                        {downloadSuccess ? t('downloaded') || 'İNDİRİLDİ' : t('downloadJpeg') || 'GÖRSEL İNDİR'}
+                        {downloadSuccess ? 'KAYDEDİLDİ' : 'GÖRSELİ İNDİR'}
                     </button>
                     <button
                         onClick={handleShare}
                         disabled={isSharing}
-                        className="w-16 h-16 flex items-center justify-center bg-white/5 text-white/40 border border-white/5 rounded-3xl hover:bg-white/10 hover:text-white transition-all backdrop-blur-md active:scale-95"
+                        className="w-16 h-16 flex items-center justify-center bg-white/5 text-white/40 border border-white/5 rounded-[2rem] hover:bg-white/10 hover:text-white transition-all backdrop-blur-md active:scale-95"
                     >
                         {shareSuccess ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
                     </button>
@@ -368,31 +397,39 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     }
 
     return (
-        <div className="space-y-8 w-full flex flex-col items-center">
+        <div className="space-y-12 w-full flex flex-col items-center">
             {mode === 'selector' && (
-                <div className="w-full flex flex-col items-center gap-8">
-                    <div className="w-full text-center">
-                        <div className="flex flex-wrap gap-4 justify-center px-4 max-w-sm mx-auto">
-                            {TEMPLATES.map((tpl) => (
-                                <button
-                                    key={tpl.id}
-                                    onClick={() => onSelect?.(tpl.id)}
-                                    className={cn(
-                                        "relative shrink-0 w-12 h-12 rounded-full border-2 transition-all p-0.5",
-                                        tp.id === tpl.id ? "border-primary ring-4 ring-primary/20 scale-110" : "border-slate-200 opacity-60 hover:opacity-100"
-                                    )}
-                                >
-                                    <div className="w-full h-full rounded-full shadow-inner" style={{ background: tpl.hex }} />
-                                </button>
-                            ))}
-                        </div>
+                <div className="w-full">
+                    <div className="mb-6 flex items-center justify-center gap-3">
+                        <div className="h-px w-8 bg-white/10" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Şablon Seçimi</span>
+                        <div className="h-px w-8 bg-white/10" />
+                    </div>
+                    <div className="flex flex-wrap gap-4 justify-center px-4 max-w-lg mx-auto">
+                        {TEMPLATES.map((tpl) => (
+                            <button
+                                key={tpl.id}
+                                onClick={() => onSelect?.(tpl.id)}
+                                className={cn(
+                                    "relative shrink-0 w-14 h-14 rounded-2xl border-2 transition-all p-1 group/tpl",
+                                    tp.id === tpl.id ? "border-primary ring-offset-4 ring-offset-slate-950 ring-2 ring-primary scale-110" : "border-white/5 opacity-40 hover:opacity-100 hover:border-white/10"
+                                )}
+                            >
+                                <div className="w-full h-full rounded-xl shadow-inner border border-white/10" style={{ background: tpl.hex }} />
+                                <div className="absolute -bottom-1 -right-1 opacity-0 group-hover/tpl:opacity-100 transition-opacity">
+                                    <div className="bg-primary text-white p-1 rounded-lg">
+                                        <Check size={8} />
+                                    </div>
+                                </div>
+                            </button>
+                        ))}
                     </div>
                 </div>
             )}
 
             <div ref={containerRef} className="relative w-full overflow-hidden flex flex-col items-center px-4">
                 <div
-                    className="relative flex-shrink-0 transition-all duration-500 origin-center"
+                    className="relative flex-shrink-0 transition-all duration-700 ease-out origin-center"
                     style={{
                         width: `${cardWidth}px`,
                         height: `${cardHeight}px`,
@@ -401,11 +438,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         marginBottom: cardScale < 1 ? `-${(1 - cardScale) * cardHeight / 2}px` : '0px'
                     }}
                 >
+                    <div className={cn("absolute inset-4 blur-[80px] opacity-10", tp.accent)} />
                     {CardContent}
                 </div>
             </div>
 
-            <div className="w-full max-w-[320px] flex gap-3 mt-8 px-6">
+            <div className="w-full max-w-[320px] flex gap-3 mt-4 px-6">
                 <button
                     onClick={handleDownload}
                     disabled={isDownloading}

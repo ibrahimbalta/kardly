@@ -3861,6 +3861,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
+
+            <QrModal
+                isOpen={isQrOpen}
+                onClose={() => setIsQrOpen(false)}
+                theme={theme}
+                profile={profile}
+                t={t}
+            />
         </div>
     )
 }
@@ -4053,42 +4061,62 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-slate-950/80 backdrop-blur-2xl flex items-center justify-center p-6">
-            <div className="fixed inset-0" onClick={onClose} />
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-slate-950/80 backdrop-blur-3xl"
+                onClick={onClose}
+            />
 
-            <div className="relative z-10 w-full flex flex-col items-center animate-in fade-in zoom-in slide-in-from-bottom-8 duration-500">
-                {/* Top Close Bar */}
-                <div className="w-full max-w-[320px] sm:max-w-[500px] flex justify-end mb-6">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                className="relative z-10 w-full flex flex-col items-center"
+            >
+                {/* Floating Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[120px] opacity-20 pointer-events-none" style={{ backgroundColor: theme.accent }} />
+
+                {/* Top Header/Action Bar */}
+                <div className="w-full max-w-[320px] flex justify-between items-center mb-6 px-2">
+                    <div className="flex flex-col">
+                        <h2 className="text-white font-black text-sm uppercase tracking-[0.2em]">{t.digitalCard || 'DİJİTAL KARTVİZİT'}</h2>
+                        <div className="h-1 w-8 rounded-full mt-1" style={{ backgroundColor: theme.accent }} />
+                    </div>
                     <button
                         onClick={onClose}
-                        className="w-12 h-12 rounded-3xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group shadow-2xl"
+                        className="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all backdrop-blur-xl group active:scale-90"
                     >
-                        <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                        <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                     </button>
                 </div>
 
-                <BusinessCardGenerator
-                    mode="modal"
-                    selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                    orientation={profile.businessCardOrientation || 'landscape'}
-                    user={{
-                        name: profile.user.name,
-                        username: profile.username,
-                        occupation: profile.occupation,
-                        phone: profile.phone,
-                        email: profile.user.email,
-                        image: profile.user.image
-                    }}
-                    profileData={profile}
-                />
+                <div className="w-full flex justify-center scale-[0.9] sm:scale-100 transition-transform">
+                    <BusinessCardGenerator
+                        mode="modal"
+                        selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                        orientation="portrait"
+                        user={{
+                            name: profile.user.name,
+                            username: profile.username,
+                            occupation: profile.occupation,
+                            phone: profile.phone,
+                            email: profile.user.email,
+                            image: profile.user.image
+                        }}
+                        profileData={profile}
+                    />
+                </div>
 
                 <button
                     onClick={onClose}
-                    className="mt-12 text-[10px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all px-8 py-4"
+                    className="mt-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all px-8 py-4 border border-transparent hover:border-white/5 rounded-full"
                 >
                     {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
                 </button>
-            </div>
+            </motion.div>
         </div>
     );
 }
