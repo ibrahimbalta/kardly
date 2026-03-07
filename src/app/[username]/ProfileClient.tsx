@@ -4063,31 +4063,32 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[500] flex flex-col items-center justify-start overflow-y-auto p-4 pt-16">
+        <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-start overflow-y-auto bg-slate-950/95 backdrop-blur-3xl p-4 sm:p-8">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-slate-950/95 backdrop-blur-3xl"
+                className="fixed inset-0"
                 onClick={onClose}
             />
-
-            {/* Fixed Close Button - Top Right with safe area */}
-            <div className="fixed top-4 right-4 z-[510]">
-                <button
-                    onClick={onClose}
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-xl group active:scale-95 shadow-2xl"
-                >
-                    <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-                </button>
-            </div>
 
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                className="relative z-10 w-full flex flex-col items-center max-w-[400px]"
+                className="relative z-10 w-full flex flex-col items-center max-w-[400px] pt-4"
             >
+                {/* Header with Title and Close Button */}
+                <div className="w-full flex items-center justify-between mb-8 px-2">
+                    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 ml-4">KARTVİZİT</h2>
+                    <button
+                        onClick={onClose}
+                        className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-xl group active:scale-95 shadow-2xl mr-2"
+                    >
+                        <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                    </button>
+                </div>
+
                 {/* Floating Glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[120px] opacity-10 pointer-events-none" style={{ backgroundColor: theme.accent }} />
 
@@ -4103,9 +4104,9 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
 
                 <button
                     onClick={onClose}
-                    className="mt-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/10 hover:text-white/40 transition-all px-8 py-4 border border-transparent hover:border-white/5 rounded-full"
+                    className="mt-8 mb-12 text-[10px] font-black uppercase tracking-[0.5em] text-white/20 hover:text-white/60 transition-all px-8 py-4 border border-white/5 hover:border-white/10 rounded-full"
                 >
-                    {t.closeLabel || 'KAPATMAK İÇİN TIKLA'}
+                    {t.closeLabel || 'Kapatmak için tıkla'}
                 </button>
             </motion.div>
         </div>
