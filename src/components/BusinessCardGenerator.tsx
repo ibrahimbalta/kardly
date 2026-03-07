@@ -213,12 +213,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute top-[-20%] right-[-20%] w-full h-full bg-purple-600/20 blur-[130px] rounded-full animate-pulse" />
                         <div className="absolute bottom-[-20%] left-[-20%] w-full h-full bg-indigo-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-                        <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 via-transparent to-indigo-900/20" />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 via-transparent to-indigo-900/20 animate-elite-bg" />
                     </>
                 )}
                 {tp.pattern === 'elite_spatial' && (
                     <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15)_0%,transparent_70%)]" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15)_0%,transparent_70%)] animate-elite-bg" />
                         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
                         <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-blue-500/5 blur-[100px] rounded-full" />
                     </>
@@ -227,27 +227,27 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute inset-0 bg-[#0a0a0a]" />
                         <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'linear-gradient(#f0f 1px, transparent 1px), linear-gradient(90deg, #f0f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(192,38,211,0.2)_0%,transparent_70%)]" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(192,38,211,0.2)_0%,transparent_70%)] animate-elite-bg" />
                         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-fuchsia-500/50 shadow-[0_0_20px_#f0f]" />
                     </>
                 )}
                 {tp.pattern === 'elite_royal' && (
                     <>
                         <div className="absolute inset-0 bg-gradient-to-b from-[#1a0b0b] to-[#0a0a0a]" />
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
-                        <div className="absolute top-[-10%] right-[-10%] w-60 h-60 bg-amber-500/10 blur-[80px] rounded-full" />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent shadow-[0_0_15px_rgba(245,158,11,0.3)]" />
+                        <div className="absolute top-[-10%] right-[-10%] w-60 h-60 bg-amber-500/10 blur-[80px] rounded-full animate-pulse" />
                         <div className="absolute bottom-0 left-0 w-full h-[150px] bg-gradient-to-t from-amber-900/20 to-transparent" />
                     </>
                 )}
                 {tp.pattern === 'aurora' && (
                     <>
                         <div className="absolute inset-0 bg-[#050510]" />
-                        <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[80%] opacity-40 blur-[100px] animate-pulse" style={{ background: 'radial-gradient(circle at 30% 30%, #4facfe 0%, transparent 50%), radial-gradient(circle at 70% 60%, #00f2fe 0%, transparent 50%)' }} />
+                        <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[80%] opacity-40 blur-[100px] animate-elite-bg" style={{ background: 'radial-gradient(circle at 30% 30%, #4facfe 0%, transparent 50%), radial-gradient(circle at 70% 60%, #00f2fe 0%, transparent 50%)' }} />
                         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] bg-indigo-500/10 blur-[80px] rounded-full" />
                     </>
                 )}
                 {tp.pattern === 'mesh' && (
-                    <div className="absolute inset-0 opacity-[0.2] blur-[70px] animate-pulse" style={{ background: 'radial-gradient(circle at 20% 20%, #f0f 0%, transparent 50%), radial-gradient(circle at 80% 80%, #0ff 0%, transparent 50%), radial-gradient(circle at 50% 50%, #8b5cf6 0%, transparent 60%)' }} />
+                    <div className="absolute inset-0 opacity-[0.2] blur-[70px] animate-elite-bg" style={{ background: 'radial-gradient(circle at 20% 20%, #f0f 0%, transparent 50%), radial-gradient(circle at 80% 80%, #0ff 0%, transparent 50%), radial-gradient(circle at 50% 50%, #8b5cf6 0%, transparent 60%)' }} />
                 )}
                 {tp.pattern === 'frosty' && (
                     <>
@@ -290,89 +290,83 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'cyber_pulse' && (
                     <>
                         <div className="absolute inset-0 bg-[#0a0a0f]" />
-                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(34,211,238,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                        <div className="absolute inset-0 opacity-20 animate-elite-bg" style={{ backgroundImage: 'linear-gradient(rgba(34,211,238,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                         <div className="absolute inset-0 border-[3px] border-cyan-500/30 rounded-[2.5rem]" />
                         <div className="absolute inset-0 border border-cyan-400/10 rounded-[2.5rem] animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.15)_0%,transparent_70%)]" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.2)_0%,transparent_70%)] animate-pulse" />
                     </>
                 )}
                 {tp.pattern === 'hud_command' && (
                     <>
                         <div className="absolute inset-0 bg-[#0c0c0c]" />
                         <div className="absolute top-0 left-0 w-full h-full border-[10px] border-emerald-500/5 rounded-[2.5rem]" />
-                        <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-emerald-500/40" />
-                        <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-emerald-500/40" />
-                        <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-emerald-500/40" />
-                        <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-emerald-500/40" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(52,211,153,0.1)_0%,transparent_60%)]" />
+                        <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-emerald-500/40 animate-pulse" />
+                        <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-emerald-500/40 animate-pulse" />
+                        <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-emerald-500/40 animate-pulse" />
+                        <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-emerald-500/40 animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(52,211,153,0.15)_0%,transparent_60%)] animate-elite-bg" />
                     </>
                 )}
                 {tp.pattern === 'circuitry' && (
                     <>
                         <div className="absolute inset-0 bg-[#050505]" />
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 100h100v100h100v-100h100M50 200v100h150v-50h100" stroke="#f0f" strokeWidth="2" fill="none" />
-                            <circle cx="100" cy="100" r="3" fill="#f0f" />
-                            <circle cx="200" cy="200" r="3" fill="#f0f" />
-                            <circle cx="340" cy="250" r="3" fill="#f0f" />
+                        <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 100h100v100h100v-100h100M50 200v100h150v-50h100" stroke="#f0f" strokeWidth="2" fill="none" className="animate-pulse" />
+                            <circle cx="100" cy="100" r="3" fill="#f0f" className="animate-ping" style={{ animationDuration: '3s' }} />
+                            <circle cx="200" cy="200" r="3" fill="#f0f" className="animate-ping" style={{ animationDuration: '4s' }} />
                         </svg>
-                        <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/10 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/20 via-transparent to-transparent animate-elite-bg" />
                     </>
                 )}
                 {tp.pattern === 'abstract_flow' && (
                     <>
                         <div className="absolute inset-0 bg-[#0f172a]" />
-                        <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-blue-600/20 rounded-full blur-[100px]" />
-                        <div className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-indigo-600/20 rounded-full blur-[100px]" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-1/2 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12" />
+                        <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-blue-600/20 rounded-full blur-[100px] animate-elite-bg" />
+                        <div className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-indigo-600/20 rounded-full blur-[100px] animate-elite-bg" style={{ animationDelay: '2s' }} />
                     </>
                 )}
                 {tp.pattern === 'quantum_grid' && (
                     <>
                         <div className="absolute inset-0 bg-[#020617]" />
-                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
-                        <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_0_100px_rgba(99,102,241,0.1)]" />
-                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-indigo-500/20" />
-                        <div className="absolute left-1/2 top-0 h-full w-[1px] bg-indigo-500/20" />
+                        <div className="absolute inset-0 opacity-[0.1] animate-elite-bg" style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                        <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_0_100px_rgba(99,102,241,0.2)]" />
+                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-indigo-500/30 animate-pulse" />
                     </>
                 )}
                 {tp.pattern === 'holo_shard' && (
                     <>
                         <div className="absolute inset-0 bg-[#0f0f0f]" />
-                        <div className="absolute top-[10%] left-[10%] w-40 h-40 bg-purple-500/10 rotate-45 skew-x-12 blur-[40px]" />
-                        <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-blue-500/10 -rotate-12 skew-y-12 blur-[40px]" />
-                        <div className="absolute inset-x-8 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                        <div className="absolute top-[10%] left-[10%] w-40 h-40 bg-purple-500/15 rotate-45 skew-x-12 blur-[40px] animate-elite-bg" />
+                        <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-blue-500/15 -rotate-12 skew-y-12 blur-[40px] animate-elite-bg" style={{ animationDelay: '3s' }} />
                     </>
                 )}
                 {tp.pattern === 'prism_shift' && (
                     <>
                         <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute inset-0 opacity-10" style={{ background: 'linear-gradient(135deg, #f43f5e 0%, transparent 40%), linear-gradient(225deg, #3b82f6 0%, transparent 40%)' }} />
-                        <div className="absolute top-0 left-0 w-full h-full border-[1px] border-white/5 rounded-[2.5rem]" />
+                        <div className="absolute inset-0 opacity-15 animate-elite-bg" style={{ background: 'linear-gradient(135deg, #f43f5e 0%, transparent 40%), linear-gradient(225deg, #3b82f6 0%, transparent 40%)' }} />
+                        <div className="absolute top-0 left-0 w-full h-full border-[1px] border-white/10 rounded-[2.5rem]" />
                     </>
                 )}
                 {tp.pattern === 'minimal_edge' && (
                     <>
                         <div className="absolute inset-0 bg-black" />
-                        <div className="absolute inset-2 border-[1px] border-white/10 rounded-[2rem]" />
-                        <div className="absolute top-4 left-4 right-4 h-[1px] bg-white/5" />
-                        <div className="absolute bottom-4 left-4 right-4 h-[1px] bg-white/5" />
+                        <div className="absolute inset-2 border-[1px] border-white/20 rounded-[2rem]" />
+                        <div className="absolute top-4 left-4 right-4 h-[1px] bg-white/10 animate-pulse" />
                     </>
                 )}
                 {tp.pattern === 'data_rain' && (
                     <>
                         <div className="absolute inset-0 bg-[#030712]" />
-                        <div className="absolute top-0 left-10 w-[2px] h-20 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
-                        <div className="absolute top-20 right-20 w-[2px] h-32 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
-                        <div className="absolute bottom-10 left-1/2 w-[2px] h-24 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-20" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.05)_0%,transparent_70%)]" />
+                        <div className="absolute top-0 left-10 w-[2px] h-20 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-40 animate-bounce" style={{ animationDuration: '3s' }} />
+                        <div className="absolute top-40 right-20 w-[2px] h-32 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-40 animate-bounce" style={{ animationDuration: '5s' }} />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.1)_0%,transparent_70%)] animate-pulse" />
                     </>
                 )}
                 {tp.pattern === 'liquid_neon' && (
                     <>
                         <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute -top-[10%] -left-[10%] w-[120%] h-[40%] bg-amber-500/10 blur-[60px] rounded-full rotate-6" />
-                        <div className="absolute top-[30%] -right-[10%] w-60 h-60 bg-blue-500/10 blur-[80px] rounded-full" />
+                        <div className="absolute -top-[10%] -left-[10%] w-[120%] h-[40%] bg-amber-500/15 blur-[60px] rounded-full rotate-6 animate-elite-bg" />
+                        <div className="absolute top-[30%] -right-[10%] w-60 h-60 bg-blue-500/15 blur-[80px] rounded-full animate-elite-bg" style={{ animationDelay: '4s' }} />
                     </>
                 )}
             </div>
