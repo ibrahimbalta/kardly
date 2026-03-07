@@ -229,6 +229,11 @@ export const translations: any = {
         noAppointments: "Henüz randevu talebi yok",
         qrTitle: "QR Kodun",
         qrSub: "Dijital kartvizitini hızlıca paylaşmak için bu kodu kullan.",
+        selectBusinessCard: "Kartvizit Şablonu Seç",
+        downloadJpeg: "GÖRSEL OLARAK İNDİR (JPEG)",
+        downloaded: "İNDİRİLDİ",
+        businessCardTitle: "Dijital Kartvizit Şablonları",
+        businessCardSub: "Kameranızla okutunca açılan profilinizi, şimdi de fiziksel kartvizit tadında indirin ve paylaşın.",
 
         // Landing Page
         heroTitle: "Profesyonel Dünyanı",
@@ -924,6 +929,11 @@ export const translations: any = {
         noAppointments: "No appointment requests yet",
         qrTitle: "Your QR Code",
         qrSub: "Use this code to quickly share your digital business card.",
+        selectBusinessCard: "Select Business Card Template",
+        downloadJpeg: "DOWNLOAD AS IMAGE (JPEG)",
+        downloaded: "DOWNLOADED",
+        businessCardTitle: "Digital Business Card Templates",
+        businessCardSub: "Download and share your profile as a professional business card, perfect for physical and digital networking.",
 
         // Landing Page
         heroTitle: "Bring Your Professional",

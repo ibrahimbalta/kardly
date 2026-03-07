@@ -91,6 +91,7 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
 import { QRCodeCard } from "@/components/QRCodeCard"
+import BusinessCardGenerator from "@/components/BusinessCardGenerator"
 import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 
@@ -3078,6 +3079,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <p className="text-[10px] text-foreground/40 mt-0.5">{t('readyPrint')}</p>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Business Card Section */}
+                        <div className="mt-20 pt-20 border-t border-white/5">
+                            <div className="mb-12">
+                                <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('businessCardTitle')}</h2>
+                                <p className="text-sm text-foreground/50 max-w-sm mx-auto">{t('businessCardSub')}</p>
+                            </div>
+
+                            <BusinessCardGenerator
+                                user={{
+                                    name: profileData.name || session?.user?.name || "Kullanıcı",
+                                    username: profile?.username || "demo",
+                                    occupation: profileData.occupation,
+                                    phone: profileData.phone,
+                                    email: session?.user?.email
+                                }}
+                                profileData={profileData}
+                            />
                         </div>
                     </div>
 
