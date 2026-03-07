@@ -199,9 +199,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const handleDownload = async () => {
         if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
+        console.log('DEBUG: Modern download triggered (html-to-image v2)')
         try {
             // Modern capture approach using html-to-image (supports oklch, lab etc)
-            await new Promise(r => setTimeout(r, 600))
+            await new Promise(r => setTimeout(r, 800))
 
             const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
                 quality: 0.95,
