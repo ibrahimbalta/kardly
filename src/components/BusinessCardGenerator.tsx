@@ -51,25 +51,25 @@ const TEMPLATES = [
     { id: 'premium_luxury', name: 'Golden Era', bg: 'bg-neutral-950', text: 'text-amber-100', accent: 'bg-amber-500', accentText: 'text-[#f59e0b]', secondary: 'text-amber-500/20', hex: '#0a0a0a', pattern: 'luxury', category: 'Premium' },
 
     // Ultimate (Elite)
-    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#050510', pattern: 'aurora', category: 'Ultimate' },
-    { id: 'elite_spatial', name: 'Spatial Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_spatial', category: 'Ultimate' },
-    { id: 'elite_cyber', name: 'Cyberpunk', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-[#d946ef]', colors: ['#c026d3', '#7c3aed', '#db2777'], animate: true, hex: '#000000', pattern: 'elite_cyber', category: 'Ultimate' },
-    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'mesh', category: 'Ultimate' },
-    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#3b82f6', '#6366f1', '#a5b4fc'], animate: true, hex: '#000000', pattern: 'frosty', category: 'Ultimate' },
-    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', colors: ['#92400e', '#d97706', '#f59e0b'], animate: true, hex: '#1a0b0b', pattern: 'elite_royal', category: 'Ultimate' },
-    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', colors: ['#6b21a8', '#4c1d95', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'nebula', category: 'Ultimate' },
+    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_spatial', name: 'Spatial Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_cyber', name: 'Cyberpunk', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-[#d946ef]', colors: ['#c026d3', '#7c3aed', '#db2777'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#3b82f6', '#6366f1', '#a5b4fc'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', colors: ['#92400e', '#d97706', '#f59e0b'], animate: true, hex: '#1a0b0b', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', colors: ['#6b21a8', '#4c1d95', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
 
     // New 10 Modern Tech Templates
-    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#0891b2', '#06b6d4', '#0a0a0f'], animate: true, hex: '#0a0a0f', pattern: 'cyber_pulse', category: 'Ultimate' },
-    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#059669', '#10b981', '#064e3b'], animate: true, hex: '#0c0c0c', pattern: 'hud_command', category: 'Ultimate' },
-    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', colors: ['#c026d3', '#a21caf', '#701a75'], animate: true, hex: '#050505', pattern: 'circuitry', category: 'Ultimate' },
-    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1d4ed8', '#3b82f6', '#60a5fa'], animate: true, hex: '#0f172a', pattern: 'abstract_flow', category: 'Ultimate' },
-    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4338ca', '#6366f1', '#4f46e5'], animate: true, hex: '#020617', pattern: 'quantum_grid', category: 'Ultimate' },
-    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', colors: ['#7c3aed', '#8b5cf6', '#c026d3'], animate: true, hex: '#0f0f0f', pattern: 'holo_shard', category: 'Ultimate' },
-    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'prism_shift', category: 'Ultimate' },
-    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'minimal_edge', category: 'Ultimate' },
-    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'data_rain', category: 'Ultimate' },
-    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'liquid_neon', category: 'Ultimate' }
+    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#0891b2', '#06b6d4', '#0a0a0f'], animate: true, hex: '#0a0a0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#059669', '#10b981', '#064e3b'], animate: true, hex: '#0c0c0c', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', colors: ['#c026d3', '#a21caf', '#701a75'], animate: true, hex: '#050505', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1d4ed8', '#3b82f6', '#60a5fa'], animate: true, hex: '#0f172a', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4338ca', '#6366f1', '#4f46e5'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', colors: ['#7c3aed', '#8b5cf6', '#c026d3'], animate: true, hex: '#0f0f0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -208,6 +208,48 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-amber-500/10 blur-[80px] rounded-full" />
                         <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-amber-500/5 blur-[80px] rounded-full" />
                     </>
+                )}
+                {tp.pattern === 'elite_wave_layered' && (
+                    <div className="absolute inset-0 overflow-hidden">
+                        {/* Layer 1: Base Liquid Flow (Animated) */}
+                        <svg className="absolute -left-[30%] top-[-20%] w-[160%] h-[140%] opacity-40 blur-[50px] animate-elite-bg" style={{ animationDuration: '25s' }} viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id={`gradBase-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} stopOpacity="0.8" />
+                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.hex} stopOpacity="0.2" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="20" cy="20" r="60" fill={`url(#gradBase-${tp.id})`} />
+                        </svg>
+
+                        {/* Layer 2: Major Bold Wave ( matches the large gold waves in 2nd image) */}
+                        <svg className="absolute -left-[50%] top-0 w-[130%] h-full drop-shadow-[25px_0_50px_rgba(0,0,0,0.7)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id={`gradMain-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} />
+                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.colors?.[0] || tp.hex} />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,0 C70,15 70,85 0,100 L100,100 L100,0 Z" fill={`url(#gradMain-${tp.id})`} />
+                        </svg>
+
+                        {/* Layer 3: Secondary Accent Wave with Texture (matches the dotted gold layer) */}
+                        <svg className="absolute -left-[40%] top-0 w-[110%] h-full opacity-50 drop-shadow-[5px_0_15px_rgba(0,0,0,0.4)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <defs>
+                                <pattern id={`waveDots-${tp.id}`} x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                                    <circle cx="1.5" cy="1.5" r="0.7" fill="#fff" fillOpacity="0.3" />
+                                </pattern>
+                            </defs>
+                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={tp.colors?.[2] || tp.colors?.[1] || tp.hex} />
+                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={`url(#waveDots-${tp.id})`} />
+                        </svg>
+
+                        {/* Layer 4: Floating Accent Glow */}
+                        <div className="absolute top-1/2 left-[-10%] w-40 h-40 rounded-full blur-[80px] opacity-30 animate-pulse" style={{ backgroundColor: tp.colors?.[0] || tp.hex }} />
+
+                        {/* Subtle noise/grain overlay */}
+                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                    </div>
                 )}
                 {tp.pattern === 'nebula' && (
                     <>
@@ -508,7 +550,13 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             <div className="w-full h-[55%]" style={{ backgroundColor: (tpl as any).waveColor || '#24292e' }} />
                                         )}
                                         {tpl.category === 'Ultimate' && (
-                                            <div className="absolute inset-0 opacity-40 animate-pulse bg-white/10" />
+                                            <>
+                                                <div className="absolute inset-0 opacity-20 animate-pulse bg-white/10" />
+                                                <svg className="absolute -left-[50%] top-0 w-[150%] h-full opacity-60" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                    <path d="M0,0 C60,10 60,90 0,100 L100,100 L100,0 Z" fill="rgba(0,0,0,0.2)" />
+                                                </svg>
+                                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 0.5px, transparent 0.5px)', backgroundSize: '6px 6px' }} />
+                                            </>
                                         )}
                                     </div>
                                     {internalSelectedTplId === tpl.id && (
@@ -564,14 +612,25 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     50% { background-position: 100% 50%; opacity: 0.6; transform: scale(1.1); }
                     100% { background-position: 0% 50%; opacity: 0.4; transform: scale(1); }
                 }
-                @keyframes cyber-drift {
-                    0% { transform: translateY(0) scaleX(1); opacity: 0.1; }
-                    50% { transform: translateY(-20px) scaleX(1.1); opacity: 0.2; }
-                    100% { transform: translateY(0) scaleX(1); opacity: 0.1; }
+                @keyframes floating {
+                    0% { transform: translate(0, 0) rotate(0deg); }
+                    33% { transform: translate(2px, 5px) rotate(0.5deg); }
+                    66% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+                    100% { transform: translate(0, 0) rotate(0deg); }
+                }
+                @keyframes rotate-slow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
                 }
                 .animate-elite-bg {
                     background-size: 200% 200%;
                     animation: aurora-flow 12s ease-in-out infinite;
+                }
+                .animate-floating {
+                    animation: floating 8s ease-in-out infinite;
+                }
+                .animate-rotate-slow {
+                    animation: rotate-slow 20s linear infinite;
                 }
             `}</style>
         </div>
