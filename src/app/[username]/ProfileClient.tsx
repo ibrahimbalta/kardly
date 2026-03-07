@@ -4063,7 +4063,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[1000] overflow-y-auto flex flex-col items-center bg-slate-950/98 backdrop-blur-3xl sm:pt-12">
+        <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/98 backdrop-blur-3xl">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -4073,49 +4073,45 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
             />
 
             {/* Scrollable Content Area */}
-            <div className="relative z-10 w-full flex flex-col items-center p-4 py-20 pointer-events-none">
+            <div className="relative z-10 w-full min-h-screen flex flex-col items-center p-4 py-12 pointer-events-none">
                 <motion.div
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 100 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
                     className="w-full flex flex-col items-center max-w-[400px] pointer-events-auto"
                 >
-                    {/* Header: Title and Big Close Button */}
-                    <div className="w-full flex items-center justify-between mb-10 px-4 bg-white/5 p-4 rounded-3xl border border-white/10 backdrop-blur-xl">
-                        <div className="flex items-center gap-3">
+                    <div className="w-full flex flex-col items-center">
+                        <div className="flex items-center gap-3 mb-8">
                             <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
-                            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60">KARTVİZİT ŞABLONU</h2>
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">KARTVİZİT ÖNİZLEME</h2>
                         </div>
-                        <button
-                            onClick={onClose}
-                            className="w-14 h-14 rounded-2xl bg-white/10 hover:bg-white/20 border-2 border-white/20 flex items-center justify-center text-white transition-all backdrop-blur-3xl group active:scale-95 shadow-2xl"
-                            style={{ borderColor: `${theme.accent}40` }}
-                        >
-                            <X size={28} className="group-hover:rotate-90 transition-transform duration-300" />
-                        </button>
-                    </div>
 
-                    {/* Floating Glow Effect */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[140px] opacity-20 pointer-events-none" style={{ backgroundColor: theme.accent }} />
+                        {/* Floating Glow Effect */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-[140px] opacity-10 pointer-events-none" style={{ backgroundColor: theme.accent }} />
 
-                    <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-12 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] rounded-3xl overflow-hidden">
-                        <BusinessCardGenerator
-                            mode="modal"
-                            selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
-                            orientation="portrait"
-                            user={profile.user}
-                            profileData={profile}
-                        />
-                    </div>
+                        <div className="w-full flex justify-center scale-[0.85] sm:scale-100 transition-all origin-top mb-10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden">
+                            <BusinessCardGenerator
+                                mode="modal"
+                                selectedTemplateId={profile.businessCardTemplateId || 'minimal_white'}
+                                orientation="portrait"
+                                user={profile.user}
+                                profileData={profile}
+                            />
+                        </div>
 
-                    <div className="flex flex-col items-center gap-4 w-full px-10">
-                        <button
-                            onClick={onClose}
-                            className="w-full py-5 text-[11px] font-black uppercase tracking-[0.5em] text-white/40 hover:text-white transition-all bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl active:scale-95"
-                        >
-                            {t.closeLabel || 'MODALI KAPAT'}
-                        </button>
-                        <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Kapatmak için ekranın herhangi bir yerine tıklayabilirsiniz</p>
+                        {/* HUGE CLOSE BUTTON AT THE BOTTOM */}
+                        <div className="w-full mt-4 pb-20">
+                            <button
+                                onClick={onClose}
+                                className="w-full h-20 bg-white/10 hover:bg-white/20 border-2 border-white/10 rounded-[2rem] flex items-center justify-center gap-4 text-white transition-all backdrop-blur-2xl group active:scale-95 shadow-2xl"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                                    <X size={24} />
+                                </div>
+                                <span className="text-xs font-black uppercase tracking-[0.3em]">MODALI KAPAT</span>
+                            </button>
+                            <p className="text-center mt-6 text-[9px] font-bold text-white/20 uppercase tracking-widest">veya ekranın boş bir yerine tıklayın</p>
+                        </div>
                     </div>
                 </motion.div>
             </div>
