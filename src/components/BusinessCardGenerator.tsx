@@ -159,8 +159,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
     const CardContent = (
         <div ref={cardRef} data-card-actual className={cn(
-            "flex overflow-hidden relative group/card",
-            orientation === 'landscape' ? "flex-row" : "flex-col",
+            "flex flex-col overflow-hidden relative group/card",
             tp.bg
         )} style={{
             width: `${cardWidth}px`,
