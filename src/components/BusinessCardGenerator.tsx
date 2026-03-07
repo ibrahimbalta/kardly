@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
+import { QRCodeCanvas } from 'qrcode.react'
 import html2canvas from 'html2canvas'
 import { Download, Share2, Check } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
@@ -168,33 +168,36 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     // Scale logic
     const cardScale = Math.min(1, containerWidth / (cardWidth + 20))
     const [isDownloading, setIsDownloading] = useState(false)
+    const [isSharing, setIsSharing] = useState(false)
     const [downloadSuccess, setDownloadSuccess] = useState(false)
     const [shareSuccess, setShareSuccess] = useState(false)
     const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : ''
 
     const handleDownload = async () => {
-        if (!cardRef.current) return
+        if (!cardRef.current || isDownloading) return
         setIsDownloading(true)
         try {
-            // Wait a bit to ensure fonts/images are ready
-            await new Promise(r => setTimeout(r, 500))
+            // Give time for everything to settle
+            await new Promise(r => setTimeout(r, 600))
 
             const canvas = await html2canvas(cardRef.current, {
-                scale: 4, // Ultra high quality
+                scale: 2, // Stable quality
                 useCORS: true,
                 backgroundColor: null,
                 logging: false,
+                width: cardWidth,
+                height: cardHeight,
                 onclone: (clonedDoc) => {
                     const el = clonedDoc.querySelector('[data-card-actual]') as HTMLElement
                     if (el) {
                         el.style.transform = 'none'
                         el.style.margin = '0'
                         el.style.position = 'static'
-                        el.style.borderRadius = '0' // Better for square download
+                        el.style.borderRadius = '0'
                     }
                 }
             })
-            const image = canvas.toDataURL('image/jpeg', 1.0)
+            const image = canvas.toDataURL('image/jpeg', 0.95)
             const link = document.createElement('a')
             link.href = image
             link.download = `kardly-${user.username}-${orientation}.jpg`
@@ -202,7 +205,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             setDownloadSuccess(true)
             setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
-            console.error('Error generating card:', error)
+            console.error('Download error:', error)
             alert(t('downloadError') || 'İndirme sırasında bir hata oluştu.')
         } finally {
             setIsDownloading(false)
@@ -210,20 +213,26 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     }
 
     const handleShare = async () => {
-        if (navigator.share) {
-            try {
+        if (isSharing) return
+        setIsSharing(true)
+
+        try {
+            if (navigator.share) {
                 await navigator.share({
                     title: `${user.name} - Kardly`,
-                    text: `Check out my digital business card on Kardly!`,
+                    text: `Check out my digital business card!`,
                     url: profileUrl,
                 })
-            } catch (error) {
-                console.log('Error sharing:', error)
+            } else {
+                throw new Error('Share API not supported')
             }
-        } else {
+        } catch (error: any) {
+            console.log('Sharing failed, copying to clipboard instead:', error)
             navigator.clipboard.writeText(profileUrl)
             setShareSuccess(true)
             setTimeout(() => setShareSuccess(false), 2000)
+        } finally {
+            setIsSharing(false)
         }
     }
 
@@ -362,7 +371,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             isPortrait ? "pb-14" : "w-[180px] pr-10"
                         )}>
                             <div className="p-3 bg-white rounded-3xl shadow-2xl flex items-center justify-center group/qr transition-transform hover:scale-105">
-                                <QRCodeSVG value={profileUrl} size={isPortrait ? 130 : 110} level="H" fgColor="#000" />
+                                <QRCodeCanvas value={profileUrl} size={isPortrait ? 130 : 110} level="H" fgColor="#000" bgColor="#fff" />
                             </div>
                         </div>
                     </div>
@@ -374,7 +383,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <button onClick={handleDownload} disabled={isDownloading} className="flex-1 flex items-center justify-center gap-3 px-8 py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 min-w-[200px]">
                         {isDownloading ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : downloadSuccess ? <><Check size={20} /> {t('downloaded') || 'İNDİRİLDİ'}</> : <><Download size={20} /> {t('downloadJpeg') || 'GÖRSEL İNDİR'}</>}
                     </button>
-                    <button onClick={handleShare} className="px-6 py-5 bg-white/10 text-white/70 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all flex items-center justify-center backdrop-blur-md min-w-[70px]">
+                    <button onClick={handleShare} disabled={isSharing} className="px-6 py-5 bg-white/10 text-white/70 border border-white/10 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/20 hover:text-white transition-all flex items-center justify-center backdrop-blur-md min-w-[70px]">
                         {shareSuccess ? <Check size={20} className="text-emerald-400" /> : <Share2 size={20} />}
                     </button>
                 </div>
