@@ -178,6 +178,39 @@ const TEMPLATES = [
         secondary: 'text-slate-400',
         hex: '#111111',
         pattern: 'layered'
+    },
+    {
+        id: 'elite_spatial',
+        name: 'Elite Spatial',
+        bg: 'bg-[#050510]',
+        text: 'text-white',
+        accent: 'bg-cyan-500',
+        accentText: 'text-cyan-400',
+        secondary: 'text-slate-400',
+        hex: '#050510',
+        pattern: 'elite_spatial'
+    },
+    {
+        id: 'elite_cyber',
+        name: 'Elite Cyber',
+        bg: 'bg-black',
+        text: 'text-fuchsia-100',
+        accent: 'bg-fuchsia-600',
+        accentText: 'text-fuchsia-400',
+        secondary: 'text-fuchsia-200/40',
+        hex: '#000000',
+        pattern: 'elite_cyber'
+    },
+    {
+        id: 'elite_royal',
+        name: 'Elite Royal',
+        bg: 'bg-[#1a0b0b]',
+        text: 'text-amber-100',
+        accent: 'bg-amber-600',
+        accentText: 'text-amber-500',
+        secondary: 'text-amber-200/40',
+        hex: '#1a0b0b',
+        pattern: 'elite_royal'
     }
 ]
 
@@ -357,6 +390,33 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")` }} />
                     </>
                 )}
+                {tp.pattern === 'elite_spatial' && (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#050510] via-[#0a0a20] to-[#050510]" />
+                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_50%_50%,_rgba(34,211,238,0.08)_0%,_transparent_50%)] animate-pulse" />
+                        <div className="absolute top-[20%] right-[-10%] w-64 h-64 bg-cyan-500/10 blur-[80px] rounded-full" />
+                        <div className="absolute bottom-[20%] left-[-10%] w-72 h-72 bg-blue-600/10 blur-[90px] rounded-full" />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
+                    </>
+                )}
+                {tp.pattern === 'elite_cyber' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(rgba(255,0,255,0.1) 1px, transparent 1px)`, backgroundSize: '100% 4px' }} />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(192,38,211,0.15)_0%,_transparent_70%)]" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10" style={{ backgroundImage: `linear-gradient(90deg, rgba(34,211,238,0.2) 1px, transparent 1px), linear-gradient(rgba(34,211,238,0.2) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[2px] bg-fuchsia-500/30 blur-sm animate-scan" />
+                    </>
+                )}
+                {tp.pattern === 'elite_royal' && (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0b0b] to-[#0a0a0a]" />
+                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l2.5 15h15l-12.5 10l5 15l-10-7.5l-10 7.5l5-15l-12.5-10h15z' fill='%23d4af37' fill-opacity='0.4'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent shadow-[0_4px_12px_rgba(212,175,55,0.3)]" />
+                        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-amber-900/10 to-transparent" />
+                        <div className="absolute top-1/2 right-0 w-32 h-64 bg-amber-500/5 blur-[60px] rounded-full" />
+                    </>
+                )}
             </div>
 
             <div className={cn(
@@ -417,14 +477,16 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     ].filter(item => item.value).map((item, idx) => (
                         <div key={idx} className={cn(
                             "flex items-center gap-3 p-2 rounded-xl transition-all border",
-                            tp.pattern === 'layered'
-                                ? "bg-white/[0.05] border-white/5 shadow-sm"
-                                : "bg-white/[0.03] border-white/5 backdrop-blur-md"
+                            tp.pattern.startsWith('elite_')
+                                ? "bg-white/[0.08] border-white/10 backdrop-blur-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                                : tp.pattern === 'layered'
+                                    ? "bg-white/[0.05] border-white/5 shadow-sm"
+                                    : "bg-white/[0.03] border-white/5 backdrop-blur-md"
                         )}>
                             <div className={cn(
                                 "w-7 h-7 rounded-lg flex items-center justify-center shadow-inner shrink-0",
                                 item.color || tp.accentText,
-                                tp.pattern === 'layered' ? "bg-white/5" : "bg-white/5"
+                                tp.pattern.startsWith('elite_') ? "bg-white/10" : "bg-white/5"
                             )}>
                                 <item.icon size={11} strokeWidth={2.5} />
                             </div>
@@ -440,6 +502,17 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <span className={cn("text-[6px] font-black tracking-[0.4em] uppercase opacity-20", tp.text)}>KARDLY • PREMIUM</span>
                 </div>
             </div>
+
+            <style jsx>{`
+                @keyframes scan {
+                    0% { top: 0%; opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { top: 100%; opacity: 0; }
+                }
+                .animate-scan {
+                    animation: scan 3s linear infinite;
+                }
+            `}</style>
         </div>
     )
 
@@ -447,7 +520,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         return (
             <div className="w-full flex flex-col items-center">
                 <div className="relative group/modal-card" style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}>
-                    <div className={cn("absolute inset-2 blur-[60px] opacity-20 transition-all group-hover/modal-card:opacity-40", tp.accent)} />
+                    <div className={cn("absolute inset-2 blur-[60px] opacity-20 transition-all group-hover/modal-card:opacity-40 rounded-[2.5rem]", tp.accent)} />
                     {CardContent}
                 </div>
             </div>
@@ -460,20 +533,24 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 <div className="w-full">
                     <div className="mb-6 flex items-center justify-center gap-3">
                         <div className="h-px w-8 bg-white/10" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Şablon Seçimi</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">ELİTE ŞABLON SEÇİMİ</span>
                         <div className="h-px w-8 bg-white/10" />
                     </div>
                     <div className="flex flex-wrap gap-4 justify-center px-4 max-w-lg mx-auto">
                         {TEMPLATES.map((tpl) => (
                             <button
                                 key={tpl.id}
+                                title={tpl.name}
                                 onClick={() => onSelect?.(tpl.id)}
                                 className={cn(
-                                    "relative shrink-0 w-14 h-14 rounded-2xl border-2 transition-all p-1 group/tpl",
+                                    "relative shrink-0 w-12 h-12 rounded-2xl border-2 transition-all p-1 group/tpl",
                                     tp.id === tpl.id ? "border-primary ring-offset-4 ring-offset-slate-950 ring-2 ring-primary scale-110" : "border-white/5 opacity-40 hover:opacity-100 hover:border-white/10"
                                 )}
                             >
                                 <div className="w-full h-full rounded-xl shadow-inner border border-white/10" style={{ background: tpl.hex }} />
+                                {tpl.id.startsWith('elite_') && (
+                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-slate-950 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+                                )}
                             </button>
                         ))}
                     </div>
@@ -491,7 +568,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         marginBottom: cardScale < 1 ? `-${(1 - cardScale) * cardHeight / 2}px` : '0px'
                     }}
                 >
-                    <div className={cn("absolute inset-4 blur-[80px] opacity-10", tp.accent)} />
+                    <div className={cn("absolute inset-4 blur-[80px] opacity-10 rounded-[1.5rem]", tp.accent)} />
                     {CardContent}
                 </div>
             </div>
