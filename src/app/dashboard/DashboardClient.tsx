@@ -84,6 +84,7 @@ import {
     Bot,
     Dribbble,
     Rss,
+    IdCard,
     Play
 } from "lucide-react"
 
@@ -147,7 +148,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         animationStyle: profile?.animationStyle || "none",
         profileBgImage: profile?.profileBgImage || "",
         qrColorDark: profile?.qrColorDark || "#0f172a",
-        qrColorLight: profile?.qrColorLight || "#ffffff"
+        qrColorLight: profile?.qrColorLight || "#ffffff",
+        businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white"
     })
 
     const [selectedTplCat, setSelectedTplCat] = useState("all")
@@ -563,7 +565,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
                     paymentType: overrides?.paymentType ?? profileData.paymentType,
                     animationStyle: overrides?.animationStyle ?? profileData.animationStyle,
-                    profileBgImage: overrides?.profileBgImage ?? profileData.profileBgImage
+                    profileBgImage: overrides?.profileBgImage ?? profileData.profileBgImage,
+                    businessCardTemplateId: overrides?.businessCardTemplateId ?? profileData.businessCardTemplateId,
+                    qrColorDark: overrides?.qrColorDark ?? profileData.qrColorDark,
+                    qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight
                 })
             })
 
@@ -882,6 +887,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "qrcode"}
                         onClick={() => {
                             setActiveTab("qrcode")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
+                        icon={<IdCard className="w-5 h-5" />}
+                        label={t('digitalCard')}
+                        active={activeTab === "businesscard"}
+                        onClick={() => {
+                            setActiveTab("businesscard")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -3080,15 +3094,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Business Card Section */}
-                        <div className="mt-20 pt-20 border-t border-white/5">
-                            <div className="mb-12">
-                                <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('businessCardTitle')}</h2>
-                                <p className="text-sm text-foreground/50 max-w-sm mx-auto">{t('businessCardSub')}</p>
-                            </div>
+                ) : activeTab === "businesscard" ? (
+                    <div className="space-y-8 max-w-4xl mx-auto text-center py-12">
+                        <div className="mb-12">
+                            <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('businessCardTitle')}</h2>
+                            <p className="text-sm text-foreground/50 max-w-sm mx-auto">{t('businessCardSub')}</p>
+                        </div>
 
+                        <div className="glass p-10 rounded-[3.5rem] bg-white/5 border-white/5 mb-10">
                             <BusinessCardGenerator
+                                mode="selector"
+                                selectedTemplateId={profileData.businessCardTemplateId}
+                                onSelect={(id) => setProfileData({ ...profileData, businessCardTemplateId: id })}
                                 user={{
                                     name: profileData.name || session?.user?.name || "Kullanıcı",
                                     username: profile?.username || "demo",
@@ -3098,6 +3117,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 }}
                                 profileData={profileData}
                             />
+                        </div>
+
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => handleSave()}
+                                disabled={isSaving}
+                                className="px-10 py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
+                            >
+                                {isSaving ? (
+                                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    <>
+                                        <CheckCircle2 size={20} />
+                                        {t('saveChanges')}
+                                    </>
+                                )}
+                            </button>
                         </div>
                     </div>
 

@@ -16,6 +16,9 @@ interface BusinessCardGeneratorProps {
         email?: string
     }
     profileData: any
+    mode?: 'full' | 'selector' | 'preview'
+    selectedTemplateId?: string
+    onSelect?: (templateId: string) => void
 }
 
 const TEMPLATES = [
@@ -57,10 +60,16 @@ const TEMPLATES = [
     }
 ]
 
-export default function BusinessCardGenerator({ user, profileData }: BusinessCardGeneratorProps) {
+export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, onSelect }: BusinessCardGeneratorProps) {
     const { t } = useTranslation()
     const cardRef = useRef<HTMLDivElement>(null)
-    const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0])
+
+    // Internal state if prop not provided
+    const [internalSelectedTpl, setInternalSelectedTpl] = useState(TEMPLATES.find(t => t.id === selectedTemplateId) || TEMPLATES[0])
+
+    // Effective template
+    const selectedTemplate = TEMPLATES.find(t => t.id === selectedTemplateId) || internalSelectedTpl
+
     const [isDownloading, setIsDownloading] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
 
@@ -117,7 +126,10 @@ export default function BusinessCardGenerator({ user, profileData }: BusinessCar
                         {TEMPLATES.map((tpl) => (
                             <button
                                 key={tpl.id}
-                                onClick={() => setSelectedTemplate(tpl)}
+                                onClick={() => {
+                                    if (onSelect) onSelect(tpl.id)
+                                    else setInternalSelectedTpl(tpl)
+                                }}
                                 className={`shrink-0 w-12 h-12 rounded-full border-2 transition-all ${selectedTemplate.id === tpl.id ? 'border-primary ring-4 ring-primary/20 scale-110' : 'border-white/10 opacity-60 hover:opacity-100'}`}
                                 style={{ background: tpl.bg.includes('gradient') ? 'linear-gradient(135deg, #6366f1, #a855f7)' : tpl.bg.replace('bg-', '') }}
                                 title={tpl.name}
@@ -191,32 +203,36 @@ export default function BusinessCardGenerator({ user, profileData }: BusinessCar
                     </div>
                 </div>
 
-                <div className="flex gap-4 mt-12 w-full max-w-md">
-                    <button
-                        onClick={handleDownload}
-                        disabled={isDownloading}
-                        className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                    >
-                        {isDownloading ? (
-                            <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                        ) : showSuccess ? (
-                            <><Check size={18} /> {t('downloaded') || 'İNDİRİLDİ'}</>
-                        ) : (
-                            <><Download size={18} /> {t('downloadJpeg') || 'GÖRSEL OLARAK İNDİR'}</>
-                        )}
-                    </button>
-                    <button
-                        onClick={handleShare}
-                        className="px-6 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all flex items-center justify-center"
-                        title={t('shareLabel')}
-                    >
-                        <Share2 size={18} />
-                    </button>
-                </div>
+                {mode === 'full' && (
+                    <div className="flex gap-4 mt-12 w-full max-w-md">
+                        <button
+                            onClick={handleDownload}
+                            disabled={isDownloading}
+                            className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                        >
+                            {isDownloading ? (
+                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                            ) : showSuccess ? (
+                                <><Check size={18} /> {t('downloaded') || 'İNDİRİLDİ'}</>
+                            ) : (
+                                <><Download size={18} /> {t('downloadJpeg') || 'GÖRSEL OLARAK İNDİR'}</>
+                            )}
+                        </button>
+                        <button
+                            onClick={handleShare}
+                            className="px-6 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all flex items-center justify-center"
+                            title={t('shareLabel')}
+                        >
+                            <Share2 size={18} />
+                        </button>
+                    </div>
+                )}
 
-                <p className="mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                    {t('highQuality') || 'BASKIYA UYGUN YÜKSEK ÇÖZÜNÜRLÜK (300DPI)'}
-                </p>
+                {mode === 'full' && (
+                    <p className="mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                        {t('highQuality') || 'BASKIYA UYGUN YÜKSEK ÇÖZÜNÜRLÜK (300DPI)'}
+                    </p>
+                )}
             </div>
         </div>
     )
