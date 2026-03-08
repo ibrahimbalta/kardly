@@ -165,6 +165,11 @@ export const translations: any = {
         animTilt: "3D Hareketli (Fare Hassas)",
         animFloat: "Yumuşak Salınım",
         animRotate: "Dinamik 3D",
+        domainSettings: "Alan Adı Ayarları",
+        usernameLabel: "Kullanıcı Adı",
+        usernameHint: "Bu senin profil adresini belirler. Örn: username.kardly.site",
+        liveUrl: "Canlı Profil Adresi",
+        updateSubdomain: "Alan Adını Güncelle",
 
         // Dashboard Settings
         accountSettings: "Hesap Ayarları",
@@ -875,6 +880,11 @@ export const translations: any = {
         animTilt: "3D Tilt (Mouse Sensitive)",
         animFloat: "Gentle Float",
         animRotate: "Dynamic 3D",
+        domainSettings: "Domain Settings",
+        usernameLabel: "Username",
+        usernameHint: "This sets your profile address. E.g: username.kardly.site",
+        liveUrl: "Live Profile Address",
+        updateSubdomain: "Update Subdomain",
 
         // Dashboard Settings
         accountSettings: "Account Settings",

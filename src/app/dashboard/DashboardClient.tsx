@@ -3212,10 +3212,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         type="text"
                                                         value={profileData.username || ""}
                                                         onChange={(e) => setProfileData({ ...profileData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm font-bold"
+                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm font-bold text-slate-900"
                                                         placeholder="kullanici-adi"
                                                     />
-                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-white/20 uppercase tracking-widest pointer-events-none">
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest pointer-events-none">
                                                         .kardly.site
                                                     </div>
                                                 </div>
@@ -3235,13 +3235,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         href={`https://${profileData.username}.kardly.site`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-lg font-black text-white truncate hover:text-primary transition-colors flex items-center gap-2"
+                                                        className="text-lg font-black text-slate-900 truncate hover:text-primary transition-colors flex items-center gap-2"
                                                     >
                                                         {profileData.username}.kardly.site <ExternalLink size={16} />
                                                     </a>
                                                     <button
                                                         onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
-                                                        className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all text-white/40 hover:text-white"
+                                                        className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-all text-slate-400 hover:text-slate-900"
                                                     >
                                                         <Share2 size={16} />
                                                     </button>
