@@ -59,7 +59,9 @@ import {
     Dribbble,
     Monitor,
     Rss,
-    RefreshCw
+    RefreshCw,
+    Plus,
+    Check
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
@@ -3576,79 +3578,107 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
 
                             {/* Testimonials */}
-                            <div className="pt-4 overflow-hidden relative">
-                                <div className="flex items-center justify-between mb-4 px-2">
-                                    <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.reviews}</h3>
-                                    <button
+                            <div className="pt-6 overflow-hidden relative group/reviews">
+                                <div className="flex items-center justify-between mb-6 px-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1.5 h-6 rounded-full" style={{ background: theme.accent }} />
+                                        <h3 className={cn("text-[11px] font-black uppercase tracking-[0.25em] opacity-50", theme.text)}>{t.reviews}</h3>
+                                    </div>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
                                         onClick={() => setIsReviewModalOpen(true)}
-                                        className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 border transition-all", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
-                                        style={{ color: theme.accent }}
+                                        className={cn("text-[10px] font-black uppercase tracking-widest px-4 py-2 border backdrop-blur-md transition-all flex items-center gap-2", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                        style={{ color: theme.accent, borderColor: `${theme.accent}40` }}
                                     >
+                                        <Plus size={12} />
                                         {t.writeReview}
-                                    </button>
+                                    </motion.button>
                                 </div>
 
-                                <div className="relative h-32">
+                                <div className="relative min-h-[160px]">
                                     {reviews.length > 0 ? (
                                         <AnimatePresence mode="wait">
                                             <motion.div
                                                 key={currentReviewIndex}
-                                                initial={{ opacity: 0, x: 50 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -50 }}
-                                                className={cn("absolute inset-0 p-5 border flex flex-col justify-between", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}
+                                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                                className={cn("absolute inset-0 p-6 border flex flex-col backdrop-blur-2xl shadow-2xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
+                                                style={{ boxShadow: `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 20px ${theme.accent}10` }}
                                             >
-                                                <div className="flex gap-4">
-                                                    <div className={cn("w-12 h-12 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center relative", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}>
-                                                        <img
-                                                            src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
-                                                            className="w-full h-full object-cover"
-                                                            onError={(e: any) => {
-                                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
-                                                            }}
-                                                        />
+                                                {/* Decorative Quote Icon */}
+                                                <div className="absolute top-4 right-6 opacity-5 pointer-events-none">
+                                                    <Quote size={64} style={{ color: theme.accent }} />
+                                                </div>
+
+                                                <div className="flex gap-5 relative z-10">
+                                                    <div className="relative">
+                                                        <div className={cn("w-14 h-14 border-2 p-1 overflow-hidden flex items-center justify-center relative z-10 bg-black/20", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")} style={{ borderColor: `${theme.accent}30` }}>
+                                                            <img
+                                                                src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                                className="w-full h-full object-cover rounded-xl"
+                                                                onError={(e: any) => {
+                                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
+                                                                }}
+                                                                alt={reviews[currentReviewIndex].name}
+                                                            />
+                                                        </div>
+                                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-black flex items-center justify-center z-20">
+                                                            <Check size={10} className="text-white" />
+                                                        </div>
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <div className="flex justify-between items-start">
-                                                            <div>
-                                                                <h4 className={cn("text-xs font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                                <p className={cn("text-[10px] opacity-40", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
+
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex justify-between items-start mb-1">
+                                                            <div className="overflow-hidden">
+                                                                <h4 className={cn("text-sm font-black truncate", theme.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                                <p className={cn("text-[10px] opacity-40 font-bold truncate tracking-tight uppercase", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
                                                             </div>
-                                                            <div className="flex gap-0.5">
+                                                            <div className="flex gap-0.5 bg-black/20 px-2 py-1 rounded-lg backdrop-blur-md">
                                                                 {[...Array(5)].map((_, i) => (
                                                                     <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
                                                                 ))}
                                                             </div>
                                                         </div>
-                                                        <p className={cn("text-[11px] leading-relaxed mt-2 line-clamp-2 italic opacity-80", theme.text)}>
-                                                            "{translateText(reviews[currentReviewIndex].content)}"
-                                                        </p>
+                                                        <div className="relative mt-3">
+                                                            <p className={cn("text-xs leading-relaxed italic opacity-90 line-clamp-3", theme.text)}>
+                                                                &ldquo;{translateText(reviews[currentReviewIndex].content)}&rdquo;
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </motion.div>
                                         </AnimatePresence>
                                     ) : (
-                                        <div className={cn("absolute inset-0 p-5 border flex items-center justify-center italic opacity-40 text-xs", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                            {t.noReviewsYet}
+                                        <div className={cn("absolute inset-0 p-8 border flex items-center justify-center italic opacity-40 text-xs text-center backdrop-blur-xl", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}>
+                                            <div className="flex flex-col items-center gap-3">
+                                                <MessageSquare className="opacity-20" size={32} />
+                                                {t.noReviewsYet}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Pagination Dots */}
-                                <div className="flex justify-center gap-1.5 mt-4">
+                                <div className="flex justify-center gap-2 mt-6">
                                     {reviews.map((_: any, i: number) => (
-                                        <div
+                                        <button
                                             key={i}
-                                            className="h-1 transition-all"
+                                            onClick={() => setCurrentReviewIndex(i)}
+                                            className="h-1.5 transition-all outline-none"
                                             style={{
-                                                width: i === currentReviewIndex ? '16px' : '4px',
+                                                width: i === currentReviewIndex ? '24px' : '6px',
                                                 background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)',
-                                                borderRadius: '99px'
+                                                borderRadius: '99px',
+                                                boxShadow: i === currentReviewIndex ? `0 0 10px ${theme.accent}40` : 'none'
                                             }}
                                         />
                                     ))}
                                 </div>
                             </div>
+
 
 
                             <div className="flex justify-center flex-wrap gap-6 pt-2">
@@ -3902,70 +3932,76 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/70 backdrop-blur-md"
+                className="absolute inset-0 bg-black/80 backdrop-blur-md"
                 onClick={onClose}
             />
             <motion.div
-                initial={{ scale: 0.98, opacity: 0, y: 10 }}
+                initial={{ scale: 0.9, opacity: 0, y: 30 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.98, opacity: 0, y: 10 }}
+                exit={{ scale: 0.9, opacity: 0, y: 30 }}
                 className={cn(
-                    "relative w-full max-w-[340px] p-5 backdrop-blur-3xl overflow-y-auto max-h-[90vh] no-scrollbar rounded-[2rem] border shadow-2xl transition-all",
+                    "relative w-full max-w-[380px] p-8 backdrop-blur-3xl overflow-y-auto max-h-[90vh] no-scrollbar rounded-[2.5rem] border shadow-2xl transition-all",
                     theme.card,
                     theme.border,
                     toneStyle?.font
                 )}
                 style={{
-                    boxShadow: `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 30px ${theme.accent}15`
+                    boxShadow: `0 30px 60px -12px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}20`
                 }}
             >
-                {/* Micro Glow */}
-                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-15 rounded-full" style={{ backgroundColor: theme.accent }} />
+                {/* Visual Flair */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 blur-[80px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute -bottom-24 -left-24 w-48 h-48 blur-[80px] opacity-10 rounded-full bg-purple-500" />
 
                 <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-5">
-                        <div className="space-y-0.5">
-                            <h3 className={cn("text-lg font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
-                            <p className={cn("text-[8px] font-bold uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
+                    <div className="flex justify-between items-start mb-8">
+                        <div className="space-y-1">
+                            <h3 className={cn("text-2xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
+                            <div className="flex items-center gap-2">
+                                <div className="w-4 h-[1px]" style={{ background: theme.accent }} />
+                                <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
+                            </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className={cn("w-7 h-7 flex items-center justify-center rounded-full transition-all active:scale-90 opacity-30 hover:opacity-100", theme.text)}
+                            className={cn("w-10 h-10 flex items-center justify-center rounded-2xl transition-all active:scale-90 bg-white/5 hover:bg-white/10 group", theme.text)}
                         >
-                            <X size={16} />
+                            <X size={20} className="opacity-40 group-hover:opacity-100 transition-opacity" />
                         </button>
                     </div>
 
-                    <div className="space-y-4">
-                        {/* Rating */}
-                        <div className="space-y-4">
-                            <div className={cn("flex flex-col items-center gap-2 py-3 rounded-2xl border bg-white/5", theme.border)} style={{ borderColor: `${theme.accent}15` }}>
-                                <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.rateLabel}</span>
-                                <div className="flex gap-1.5">
+                    <div className="space-y-6">
+                        {/* Rating & Gender Section */}
+                        <div className="space-y-5">
+                            <div className={cn("flex flex-col items-center gap-3 py-5 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
+                                <span className={cn("text-[9px] font-black uppercase tracking-[0.25em] opacity-40 mb-1", theme.text)}>{t.rateLabel}</span>
+                                <div className="flex gap-2">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
+                                        <motion.button
                                             key={star}
+                                            whileHover={{ scale: 1.2, rotate: 15 }}
+                                            whileTap={{ scale: 0.9 }}
                                             onClick={() => setFormData({ ...formData, rating: star })}
-                                            className="transition-all hover:scale-110"
+                                            className="transition-all"
                                         >
                                             <Star
-                                                size={20}
+                                                size={28}
                                                 className={cn(
-                                                    "transition-colors duration-300",
+                                                    "transition-all duration-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]",
                                                     star <= formData.rating ? "fill-current" : "text-white/5"
                                                 )}
-                                                style={star <= formData.rating ? { color: theme.accent } : {}}
+                                                style={star <= formData.rating ? { color: '#fbbf24' } : {}}
                                             />
-                                        </button>
+                                        </motion.button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-3">
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'male' })}
                                     className={cn(
-                                        "flex-1 flex items-center gap-2 p-2.5 rounded-xl border transition-all duration-300",
+                                        "flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
                                         theme.border
                                     )}
                                     style={formData.gender === 'male' ? {
@@ -3976,16 +4012,14 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                         borderColor: 'rgba(255,255,255,0.05)'
                                     }}
                                 >
-                                    <div className="w-7 h-7 flex items-center justify-center rounded-lg" style={formData.gender === 'male' ? { backgroundColor: theme.accent, color: '#000' } : { backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.2)' }}>
-                                        <User size={14} />
-                                    </div>
-                                    <span className={cn("text-[9px] font-black uppercase tracking-wider", formData.gender === 'male' ? "opacity-100" : "opacity-30", theme.text)}>{t.male}</span>
+                                    <User size={18} className={cn("transition-all", formData.gender === 'male' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'male' ? theme.accent : 'currentColor' }} />
+                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'male' ? "opacity-100" : "opacity-30", theme.text)}>{t.male}</span>
                                 </button>
 
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'female' })}
                                     className={cn(
-                                        "flex-1 flex items-center gap-2 p-2.5 rounded-xl border transition-all duration-300",
+                                        "flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
                                         theme.border
                                     )}
                                     style={formData.gender === 'female' ? {
@@ -3996,55 +4030,76 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                         borderColor: 'rgba(255,255,255,0.05)'
                                     }}
                                 >
-                                    <div className="w-7 h-7 flex items-center justify-center rounded-lg" style={formData.gender === 'female' ? { backgroundColor: theme.accent, color: '#000' } : { backgroundColor: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.2)' }}>
-                                        <UserCircle size={14} />
-                                    </div>
-                                    <span className={cn("text-[9px] font-black uppercase tracking-wider", formData.gender === 'female' ? "opacity-100" : "opacity-30", theme.text)}>{t.female}</span>
+                                    <UserCircle size={18} className={cn("transition-all", formData.gender === 'female' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'female' ? theme.accent : 'currentColor' }} />
+                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'female' ? "opacity-100" : "opacity-30", theme.text)}>{t.female}</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Form Inputs */}
-                        <div className="space-y-2.5">
-                            <input
-                                type="text"
-                                placeholder={t.yourName}
-                                className={cn("w-full px-4 py-3 rounded-xl focus:outline-none transition-all text-xs font-bold border", theme.border, theme.text)}
-                                style={{ backgroundColor: `${theme.accent}05`, borderColor: `${theme.accent}15` }}
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                            <input
-                                type="text"
-                                placeholder={t.yourTitle}
-                                className={cn("w-full px-4 py-3 rounded-xl focus:outline-none transition-all text-xs font-bold border", theme.border, theme.text)}
-                                style={{ backgroundColor: `${theme.accent}05`, borderColor: `${theme.accent}15` }}
-                                value={formData.title}
-                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            />
-                            <textarea
-                                rows={3}
-                                placeholder={t.yourMessage}
-                                className={cn("w-full px-4 py-3 rounded-xl focus:outline-none transition-all text-xs font-bold resize-none border", theme.border, theme.text)}
-                                style={{ backgroundColor: `${theme.accent}05`, borderColor: `${theme.accent}15` }}
-                                value={formData.content}
-                                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                            />
+                        <div className="space-y-4">
+                            <div className="space-y-1.5">
+                                <div className="flex items-center gap-2 px-2 opacity-40">
+                                    <User size={10} className={theme.text} />
+                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourName}</span>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Jone Doe"
+                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <div className="flex items-center gap-2 px-2 opacity-40">
+                                    <Briefcase size={10} className={theme.text} />
+                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourTitle}</span>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="CEO @ Tech Inc"
+                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <div className="flex items-center gap-2 px-2 opacity-40">
+                                    <MessageSquare size={10} className={theme.text} />
+                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourMessage}</span>
+                                </div>
+                                <textarea
+                                    rows={5}
+                                    placeholder={t.yourMessagePlaceholder || "Paylaşmak istediğiniz düşüncelerinizi buraya yazın..."}
+                                    className={cn("w-full px-5 py-4 rounded-3xl focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
+                                    style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
+                                    value={formData.content}
+                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                />
+                            </div>
                         </div>
 
-                        <button
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className={cn("w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2", toneStyle?.font)}
+                            className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
                             style={{
                                 backgroundColor: theme.accent,
                                 color: '#000',
-                                boxShadow: `0 10px 25px -5px ${theme.accent}40`
+                                boxShadow: `0 20px 40px -10px ${theme.accent}60`
                             }}
                         >
-                            <MessageSquare size={14} />
-                            {t.publishReview}
-                        </button>
+                            <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+                            <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <span className="relative z-10">{t.publishReview}</span>
+                        </motion.button>
                     </div>
                 </div>
             </motion.div>
