@@ -1,18 +1,21 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { RegisterSchema } from "@/lib/validations"
 
 export async function POST(req: Request) {
     try {
-        const { email, password } = await req.json()
+        const body = await req.json()
 
-        if (!email || !password) {
-            return NextResponse.json({ error: "Email ve şifre gereklidir." }, { status: 400 })
+        // Zod ile doğrulama yap
+        const validation = RegisterSchema.safeParse(body)
+
+        if (!validation.success) {
+            const error = validation.error.issues[0].message
+            return NextResponse.json({ error }, { status: 400 })
         }
 
-        if (password.length < 6) {
-            return NextResponse.json({ error: "Şifre en az 6 karakter olmalıdır." }, { status: 400 })
-        }
+        const { email, password } = validation.data
 
         // Kullanıcı var mı kontrol et
         const existingUser = await prisma.user.findUnique({
