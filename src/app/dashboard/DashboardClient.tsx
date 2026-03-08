@@ -567,7 +567,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
 
             if (!validation.success) {
-                const firstError = validation.error.errors[0].message
+                const firstError = validation.error.issues[0].message
                 setShowToast(firstError)
                 setTimeout(() => setShowToast(null), 4000)
                 setIsSaving(false)
