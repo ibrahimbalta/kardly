@@ -2826,6 +2826,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 .animate-marquee-vertical {
                     animation: marquee-vertical 30s linear infinite;
                 }
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
 
             {/* Modal integration for dynamic theme */}
@@ -3940,7 +3942,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 30 }}
                 className={cn(
-                    "relative w-full max-w-[380px] p-8 backdrop-blur-3xl overflow-y-auto max-h-[90vh] no-scrollbar rounded-[2.5rem] border shadow-2xl transition-all",
+                    "relative w-full max-w-[320px] p-5 backdrop-blur-3xl overflow-y-auto max-h-[90vh] no-scrollbar rounded-[2rem] border shadow-2xl transition-all",
                     theme.card,
                     theme.border,
                     toneStyle?.font
@@ -3950,44 +3952,43 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 }}
             >
                 {/* Visual Flair */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 blur-[80px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
-                <div className="absolute -bottom-24 -left-24 w-48 h-48 blur-[80px] opacity-10 rounded-full bg-purple-500" />
+                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
 
                 <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-8">
-                        <div className="space-y-1">
-                            <h3 className={cn("text-2xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="space-y-0.5">
+                            <h3 className={cn("text-xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-[1px]" style={{ background: theme.accent }} />
-                                <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
+                                <div className="w-3 h-[1px]" style={{ background: theme.accent }} />
+                                <p className={cn("text-[7px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className={cn("w-10 h-10 flex items-center justify-center rounded-2xl transition-all active:scale-90 bg-white/5 hover:bg-white/10 group", theme.text)}
+                            className={cn("w-8 h-8 flex items-center justify-center rounded-xl transition-all active:scale-90 bg-white/5 hover:bg-white/10 group", theme.text)}
                         >
-                            <X size={20} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+                            <X size={16} className="opacity-40 group-hover:opacity-100 transition-opacity" />
                         </button>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                         {/* Rating & Gender Section */}
-                        <div className="space-y-5">
-                            <div className={cn("flex flex-col items-center gap-3 py-5 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
-                                <span className={cn("text-[9px] font-black uppercase tracking-[0.25em] opacity-40 mb-1", theme.text)}>{t.rateLabel}</span>
-                                <div className="flex gap-2">
+                        <div className="space-y-3">
+                            <div className={cn("flex flex-col items-center gap-2 py-3 rounded-2xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
+                                <span className={cn("text-[8px] font-black uppercase tracking-[0.25em] opacity-40 mb-0.5", theme.text)}>{t.rateLabel}</span>
+                                <div className="flex gap-1.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <motion.button
                                             key={star}
-                                            whileHover={{ scale: 1.2, rotate: 15 }}
+                                            whileHover={{ scale: 1.15 }}
                                             whileTap={{ scale: 0.9 }}
                                             onClick={() => setFormData({ ...formData, rating: star })}
                                             className="transition-all"
                                         >
                                             <Star
-                                                size={28}
+                                                size={22}
                                                 className={cn(
-                                                    "transition-all duration-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]",
+                                                    "transition-all duration-500 drop-shadow-[0_0_6px_rgba(251,191,36,0.3)]",
                                                     star <= formData.rating ? "fill-current" : "text-white/5"
                                                 )}
                                                 style={star <= formData.rating ? { color: '#fbbf24' } : {}}
@@ -3997,11 +3998,11 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                 </div>
                             </div>
 
-                            <div className="flex gap-3">
+                            <div className="flex gap-2.5">
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'male' })}
                                     className={cn(
-                                        "flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
+                                        "flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-300 relative group overflow-hidden",
                                         theme.border
                                     )}
                                     style={formData.gender === 'male' ? {
@@ -4012,14 +4013,14 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                         borderColor: 'rgba(255,255,255,0.05)'
                                     }}
                                 >
-                                    <User size={18} className={cn("transition-all", formData.gender === 'male' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'male' ? theme.accent : 'currentColor' }} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'male' ? "opacity-100" : "opacity-30", theme.text)}>{t.male}</span>
+                                    <User size={14} className={cn("transition-all", formData.gender === 'male' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'male' ? theme.accent : 'currentColor' }} />
+                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", formData.gender === 'male' ? "opacity-100" : "opacity-30", theme.text)}>{t.male}</span>
                                 </button>
 
                                 <button
                                     onClick={() => setFormData({ ...formData, gender: 'female' })}
                                     className={cn(
-                                        "flex-1 flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
+                                        "flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border transition-all duration-300 relative group overflow-hidden",
                                         theme.border
                                     )}
                                     style={formData.gender === 'female' ? {
@@ -4030,53 +4031,41 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                         borderColor: 'rgba(255,255,255,0.05)'
                                     }}
                                 >
-                                    <UserCircle size={18} className={cn("transition-all", formData.gender === 'female' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'female' ? theme.accent : 'currentColor' }} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'female' ? "opacity-100" : "opacity-30", theme.text)}>{t.female}</span>
+                                    <UserCircle size={14} className={cn("transition-all", formData.gender === 'female' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'female' ? theme.accent : 'currentColor' }} />
+                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", formData.gender === 'female' ? "opacity-100" : "opacity-30", theme.text)}>{t.female}</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Form Inputs */}
-                        <div className="space-y-4">
-                            <div className="space-y-1.5">
-                                <div className="flex items-center gap-2 px-2 opacity-40">
-                                    <User size={10} className={theme.text} />
-                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourName}</span>
-                                </div>
+                        <div className="space-y-3">
+                            <div className="space-y-1">
                                 <input
                                     type="text"
-                                    placeholder="Jone Doe"
-                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    placeholder={t.yourName}
+                                    className={cn("w-full px-4 py-3 rounded-xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <div className="flex items-center gap-2 px-2 opacity-40">
-                                    <Briefcase size={10} className={theme.text} />
-                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourTitle}</span>
-                                </div>
+                            <div className="space-y-1">
                                 <input
                                     type="text"
-                                    placeholder="CEO @ Tech Inc"
-                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    placeholder={t.yourTitle}
+                                    className={cn("w-full px-4 py-3 rounded-xl focus:outline-none transition-all text-xs font-bold border backdrop-blur-xl", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <div className="flex items-center gap-2 px-2 opacity-40">
-                                    <MessageSquare size={10} className={theme.text} />
-                                    <span className={cn("text-[8px] font-black uppercase tracking-widest", theme.text)}>{t.yourMessage}</span>
-                                </div>
+                            <div className="space-y-1">
                                 <textarea
-                                    rows={5}
-                                    placeholder={t.yourMessagePlaceholder || "Paylaşmak istediğiniz düşüncelerinizi buraya yazın..."}
-                                    className={cn("w-full px-5 py-4 rounded-3xl focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
+                                    rows={3}
+                                    placeholder={t.yourMessage}
+                                    className={cn("w-full px-4 py-3 rounded-2xl focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -4089,15 +4078,15 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
+                            className={cn("w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
                             style={{
                                 backgroundColor: theme.accent,
                                 color: '#000',
-                                boxShadow: `0 20px 40px -10px ${theme.accent}60`
+                                boxShadow: `0 15px 30px -10px ${theme.accent}60`
                             }}
                         >
                             <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                            <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             <span className="relative z-10">{t.publishReview}</span>
                         </motion.button>
                     </div>
