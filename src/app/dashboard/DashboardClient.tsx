@@ -85,7 +85,10 @@ import {
     Dribbble,
     Rss,
     IdCard,
-    Play
+    Play,
+    Coffee,
+    Heart,
+    CreditCard
 } from "lucide-react"
 
 import Link from "next/link"
@@ -2011,7 +2014,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
-                                            <p className="text-sm font-bold text-white">{profileData.username}.kardly.site</p>
+                                            <p className="text-sm font-bold text-slate-900">{profileData.username}.kardly.site</p>
                                         </div>
                                     </div>
                                     <button
@@ -2150,7 +2153,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
-                                            <p className="text-sm font-bold text-white">{profileData.username}.kardly.site</p>
+                                            <p className="text-sm font-bold text-slate-900">{profileData.username}.kardly.site</p>
                                         </div>
                                     </div>
                                     <button
@@ -3416,22 +3419,46 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                     <div className="space-y-4">
                                         <label className="block text-sm font-medium opacity-60">{t('paymentType')}</label>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-3">
                                             {[
-                                                { id: "coffee", name: t('coffeeBtn') },
-                                                { id: "consulting", name: t('consultingBtn') },
-                                                { id: "support", name: t('supportBtn') },
-                                                { id: "pay", name: t('payBtn') }
+                                                { id: "coffee", name: t('coffeeBtn'), icon: <Coffee size={16} /> },
+                                                { id: "consulting", name: t('consultingBtn'), icon: <Briefcase size={16} /> },
+                                                { id: "support", name: t('supportBtn'), icon: <Heart size={16} /> },
+                                                { id: "pay", name: t('payBtn'), icon: <CreditCard size={16} /> }
                                             ].map(type => (
                                                 <button
                                                     key={type.id}
+                                                    type="button"
                                                     onClick={() => setProfileData({ ...profileData, paymentType: type.id })}
                                                     className={cn(
-                                                        "px-4 py-3 rounded-xl border text-xs font-bold transition-all",
-                                                        profileData.paymentType === type.id ? "bg-primary text-white border-primary shadow-lg" : "bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300"
+                                                        "flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
+                                                        profileData.paymentType === type.id
+                                                            ? "bg-primary/10 border-primary text-primary shadow-[0_10px_30px_-10px_rgba(var(--primary-rgb),0.3)]"
+                                                            : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20 hover:bg-white/10"
                                                     )}
                                                 >
-                                                    {type.name}
+                                                    {profileData.paymentType === type.id && (
+                                                        <motion.div
+                                                            layoutId="type-active"
+                                                            className="absolute inset-0 bg-primary/5 -z-10"
+                                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                                        />
+                                                    )}
+                                                    <div className={cn(
+                                                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+                                                        profileData.paymentType === type.id ? "bg-primary text-white scale-110" : "bg-white/5 text-slate-500 group-hover:scale-110"
+                                                    )}>
+                                                        {type.icon}
+                                                    </div>
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">{type.name}</span>
+
+                                                    {profileData.paymentType === type.id && (
+                                                        <div className="absolute top-2 right-2">
+                                                            <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                                                                <Check size={10} className="text-white" strokeWidth={4} />
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </button>
                                             ))}
                                         </div>

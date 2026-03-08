@@ -61,7 +61,10 @@ import {
     Rss,
     RefreshCw,
     Plus,
-    Check
+    Check,
+    Coffee,
+    Heart,
+    CreditCard
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
@@ -3704,7 +3707,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             {
                                 profile.paymentLink && (
-                                    <div className="pt-8 w-full">
+                                    <div className="pt-8 w-full max-w-[340px] mx-auto">
                                         <motion.a
                                             href={formatUrl(profile.paymentLink)}
                                             target="_blank"
@@ -3712,23 +3715,69 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animate={{ scale: 1, opacity: 1 }}
                                             whileHover={{ scale: 1.02, y: -2 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className={cn("w-full py-5 flex items-center justify-center gap-4 font-black text-xs uppercase tracking-[0.3em] transition-all text-white relative overflow-hidden group border border-white/10", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
+                                            className={cn(
+                                                "w-full py-4.5 px-6 flex items-center justify-between font-black text-[11px] uppercase tracking-[0.25em] transition-all relative overflow-hidden group border-2 shadow-2xl",
+                                                toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl"
+                                            )}
                                             style={{
-                                                background: `linear-gradient(135deg, #f59e0b, #f97316, #ea580c)`,
-                                                boxShadow: `0 20px 40px -15px rgba(234, 88, 12, 0.4), inset 0 0 20px rgba(255,255,255,0.1)`
+                                                backgroundColor: `${theme.accent}15`,
+                                                borderColor: `${theme.accent}40`,
+                                                color: theme.text === "text-white" ? "#fff" : theme.accent,
+                                                boxShadow: `0 20px 40px -15px ${theme.accent}30, inset 0 0 20px ${theme.accent}10`
                                             }}
                                             onClick={() => trackEvent("payment_click")}
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md border border-white/20">
-                                                <Zap className="w-5 h-5 fill-white" />
+                                            {/* Modern Animated Glow Background */}
+                                            <div
+                                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                                style={{
+                                                    background: `radial-gradient(circle at center, ${theme.accent}20 0%, transparent 70%)`
+                                                }}
+                                            />
+
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+
+                                            <div className="flex items-center gap-4 relative z-10">
+                                                <div
+                                                    className="w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md border transition-all duration-300 group-hover:scale-110 group-hover:rotate-6"
+                                                    style={{
+                                                        backgroundColor: `${theme.accent}25`,
+                                                        borderColor: `${theme.accent}50`,
+                                                        color: theme.accent
+                                                    }}
+                                                >
+                                                    {profile.paymentType === 'consulting' ? <Briefcase size={20} fill={`${theme.accent}33`} /> :
+                                                        profile.paymentType === 'support' ? <Heart size={20} fill={`${theme.accent}33`} /> :
+                                                            profile.paymentType === 'pay' ? <CreditCard size={20} fill={`${theme.accent}33`} /> :
+                                                                <Coffee size={20} fill={`${theme.accent}33`} />}
+                                                </div>
+                                                <div className="flex flex-col items-start gap-0.5">
+                                                    <span className="opacity-40 text-[7px] font-black tracking-[0.4em]">
+                                                        {profile.paymentType === 'consulting' ? "PROFESSIONAL" :
+                                                            profile.paymentType === 'support' ? "CONTRIBUTION" :
+                                                                profile.paymentType === 'pay' ? "TRANSACTION" :
+                                                                    "APPRECIATION"}
+                                                    </span>
+                                                    <span className="drop-shadow-sm text-sm">
+                                                        {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                                            profile.paymentType === 'support' ? t.supportBtn :
+                                                                profile.paymentType === 'pay' ? t.payBtn :
+                                                                    t.coffeeBtn}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <span className="drop-shadow-md">
-                                                {profile.paymentType === 'consulting' ? t.consultingBtn :
-                                                    profile.paymentType === 'support' ? t.supportBtn :
-                                                        profile.paymentType === 'pay' ? t.payBtn :
-                                                            t.coffeeBtn}
-                                            </span>
+
+                                            <div
+                                                className="w-10 h-10 rounded-full flex items-center justify-center border transition-all group-hover:bg-white/10 relative z-10"
+                                                style={{ borderColor: `${theme.accent}30` }}
+                                            >
+                                                <Zap
+                                                    size={16}
+                                                    className="group-hover:animate-pulse"
+                                                    style={{ color: theme.accent }}
+                                                    fill={theme.accent}
+                                                />
+                                            </div>
                                         </motion.a>
                                     </div>
                                 )
