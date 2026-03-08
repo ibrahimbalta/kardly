@@ -4184,15 +4184,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
 }
 
 function StatBar({ label, count, total, color }: any) {
-    const percentage = total > 0 ? (count / total * 100).toFixed(0) : 0
-        < span className = "opacity-60" > { label }</span>
-            <span>{count} ({percentage}%)</span>
-                                </div >
-        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-            <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
+    const percentage = total > 0 ? (count / total * 100).toFixed(0) : 0;
+    return (
+        <div className="space-y-2">
+            <div className="flex justify-between text-xs font-bold">
+                <span className="opacity-60">{label}</span>
+                <span>{count} ({percentage}%)</span>
+            </div>
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
+            </div>
         </div>
-                            </div >
-                            )
+    );
 }
 
 function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode, label: string, active?: boolean, onClick?: () => void }) {
@@ -4217,7 +4220,7 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
                 />
             )}
         </button>
-    )
+    );
 }
 
 function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label: string, value: string, trend: string }) {
@@ -4242,7 +4245,7 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
 
             <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
-    )
+    );
 }
 
 function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, label: string, count: number, color: string }) {
@@ -4255,7 +4258,7 @@ function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, 
         rose: "bg-rose-50 text-rose-600 border-rose-100",
         orange: "bg-orange-50 text-orange-600 border-orange-100",
         amber: "bg-amber-50 text-amber-600 border-amber-100",
-    }
+    };
 
     return (
         <div className={cn("bg-white p-5 rounded-[2rem] border flex flex-col items-center text-center gap-3 transition-all hover:scale-105 active:scale-95 cursor-default shadow-sm", colors[color] || "border-slate-200")}>
@@ -4267,9 +4270,9 @@ function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, 
                 <p className="text-2xl font-black text-slate-800">{count}</p>
             </div>
         </div>
-    )
+    );
 }
 
 function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(" ")
+    return inputs.filter(Boolean).join(" ");
 }
