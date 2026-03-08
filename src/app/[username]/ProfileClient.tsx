@@ -61,7 +61,7 @@ import {
     Rss,
     RefreshCw
 } from "lucide-react"
-import BusinessCardGenerator from "@/components/BusinessCardGenerator"
+import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
 import { motion, AnimatePresence } from "framer-motion"
@@ -4097,13 +4097,16 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
 
             const htmlToImage = await import('html-to-image');
 
+            const currentTpl = TEMPLATES.find(t => t.id === profile.businessCardTemplateId) || TEMPLATES[0];
+            const pixelPerfectBg = currentTpl.hex || '#ffffff';
+
             // Try toJpeg first, then toPng as fallback
             let dataUrl: string;
             try {
                 dataUrl = await htmlToImage.toJpeg(cardEl, {
                     quality: 0.95,
                     pixelRatio: 2,
-                    backgroundColor: '#000000',
+                    backgroundColor: pixelPerfectBg,
                     cacheBust: true,
                     skipAutoScale: true,
                     filter: (node: any) => {
@@ -4116,7 +4119,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 console.warn('JPEG failed, trying PNG:', jpegErr);
                 dataUrl = await htmlToImage.toPng(cardEl, {
                     pixelRatio: 2,
-                    backgroundColor: '#000000',
+                    backgroundColor: pixelPerfectBg,
                     cacheBust: true,
                     skipAutoScale: true,
                 });

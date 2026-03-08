@@ -24,7 +24,7 @@ interface BusinessCardGeneratorProps {
     onOrientationChange?: (orientation: 'landscape' | 'portrait') => void
 }
 
-const TEMPLATES = [
+export const TEMPLATES = [
     // Standard
     { id: 'minimal_white', name: 'Zen White', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-600', accentText: 'text-indigo-600', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'dots', category: 'Standard' },
     { id: 'modern_dark', name: 'Obsidian', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-emerald-400', accentText: 'text-emerald-400', secondary: 'text-slate-400', hex: '#020617', pattern: 'grid', category: 'Standard' },
