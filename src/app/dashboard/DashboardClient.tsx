@@ -95,6 +95,19 @@ import { QRCodeCard } from "@/components/QRCodeCard"
 import BusinessCardGenerator from "@/components/BusinessCardGenerator"
 import { useTranslation } from "@/context/LanguageContext"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { z } from "zod"
+
+
+const profileSchema = z.object({
+    username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
+    displayName: z.string().min(2, "İsim en az 2 karakter olmalıdır").optional().or(z.literal("")),
+    slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")),
+    bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")),
+    phone: z.string().optional().or(z.literal("")),
+    occupation: z.string().optional().or(z.literal("")),
+    paymentLink: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
+    youtubeVideoUrl: z.string().url("Geçerli bir YouTube URL'si giriniz").optional().or(z.literal(""))
+})
 
 
 
@@ -542,10 +555,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const handleSave = async (overrides?: any) => {
         setIsSaving(true)
         try {
+            const validation = profileSchema.safeParse({
+                username: overrides?.username ?? profileData.username,
+                displayName: overrides?.name ?? profileData.name ?? session?.user?.name,
+                slogan: overrides?.slogan ?? profileData.slogan,
+                bio: overrides?.bio ?? profileData.bio,
+                phone: overrides?.phone ?? profileData.phone,
+                occupation: overrides?.occupation ?? profileData.occupation,
+                paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
+                youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl
+            })
+
+            if (!validation.success) {
+                const firstError = validation.error.errors[0].message
+                setShowToast(firstError)
+                setTimeout(() => setShowToast(null), 4000)
+                setIsSaving(false)
+                return
+            }
+
             const res = await fetch("/api/profile/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    username: overrides?.username ?? profileData.username,
                     slogan: overrides?.slogan ?? profileData.slogan,
                     bio: overrides?.bio ?? profileData.bio,
                     phone: overrides?.phone ?? profileData.phone,
@@ -597,7 +630,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             } else {
                 const err = await res.json().catch(() => ({}))
                 console.error("Save error:", err)
-                setShowToast("Kaydetme başarısız! Lütfen tekrar deneyin.")
+                setShowToast(err.error || "Kaydetme başarısız! Lütfen tekrar deneyin.")
                 setTimeout(() => setShowToast(null), 4000)
             }
         } catch (err) {
@@ -944,7 +977,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     <NavItem
                         icon={<Settings className="w-5 h-5" />}
-                        label={t('settings')}
+                        label={t('settings') || "Ayarlar"}
                         active={activeTab === "settings"}
                         onClick={() => {
                             setActiveTab("settings")
@@ -1951,7 +1984,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </div >
                         </div >
                     </div >
                 ) : activeTab === "edit" ? (
@@ -1968,461 +2001,475 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
 
                         {/* Editor Preview Area */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                            {/* Simple Editor Controls */}
-                            <div className="space-y-6">
-                                <h3 className="text-lg font-bold">{t('editProfileInfo')}</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
-                                        <div className="flex gap-4">
-                                            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
-                                                {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
-                                                    <div className="w-full h-full bg-black flex items-center justify-center">
-                                                        <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
-                                                    </div>
-                                                ) : (
-                                                    <img
-                                                        src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
-                                                        className="w-full h-full object-cover"
-                                                        alt="Preview"
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 flex gap-2">
-                                                <input
-                                                    type="text"
-                                                    value={profileData?.image || ""}
-                                                    onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
-                                                    placeholder={t('imagePlaceholder')}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => document.getElementById('image-upload')?.click()}
-                                                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
-                                                >
-                                                    <Upload className="w-4 h-4" /> {t('upload')}
-                                                </button>
-                                            </div>
-                                            <input
-                                                id="image-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-                                                    const reader = new FileReader();
-                                                    reader.onloadend = () => setProfileData({ ...profileData, image: reader.result as string });
-                                                    reader.readAsDataURL(file);
-                                                }}
-                                            />
+                        <div className="space-y-6">
+                            <h3 className="text-lg font-bold">{t('editProfileInfo')}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="md:col-span-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 flex items-center justify-between group">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                            <Globe size={16} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
+                                            <p className="text-sm font-bold text-white">{profileData.username}.kardly.site</p>
                                         </div>
                                     </div>
-                                    <div className="md:col-span-2 space-y-4">
-                                        <div className="flex items-center gap-2">
-                                            <input
-                                                type="checkbox"
-                                                id="useVideoAsProfile"
-                                                checked={profileData.showVideoAsProfile}
-                                                onChange={(e) => setProfileData({ ...profileData, showVideoAsProfile: e.target.checked })}
-                                                className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
-                                            />
-                                            <label htmlFor="useVideoAsProfile" className="text-sm font-medium opacity-80 cursor-pointer">{t('useVideoAsProfile')}</label>
-                                        </div>
-                                        {profileData.showVideoAsProfile && (
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-medium opacity-60">{t('profileVideoUrl')}</label>
-                                                <div className="flex gap-3">
-                                                    <div className="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center text-red-500 border border-red-500/20">
-                                                        <Youtube size={20} />
-                                                    </div>
-                                                    <input
-                                                        type="text"
-                                                        value={profileData.youtubeVideoUrl}
-                                                        onChange={(e) => setProfileData({ ...profileData, youtubeVideoUrl: e.target.value })}
-                                                        placeholder={t('youtubeHint')}
-                                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                                    />
+                                    <button
+                                        onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
+                                        className="p-2 text-white/40 hover:text-white transition-colors"
+                                    >
+                                        <Share2 size={16} />
+                                    </button>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
+                                    <div className="flex gap-4">
+                                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+                                            {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
+                                                <div className="w-full h-full bg-black flex items-center justify-center">
+                                                    <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="md:col-span-2 space-y-4 mb-6">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('profileBgImageLabel')}</label>
-                                        <div className="flex gap-4">
-                                            <div className="w-24 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative shadow-inner">
-                                                {profileData.profileBgImage ? (
-                                                    <img
-                                                        src={profileData.profileBgImage}
-                                                        className="w-full h-full object-cover"
-                                                        alt="BG Preview"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center bg-slate-800/50">
-                                                        <Monitor className="w-6 h-6 opacity-20" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex-1 flex gap-2 self-end">
-                                                <input
-                                                    type="text"
-                                                    value={profileData?.profileBgImage || ""}
-                                                    onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
-                                                    placeholder={t('bgImagePlaceholder')}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => document.getElementById('bg-image-upload')?.click()}
-                                                    className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
-                                                >
-                                                    <Upload className="w-4 h-4" /> {t('upload')}
-                                                </button>
-                                            </div>
-                                            <input
-                                                id="bg-image-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-                                                    const reader = new FileReader();
-                                                    reader.onloadend = () => setProfileData({ ...profileData, profileBgImage: reader.result as string });
-                                                    reader.readAsDataURL(file);
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('displayNameLabel')}</label>
-                                        <input
-                                            type="text"
-                                            value={profileData?.name || session?.user?.name || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                            placeholder={t('namePlaceholder')}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('occupationLabel')}</label>
-                                        <input
-                                            type="text"
-                                            value={profileData?.occupation || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
-                                            placeholder={t('occupationPlaceholder')}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('phoneNumberLabel')}</label>
-                                        <input
-                                            type="text"
-                                            value={profileData?.phone || ""}
-                                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                            placeholder="Örn: +90 5XX XXX XX XX"
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2 opacity-60">{t('locationLabel')}</label>
-                                        <input
-                                            type="text"
-                                            value={getSocialUrl("city")}
-                                            onChange={(e) => updateSocialLink("city", e.target.value)}
-                                            placeholder={t('locationPlaceholder')}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        />
-                                    </div>
-
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('mottoLabel')}</label>
-                                    <input
-                                        type="text"
-                                        value={profileData?.slogan || ""}
-                                        onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
-                                        placeholder={t('mottoPlaceholder')}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                    />
-                                </div>
-
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <label className="block text-sm font-medium opacity-60">{t('aboutLabel')}</label>
-                                        <button
-                                            type="button"
-                                            onClick={handleGenerateBio}
-                                            disabled={isGeneratingBio}
-                                            className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 border border-primary/20 rounded-lg text-[10px] font-black uppercase text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
-                                        >
-                                            {isGeneratingBio ? (
-                                                <div className="w-3 h-3 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
                                             ) : (
-                                                <Sparkles size={12} />
-                                            )}
-                                            {t('writeWithAI') || 'AI İle Yaz'}
-                                        </button>
-                                    </div>
-                                    <textarea
-                                        rows={3}
-                                        value={profileData?.bio || ""}
-                                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                                        placeholder={t('aboutPlaceholder')}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{profileData.isCatalog ? 'Katalog' : 'CV'} (PDF/DOC)</label>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex items-center gap-2">
-                                            <input
-                                                type="checkbox"
-                                                id="isCatalog"
-                                                checked={profileData.isCatalog}
-                                                onChange={(e) => setProfileData({ ...profileData, isCatalog: e.target.checked })}
-                                                className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
-                                            />
-                                            <label htmlFor="isCatalog" className="text-sm font-medium opacity-80 cursor-pointer">{t('showAsCatalog')}</label>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-primary">
-                                                <FileText className="w-5 h-5" />
-                                            </div>
-                                            <div className="flex-1 flex gap-2">
-                                                <input
-                                                    type="text"
-                                                    value={profileData?.cvUrl || ""}
-                                                    onChange={(e) => setProfileData({ ...profileData, cvUrl: e.target.value })}
-                                                    placeholder={profileData.isCatalog ? t('catalogFileHint') : t('cvHint')}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                                <img
+                                                    src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
+                                                    className="w-full h-full object-cover"
+                                                    alt="Preview"
                                                 />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => document.getElementById('cv-upload')?.click()}
-                                                    className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2"
-                                                >
-                                                    <Upload className="w-4 h-4" /> Yükle
-                                                </button>
-                                            </div>
-                                            <input
-                                                id="cv-upload"
-                                                type="file"
-                                                accept=".pdf,.doc,.docx"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-                                                    const reader = new FileReader();
-                                                    reader.onloadend = () => setProfileData({ ...profileData, cvUrl: reader.result as string });
-                                                    reader.readAsDataURL(file);
-                                                }}
-                                            />
+                                            )}
                                         </div>
-                                        <p className="text-[10px] text-slate-400 italic ps-12">{t('catalogHint')}</p>
-                                    </div>
-                                </div>
-
-                                <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('socialConnections')}</label>
-                                    <div className="space-y-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
-                                                <Instagram className="w-5 h-5" />
-                                            </div>
+                                        <div className="flex-1 flex gap-2">
                                             <input
                                                 type="text"
-                                                placeholder="Instagram URL"
-                                                value={getSocialUrl("instagram")}
-                                                onChange={(e) => updateSocialLink("instagram", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-emerald-500">
-                                                <Phone className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="WhatsApp / Telefon Numarası"
-                                                value={getSocialUrl("phone")}
-                                                onChange={(e) => updateSocialLink("phone", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-400">
-                                                <Twitter className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="Twitter URL"
-                                                value={getSocialUrl("twitter")}
-                                                onChange={(e) => updateSocialLink("twitter", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-blue-500">
-                                                <Linkedin className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="LinkedIn URL"
-                                                value={getSocialUrl("linkedin")}
-                                                onChange={(e) => updateSocialLink("linkedin", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-emerald-400">
-                                                <Globe className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="Web Sitesi URL"
-                                                value={getSocialUrl("website")}
-                                                onChange={(e) => updateSocialLink("website", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
-                                                <Github className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="GitHub URL"
-                                                value={getSocialUrl("github")}
-                                                onChange={(e) => updateSocialLink("github", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-red-500">
-                                                <Youtube className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="YouTube URL"
-                                                value={getSocialUrl("youtube")}
-                                                onChange={(e) => updateSocialLink("youtube", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
-                                                <FileText className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder={t('mediumLabel')}
-                                                value={getSocialUrl("medium")}
-                                                onChange={(e) => updateSocialLink("medium", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
-                                                <MapPin className="w-5 h-5" />
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder={t('locationLinkPlaceholder')}
-                                                value={getSocialUrl("location")}
-                                                onChange={(e) => updateSocialLink("location", e.target.value)}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                            />
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                {/* Custom Links Section */}
-                                <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-medium mb-4 opacity-60">{t('customLinksLabel')}</label>
-                                    <p className="text-xs text-slate-400 mb-4">{t('customLinksSub')}</p>
-
-                                    {/* Existing Links */}
-                                    {customLinks.length > 0 && (
-                                        <div className="space-y-2 mb-4">
-                                            {customLinks.map((link: any, i: number) => (
-                                                <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/10 group">
-                                                    <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                                                        <Globe className="w-4 h-4" />
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-xs font-bold truncate">{link.title}</p>
-                                                        <p className="text-[10px] text-slate-400 truncate">{link.url}</p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <button
-                                                            onClick={() => toggleLinkAction(i)}
-                                                            className={cn(
-                                                                "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all shadow-sm",
-                                                                link.isAction ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-500 border border-slate-200 hover:bg-primary/10 hover:text-primary"
-                                                            )}
-                                                        >
-                                                            {link.isAction ? t('buttonDone') : t('makeButton')}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDeleteLink(i)}
-                                                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                                                        >
-                                                            <X className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* Add New Link */}
-                                    <div className="flex flex-col gap-2">
-                                        <input
-                                            type="text"
-                                            placeholder={t('linkTitlePlaceholder')}
-                                            value={newLink.title}
-                                            onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
-                                            className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                        <div className="flex items-center gap-3 mb-1 px-1">
-                                            <button
-                                                onClick={() => setNewLink({ ...newLink, isAction: !newLink.isAction })}
-                                                className={cn(
-                                                    "w-10 h-5 rounded-full relative transition-all duration-300 shadow-inner",
-                                                    newLink.isAction ? "bg-amber-500" : "bg-slate-200"
-                                                )}
-                                            >
-                                                <div className={cn(
-                                                    "absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300",
-                                                    newLink.isAction ? "left-6" : "left-1"
-                                                )} />
-                                            </button>
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('showAsMainButton') || "ANA BUTON OLARAK GÖSTER"}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                placeholder={t('linkUrlPlaceholder')}
-                                                value={newLink.url}
-                                                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                                value={profileData?.image || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
+                                                placeholder={t('imagePlaceholder')}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
                                             />
                                             <button
                                                 type="button"
-                                                onClick={handleAddLink}
-                                                disabled={!newLink.title || !newLink.url}
-                                                className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all disabled:opacity-30 flex items-center gap-1"
+                                                onClick={() => document.getElementById('image-upload')?.click()}
+                                                className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
                                             >
-                                                <Plus className="w-4 h-4" /> {t('add')}
+                                                <Upload className="w-4 h-4" /> {t('upload')}
                                             </button>
                                         </div>
+                                        <input
+                                            id="image-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => setProfileData({ ...profileData, image: reader.result as string });
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            id="useVideoAsProfile"
+                                            checked={profileData.showVideoAsProfile}
+                                            onChange={(e) => setProfileData({ ...profileData, showVideoAsProfile: e.target.checked })}
+                                            className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
+                                        />
+                                        <label htmlFor="useVideoAsProfile" className="text-sm font-medium opacity-80 cursor-pointer">{t('useVideoAsProfile')}</label>
+                                    </div>
+                                    {profileData.showVideoAsProfile && (
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-medium opacity-60">{t('profileVideoUrl')}</label>
+                                            <div className="flex gap-3">
+                                                <div className="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center text-red-500 border border-red-500/20">
+                                                    <Youtube size={20} />
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    value={profileData.youtubeVideoUrl}
+                                                    onChange={(e) => setProfileData({ ...profileData, youtubeVideoUrl: e.target.value })}
+                                                    placeholder={t('youtubeHint')}
+                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="md:col-span-2 space-y-4 mb-6">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profileBgImageLabel')}</label>
+                                    <div className="flex gap-4">
+                                        <div className="w-24 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative shadow-inner">
+                                            {profileData.profileBgImage ? (
+                                                <img
+                                                    src={profileData.profileBgImage}
+                                                    className="w-full h-full object-cover"
+                                                    alt="BG Preview"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-slate-800/50">
+                                                    <Monitor className="w-6 h-6 opacity-20" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 flex gap-2 self-end">
+                                            <input
+                                                type="text"
+                                                value={profileData?.profileBgImage || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
+                                                placeholder={t('bgImagePlaceholder')}
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => document.getElementById('bg-upload')?.click()}
+                                                className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
+                                            >
+                                                <Upload className="w-4 h-4" /> {t('upload')}
+                                            </button>
+                                        </div>
+                                        <input
+                                            id="bg-upload"
+                                            type="file"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                const reader = new FileReader();
+                                                reader.onloadend = () => setProfileData({ ...profileData, profileBgImage: reader.result as string });
+                                                reader.readAsDataURL(file);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 flex items-center justify-between group">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                            <Globe size={16} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
+                                            <p className="text-sm font-bold text-white">{profileData.username}.kardly.site</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
+                                        className="p-2 text-white/40 hover:text-white transition-colors"
+                                    >
+                                        <Share2 size={16} />
+                                    </button>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
+                                    <div className="flex gap-4">
+                                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+                                            {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
+                                                <div className="w-full h-full bg-black flex items-center justify-center">
+                                                    <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
+                                                </div>
+                                            ) : (profileData?.image || session?.user?.image) ? (
+                                                <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-white/20">
+                                                    <UserCircle size={32} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={profileData.image}
+                                                    onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
+                                                    placeholder={t('imageUrlPlaceholder')}
+                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                                />
+                                                <label className="cursor-pointer px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2">
+                                                    <Upload size={14} />
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={async (e) => {
+                                                            const file = e.target.files?.[0]
+                                                            if (file) {
+                                                                const formData = new FormData()
+                                                                formData.append("file", file)
+                                                                try {
+                                                                    const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                                                    const data = await res.json()
+                                                                    if (data.url) setProfileData({ ...profileData, image: data.url })
+                                                                } catch (err) { console.error(err) }
+                                                            }
+                                                        }}
+                                                    />
+                                                </label>
+                                            </div>
+                                            <p className="text-[10px] text-foreground/40 italic">{t('profileImageHint')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('displayNameLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={profileData.name}
+                                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        placeholder={t('yourNamePlaceholder')}
+                                    />
+                                </div>
+
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('occupationLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={profileData.occupation}
+                                        onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        placeholder={t('occupationPlaceholder')}
+                                    />
+                                </div>
+
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('sloganLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={profileData.slogan}
+                                        onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        placeholder={t('sloganPlaceholder')}
+                                    />
+                                </div>
+
+                                <div className="md:col-span-2">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="block text-sm font-medium opacity-60">{t('bioLabel')}</label>
+                                        <button
+                                            onClick={handleGenerateBio}
+                                            disabled={isGeneratingBio}
+                                            className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5 hover:opacity-80 transition-all disabled:opacity-50"
+                                        >
+                                            {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
+                                            {t('generateWithAi')}
+                                        </button>
+                                    </div>
+                                    <textarea
+                                        value={profileData.bio}
+                                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm min-h-[120px] resize-none"
+                                        placeholder={t('bioPlaceholder')}
+                                    />
+                                    <p className="text-[10px] text-foreground/40 mt-2 italic">{t('bioHint')}</p>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('phoneLabel')}</label>
+                                    <input
+                                        type="tel"
+                                        value={profileData.phone}
+                                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        placeholder="+90 5xx xxx xx xx"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('targetAudienceLabel')}</label>
+                                    <input
+                                        type="text"
+                                        value={profileData.targetAudience}
+                                        onChange={(e) => setProfileData({ ...profileData, targetAudience: e.target.value })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                                        placeholder={t('targetAudiencePlaceholder')}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Social Links Section */}
+                            <div className="pt-4 border-t border-white/5 space-y-4">
+                                <label className="block text-sm font-medium opacity-60">{t('socialLinksLabel')}</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-pink-500">
+                                            <Instagram className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Instagram URL"
+                                            value={getSocialUrl("instagram")}
+                                            onChange={(e) => updateSocialLink("instagram", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-500">
+                                            <Twitter className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Twitter URL"
+                                            value={getSocialUrl("twitter")}
+                                            onChange={(e) => updateSocialLink("twitter", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-blue-600">
+                                            <Linkedin className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="LinkedIn URL"
+                                            value={getSocialUrl("linkedin")}
+                                            onChange={(e) => updateSocialLink("linkedin", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-green-500">
+                                            <Globe className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Web Sitesi URL"
+                                            value={getSocialUrl("website")}
+                                            onChange={(e) => updateSocialLink("website", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
+                                            <Github className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="GitHub URL"
+                                            value={getSocialUrl("github")}
+                                            onChange={(e) => updateSocialLink("github", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-red-500">
+                                            <Youtube className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="YouTube URL"
+                                            value={getSocialUrl("youtube")}
+                                            onChange={(e) => updateSocialLink("youtube", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
+                                            <FileText className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder={t('mediumLabel')}
+                                            value={getSocialUrl("medium")}
+                                            onChange={(e) => updateSocialLink("medium", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
+                                            <MapPin className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder={t('locationLinkPlaceholder')}
+                                            value={getSocialUrl("location")}
+                                            onChange={(e) => updateSocialLink("location", e.target.value)}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {/* Custom Links Section */}
+                            <div className="pt-4 border-t border-white/5">
+                                <label className="block text-sm font-medium mb-4 opacity-60">{t('customLinksLabel')}</label>
+                                <p className="text-xs text-slate-400 mb-4">{t('customLinksSub')}</p>
+
+                                {/* Existing Links */}
+                                {customLinks.length > 0 && (
+                                    <div className="space-y-2 mb-4">
+                                        {customLinks.map((link: any, i: number) => (
+                                            <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/10 group">
+                                                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                                    <Globe className="w-4 h-4" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs font-bold truncate">{link.title}</p>
+                                                    <p className="text-[10px] text-slate-400 truncate">{link.url}</p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => toggleLinkAction(i)}
+                                                        className={cn(
+                                                            "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all shadow-sm",
+                                                            link.isAction ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-500 border border-slate-200 hover:bg-primary/10 hover:text-primary"
+                                                        )}
+                                                    >
+                                                        {link.isAction ? t('buttonDone') : t('makeButton')}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteLink(i)}
+                                                        className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Add New Link */}
+                                <div className="flex flex-col gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder={t('linkTitlePlaceholder')}
+                                        value={newLink.title}
+                                        onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                    />
+                                    <div className="flex items-center gap-3 mb-1 px-1">
+                                        <button
+                                            onClick={() => setNewLink({ ...newLink, isAction: !newLink.isAction })}
+                                            className={cn(
+                                                "w-10 h-5 rounded-full relative transition-all duration-300 shadow-inner",
+                                                newLink.isAction ? "bg-amber-500" : "bg-slate-200"
+                                            )}
+                                        >
+                                            <div className={cn(
+                                                "absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300",
+                                                newLink.isAction ? "left-6" : "left-1"
+                                            )} />
+                                        </button>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('showAsMainButton') || "ANA BUTON OLARAK GÖSTER"}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            placeholder={t('linkUrlPlaceholder')}
+                                            value={newLink.url}
+                                            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleAddLink}
+                                            disabled={!newLink.title || !newLink.url}
+                                            className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all disabled:opacity-30 flex items-center gap-1"
+                                        >
+                                            <Plus className="w-4 h-4" /> {t('add')}
+                                        </button>
                                     </div>
                                 </div>
 
@@ -2442,6 +2489,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </button>
                                 </div>
                             </div>
+
                             {/* Realistic Smartphone Preview */}
                             <div className="relative group perspective-1000">
                                 <div className="absolute -inset-4 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-all duration-1000" />
@@ -3149,6 +3197,71 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Domain Settings */}
+                            <div className="md:col-span-2 glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
+                                <h3 className="font-bold flex items-center gap-2">
+                                    <Globe className="w-5 h-5 text-blue-400" /> {t('domainSettings') || 'Alan Adı Ayarları'}
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2 opacity-60">{t('usernameLabel') || 'Kullanıcı Adı'}</label>
+                                            <div className="flex gap-2">
+                                                <div className="relative flex-1">
+                                                    <input
+                                                        type="text"
+                                                        value={profileData.username || ""}
+                                                        onChange={(e) => setProfileData({ ...profileData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
+                                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm font-bold"
+                                                        placeholder="kullanici-adi"
+                                                    />
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-white/20 uppercase tracking-widest pointer-events-none">
+                                                        .kardly.site
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p className="text-[10px] text-foreground/40 mt-2 italic px-1">
+                                                {t('usernameHint') || 'Bu senin profil adresini belirler. Örn: username.kardly.site'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/20 relative overflow-hidden group">
+                                            <div className="relative z-10">
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <a
+                                                        href={`https://${profileData.username}.kardly.site`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-lg font-black text-white truncate hover:text-primary transition-colors flex items-center gap-2"
+                                                    >
+                                                        {profileData.username}.kardly.site <ExternalLink size={16} />
+                                                    </a>
+                                                    <button
+                                                        onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
+                                                        className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all text-white/40 hover:text-white"
+                                                    >
+                                                        <Share2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => handleSave()}
+                                    disabled={isSaving}
+                                    className="w-full py-4 bg-primary/10 border border-primary/20 text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
+                                >
+                                    {isSaving ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : <CheckCircle2 size={14} />}
+                                    {t('updateSubdomain') || 'ALAN ADINI GÜNCELLE'}
+                                </button>
+                            </div>
+
                             <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
                                     <Settings className="w-5 h-5 text-indigo-400" /> {t('appearanceSettings')}
@@ -3807,8 +3920,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
-                ) : null
-                }
+                ) : null}
 
                 {/* Modals outside of conditional tabs */}
                 <AnimatePresence>
@@ -4068,22 +4180,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 </AnimatePresence>
             </main >
         </div >
-    )
+    );
 }
 
 function StatBar({ label, count, total, color }: any) {
     const percentage = total > 0 ? (count / total * 100).toFixed(0) : 0
-    return (
-        <div className="space-y-2">
-            <div className="flex justify-between text-xs font-bold">
-                <span className="opacity-60">{label}</span>
-                <span>{count} ({percentage}%)</span>
-            </div>
-            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
-            </div>
+        < span className = "opacity-60" > { label }</span>
+            <span>{count} ({percentage}%)</span>
+                                </div >
+        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+            <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
         </div>
-    )
+                            </div >
+                            )
 }
 
 function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode, label: string, active?: boolean, onClick?: () => void }) {
