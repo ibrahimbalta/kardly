@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { writeFile, mkdir } from "fs/promises"
-import path from "path"
+import cloudinary from "@/lib/cloudinary"
 
 export async function POST(req: Request) {
     try {
@@ -32,19 +31,22 @@ export async function POST(req: Request) {
         const bytes = await file.arrayBuffer()
         const buffer = Buffer.from(bytes)
 
-        // Create uploads directory if it doesn't exist
-        const uploadsDir = path.join(process.cwd(), "public", "uploads")
-        await mkdir(uploadsDir, { recursive: true })
+        // Upload to Cloudinary using a promise to handle the stream-based upload
+        const result = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "kardly_uploads",
+                    resource_type: "auto",
+                },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+            uploadStream.end(buffer);
+        }) as any;
 
-        // Generate unique filename
-        const ext = file.name.split(".").pop() || "jpg"
-        const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`
-        const filePath = path.join(uploadsDir, uniqueName)
-
-        await writeFile(filePath, buffer)
-
-        const url = `/uploads/${uniqueName}`
-        return NextResponse.json({ url })
+        return NextResponse.json({ url: result.secure_url })
     } catch (error) {
         console.error("Upload Error:", error)
         return NextResponse.json({ error: "Yükleme başarısız" }, { status: 500 })
