@@ -186,6 +186,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             style={{
                 width: `${cardWidth}px`,
                 height: `${cardHeight}px`,
+                backgroundColor: tp.hex,
                 border: tp.hex === '#ffffff' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)'
             }}
         >
