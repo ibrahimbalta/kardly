@@ -36,7 +36,7 @@ import {
     Activity,
     Layers,
     Monitor,
-    Image,
+    Image as ImageIcon,
     MessageSquare,
     Map,
     FileText,
@@ -1072,7 +1072,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 { id: "video", name: t('widgetVideo'), icon: <Play size={18} /> },
                                                 { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
                                                 { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> },
-                                                { id: "portfolio", name: "Portfolyo", icon: <Image size={18} /> },
+                                                { id: "portfolio", name: "Portfolyo", icon: <ImageIcon size={18} /> },
                                                 { id: "tech", name: "Yazılımcı Seti", icon: <Code size={18} /> },
                                                 { id: "blog", name: "Otomatik Blog", icon: <Rss size={18} /> }
                                             ].map(w => (
@@ -1278,7 +1278,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </div>
                                                 ) : (
                                                     <div className="py-8 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-slate-400 bg-white/50">
-                                                        <Image size={24} className="opacity-20" />
+                                                        <ImageIcon size={24} className="opacity-20" />
                                                         <span className="text-[10px] font-bold uppercase tracking-widest italic">Henüz resim eklenmedi</span>
                                                     </div>
                                                 )}
@@ -1751,7 +1751,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto">
                                                     {(() => {
                                                         const props = { size: 20 };
-                                                        if (activeWidget === "portfolio") return <Image {...props} />;
+                                                        if (activeWidget === "portfolio") return <ImageIcon {...props} />;
                                                         if (activeWidget === "video") return <Play {...props} />;
                                                         if (activeWidget === "skills") return <Zap {...props} />;
                                                         if (activeWidget === "tech") return <Code {...props} />;
@@ -2004,205 +2004,138 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div >
                     </div >
                 ) : activeTab === "edit" ? (
-                    <div className="space-y-10">
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                            <StatCard icon={<Eye />} label={t('totalViewsLabel')} value={stats?.totalViews?.toString() || "0"} trend="+0%" />
-                            <StatCard icon={<MousePointer2 />} label={t('clickRateLabel')} value={stats?.clickRate || "0%"} trend="+0%" />
-                            <StatCard icon={<Users />} label={t('vCardClicksLabel')} value={stats?.vCardClicks?.toString() || "0"} trend="+0%" />
-
-                            <div className="glass p-6 rounded-3xl border-white/5 flex flex-col items-center justify-center">
-                                <QRCodeCard username={profile?.username || "demo"} />
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+                        {/* Editor Section */}
+                        <div className="xl:col-span-7 2xl:col-span-8 space-y-8">
+                            <div className="mb-2">
+                                <h2 className="text-2xl font-black text-slate-900 mb-1">{t('editProfileInfo')}</h2>
+                                <p className="text-sm text-slate-500 font-medium">{t('yourDigitalIdentity')}</p>
                             </div>
-                        </div>
 
-                        {/* Editor Preview Area */}
-                        <div className="space-y-6">
-                            <h3 className="text-lg font-bold">{t('editProfileInfo')}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="md:col-span-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 flex items-center justify-between group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                                            <Globe size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
-                                            <p className="text-sm font-bold text-slate-900">{profileData.username}.kardly.site</p>
-                                        </div>
+                            {/* Section 1: Profile Basics */}
+                            <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-6">
+                                <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
+                                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                                        <User size={20} />
                                     </div>
-                                    <button
-                                        onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
-                                        className="p-2 text-white/40 hover:text-white transition-colors"
-                                    >
-                                        <Share2 size={16} />
-                                    </button>
+                                    <div>
+                                        <h3 className="font-bold text-slate-900">{t('profileBasics')}</h3>
+                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{t('profileBasicsSub')}</p>
+                                    </div>
                                 </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
-                                    <div className="flex gap-4">
-                                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
-                                            {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
-                                                <div className="w-full h-full bg-black flex items-center justify-center">
-                                                    <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
-                                                </div>
-                                            ) : (
-                                                <img
-                                                    src={profileData?.image || session?.user?.image || `https://ui-avatars.com/api/?name=${profileData?.name || "User"}`}
-                                                    className="w-full h-full object-cover"
-                                                    alt="Preview"
-                                                />
-                                            )}
-                                        </div>
-                                        <div className="flex-1 flex gap-2">
-                                            <input
-                                                type="text"
-                                                value={profileData?.image || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
-                                                placeholder={t('imagePlaceholder')}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
-                                            />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('displayNameLabel')}</label>
+                                        <input
+                                            type="text"
+                                            value={profileData.name}
+                                            onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                                            className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
+                                            placeholder={t('yourNamePlaceholder')}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('occupationLabel')}</label>
+                                        <input
+                                            type="text"
+                                            value={profileData.occupation}
+                                            onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
+                                            className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
+                                            placeholder={t('occupationPlaceholder')}
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-2">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('sloganLabel')}</label>
+                                        <input
+                                            type="text"
+                                            value={profileData.slogan}
+                                            onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
+                                            className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
+                                            placeholder={t('sloganPlaceholder')}
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2 space-y-2">
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('bioLabel')}</label>
                                             <button
-                                                type="button"
-                                                onClick={() => document.getElementById('image-upload')?.click()}
-                                                className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
+                                                onClick={handleGenerateBio}
+                                                disabled={isGeneratingBio}
+                                                className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5 hover:opacity-80 transition-all disabled:opacity-50"
                                             >
-                                                <Upload className="w-4 h-4" /> {t('upload')}
+                                                {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
+                                                {t('generateWithAi')}
                                             </button>
                                         </div>
+                                        <textarea
+                                            value={profileData.bio}
+                                            onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                                            className="w-full min-h-[140px] bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                                            placeholder={t('bioPlaceholder')}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('phoneLabel')}</label>
                                         <input
-                                            id="image-upload"
-                                            type="file"
-                                            accept="image/*"
-                                            className="hidden"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => setProfileData({ ...profileData, image: reader.result as string });
-                                                reader.readAsDataURL(file);
-                                            }}
+                                            type="tel"
+                                            value={profileData.phone}
+                                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                            className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
+                                            placeholder="+90 5xx xxx xx xx"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('targetAudienceLabel')}</label>
+                                        <input
+                                            type="text"
+                                            value={profileData.targetAudience}
+                                            onChange={(e) => setProfileData({ ...profileData, targetAudience: e.target.value })}
+                                            className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
+                                            placeholder={t('targetAudiencePlaceholder')}
                                         />
                                     </div>
                                 </div>
-                                <div className="md:col-span-2 space-y-4">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            id="useVideoAsProfile"
-                                            checked={profileData.showVideoAsProfile}
-                                            onChange={(e) => setProfileData({ ...profileData, showVideoAsProfile: e.target.checked })}
-                                            className="w-4 h-4 rounded border-white/10 bg-white/5 text-primary focus:ring-primary/50"
-                                        />
-                                        <label htmlFor="useVideoAsProfile" className="text-sm font-medium opacity-80 cursor-pointer">{t('useVideoAsProfile')}</label>
+                            </div>
+                            {/* Section 2: Media & Branding */}
+                            <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
+                                <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
+                                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                                        <ImageIcon size={20} />
                                     </div>
-                                    {profileData.showVideoAsProfile && (
-                                        <div className="space-y-2">
-                                            <label className="block text-sm font-medium opacity-60">{t('profileVideoUrl')}</label>
-                                            <div className="flex gap-3">
-                                                <div className="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center text-red-500 border border-red-500/20">
-                                                    <Youtube size={20} />
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    value={profileData.youtubeVideoUrl}
-                                                    onChange={(e) => setProfileData({ ...profileData, youtubeVideoUrl: e.target.value })}
-                                                    placeholder={t('youtubeHint')}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="md:col-span-2 space-y-4 mb-6">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profileBgImageLabel')}</label>
-                                    <div className="flex gap-4">
-                                        <div className="w-24 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative shadow-inner">
-                                            {profileData.profileBgImage ? (
-                                                <img
-                                                    src={profileData.profileBgImage}
-                                                    className="w-full h-full object-cover"
-                                                    alt="BG Preview"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-slate-800/50">
-                                                    <Monitor className="w-6 h-6 opacity-20" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex-1 flex gap-2 self-end">
-                                            <input
-                                                type="text"
-                                                value={profileData?.profileBgImage || ""}
-                                                onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
-                                                placeholder={t('bgImagePlaceholder')}
-                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm h-fit"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => document.getElementById('bg-upload')?.click()}
-                                                className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2 h-fit shrink-0"
-                                            >
-                                                <Upload className="w-4 h-4" /> {t('upload')}
-                                            </button>
-                                        </div>
-                                        <input
-                                            id="bg-upload"
-                                            type="file"
-                                            className="hidden"
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => setProfileData({ ...profileData, profileBgImage: reader.result as string });
-                                                reader.readAsDataURL(file);
-                                            }}
-                                        />
+                                    <div>
+                                        <h3 className="font-bold text-slate-900">{t('mediaAndBranding')}</h3>
+                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{t('mediaAndBrandingSub')}</p>
                                     </div>
                                 </div>
-                                <div className="md:col-span-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 flex items-center justify-between group">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                                            <Globe size={16} />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
-                                            <p className="text-sm font-bold text-slate-900">{profileData.username}.kardly.site</p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={() => copyToClipboard(`https://${profileData.username}.kardly.site`)}
-                                        className="p-2 text-white/40 hover:text-white transition-colors"
-                                    >
-                                        <Share2 size={16} />
-                                    </button>
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('profilePicture')}</label>
-                                    <div className="flex gap-4">
-                                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shrink-0 relative">
+
+                                {/* Profile Image */}
+                                <div className="space-y-4">
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('profilePicture')}</label>
+                                    <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                                        <div className="w-24 h-24 rounded-[2rem] overflow-hidden bg-slate-100 border-4 border-white shadow-xl shrink-0 group relative">
                                             {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
-                                                <div className="w-full h-full bg-black flex items-center justify-center">
-                                                    <Youtube className="w-6 h-6 text-red-500 animate-pulse" />
+                                                <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+                                                    <Youtube className="w-10 h-10 text-red-500 animate-pulse" />
                                                 </div>
                                             ) : (profileData?.image || session?.user?.image) ? (
                                                 <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover" alt="Profile" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-white/20">
-                                                    <UserCircle size={32} />
+                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                    <UserCircle size={48} />
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="flex-1 space-y-2">
+                                        <div className="flex-1 w-full space-y-3">
                                             <div className="flex gap-2">
                                                 <input
                                                     type="text"
                                                     value={profileData.image}
                                                     onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
                                                     placeholder={t('imageUrlPlaceholder')}
-                                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
+                                                    className="flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                                 />
-                                                <label className="cursor-pointer px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-all flex items-center gap-2">
-                                                    <Upload size={14} />
+                                                <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 cursor-pointer">
+                                                    <Upload size={16} /> {t('upload')}
                                                     <input
                                                         type="file"
                                                         className="hidden"
@@ -2222,291 +2155,216 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     />
                                                 </label>
                                             </div>
-                                            <p className="text-[10px] text-foreground/40 italic">{t('profileImageHint')}</p>
+                                            <div className="flex items-center gap-3 bg-red-50 p-3 rounded-xl border border-red-100/50">
+                                                <input
+                                                    type="checkbox"
+                                                    id="useVideoAsProfile"
+                                                    checked={profileData.showVideoAsProfile}
+                                                    onChange={(e) => setProfileData({ ...profileData, showVideoAsProfile: e.target.checked })}
+                                                    className="w-4 h-4 rounded border-slate-300 text-red-500 focus:ring-red-200"
+                                                />
+                                                <label htmlFor="useVideoAsProfile" className="text-[10px] font-black uppercase tracking-widest text-red-600 cursor-pointer">{t('useVideoAsProfile')}</label>
+                                            </div>
+                                            {profileData.showVideoAsProfile && (
+                                                <input
+                                                    type="text"
+                                                    value={profileData.youtubeVideoUrl}
+                                                    onChange={(e) => setProfileData({ ...profileData, youtubeVideoUrl: e.target.value })}
+                                                    placeholder={t('youtubeHint')}
+                                                    className="w-full h-12 bg-red-50 border-none rounded-xl px-4 text-sm font-bold text-red-900 focus:ring-2 focus:ring-red-200"
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('displayNameLabel')}</label>
-                                    <input
-                                        type="text"
-                                        value={profileData.name}
-                                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        placeholder={t('yourNamePlaceholder')}
-                                    />
-                                </div>
 
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('occupationLabel')}</label>
-                                    <input
-                                        type="text"
-                                        value={profileData.occupation}
-                                        onChange={(e) => setProfileData({ ...profileData, occupation: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        placeholder={t('occupationPlaceholder')}
-                                    />
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('sloganLabel')}</label>
-                                    <input
-                                        type="text"
-                                        value={profileData.slogan}
-                                        onChange={(e) => setProfileData({ ...profileData, slogan: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        placeholder={t('sloganPlaceholder')}
-                                    />
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-sm font-medium opacity-60">{t('bioLabel')}</label>
-                                        <button
-                                            onClick={handleGenerateBio}
-                                            disabled={isGeneratingBio}
-                                            className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5 hover:opacity-80 transition-all disabled:opacity-50"
-                                        >
-                                            {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
-                                            {t('generateWithAi')}
-                                        </button>
+                                {/* Background Image */}
+                                <div className="space-y-4 pt-4 border-t border-slate-50">
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('profileBgImageLabel')}</label>
+                                    <div className="flex flex-col sm:flex-row gap-6 items-start">
+                                        <div className="w-full sm:w-40 h-24 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-md shrink-0">
+                                            {profileData.profileBgImage ? (
+                                                <img src={profileData.profileBgImage} className="w-full h-full object-cover" alt="Background" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                                    <ImageIcon size={32} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 w-full flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={profileData?.profileBgImage || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
+                                                placeholder={t('bgImagePlaceholder')}
+                                                className="flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                            />
+                                            <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 cursor-pointer">
+                                                <Upload size={16} /> {t('upload')}
+                                                <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            const formData = new FormData()
+                                                            formData.append("file", file)
+                                                            try {
+                                                                const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                                                const data = await res.json()
+                                                                if (data.url) setProfileData({ ...profileData, profileBgImage: data.url })
+                                                            } catch (err) { console.error(err) }
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
                                     </div>
-                                    <textarea
-                                        value={profileData.bio}
-                                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm min-h-[120px] resize-none"
-                                        placeholder={t('bioPlaceholder')}
-                                    />
-                                    <p className="text-[10px] text-foreground/40 mt-2 italic">{t('bioHint')}</p>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('phoneLabel')}</label>
-                                    <input
-                                        type="tel"
-                                        value={profileData.phone}
-                                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        placeholder="+90 5xx xxx xx xx"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium mb-2 opacity-60">{t('targetAudienceLabel')}</label>
-                                    <input
-                                        type="text"
-                                        value={profileData.targetAudience}
-                                        onChange={(e) => setProfileData({ ...profileData, targetAudience: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-                                        placeholder={t('targetAudiencePlaceholder')}
-                                    />
                                 </div>
                             </div>
 
-                            {/* Social Links Section */}
-                            <div className="pt-4 border-t border-white/5 space-y-4">
-                                <label className="block text-sm font-medium opacity-60">{t('socialLinksLabel')}</label>
+                            {/* Section 3: Social & Links */}
+                            <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
+                                <div className="flex items-center gap-3 pb-4 border-b border-slate-50">
+                                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                                        <Share2 size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-slate-900">{t('socialAndLinks')}</h3>
+                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{t('socialAndLinksSub')}</p>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-pink-500">
-                                            <Instagram className="w-5 h-5" />
+                                    {[
+                                        { id: "instagram", icon: <Instagram />, color: "text-pink-500", label: "Instagram" },
+                                        { id: "whatsapp", icon: <Phone />, color: "text-emerald-500", label: "WhatsApp" },
+                                        { id: "twitter", icon: <Twitter />, color: "text-sky-500", label: "Twitter" },
+                                        { id: "linkedin", icon: <Linkedin />, color: "text-blue-700", label: "LinkedIn" },
+                                        { id: "youtube", icon: <Youtube />, color: "text-red-500", label: "YouTube" },
+                                        { id: "github", icon: <Github />, color: "text-slate-800", label: "GitHub" },
+                                        { id: "website", icon: <Globe />, color: "text-indigo-500", label: "Website" },
+                                        { id: "email", icon: <Mail />, color: "text-rose-500", label: "Email" },
+                                    ].map((social) => (
+                                        <div key={social.id} className="flex items-center gap-3 p-1 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm", social.color)}>
+                                                {social.icon}
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder={`${social.label} URL`}
+                                                value={getSocialUrl(social.id)}
+                                                onChange={(e) => updateSocialLink(social.id, e.target.value)}
+                                                className="flex-1 bg-transparent border-none text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:ring-0"
+                                            />
                                         </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Instagram URL"
-                                            value={getSocialUrl("instagram")}
-                                            onChange={(e) => updateSocialLink("instagram", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-sky-500">
-                                            <Twitter className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Twitter URL"
-                                            value={getSocialUrl("twitter")}
-                                            onChange={(e) => updateSocialLink("twitter", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-blue-600">
-                                            <Linkedin className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="LinkedIn URL"
-                                            value={getSocialUrl("linkedin")}
-                                            onChange={(e) => updateSocialLink("linkedin", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-green-500">
-                                            <Globe className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Web Sitesi URL"
-                                            value={getSocialUrl("website")}
-                                            onChange={(e) => updateSocialLink("website", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
-                                            <Github className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="GitHub URL"
-                                            value={getSocialUrl("github")}
-                                            onChange={(e) => updateSocialLink("github", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-red-500">
-                                            <Youtube className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="YouTube URL"
-                                            value={getSocialUrl("youtube")}
-                                            onChange={(e) => updateSocialLink("youtube", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-slate-300">
-                                            <FileText className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder={t('mediumLabel')}
-                                            value={getSocialUrl("medium")}
-                                            onChange={(e) => updateSocialLink("medium", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-rose-400">
-                                            <MapPin className="w-5 h-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder={t('locationLinkPlaceholder')}
-                                            value={getSocialUrl("location")}
-                                            onChange={(e) => updateSocialLink("location", e.target.value)}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                    </div>
+                                    ))}
                                 </div>
 
-                            </div>
+                                {/* Custom Buttons */}
+                                <div className="pt-6 border-t border-slate-50 space-y-4">
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('customLinksLabel')}</label>
 
-                            {/* Custom Links Section */}
-                            <div className="pt-4 border-t border-white/5">
-                                <label className="block text-sm font-medium mb-4 opacity-60">{t('customLinksLabel')}</label>
-                                <p className="text-xs text-slate-400 mb-4">{t('customLinksSub')}</p>
-
-                                {/* Existing Links */}
-                                {customLinks.length > 0 && (
-                                    <div className="space-y-2 mb-4">
+                                    {/* Link List */}
+                                    <div className="space-y-3">
                                         {customLinks.map((link: any, i: number) => (
-                                            <div key={i} className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/10 group">
-                                                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                                                    <Globe className="w-4 h-4" />
+                                            <div key={i} className="flex items-center gap-4 bg-slate-50 rounded-3xl p-4 border border-slate-100 group">
+                                                <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all", link.isAction ? "bg-amber-500 text-white shadow-lg shadow-amber-200" : "bg-white text-slate-400")}>
+                                                    {link.isAction ? <Zap size={20} /> : <LinkIcon size={20} />}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-bold truncate">{link.title}</p>
-                                                    <p className="text-[10px] text-slate-400 truncate">{link.url}</p>
+                                                    <p className="text-sm font-black text-slate-900 truncate">{link.title}</p>
+                                                    <p className="text-[10px] font-medium text-slate-400 truncate">{link.url}</p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <button
                                                         onClick={() => toggleLinkAction(i)}
                                                         className={cn(
-                                                            "px-2 py-1 rounded-lg text-[9px] font-black uppercase transition-all shadow-sm",
-                                                            link.isAction ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-slate-50 text-slate-500 border border-slate-200 hover:bg-primary/10 hover:text-primary"
+                                                            "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                                                            link.isAction ? "bg-amber-100 text-amber-600" : "bg-slate-200 text-slate-500 hover:bg-slate-300"
                                                         )}
                                                     >
-                                                        {link.isAction ? t('buttonDone') : t('makeButton')}
+                                                        {link.isAction ? t('heroButton') : t('makeHero')}
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteLink(i)}
-                                                        className="w-7 h-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-50 text-rose-500 border border-rose-100 hover:bg-rose-500 hover:text-white transition-all shadow-sm"
                                                     >
-                                                        <X className="w-4 h-4" />
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                )}
 
-                                {/* Add New Link */}
-                                <div className="flex flex-col gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder={t('linkTitlePlaceholder')}
-                                        value={newLink.title}
-                                        onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
-                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                    />
-                                    <div className="flex items-center gap-3 mb-1 px-1">
-                                        <button
-                                            onClick={() => setNewLink({ ...newLink, isAction: !newLink.isAction })}
-                                            className={cn(
-                                                "w-10 h-5 rounded-full relative transition-all duration-300 shadow-inner",
-                                                newLink.isAction ? "bg-amber-500" : "bg-slate-200"
-                                            )}
-                                        >
-                                            <div className={cn(
-                                                "absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300",
-                                                newLink.isAction ? "left-6" : "left-1"
-                                            )} />
-                                        </button>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('showAsMainButton') || "ANA BUTON OLARAK GÖSTER"}</span>
+                                    {/* Link Form */}
+                                    <div className="bg-slate-50 rounded-[2rem] p-6 space-y-4 border border-slate-100">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <input
+                                                type="text"
+                                                placeholder={t('linkTitlePlaceholder')}
+                                                value={newLink.title}
+                                                onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                                                className="w-full h-12 bg-white border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder={t('linkUrlPlaceholder')}
+                                                value={newLink.url}
+                                                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                                className="w-full h-12 bg-white border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                            />
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    onClick={() => setNewLink({ ...newLink, isAction: !newLink.isAction })}
+                                                    className={cn(
+                                                        "w-10 h-5 rounded-full relative transition-all duration-300",
+                                                        newLink.isAction ? "bg-amber-500" : "bg-slate-300"
+                                                    )}
+                                                >
+                                                    <div className={cn(
+                                                        "absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300",
+                                                        newLink.isAction ? "left-6" : "left-1"
+                                                    )} />
+                                                </button>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('showAsMainButton')}</span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={handleAddLink}
+                                                disabled={!newLink.title || !newLink.url}
+                                                className="h-12 px-8 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 flex items-center gap-2"
+                                            >
+                                                <Plus size={16} /> {t('addLink')}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            placeholder={t('linkUrlPlaceholder')}
-                                            value={newLink.url}
-                                            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={handleAddLink}
-                                            disabled={!newLink.title || !newLink.url}
-                                            className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition-all disabled:opacity-30 flex items-center gap-1"
-                                        >
-                                            <Plus className="w-4 h-4" /> {t('add')}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="pt-6">
-                                    <button
-                                        onClick={() => handleSave()}
-                                        disabled={isSaving}
-                                        className="w-full flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-[1.2rem] font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                                    >
-                                        {isSaving ? (
-                                            <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                        ) : (
-                                            <>
-                                                <CheckCircle2 className="w-5 h-5" /> {t('saveChanges')}
-                                            </>
-                                        )}
-                                    </button>
                                 </div>
                             </div>
 
-                            {/* Realistic Smartphone Preview */}
+                            {/* Global Save Button */}
+                            <div className="sticky bottom-6 z-30">
+                                <button
+                                    onClick={() => handleSave()}
+                                    disabled={isSaving}
+                                    className="w-full h-16 flex items-center justify-center gap-3 bg-primary text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                >
+                                    {isSaving ? (
+                                        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 size={20} /> {t('saveChanges')}
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Realistic Smartphone Preview */}
+                        <div className="xl:col-span-5 2xl:col-span-4 sticky top-8">
                             <div className="relative group perspective-1000">
                                 <div className="absolute -inset-4 bg-primary/20 blur-[100px] opacity-0 group-hover:opacity-100 transition-all duration-1000" />
 
@@ -2742,11 +2600,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "products" ? (
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-center">
+                    <div className="space-y-8">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 className="text-xl font-bold">{t('myProjects')}</h2>
-                                <p className="text-sm text-foreground/50">{t('myProjectsSub')}</p>
+                                <h2 className="text-2xl font-black text-slate-900 mb-1">{t('myProjects')}</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">{t('myProjectsSub')}</p>
                             </div>
                             <button
                                 onClick={() => {
@@ -2754,39 +2612,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     setNewProduct({ name: "", description: "", price: "", link: "", image: "" })
                                     setShowProductModal(true)
                                 }}
-                                className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
+                                className="flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
                             >
                                 <Plus className="w-5 h-5" /> {t('addNewProject')}
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8">
                             {productList.map((product: any) => (
-                                <div key={product.id} className="glass rounded-[2rem] border-white/5 overflow-hidden group">
-                                    <div className="aspect-video bg-white/5 relative">
+                                <div key={product.id} className="group bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
+                                    <div className="aspect-video bg-slate-50 relative overflow-hidden">
                                         {product.image ? (
-                                            <img src={product.image} className="w-full h-full object-cover" />
+                                            <img src={product.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={product.name} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <ShoppingBag className="w-10 h-10 text-white/10" />
+                                                <ShoppingBag className="w-12 h-12 text-slate-200" />
                                             </div>
                                         )}
-                                        <div className="absolute top-4 right-4">
+                                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => handleDeleteProduct(product.id)}
-                                                className="p-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                className="w-10 h-10 flex items-center justify-center bg-rose-500 text-white rounded-xl shadow-lg hover:bg-rose-600 transition-all"
                                             >
-                                                <Trash2 className="w-4 h-4" />
+                                                <Trash2 size={18} />
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-bold">{product.name}</h3>
-                                            <span className="font-black text-primary text-xs uppercase tracking-widest">{product.price}</span>
+                                    <div className="p-8">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h3 className="font-black text-slate-900 uppercase tracking-tight line-clamp-1">{product.name}</h3>
+                                            <span className="shrink-0 font-black text-primary text-[10px] bg-primary/5 px-2.5 py-1 rounded-lg uppercase tracking-widest">{product.price}</span>
                                         </div>
-                                        <p className="text-sm text-foreground/50 mb-4 line-clamp-2">{product.description}</p>
-                                        <div className="flex gap-2">
+                                        <p className="text-sm text-slate-500 font-medium mb-8 line-clamp-2 leading-relaxed">{product.description || t('noProjectDesc')}</p>
+                                        <div className="flex gap-3">
                                             <button
                                                 onClick={() => {
                                                     setEditingProduct(product)
@@ -2799,13 +2657,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     })
                                                     setShowProductModal(true)
                                                 }}
-                                                className="flex-1 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-primary/10 hover:text-primary transition-all shadow-sm"
+                                                className="flex-1 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-primary/5 hover:text-primary transition-all shadow-sm"
                                             >
                                                 {t('edit')}
                                             </button>
                                             {product.link && (
-                                                <a href={product.link} target="_blank" className="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-xl hover:scale-105 transition-all">
-                                                    <ExternalLink size={18} />
+                                                <a
+                                                    href={product.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="w-14 h-14 flex items-center justify-center bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-primary hover:border-primary/20 transition-all shadow-sm"
+                                                >
+                                                    <ExternalLink size={20} />
                                                 </a>
                                             )}
                                         </div>
@@ -2814,14 +2677,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             ))}
 
                             {productList.length === 0 && (
-                                <div className="col-span-full py-20 text-center glass rounded-[2.5rem] border-white/5">
-                                    <Briefcase className="w-16 h-16 mx-auto mb-4 text-white/10" />
-                                    <p className="text-lg font-bold">{t('noProjectsYet')}</p>
-                                    <p className="text-sm text-foreground/40 mt-2">{t('noProjectsYetSub')}</p>
+                                <div className="col-span-full py-24 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
+                                    <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                                        <Briefcase className="w-10 h-10 text-slate-300" />
+                                    </div>
+                                    <h3 className="text-xl font-black text-slate-900 mb-2">{t('noProjectsYet')}</h3>
+                                    <p className="text-sm text-slate-400 font-medium max-w-sm mx-auto">{t('noProjectsYetSub')}</p>
                                 </div>
                             )}
                         </div>
                     </div>
+
                 ) : activeTab === "services" ? (
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
@@ -2957,70 +2823,71 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     </div>
 
                 ) : activeTab === "ai" ? (
-                    <div className="max-w-4xl space-y-8">
+                    <div className="max-w-4xl space-y-10">
                         <div>
-                            <h2 className="text-xl font-bold">Yapay Zeka Asistanı</h2>
-                            <p className="text-sm text-foreground/50">Profil sayfanızda ziyaretçilerle konuşacak asistanı yönetin.</p>
+                            <h2 className="text-2xl font-black text-slate-900 mb-1">{t('aiLabel')}</h2>
+                            <p className="text-sm text-slate-500 font-medium tracking-wide">{t('aiAssistantSub')}</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="md:col-span-2 space-y-6">
-                                <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                                                <Sparkles size={20} />
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                            <div className="lg:col-span-7 space-y-8">
+                                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
+                                    <div className="flex items-center justify-between pb-6 border-b border-slate-50">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                                <Sparkles size={24} />
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-sm">Asistan Görünürlüğü</h3>
-                                                <p className="text-[10px] text-foreground/40 font-bold uppercase tracking-widest">
-                                                    {aiConfig.isEnabled ? "Profilde Gözüküyor (CV'nin yanında)" : "Profilde Gizli (Gizlendi)"}
+                                                <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">{t('assistantVisibility')}</h3>
+                                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                                                    {aiConfig.isEnabled ? t('visibleOnProfile') : t('hiddenOnProfile')}
                                                 </p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => setAiConfig({ ...aiConfig, isEnabled: !aiConfig.isEnabled })}
                                             className={cn(
-                                                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
-                                                aiConfig.isEnabled ? "bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "bg-rose-500/20 text-rose-500 border border-rose-500/20"
+                                                "px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] transition-all flex items-center gap-2",
+                                                aiConfig.isEnabled ? "bg-emerald-500 text-white shadow-xl shadow-emerald-200" : "bg-slate-100 text-slate-400"
                                             )}
                                         >
-                                            {aiConfig.isEnabled ? "Görünür" : "Gizli"}
+                                            <div className={cn("w-2 h-2 rounded-full animate-pulse", aiConfig.isEnabled ? "bg-white" : "bg-slate-300")} />
+                                            {aiConfig.isEnabled ? t('active') : t('passive')}
                                         </button>
                                     </div>
 
-                                    <div className="pt-6 border-t border-white/5 space-y-4">
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Asistan Adı</label>
+                                    <div className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{t('assistantNameLabel')}</label>
                                             <input
                                                 type="text"
                                                 value={aiConfig.assistantName}
                                                 onChange={(e) => setAiConfig({ ...aiConfig, assistantName: e.target.value })}
                                                 placeholder="Örn: Kardly AI"
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                                className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
                                             />
                                         </div>
 
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Özel Karşılama Mesajı (Opsiyonel)</label>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{t('customGreetingLabel')}</label>
                                             <textarea
                                                 value={aiConfig.greeting}
                                                 onChange={(e) => setAiConfig({ ...aiConfig, greeting: e.target.value })}
-                                                placeholder="Örn: Merhaba! Size nasıl yardımcı olabilirim?"
+                                                placeholder={t('aiGreetingPlaceholder')}
                                                 rows={2}
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                                                className="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                                             />
-                                            <p className="text-[9px] text-foreground/30 mt-2 italic">* Boş bırakılırsa varsayılan mesaj kullanılır.</p>
+                                            <p className="text-[9px] text-slate-400 font-medium px-2 italic">* {t('greetingDefaultNote')}</p>
                                         </div>
 
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 block mb-2">Özel Talimatlar</label>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{t('customInstructionsLabel')}</label>
                                             <textarea
                                                 value={aiConfig.instructions}
                                                 onChange={(e) => setAiConfig({ ...aiConfig, instructions: e.target.value })}
-                                                placeholder="Asistanın bilmesi gereken ekstra bilgiler veya davranış şekilleri..."
+                                                placeholder={t('aiInstructionsPlaceholder')}
                                                 rows={4}
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                                                className="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                                             />
                                         </div>
                                     </div>
@@ -3037,42 +2904,68 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     newBlocks = [...blocks, { type: 'ai_assistant', content: aiConfig, order: 100, isActive: true }]
                                                 }
                                                 await handleSyncBlocks(newBlocks)
-                                                setShowToast("AI Ayarları kaydedildi! ✨")
+                                                setShowToast(t('aiSettingsSaved') || "Ayarlar kaydedildi! ✨")
                                                 setTimeout(() => setShowToast(null), 3000)
                                             } catch (err) {
-                                                setShowToast("Hata oluştu.")
+                                                setShowToast(t('errorBooking'))
                                                 setTimeout(() => setShowToast(null), 3000)
                                             } finally {
                                                 setIsSaving(false)
                                             }
                                         }}
                                         disabled={isSaving}
-                                        className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                        className="w-full h-16 bg-primary text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                                     >
-                                        {isSaving ? "Kaydediliyor..." : <><Check size={16} /> AYARLARI KAYDET</>}
+                                        {isSaving ? (
+                                            <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                        ) : (
+                                            <><CheckCircle2 size={20} /> {t('saveSettings')}</>
+                                        )}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="space-y-6">
-                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                            <div className="lg:col-span-5 space-y-6">
+                                <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden group">
                                     <div className="relative z-10">
-                                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                            <Zap className="text-amber-400" size={18} /> AI İpucu
-                                        </h3>
-                                        <p className="text-sm text-white/60 leading-relaxed mb-6">
-                                            Asistanınız profilinizdeki tüm bilgileri (meslek, hizmetler, biyografi) otomatik olarak bilmektedir. Buraya ekleyeceğiniz talimatlar asistanın karakterini belirler.
+                                        <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                            <Zap className="text-primary" size={24} />
+                                        </div>
+                                        <h3 className="text-xl font-black uppercase tracking-tight mb-4">{t('aiHintTitle')}</h3>
+                                        <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8">
+                                            {t('aiHintDesc')}
                                         </p>
-                                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
-                                            <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Örnek Talimat:</p>
-                                            <p className="text-xs italic text-white/40">"Müşterilerle senli benli konuş, çok şakacı ol ve mutlaka her cümlenin sonuna roket emojisi ekle."</p>
+                                        <div className="p-6 bg-white/5 rounded-3xl border border-white/10 space-y-3">
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">{t('exampleInstruction')}:</p>
+                                            <p className="text-xs italic text-slate-500 font-medium leading-relaxed">
+                                                "{t('aiInstructionExampleText')}"
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 blur-[60px] rounded-full" />
+                                    <div className="absolute -bottom-24 -right-24 w-60 h-60 bg-primary/10 blur-[100px] rounded-full group-hover:bg-primary/20 transition-all duration-1000" />
+                                </div>
+
+                                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{t('howItWorks')}</h4>
+                                    <ul className="space-y-4">
+                                        {[
+                                            t('aiFeature1'),
+                                            t('aiFeature2'),
+                                            t('aiFeature3')
+                                        ].map((text, i) => (
+                                            <li key={i} className="flex gap-3 text-xs font-bold text-slate-600">
+                                                <div className="shrink-0 w-5 h-5 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center">
+                                                    <Check size={12} />
+                                                </div>
+                                                {text}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                 ) : activeTab === "qrcode" ? (
                     <div className="space-y-8 max-w-2xl mx-auto text-center py-12">
@@ -3960,7 +3853,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
-                ) : null}
+                ) : null
+                }
 
                 {/* Modals outside of conditional tabs */}
                 <AnimatePresence>
