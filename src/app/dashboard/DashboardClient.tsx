@@ -2165,15 +2165,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             )}
                                         </div>
                                         <div className="flex-1 w-full space-y-3">
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <input
                                                     type="text"
                                                     value={profileData.image}
                                                     onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
                                                     placeholder={t('imagePlaceholder')}
-                                                    className="flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                                    className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                                 />
-                                                <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 cursor-pointer">
+                                                <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
                                                     <Upload size={16} /> {t('upload')}
                                                     <input
                                                         type="file"
@@ -2230,15 +2230,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="flex-1 w-full flex gap-2">
+                                        <div className="flex-1 w-full flex flex-col sm:flex-row gap-2">
                                             <input
                                                 type="text"
                                                 value={profileData?.profileBgImage || ""}
                                                 onChange={(e) => setProfileData({ ...profileData, profileBgImage: e.target.value })}
                                                 placeholder={t('bgImagePlaceholder')}
-                                                className="flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                                className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                             />
-                                            <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 cursor-pointer">
+                                            <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
                                                 <Upload size={16} /> {t('upload')}
                                                 <input
                                                     type="file"
