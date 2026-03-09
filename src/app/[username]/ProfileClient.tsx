@@ -2103,9 +2103,47 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         return mapping[text] || text;
     };
 
+    const getHeroIcon = (platform: string) => {
+        switch (platform) {
+            case 'instagram': return <Instagram size={20} />;
+            case 'whatsapp': return <MessageCircle size={20} />;
+            case 'twitter': return <Twitter size={20} />;
+            case 'linkedin': return <Linkedin size={20} />;
+            case 'youtube': return <Youtube size={20} />;
+            case 'github': return <Github size={20} />;
+            case 'website': return <Globe size={20} />;
+            case 'email': return <Mail size={20} />;
+            case 'phone': return <Phone size={20} />;
+            default: return <Globe size={20} />;
+        }
+    }
+
+    const heroSocialActions = (socialLinks || [])
+        .filter((l: any) => l.isHero && l.platform !== 'phone' && l.url)
+        .map((l: any) => ({
+            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            icon: getHeroIcon(l.platform),
+            href: formatUrl(l.url),
+            onClick: () => trackEvent("hero_social", l.platform),
+            active: true
+        }))
+
     const actions = [
-        { label: t.phoneCallsBtn || "Call", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url}`, onClick: () => trackEvent("phone"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
-        { label: t.waMessagesBtn || "WhatsApp", icon: <MessageCircle size={20} />, href: `https://wa.me/${socialLinks.find((l: any) => l.platform === 'phone')?.url?.replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!socialLinks.find((l: any) => l.platform === 'phone')?.url },
+        {
+            label: t.phoneCallsBtn || "Call",
+            icon: <Phone size={20} />,
+            href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`,
+            onClick: () => trackEvent("phone"),
+            active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
+        },
+        {
+            label: t.waMessagesBtn || "WhatsApp",
+            icon: <MessageCircle size={20} />,
+            href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`,
+            onClick: () => trackEvent("whatsapp"),
+            active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
+        },
+        ...heroSocialActions,
         {
             label: t.contactMeTitle,
             icon: <MessageSquare size={20} />,

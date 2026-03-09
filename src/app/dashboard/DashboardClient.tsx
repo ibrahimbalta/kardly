@@ -783,17 +783,37 @@ export default function DashboardClient({ session, profile, subscription, appoin
         } catch (err) { console.error(err) }
     }
 
-    const updateSocialLink = (platform: string, url: string) => {
+    const updateSocialLink = (platform: string, url: string, isHero?: boolean) => {
         const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
         const index = currentLinks.findIndex((l: any) => l.platform === platform)
 
         if (index > -1) {
-            currentLinks[index] = { platform, url }
+            currentLinks[index] = { ...currentLinks[index], platform, url, isHero: isHero !== undefined ? isHero : currentLinks[index].isHero }
         } else {
-            currentLinks.push({ platform, url })
+            currentLinks.push({ platform, url, isHero: isHero || false })
         }
 
         setProfileData({ ...profileData, socialLinks: currentLinks })
+    }
+
+    const toggleSocialHero = (platform: string) => {
+        const currentLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        const index = currentLinks.findIndex((l: any) => l.platform === platform)
+
+        if (index > -1) {
+            currentLinks[index] = { ...currentLinks[index], isHero: !currentLinks[index].isHero }
+        } else {
+            // If it doesn't exist, we can't really make it hero without a URL, 
+            // but for 'phone' we might take it from profileData.phone
+            const url = platform === 'phone' ? profileData.phone : ""
+            currentLinks.push({ platform, url, isHero: true })
+        }
+
+        setProfileData({ ...profileData, socialLinks: currentLinks })
+    }
+
+    const isSocialHero = (platform: string) => {
+        return (profileData.socialLinks as any[])?.find((l: any) => l.platform === platform)?.isHero || false
     }
 
     const getSocialUrl = (platform: string) => {
@@ -2076,11 +2096,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('phoneLabel')}</label>
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('phoneLabel')}</label>
+                                            <button
+                                                onClick={() => toggleSocialHero('phone')}
+                                                className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
+                                                    isSocialHero('phone') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                {isSocialHero('phone') ? t('heroButton') : t('makeHero')}
+                                            </button>
+                                        </div>
                                         <input
                                             type="tel"
                                             value={profileData.phone}
-                                            onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setProfileData({ ...profileData, phone: val });
+                                                // Also sync to socialLinks if already exists as hero
+                                                if (isSocialHero('phone')) {
+                                                    updateSocialLink('phone', val);
+                                                }
+                                            }}
                                             className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
                                             placeholder="+90 5xx xxx xx xx"
                                         />
@@ -2248,17 +2286,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         { id: "website", icon: <Globe />, color: "text-indigo-500", label: "Website" },
                                         { id: "email", icon: <Mail />, color: "text-rose-500", label: "Email" },
                                     ].map((social) => (
-                                        <div key={social.id} className="flex items-center gap-3 p-1 bg-slate-50 rounded-2xl border border-slate-100/50">
-                                            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm", social.color)}>
-                                                {social.icon}
+                                        <div key={social.id} className="flex flex-col gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                            <div className="flex items-center gap-3">
+                                                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm", social.color)}>
+                                                    {social.icon}
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    placeholder={`${social.label} URL`}
+                                                    value={getSocialUrl(social.id)}
+                                                    onChange={(e) => updateSocialLink(social.id, e.target.value)}
+                                                    className="flex-1 bg-transparent border-none text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:ring-0"
+                                                />
                                             </div>
-                                            <input
-                                                type="text"
-                                                placeholder={`${social.label} URL`}
-                                                value={getSocialUrl(social.id)}
-                                                onChange={(e) => updateSocialLink(social.id, e.target.value)}
-                                                className="flex-1 bg-transparent border-none text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:ring-0"
-                                            />
+                                            <div className="flex justify-end pt-1">
+                                                <button
+                                                    onClick={() => toggleSocialHero(social.id)}
+                                                    className={cn(
+                                                        "text-[9px] font-black uppercase tracking-widest transition-all px-2 py-1 rounded-lg",
+                                                        isSocialHero(social.id) ? "bg-amber-100 text-amber-600" : "bg-white text-slate-400 hover:bg-slate-100"
+                                                    )}
+                                                >
+                                                    {isSocialHero(social.id) ? t('heroButton') : t('makeHero')}
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
