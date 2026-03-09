@@ -238,6 +238,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     })
     const [isProductSaving, setIsProductSaving] = useState(false)
     const [editingProduct, setEditingProduct] = useState<any>(null)
+    const [isProductImageUploading, setIsProductImageUploading] = useState(false)
     const [statsRange, setStatsRange] = useState("30")
     const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
 
@@ -2131,7 +2132,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     type="text"
                                                     value={profileData.image}
                                                     onChange={(e) => setProfileData({ ...profileData, image: e.target.value })}
-                                                    placeholder={t('imageUrlPlaceholder')}
+                                                    placeholder={t('imagePlaceholder')}
                                                     className="flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                                 />
                                                 <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 cursor-pointer">
@@ -2148,7 +2149,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 try {
                                                                     const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                     const data = await res.json()
-                                                                    if (data.url) setProfileData({ ...profileData, image: data.url })
+                                                                    if (data.url) setProfileData(prev => ({ ...prev, image: data.url }))
                                                                 } catch (err) { console.error(err) }
                                                             }
                                                         }}
@@ -2213,7 +2214,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             try {
                                                                 const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                 const data = await res.json()
-                                                                if (data.url) setProfileData({ ...profileData, profileBgImage: data.url })
+                                                                if (data.url) setProfileData(prev => ({ ...prev, profileBgImage: data.url }))
                                                             } catch (err) { console.error(err) }
                                                         }
                                                     }}
@@ -3888,7 +3889,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
                                                     <button
                                                         type="button"
-                                                        onClick={(e) => { e.stopPropagation(); setNewProduct({ ...newProduct, image: '' }); }}
+                                                        onClick={(e) => { e.stopPropagation(); setNewProduct(prev => ({ ...prev, image: '' })); }}
                                                         className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
                                                     >
                                                         <X className="w-4 h-4" />
@@ -3896,8 +3897,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
                                             ) : (
                                                 <div className="py-8 flex flex-col items-center gap-2 text-gray-400 group-hover:text-primary transition-colors">
-                                                    <Upload className="w-8 h-8" />
-                                                    <span className="text-sm font-medium">{t('projectImageSub')}</span>
+                                                    {isProductImageUploading ? (
+                                                        <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                                    ) : (
+                                                        <Upload className="w-8 h-8" />
+                                                    )}
+                                                    <span className="text-sm font-medium">
+                                                        {isProductImageUploading ? t('loading') : t('projectImageSub')}
+                                                    </span>
                                                 </div>
                                             )}
                                         </div>
@@ -3909,9 +3916,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
-                                                const reader = new FileReader();
-                                                reader.onloadend = () => setNewProduct({ ...newProduct, image: reader.result as string });
-                                                reader.readAsDataURL(file);
+
+                                                setIsProductImageUploading(true);
+                                                const formData = new FormData();
+                                                formData.append("file", file);
+
+                                                try {
+                                                    const res = await fetch("/api/upload", { method: "POST", body: formData });
+                                                    const data = await res.json();
+                                                    if (data.url) {
+                                                        setNewProduct(prev => ({ ...prev, image: data.url }));
+                                                    }
+                                                } catch (err) {
+                                                    console.error(err);
+                                                } finally {
+                                                    setIsProductImageUploading(false);
+                                                }
                                             }}
                                         />
                                     </div>
