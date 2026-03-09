@@ -1017,17 +1017,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <p className="text-slate-400 text-sm font-medium tracking-wide">{t('welcomeSub')}</p>
                     </motion.div>
                     {profile && (
-                        <motion.a
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            href={`/${profile.username}`}
-                            target="_blank"
-                            className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all font-black text-xs uppercase tracking-widest"
-                        >
-                            {t('liveSite')} <ExternalLink className="w-4 h-4" />
-                        </motion.a>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <motion.a
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                href={`/${profile.username}`}
+                                target="_blank"
+                                className="flex items-center justify-center gap-3 px-6 py-4 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all font-black text-[10px] uppercase tracking-widest"
+                            >
+                                {t('liveSite')} <ExternalLink className="w-4 h-4" />
+                            </motion.a>
+                            <motion.a
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                href={`https://${profile.username}.kardly.site`}
+                                target="_blank"
+                                className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl shadow-sm hover:border-primary/20 hover:bg-slate-50 transition-all font-black text-[10px] uppercase tracking-widest group"
+                            >
+                                <Globe className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" /> {t('viewSubdomain')}
+                            </motion.a>
+                        </div>
                     )}
                 </header>
 
