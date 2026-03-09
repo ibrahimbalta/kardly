@@ -103,13 +103,13 @@ import { z } from "zod"
 
 const profileSchema = z.object({
     username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
-    displayName: z.string().min(2, "İsim en az 2 karakter olmalıdır").optional().or(z.literal("")),
-    slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")),
-    bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")),
-    phone: z.string().optional().or(z.literal("")),
-    occupation: z.string().optional().or(z.literal("")),
-    paymentLink: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
-    youtubeVideoUrl: z.string().url("Geçerli bir YouTube URL'si giriniz").optional().or(z.literal(""))
+    displayName: z.string().optional().or(z.literal("")).nullable(),
+    slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")).nullable(),
+    bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")).nullable(),
+    phone: z.string().optional().or(z.literal("")).nullable(),
+    occupation: z.string().optional().or(z.literal("")).nullable(),
+    paymentLink: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")).nullable(),
+    youtubeVideoUrl: z.string().url("Geçerli bir YouTube URL'si giriniz").optional().or(z.literal("")).nullable()
 })
 
 
@@ -561,13 +561,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
         try {
             const validation = profileSchema.safeParse({
                 username: overrides?.username ?? profileData.username,
-                displayName: overrides?.name ?? profileData.name ?? session?.user?.name,
-                slogan: overrides?.slogan ?? profileData.slogan,
-                bio: overrides?.bio ?? profileData.bio,
-                phone: overrides?.phone ?? profileData.phone,
-                occupation: overrides?.occupation ?? profileData.occupation,
-                paymentLink: overrides?.paymentLink ?? profileData.paymentLink,
-                youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl
+                displayName: overrides?.name ?? profileData.name ?? session?.user?.name ?? "",
+                slogan: overrides?.slogan ?? profileData.slogan ?? "",
+                bio: overrides?.bio ?? profileData.bio ?? "",
+                phone: overrides?.phone ?? profileData.phone ?? "",
+                occupation: overrides?.occupation ?? profileData.occupation ?? "",
+                paymentLink: overrides?.paymentLink ?? profileData.paymentLink ?? "",
+                youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl ?? ""
             })
 
             if (!validation.success) {
