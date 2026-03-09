@@ -2149,7 +2149,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 try {
                                                                     const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                     const data = await res.json()
-                                                                    if (data.url) setProfileData(prev => ({ ...prev, image: data.url }))
+                                                                    if (data.url) setProfileData((prev: any) => ({ ...prev, image: data.url }))
                                                                 } catch (err) { console.error(err) }
                                                             }
                                                         }}
@@ -2214,7 +2214,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             try {
                                                                 const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                 const data = await res.json()
-                                                                if (data.url) setProfileData(prev => ({ ...prev, profileBgImage: data.url }))
+                                                                if (data.url) setProfileData((prev: any) => ({ ...prev, profileBgImage: data.url }))
                                                             } catch (err) { console.error(err) }
                                                         }
                                                     }}
@@ -3889,7 +3889,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     <img src={newProduct.image} alt="Proje" className="w-full h-full object-cover" />
                                                     <button
                                                         type="button"
-                                                        onClick={(e) => { e.stopPropagation(); setNewProduct(prev => ({ ...prev, image: '' })); }}
+                                                        onClick={(e) => { e.stopPropagation(); setNewProduct((prev: any) => ({ ...prev, image: '' })); }}
                                                         className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
                                                     >
                                                         <X className="w-4 h-4" />
@@ -3925,7 +3925,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     const res = await fetch("/api/upload", { method: "POST", body: formData });
                                                     const data = await res.json();
                                                     if (data.url) {
-                                                        setNewProduct(prev => ({ ...prev, image: data.url }));
+                                                        setNewProduct((prev: any) => ({ ...prev, image: data.url }));
                                                     }
                                                 } catch (err) {
                                                     console.error(err);
