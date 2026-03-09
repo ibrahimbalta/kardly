@@ -346,7 +346,7 @@ export const translations: any = {
         viewLive: "Canlı Görüntüle",
         addNewProject: "Yeni Proje Ekle",
         noProjectsYet: "Henüz Proje Eklememişsin",
-        noProjectsYetSub: "En iyi çalışmalarınızı ekleyerek potansiyel partnerlerinizi etkileyin.",
+        myProjectsSub: "En iyi çalışmalarınızı ekleyerek potansiyel partnerlerinizi etkileyin.",
         expertiseAreas: "Uzmanlık Alanları",
         expertiseAreasSub: "Mesleki yetkinliklerinizi ve odak noktalarınıza listeleyin.",
         addNewExpertise: "Yeni Uzmanlık Ekle",
@@ -883,10 +883,6 @@ export const translations: any = {
         aiFeature1: "24/7 Active Support",
         aiFeature2: "Knowledge-Based Responses",
         aiFeature3: "Personalized Character",
-        myProjectsSub: "Impress potential partners by showcasing your best work.",
-        expertiseAreasSub: "List your professional competencies and focus points.",
-        addNewExpertise: "Add New Expertise",
-        noExpertiseYetSub: "Tell people what you do by adding your services.",
 
         // Profile Sections
         myProjects: "Projects",
@@ -1095,7 +1091,7 @@ export const translations: any = {
         viewLive: "View Live",
         addNewProject: "Add New Project",
         noProjectsYet: "No Projects Added Yet",
-        noProjectsYetSub: "Impress potential partners by adding your best work.",
+        myProjectsSub: "Impress potential partners by adding your best work.",
         expertiseAreas: "Expertise Areas",
         expertiseAreasSub: "List your professional competencies and focus points.",
         addNewExpertise: "Add New Expertise",
