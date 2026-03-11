@@ -70,11 +70,11 @@ function LoginLogic() {
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.3) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
                     <div className="relative z-10">
-                        <div className="flex items-center gap-3 mb-12">
-                            <div className="w-12 h-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center">
+                        <div className="flex items-center gap-3.5 mb-12">
+                            <div className="w-12 h-12 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center">
                                 <Layout className="text-white w-7 h-7" />
                             </div>
-                            <span className="text-2xl font-black text-white tracking-tighter">KARDLY<span className="text-white/60">.SİTE</span></span>
+                            <span className="text-2xl font-black text-white tracking-tighter">Kardly<span className="text-white/60">.site</span></span>
                         </div>
 
                         <h2 className="text-4xl font-black text-white leading-tight mb-6">
@@ -112,11 +112,11 @@ function LoginLogic() {
                     className="flex flex-col justify-center p-10 md:p-16 bg-white rounded-[3.5rem] lg:rounded-l-none lg:rounded-r-[3.5rem] border border-slate-100 shadow-2xl shadow-rose-100/20"
                 >
                     {/* Mobile Logo */}
-                    <div className="lg:hidden flex items-center gap-3 mb-10">
-                        <div className="w-11 h-11 bg-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-200">
+                    <div className="lg:hidden flex items-center gap-3.5 mb-10">
+                        <div className="w-11 h-11 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-200">
                             <Layout className="text-white w-6 h-6" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-rose-500">.SİTE</span></span>
+                        <span className="text-xl font-black tracking-tighter text-slate-900">Kardly<span className="text-rose-500">.site</span></span>
                     </div>
 
                     {(error === "account_disabled" || loginError) && (

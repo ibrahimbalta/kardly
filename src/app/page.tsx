@@ -417,14 +417,15 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
             <div className="col-span-2 md:col-span-4">
               <Link href="/" className="flex items-center gap-3 mb-6 group">
-                <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200/50">
-                  <Layout className="text-white w-5 h-5" />
+                <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200/40 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Layout className="text-white w-5 h-5 relative z-10" />
                 </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-lg font-black tracking-tight text-slate-900 uppercase">
-                    KARDLY<span className="text-rose-500">.SİTE</span>
+                <div className="flex flex-col items-start px-1">
+                  <span className="text-xl font-black tracking-tighter leading-none text-slate-950 flex items-center">
+                    Kardly<span className="text-rose-500">.site</span>
                   </span>
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1 text-center w-full">LINK TO SUCCESS</span>
+                  <span className="text-[9px] font-bold text-slate-500 tracking-[0.1em] mt-1">link to success</span>
                 </div>
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>

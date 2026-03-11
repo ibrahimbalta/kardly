@@ -27,7 +27,8 @@ import {
     EyeOff,
     Check,
     Edit3,
-    Send
+    Send,
+    Layout
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -171,11 +172,11 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
         <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
             {/* Mobile Header */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-50 flex items-center justify-between px-6">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
-                        <ShieldCheck className="text-white w-5 h-5" />
+                <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-200/50">
+                        <Layout className="text-white w-4 h-4" />
                     </div>
-                    <span className="text-sm font-black uppercase tracking-tighter">Admin Panel</span>
+                    <span className="text-sm font-black tracking-tighter">Kardly <span className="text-rose-500">ADMIN</span></span>
                 </div>
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -193,13 +194,13 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                         isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full lg:translate-x-0"
                     )}>
                         <div className="flex items-center justify-between lg:justify-start gap-3 px-2 mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30">
-                                    <ShieldCheck className="text-white w-6 h-6" />
+                            <div className="flex items-center gap-3.5">
+                                <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-xl shadow-rose-200/40">
+                                    <Layout className="text-white w-5 h-5" />
                                 </div>
                                 <div>
-                                    <span className="text-lg font-black block leading-none tracking-tighter">SaaS <span className="text-primary">ADMIN</span></span>
-                                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-1 block">Yönetim Merkezi</span>
+                                    <span className="text-lg font-black block leading-none tracking-tighter">Kardly <span className="text-rose-500">ADMIN</span></span>
+                                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.1em] mt-1 block">Yönetim Merkezi</span>
                                 </div>
                             </div>
                             <button className="lg:hidden p-2 text-slate-300 hover:text-slate-600" onClick={() => setIsSidebarOpen(false)}>

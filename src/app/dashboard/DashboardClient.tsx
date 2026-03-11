@@ -102,14 +102,17 @@ import { z } from "zod"
 
 
 const profileSchema = z.object({
-    username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
+    username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-zA-Z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
     displayName: z.string().optional().or(z.literal("")).nullable(),
     slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")).nullable(),
     bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")).nullable(),
     phone: z.string().optional().or(z.literal("")).nullable(),
     occupation: z.string().optional().or(z.literal("")).nullable(),
-    paymentLink: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")).nullable(),
-    youtubeVideoUrl: z.string().url("Geçerli bir YouTube URL'si giriniz").optional().or(z.literal("")).nullable()
+    targetAudience: z.string().optional().or(z.literal("")).nullable(),
+    paymentLink: z.string().optional().or(z.literal("")).nullable(),
+    youtubeVideoUrl: z.string().optional().or(z.literal("")).nullable(),
+    image: z.string().optional().or(z.literal("")).nullable(),
+    profileBgImage: z.string().optional().or(z.literal("")).nullable()
 })
 
 
@@ -566,8 +569,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 bio: overrides?.bio ?? profileData.bio ?? "",
                 phone: overrides?.phone ?? profileData.phone ?? "",
                 occupation: overrides?.occupation ?? profileData.occupation ?? "",
+                targetAudience: overrides?.targetAudience ?? profileData.targetAudience ?? "",
                 paymentLink: overrides?.paymentLink ?? profileData.paymentLink ?? "",
-                youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl ?? ""
+                youtubeVideoUrl: overrides?.youtubeVideoUrl ?? profileData.youtubeVideoUrl ?? "",
+                image: profileData.image ?? "",
+                profileBgImage: profileData.profileBgImage ?? ""
             })
 
             if (!validation.success) {
@@ -835,11 +841,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
             {/* Mobile Header Toggle */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-50 flex items-center justify-between px-6">
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
-                        <Zap className="text-white w-4 h-4 fill-current" />
+                <Link href="/" className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-200/50">
+                        <Layout className="text-white w-5 h-5" />
                     </div>
-                    <span className="text-sm font-black uppercase tracking-tighter tracking-[0.2em]">KARDLY</span>
+                    <span className="text-lg font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
                 </Link>
                 <div className="flex items-center gap-3">
                     <button
@@ -857,13 +863,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full"
             )}>
                 <div className="flex items-center justify-between lg:justify-start gap-3 mb-4">
-                    <Link href="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform">
-                            <Zap className="text-white w-5 h-5 fill-current" />
+                    <Link href="/" className="flex items-center gap-3.5 group">
+                        <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-200/40 group-hover:rotate-6 transition-all duration-500 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Layout className="text-white w-5 h-5 relative z-10" />
                         </div>
                         <div>
-                            <span className="text-xl font-black tracking-tighter text-slate-900">KARDLY<span className="text-primary">.</span></span>
-                            <span className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] block">Dashboard PRO</span>
+                            <span className="text-xl font-black tracking-tighter text-slate-950 flex items-center">
+                                Kardly<span className="text-rose-500">.site</span>
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] mt-0.5 block">Dashboard PRO</span>
                         </div>
                     </Link>
                     <button className="lg:hidden p-2 text-slate-300 hover:text-slate-600" onClick={() => setIsSidebarOpen(false)}>
@@ -2047,7 +2056,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('displayNameLabel')}</label>
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('displayNameLabel')}</label>
+                                            <button
+                                                onClick={() => toggleSocialHero('displayName')}
+                                                className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
+                                                    isSocialHero('displayName') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                {isSocialHero('displayName') ? t('heroButton') : t('makeHero')}
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
                                             value={profileData.name}
@@ -2057,7 +2077,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('occupationLabel')}</label>
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('occupationLabel')}</label>
+                                            <button
+                                                onClick={() => toggleSocialHero('occupation')}
+                                                className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
+                                                    isSocialHero('occupation') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                {isSocialHero('occupation') ? t('heroButton') : t('makeHero')}
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
                                             value={profileData.occupation}
@@ -2067,7 +2098,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('sloganLabel')}</label>
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('sloganLabel')}</label>
+                                            <button
+                                                onClick={() => toggleSocialHero('slogan')}
+                                                className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
+                                                    isSocialHero('slogan') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                {isSocialHero('slogan') ? t('heroButton') : t('makeHero')}
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
                                             value={profileData.slogan}
@@ -2079,14 +2121,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex justify-between items-center px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('bioLabel')}</label>
-                                            <button
-                                                onClick={handleGenerateBio}
-                                                disabled={isGeneratingBio}
-                                                className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5 hover:opacity-80 transition-all disabled:opacity-50"
-                                            >
-                                                {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
-                                                {t('generateWithAi')}
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={handleGenerateBio}
+                                                    disabled={isGeneratingBio}
+                                                    className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5 hover:opacity-80 transition-all disabled:opacity-50"
+                                                >
+                                                    {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
+                                                    {t('generateWithAi')}
+                                                </button>
+                                                <button
+                                                    onClick={() => toggleSocialHero('bio')}
+                                                    className={cn(
+                                                        "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg ml-2",
+                                                        isSocialHero('bio') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                    )}
+                                                >
+                                                    {isSocialHero('bio') ? t('heroButton') : t('makeHero')}
+                                                </button>
+                                            </div>
                                         </div>
                                         <textarea
                                             value={profileData.bio}
@@ -2124,7 +2177,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('targetAudienceLabel')}</label>
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('targetAudienceLabel')}</label>
+                                            <button
+                                                onClick={() => toggleSocialHero('targetAudience')}
+                                                className={cn(
+                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
+                                                    isSocialHero('targetAudience') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                )}
+                                            >
+                                                {isSocialHero('targetAudience') ? t('heroButton') : t('makeHero')}
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
                                             value={profileData.targetAudience}

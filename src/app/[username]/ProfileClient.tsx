@@ -2119,7 +2119,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     }
 
     const heroSocialActions = (socialLinks || [])
-        .filter((l: any) => l.isHero && l.platform !== 'phone' && l.url)
+        .filter((l: any) => l.isHero && l.url)
         .map((l: any) => ({
             label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
             icon: getHeroIcon(l.platform),
