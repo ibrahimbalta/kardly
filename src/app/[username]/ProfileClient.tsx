@@ -403,7 +403,7 @@ END:VCARD`
         const templateId = profile.templateId || "black"
 
         if (templateId.startsWith('elite_')) {
-            return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+            return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
@@ -3994,7 +3994,25 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     )
 }
 
-function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode }: any) {
+function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText }: any) {
+    const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
+    const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
+
+    const getIcon = (title: string) => {
+        const t = title.toLowerCase();
+        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('mağaza') || t.includes('market')) return <ShoppingBag size={14} />;
+        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan') || t.includes('yönetim')) return <Target size={14} />;
+        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process') || t.includes('teknoloji')) return <Zap size={14} />;
+        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('destek')) return <Users size={14} />;
+        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme') || t.includes('bilişim')) return <Code size={14} />;
+        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik') || t.includes('sanat')) return <Palette size={14} />;
+        if (t.includes('hukuk') || t.includes('law') || t.includes('legal') || t.includes('adalet')) return <Shield size={14} />;
+        if (t.includes('finans') || t.includes('money') || t.includes('bank') || t.includes('yatırım')) return <Briefcase size={14} />;
+        if (t.includes('eğitim') || t.includes('ders') || t.includes('okul') || t.includes('akadem')) return <Trophy size={14} />;
+        if (t.includes('sağlık') || t.includes('tıp') || t.includes('doctor') || t.includes('doktor')) return <Activity size={14} />;
+        return <Zap size={14} />;
+    };
+
     const themes: Record<string, any> = {
         elite_pink: {
             header: "bg-gradient-to-r from-[#ec4899] to-[#fb923c]",
@@ -4137,14 +4155,67 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
             {/* Main Content */}
             <div className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center">
-                {/* Avatar with Glow */}
-                <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative", theme.glow)}
-                >
-                    <img src={profile.user.image} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
-                </motion.div>
+                {/* Avatar with Glow and Floating Expertise Icons */}
+                <div className="relative">
+                    {toneStyle.expertiseStyle !== 'minimal' && (
+                        <motion.div
+                            className="absolute inset-0 z-20 pointer-events-none"
+                            animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
+                            transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                        >
+                            {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                const radius = 100; // Increased radius for Elite avatar size
+                                const x = Math.cos(angle) * radius;
+                                const y = Math.sin(angle) * radius;
+
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        animate={toneStyle.expertiseStyle === 'floating' ? {
+                                            opacity: 1, scale: 1,
+                                            y: [0, -10, 0],
+                                            transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
+                                        } : { opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.5 + i * 0.1 }}
+                                        className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
+                                        style={{
+                                            left: `calc(50% + ${x}px)`,
+                                            top: `calc(50% + ${y}px)`,
+                                            transform: 'translate(-50%, -50%)'
+                                        }}
+                                    >
+                                        <motion.div
+                                            animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
+                                            transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                            className={cn("w-10 h-10 glass border border-slate-200/50 flex items-center justify-center shadow-lg transition-all hover:scale-125 hover:border-slate-300 hover:bg-white/90 relative rounded-full")}
+                                            style={{
+                                                color: theme.accent,
+                                                backgroundColor: 'rgba(255,255,255,0.7)',
+                                                backdropFilter: 'blur(10px)'
+                                            }}
+                                        >
+                                            {getIcon(service.title)}
+
+                                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[10px] font-black text-slate-800 pointer-events-none border border-slate-100 shadow-xl scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-widest">
+                                                {translateText(service.title)}
+                                            </div>
+                                        </motion.div>
+                                    </motion.div>
+                                );
+                            })}
+                        </motion.div>
+                    )}
+
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
+                    >
+                        <img src={profile.user.image} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
+                    </motion.div>
+                </div>
 
                 {/* Profile Information */}
                 <div className="text-center mt-6 space-y-1">
@@ -4153,12 +4224,12 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </h1>
                     <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
                         <span className="w-6 h-[1px] bg-slate-200"></span>
-                        {profile.occupation}
+                        {translateText(profile.occupation)}
                         <span className="w-6 h-[1px] bg-slate-200"></span>
                     </p>
                     {profile.slogan && (
                         <p className="text-[11px] font-medium text-slate-500 mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4">
-                            "{profile.slogan} 🚀"
+                            "{translateText(profile.slogan)} 🚀"
                         </p>
                     )}
                 </div>
@@ -4247,39 +4318,109 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
-                {/* Projects Section (Products) */}
-                {profile.products && profile.products.length > 0 && (
-                    <div className="w-full mt-12 space-y-6">
-                        <div className="flex items-center gap-2 px-2">
-                            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.projectsTitle || "PROJELER"}</h3>
-                        </div>
-                        <div className="grid grid-cols-1 gap-6">
-                            {profile.products.map((project: any, i: number) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileHover={{ y: -5 }}
-                                    className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group"
-                                >
-                                    <div className="aspect-video relative overflow-hidden">
-                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                        <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
-                                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                                                <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
+                {/* Projects Section (Toggleable Marquee/Grid) */}
+                {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
+                    <div className="w-full mt-12 space-y-4 group/marquee">
+                        <style>{`
+                            @keyframes marquee-right-elite {
+                                0% { transform: translateX(-50%); }
+                                100% { transform: translateX(0); }
+                            }
+                            .animate-marquee-right-elite {
+                                display: flex;
+                                width: max-content;
+                                animation: marquee-right-elite 20s linear infinite;
+                            }
+                            .group\\/marquee:hover .animate-marquee-right-elite {
+                                animation-play-state: paused;
+                            }
+                        `}</style>
+                        <div className={cn("w-full bg-slate-50 border border-slate-100 p-6 rounded-[2.5rem] shadow-sm relative z-20 overflow-hidden")}>
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                                        {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
+                                    </h3>
+                                </div>
+                                <div className="flex gap-2 bg-white p-1 rounded-2xl border border-slate-100 shadow-sm">
+                                    <button
+                                        onClick={() => setLayoutMode('marquee')}
+                                        className={cn("p-2 rounded-xl transition-all", layoutMode === 'marquee' ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600")}
+                                        title={t.standardView}
+                                    >
+                                        <Layers size={14} />
+                                    </button>
+                                    <button
+                                        onClick={() => setLayoutMode('grid')}
+                                        className={cn("p-2 rounded-xl transition-all", layoutMode === 'grid' ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600")}
+                                        title={t.portfolioView}
+                                    >
+                                        <Layout size={14} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {layoutMode === 'marquee' ? (
+                                <div className="relative h-20 flex items-center overflow-visible">
+                                    <div className="animate-marquee-right-elite flex gap-6 h-full items-center overflow-visible">
+                                        {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
+                                            <div
+                                                key={i}
+                                                className="w-16 h-16 rounded-2xl border border-slate-200 overflow-hidden shadow-md flex-shrink-0 bg-white p-1 group/prj transition-all hover:scale-110 cursor-pointer relative"
+                                                onClick={() => {
+                                                    trackEvent("product_marquee", project.name);
+                                                    if (project.link) window.open(formatUrl(project.link), "_blank");
+                                                }}
+                                            >
+                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
+
+                                                {/* Elite Project Tooltip */}
+                                                <div className="absolute bottom-[calc(100%+12px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 bg-white border border-slate-100 p-4 rounded-3xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-50">
+                                                    <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">{project.name}</h4>
+                                                    <p className="text-[10px] text-slate-500 font-medium leading-relaxed line-clamp-3">{project.description}</p>
+                                                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-white border-slate-100" />
+                                                </div>
                                             </div>
-                                            <a href={formatUrl(project.link)} target="_blank" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
-                                                <ExternalLink size={16} className="text-slate-900" />
-                                            </a>
-                                        </div>
+                                        ))}
                                     </div>
-                                    <div className="p-6">
-                                        <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
-                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
+                                    <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none bg-gradient-to-r from-slate-50 to-transparent" />
+                                    <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none bg-gradient-to-l from-slate-50 to-transparent" />
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-6">
+                                    {profile.products.map((project: any, i: number) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            whileHover={{ y: -5 }}
+                                            className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group cursor-pointer"
+                                            onClick={() => {
+                                                trackEvent("product_grid", project.name);
+                                                if (project.link) window.open(formatUrl(project.link), "_blank");
+                                            }}
+                                        >
+                                            <div className="aspect-video relative overflow-hidden">
+                                                <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                                <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+                                                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                                                        <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
+                                                    </div>
+                                                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
+                                                        <ExternalLink size={16} className="text-slate-900" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="p-6">
+                                                <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
+                                                <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
