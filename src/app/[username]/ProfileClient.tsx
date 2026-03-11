@@ -4056,21 +4056,26 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         return `https://${trimmed}`;
     };
 
-    const actions = [
+    const heroActions = [
         {
-            label: t.phoneCallsBtn || "ARA",
-            icon: <Phone size={18} />,
+            label: t.phoneCallsBtn || "HEMEN ARA",
+            icon: <Phone size={24} />,
             href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`,
             onClick: () => trackEvent("phone"),
-            active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
+            active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone),
+            color: "bg-[#0f172a]"
         },
         {
             label: t.waMessagesBtn || "WHATSAPP",
-            icon: <MessageCircle size={18} />,
+            icon: <MessageCircle size={24} />,
             href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`,
             onClick: () => trackEvent("whatsapp"),
-            active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
-        },
+            active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone),
+            color: theme.accent
+        }
+    ].filter(a => a.active);
+
+    const otherActions = [
         {
             label: t.contactMeTitle || "İLETİŞİME GEÇ",
             icon: <MessageSquare size={18} />,
@@ -4156,9 +4161,34 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     )}
                 </div>
 
+                {/* Hero Action Grid (Side-by-side) */}
+                <div className="grid grid-cols-2 gap-4 w-full mt-10">
+                    {heroActions.map((action, i) => (
+                        <motion.button
+                            key={i}
+                            whileHover={{ scale: 1.05, y: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                                if (action.onClick) action.onClick();
+                                if (action.href) window.location.href = action.href;
+                            }}
+                            style={{ backgroundColor: action.color.startsWith('bg-') ? undefined : action.color }}
+                            className={cn(
+                                "flex flex-col items-center justify-center gap-3 py-7 rounded-[2rem] shadow-xl text-white transition-all",
+                                action.color.startsWith('bg-') ? action.color : ""
+                            )}
+                        >
+                            <span className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                                {action.icon}
+                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">{action.label}</span>
+                        </motion.button>
+                    ))}
+                </div>
+
                 {/* Vertical Action Stack */}
-                <div className="w-full mt-10 space-y-3">
-                    {actions.map((action, i) => (
+                <div className="w-full mt-4 space-y-3">
+                    {otherActions.map((action, i) => (
                         <motion.button
                             key={i}
                             whileHover={{ scale: 1.02, x: 5 }}
