@@ -4216,6 +4216,72 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
+                {/* Expertise Areas (Services) */}
+                {profile.services && profile.services.length > 0 && (
+                    <div className="w-full mt-12 space-y-6">
+                        <div className="flex items-center gap-2 px-2">
+                            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4">
+                            {profile.services.map((service: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex items-start gap-4 group hover:bg-white hover:shadow-xl transition-all"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                        <Award size={18} style={{ color: theme.accent }} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="text-xs font-black text-slate-900 mb-1">{service.title}</h4>
+                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{service.description}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Projects Section (Products) */}
+                {profile.products && profile.products.length > 0 && (
+                    <div className="w-full mt-12 space-y-6">
+                        <div className="flex items-center gap-2 px-2">
+                            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.projectsTitle || "PROJELER"}</h3>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6">
+                            {profile.products.map((project: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileHover={{ y: -5 }}
+                                    className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group"
+                                >
+                                    <div className="aspect-video relative overflow-hidden">
+                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                        <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+                                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                                                <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
+                                            </div>
+                                            <a href={formatUrl(project.link)} target="_blank" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
+                                                <ExternalLink size={16} className="text-slate-900" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
+                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Reviews Section */}
                 {reviews.length > 0 && (
                     <div className="w-full mt-12 space-y-6">
