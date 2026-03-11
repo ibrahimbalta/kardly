@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { useMotionValue, useTransform, animate, useSpring } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue, useTransform, animate, useSpring } from "framer-motion"
 import { cn } from "@/lib/utils"
 import html2canvas from 'html2canvas'
 import {
@@ -72,7 +71,6 @@ import {
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
 import { translations } from "@/lib/i18n"
-import { motion, AnimatePresence } from "framer-motion"
 
 // ─── TYPES ───────────────────────────────────────────────────────
 
