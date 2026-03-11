@@ -66,7 +66,9 @@ import {
     Coffee,
     Heart,
     CreditCard,
-    Facebook
+    Facebook,
+    Award,
+    ExternalLink
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
