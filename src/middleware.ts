@@ -20,6 +20,17 @@ export function middleware(request: NextRequest) {
     if (isSubdomain) {
         const subdomain = hostname.replace(`.${rootDomain}`, "")
 
+        // Don't rewrite API routes, auth routes, or Next.js internal paths
+        // These should always go to their original /api/... endpoints
+        if (
+            pathname.startsWith("/api/") ||
+            pathname.startsWith("/api") ||
+            pathname.startsWith("/_next/") ||
+            pathname.startsWith("/auth/")
+        ) {
+            return NextResponse.next()
+        }
+
         // Prevent recursive rewriting if path already starts with /[subdomain]
         if (pathname.startsWith(`/${subdomain}`)) {
             return NextResponse.next()
