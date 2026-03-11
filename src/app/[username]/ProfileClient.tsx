@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo } from "react"
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 import { useMotionValue, useTransform, animate, useSpring } from "framer-motion"
 import { cn } from "@/lib/utils"
 import html2canvas from 'html2canvas'
@@ -64,7 +66,8 @@ import {
     Check,
     Coffee,
     Heart,
-    CreditCard
+    CreditCard,
+    Facebook
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
@@ -398,6 +401,10 @@ END:VCARD`
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
         const templateId = profile.templateId || "black"
+
+        if (templateId.startsWith('elite_')) {
+            return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+        }
 
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
     }
@@ -3985,6 +3992,212 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             />
         </div>
     )
+}
+
+function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode }: any) {
+    const themes: Record<string, any> = {
+        elite_pink: {
+            header: "bg-gradient-to-r from-[#ec4899] to-[#fb923c]",
+            body: "bg-white",
+            hero1: "bg-[#0f172a]",
+            hero2: "bg-[#ff2d55]",
+            card: "bg-slate-50",
+            text: "text-slate-900",
+            accent: "#ff2d55"
+        },
+        elite_blue: {
+            header: "bg-gradient-to-r from-[#06b6d4] to-[#3b82f6]",
+            body: "bg-white",
+            hero1: "bg-[#0f172a]",
+            hero2: "bg-[#3498db]",
+            card: "bg-slate-50",
+            text: "text-slate-900",
+            accent: "#3498db"
+        },
+        elite_purple: {
+            header: "bg-gradient-to-r from-[#8b5cf6] to-[#d946ef]",
+            body: "bg-white",
+            hero1: "bg-[#0f172a]",
+            hero2: "bg-[#8e44ad]",
+            card: "bg-slate-50",
+            text: "text-slate-900",
+            accent: "#8e44ad"
+        },
+        elite_emerald: {
+            header: "bg-gradient-to-r from-[#10b981] to-[#3b82f6]",
+            body: "bg-white",
+            hero1: "bg-[#0f172a]",
+            hero2: "bg-[#1abc9c]",
+            card: "bg-slate-50",
+            text: "text-slate-900",
+            accent: "#1abc9c"
+        },
+        elite_sunset: {
+            header: "bg-gradient-to-r from-[#f59e0b] to-[#ef4444]",
+            body: "bg-white",
+            hero1: "bg-[#0f172a]",
+            hero2: "bg-[#e67e22]",
+            card: "bg-slate-50",
+            text: "text-slate-900",
+            accent: "#e67e22"
+        }
+    };
+
+    const theme = themes[colorScheme] || themes.elite_pink;
+    const socialLinks = profile.socialLinks || [];
+
+    const formatUrl = (url?: string) => {
+        if (!url) return "";
+        const trimmed = url.trim();
+        if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('tel:') || trimmed.startsWith('mailto:')) return trimmed;
+        return `https://${trimmed}`;
+    };
+
+    const actions = [
+        { label: t.phoneCallsBtn || "Ara", icon: <Phone size={20} />, href: `tel:${profile.phone}`, active: !!profile.phone, color: theme.hero1 },
+        { label: t.emailBtn || "E-Posta", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email, color: theme.hero2 }
+    ].filter(a => a.active);
+
+    return (
+        <div className={cn("min-h-screen", theme.body, toneStyle.font)}>
+            {/* Header with Curve */}
+            <div className={cn("relative h-64 sm:h-80 w-full overflow-hidden", theme.header)}>
+                <div className="absolute inset-0 bg-black/5" />
+                <svg className="absolute bottom-[-1px] w-full h-24 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
+                    <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+            </div>
+
+            {/* Content Area */}
+            <div className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center">
+                {/* Avatar */}
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="w-40 h-40 rounded-[2.5rem] bg-white p-2 shadow-2xl relative"
+                >
+                    <img src={profile.user.image} className="w-full h-full object-cover rounded-[2rem]" alt={profile.user.name} />
+                </motion.div>
+
+                {/* Info */}
+                <div className="text-center mt-6 space-y-1">
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">{profile.user.name}</h1>
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em]">{profile.occupation}</p>
+                    {profile.slogan && <p className="text-xs font-medium text-slate-400 mt-2 max-w-[280px] mx-auto italic opacity-80">"{profile.slogan}"</p>}
+                </div>
+
+                {/* Hero Actions */}
+                <div className="grid grid-cols-2 gap-4 w-full mt-10">
+                    {actions.map((action, i) => (
+                        <motion.a
+                            key={i}
+                            whileHover={{ y: -4, scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            href={action.href}
+                            className={cn("flex flex-col items-center justify-center py-6 rounded-3xl shadow-xl transition-all gap-3 text-white")}
+                            style={{ backgroundColor: action.color }}
+                        >
+                            {action.icon}
+                            <span className="text-[10px] font-black uppercase tracking-widest">{action.label}</span>
+                        </motion.a>
+                    ))}
+                </div>
+
+                {/* Social Links */}
+                <div className="w-full mt-10 space-y-3">
+                    {socialLinks.filter((l: any) => l.url && !l.isHero && l.platform !== 'phone').map((link: any, i: number) => (
+                        <motion.a
+                            key={i}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            href={formatUrl(link.url)}
+                            target="_blank"
+                            className={cn("flex items-center gap-4 p-5 rounded-[1.8rem] border border-slate-100 shadow-sm hover:shadow-md transition-all group", theme.card)}
+                        >
+                            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform text-slate-900">
+                                {link.platform === 'instagram' && <Instagram size={18} />}
+                                {link.platform === 'facebook' && <Facebook size={18} />}
+                                {link.platform === 'twitter' && <Twitter size={18} />}
+                                {link.platform === 'linkedin' && <Linkedin size={18} />}
+                                {link.platform === 'github' && <Github size={18} />}
+                                {link.platform === 'youtube' && <Youtube size={18} />}
+                                {link.platform === 'website' && <Globe size={18} />}
+                                {link.platform === 'whatsapp' && <MessageCircle size={18} />}
+                                {!['instagram', 'facebook', 'twitter', 'linkedin', 'github', 'youtube', 'website', 'whatsapp'].includes(link.platform) && <Globe size={18} />}
+                            </div>
+                            <span className="text-sm font-bold text-slate-700 capitalize">{link.platform}</span>
+                            <ArrowRight size={16} className="ml-auto text-slate-300 group-hover:text-slate-900 transition-colors" />
+                        </motion.a>
+                    ))}
+                </div>
+
+                {/* Appointment Button if active */}
+                {profile.showAppointmentBtn && (
+                    <button
+                        onClick={() => setIsAppointmentOpen(true)}
+                        className="w-full mt-8 py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3"
+                    >
+                        <Calendar size={20} /> {t.bookAppointment}
+                    </button>
+                )}
+
+                {/* Reviews Section */}
+                {reviews.length > 0 && (
+                    <div className="w-full mt-12 mb-20 space-y-6">
+                        <div className="flex items-center justify-between px-2">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">{t.reviewsTitle}</h3>
+                            <button onClick={() => setIsReviewModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-primary" style={{ color: theme.accent }}>{t.writeReview}</button>
+                        </div>
+                        <div className="space-y-4">
+                            {reviews.slice(0, 3).map((review: any, i: number) => (
+                                <div key={i} className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 space-y-3">
+                                    <div className="flex items-center gap-3">
+                                        <img src={review.image} className="w-8 h-8 rounded-full" />
+                                        <div className="flex-1">
+                                            <h4 className="text-[10px] font-black text-slate-900">{review.name}</h4>
+                                            <div className="flex text-amber-400">
+                                                {[...Array(5)].map((_, j) => <Star key={j} size={8} fill={j < review.rating ? "currentColor" : "none"} strokeWidth={2} />)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic">"{review.content}"</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Footer Logo */}
+                <div className="py-10 opacity-20 hover:opacity-100 transition-opacity">
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg">
+                            <Layout className="text-white w-3 h-3" />
+                        </div>
+                        <span className="text-sm font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
+                    </Link>
+                </div>
+            </div>
+
+            {/* Modals & Chat */}
+            <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
+            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
+            <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
+            <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
+            <SocialProof t={t} theme={theme} />
+            <AIChatAssistant
+                isOpen={isAIChatOpen}
+                onClose={() => setIsAIChatOpen(false)}
+                profile={profile}
+                t={t}
+                theme={theme}
+                toneStyle={toneStyle}
+                messages={chatMessages}
+                setMessages={setChatMessages}
+                aiConfig={aiConfig}
+            />
+        </div>
+    );
 }
 
 function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {

@@ -138,14 +138,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "pop", name: t('catPop'), icon: <Palette size={14} /> },
         { id: "zen", name: t('catZen'), icon: <Target size={14} /> },
         { id: "adventure", name: t('catAdventure'), icon: <MapPin size={14} /> },
-        { id: "celestial", name: t('catCelestial'), icon: <Compass size={14} /> },
-        { id: "minimal", name: t('catMinimal'), icon: <Layout size={14} /> },
-        { id: "industrial", name: t('catIndustrial'), icon: <Wind size={14} /> },
+        { id: "celestial", name: t('catCelestial'), icon: <Star size={14} /> },
+        { id: "minimal", name: t('catMinimal'), icon: <Circle size={14} /> },
+        { id: "industrial", name: t('catIndustrial'), icon: <Layout size={14} /> },
         { id: "vibrant", name: t('catVibrant'), icon: <Zap size={14} /> },
-        { id: "royal", name: t('catRoyal'), icon: <Gem size={14} /> },
-        { id: "tech", name: t('catTech'), icon: <Atom size={14} /> },
-        { id: "meta", name: t('catMeta'), icon: <Boxes size={14} /> },
-        { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> }
+        { id: "royal", name: t('catRoyal'), icon: <Crown size={14} /> },
+        { id: "tech", name: t('catTech'), icon: <Cpu size={14} /> },
+        { id: "meta", name: t('catMeta'), icon: <Globe size={14} /> },
+        { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> },
+        { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> }
     ]
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -487,7 +488,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "3d_galaxy", category: "3d", name: "🌌 3D Galaxy", description: "Derin uzay nebulası, dönen galaksi bulutu ve yıldız tozu butonlar.", isNew: true },
         { id: "3d_luxegold", category: "3d", name: "🏆 3D Luxe Gold", description: "Sıvı altın efekti, metalik gold butonlar ve premium lüks doku.", isNew: true },
         { id: "3d_hologram", category: "3d", name: "💿 3D Hologram", description: "İridyum gökkuşağı yansıması, krom butonlar ve prizmatik ızgara.", isNew: true },
-        { id: "3d_quantum", category: "3d", name: "🧬 3D Quantum Liquid", description: "Oval (pill) butonlar, hareketli akışkanlar ve ileri seviye derinlik.", isNew: true }
+        { id: "3d_quantum", category: "3d", name: "🧬 3D Quantum Liquid", description: "Oval (pill) butonlar, hareketli akışkanlar ve ileri seviye derinlik.", isNew: true },
+
+        // Elite Modern (Image inspired)
+        { id: "elite_pink", category: "elite", name: "💖 Elite Pink Wave", description: "Modern eğrisel başlık, pembe-turuncu geçiş ve profesyonel butonlar.", isNew: true },
+        { id: "elite_blue", category: "elite", name: "💙 Elite Ocean Wave", description: "Derin okyanus mavisi geçişleri ve ferah modern tasarım.", isNew: true },
+        { id: "elite_purple", category: "elite", name: "💜 Elite Violet Wave", description: "Asil mor geçişler ve premium minimalist yaklaşım.", isNew: true },
+        { id: "elite_emerald", category: "elite", name: "💚 Elite Mint Wave", description: "Taze nane yeşili geçişler ve teknolojik şıklık.", isNew: true },
+        { id: "elite_sunset", category: "elite", name: "🧡 Elite Sunset Wave", description: "Sıcak gün batımı tonları ve enerjik modern çizgiler.", isNew: true }
     ]
 
     // Working Hours Management
