@@ -509,28 +509,30 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 <div className="w-full mb-12 bg-slate-900/40 backdrop-blur-2xl rounded-[3rem] p-8 border border-white/5 shadow-2xl">
                     <div className="flex flex-col gap-8">
                         {/* Category Tabs */}
-                        <div className="flex bg-slate-950/50 p-1.5 rounded-full border border-white/5 w-fit mx-auto shadow-inner">
-                            {(['Standard', 'Premium', 'Ultimate'] as const).map((tab) => (
-                                <button
-                                    key={tab}
-                                    onClick={() => setActiveTab(tab)}
-                                    className={cn(
-                                        "px-8 py-3 rounded-full transition-all font-black text-[10px] uppercase tracking-widest flex items-center gap-2",
-                                        activeTab === tab
-                                            ? "bg-primary text-white shadow-xl scale-105"
-                                            : "text-slate-400 hover:text-white"
-                                    )}
-                                >
-                                    {tab === 'Standard' && <Palette size={14} />}
-                                    {tab === 'Premium' && <Star size={14} />}
-                                    {tab === 'Ultimate' && <Crown size={14} />}
-                                    {tab}
-                                </button>
-                            ))}
+                        <div className="max-w-full overflow-x-auto no-scrollbar py-2">
+                            <div className="flex bg-slate-950/50 p-1 rounded-full border border-white/5 w-fit mx-auto shadow-inner whitespace-nowrap">
+                                {(['Standard', 'Premium', 'Ultimate'] as const).map((tab) => (
+                                    <button
+                                        key={tab}
+                                        onClick={() => setActiveTab(tab)}
+                                        className={cn(
+                                            "px-4 sm:px-8 py-2.5 sm:py-3 rounded-full transition-all font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center gap-2",
+                                            activeTab === tab
+                                                ? "bg-primary text-white shadow-xl scale-105"
+                                                : "text-slate-400 hover:text-white"
+                                        )}
+                                    >
+                                        {tab === 'Standard' && <Palette size={14} />}
+                                        {tab === 'Premium' && <Star size={14} />}
+                                        {tab === 'Ultimate' && <Crown size={14} />}
+                                        {tab}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Template Picker */}
-                        <div className="grid grid-cols-4 sm:grid-cols-7 gap-4 justify-center">
+                        <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 sm:gap-4 justify-center">
                             {TEMPLATES.filter(t => t.category === activeTab).map((tpl) => (
                                 <button
                                     key={tpl.id}

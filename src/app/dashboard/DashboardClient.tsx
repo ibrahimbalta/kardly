@@ -2056,7 +2056,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <div className="flex justify-between items-center px-1">
+                                        <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('displayNameLabel')}</label>
                                             <button
                                                 onClick={() => toggleSocialHero('displayName')}
@@ -2077,7 +2077,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <div className="flex justify-between items-center px-1">
+                                        <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('occupationLabel')}</label>
                                             <button
                                                 onClick={() => toggleSocialHero('occupation')}
@@ -2098,7 +2098,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <div className="flex justify-between items-center px-1">
+                                        <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('sloganLabel')}</label>
                                             <button
                                                 onClick={() => toggleSocialHero('slogan')}
@@ -2121,7 +2121,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex justify-between items-center px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('bioLabel')}</label>
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex flex-wrap items-center gap-2 my-1">
                                                 <button
                                                     onClick={handleGenerateBio}
                                                     disabled={isGeneratingBio}
@@ -2149,7 +2149,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <div className="flex justify-between items-center px-1">
+                                        <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('phoneLabel')}</label>
                                             <button
                                                 onClick={() => toggleSocialHero('phone')}
@@ -3178,7 +3178,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <p className="text-sm text-foreground/50 max-w-sm mx-auto">{t('businessCardSub')}</p>
                         </div>
 
-                        <div className="glass p-10 rounded-[3.5rem] bg-white/5 border-white/5 mb-10">
+                        <div className="glass p-4 sm:p-10 rounded-[2rem] sm:rounded-[3.5rem] bg-white/5 border-white/5 mb-10 overflow-hidden">
                             <BusinessCardGenerator
                                 mode="selector"
                                 selectedTemplateId={profileData.businessCardTemplateId}
