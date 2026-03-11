@@ -3997,47 +3997,52 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         elite_pink: {
             header: "bg-gradient-to-r from-[#ec4899] to-[#fb923c]",
             body: "bg-white",
-            hero1: "bg-[#0f172a]",
-            hero2: "bg-[#ff2d55]",
+            btn: "bg-slate-900",
+            btnText: "text-white",
             card: "bg-slate-50",
             text: "text-slate-900",
-            accent: "#ff2d55"
+            accent: "#ec4899",
+            glow: "shadow-[0_0_20px_rgba(236,72,153,0.3)]"
         },
         elite_blue: {
             header: "bg-gradient-to-r from-[#06b6d4] to-[#3b82f6]",
             body: "bg-white",
-            hero1: "bg-[#0f172a]",
-            hero2: "bg-[#3498db]",
+            btn: "bg-slate-900",
+            btnText: "text-white",
             card: "bg-slate-50",
             text: "text-slate-900",
-            accent: "#3498db"
+            accent: "#3b82f6",
+            glow: "shadow-[0_0_20px_rgba(59,130,246,0.3)]"
         },
         elite_purple: {
             header: "bg-gradient-to-r from-[#8b5cf6] to-[#d946ef]",
             body: "bg-white",
-            hero1: "bg-[#0f172a]",
-            hero2: "bg-[#8e44ad]",
+            btn: "bg-slate-900",
+            btnText: "text-white",
             card: "bg-slate-50",
             text: "text-slate-900",
-            accent: "#8e44ad"
+            accent: "#a855f7",
+            glow: "shadow-[0_0_20px_rgba(168,85,247,0.3)]"
         },
         elite_emerald: {
             header: "bg-gradient-to-r from-[#10b981] to-[#3b82f6]",
             body: "bg-white",
-            hero1: "bg-[#0f172a]",
-            hero2: "bg-[#1abc9c]",
+            btn: "bg-slate-900",
+            btnText: "text-white",
             card: "bg-slate-50",
             text: "text-slate-900",
-            accent: "#1abc9c"
+            accent: "#10b981",
+            glow: "shadow-[0_0_20px_rgba(16,185,129,0.3)]"
         },
         elite_sunset: {
             header: "bg-gradient-to-r from-[#f59e0b] to-[#ef4444]",
             body: "bg-white",
-            hero1: "bg-[#0f172a]",
-            hero2: "bg-[#e67e22]",
+            btn: "bg-slate-900",
+            btnText: "text-white",
             card: "bg-slate-50",
             text: "text-slate-900",
-            accent: "#e67e22"
+            accent: "#f59e0b",
+            glow: "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
         }
     };
 
@@ -4052,122 +4057,227 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     };
 
     const actions = [
-        { label: t.phoneCallsBtn || "Ara", icon: <Phone size={20} />, href: `tel:${profile.phone}`, active: !!profile.phone, color: theme.hero1 },
-        { label: t.emailBtn || "E-Posta", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email, color: theme.hero2 }
+        {
+            label: t.phoneCallsBtn || "ARA",
+            icon: <Phone size={18} />,
+            href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`,
+            onClick: () => trackEvent("phone"),
+            active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
+        },
+        {
+            label: t.waMessagesBtn || "WHATSAPP",
+            icon: <MessageCircle size={18} />,
+            href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`,
+            onClick: () => trackEvent("whatsapp"),
+            active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
+        },
+        {
+            label: t.contactMeTitle || "İLETİŞİME GEÇ",
+            icon: <MessageSquare size={18} />,
+            onClick: () => {
+                trackEvent("contact_form");
+                setIsLeadModalOpen(true);
+            },
+            active: true
+        },
+        {
+            label: t.emailBtn || "E-MAIL",
+            icon: <Mail size={18} />,
+            href: `mailto:${profile.user.email}`,
+            onClick: () => trackEvent("email"),
+            active: !!profile.user.email
+        },
+        {
+            label: t.website || "WEB SİTE",
+            icon: <Globe size={18} />,
+            href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url),
+            onClick: () => trackEvent("website"),
+            active: !!socialLinks.find((l: any) => l.platform === 'website')?.url
+        },
+        {
+            label: t.locationsBtn || "KONUM",
+            icon: <MapPin size={18} />,
+            href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url),
+            onClick: () => trackEvent("location"),
+            active: !!socialLinks.find((l: any) => l.platform === 'location')?.url
+        },
     ].filter(a => a.active);
 
     return (
-        <div className={cn("min-h-screen", theme.body, toneStyle.font)}>
-            {/* Header with Curve */}
+        <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
+            {/* Top Navigation Icons */}
+            <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center">
+                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg">
+                    <QrCode size={18} />
+                </button>
+                <div className="flex gap-3">
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center text-white/80">
+                        <Plus size={18} />
+                    </button>
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center text-white/80 font-black text-[10px]">
+                        {lang.toUpperCase()}
+                    </button>
+                </div>
+            </div>
+
+            {/* Header Curve */}
             <div className={cn("relative h-64 sm:h-80 w-full overflow-hidden", theme.header)}>
-                <div className="absolute inset-0 bg-black/5" />
+                <div className="absolute inset-0 bg-black/10" />
                 <svg className="absolute bottom-[-1px] w-full h-24 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
                     <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
                 </svg>
             </div>
 
-            {/* Content Area */}
+            {/* Main Content */}
             <div className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center">
-                {/* Avatar */}
+                {/* Avatar with Glow */}
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="w-40 h-40 rounded-[2.5rem] bg-white p-2 shadow-2xl relative"
+                    className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative", theme.glow)}
                 >
-                    <img src={profile.user.image} className="w-full h-full object-cover rounded-[2rem]" alt={profile.user.name} />
+                    <img src={profile.user.image} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
                 </motion.div>
 
-                {/* Info */}
+                {/* Profile Information */}
                 <div className="text-center mt-6 space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">{profile.user.name}</h1>
-                    <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em]">{profile.occupation}</p>
-                    {profile.slogan && <p className="text-xs font-medium text-slate-400 mt-2 max-w-[280px] mx-auto italic opacity-80">"{profile.slogan}"</p>}
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
+                        <Sparkles size={18} style={{ color: theme.accent }} /> {profile.user.name}
+                    </h1>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
+                        <span className="w-6 h-[1px] bg-slate-200"></span>
+                        {profile.occupation}
+                        <span className="w-6 h-[1px] bg-slate-200"></span>
+                    </p>
+                    {profile.slogan && (
+                        <p className="text-[11px] font-medium text-slate-500 mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4">
+                            "{profile.slogan} 🚀"
+                        </p>
+                    )}
                 </div>
 
-                {/* Hero Actions */}
-                <div className="grid grid-cols-2 gap-4 w-full mt-10">
-                    {actions.map((action, i) => (
-                        <motion.a
-                            key={i}
-                            whileHover={{ y: -4, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            href={action.href}
-                            className={cn("flex flex-col items-center justify-center py-6 rounded-3xl shadow-xl transition-all gap-3 text-white")}
-                            style={{ backgroundColor: action.color }}
-                        >
-                            {action.icon}
-                            <span className="text-[10px] font-black uppercase tracking-widest">{action.label}</span>
-                        </motion.a>
-                    ))}
-                </div>
-
-                {/* Social Links */}
+                {/* Vertical Action Stack */}
                 <div className="w-full mt-10 space-y-3">
-                    {socialLinks.filter((l: any) => l.url && !l.isHero && l.platform !== 'phone').map((link: any, i: number) => (
-                        <motion.a
+                    {actions.map((action, i) => (
+                        <motion.button
                             key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            href={formatUrl(link.url)}
-                            target="_blank"
-                            className={cn("flex items-center gap-4 p-5 rounded-[1.8rem] border border-slate-100 shadow-sm hover:shadow-md transition-all group", theme.card)}
+                            whileHover={{ scale: 1.02, x: 5 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                                if (action.onClick) action.onClick();
+                                if (action.href) window.location.href = action.href;
+                            }}
+                            className="w-full flex items-center justify-center gap-4 py-5 rounded-[1.8rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-all group"
                         >
-                            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform text-slate-900">
-                                {link.platform === 'instagram' && <Instagram size={18} />}
-                                {link.platform === 'facebook' && <Facebook size={18} />}
-                                {link.platform === 'twitter' && <Twitter size={18} />}
-                                {link.platform === 'linkedin' && <Linkedin size={18} />}
-                                {link.platform === 'github' && <Github size={18} />}
-                                {link.platform === 'youtube' && <Youtube size={18} />}
-                                {link.platform === 'website' && <Globe size={18} />}
-                                {link.platform === 'whatsapp' && <MessageCircle size={18} />}
-                                {!['instagram', 'facebook', 'twitter', 'linkedin', 'github', 'youtube', 'website', 'whatsapp'].includes(link.platform) && <Globe size={18} />}
-                            </div>
-                            <span className="text-sm font-bold text-slate-700 capitalize">{link.platform}</span>
-                            <ArrowRight size={16} className="ml-auto text-slate-300 group-hover:text-slate-900 transition-colors" />
-                        </motion.a>
+                            <span style={{ color: theme.accent }} className="group-hover:scale-125 transition-transform">
+                                {action.icon}
+                            </span>
+                            <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">{action.label}</span>
+                        </motion.button>
                     ))}
                 </div>
 
-                {/* Appointment Button if active */}
-                {profile.showAppointmentBtn && (
-                    <button
-                        onClick={() => setIsAppointmentOpen(true)}
-                        className="w-full mt-8 py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3"
-                    >
-                        <Calendar size={20} /> {t.bookAppointment}
-                    </button>
+                {/* Bio Section */}
+                {profile.bio && (
+                    <div className="w-full mt-12 px-4 text-center">
+                        <p className="text-xs text-slate-500 leading-relaxed font-medium opacity-80 whitespace-pre-wrap">
+                            {profile.bio}
+                        </p>
+                    </div>
                 )}
 
                 {/* Reviews Section */}
                 {reviews.length > 0 && (
-                    <div className="w-full mt-12 mb-20 space-y-6">
+                    <div className="w-full mt-12 space-y-6">
                         <div className="flex items-center justify-between px-2">
-                            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">{t.reviewsTitle}</h3>
-                            <button onClick={() => setIsReviewModalOpen(true)} className="text-[10px] font-black uppercase tracking-widest text-primary" style={{ color: theme.accent }}>{t.writeReview}</button>
+                            <div className="flex items-center gap-2">
+                                <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.reviewsTitle}</h3>
+                            </div>
+                            <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 text-[8px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
+                                <Plus size={10} /> {t.writeReview}
+                            </button>
                         </div>
-                        <div className="space-y-4">
-                            {reviews.slice(0, 3).map((review: any, i: number) => (
-                                <div key={i} className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 space-y-3">
+                        <div className="bg-slate-50/50 p-6 rounded-[2.5rem] border border-slate-100 relative group overflow-hidden">
+                            <Quote className="absolute top-10 right-6 opacity-[0.03] text-slate-900 group-hover:scale-110 transition-transform" size={80} />
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={reviews[0].name}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="space-y-4 relative z-10"
+                                >
                                     <div className="flex items-center gap-3">
-                                        <img src={review.image} className="w-8 h-8 rounded-full" />
+                                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1 shadow-sm">
+                                            <img src={reviews[0].image} className="w-full h-full object-cover rounded-xl" />
+                                        </div>
                                         <div className="flex-1">
-                                            <h4 className="text-[10px] font-black text-slate-900">{review.name}</h4>
-                                            <div className="flex text-amber-400">
-                                                {[...Array(5)].map((_, j) => <Star key={j} size={8} fill={j < review.rating ? "currentColor" : "none"} strokeWidth={2} />)}
-                                            </div>
+                                            <h4 className="text-[11px] font-black text-slate-900">{reviews[0].name}</h4>
+                                            <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{reviews[0].title || "Müşteri"}</p>
+                                        </div>
+                                        <div className="flex gap-0.5 text-amber-400">
+                                            {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < reviews[0].rating ? "currentColor" : "none"} />)}
                                         </div>
                                     </div>
-                                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic">"{review.content}"</p>
-                                </div>
-                            ))}
+                                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed italic">"{reviews[0].content}"</p>
+                                    {reviews[0].isVerified && (
+                                        <div className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.2em] text-emerald-500 pt-2">
+                                            <CheckCircle2 size={12} /> DOĞRULANMIŞ GÖRÜŞ
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
                     </div>
                 )}
 
+                {/* Horizontal Social Row */}
+                <div className="w-full mt-12 flex flex-wrap justify-center gap-6">
+                    {socialLinks.filter((l: any) => l.url && !l.isHero && l.platform !== 'phone').map((link: any, i: number) => (
+                        <motion.a
+                            key={i}
+                            whileHover={{ scale: 1.2, y: -5 }}
+                            whileTap={{ scale: 0.9 }}
+                            href={formatUrl(link.url)}
+                            target="_blank"
+                            className="text-slate-400 hover:text-slate-900 transition-colors"
+                        >
+                            {link.platform === 'instagram' && <Instagram size={22} />}
+                            {link.platform === 'facebook' && <Facebook size={22} />}
+                            {link.platform === 'twitter' && <Twitter size={22} />}
+                            {link.platform === 'linkedin' && <Linkedin size={22} />}
+                            {link.platform === 'github' && <Github size={22} />}
+                            {link.platform === 'youtube' && <Youtube size={22} />}
+                            {link.platform === 'website' && <Globe size={22} />}
+                            {link.platform === 'whatsapp' && <MessageCircle size={22} />}
+                            {!['instagram', 'facebook', 'twitter', 'linkedin', 'github', 'youtube', 'website', 'whatsapp'].includes(link.platform) && <Globe size={22} />}
+                        </motion.a>
+                    ))}
+                    {profile.cvUrl && (
+                        <motion.a whileHover={{ scale: 1.2, y: -5 }} href={profile.cvUrl} target="_blank" className="text-slate-400 hover:text-slate-900">
+                            <FileText size={22} />
+                        </motion.a>
+                    )}
+                </div>
+
+                {/* Main CTA Button */}
+                {profile.showAppointmentBtn && (
+                    <motion.button
+                        whileHover={{ scale: 1.02, y: -4 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setIsAppointmentOpen(true)}
+                        className="w-full mt-12 py-6 rounded-[2.5rem] bg-slate-900 text-white font-black uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-4 group"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Briefcase size={20} />
+                        </div>
+                        <span className="flex-1 text-center pr-10">{t.bookAppointment || "DANIŞMANLIK AL"}</span>
+                        <Zap size={18} className="text-amber-400 animate-pulse" />
+                    </motion.button>
+                )}
+
                 {/* Footer Logo */}
-                <div className="py-10 opacity-20 hover:opacity-100 transition-opacity">
+                <div className="py-16 opacity-30 hover:opacity-100 transition-opacity">
                     <Link href="/" className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg">
                             <Layout className="text-white w-3 h-3" />
@@ -4177,7 +4287,31 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 </div>
             </div>
 
-            {/* Modals & Chat */}
+            {/* Sticky Bottom Footer Bar */}
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[360px] px-6 z-[100]">
+                <div className="bg-white/80 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-2">
+                    <button
+                        onClick={handleShare}
+                        className="flex-1 flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:bg-slate-100 transition-all border border-slate-100"
+                    >
+                        <Share2 size={14} /> PAYLAŞ
+                    </button>
+                    <button
+                        onClick={handleAddToContacts}
+                        className="flex-[1.5] flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all shadow-lg"
+                    >
+                        {t.addToContactsBtn || "REHBERE KAYDET"}
+                    </button>
+                    <button
+                        onClick={() => setIsQrOpen(true)}
+                        className="w-14 h-14 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                    >
+                        <QrCode size={20} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Components & Modals */}
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
             <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
