@@ -417,6 +417,10 @@ END:VCARD`
             return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
+        if (templateId.startsWith('athletic_')) {
+            return <AthleticProTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
+        }
+
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
@@ -4584,6 +4588,276 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
+        </div>
+    );
+}
+
+function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText }: any) {
+    const themes: any = {
+        "athletic_pro": {
+            bg: "bg-[#080808]",
+            card: "bg-white/[0.04]",
+            accent: profile.themeColor || "#00ffa3",
+            text: "text-white",
+            subtext: "text-white/40",
+            border: "border-white/10",
+            gradient: "from-zinc-900 to-black",
+            font: "font-sans"
+        },
+        "athletic_football": {
+            bg: "bg-[#050805]",
+            card: "bg-green-500/5",
+            accent: "#00ff66",
+            text: "text-white",
+            subtext: "text-green-200/30",
+            border: "border-green-500/20",
+            gradient: "from-green-950 to-black",
+            font: "font-sans"
+        },
+        "athletic_basketball": {
+            bg: "bg-[#0a0503]",
+            card: "bg-orange-500/5",
+            accent: "#f97316",
+            text: "text-white",
+            subtext: "text-orange-200/30",
+            border: "border-orange-500/20",
+            gradient: "from-orange-950 to-black",
+            font: "font-sans"
+        },
+        "athletic_tennis": {
+            bg: "bg-[#070803]",
+            card: "bg-yellow-400/5",
+            accent: "#eab308",
+            text: "text-white",
+            subtext: "text-yellow-100/30",
+            border: "border-yellow-400/20",
+            gradient: "from-yellow-950 to-black",
+            font: "font-sans"
+        }
+    }
+
+    const theme = themes[colorScheme] || themes.athletic_pro;
+    const socialLinks = profile.socialLinks || [];
+
+    const formatUrl = (url?: string) => {
+        if (!url) return "#";
+        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("mailto:") || url.startsWith("tel:")) return url;
+        return `https://${url}`;
+    };
+
+    const heroActions = [
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || profile.phone) }
+    ].filter(a => a.active);
+
+    return (
+        <div className={cn("min-h-screen relative overflow-x-hidden selection:bg-white/20", theme.bg, toneStyle.font)}>
+            {/* High Performance Background */}
+            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className={cn("absolute inset-0 bg-gradient-to-b opacity-40", theme.gradient)} />
+                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(45deg, ${theme.accent} 25%, transparent 25%, transparent 75%, ${theme.accent} 75%, ${theme.accent}), linear-gradient(45deg, ${theme.accent} 25%, transparent 25%, transparent 75%, ${theme.accent} 75%, ${theme.accent})`, backgroundSize: '60px 60px', backgroundPosition: '0 0, 30px 30px' }} />
+
+                {/* Moving Performance Lines */}
+                <div className="absolute top-0 left-0 w-full h-full">
+                    {[...Array(5)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "100%" }}
+                            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+                            className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent absolute"
+                            style={{ top: `${20 * i + 10}%` }}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Navigation Overlay */}
+            <div className="sticky top-0 left-0 right-0 z-[100] px-6 py-8 flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
+                <button onClick={() => setIsQrOpen(true)} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90">
+                    <QrCode size={20} />
+                </button>
+                <div className="flex gap-3">
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90">
+                        <UserPlus size={20} />
+                    </button>
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white font-black text-xs">
+                        {lang.toUpperCase()}
+                    </button>
+                </div>
+            </div>
+
+            <main className="relative z-10 w-full max-w-lg mx-auto px-6 pt-4 pb-40 space-y-10">
+                {/* Athlete Identity Card */}
+                <section className="relative">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={cn("relative p-2 rounded-[3.5rem] overflow-hidden border", theme.card, theme.border)}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+
+                        <div className="relative rounded-[3rem] overflow-hidden bg-zinc-900 shadow-2xl">
+                            <img
+                                src={profile.profileImage || "https://images.unsplash.com/photo-1508624217470-5ef0f947d8be?q=80&w=1470"}
+                                className="w-full aspect-[4/5] object-cover filter contrast-125 saturate-110"
+                                alt={profile.displayName}
+                            />
+
+                            {/* Identity Overlay */}
+                            <div className="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col items-center">
+                                <motion.h1
+                                    className="text-5xl font-black italic tracking-tighter text-white mb-2 uppercase text-center"
+                                    style={{ textShadow: `0 0 30px ${theme.accent}40` }}
+                                >
+                                    {profile.displayName}
+                                </motion.h1>
+                                <div className="flex items-center gap-3">
+                                    <span className="px-5 py-2 bg-white/10 border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white/60">
+                                        {profile.occupation || "Pro Athlete"}
+                                    </span>
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
+                                </div>
+                            </div>
+
+                            {/* Dynamic Rating / Rank Badge */}
+                            <div className="absolute top-8 right-8 flex flex-col items-center">
+                                <div className="text-[10px] font-black text-white/40 uppercase mb-1 tracking-widest">RANK</div>
+                                <div className="w-16 h-16 rounded-full border-4 border-white/10 bg-black/40 backdrop-blur-xl flex items-center justify-center text-2xl font-black italic text-white" style={{ borderColor: `${theme.accent}40` }}>
+                                    {profile.blocks?.length > 5 ? "89" : "PRO"}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Quick Stats / Hero Actions */}
+                    <div className="grid grid-cols-2 gap-4 mt-8">
+                        {heroActions.map((action, i) => (
+                            <motion.a
+                                key={i}
+                                href={action.href}
+                                initial={{ opacity: 0, x: i === 0 ? -20 : 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className={cn("p-6 rounded-[2.5rem] border flex items-center gap-4 transition-all hover:bg-white/10 active:scale-95 group", theme.card, theme.border)}
+                            >
+                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white/10 transition-all">
+                                    {action.icon}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] font-black text-white/40 tracking-[0.2em] uppercase">CONTACT</span>
+                                    <span className="text-xs font-black uppercase tracking-widest">{action.label}</span>
+                                </div>
+                            </motion.a>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Slogan / Bio Section */}
+                {(profile.slogan || profile.bio) && (
+                    <motion.section
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center space-y-4"
+                    >
+                        {profile.slogan && <h2 className="text-2xl font-black italic text-white tracking-tight uppercase leading-none opacity-90">{profile.slogan}</h2>}
+                        {profile.bio && <p className="text-sm font-medium text-white/50 leading-relaxed max-w-sm mx-auto">{profile.bio}</p>}
+                    </motion.section>
+                )}
+
+                {/* Performance Blocks */}
+                <div className="space-y-6">
+                    {profile.blocks?.filter((b: any) => b.isActive).sort((a: any, b: any) => a.order - b.order).map((block: any) => (
+                        <div key={block.id}>
+                            {/* Special Block Headers */}
+                            <div className="flex items-center gap-3 mb-4 px-2">
+                                <span className="w-8 h-[2px] rounded-full bg-white/10" />
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">{block.title || block.type}</h3>
+                                <div className="flex-1 h-[1px] bg-white/5" />
+                            </div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className={cn("rounded-[2.5rem] p-8 border transition-all hover:bg-white/[0.06]", theme.card, theme.border)}
+                            >
+                                {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'video' && <VideoWidget url={block.content?.url} btnText={block.content?.btnText} theme={theme} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/60 leading-relaxed font-medium" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
+                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/10" alt="" />}
+                                {block.type === 'map' && (
+                                    <div className="space-y-4">
+                                        <div className="w-full h-40 rounded-2xl overflow-hidden border border-white/10 grayscale brightness-75 bg-zinc-900">
+                                            <iframe width="100%" height="100%" frameBorder="0" style={{ border: 0 }} src={`https://www.google.com/maps?q=${encodeURIComponent(block.content?.location || "")}&output=embed`} allowFullScreen></iframe>
+                                        </div>
+                                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(block.content?.location || "")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-all">
+                                            <MapPin size={14} /> NAVİGASYON
+                                        </a>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Social Media Grid */}
+                {socialLinks.length > 0 && (
+                    <section className="grid grid-cols-4 gap-4">
+                        {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
+                            <motion.a
+                                key={i}
+                                href={formatUrl(link.url)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                className={cn("aspect-square rounded-[1.5rem] border flex items-center justify-center text-white transition-all", theme.card, theme.border)}
+                                style={{ backgroundColor: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}
+                            >
+                                {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={20} />}
+                            </motion.a>
+                        ))}
+                    </section>
+                )}
+            </main>
+
+            {/* Performance Sticky Bottom Bar */}
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[340px] px-6 z-[100]">
+                <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between gap-2 overflow-hidden">
+                    <button
+                        onClick={() => setIsAIChatOpen(true)}
+                        className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group hover:bg-white/10 transition-all"
+                    >
+                        <Bot size={22} className="group-hover:animate-bounce" />
+                    </button>
+
+                    <button
+                        onClick={handleCVView}
+                        className="flex-1 px-6 py-4 rounded-full flex items-center justify-center gap-3 bg-white text-black text-xs font-black uppercase tracking-[0.1em] hover:bg-zinc-200 transition-all active:scale-95"
+                    >
+                        <FileText size={16} /> {profile.isCatalog ? t.viewCatalog || "KATALOG" : t.viewCV || "CV / PROFİL"}
+                    </button>
+
+                    <button
+                        onClick={handleShare}
+                        className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group hover:bg-white/10 transition-all"
+                    >
+                        <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Integration with Shared Components */}
+            <AnimatePresence>
+                {isWalletModalOpen && (
+                    <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />
+                )}
+            </AnimatePresence>
+            <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
+            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
+            <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
+            <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
+            <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
     );
 }
