@@ -148,7 +148,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "tech", name: t('catTech'), icon: <Cpu size={14} /> },
         { id: "meta", name: t('catMeta'), icon: <Globe size={14} /> },
         { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> },
-        { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> }
+        { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> },
+        { id: "athletic", name: "Sporcu / Pro", icon: <Activity size={14} /> }
     ]
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -497,7 +498,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "elite_blue", category: "elite", name: "💙 Elite Ocean Wave", description: "Derin okyanus mavisi geçişleri ve ferah modern tasarım.", isNew: true },
         { id: "elite_purple", category: "elite", name: "💜 Elite Violet Wave", description: "Asil mor geçişler ve premium minimalist yaklaşım.", isNew: true },
         { id: "elite_emerald", category: "elite", name: "💚 Elite Mint Wave", description: "Taze nane yeşili geçişler ve teknolojik şıklık.", isNew: true },
-        { id: "elite_sunset", category: "elite", name: "🧡 Elite Sunset Wave", description: "Sıcak gün batımı tonları ve enerjik modern çizgiler.", isNew: true }
+        { id: "elite_sunset", category: "elite", name: "🧡 Elite Sunset Wave", description: "Sıcak gün batımı tonları ve enerjik modern çizgiler.", isNew: true },
+
+        // Athlete Pro
+        { id: "athletic_pro", category: "athletic", name: "🏆 Athlete Pro (Dark)", description: "Yüksek performans odaklı, dinamik ve maskülen sporcu tasarımı.", isNew: true },
+        { id: "athletic_football", category: "athletic", name: "⚽ Football Pro", description: "Futbolcular için yeşil saha ve enerji odaklı özel tasarım.", isNew: true },
+        { id: "athletic_basketball", category: "athletic", name: "🏀 Basketball Pro", description: "Basketbolcular için turuncu vurgulu, sert hatlı parke estetiği.", isNew: true },
+        { id: "athletic_tennis", category: "athletic", name: "🎾 Tennis Pro", description: "Tenisçiler için asil, raket/top vurgulu modern kort tasarımı.", isNew: true }
     ]
 
     // Working Hours Management
