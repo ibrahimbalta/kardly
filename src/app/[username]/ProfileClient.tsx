@@ -179,6 +179,17 @@ export default function ProfileClient({ profile }: { profile: any }) {
 
     const t = translations[lang as keyof typeof translations] || translations.tr
 
+    const translateText = (text: string) => {
+        if (lang === 'tr' || !text) return text;
+        const mapping: Record<string, string> = {
+            "Dış Doktoru": "Dentist",
+            "Gülüşünüzü Aydınlatın": "Brighten Your Smile",
+            "Yazılım Mimarı": "Software Architect",
+            "Tasarımcı": "Designer"
+        };
+        return mapping[text] || text;
+    };
+
     useEffect(() => {
         setMounted(true)
 
@@ -2099,16 +2110,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
     const customLinks = customLinksEntry?.links || [];
 
-    const translateText = (text: string) => {
-        if (lang === 'tr' || !text) return text;
-        const mapping: Record<string, string> = {
-            "Dış Doktoru": "Dentist",
-            "Gülüşünüzü Aydınlatın": "Brighten Your Smile",
-            "Yazılım Mimarı": "Software Architect",
-            "Tasarımcı": "Designer"
-        };
-        return mapping[text] || text;
-    };
 
     const getHeroIcon = (platform: string) => {
         switch (platform) {
