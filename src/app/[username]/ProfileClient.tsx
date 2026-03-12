@@ -417,7 +417,7 @@ END:VCARD`
             return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
-        return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} />;
+        return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
     return (
@@ -430,7 +430,7 @@ END:VCARD`
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
