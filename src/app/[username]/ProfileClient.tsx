@@ -4595,44 +4595,44 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText }: any) {
     const themes: any = {
         "athletic_pro": {
-            bg: "bg-[#080808]",
-            card: "bg-white/[0.04]",
-            accent: profile.themeColor || "#00ffa3",
+            bg: "bg-[#0c0c0c]",
+            card: "bg-white/[0.03]",
+            accent: profile.themeColor || "#ff3131",
             text: "text-white",
             subtext: "text-white/40",
-            border: "border-white/10",
-            gradient: "from-zinc-900 to-black",
-            font: "font-sans"
+            border: "border-white/5",
+            gradient: "from-red-600/10 via-transparent to-transparent",
+            glow: "shadow-[0_0_40px_-10px_#ff3131]"
         },
         "athletic_football": {
             bg: "bg-[#050805]",
-            card: "bg-green-500/5",
+            card: "bg-white/[0.02]",
             accent: "#00ff66",
             text: "text-white",
-            subtext: "text-green-200/30",
-            border: "border-green-500/20",
-            gradient: "from-green-950 to-black",
-            font: "font-sans"
+            subtext: "text-green-500/30",
+            border: "border-green-500/10",
+            gradient: "from-green-600/10 via-transparent to-transparent",
+            glow: "shadow-[0_0_40px_-10px_#00ff66]"
         },
         "athletic_basketball": {
             bg: "bg-[#0a0503]",
-            card: "bg-orange-500/5",
+            card: "bg-white/[0.02]",
             accent: "#f97316",
             text: "text-white",
-            subtext: "text-orange-200/30",
-            border: "border-orange-500/20",
-            gradient: "from-orange-950 to-black",
-            font: "font-sans"
+            subtext: "text-orange-500/30",
+            border: "border-orange-500/10",
+            gradient: "from-orange-600/10 via-transparent to-transparent",
+            glow: "shadow-[0_0_40px_-10px_#f97316]"
         },
         "athletic_tennis": {
             bg: "bg-[#070803]",
-            card: "bg-yellow-400/5",
+            card: "bg-white/[0.02]",
             accent: "#eab308",
             text: "text-white",
-            subtext: "text-yellow-100/30",
-            border: "border-yellow-400/20",
-            gradient: "from-yellow-950 to-black",
-            font: "font-sans"
+            subtext: "text-yellow-400/30",
+            border: "border-yellow-400/10",
+            gradient: "from-yellow-600/10 via-transparent to-transparent",
+            glow: "shadow-[0_0_40px_-10px_#eab308]"
         }
     }
 
@@ -4645,155 +4645,150 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         return `https://${url}`;
     };
 
-    const heroActions = [
-        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
-        { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || profile.phone) }
+    const actionButtons = [
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${profile.phone}`, active: !!profile.phone },
+        { label: "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(profile.phone || "").replace(/\D/g, '')}`, active: !!profile.phone },
+        { label: t.locationsBtn || "KONUM", icon: <MapPin size={18} />, onClick: () => { document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }) }, active: !!profile.blocks?.find((b: any) => b.type === 'map') },
+        { label: t.viewCV || "CV / PROFİL", icon: <FileText size={18} />, onClick: handleCVView, active: true },
+        { label: t.sharesBtn || "PAYLAŞ", icon: <Share2 size={18} />, onClick: handleShare, active: true }
     ].filter(a => a.active);
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden selection:bg-white/20", theme.bg, toneStyle.font)}>
-            {/* High Performance Background */}
+            {/* Stadium Atmosphere Background */}
             <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
                 <div className={cn("absolute inset-0 bg-gradient-to-b opacity-40", theme.gradient)} />
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(45deg, ${theme.accent} 25%, transparent 25%, transparent 75%, ${theme.accent} 75%, ${theme.accent}), linear-gradient(45deg, ${theme.accent} 25%, transparent 25%, transparent 75%, ${theme.accent} 75%, ${theme.accent})`, backgroundSize: '60px 60px', backgroundPosition: '0 0, 30px 30px' }} />
-
-                {/* Moving Performance Lines */}
-                <div className="absolute top-0 left-0 w-full h-full">
-                    {[...Array(5)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ x: "-100%" }}
-                            animate={{ x: "100%" }}
-                            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
-                            className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent absolute"
-                            style={{ top: `${20 * i + 10}%` }}
-                        />
-                    ))}
-                </div>
+                <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] blur-[150px] rounded-full opacity-20" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] blur-[150px] rounded-full opacity-10" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/black-paper.png')` }} />
             </div>
 
-            {/* Navigation Overlay */}
-            <div className="sticky top-0 left-0 right-0 z-[100] px-6 py-8 flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
-                <button onClick={() => setIsQrOpen(true)} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90">
-                    <QrCode size={20} />
+            {/* Float Nav Header */}
+            <header className="sticky top-0 left-0 right-0 z-[100] px-6 py-6 flex justify-between items-center bg-black/10 backdrop-blur-md">
+                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all active:scale-90">
+                    <QrCode size={18} />
                 </button>
-                <div className="flex gap-3">
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90">
-                        <UserPlus size={20} />
-                    </button>
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white font-black text-xs">
+                <div className="flex gap-2">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 font-black text-[9px] uppercase tracking-widest hover:text-white transition-all">
                         {lang.toUpperCase()}
                     </button>
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all active:scale-90">
+                        <UserPlus size={18} />
+                    </button>
                 </div>
-            </div>
+            </header>
 
-            <main className="relative z-10 w-full max-w-lg mx-auto px-6 pt-4 pb-40 space-y-10">
-                {/* Athlete Identity Card */}
-                <section className="relative">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={cn("relative p-2 rounded-[3.5rem] overflow-hidden border", theme.card, theme.border)}
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-
-                        <div className="relative rounded-[3rem] overflow-hidden bg-zinc-900 shadow-2xl">
+            <main className="relative z-10 w-full max-w-lg mx-auto px-6 py-4 pb-48 space-y-12">
+                {/* Visual Identity Section (Image 1 Style) */}
+                <section className="flex flex-col items-center text-center space-y-8">
+                    {/* Circle Image with Orbit */}
+                    <div className="relative">
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute -inset-4 border border-dashed border-white/10 rounded-full"
+                        />
+                        <div className="relative w-40 h-40 p-2 rounded-full bg-[#111] shadow-2xl overflow-hidden border border-white/5">
+                            <div className="absolute inset-0 rounded-full border-2 opacity-60" style={{ borderColor: theme.accent, boxShadow: `0 0 25px ${theme.accent}40` }} />
                             <img
                                 src={profile.profileImage || "https://images.unsplash.com/photo-1508624217470-5ef0f947d8be?q=80&w=1470"}
-                                className="w-full aspect-[4/5] object-cover filter contrast-125 saturate-110"
+                                className="w-full h-full object-cover rounded-full filter contrast-110"
                                 alt={profile.displayName}
                             />
-
-                            {/* Identity Overlay */}
-                            <div className="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col items-center">
-                                <motion.h1
-                                    className="text-5xl font-black italic tracking-tighter text-white mb-2 uppercase text-center"
-                                    style={{ textShadow: `0 0 30px ${theme.accent}40` }}
-                                >
-                                    {profile.displayName}
-                                </motion.h1>
-                                <div className="flex items-center gap-3">
-                                    <span className="px-5 py-2 bg-white/10 border border-white/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white/60">
-                                        {profile.occupation || "Pro Athlete"}
-                                    </span>
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
-                                </div>
-                            </div>
-
-                            {/* Dynamic Rating / Rank Badge */}
-                            <div className="absolute top-8 right-8 flex flex-col items-center">
-                                <div className="text-[10px] font-black text-white/40 uppercase mb-1 tracking-widest">RANK</div>
-                                <div className="w-16 h-16 rounded-full border-4 border-white/10 bg-black/40 backdrop-blur-xl flex items-center justify-center text-2xl font-black italic text-white" style={{ borderColor: `${theme.accent}40` }}>
-                                    {profile.blocks?.length > 5 ? "89" : "PRO"}
-                                </div>
-                            </div>
                         </div>
-                    </motion.div>
+                        {/* Verified Badge Position */}
+                        <div className="absolute bottom-2 right-4 bg-blue-500 text-white rounded-full p-1 border-2 border-[#111]">
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check size={10} strokeWidth={4} /></motion.div>
+                        </div>
+                    </div>
 
-                    {/* Quick Stats / Hero Actions */}
-                    <div className="grid grid-cols-2 gap-4 mt-8">
-                        {heroActions.map((action, i) => (
-                            <motion.a
+                    {/* Typography Branding */}
+                    <div className="space-y-3">
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-0 text-center">
+                            <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none">
+                                {profile.displayName?.split(' ')[0]} <span style={{ color: theme.accent }}>{profile.displayName?.split(' ').slice(1).join(' ')}</span>
+                            </h1>
+                            <div className="flex items-center justify-center gap-3 mt-3 text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
+                                <span>{profile.occupation}</span>
+                                <span className="w-1 h-1 rounded-full bg-white/20" />
+                                <span>TÜRKİYE</span>
+                            </div>
+                        </motion.div>
+
+                        {profile.slogan && (
+                            <div className="inline-flex items-center gap-3 px-4 py-1.5 border border-white/5 rounded-full bg-white/[0.02]">
+                                <Zap size={10} className="text-amber-400 fill-amber-400" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{profile.slogan}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Quick Stats Grid Buttons */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
+                        {actionButtons.map((btn, i) => (
+                            <button
                                 key={i}
-                                href={action.href}
-                                initial={{ opacity: 0, x: i === 0 ? -20 : 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className={cn("p-6 rounded-[2.5rem] border flex items-center gap-4 transition-all hover:bg-white/10 active:scale-95 group", theme.card, theme.border)}
+                                onClick={() => btn.onClick ? btn.onClick() : btn.href && (window.location.href = btn.href)}
+                                className={cn(
+                                    "p-6 rounded-[2.5rem] border flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group relative overflow-hidden",
+                                    theme.card,
+                                    theme.border,
+                                    "hover:bg-white/[0.08]"
+                                )}
                             >
-                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white/10 transition-all">
-                                    {action.icon}
+                                <div
+                                    className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
+                                    style={{ color: theme.accent, backgroundColor: `${theme.accent}10` }}
+                                >
+                                    {btn.icon}
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[8px] font-black text-white/40 tracking-[0.2em] uppercase">CONTACT</span>
-                                    <span className="text-xs font-black uppercase tracking-widest">{action.label}</span>
-                                </div>
-                            </motion.a>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-white/50">{btn.label}</span>
+                            </button>
                         ))}
                     </div>
                 </section>
 
-                {/* Slogan / Bio Section */}
-                {(profile.slogan || profile.bio) && (
-                    <motion.section
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-center space-y-4"
-                    >
-                        {profile.slogan && <h2 className="text-2xl font-black italic text-white tracking-tight uppercase leading-none opacity-90">{profile.slogan}</h2>}
-                        {profile.bio && <p className="text-sm font-medium text-white/50 leading-relaxed max-w-sm mx-auto">{profile.bio}</p>}
-                    </motion.section>
-                )}
-
-                {/* Performance Blocks */}
-                <div className="space-y-6">
+                {/* Content Blocks */}
+                <div className="space-y-12">
                     {profile.blocks?.filter((b: any) => b.isActive).sort((a: any, b: any) => a.order - b.order).map((block: any) => (
-                        <div key={block.id}>
-                            {/* Special Block Headers */}
-                            <div className="flex items-center gap-3 mb-4 px-2">
-                                <span className="w-8 h-[2px] rounded-full bg-white/10" />
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">{block.title || block.type}</h3>
-                                <div className="flex-1 h-[1px] bg-white/5" />
+                        <div key={block.id} id={block.type === 'map' ? 'map-section' : undefined} className="space-y-5">
+                            {/* Section Header */}
+                            <div className="flex items-center gap-3 px-2">
+                                <span className="w-1 h-5 rounded-full" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/80 italic">{block.title || block.type}</h3>
+                                <div className="flex-1 h-[0.5px] bg-white/5" />
                             </div>
 
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className={cn("rounded-[2.5rem] p-8 border transition-all hover:bg-white/[0.06]", theme.card, theme.border)}
+                                className={cn("rounded-[3rem] border p-8 transition-all hover:bg-white/[0.04] relative overflow-hidden", theme.card, theme.border)}
                             >
                                 {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
                                 {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'video' && <VideoWidget url={block.content?.url} btnText={block.content?.btnText} theme={theme} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/60 leading-relaxed font-medium" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
-                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/10" alt="" />}
-                                {block.type === 'map' && (
-                                    <div className="space-y-4">
-                                        <div className="w-full h-40 rounded-2xl overflow-hidden border border-white/10 grayscale brightness-75 bg-zinc-900">
-                                            <iframe width="100%" height="100%" frameBorder="0" style={{ border: 0 }} src={`https://www.google.com/maps?q=${encodeURIComponent(block.content?.location || "")}&output=embed`} allowFullScreen></iframe>
+                                {block.type === 'video' && (
+                                    <div className="relative rounded-3xl overflow-hidden aspect-video border border-white/5 bg-black group">
+                                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                                            <div
+                                                className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-white transition-all group-hover:scale-110"
+                                                style={{ backgroundColor: `${theme.accent}60` }}
+                                            >
+                                                <Play size={24} fill="currentColor" className="ml-1" />
+                                            </div>
                                         </div>
-                                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(block.content?.location || "")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-white/60 hover:text-white transition-all">
-                                            <MapPin size={14} /> NAVİGASYON
-                                        </a>
+                                        <img
+                                            src={`https://img.youtube.com/vi/${(block.content?.url || "").split('v=')[1]?.split('&')[0]}/maxresdefault.jpg`}
+                                            className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                                            alt=""
+                                        />
+                                    </div>
+                                )}
+                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/40 leading-relaxed font-bold italic" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
+                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5" alt="" />}
+                                {block.type === 'map' && (
+                                    <div className="w-full h-44 rounded-3xl overflow-hidden border border-white/5 grayscale brightness-75 bg-[#111]">
+                                        <iframe width="100%" height="100%" frameBorder="0" style={{ border: 0 }} src={`https://www.google.com/maps?q=${encodeURIComponent(block.content?.location || "")}&output=embed`} allowFullScreen></iframe>
                                     </div>
                                 )}
                             </motion.div>
@@ -4801,18 +4796,17 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     ))}
                 </div>
 
-                {/* Social Media Grid */}
+                {/* Social Icon Bar */}
                 {socialLinks.length > 0 && (
-                    <section className="grid grid-cols-4 gap-4">
+                    <section className="flex flex-wrap justify-center gap-6 py-10 border-t border-white/5">
                         {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
                             <motion.a
                                 key={i}
                                 href={formatUrl(link.url)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                whileHover={{ scale: 1.1, rotate: 5 }}
-                                className={cn("aspect-square rounded-[1.5rem] border flex items-center justify-center text-white transition-all", theme.card, theme.border)}
-                                style={{ backgroundColor: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}
+                                whileHover={{ scale: 1.2 }}
+                                className="text-white/30 hover:text-white transition-all"
                             >
                                 {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={20} />}
                             </motion.a>
@@ -4821,33 +4815,36 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 )}
             </main>
 
-            {/* Performance Sticky Bottom Bar */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[340px] px-6 z-[100]">
-                <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between gap-2 overflow-hidden">
+            {/* Premium CTA Floating Bottom Bar (Image 1 Style) */}
+            <div className="fixed bottom-0 left-0 right-0 p-8 z-[120] bg-gradient-to-t from-black via-black/80 to-transparent">
+                <div className="max-w-lg mx-auto flex gap-3 h-16">
                     <button
                         onClick={() => setIsAIChatOpen(true)}
-                        className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group hover:bg-white/10 transition-all"
+                        className="w-16 h-full rounded-[2.5rem] bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all"
                     >
-                        <Bot size={22} className="group-hover:animate-bounce" />
+                        <Bot size={22} />
                     </button>
 
                     <button
-                        onClick={handleCVView}
-                        className="flex-1 px-6 py-4 rounded-full flex items-center justify-center gap-3 bg-white text-black text-xs font-black uppercase tracking-[0.1em] hover:bg-zinc-200 transition-all active:scale-95"
+                        onClick={() => setIsLeadModalOpen(true)}
+                        className={cn(
+                            "flex-1 h-full rounded-[2.5rem] border-2 flex items-center justify-between px-8 text-white relative overflow-hidden group transition-all active:scale-95",
+                            theme.glow
+                        )}
+                        style={{ backgroundColor: `${theme.accent}30`, borderColor: `${theme.accent}60` }}
                     >
-                        <FileText size={16} /> {profile.isCatalog ? t.viewCatalog || "KATALOG" : t.viewCV || "CV / PROFİL"}
-                    </button>
-
-                    <button
-                        onClick={handleShare}
-                        className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group hover:bg-white/10 transition-all"
-                    >
-                        <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-700" />
+                        <span className="text-xs font-black uppercase tracking-[0.2em] italic relative z-10">
+                            {profile.isCatalog ? "KATALOGU GÖRÜNTÜLE" : "BİZE ULAŞIN / MENAJER"}
+                        </span>
+                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                            <ArrowRight size={16} />
+                        </div>
                     </button>
                 </div>
             </div>
 
-            {/* Integration with Shared Components */}
+            {/* Core Component Logic Integration */}
             <AnimatePresence>
                 {isWalletModalOpen && (
                     <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />
@@ -4861,6 +4858,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         </div>
     );
 }
+
 
 function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
     const [formData, setFormData] = useState({
