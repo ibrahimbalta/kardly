@@ -2068,15 +2068,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('displayNameLabel')}</label>
-                                            <button
-                                                onClick={() => toggleSocialHero('displayName')}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
-                                                    isSocialHero('displayName') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                )}
-                                            >
-                                                {isSocialHero('displayName') ? t('heroButton') : t('makeHero')}
-                                            </button>
                                         </div>
                                         <input
                                             type="text"
@@ -2089,15 +2080,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('occupationLabel')}</label>
-                                            <button
-                                                onClick={() => toggleSocialHero('occupation')}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
-                                                    isSocialHero('occupation') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                )}
-                                            >
-                                                {isSocialHero('occupation') ? t('heroButton') : t('makeHero')}
-                                            </button>
                                         </div>
                                         <input
                                             type="text"
@@ -2110,15 +2092,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('sloganLabel')}</label>
-                                            <button
-                                                onClick={() => toggleSocialHero('slogan')}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
-                                                    isSocialHero('slogan') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                )}
-                                            >
-                                                {isSocialHero('slogan') ? t('heroButton') : t('makeHero')}
-                                            </button>
                                         </div>
                                         <input
                                             type="text"
@@ -2140,15 +2113,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     {isGeneratingBio ? <div className="w-3 h-3 border border-primary/20 border-t-primary rounded-full animate-spin" /> : <Sparkles size={12} />}
                                                     {t('generateWithAi')}
                                                 </button>
-                                                <button
-                                                    onClick={() => toggleSocialHero('bio')}
-                                                    className={cn(
-                                                        "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg ml-2",
-                                                        isSocialHero('bio') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                    )}
-                                                >
-                                                    {isSocialHero('bio') ? t('heroButton') : t('makeHero')}
-                                                </button>
                                             </div>
                                         </div>
                                         <textarea
@@ -2161,15 +2125,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('phoneLabel')}</label>
-                                            <button
-                                                onClick={() => toggleSocialHero('phone')}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
-                                                    isSocialHero('phone') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                )}
-                                            >
-                                                {isSocialHero('phone') ? t('heroButton') : t('makeHero')}
-                                            </button>
                                         </div>
                                         <input
                                             type="tel"
@@ -2189,15 +2144,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('targetAudienceLabel')}</label>
-                                            <button
-                                                onClick={() => toggleSocialHero('targetAudience')}
-                                                className={cn(
-                                                    "text-[10px] font-black uppercase tracking-widest transition-all px-2 py-0.5 rounded-lg",
-                                                    isSocialHero('targetAudience') ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                                )}
-                                            >
-                                                {isSocialHero('targetAudience') ? t('heroButton') : t('makeHero')}
-                                            </button>
                                         </div>
                                         <input
                                             type="text"
@@ -2334,6 +2280,68 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </label>
                                         </div>
                                     </div>
+                                </div>
+                                {/* CV / Catalog File */}
+                                <div className="space-y-4 pt-4 border-t border-slate-50">
+                                    <div className="flex items-center justify-between px-1">
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('cvLabel') || 'CV Dosyası / Katalog'}</label>
+                                        <div className="flex items-center gap-3 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100/50">
+                                            <input
+                                                type="checkbox"
+                                                id="isCatalog"
+                                                checked={profileData.isCatalog}
+                                                onChange={(e) => setProfileData({ ...profileData, isCatalog: e.target.checked })}
+                                                className="w-3.5 h-3.5 rounded border-slate-300 text-blue-500 focus:ring-blue-200"
+                                            />
+                                            <label htmlFor="isCatalog" className="text-[10px] font-black uppercase tracking-widest text-blue-600 cursor-pointer">{t('showAsCatalog')}</label>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-4 items-start">
+                                        <div className="w-full sm:w-40 h-14 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                                            {profileData.cvUrl ? (
+                                                <div className="flex items-center gap-2 text-primary">
+                                                    <FileText size={20} />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest">{t('file')}</span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <FileText size={20} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 w-full flex flex-col sm:flex-row gap-2">
+                                            <input
+                                                type="text"
+                                                value={profileData.cvUrl || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, cvUrl: e.target.value })}
+                                                placeholder={profileData.isCatalog ? (t('catalogFileHint') || "Katalog dosya linki") : (t('cvHint') || "CV dosya linki")}
+                                                className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
+                                            />
+                                            <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                                                <Upload size={16} /> {t('upload')}
+                                                <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept=".pdf,.doc,.docx,.jpg,.png"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            const formData = new FormData()
+                                                            formData.append("file", file)
+                                                            try {
+                                                                const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                                                const data = await res.json()
+                                                                if (data.url) setProfileData((prev: any) => ({ ...prev, cvUrl: data.url }))
+                                                            } catch (err) { console.error(err) }
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <p className="text-[9px] text-slate-400 font-medium px-1 italic">
+                                        {profileData.isCatalog ? (t('catalogHint') || "CV butonu yerine 'Katalog Görüntüle' etiketini kullanın.") : (t('cvHint') || "CV dosya linki veya dosyayı yükleyin")}
+                                    </p>
                                 </div>
                             </div>
 
