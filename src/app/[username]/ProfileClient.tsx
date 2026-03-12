@@ -5222,70 +5222,78 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
             <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.98 }}
                 className={cn(
-                    "relative w-full max-w-[300px] p-5 rounded-[2rem] shadow-2xl overflow-hidden border backdrop-blur-3xl transition-all",
-                    theme.card,
-                    theme.border
+                    "relative w-full max-w-[320px] p-8 rounded-[2.5rem] shadow-2xl overflow-hidden border transition-all bg-[#0a0a0a] border-white/5",
+                    toneStyle?.font
                 )}
+                style={{
+                    boxShadow: `0 30px 60px -12px rgba(0,0,0,0.8), 0 0 40px ${theme.accent}10`
+                }}
             >
-                {/* Micro Glows */}
-                <div
-                    className="absolute -top-10 -right-10 w-24 h-24 blur-[40px] opacity-20 rounded-full"
-                    style={{ background: theme.accent }}
-                />
+                {/* Visual Flair */}
+                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
 
-                <div className="flex flex-col items-center text-center space-y-4 relative z-10">
+                <div className="flex flex-col items-center text-center space-y-6 relative z-10">
                     <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm relative overflow-hidden group border"
-                        style={{
-                            color: theme?.accent,
-                            backgroundColor: `${theme?.accent}10`,
-                            borderColor: `${theme?.accent}20`
-                        }}
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden group border bg-red-500/10 border-red-500/20"
                     >
-                        <Smartphone size={18} className="relative z-10" />
+                        <Smartphone size={20} className="text-red-500" />
                     </div>
 
-                    <div className="space-y-1">
-                        <h3 className={cn("text-lg font-black px-2 leading-tight uppercase tracking-tight", theme.text, toneStyle?.font)}>
-                            {t.addToWallet}
+                    <div className="space-y-1.5">
+                        <h3 className={cn("text-xl font-black px-2 leading-tight uppercase tracking-[0.1em] text-[#00ffa3]", toneStyle?.font)}>
+                            {t.addToWallet ? t.addToWallet.toUpperCase() : "CÜZDANA EKLE"}
                         </h3>
-                        <p className={cn("text-[8px] font-bold tracking-[0.2em] uppercase opacity-40", theme.text)}>
-                            {t.savePassDesc}
+                        <p className={cn("text-[10px] font-black tracking-[0.1em] uppercase text-[#00ffa3] opacity-60")}>
+                            {t.savePassDesc ? t.savePassDesc.toUpperCase() : "KARTINIZI TELEFONUNUZA KAYDEDİN."}
                         </p>
                     </div>
 
-                    <div className="w-full space-y-1.5">
+                    <div className="w-full space-y-2">
                         {[
-                            { icon: <UserPlus size={16} />, label: t.vcfLabel, action: handleAddToContacts },
-                            { icon: <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={16} /></div>, label: "Apple Wallet", action: handleAddToContacts, badge: t.current },
-                            { icon: <Globe size={16} />, label: "Google Wallet", action: handleAddToContacts }
+                            {
+                                icon: <UserPlus size={18} className="text-red-500" />,
+                                label: t.vcfLabel || "Rehbere Kaydet (VCF)",
+                                action: handleAddToContacts,
+                                iconBg: "bg-red-500/10"
+                            },
+                            {
+                                icon: <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={16} /></div>,
+                                label: "Apple Wallet",
+                                action: handleAddToContacts,
+                                badge: "GÜNCEL",
+                                iconBg: "bg-transparent"
+                            },
+                            {
+                                icon: <Globe size={18} className="text-red-500" />,
+                                label: "Google Wallet",
+                                action: handleAddToContacts,
+                                iconBg: "bg-red-500/10"
+                            }
                         ].map((btn, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => { btn.action(); onClose(); }}
                                 className={cn(
-                                    "w-full flex items-center justify-between p-3 border rounded-xl transition-all group active:scale-[0.98] relative overflow-hidden",
-                                    theme.btn,
-                                    theme.border
+                                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden bg-white/5 border border-white/5 hover:bg-white/10"
                                 )}
                             >
-                                <div className="flex items-center gap-2.5 z-10">
-                                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center transition-all bg-white/5", !btn.badge && "text-opacity-100")} style={!btn.badge ? { color: theme?.accent } : {}}>
+                                <div className="flex items-center gap-4 z-10">
+                                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all", btn.iconBg)}>
                                         {btn.icon}
                                     </div>
-                                    <span className={cn("text-[11px] font-bold", theme.text, toneStyle?.font)}>{btn.label}</span>
+                                    <span className={cn("text-[12px] font-black tracking-tight text-[#00ffa3] group-hover:text-white transition-colors")}>{btn.label}</span>
                                 </div>
                                 {btn.badge ? (
-                                    <span className="text-[7px] font-black opacity-30 tracking-widest">{btn.badge}</span>
+                                    <span className="text-[8px] font-black text-[#00ffa3] opacity-30 tracking-widest">{btn.badge}</span>
                                 ) : (
-                                    <ArrowRight size={12} className="opacity-10 group-hover:opacity-100 transition-opacity mr-1 z-10" />
+                                    <ArrowRight size={14} className="text-[#00ffa3] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all mr-1 z-10" />
                                 )}
                             </button>
                         ))}
@@ -5293,9 +5301,9 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
 
                     <button
                         onClick={onClose}
-                        className={cn("text-[8px] font-black uppercase tracking-[0.5em] transition-all pt-2 opacity-30 hover:opacity-100", theme.text)}
+                        className={cn("text-[10px] font-black uppercase tracking-[0.5em] transition-all pt-4 text-[#00ffa3] opacity-60 hover:opacity-100")}
                     >
-                        {t.cancel}
+                        {t.cancel ? t.cancel.toUpperCase() : "VAZGEÇ"}
                     </button>
                 </div>
             </motion.div>
