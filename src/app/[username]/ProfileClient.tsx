@@ -4555,6 +4555,19 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             </div>
 
             {/* Components & Modals */}
+            <AnimatePresence>
+                {isWalletModalOpen && (
+                    <WalletModal
+                        isOpen={isWalletModalOpen}
+                        onClose={() => setIsWalletModalOpen(false)}
+                        profile={profile}
+                        t={t}
+                        handleAddToContacts={handleAddToContacts}
+                        theme={theme}
+                        toneStyle={toneStyle}
+                    />
+                )}
+            </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
             <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
