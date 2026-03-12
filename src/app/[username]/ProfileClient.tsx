@@ -4593,46 +4593,57 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 }
 
 function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText }: any) {
+    const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+
+    useEffect(() => {
+        if (reviews?.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentReviewIndex((prev) => (prev + 1) % reviews.length);
+            }, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [reviews?.length]);
+
     const themes: any = {
         "athletic_pro": {
-            bg: "bg-[#0c0c0c]",
-            card: "bg-white/[0.03]",
+            bg: "bg-[#0a0a0a]",
+            card: "bg-black/60",
             accent: profile.themeColor || "#ff3131",
             text: "text-white",
             subtext: "text-white/40",
-            border: "border-white/5",
-            gradient: "from-red-600/10 via-transparent to-transparent",
-            glow: "shadow-[0_0_40px_-10px_#ff3131]"
+            border: "border-white/10",
+            overlay: "bg-black/60",
+            image: "url('/images/athletic/general_bg.png')"
         },
         "athletic_football": {
             bg: "bg-[#050805]",
-            card: "bg-white/[0.02]",
+            card: "bg-black/60",
             accent: "#00ff66",
             text: "text-white",
             subtext: "text-green-500/30",
-            border: "border-green-500/10",
-            gradient: "from-green-600/10 via-transparent to-transparent",
-            glow: "shadow-[0_0_40px_-10px_#00ff66]"
+            border: "border-green-500/20",
+            overlay: "bg-black/60",
+            image: "url('/images/athletic/football_bg.png')"
         },
         "athletic_basketball": {
             bg: "bg-[#0a0503]",
-            card: "bg-white/[0.02]",
+            card: "bg-black/60",
             accent: "#f97316",
             text: "text-white",
             subtext: "text-orange-500/30",
-            border: "border-orange-500/10",
-            gradient: "from-orange-600/10 via-transparent to-transparent",
-            glow: "shadow-[0_0_40px_-10px_#f97316]"
+            border: "border-orange-500/20",
+            overlay: "bg-black/60",
+            image: "url('/images/athletic/basketball_bg.png')"
         },
         "athletic_tennis": {
             bg: "bg-[#070803]",
-            card: "bg-white/[0.02]",
+            card: "bg-black/60",
             accent: "#eab308",
             text: "text-white",
             subtext: "text-yellow-400/30",
-            border: "border-yellow-400/10",
-            gradient: "from-yellow-600/10 via-transparent to-transparent",
-            glow: "shadow-[0_0_40px_-10px_#eab308]"
+            border: "border-yellow-400/20",
+            overlay: "bg-black/60",
+            image: "url('/images/athletic/tennis_bg.png')"
         }
     }
 
@@ -4646,209 +4657,232 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
     };
 
     const actionButtons = [
-        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${profile.phone}`, active: !!profile.phone },
-        { label: "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(profile.phone || "").replace(/\D/g, '')}`, active: !!profile.phone },
-        { label: t.locationsBtn || "KONUM", icon: <MapPin size={18} />, onClick: () => { document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }) }, active: !!profile.blocks?.find((b: any) => b.type === 'map') },
-        { label: t.viewCV || "CV / PROFİL", icon: <FileText size={18} />, onClick: handleCVView, active: true },
-        { label: t.sharesBtn || "PAYLAŞ", icon: <Share2 size={18} />, onClick: handleShare, active: true }
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${profile.phone}`, active: !!profile.phone },
+        { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(profile.phone || "").replace(/\D/g, '')}`, active: !!profile.phone },
+        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
+        { label: t.emailBtn || "E-MAIL", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
+        { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: t.locationsBtn || "KONUM", icon: <MapPin size={20} />, onClick: () => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }), active: !!profile.blocks?.find((b: any) => b.type === 'map') }
     ].filter(a => a.active);
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden selection:bg-white/20", theme.bg, toneStyle.font)}>
-            {/* Stadium Atmosphere Background */}
-            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-                <div className={cn("absolute inset-0 bg-gradient-to-b opacity-40", theme.gradient)} />
-                <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] blur-[150px] rounded-full opacity-20" style={{ backgroundColor: theme.accent }} />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] blur-[150px] rounded-full opacity-10" style={{ backgroundColor: theme.accent }} />
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/black-paper.png')` }} />
+            {/* Thematic Background visual */}
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-no-repeat bg-cover bg-center transition-all duration-1000 grayscale-[0.2] brightness-[0.35] saturate-[0.9]"
+                    style={{ backgroundImage: theme.image, backgroundAttachment: 'fixed' }}
+                />
+                <div className={cn("absolute inset-0 opacity-50 mix-blend-overlay", theme.overlay)} />
+                <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] blur-[120px] rounded-full opacity-10" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] blur-[120px] rounded-full opacity-10" style={{ backgroundColor: theme.accent }} />
             </div>
 
-            {/* Float Nav Header */}
-            <header className="sticky top-0 left-0 right-0 z-[100] px-6 py-6 flex justify-between items-center bg-black/10 backdrop-blur-md">
-                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all active:scale-90">
-                    <QrCode size={18} />
-                </button>
+            {/* Navigation Header (Requested layout) */}
+            <header className="sticky top-0 left-0 right-0 z-[100] px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-3xl border-b border-white/5">
                 <div className="flex gap-2">
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 font-black text-[9px] uppercase tracking-widest hover:text-white transition-all">
+                    <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/10 transition-all shadow-lg active:scale-95">
+                        <QrCode size={18} />
+                    </button>
+                    {aiConfig?.isEnabled && (
+                        <button onClick={() => setIsAIChatOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/10 transition-all shadow-lg group active:scale-95">
+                            <Bot size={18} className="group-hover:animate-bounce" />
+                        </button>
+                    )}
+                </div>
+                <div className="flex gap-3 items-center">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 font-black text-[10px] uppercase tracking-widest hover:text-white transition-all">
                         {lang.toUpperCase()}
                     </button>
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:text-white transition-all active:scale-90">
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/10 transition-all shadow-lg active:scale-95">
                         <UserPlus size={18} />
                     </button>
                 </div>
             </header>
 
-            <main className="relative z-10 w-full max-w-lg mx-auto px-6 py-4 pb-48 space-y-12">
-                {/* Visual Identity Section (Image 1 Style) */}
-                <section className="flex flex-col items-center text-center space-y-8">
-                    {/* Circle Image with Orbit */}
-                    <div className="relative">
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute -inset-4 border border-dashed border-white/10 rounded-full"
-                        />
-                        <div className="relative w-40 h-40 p-2 rounded-full bg-[#111] shadow-2xl overflow-hidden border border-white/5">
-                            <div className="absolute inset-0 rounded-full border-2 opacity-60" style={{ borderColor: theme.accent, boxShadow: `0 0 25px ${theme.accent}40` }} />
-                            <img
-                                src={profile.profileImage || "https://images.unsplash.com/photo-1508624217470-5ef0f947d8be?q=80&w=1470"}
-                                className="w-full h-full object-cover rounded-full filter contrast-110"
-                                alt={profile.displayName}
-                            />
-                        </div>
-                        {/* Verified Badge Position */}
-                        <div className="absolute bottom-2 right-4 bg-blue-500 text-white rounded-full p-1 border-2 border-[#111]">
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Check size={10} strokeWidth={4} /></motion.div>
+            <main className="relative z-10 w-full max-w-lg mx-auto px-6 py-10 pb-48 space-y-12">
+                {/* Identity Area (Image 6907 High-end Style) */}
+                <section className="flex flex-col items-center text-center space-y-7">
+                    <div className="relative group">
+                        <div className="absolute -inset-6 rounded-full opacity-20 blur-3xl transition-all duration-1000 group-hover:opacity-35" style={{ backgroundColor: theme.accent }} />
+                        <div className="relative w-44 h-44 p-2 rounded-full bg-zinc-950 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden transition-transform duration-700 group-hover:scale-105">
+                            <img src={profile.profileImage || `https://ui-avatars.com/api/?name=${profile.displayName}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile.displayName} />
                         </div>
                     </div>
 
-                    {/* Typography Branding */}
-                    <div className="space-y-3">
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-0 text-center">
-                            <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none">
-                                {profile.displayName?.split(' ')[0]} <span style={{ color: theme.accent }}>{profile.displayName?.split(' ').slice(1).join(' ')}</span>
-                            </h1>
-                            <div className="flex items-center justify-center gap-3 mt-3 text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
-                                <span>{profile.occupation}</span>
-                                <span className="w-1 h-1 rounded-full bg-white/20" />
-                                <span>TÜRKİYE</span>
-                            </div>
-                        </motion.div>
-
+                    <div className="space-y-4">
+                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile.displayName}</h1>
+                        <div className="flex items-center justify-center gap-4">
+                            <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
+                            <p className="text-[12px] font-black uppercase tracking-[0.4em] drop-shadow-lg" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
+                            <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
+                        </div>
                         {profile.slogan && (
-                            <div className="inline-flex items-center gap-3 px-4 py-1.5 border border-white/5 rounded-full bg-white/[0.02]">
-                                <Zap size={10} className="text-amber-400 fill-amber-400" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{profile.slogan}</span>
+                            <div className="px-6 py-3 border border-white/5 bg-white/[0.04] rounded-[2rem] inline-block backdrop-blur-2xl shadow-xl">
+                                <p className="text-[11px] font-bold italic text-white/50 tracking-[0.2em] uppercase">“{translateText(profile.slogan)}”</p>
                             </div>
                         )}
                     </div>
-
-                    {/* Quick Stats Grid Buttons */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
-                        {actionButtons.map((btn, i) => (
-                            <button
-                                key={i}
-                                onClick={() => btn.onClick ? btn.onClick() : btn.href && (window.location.href = btn.href)}
-                                className={cn(
-                                    "p-6 rounded-[2.5rem] border flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group relative overflow-hidden",
-                                    theme.card,
-                                    theme.border,
-                                    "hover:bg-white/[0.08]"
-                                )}
-                            >
-                                <div
-                                    className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
-                                    style={{ color: theme.accent, backgroundColor: `${theme.accent}10` }}
-                                >
-                                    {btn.icon}
-                                </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-white/50">{btn.label}</span>
-                            </button>
-                        ))}
-                    </div>
                 </section>
 
-                {/* Content Blocks */}
-                <div className="space-y-12">
-                    {profile.blocks?.filter((b: any) => b.isActive).sort((a: any, b: any) => a.order - b.order).map((block: any) => (
-                        <div key={block.id} id={block.type === 'map' ? 'map-section' : undefined} className="space-y-5">
-                            {/* Section Header */}
-                            <div className="flex items-center gap-3 px-2">
-                                <span className="w-1 h-5 rounded-full" style={{ backgroundColor: theme.accent }} />
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/80 italic">{block.title || block.type}</h3>
-                                <div className="flex-1 h-[0.5px] bg-white/5" />
+                {/* Vertical Interactive Buttons (Main Actions) */}
+                <div className="space-y-4">
+                    {actionButtons.map((btn, i) => (
+                        <motion.a
+                            key={i}
+                            href={btn.href}
+                            onClick={btn.onClick}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.05 }}
+                            className={cn("w-full py-5.5 rounded-[2.5rem] border flex items-center gap-6 px-10 transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", theme.card, theme.border)}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner" style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}>
+                                {btn.icon}
                             </div>
+                            <span className="text-[12px] font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors">{btn.label}</span>
+                        </motion.a>
+                    ))}
+                </div>
 
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className={cn("rounded-[3rem] border p-8 transition-all hover:bg-white/[0.04] relative overflow-hidden", theme.card, theme.border)}
-                            >
+                {/* Modular Content Blocks */}
+                <div className="space-y-12">
+                    {profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map').sort((a: any, b: any) => a.order - b.order).map((block: any) => (
+                        <div key={block.id} className="space-y-6">
+                            <div className="flex items-center gap-4 px-2">
+                                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40 italic drop-shadow-lg">{block.title || block.type}</h3>
+                                <div className="flex-1 h-[1px] bg-white/10" />
+                            </div>
+                            <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className={cn("rounded-[3.5rem] border p-10 transition-all hover:bg-white/[0.04] relative overflow-hidden backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]", theme.card, theme.border)}>
                                 {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
                                 {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'video' && (
-                                    <div className="relative rounded-3xl overflow-hidden aspect-video border border-white/5 bg-black group">
-                                        <div className="absolute inset-0 flex items-center justify-center z-10">
-                                            <div
-                                                className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 text-white transition-all group-hover:scale-110"
-                                                style={{ backgroundColor: `${theme.accent}60` }}
-                                            >
-                                                <Play size={24} fill="currentColor" className="ml-1" />
-                                            </div>
-                                        </div>
-                                        <img
-                                            src={`https://img.youtube.com/vi/${(block.content?.url || "").split('v=')[1]?.split('&')[0]}/maxresdefault.jpg`}
-                                            className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
-                                            alt=""
-                                        />
-                                    </div>
-                                )}
-                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/40 leading-relaxed font-bold italic" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
-                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5" alt="" />}
-                                {block.type === 'map' && (
-                                    <div className="w-full h-44 rounded-3xl overflow-hidden border border-white/5 grayscale brightness-75 bg-[#111]">
-                                        <iframe width="100%" height="100%" frameBorder="0" style={{ border: 0 }} src={`https://www.google.com/maps?q=${encodeURIComponent(block.content?.location || "")}&output=embed`} allowFullScreen></iframe>
-                                    </div>
-                                )}
+                                {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/60 leading-relaxed font-bold italic antialiased" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
+                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-[2.5rem] border border-white/5 shadow-2xl" alt="" />}
                             </motion.div>
                         </div>
                     ))}
                 </div>
 
-                {/* Social Icon Bar */}
-                {socialLinks.length > 0 && (
-                    <section className="flex flex-wrap justify-center gap-6 py-10 border-t border-white/5">
-                        {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
-                            <motion.a
-                                key={i}
-                                href={formatUrl(link.url)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                whileHover={{ scale: 1.2 }}
-                                className="text-white/30 hover:text-white transition-all"
+                {/* Slogan Text Center Banner */}
+                {profile.bio && (
+                    <div className="text-center px-8 py-12 border-y border-white/5 bg-white/[0.01] backdrop-blur-md rounded-3xl">
+                        <p className="text-sm font-medium text-white/30 leading-relaxed italic max-w-xs mx-auto drop-shadow-md">“{profile.bio}” 🏔️</p>
+                    </div>
+                )}
+
+                {/* Reviews Performance Section */}
+                {reviews?.length > 0 && (
+                    <section className="space-y-8">
+                        <div className="flex items-center justify-between px-2">
+                            <div className="flex items-center gap-4">
+                                <div className="w-2 h-7 rounded-full" style={{ background: theme.accent }} />
+                                <h3 className="text-[13px] font-black uppercase tracking-[0.25em] text-white/40">{t.reviews || "YORUMLAR"}</h3>
+                            </div>
+                            <button onClick={() => setIsReviewModalOpen(true)} className="text-[11px] font-black uppercase tracking-widest px-6 py-3 border rounded-full text-white/50 hover:text-white transition-all hover:bg-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]" style={{ borderColor: `${theme.accent}30` }}>
+                                <Plus size={12} className="inline mr-2" /> {t.writeReview || "YORUM YAZ"}
+                            </button>
+                        </div>
+
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentReviewIndex}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className={cn("p-12 rounded-[4rem] border flex flex-col gap-8 relative overflow-hidden backdrop-blur-3xl shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]", theme.card, theme.border)}
                             >
-                                {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={20} />}
+                                <div className="absolute top-10 right-14 opacity-10 pointer-events-none">
+                                    <Quote size={100} style={{ color: theme.accent }} />
+                                </div>
+                                <div className="flex gap-7 relative z-10">
+                                    <div className="relative">
+                                        <div className="w-20 h-20 rounded-[1.8rem] overflow-hidden border-2 p-1.5 shadow-2xl" style={{ borderColor: `${theme.accent}40` }}>
+                                            <img src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" />
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 rounded-full border-[3px] border-zinc-950 flex items-center justify-center text-white shadow-xl">
+                                            <Check size={14} strokeWidth={4} />
+                                        </div>
+                                    </div>
+                                    <div className="min-w-0 flex flex-col justify-center">
+                                        <h4 className="text-[17px] font-black text-white truncate drop-shadow-xl">{reviews[currentReviewIndex].name}</h4>
+                                        <p className="text-[11px] font-bold text-white/20 uppercase tracking-[0.25em] truncate mt-1">{reviews[currentReviewIndex].title}</p>
+                                        <div className="flex gap-1 mt-3.5">
+                                            {[...Array(5)].map((_, i) => <Star key={i} size={13} className={cn("fill-current", i < reviews[currentReviewIndex].rating ? "text-orange-400" : "text-white/10")} />)}
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="text-[15px] font-medium text-white/70 italic leading-relaxed relative z-10 antialiased font-serif drop-shadow-md">“{reviews[currentReviewIndex].content}”</p>
+                            </motion.div>
+                        </AnimatePresence>
+                    </section>
+                )}
+
+                {/* Map Display */}
+                {profile.blocks?.find((b: any) => b.type === 'map') && (
+                    <div id="map-section" className="space-y-6 pb-12">
+                        <div className="flex items-center gap-4 px-2">
+                             <div className="w-1.5 h-7 rounded-full" style={{ backgroundColor: theme.accent }} />
+                             <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40 italic">KONUM</h3>
+                        </div>
+                        <div className={cn("rounded-[3.5rem] border p-2.5 relative overflow-hidden aspect-video shadow-[0_50px_100px_rgba(0,0,0,0.6)]", theme.card, theme.border)}>
+                            <iframe width="100%" height="100%" frameBorder="0" style={{ border: 0 }} src={`https://www.google.com/maps?q=${encodeURIComponent(profile.blocks?.find((b: any) => b.type === 'map')?.content?.location || "")}&output=embed`} allowFullScreen className="rounded-[3rem] grayscale brightness-50 contrast-125 invert-[0.1]"></iframe>
+                        </div>
+                    </div>
+                )}
+
+                {/* Social Networks Horizontal */}
+                {socialLinks.length > 0 && (
+                    <section className="flex flex-wrap justify-center gap-12 py-16 border-t border-white/5">
+                        {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
+                            <motion.a key={i} href={formatUrl(link.url)} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.4, rotate: 8, y: -8 }} className="text-white/20 hover:text-white transition-all drop-shadow-2xl">
+                                {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={28} />}
                             </motion.a>
                         ))}
                     </section>
                 )}
             </main>
 
-            {/* Premium CTA Floating Bottom Bar (Image 1 Style) */}
-            <div className="fixed bottom-0 left-0 right-0 p-8 z-[120] bg-gradient-to-t from-black via-black/80 to-transparent">
-                <div className="max-w-lg mx-auto flex gap-3 h-16">
-                    <button
-                        onClick={() => setIsAIChatOpen(true)}
-                        className="w-16 h-full rounded-[2.5rem] bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all"
-                    >
-                        <Bot size={22} />
+            {/* Premium Floating High-Performance Action Bar */}
+            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[420px] px-6 z-[150]">
+                <div className="bg-black/70 backdrop-blur-3xl border border-white/10 rounded-[3.5rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,1)] flex items-center justify-between gap-3 border-t-white/20">
+                    <button onClick={handleShare} className="w-[60px] h-[60px] rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all shadow-inner group relative">
+                        <div className="absolute inset-0 rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity" style={{ backgroundColor: theme.accent }} />
+                        <Share2 size={22} className="group-hover:rotate-12 transition-transform relative z-10" />
                     </button>
 
                     <button
-                        onClick={() => setIsLeadModalOpen(true)}
-                        className={cn(
-                            "flex-1 h-full rounded-[2.5rem] border-2 flex items-center justify-between px-8 text-white relative overflow-hidden group transition-all active:scale-95",
-                            theme.glow
-                        )}
-                        style={{ backgroundColor: `${theme.accent}30`, borderColor: `${theme.accent}60` }}
+                        onClick={handleCVView}
+                        className={cn("flex-1 h-[60px] rounded-full flex items-center justify-center gap-4 text-white text-[12px] font-black uppercase tracking-[0.3em] shadow-[0_0_40px_rgba(0,0,0,0.5)] relative overflow-hidden group transition-all active:scale-95")}
+                        style={{ backgroundColor: theme.accent }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-700" />
-                        <span className="text-xs font-black uppercase tracking-[0.2em] italic relative z-10">
-                            {profile.isCatalog ? "KATALOGU GÖRÜNTÜLE" : "BİZE ULAŞIN / MENAJER"}
-                        </span>
-                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                            <ArrowRight size={16} />
-                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                        <FileText size={20} className="fill-white drop-shadow-lg" />
+                        <span className="drop-shadow-lg">{t.viewCvBtn || "CV GÖRÜNTÜLE"}</span>
                     </button>
+
+                    <button
+                        onClick={() => setIsAppointmentOpen(true)}
+                        className="w-[60px] h-[60px] rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all shadow-inner group overflow-hidden"
+                    >
+                        <Zap size={22} className="group-hover:scale-125 transition-transform" />
+                    </button>
+                    
+                    {aiConfig?.isEnabled && (
+                        <button onClick={() => setIsAIChatOpen(true)} className="w-[60px] h-[60px] rounded-full bg-white border-[4px] flex items-center justify-center text-black hover:scale-110 transition-all shadow-[0_0_30px_white] relative group" style={{ borderColor: theme.accent }}>
+                            <Bot size={26} className="group-hover:animate-bounce" />
+                            <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full border-[3px] border-black animate-ping opacity-75" />
+                        </button>
+                    )}
                 </div>
             </div>
 
-            {/* Core Component Logic Integration */}
+            {/* Global Modals */}
             <AnimatePresence>
-                {isWalletModalOpen && (
-                    <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />
-                )}
+                {isWalletModalOpen && <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />}
             </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
             <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
