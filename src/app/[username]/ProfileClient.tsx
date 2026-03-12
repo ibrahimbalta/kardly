@@ -3068,11 +3068,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             <motion.button
                                 whileHover={{ scale: 1.1, rotate: -5 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => setIsQrOpen(true)}
+                                onClick={() => setIsAIChatOpen(true)}
                                 className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
                                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
-                                <QrCode size={18} style={{ color: theme.accent }} />
+                                <Bot size={18} style={{ color: theme.accent }} />
                             </motion.button>
                         </div>
 
@@ -4133,8 +4133,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
             {/* Top Navigation Icons */}
             <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center">
-                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg">
-                    <QrCode size={18} />
+                <button onClick={() => setIsAIChatOpen(true)} title={aiConfig?.assistantName} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg">
+                    <Bot size={18} />
                 </button>
                 <div className="flex gap-3">
                     <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center text-white/80">
@@ -4537,17 +4537,20 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <Share2 size={14} /> PAYLAŞ
                     </button>
                     <button
-                        onClick={handleAddToContacts}
-                        className="flex-[1.5] flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all shadow-lg"
+                        onClick={handleCVView}
+                        className={cn("flex-[1.5] flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all shadow-lg")}
                     >
-                        {t.addToContactsBtn || "REHBERE KAYDET"}
+                        <FileText size={16} /> {profile.isCatalog ? t.viewCatalog || "KATALOG GÖRÜNTÜLE" : t.viewCV || "CV GÖRÜNTÜLE"}
                     </button>
-                    <button
-                        onClick={() => setIsQrOpen(true)}
-                        className="w-14 h-14 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-                    >
-                        <QrCode size={20} />
-                    </button>
+                    {aiConfig?.isEnabled && (
+                        <button
+                            onClick={() => setIsAIChatOpen(true)}
+                            className="w-14 h-14 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                            title={aiConfig.assistantName}
+                        >
+                            <Bot size={20} />
+                        </button>
+                    )}
                 </div>
             </div>
 
