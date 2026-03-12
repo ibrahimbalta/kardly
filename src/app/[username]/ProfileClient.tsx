@@ -106,6 +106,28 @@ interface Profile {
     businessCardOrientation?: string;
 }
 
+const getHeroIcon = (platform: string = "", size: number = 20) => {
+    const p = platform.toLowerCase().trim();
+    switch (p) {
+        case 'instagram': return <Instagram size={size} />;
+        case 'whatsapp': return <MessageCircle size={size} />;
+        case 'twitter': case 'x': return <Twitter size={size} />;
+        case 'linkedin': return <Linkedin size={size} />;
+        case 'youtube': return <Youtube size={size} />;
+        case 'github': return <Github size={size} />;
+        case 'website': return <Globe size={size} />;
+        case 'email': return <Mail size={size} />;
+        case 'phone': return <Phone size={size} />;
+        case 'facebook': return <Facebook size={size} />;
+        case 'dribbble': return <Dribbble size={size} />;
+        case 'behance': return <Palette size={size} />;
+        case 'tiktok': return <Sparkles size={size} />;
+        case 'telegram': return <Send size={size} />;
+        case 'snapchat': return <Target size={size} />;
+        default: return <Globe size={size} />;
+    }
+}
+
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
 
 export default function ProfileClient({ profile }: { profile: any }) {
@@ -2115,20 +2137,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const customLinks = customLinksEntry?.links || [];
 
 
-    const getHeroIcon = (platform: string) => {
-        switch (platform) {
-            case 'instagram': return <Instagram size={20} />;
-            case 'whatsapp': return <MessageCircle size={20} />;
-            case 'twitter': return <Twitter size={20} />;
-            case 'linkedin': return <Linkedin size={20} />;
-            case 'youtube': return <Youtube size={20} />;
-            case 'github': return <Github size={20} />;
-            case 'website': return <Globe size={20} />;
-            case 'email': return <Mail size={20} />;
-            case 'phone': return <Phone size={20} />;
-            default: return <Globe size={20} />;
-        }
-    }
 
     const heroSocialActions = (socialLinks || [])
         .filter((l: any) => l.isHero && l.url)
@@ -4573,7 +4581,19 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 )}
             </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
-            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
+            <LeadModal 
+                isOpen={isLeadModalOpen} 
+                onClose={() => setIsLeadModalOpen(false)} 
+                onSubmit={(data: any) => {
+                    console.log("Lead submitted:", data);
+                    setIsLeadModalOpen(false);
+                    if (setLeadStatus) setLeadStatus({ type: 'success', message: 'Mesajınız iletildi!' });
+                }}
+                theme={theme} 
+                t={t} 
+                lang={lang}
+                toneStyle={toneStyle}
+            />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
             <SocialProof t={t} theme={theme} />
@@ -4850,7 +4870,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     style={{ borderColor: `${theme.accent}60`, color: `${theme.accent}90` }}
                                 >
                                     <div className="transition-all duration-300 group-hover:scale-110" style={{ color: theme.accent }}>
-                                        {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={22} />}
+                                        {getHeroIcon(link.platform, 22)}
                                     </div>
                                 </motion.a>
                             ))}
@@ -4898,7 +4918,19 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 {isWalletModalOpen && <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />}
             </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
-            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} profile={profile} t={t} />
+            <LeadModal 
+                isOpen={isLeadModalOpen} 
+                onClose={() => setIsLeadModalOpen(false)} 
+                onSubmit={(data: any) => {
+                    console.log("Lead submitted:", data);
+                    setIsLeadModalOpen(false);
+                    if (setLeadStatus) setLeadStatus({ type: 'success', message: 'Mesajınız iletildi!' });
+                }}
+                theme={theme} 
+                t={t} 
+                lang={lang}
+                toneStyle={toneStyle}
+            />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
