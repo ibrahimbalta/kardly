@@ -4834,14 +4834,27 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
-                {/* Social Networks Horizontal */}
+                {/* Social Networks Grid (Accent Outlined Style) */}
                 {socialLinks.length > 0 && (
-                    <section className="flex flex-wrap justify-center gap-12 py-16 border-t border-white/5">
-                        {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
-                            <motion.a key={i} href={formatUrl(link.url)} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.4, rotate: 8, y: -8 }} className="text-white/20 hover:text-white transition-all drop-shadow-2xl">
-                                {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={28} />}
-                            </motion.a>
-                        ))}
+                    <section className="py-16 border-t border-white/5">
+                        <div className="flex flex-wrap justify-center gap-5">
+                            {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
+                                <motion.a 
+                                    key={i} 
+                                    href={formatUrl(link.url)} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    whileHover={{ scale: 1.15, y: -4 }} 
+                                    whileTap={{ scale: 0.95 }}
+                                    className="w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)] group"
+                                    style={{ borderColor: `${theme.accent}60`, color: `${theme.accent}90` }}
+                                >
+                                    <div className="transition-all duration-300 group-hover:scale-110" style={{ color: theme.accent }}>
+                                        {NeonModernTemplate.prototype.getHeroIcon ? NeonModernTemplate.prototype.getHeroIcon(link.platform) : <Globe size={22} />}
+                                    </div>
+                                </motion.a>
+                            ))}
+                        </div>
                     </section>
                 )}
             </main>
