@@ -3841,22 +3841,25 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 )
                             }
 
-                            <div className="pt-10 border-t border-white/5 text-center flex flex-col gap-6" >
+                            <div className="pt-10 border-t border-white/5 text-center flex flex-col gap-6">
                                 <div className="flex items-stretch gap-3">
                                     <button
                                         onClick={handleShare}
-                                        className={cn("flex-1 py-4 border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:scale-[0.97] backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
-                                        style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
+                                        className={cn("flex-1 h-[60px] border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:translate-y-[4px] active:shadow-none backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        style={{ 
+                                            backgroundColor: 'rgba(255,255,255,0.03)',
+                                            boxShadow: '0 4px 0 0 rgba(255,255,255,0.1)'
+                                        }}
                                     >
                                         <Share2 size={16} className="opacity-60" /> {t.shareLabel}
                                     </button>
 
                                     <button
                                         onClick={handleCVView}
-                                        className={cn("flex-[1.5] py-4 flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:scale-[0.97] text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         style={{
                                             background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                            boxShadow: `0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
+                                            boxShadow: `0 4px 0 0 ${(theme as any).cvAccent || theme.accent}66, 0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
                                         }}
                                     >
                                         <FileText size={16} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
@@ -3866,10 +3869,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     {aiConfig?.isEnabled && (
                                         <button
                                             onClick={() => setIsAIChatOpen(true)}
-                                            className={cn("w-[62px] h-[54px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:scale-[0.97]", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                            className={cn("w-[62px] h-[60px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                             style={{
                                                 background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                                                boxShadow: `0 12px 24px -10px ${theme.accent}70`
+                                                boxShadow: `0 4px 0 0 ${theme.accent}66, 0 12px 24px -10px ${theme.accent}70`
                                             }}
                                             title={aiConfig.assistantName}
                                         >
@@ -4541,23 +4544,23 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
             {/* Sticky Bottom Footer Bar */}
             <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[360px] px-6 z-[100]">
-                <div className="bg-white/80 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-2">
+                <div className="bg-white/90 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-2.5">
                     <button
                         onClick={handleShare}
-                        className="flex-1 flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:bg-slate-100 transition-all border border-slate-100"
+                        className="flex-1 h-[60px] flex items-center justify-center gap-2 rounded-[2rem] bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:bg-slate-100 transition-all border border-slate-100 active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#e2e8f0]"
                     >
-                        <Share2 size={14} /> PAYLAŞ
+                        <Share2 size={14} /> {t.shareLabel || "PAYLAŞ"}
                     </button>
                     <button
                         onClick={handleCVView}
-                        className={cn("flex-[1.5] flex items-center justify-center gap-2 py-4 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all shadow-lg")}
+                        className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a]")}
                     >
                         <FileText size={16} /> {profile.isCatalog ? t.viewCatalog || "KATALOG GÖRÜNTÜLE" : t.viewCV || "CV GÖRÜNTÜLE"}
                     </button>
                     {aiConfig?.isEnabled && (
                         <button
                             onClick={() => setIsAIChatOpen(true)}
-                            className="w-14 h-14 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                            className="w-[60px] h-[60px] rounded-full bg-slate-900 text-white flex items-center justify-center transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a] hover:brightness-110"
                             title={aiConfig.assistantName}
                         >
                             <Bot size={20} />
@@ -5062,31 +5065,41 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
             {/* Premium Floating High-Performance Action Bar */}
             <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[420px] px-6 z-[150]">
-                <div className="bg-black/70 backdrop-blur-3xl border border-white/10 rounded-[3.5rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,1)] flex items-center justify-between gap-3 border-t-white/20">
-                    <button onClick={handleShare} className="w-[60px] h-[60px] rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all shadow-inner group relative">
+                <div className="bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[3.5rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,1)] flex items-center justify-between gap-3 border-t-white/20">
+                    <button 
+                        onClick={handleShare} 
+                        className="w-[60px] h-[60px] rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_rgba(255,255,255,0.1)] group relative"
+                    >
                         <div className="absolute inset-0 rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity" style={{ backgroundColor: theme.accent }} />
                         <Share2 size={22} className="group-hover:rotate-12 transition-transform relative z-10" />
                     </button>
 
                     <button
                         onClick={handleCVView}
-                        className={cn("flex-1 h-[60px] rounded-full flex items-center justify-center gap-4 text-white text-[12px] font-black uppercase tracking-[0.3em] shadow-[0_0_40px_rgba(0,0,0,0.5)] relative overflow-hidden group transition-all active:scale-95")}
-                        style={{ backgroundColor: theme.accent }}
+                        className={cn("flex-1 h-[60px] rounded-full flex items-center justify-center gap-4 text-white text-[12px] font-black uppercase tracking-[0.3em] relative overflow-hidden group transition-all active:translate-y-[4px] active:shadow-none")}
+                        style={{ 
+                            backgroundColor: theme.accent,
+                            boxShadow: `0 4px 0 0 ${theme.accent}66`
+                        }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
                         <FileText size={20} className="fill-white drop-shadow-lg" />
-                        <span className="drop-shadow-lg">{t.viewCvBtn || "CV GÖRÜNTÜLE"}</span>
+                        <span className="drop-shadow-lg">{profile.isCatalog ? t.viewCatalog || "KATALOG" : t.viewCvBtn || "CV GÖRÜNTÜLE"}</span>
                     </button>
 
                     <button
                         onClick={() => setIsAppointmentOpen(true)}
-                        className="w-[60px] h-[60px] rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all shadow-inner group overflow-hidden"
+                        className="w-[60px] h-[60px] rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_rgba(255,255,255,0.15)] group overflow-hidden"
                     >
                         <Zap size={22} className="group-hover:scale-125 transition-transform" />
                     </button>
                     
                     {aiConfig?.isEnabled && (
-                        <button onClick={() => setIsAIChatOpen(true)} className="w-[60px] h-[60px] rounded-full bg-white border-[4px] flex items-center justify-center text-black hover:scale-110 transition-all shadow-[0_0_30px_white] relative group" style={{ borderColor: theme.accent }}>
+                        <button 
+                            onClick={() => setIsAIChatOpen(true)} 
+                            className="w-[60px] h-[60px] rounded-full bg-white border-[4px] flex items-center justify-center text-black hover:brightness-110 transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#cbd5e1] relative group" 
+                            style={{ borderColor: theme.accent }}
+                        >
                             <Bot size={26} className="group-hover:animate-bounce" />
                             <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full border-[3px] border-black animate-ping opacity-75" />
                         </button>
