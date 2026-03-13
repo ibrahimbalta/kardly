@@ -850,7 +850,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const currentPlan = "pro"
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
+        <>
+            <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
@@ -3279,20 +3280,36 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             />
                         </div>
 
-                        <div className="flex justify-center">
+                        <div className="flex justify-center mt-12 pb-12">
                             <button
                                 onClick={() => handleSave()}
                                 disabled={isSaving}
-                                className="px-10 py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
+                                className="relative group px-12 py-5"
                             >
-                                {isSaving ? (
-                                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                ) : (
-                                    <>
-                                        <CheckCircle2 size={20} />
-                                        {t('saveChanges')}
-                                    </>
-                                )}
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary via-rose-500 to-primary rounded-[2rem] blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                                <div className="relative h-16 px-10 bg-primary rounded-[2rem] flex items-center justify-center gap-4 overflow-hidden border border-white/20 shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95 group">
+                                    {/* Shimmer Effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                                    
+                                    {isSaving ? (
+                                        <RefreshCw className="w-5 h-5 animate-spin text-white" />
+                                    ) : (
+                                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                            <CheckCircle2 size={16} className="text-primary" />
+                                        </div>
+                                    )}
+                                    
+                                    <div className="flex flex-col items-start leading-none">
+                                        <span className="text-white font-black text-xs uppercase tracking-[0.25em]">
+                                            {isSaving ? t('saving') || 'GÜNCELLENİYOR...' : t('saveChanges') || 'DEĞİŞİKLİKLERİ YAYINLA'}
+                                        </span>
+                                        {!isSaving && (
+                                            <span className="text-white/40 text-[8px] uppercase tracking-widest mt-1 font-bold group-hover:text-white/60 transition-colors">
+                                                Anında Sitede Güncellenir
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -4337,6 +4354,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 </AnimatePresence>
             </main >
         </div >
+        <style jsx>{`
+            @keyframes shimmer {
+                100% { transform: translateX(100%); }
+            }
+            .animate-shimmer {
+                animation: shimmer 2s infinite;
+            }
+        `}</style>
+        </>
     );
 }
 

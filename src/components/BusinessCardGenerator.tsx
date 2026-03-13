@@ -846,21 +846,49 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 </div>
             </div>
 
-            {/* Download & Share Buttons */}
-            <div className="w-full max-w-[340px] flex gap-4 mt-12 relative z-50">
+            {/* Download & Share Buttons - Professional Redesign */}
+            <div className="w-full max-w-[400px] flex gap-4 mt-16 relative z-50">
                 <button
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="flex-1 h-16 bg-primary text-white rounded-full font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                    className="flex-[2.5] relative group"
                 >
-                    {isDownloading ? <RefreshCw className="w-5 h-5 animate-spin" /> : downloadSuccess ? <Check size={20} /> : <Download size={20} />}
-                    {downloadSuccess ? 'KAYDEDİLDİ ✓' : 'TASARIMI İNDİR'}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-primary via-rose-500 to-primary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div className="relative h-16 bg-slate-950 rounded-2xl flex items-center justify-center gap-3 overflow-hidden border border-white/10 transition-all active:scale-95">
+                        {/* Animated Background Shimmer */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                        
+                        {isDownloading ? (
+                            <RefreshCw className="w-5 h-5 animate-spin text-primary" />
+                        ) : downloadSuccess ? (
+                            <Check size={20} className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+                        ) : (
+                            <Download size={20} className="text-white group-hover:-translate-y-1 transition-transform duration-300" />
+                        )}
+                        
+                        <div className="flex flex-col items-start leading-none">
+                            <span className="text-white font-black text-[11px] uppercase tracking-[0.2em]">
+                                {downloadSuccess ? 'BAŞARIYLA KAYDEDİLDİ' : 'TASARIMI İNDİR'}
+                            </span>
+                            <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium group-hover:text-white/50 transition-colors">
+                                Yüksek Kaliteli Görsel (PNG)
+                            </span>
+                        </div>
+                    </div>
                 </button>
+
                 <button
                     onClick={handleShare}
-                    className="w-16 h-16 bg-white text-slate-900 rounded-full shadow-xl hover:scale-110 active:scale-90 transition-all flex items-center justify-center"
+                    className="flex-1 relative group"
                 >
-                    {shareSuccess ? <Check size={20} className="text-emerald-500" /> : <Share2 size={20} />}
+                    <div className="absolute -inset-1 bg-white/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <div className="relative h-16 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-white/[0.08] active:scale-90 shadow-2xl">
+                        {shareSuccess ? (
+                            <Check size={22} className="text-emerald-400" />
+                        ) : (
+                            <Share2 size={22} className="text-white/70 group-hover:text-white group-hover:rotate-12 transition-all" />
+                        )}
+                    </div>
                 </button>
             </div>
 
@@ -889,6 +917,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     0% { transform: translateY(-100%); opacity: 0; }
                     50% { opacity: 1; }
                     100% { transform: translateY(600px); opacity: 0; }
+                }
+                @keyframes shimmer {
+                    100% { transform: translateX(100%); }
+                }
+                .animate-shimmer {
+                    animation: shimmer 2s infinite;
                 }
                 .animate-elite-bg {
                     background-size: 200% 200%;
