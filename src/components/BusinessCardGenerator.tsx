@@ -76,7 +76,12 @@ export const TEMPLATES = [
     { id: 'extra_neon_portal', name: 'Neon Portal', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#f43f5e', '#8b5cf6', '#d946ef'], animate: true, hex: '#000000', pattern: 'extra_neon_3d', category: 'Extraordinary' },
     { id: 'extra_liquid_mercury', name: 'Mercury Flow', bg: 'bg-zinc-900', text: 'text-white', accent: 'bg-zinc-400', accentText: 'text-zinc-400', colors: ['#71717a', '#a1a1aa', '#f4f4f5'], animate: true, hex: '#18181b', pattern: 'extra_metal_3d', category: 'Extraordinary' },
     { id: 'extra_space_warp', name: 'Space Warp', bg: 'bg-[#020205]', text: 'text-indigo-50', accent: 'bg-indigo-500', accentText: 'text-indigo-500', colors: ['#4f46e5', '#312e81', '#000000'], animate: true, hex: '#020205', pattern: 'extra_space_3d', category: 'Extraordinary' },
-    { id: 'extra_holo_mesh', name: 'Holo Web', bg: 'bg-[#050510]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#22d3ee', '#8b5cf6', '#06b6d4'], animate: true, hex: '#050510', pattern: 'extra_holo_3d', category: 'Extraordinary' }
+    { id: 'extra_holo_mesh', name: 'Holo Web', bg: 'bg-[#050510]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#22d3ee', '#8b5cf6', '#06b6d4'], animate: true, hex: '#050510', pattern: 'extra_holo_3d', category: 'Extraordinary' },
+    { id: 'extra_magma_stone', name: 'Molten Magma', bg: 'bg-stone-950', text: 'text-orange-50', accent: 'bg-orange-600', accentText: 'text-orange-500', colors: ['#ea580c', '#9a3412', '#431407'], animate: true, hex: '#0c0a09', pattern: 'extra_magma', category: 'Extraordinary' },
+    { id: 'extra_glitch_vibe', name: 'Cyber Glitch', bg: 'bg-[#050505]', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-400', colors: ['#ff00ff', '#00ffff', '#0000ff'], animate: true, hex: '#050505', pattern: 'extra_glitch', category: 'Extraordinary' },
+    { id: 'extra_cosmic_void', name: 'Cosmic Void', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#1e293b', '#000000'], animate: true, hex: '#000000', pattern: 'extra_void', category: 'Extraordinary' },
+    { id: 'extra_pearl_iris', name: 'Pearl Iris', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-400', accentText: 'text-sky-500', colors: ['#f0f9ff', '#e0f2fe', '#fdf4ff'], animate: true, hex: '#ffffff', pattern: 'extra_pearl', category: 'Extraordinary' },
+    { id: 'extra_toxic_bio', name: 'Bio Hazard', bg: 'bg-[#020617]', text: 'text-lime-50', accent: 'bg-lime-400', accentText: 'text-lime-400', colors: ['#84cc16', '#3f6212', '#1a2e05'], animate: true, hex: '#020617', pattern: 'extra_bio', category: 'Extraordinary' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -509,6 +514,64 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                     </>
                 )}
+
+                {tp.pattern === 'extra_magma' && (
+                    <>
+                        <div className="absolute inset-0 bg-stone-950" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-30 animate-pulse" style={{ background: 'radial-gradient(circle at 30% 20%, #ea580c 0%, transparent 60%), radial-gradient(circle at 70% 80%, #9a3412 0%, transparent 60%)', filter: 'blur(40px)' }} />
+                        <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100">
+                            <filter id="lava-crack">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="5" />
+                                <feDisplacementMap in="SourceGraphic" scale="10" />
+                            </filter>
+                            <rect width="100" height="100" filter="url(#lava-crack)" fill="none" stroke="#f97316" strokeWidth="0.5" />
+                        </svg>
+                        <div className="absolute bottom-[-20%] left-[-20%] w-[140%] h-[40%] bg-orange-600/10 blur-[80px] rounded-full" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_glitch' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-0 opacity-15 overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-500 animate-glitch-line" />
+                            <div className="absolute top-1/4 left-0 w-full h-[1px] bg-rose-500 animate-glitch-line" style={{ animationDelay: '1s' }} />
+                            <div className="absolute top-2/3 left-0 w-full h-[3px] bg-purple-500 animate-glitch-line" style={{ animationDelay: '2s' }} />
+                        </div>
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-light.png')] opacity-[0.4] mix-blend-overlay" />
+                        <div className="absolute -left-[10%] top-[-10%] w-[120%] h-[40%] bg-fuchsia-600/10 blur-[100px] animate-pulse" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_void' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-white/5 rounded-full animate-rotate-slow" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-white/10 rounded-full animate-pulse" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 blur-3xl rounded-full animate-floating" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,1)_80%)]" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_pearl' && (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-pink-50" />
+                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ background: 'linear-gradient(45deg, rgba(255,0,255,0.05) 0%, rgba(0,255,255,0.05) 50%, rgba(255,255,0,0.05) 100%)' }} />
+                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-rotate-slow opacity-20" style={{ backgroundImage: 'conic-gradient(from 0deg at 50% 50%, transparent, rgba(255,255,255,0.8), transparent)' }} />
+                        <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(255,255,255,0.9)]" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_bio' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#020617]" />
+                        <div className="absolute inset-0 opacity-20 animate-pulse" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #84cc16 0.5px, transparent 0px)', backgroundSize: '15px 15px' }} />
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(132,204,22,0.1)_0%,transparent_70%)] animate-floating" />
+                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
+                    </>
+                )}
             </div>
 
             {/* Card Inner Content (Portrait) */}
@@ -723,6 +786,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
+                @keyframes glitch-line {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(600px); }
+                }
                 .animate-elite-bg {
                     background-size: 200% 200%;
                     animation: aurora-flow 12s ease-in-out infinite;
@@ -732,6 +799,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 }
                 .animate-rotate-slow {
                     animation: rotate-slow 20s linear infinite;
+                }
+                .animate-glitch-line {
+                    animation: glitch-line 3s linear infinite;
                 }
             `}</style>
         </div>
