@@ -1074,7 +1074,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 animate={{ opacity: 1, scale: 1 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                href={`/${profile.username}`}
+                                href={`https://kardly.site/${profile.username}`}
                                 target="_blank"
                                 className="flex items-center justify-center gap-3 px-6 py-4 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all font-black text-[10px] uppercase tracking-widest"
                             >
@@ -2787,7 +2787,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="absolute inset-x-12 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-t-[3rem]" />
                                 </div>
 
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 hover:opacity-100 transition-opacity rounded-[3.5rem] cursor-pointer" onClick={() => profile?.username && window.open(`/${profile.username}`, '_blank')}>
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 hover:opacity-100 transition-opacity rounded-[3.5rem] cursor-pointer" onClick={() => profile?.username && window.open(`https://kardly.site/${profile.username}`, '_blank')}>
                                     <div className="flex flex-col items-center gap-3">
                                         <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-slate-900 shadow-xl">
                                             <ArrowRight size={24} />
