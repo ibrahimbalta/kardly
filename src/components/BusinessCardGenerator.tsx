@@ -471,11 +471,18 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute inset-0 bg-slate-950" />
                         <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] opacity-20 blur-[100px] animate-pulse" style={{ background: `radial-gradient(circle, ${tp.colors?.[0]} 0%, transparent 70%)` }} />
+                        
+                        {/* 3D Embossed Layer 1 */}
+                        <svg className="absolute -left-[20%] top-0 w-full h-full opacity-30 drop-shadow-[20px_0_40px_rgba(0,0,0,0.8)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,0 C80,20 80,80 0,100 L100,100 L100,0 Z" fill={tp.colors?.[0] || tp.accent} />
+                        </svg>
+
+                        {/* 3D Embossed Layer 2 */}
+                        <svg className="absolute -left-[10%] top-0 w-full h-full opacity-20 drop-shadow-[10px_0_20px_rgba(0,0,0,0.5)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,0 C60,30 60,70 0,100 L50,100 C80,70 80,30 50,0 Z" fill={tp.colors?.[1] || "#fff"} />
+                        </svg>
+
                         <div className="absolute top-[20%] right-[10%] w-40 h-40 bg-indigo-500/20 blur-[60px] rounded-full animate-floating" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                            <div className="w-[200px] h-[400px] border-2 border-white/10 rounded-full rotate-12 animate-rotate-slow" />
-                            <div className="absolute w-[300px] h-[300px] border border-white/5 rounded-full -rotate-45 animate-pulse" />
-                        </div>
                         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-sky-500/10 to-transparent" />
                     </>
                 )}
@@ -483,20 +490,29 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'extra_neon_3d' && (
                     <>
                         <div className="absolute inset-0 bg-black" />
+                        
+                        {/* Perspective Emboss Layer */}
+                        <svg className="absolute right-0 top-0 h-full w-1/2 opacity-20 drop-shadow-[-25px_0_50px_rgba(244,63,94,0.6)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M100,0 L20,0 C50,50 50,50 20,100 L100,100 Z" fill={tp.colors?.[0] || "#f43f5e"} />
+                        </svg>
+
                         <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ backgroundImage: 'linear-gradient(rgba(244,63,94,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,63,94,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-50%)' }} />
                         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-rose-500/20" />
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-rose-500/20 blur-[80px] rounded-full animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent shadow-[0_0_20px_#f43f5e]" />
                     </>
                 )}
 
                 {tp.pattern === 'extra_metal_3d' && (
                     <>
                         <div className="absolute inset-0 bg-zinc-900" />
+                        
+                        {/* Chiseled Edge Emboss */}
+                        <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.3) 100%)' }} />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-white/10" />
+                        
                         <div className="absolute inset-0 opacity-[0.15] animate-elite-bg" style={{ background: 'radial-gradient(circle at 20% 30%, #fff 0%, transparent 60%), radial-gradient(circle at 80% 70%, #555 0%, transparent 60%)' }} />
-                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-gradient-to-br from-white/10 via-transparent to-black/30 pointer-events-none" />
+                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-gradient-to-br from-white/10 via-transparent to-black/30 pointer-events-none shadow-[25px_0_50px_rgba(0,0,0,0.7)]" />
                         <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]" />
-                        <div className="absolute top-1/4 left-1/4 w-px h-1/2 bg-white/20 animate-pulse" />
                     </>
                 )}
 
@@ -522,6 +538,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'extra_magma' && (
                     <>
                         <div className="absolute inset-0 bg-stone-950" />
+                        
+                        {/* Embossed Magma Layer */}
+                        <svg className="absolute left-0 top-0 w-full h-full opacity-50 drop-shadow-[0_0_20px_rgba(234,88,12,0.4)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,20 Q40,50 0,80 L0,100 L100,100 L100,0 L0,0 Z" fill="#1c1917" />
+                        </svg>
+
                         <div className="absolute top-0 left-0 w-full h-full opacity-30 animate-pulse" style={{ background: 'radial-gradient(circle at 30% 20%, #ea580c 0%, transparent 60%), radial-gradient(circle at 70% 80%, #9a3412 0%, transparent 60%)', filter: 'blur(40px)' }} />
                         <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100">
                             <filter id="lava-crack">
@@ -530,7 +552,6 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             </filter>
                             <rect width="100" height="100" filter="url(#lava-crack)" fill="none" stroke="#f97316" strokeWidth="0.5" />
                         </svg>
-                        <div className="absolute bottom-[-20%] left-[-20%] w-[140%] h-[40%] bg-orange-600/10 blur-[80px] rounded-full" />
                     </>
                 )}
 
@@ -550,20 +571,31 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'extra_void' && (
                     <>
                         <div className="absolute inset-0 bg-black" />
+                        
+                        {/* Deep Void Emboss */}
+                        <svg className="absolute inset-0 w-full h-full opacity-40 drop-shadow-[inset_0_0_50px_rgba(255,255,255,0.2)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="5" />
+                        </svg>
+
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-white/5 rounded-full animate-rotate-slow" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border border-white/10 rounded-full animate-pulse" />
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 blur-3xl rounded-full animate-floating" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,1)_80%)]" />
-                        <div className="absolute top-0 left-0 w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 0.5px, transparent 0.5px)', backgroundSize: '20px 20px' }} />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,1)_85%)]" />
                     </>
                 )}
 
                 {tp.pattern === 'extra_pearl' && (
                     <>
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-pink-50" />
-                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ background: 'linear-gradient(45deg, rgba(255,0,255,0.05) 0%, rgba(0,255,255,0.05) 50%, rgba(255,255,0,0.05) 100%)' }} />
-                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-rotate-slow opacity-20" style={{ backgroundImage: 'conic-gradient(from 0deg at 50% 50%, transparent, rgba(255,255,255,0.8), transparent)' }} />
-                        <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(255,255,255,0.9)]" />
+                        
+                        {/* Iridescent Emboss Layers */}
+                        <svg className="absolute -left-1/2 top-[-10%] w-[150%] h-[120%] opacity-15 drop-shadow-[20px_20px_40px_rgba(0,0,0,0.1)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,0 C100,10 100,90 0,100 Z" fill="rgba(255,255,255,0.8)" />
+                        </svg>
+
+                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ background: 'linear-gradient(45deg, rgba(255,0,255,0.08) 0%, rgba(0,255,255,0.08) 50%, rgba(255,255,0,0.08) 100%)' }} />
+                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-rotate-slow opacity-25" style={{ backgroundImage: 'conic-gradient(from 0deg at 50% 50%, transparent, rgba(255,255,255,1), transparent)' }} />
+                        <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(255,255,255,1)]" />
                     </>
                 )}
 
@@ -571,7 +603,11 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute inset-0 bg-[#020617]" />
                         <div className="absolute inset-0 opacity-20 animate-pulse" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #84cc16 0.5px, transparent 0px)', backgroundSize: '15px 15px' }} />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(132,204,22,0.1)_0%,transparent_70%)] animate-floating" />
+                        
+                        {/* Bio Emboss Membrane */}
+                        <div className="absolute inset-8 border border-lime-400/20 rounded-full shadow-[0_0_50px_rgba(132,204,22,0.1),inset_0_0_50px_rgba(132,204,22,0.1)] animate-floating" />
+                        
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(132,204,22,0.1)_0%,transparent_70%)]" />
                         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
                         <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
                     </>
@@ -580,8 +616,14 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'extra_plasma' && (
                     <>
                         <div className="absolute inset-0 bg-indigo-950" />
+                        
+                        {/* Plasma Cavities (Embossed) */}
+                        <svg className="absolute -right-1/4 top-0 h-full w-full opacity-30 drop-shadow-[-30px_0_60px_rgba(0,0,0,0.7)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M100,0 C20,30 20,70 100,100 Z" fill={tp.colors?.[1] || "#9333ea"} />
+                        </svg>
+
                         <div className="absolute inset-0 opacity-40 blur-[60px] animate-elite-bg" style={{ background: `radial-gradient(circle at 20% 30%, ${tp.colors?.[0]} 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${tp.colors?.[1]} 0%, transparent 50%), radial-gradient(circle at 50% 50%, ${tp.colors?.[2]} 0%, transparent 50%)` }} />
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.1]" />
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.15]" />
                     </>
                 )}
 
@@ -589,21 +631,29 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute inset-0 bg-slate-950" />
                         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/5 rounded-full animate-rotate-slow" />
-                        <div className="absolute top-[15%] left-[15%] w-32 h-32 bg-sky-500/10 rotate-45 animate-floating blur-2xl" />
-                        <div className="absolute bottom-[15%] right-[15%] w-32 h-32 bg-rose-500/10 -rotate-12 animate-floating blur-2xl" style={{ animationDelay: '2s' }} />
+                        
+                        {/* Embossed Crystal Layers */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] border border-white/10 rounded-full animate-rotate-slow shadow-[0_0_40px_rgba(255,255,255,0.05)]" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] border border-white/5 rounded-full animate-rotate-slow" style={{ animationDirection: 'reverse' }} />
+                        
+                        <div className="absolute top-[15%] left-[15%] w-32 h-32 bg-sky-500/15 rotate-45 animate-floating blur-2xl" />
+                        <div className="absolute bottom-[15%] right-[15%] w-32 h-32 bg-rose-500/15 -rotate-12 animate-floating blur-2xl" style={{ animationDelay: '2s' }} />
                     </>
                 )}
 
                 {tp.pattern === 'extra_matrix' && (
                     <>
                         <div className="absolute inset-0 bg-black" />
+                        
+                        {/* Digital Emboss Frames */}
+                        <div className="absolute inset-4 border border-green-500/10 rounded-2xl shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]" />
+                        
                         <div className="absolute inset-0 opacity-20 overflow-hidden">
-                            {[...Array(10)].map((_, i) => (
-                                <div key={i} className="absolute top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500 to-transparent animate-matrix-rain" style={{ left: `${i * 10}%`, animationDelay: `${Math.random() * 3}s`, animationDuration: `${2 + Math.random() * 3}s` }} />
+                            {[...Array(12)].map((_, i) => (
+                                <div key={i} className="absolute top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500 to-transparent animate-matrix-rain" style={{ left: `${i * 8.5}%`, animationDelay: `${Math.random() * 4}s`, animationDuration: `${2.5 + Math.random() * 3.5}s` }} />
                             ))}
                         </div>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.85)_100%)]" />
                     </>
                 )}
 
@@ -611,8 +661,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <>
                         <div className="absolute inset-0 bg-slate-50" />
                         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(30deg, #000 1px, transparent 1px), linear-gradient(150deg, #000 1px, transparent 1px), linear-gradient(270deg, #000 1px, transparent 1px)', backgroundSize: '60px 52px' }} />
-                        <div className="absolute top-0 right-0 w-1/2 h-full bg-white shadow-[-20px_0_40px_rgba(0,0,0,0.02)] rotate-[-5deg] origin-top-right" />
-                        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-slate-100/50 shadow-[0_-20px_40px_rgba(0,0,0,0.02)] rotate-[2deg] origin-bottom-left" />
+                        
+                        {/* 3D Folded Emboss Layers */}
+                        <div className="absolute top-0 right-0 w-2/3 h-full bg-white shadow-[-30px_0_60px_rgba(0,0,0,0.05)] rotate-[-8deg] origin-top-right border-l border-black/[0.02]" />
+                        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-slate-100/40 shadow-[0_-30px_60px_rgba(0,0,0,0.05)] rotate-[3deg] origin-bottom-left border-t border-black/[0.02]" />
                     </>
                 )}
             </div>
