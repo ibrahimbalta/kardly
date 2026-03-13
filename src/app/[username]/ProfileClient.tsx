@@ -4677,8 +4677,8 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
     };
 
     const actionButtons = [
-        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${profile.phone}`, active: !!profile.phone },
-        { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(profile.phone || "").replace(/\D/g, '')}`, active: !!profile.phone },
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
         { label: t.emailBtn || "E-MAIL", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
         { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
@@ -4787,10 +4787,191 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     ))}
                 </div>
 
+                {/* Services / Expertise Areas */}
+                {profile.services && profile.services.length > 0 && (
+                    <section className="space-y-6">
+                        <div className="flex items-center gap-4 px-2">
+                            <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40 italic drop-shadow-lg">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
+                            <div className="flex-1 h-[1px] bg-white/10" />
+                        </div>
+                        <div className="grid grid-cols-1 gap-4">
+                            {profile.services.map((service: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.08 }}
+                                    className={cn("p-6 rounded-[2.5rem] border backdrop-blur-3xl relative overflow-hidden group hover:bg-white/[0.06] transition-all shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]", theme.card, theme.border)}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                                    <div className="flex items-start gap-5 relative z-10">
+                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner shrink-0" style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}>
+                                            <Award size={20} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="text-sm font-black text-white mb-1.5 tracking-wide">{translateText(service.title)}</h4>
+                                            <p className="text-[12px] text-white/40 font-medium leading-relaxed">{translateText(service.description)}</p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Products / Portfolio Gallery */}
+                {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
+                    <section className="space-y-6">
+                        <div className="flex items-center gap-4 px-2">
+                            <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40 italic drop-shadow-lg">{t.myProjects || "ÇALIŞMALARIM"}</h3>
+                            <div className="flex-1 h-[1px] bg-white/10" />
+                        </div>
+                        <div className="grid grid-cols-1 gap-6">
+                            {profile.products.map((project: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    whileHover={{ y: -5 }}
+                                    className={cn("rounded-[3rem] border overflow-hidden group cursor-pointer backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] transition-all", theme.card, theme.border)}
+                                    onClick={() => {
+                                        trackEvent("product_click", project.name);
+                                        if (project.link) {
+                                            const url = project.link.startsWith('http') ? project.link : `https://${project.link}`;
+                                            window.open(url, "_blank");
+                                        }
+                                    }}
+                                >
+                                    {project.image && (
+                                        <div className="aspect-video relative overflow-hidden">
+                                            <img src={project.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter contrast-[1.1] brightness-[0.9]" alt={project.name} />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                            <div className="absolute bottom-5 left-6 right-6 flex items-end justify-between">
+                                                {project.price > 0 && (
+                                                    <div className="bg-white/10 backdrop-blur-lg px-4 py-2 rounded-full border border-white/10">
+                                                        <span className="text-[11px] font-black text-white tracking-wider">{project.price} ₺</span>
+                                                    </div>
+                                                )}
+                                                <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-2xl translate-y-16 group-hover:translate-y-0 transition-all duration-500" style={{ backgroundColor: theme.accent }}>
+                                                    <ExternalLink size={16} className="text-white" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="p-8">
+                                        <h4 className="text-sm font-black text-white mb-2 tracking-wide">{translateText(project.name)}</h4>
+                                        {project.description && (
+                                            <p className="text-[12px] text-white/40 font-medium leading-relaxed line-clamp-2">{translateText(project.description)}</p>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Custom Links */}
+                {(() => {
+                    const customLinksEntry = socialLinks.find((l: any) => l.platform === 'customLinks');
+                    const customLinksList = customLinksEntry?.links || [];
+                    if (customLinksList.length === 0) return null;
+                    return (
+                        <section className="space-y-4">
+                            {customLinksList.map((link: any, i: number) => (
+                                <motion.a
+                                    key={i}
+                                    href={link.url?.startsWith('http') ? link.url : `https://${link.url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.05 }}
+                                    className={cn(
+                                        "w-full py-5 rounded-[2.5rem] border flex items-center gap-6 px-10 transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40",
+                                        link.isAction
+                                            ? "border-transparent"
+                                            : cn(theme.card, theme.border)
+                                    )}
+                                    style={link.isAction ? { backgroundColor: theme.accent } : {}}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 shadow-inner")}
+                                         style={link.isAction ? { color: '#fff', backgroundColor: 'rgba(255,255,255,0.2)' } : { color: theme.accent, backgroundColor: `${theme.accent}15` }}>
+                                        <ExternalLink size={20} />
+                                    </div>
+                                    <span className={cn("text-[12px] font-black uppercase tracking-[0.25em] group-hover:text-white transition-colors", link.isAction ? "text-white" : "text-white/80")}>{link.title}</span>
+                                </motion.a>
+                            ))}
+                        </section>
+                    );
+                })()}
+
+                {/* Payment Link Section */}
+                {profile.paymentLink && (
+                    <section className="pt-8 w-full">
+                        <motion.a
+                            href={formatUrl(profile.paymentLink)}
+                            target="_blank"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={cn(
+                                "w-full py-6 px-10 flex items-center justify-between font-black text-[12px] uppercase tracking-[0.25em] transition-all relative overflow-hidden group border-2 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] rounded-[2.5rem]",
+                                theme.card,
+                                theme.border
+                            )}
+                            style={{
+                                backgroundColor: `${theme.accent}15`,
+                                borderColor: `${theme.accent}40`,
+                                color: "#fff",
+                                boxShadow: `0 20px 40px -15px ${theme.accent}30, inset 0 0 20px ${theme.accent}10`
+                            }}
+                            onClick={() => trackEvent("payment_click")}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                            <div className="flex items-center gap-5 relative z-10">
+                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center backdrop-blur-3xl border transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"
+                                     style={{ backgroundColor: `${theme.accent}25`, borderColor: `${theme.accent}50`, color: theme.accent }}>
+                                    {profile.paymentType === 'consulting' ? <Briefcase size={22} fill={`${theme.accent}33`} /> :
+                                     profile.paymentType === 'support' ? <Heart size={22} fill={`${theme.accent}33`} /> :
+                                     profile.paymentType === 'pay' ? <CreditCard size={22} fill={`${theme.accent}33`} /> :
+                                     <Coffee size={22} fill={`${theme.accent}33`} />}
+                                </div>
+                                <div className="flex flex-col items-start gap-1">
+                                    <span className="opacity-40 text-[8px] font-black tracking-[0.4em]">
+                                        {profile.paymentType === 'consulting' ? "PROFESSIONAL" :
+                                         profile.paymentType === 'support' ? "CONTRIBUTION" :
+                                         profile.paymentType === 'pay' ? "TRANSACTION" :
+                                         "APPRECIATION"}
+                                    </span>
+                                    <span className="text-sm font-black tracking-widest">
+                                        {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                         profile.paymentType === 'support' ? t.supportBtn :
+                                         profile.paymentType === 'pay' ? t.payBtn :
+                                         t.coffeeBtn}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center border transition-all group-hover:bg-white/10 relative z-10"
+                                 style={{ borderColor: `${theme.accent}30` }}>
+                                <Zap size={18} className="group-hover:animate-pulse" style={{ color: theme.accent }} fill={theme.accent} />
+                            </div>
+                        </motion.a>
+                    </section>
+                )}
+
                 {/* Slogan Text Center Banner */}
                 {profile.bio && (
                     <div className="text-center px-8 py-12 border-y border-white/5 bg-white/[0.01] backdrop-blur-md rounded-3xl">
-                        <p className="text-sm font-medium text-white/30 leading-relaxed italic max-w-xs mx-auto drop-shadow-md">“{profile.bio}” 🏔️</p>
+                        <p className="text-sm font-medium text-white/30 leading-relaxed italic max-w-xs mx-auto drop-shadow-md">“{translateText(profile.bio)}” 🏔️</p>
                     </div>
                 )}
 
@@ -4933,6 +5114,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
+            <SocialProof t={t} theme={theme} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
     );
