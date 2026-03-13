@@ -153,13 +153,30 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     }
 
     const handleShare = async () => {
-        if (isSharing) return
+        if (!cardRef.current || isSharing) return
         setIsSharing(true)
         try {
-            if (navigator.share) {
+            const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
+                quality: 0.95,
+                pixelRatio: 2,
+                backgroundColor: tp.hex,
+                cacheBust: true,
+            })
+
+            const response = await fetch(dataUrl)
+            const blob = await response.blob()
+            const file = new File([blob], `kardly-${user.username}.jpg`, { type: 'image/jpeg' })
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: user.name,
+                    text: `${user.name} - Kardly Dijital Kartvizit`,
+                })
+            } else if (navigator.share) {
                 await navigator.share({ title: user.name, url: profileUrl })
             } else {
-                navigator.clipboard.writeText(profileUrl)
+                await navigator.clipboard.writeText(profileUrl)
                 setShareSuccess(true)
                 setTimeout(() => setShareSuccess(false), 2000)
             }
