@@ -156,32 +156,52 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         if (!cardRef.current || isSharing) return
         setIsSharing(true)
         try {
-            const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
-                quality: 0.95,
+            // Generate PNG for better transparency support and compatibility
+            const dataUrl = await htmlToImage.toPng(cardRef.current, {
                 pixelRatio: 2,
                 backgroundColor: tp.hex,
                 cacheBust: true,
             })
 
-            const response = await fetch(dataUrl)
-            const blob = await response.blob()
-            const file = new File([blob], `kardly-${user.username}.jpg`, { type: 'image/jpeg' })
+            // Convert dataUrl to File object manually (safer than fetch for base64)
+            const [header, base64Data] = dataUrl.split(',')
+            const mime = header.match(/:(.*?);/)?.[1] || 'image/png'
+            const binary = atob(base64Data)
+            const array = new Uint8Array(binary.length)
+            for (let i = 0; i < binary.length; i++) {
+                array[i] = binary.charCodeAt(i)
+            }
+            const blob = new Blob([array], { type: mime })
+            const file = new File([blob], `kardly-card.png`, { type: mime })
 
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            // Check if file sharing is supported
+            const shareData = {
+                files: [file],
+                title: user.name,
+                text: `${user.name} - Kardly Dijital Kartvizit`,
+            }
+
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData)
+            } else if (navigator.share) {
+                // Fallback to link sharing if file sharing is not supported
                 await navigator.share({
-                    files: [file],
                     title: user.name,
                     text: `${user.name} - Kardly Dijital Kartvizit`,
+                    url: profileUrl
                 })
-            } else if (navigator.share) {
-                await navigator.share({ title: user.name, url: profileUrl })
             } else {
+                // Fallback to clipboard
                 await navigator.clipboard.writeText(profileUrl)
                 setShareSuccess(true)
                 setTimeout(() => setShareSuccess(false), 2000)
             }
         } catch (error) {
-            console.log('Sharing failed', error)
+            console.error('Sharing failed', error)
+            // Final fallback to link sharing on error
+            if (navigator.share) {
+                try { await navigator.share({ title: user.name, url: profileUrl }) } catch(e) {}
+            }
         } finally {
             setIsSharing(false)
         }
