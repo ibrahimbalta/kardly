@@ -4226,7 +4226,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         animate={{ scale: 1, opacity: 1 }}
                         className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
                     >
-                        <img src={profile.user.image} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
+                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
                     </motion.div>
                 </div>
 
@@ -4726,12 +4726,12 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     <div className="relative group">
                         <div className="absolute -inset-6 rounded-full opacity-20 blur-3xl transition-all duration-1000 group-hover:opacity-35" style={{ backgroundColor: theme.accent }} />
                         <div className="relative w-44 h-44 p-2 rounded-full bg-zinc-950 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden transition-transform duration-700 group-hover:scale-105">
-                            <img src={profile.profileImage || `https://ui-avatars.com/api/?name=${profile.displayName}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile.displayName} />
+                            <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile.user.name} />
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile.displayName}</h1>
+                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile.user.name}</h1>
                         <div className="flex items-center justify-center gap-4">
                             <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
                             <p className="text-[12px] font-black uppercase tracking-[0.4em] drop-shadow-lg" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
