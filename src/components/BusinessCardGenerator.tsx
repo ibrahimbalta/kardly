@@ -81,7 +81,11 @@ export const TEMPLATES = [
     { id: 'extra_glitch_vibe', name: 'Cyber Glitch', bg: 'bg-[#050505]', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-400', colors: ['#ff00ff', '#00ffff', '#0000ff'], animate: true, hex: '#050505', pattern: 'extra_glitch', category: 'Extraordinary' },
     { id: 'extra_cosmic_void', name: 'Cosmic Void', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#1e293b', '#000000'], animate: true, hex: '#000000', pattern: 'extra_void', category: 'Extraordinary' },
     { id: 'extra_pearl_iris', name: 'Pearl Iris', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-400', accentText: 'text-sky-500', colors: ['#f0f9ff', '#e0f2fe', '#fdf4ff'], animate: true, hex: '#ffffff', pattern: 'extra_pearl', category: 'Extraordinary' },
-    { id: 'extra_toxic_bio', name: 'Bio Hazard', bg: 'bg-[#020617]', text: 'text-lime-50', accent: 'bg-lime-400', accentText: 'text-lime-400', colors: ['#84cc16', '#3f6212', '#1a2e05'], animate: true, hex: '#020617', pattern: 'extra_bio', category: 'Extraordinary' }
+    { id: 'extra_toxic_bio', name: 'Bio Hazard', bg: 'bg-[#020617]', text: 'text-lime-50', accent: 'bg-lime-400', accentText: 'text-lime-400', colors: ['#84cc16', '#3f6212', '#1a2e05'], animate: true, hex: '#020617', pattern: 'extra_bio', category: 'Extraordinary' },
+    { id: 'extra_plasma_flow', name: 'Plasma Flow', bg: 'bg-indigo-950', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4f46e5', '#9333ea', '#db2777'], animate: true, hex: '#1e1b4b', pattern: 'extra_plasma', category: 'Extraordinary' },
+    { id: 'extra_crystal_prism', name: 'Crystal Prism', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#7dd3fc', '#f472b6', '#fbbf24'], animate: true, hex: '#0f172a', pattern: 'extra_crystal', category: 'Extraordinary' },
+    { id: 'extra_matrix_digital', name: 'Matrix Digital', bg: 'bg-black', text: 'text-green-400', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#22c55e', '#166534', '#052e16'], animate: true, hex: '#000000', pattern: 'extra_matrix', category: 'Extraordinary' },
+    { id: 'extra_abstract_origami', name: 'Origami Fold', bg: 'bg-slate-100', text: 'text-slate-900', accent: 'bg-primary', accentText: 'text-primary', colors: ['#ffffff', '#f1f5f9', '#e2e8f0'], animate: true, hex: '#f8fafc', pattern: 'extra_origami', category: 'Extraordinary' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -572,6 +576,45 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
                     </>
                 )}
+
+                {tp.pattern === 'extra_plasma' && (
+                    <>
+                        <div className="absolute inset-0 bg-indigo-950" />
+                        <div className="absolute inset-0 opacity-40 blur-[60px] animate-elite-bg" style={{ background: `radial-gradient(circle at 20% 30%, ${tp.colors?.[0]} 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${tp.colors?.[1]} 0%, transparent 50%), radial-gradient(circle at 50% 50%, ${tp.colors?.[2]} 0%, transparent 50%)` }} />
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.1]" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_crystal' && (
+                    <>
+                        <div className="absolute inset-0 bg-slate-950" />
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/5 rounded-full animate-rotate-slow" />
+                        <div className="absolute top-[15%] left-[15%] w-32 h-32 bg-sky-500/10 rotate-45 animate-floating blur-2xl" />
+                        <div className="absolute bottom-[15%] right-[15%] w-32 h-32 bg-rose-500/10 -rotate-12 animate-floating blur-2xl" style={{ animationDelay: '2s' }} />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_matrix' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-0 opacity-20 overflow-hidden">
+                            {[...Array(10)].map((_, i) => (
+                                <div key={i} className="absolute top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500 to-transparent animate-matrix-rain" style={{ left: `${i * 10}%`, animationDelay: `${Math.random() * 3}s`, animationDuration: `${2 + Math.random() * 3}s` }} />
+                            ))}
+                        </div>
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_origami' && (
+                    <>
+                        <div className="absolute inset-0 bg-slate-50" />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(30deg, #000 1px, transparent 1px), linear-gradient(150deg, #000 1px, transparent 1px), linear-gradient(270deg, #000 1px, transparent 1px)', backgroundSize: '60px 52px' }} />
+                        <div className="absolute top-0 right-0 w-1/2 h-full bg-white shadow-[-20px_0_40px_rgba(0,0,0,0.02)] rotate-[-5deg] origin-top-right" />
+                        <div className="absolute bottom-0 left-0 w-full h-1/3 bg-slate-100/50 shadow-[0_-20px_40px_rgba(0,0,0,0.02)] rotate-[2deg] origin-bottom-left" />
+                    </>
+                )}
             </div>
 
             {/* Card Inner Content (Portrait) */}
@@ -790,6 +833,11 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     0% { transform: translateY(-100%); }
                     100% { transform: translateY(600px); }
                 }
+                @keyframes matrix-rain {
+                    0% { transform: translateY(-100%); opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { transform: translateY(600px); opacity: 0; }
+                }
                 .animate-elite-bg {
                     background-size: 200% 200%;
                     animation: aurora-flow 12s ease-in-out infinite;
@@ -802,6 +850,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 }
                 .animate-glitch-line {
                     animation: glitch-line 3s linear infinite;
+                }
+                .animate-matrix-rain {
+                    animation: matrix-rain 3s linear infinite;
                 }
             `}</style>
         </div>
