@@ -5421,8 +5421,43 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
         if (isSharing) return;
         setIsSharing(true);
         try {
+            const wrapperEl = cardExportRef.current;
+            if (!wrapperEl) { setIsSharing(false); return; }
+
+            const cardEl = wrapperEl.querySelector('[data-card-actual]') as HTMLElement;
+            if (!cardEl) { setIsSharing(false); return; }
+
+            const htmlToImage = await import('html-to-image');
+            const currentTpl = TEMPLATES.find(t => t.id === profile.businessCardTemplateId) || TEMPLATES[0];
+            const pixelPerfectBg = currentTpl.hex || '#ffffff';
+
+            const dataUrl = await htmlToImage.toPng(cardEl, {
+                pixelRatio: 2,
+                backgroundColor: pixelPerfectBg,
+                cacheBust: true,
+                skipAutoScale: true,
+            });
+
+            const [header, base64Data] = dataUrl.split(',');
+            const mime = header.match(/:(.*?);/)?.[1] || 'image/png';
+            const binary = atob(base64Data);
+            const array = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                array[i] = binary.charCodeAt(i);
+            }
+            const blob = new Blob([array], { type: mime });
+            const file = new File([blob], `kardly-card.png`, { type: mime });
+
             const profileUrl = `${window.location.origin}/${profile.username}`;
-            if (navigator.share) {
+            const shareData = {
+                files: [file],
+                title: profile.displayName || profile.user?.name || 'Kardly',
+                text: `${profile.displayName || profile.user?.name}'in dijital kartviziti`,
+            };
+
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+            } else if (navigator.share) {
                 await navigator.share({
                     title: profile.displayName || profile.user?.name || 'Kardly',
                     text: `${profile.displayName || profile.user?.name}'in dijital kartviziti`,
@@ -5434,7 +5469,18 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 setTimeout(() => setActionDone(null), 2500);
             }
         } catch (err) {
-            console.log('Share error:', err);
+            console.error('Share error:', err);
+            // Final fallback to URL share on error
+            try {
+                const profileUrl = `${window.location.origin}/${profile.username}`;
+                if (navigator.share) {
+                    await navigator.share({
+                        title: profile.displayName || profile.user?.name || 'Kardly',
+                        text: `${profile.displayName || profile.user?.name}'in dijital kartviziti`,
+                        url: profileUrl
+                    });
+                }
+            } catch (e) {}
         } finally {
             setIsSharing(false);
         }
