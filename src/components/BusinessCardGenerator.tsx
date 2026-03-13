@@ -33,43 +33,43 @@ export const TEMPLATES = [
 
     // Premium
     { id: 'vibe_wave', name: 'Vibe Wave', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#24292e' },
-    { id: 'vibe_wave_blue', name: 'Wave Ocean', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#2563eb]', accentText: 'text-[#2563eb]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#1e3a5f' },
-    { id: 'vibe_wave_emerald', name: 'Wave Emerald', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#059669]', accentText: 'text-[#059669]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#064e3b' },
+    { id: 'vibe_wave_blue', name: 'Wave Ocean', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#2563eb]', accentText: 'text-[#2563eb]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_geo', category: 'Premium', waveColor: '#1e3a5f' },
+    { id: 'vibe_wave_emerald', name: 'Wave Emerald', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#059669]', accentText: 'text-[#059669]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium', waveColor: '#064e3b' },
     { id: 'vibe_wave_purple', name: 'Wave Royal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#7c3aed]', accentText: 'text-[#7c3aed]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#2e1065' },
-    { id: 'vibe_wave_ruby', name: 'Wave Ruby', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#dc2626]', accentText: 'text-[#dc2626]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#7f1d1d' },
-    { id: 'vibe_wave_teal', name: 'Wave Teal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#0d9488]', accentText: 'text-[#0d9488]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#134e4a' },
-    { id: 'vibe_wave_rose', name: 'Wave Rosé', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c0519' },
-    { id: 'vibe_wave_midnight', name: 'Wave Midnight', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#06b6d4]', accentText: 'text-[#06b6d4]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#0f172a' },
-    { id: 'vibe_wave_forest', name: 'Wave Forest', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#84cc16]', accentText: 'text-[#84cc16]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#14532d' },
-    { id: 'vibe_wave_gold', name: 'Wave Gold', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#d4af37]', accentText: 'text-[#d4af37]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#000000' },
-    { id: 'vibe_wave_slate', name: 'Wave Slate', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#64748b]', accentText: 'text-[#64748b]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#334155' },
-    { id: 'vibe_wave_sunset', name: 'Wave Sunset', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#f97316]', accentText: 'text-[#f97316]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c1d95' },
-    { id: 'vibe_wave_neon', name: 'Wave Neon', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#a3e635]', accentText: 'text-[#a3e635]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#0a0a0a' },
+    { id: 'vibe_wave_ruby', name: 'Wave Ruby', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#dc2626]', accentText: 'text-[#dc2626]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_geo', category: 'Premium', waveColor: '#7f1d1d' },
+    { id: 'vibe_wave_teal', name: 'Wave Teal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#0d9488]', accentText: 'text-[#0d9488]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium', waveColor: '#134e4a' },
+    { id: 'vibe_wave_rose', name: 'Wave Rosé', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_mesh', category: 'Premium', waveColor: '#4c0519' },
+    { id: 'vibe_wave_midnight', name: 'Wave Midnight', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#06b6d4]', accentText: 'text-[#06b6d4]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_geo', category: 'Premium', waveColor: '#0f172a' },
+    { id: 'vibe_wave_forest', name: 'Wave Forest', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#84cc16]', accentText: 'text-[#84cc16]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium', waveColor: '#14532d' },
+    { id: 'vibe_wave_gold', name: 'Wave Gold', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#d4af37]', accentText: 'text-[#d4af37]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_mesh', category: 'Premium', waveColor: '#000000' },
+    { id: 'vibe_wave_slate', name: 'Wave Slate', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#64748b]', accentText: 'text-[#64748b]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_geo', category: 'Premium', waveColor: '#334155' },
+    { id: 'vibe_wave_sunset', name: 'Wave Sunset', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#f97316]', accentText: 'text-[#f97316]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium', waveColor: '#4c1d95' },
+    { id: 'vibe_wave_neon', name: 'Wave Neon', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#a3e635]', accentText: 'text-[#a3e635]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_mesh', category: 'Premium', waveColor: '#0a0a0a' },
     { id: 'vibe_geometric', name: 'Vibe Geometric', bg: 'bg-[#1a1a1a]', text: 'text-white', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-300', hex: '#1a1a1a', pattern: 'vibe_geo', category: 'Premium' },
     { id: 'vibe_elegant', name: 'Vibe Elegant', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium' },
     { id: 'premium_glass', name: 'Glass Frost', bg: 'bg-white/10', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-[#60a5fa]', secondary: 'text-white/40', hex: '#1e293b', pattern: 'glass', category: 'Premium' },
     { id: 'premium_luxury', name: 'Golden Era', bg: 'bg-neutral-950', text: 'text-amber-100', accent: 'bg-amber-500', accentText: 'text-[#f59e0b]', secondary: 'text-amber-500/20', hex: '#0a0a0a', pattern: 'luxury', category: 'Premium' },
 
     // Ultimate (Elite)
-    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_spatial', name: 'Spatial Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_cyber', name: 'Cyberpunk', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-[#d946ef]', colors: ['#c026d3', '#7c3aed', '#db2777'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#3b82f6', '#6366f1', '#a5b4fc'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', colors: ['#92400e', '#d97706', '#f59e0b'], animate: true, hex: '#1a0b0b', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', colors: ['#6b21a8', '#4c1d95', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#050510', pattern: 'aurora', category: 'Ultimate' },
+    { id: 'elite_spatial', name: 'Spatial Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_spatial', category: 'Ultimate' },
+    { id: 'elite_cyber', name: 'Cyberpunk', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-[#d946ef]', colors: ['#c026d3', '#7c3aed', '#db2777'], animate: true, hex: '#000000', pattern: 'elite_cyber', category: 'Ultimate' },
+    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'mesh', category: 'Ultimate' },
+    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#3b82f6', '#6366f1', '#a5b4fc'], animate: true, hex: '#000000', pattern: 'frosty', category: 'Ultimate' },
+    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', colors: ['#92400e', '#d97706', '#f59e0b'], animate: true, hex: '#1a0b0b', pattern: 'elite_royal', category: 'Ultimate' },
+    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', colors: ['#6b21a8', '#4c1d95', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'nebula', category: 'Ultimate' },
 
     // New 10 Modern Tech Templates
-    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#0891b2', '#06b6d4', '#0a0a0f'], animate: true, hex: '#0a0a0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#059669', '#10b981', '#064e3b'], animate: true, hex: '#0c0c0c', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', colors: ['#c026d3', '#a21caf', '#701a75'], animate: true, hex: '#050505', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1d4ed8', '#3b82f6', '#60a5fa'], animate: true, hex: '#0f172a', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4338ca', '#6366f1', '#4f46e5'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', colors: ['#7c3aed', '#8b5cf6', '#c026d3'], animate: true, hex: '#0f0f0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#0891b2', '#06b6d4', '#0a0a0f'], animate: true, hex: '#0a0a0f', pattern: 'cyber_pulse', category: 'Ultimate' },
+    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#059669', '#10b981', '#064e3b'], animate: true, hex: '#0c0c0c', pattern: 'hud_command', category: 'Ultimate' },
+    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', colors: ['#c026d3', '#a21caf', '#701a75'], animate: true, hex: '#050505', pattern: 'circuitry', category: 'Ultimate' },
+    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1d4ed8', '#3b82f6', '#60a5fa'], animate: true, hex: '#0f172a', pattern: 'abstract_flow', category: 'Ultimate' },
+    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4338ca', '#6366f1', '#4f46e5'], animate: true, hex: '#020617', pattern: 'quantum_grid', category: 'Ultimate' },
+    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', colors: ['#7c3aed', '#8b5cf6', '#c026d3'], animate: true, hex: '#0f0f0f', pattern: 'holo_shard', category: 'Ultimate' },
+    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'prism_shift', category: 'Ultimate' },
+    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'minimal_edge', category: 'Ultimate' },
+    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'data_rain', category: 'Ultimate' },
+    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'liquid_neon', category: 'Ultimate' },
 
     // Extraordinary (Sıradışı) - 3D & Advanced Effects
     { id: 'extra_3d_glass', name: '3D Crystal', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#0ea5e9', '#6366f1', '#a855f7'], animate: true, hex: '#0f172a', pattern: 'extra_glass_3d', category: 'Extraordinary' },
@@ -266,43 +266,28 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {tp.pattern === 'elite_wave_layered' && (
                     <div className="absolute inset-0 overflow-hidden">
                         {/* Layer 1: Base Liquid Flow (Animated) */}
-                        <svg className="absolute -left-[30%] top-[-20%] w-[160%] h-[140%] opacity-40 blur-[50px] animate-elite-bg" style={{ animationDuration: '25s' }} viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id={`gradBase-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} stopOpacity="0.8" />
-                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.hex} stopOpacity="0.2" />
-                                </linearGradient>
-                            </defs>
-                            <circle cx="20" cy="20" r="60" fill={`url(#gradBase-${tp.id})`} />
+                        <div className="absolute inset-0 bg-[#050510]" />
+                        <div className="absolute -left-[30%] top-[-20%] w-[160%] h-[140%] opacity-40 blur-[60px] animate-elite-bg" style={{ 
+                            background: `radial-gradient(circle at center, ${tp.colors?.[0] || tp.accentText} 0%, transparent 70%)`
+                        }} />
+
+                        {/* Layer 2: Major Bold Wave */}
+                        <svg className="absolute -left-[40%] top-0 w-[140%] h-full drop-shadow-[20px_0_40px_rgba(0,0,0,0.6)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,0 C80,30 80,70 0,100 L100,100 L100,0 Z" fill={tp.colors?.[0] || tp.accentText} fillOpacity="0.8" />
                         </svg>
 
-                        {/* Layer 2: Major Bold Wave ( matches the large gold waves in 2nd image) */}
-                        <svg className="absolute -left-[50%] top-0 w-[130%] h-full drop-shadow-[25px_0_50px_rgba(0,0,0,0.7)]" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        {/* Layer 3: Secondary Accent Wave with Texture */}
+                        <svg className="absolute -left-[30%] top-0 w-[120%] h-full opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <defs>
-                                <linearGradient id={`gradMain-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} />
-                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.colors?.[0] || tp.hex} />
-                                </linearGradient>
-                            </defs>
-                            <path d="M0,0 C70,15 70,85 0,100 L100,100 L100,0 Z" fill={`url(#gradMain-${tp.id})`} />
-                        </svg>
-
-                        {/* Layer 3: Secondary Accent Wave with Texture (matches the dotted gold layer) */}
-                        <svg className="absolute -left-[40%] top-0 w-[110%] h-full opacity-50 drop-shadow-[5px_0_15px_rgba(0,0,0,0.4)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <pattern id={`waveDots-${tp.id}`} x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                                    <circle cx="1.5" cy="1.5" r="0.7" fill="#fff" fillOpacity="0.3" />
+                                <pattern id={`waveDots-${tp.id}`} x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                                    <circle cx="1" cy="1" r="0.5" fill="#fff" fillOpacity="0.4" />
                                 </pattern>
                             </defs>
-                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={tp.colors?.[2] || tp.colors?.[1] || tp.hex} />
-                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={`url(#waveDots-${tp.id})`} />
+                            <path d="M0,0 C60,20 60,80 0,100 L40,100 C100,80 100,20 40,0 Z" fill={`url(#waveDots-${tp.id})`} />
                         </svg>
 
-                        {/* Layer 4: Floating Accent Glow */}
-                        <div className="absolute top-1/2 left-[-10%] w-40 h-40 rounded-full blur-[80px] opacity-30 animate-pulse" style={{ backgroundColor: tp.colors?.[0] || tp.hex }} />
-
                         {/* Subtle noise/grain overlay */}
-                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
                     </div>
                 )}
                 {tp.pattern === 'nebula' && (
@@ -372,15 +357,28 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 )}
                 {tp.pattern === 'vibe_geo' && (
                     <>
-                        <div className="absolute inset-0 bg-[#0a0a0a]" />
-                        <div className="absolute -top-10 -left-10 w-48 h-48 bg-[#e67e22]/15 rounded-full blur-[60px]" />
-                        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#e67e22]/10 rounded-full blur-[60px]" />
+                        <div className="absolute inset-0 bg-slate-50" />
+                        <div className="absolute -top-20 -left-20 w-64 h-64 opacity-20 rotate-45" style={{ backgroundColor: tp.hex === '#ffffff' ? '#000' : tp.accentText }} />
+                        <div className="absolute -bottom-20 -right-20 w-64 h-64 opacity-20 -rotate-12" style={{ backgroundColor: tp.hex === '#ffffff' ? '#000' : tp.accentText }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-slate-200" />
                     </>
                 )}
                 {tp.pattern === 'vibe_elegant' && (
                     <>
-                        <div className="absolute top-0 left-0 w-full h-6 bg-[#e67e22]" />
-                        <div className="absolute bottom-0 left-0 w-full h-16 bg-[#e67e22]" />
+                        <div className="absolute inset-0 bg-white" />
+                        <div className="absolute top-0 left-0 w-full h-[30%] opacity-5" style={{ background: `linear-gradient(to bottom, ${tp.accentText}, transparent)` }} />
+                        <div className="absolute bottom-0 left-0 w-full h-1" style={{ backgroundColor: tp.accentText }} />
+                        <div className="absolute top-8 right-8 w-16 h-16 border-t border-r opacity-20" style={{ borderColor: tp.accentText }} />
+                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                    </>
+                )}
+                {tp.pattern === 'vibe_gradient_mesh' && (
+                    <>
+                        <div className="absolute inset-0 bg-white" />
+                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] opacity-20 blur-[60px] animate-elite-bg" style={{ 
+                            background: `radial-gradient(circle at 30% 30%, ${tp.accentText} 0%, transparent 50%), radial-gradient(circle at 70% 60%, ${tp.secondary} 0%, transparent 50%)`
+                        }} />
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                     </>
                 )}
                 {tp.pattern === 'cyber_pulse' && (
