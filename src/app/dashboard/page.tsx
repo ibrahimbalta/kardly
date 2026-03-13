@@ -53,6 +53,12 @@ export default async function DashboardPage() {
     const clickRate = totalViews > 0 ? (totalClicks / totalViews * 100).toFixed(1) : "0"
     const vCardClicks = analytics.filter((a: any) => a.type === 'click_vcard').length
 
+    // Channel Performance (Referrer) Stats
+    const instagramCount = analytics.filter((a: any) => a.type === 'view' && a.referrer?.toLowerCase().includes('instagram')).length
+    const whatsappCount = analytics.filter((a: any) => a.type === 'view' && (a.referrer?.toLowerCase().includes('whatsapp') || a.referrer?.toLowerCase().includes('wa.me'))).length
+    const directCount = analytics.filter((a: any) => a.type === 'view' && (!a.referrer || a.referrer === '')).length
+    const otherCount = totalViews - (instagramCount + whatsappCount + directCount)
+
     const stats = {
         totalViews,
         clickRate: clickRate + "%",
@@ -67,6 +73,12 @@ export default async function DashboardPage() {
         websiteClicks: analytics.filter((a: any) => a.type === 'click_website').length,
         locationClicks: analytics.filter((a: any) => a.type === 'click_location').length,
         reviewCount: reviews.length,
+        channelStats: {
+            instagram: instagramCount,
+            whatsapp: whatsappCount,
+            direct: directCount,
+            others: Math.max(0, otherCount)
+        },
         recentAnalytics: analytics.slice(0, 50)
     }
 

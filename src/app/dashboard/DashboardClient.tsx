@@ -1925,10 +1925,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
                                     <div className="space-y-6">
-                                        <StatBar label={t('instagramSocial')} count={420} total={1000} color="bg-primary" />
-                                        <StatBar label={t('whatsappShares')} count={280} total={1000} color="bg-indigo-500" />
-                                        <StatBar label={t('directTraffic')} count={150} total={1000} color="bg-emerald-500" />
-                                        <StatBar label={t('others')} count={150} total={1000} color="bg-slate-200" />
+                                        <StatBar label={t('instagramSocial')} count={stats.channelStats?.instagram || 0} total={stats.totalViews} color="bg-primary" />
+                                        <StatBar label={t('whatsappShares')} count={stats.channelStats?.whatsapp || 0} total={stats.totalViews} color="bg-indigo-500" />
+                                        <StatBar label={t('directTraffic')} count={stats.channelStats?.direct || 0} total={stats.totalViews} color="bg-emerald-500" />
+                                        <StatBar label={t('others')} count={stats.channelStats?.others || 0} total={stats.totalViews} color="bg-slate-200" />
                                     </div>
                                 </section>
 
