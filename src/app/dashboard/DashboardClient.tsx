@@ -61,6 +61,7 @@ import {
     History,
     Cpu,
     Cloud,
+    RefreshCw,
     Moon,
     Sun,
     Circle,
@@ -248,6 +249,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isProductImageUploading, setIsProductImageUploading] = useState(false)
     const [statsRange, setStatsRange] = useState("30")
     const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
+    const [isProfileImageUploading, setIsProfileImageUploading] = useState(false)
+    const [isBgImageUploading, setIsBgImageUploading] = useState(false)
+    const [isCvUploading, setIsCvUploading] = useState(false)
 
     // Reviews Management
     const [reviewList, setReviewList] = useState(reviews || [])
@@ -2201,21 +2205,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                                 />
                                                 <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
-                                                    <Upload size={16} /> {t('upload')}
+                                                    {isProfileImageUploading ? (
+                                                        <RefreshCw size={16} className="animate-spin" />
+                                                    ) : (
+                                                        <Upload size={16} />
+                                                    )} 
+                                                    {isProfileImageUploading ? t('loading') : t('upload')}
                                                     <input
                                                         type="file"
                                                         className="hidden"
                                                         accept="image/*"
+                                                        disabled={isProfileImageUploading}
                                                         onChange={async (e) => {
-                                                            const file = e.target.files?.[0]
+                                                            const file = e.target.files?.[0];
                                                             if (file) {
+                                                                setIsProfileImageUploading(true)
                                                                 const formData = new FormData()
                                                                 formData.append("file", file)
                                                                 try {
                                                                     const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                     const data = await res.json()
-                                                                    if (data.url) setProfileData((prev: any) => ({ ...prev, image: data.url }))
-                                                                } catch (err) { console.error(err) }
+                                                                    if (res.ok && data.url) {
+                                                                        setProfileData((prev: any) => ({ ...prev, image: data.url }))
+                                                                        setShowToast("Profil resmi yüklendi! ✨")
+                                                                    } else {
+                                                                        setShowToast(data.error || "Yükleme hatası")
+                                                                    }
+                                                                } catch (err) { 
+                                                                    console.error(err)
+                                                                    setShowToast("Bağlantı hatası")
+                                                                } finally {
+                                                                    setIsProfileImageUploading(false)
+                                                                    setTimeout(() => setShowToast(null), 3000)
+                                                                }
                                                             }
                                                         }}
                                                     />
@@ -2266,21 +2288,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                             />
                                             <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
-                                                <Upload size={16} /> {t('upload')}
+                                                {isBgImageUploading ? (
+                                                    <RefreshCw size={16} className="animate-spin" />
+                                                ) : (
+                                                    <Upload size={16} />
+                                                )}
+                                                {isBgImageUploading ? t('loading') : t('upload')}
                                                 <input
                                                     type="file"
                                                     className="hidden"
                                                     accept="image/*"
+                                                    disabled={isBgImageUploading}
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
+                                                            setIsBgImageUploading(true)
                                                             const formData = new FormData()
                                                             formData.append("file", file)
                                                             try {
                                                                 const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                 const data = await res.json()
-                                                                if (data.url) setProfileData((prev: any) => ({ ...prev, profileBgImage: data.url }))
-                                                            } catch (err) { console.error(err) }
+                                                                if (res.ok && data.url) {
+                                                                    setProfileData((prev: any) => ({ ...prev, profileBgImage: data.url }))
+                                                                    setShowToast("Arka plan görseli yüklendi! ✨")
+                                                                } else {
+                                                                    setShowToast(data.error || "Yükleme hatası")
+                                                                }
+                                                            } catch (err) { 
+                                                                console.error(err)
+                                                                setShowToast("Bağlantı hatası")
+                                                            } finally {
+                                                                setIsBgImageUploading(false)
+                                                                setTimeout(() => setShowToast(null), 3000)
+                                                            }
                                                         }
                                                     }}
                                                 />
@@ -2325,21 +2365,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 className="w-full sm:flex-1 h-12 bg-slate-50 border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
                                             />
                                             <label className="h-12 px-5 bg-white border-2 border-slate-100 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0">
-                                                <Upload size={16} /> {t('upload')}
+                                                {isCvUploading ? (
+                                                    <RefreshCw size={16} className="animate-spin" />
+                                                ) : (
+                                                    <Upload size={16} />
+                                                )}
+                                                {isCvUploading ? t('loading') : t('upload')}
                                                 <input
                                                     type="file"
                                                     className="hidden"
                                                     accept=".pdf,.doc,.docx,.jpg,.png"
+                                                    disabled={isCvUploading}
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
+                                                            setIsCvUploading(true)
                                                             const formData = new FormData()
                                                             formData.append("file", file)
                                                             try {
                                                                 const res = await fetch("/api/upload", { method: "POST", body: formData })
                                                                 const data = await res.json()
-                                                                if (data.url) setProfileData((prev: any) => ({ ...prev, cvUrl: data.url }))
-                                                            } catch (err) { console.error(err) }
+                                                                if (res.ok && data.url) {
+                                                                    setProfileData((prev: any) => ({ ...prev, cvUrl: data.url }))
+                                                                    setShowToast("Dosya başarıyla yüklendi! ✨")
+                                                                } else {
+                                                                    setShowToast(data.error || "Dosya yükleme hatası")
+                                                                }
+                                                            } catch (err) { 
+                                                                console.error(err)
+                                                                setShowToast("Bağlantı hatası")
+                                                            } finally {
+                                                                setIsCvUploading(false)
+                                                                setTimeout(() => setShowToast(null), 3000)
+                                                            }
                                                         }
                                                     }}
                                                 />
@@ -4064,13 +4122,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 try {
                                                     const res = await fetch("/api/upload", { method: "POST", body: formData });
                                                     const data = await res.json();
-                                                    if (data.url) {
+                                                    if (res.ok && data.url) {
                                                         setNewProduct((prev: any) => ({ ...prev, image: data.url }));
+                                                        setShowToast("Proje resmi yüklendi! ✨");
+                                                    } else {
+                                                        setShowToast(data.error || "Yükleme hatası");
                                                     }
                                                 } catch (err) {
                                                     console.error(err);
+                                                    setShowToast("Bağlantı hatası");
                                                 } finally {
                                                     setIsProductImageUploading(false);
+                                                    setTimeout(() => setShowToast(null), 3000);
                                                 }
                                             }}
                                         />

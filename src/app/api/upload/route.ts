@@ -18,9 +18,17 @@ export async function POST(req: Request) {
         }
 
         // Validate file type
-        const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+        const allowedTypes = [
+            "image/jpeg", 
+            "image/png", 
+            "image/webp", 
+            "image/gif", 
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ]
         if (!allowedTypes.includes(file.type)) {
-            return NextResponse.json({ error: "Sadece JPG, PNG, WebP ve GIF dosyaları yüklenebilir" }, { status: 400 })
+            return NextResponse.json({ error: "Sadece JPG, PNG, PDF ve Word dosyaları yüklenebilir" }, { status: 400 })
         }
 
         // Validate file size (max 5MB)
