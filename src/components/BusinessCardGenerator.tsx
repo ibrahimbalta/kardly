@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 
@@ -69,7 +69,14 @@ export const TEMPLATES = [
     { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
     { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
     { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' }
+    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
+
+    // Extraordinary (Sıradışı) - 3D & Advanced Effects
+    { id: 'extra_3d_glass', name: '3D Crystal', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#0ea5e9', '#6366f1', '#a855f7'], animate: true, hex: '#0f172a', pattern: 'extra_glass_3d', category: 'Extraordinary' },
+    { id: 'extra_neon_portal', name: 'Neon Portal', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#f43f5e', '#8b5cf6', '#d946ef'], animate: true, hex: '#000000', pattern: 'extra_neon_3d', category: 'Extraordinary' },
+    { id: 'extra_liquid_mercury', name: 'Mercury Flow', bg: 'bg-zinc-900', text: 'text-white', accent: 'bg-zinc-400', accentText: 'text-zinc-400', colors: ['#71717a', '#a1a1aa', '#f4f4f5'], animate: true, hex: '#18181b', pattern: 'extra_metal_3d', category: 'Extraordinary' },
+    { id: 'extra_space_warp', name: 'Space Warp', bg: 'bg-[#020205]', text: 'text-indigo-50', accent: 'bg-indigo-500', accentText: 'text-indigo-500', colors: ['#4f46e5', '#312e81', '#000000'], animate: true, hex: '#020205', pattern: 'extra_space_3d', category: 'Extraordinary' },
+    { id: 'extra_holo_mesh', name: 'Holo Web', bg: 'bg-[#050510]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#22d3ee', '#8b5cf6', '#06b6d4'], animate: true, hex: '#050510', pattern: 'extra_holo_3d', category: 'Extraordinary' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -79,7 +86,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const [containerWidth, setContainerWidth] = useState(500)
     const [internalSelectedTplId, setInternalSelectedTplId] = useState(selectedTemplateId || TEMPLATES[0].id)
     const [qrDataUrl, setQrDataUrl] = useState<string>('')
-    const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate'>('Ultimate')
+    const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate' | 'Extraordinary'>('Extraordinary')
 
     useEffect(() => {
         if (selectedTemplateId) {
@@ -449,6 +456,59 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-[30%] -right-[10%] w-60 h-60 bg-blue-500/15 blur-[80px] rounded-full animate-elite-bg" style={{ animationDelay: '4s' }} />
                     </>
                 )}
+
+                {/* Extraordinary Patterns (3D & Visual Effects) */}
+                {tp.pattern === 'extra_glass_3d' && (
+                    <>
+                        <div className="absolute inset-0 bg-slate-950" />
+                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] opacity-20 blur-[100px] animate-pulse" style={{ background: `radial-gradient(circle, ${tp.colors?.[0]} 0%, transparent 70%)` }} />
+                        <div className="absolute top-[20%] right-[10%] w-40 h-40 bg-indigo-500/20 blur-[60px] rounded-full animate-floating" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                            <div className="w-[200px] h-[400px] border-2 border-white/10 rounded-full rotate-12 animate-rotate-slow" />
+                            <div className="absolute w-[300px] h-[300px] border border-white/5 rounded-full -rotate-45 animate-pulse" />
+                        </div>
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-sky-500/10 to-transparent" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_neon_3d' && (
+                    <>
+                        <div className="absolute inset-0 bg-black" />
+                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ backgroundImage: 'linear-gradient(rgba(244,63,94,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,63,94,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-50%)' }} />
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-rose-500/20" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-rose-500/20 blur-[80px] rounded-full animate-pulse" />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent shadow-[0_0_20px_#f43f5e]" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_metal_3d' && (
+                    <>
+                        <div className="absolute inset-0 bg-zinc-900" />
+                        <div className="absolute inset-0 opacity-[0.15] animate-elite-bg" style={{ background: 'radial-gradient(circle at 20% 30%, #fff 0%, transparent 60%), radial-gradient(circle at 80% 70%, #555 0%, transparent 60%)' }} />
+                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-gradient-to-br from-white/10 via-transparent to-black/30 pointer-events-none" />
+                        <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]" />
+                        <div className="absolute top-1/4 left-1/4 w-px h-1/2 bg-white/20 animate-pulse" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_space_3d' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#020205]" />
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #fff 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent shadow-[0_0_30px_rgba(79,70,229,0.5)] rotate-[-15deg]" />
+                        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full animate-pulse" />
+                        <div className="absolute bottom-[-10%] left-[-10%] w-48 h-48 bg-purple-600/10 blur-[80px] rounded-full animate-floating" />
+                    </>
+                )}
+
+                {tp.pattern === 'extra_holo_3d' && (
+                    <>
+                        <div className="absolute inset-0 bg-[#050510]" />
+                        <div className="absolute inset-0 opacity-30 animate-elite-bg" style={{ background: 'conic-gradient(from 180deg at 50% 50%, #22d3ee 0%, #8b5cf6 25%, #d946ef 50%, #22d3ee 75%, #22d3ee 100%)', filter: 'blur(60px)' }} />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,5,16,0.8)_100%)]" />
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
+                    </>
+                )}
             </div>
 
             {/* Card Inner Content (Portrait) */}
@@ -548,7 +608,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         {/* Category Tabs */}
                         <div className="max-w-full overflow-x-auto no-scrollbar py-2">
                             <div className="flex bg-slate-950/50 p-1 rounded-full border border-white/5 w-fit mx-auto shadow-inner whitespace-nowrap">
-                                {(['Standard', 'Premium', 'Ultimate'] as const).map((tab) => (
+                                {(['Standard', 'Premium', 'Ultimate', 'Extraordinary'] as const).map((tab) => (
                                     <button
                                         key={tab}
                                         onClick={() => setActiveTab(tab)}
@@ -562,7 +622,8 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                         {tab === 'Standard' && <Palette size={14} />}
                                         {tab === 'Premium' && <Star size={14} />}
                                         {tab === 'Ultimate' && <Crown size={14} />}
-                                        {tab}
+                                        {tab === 'Extraordinary' && <Zap size={14} />}
+                                        {tab === 'Extraordinary' ? 'Sıradışı' : tab}
                                     </button>
                                 ))}
                             </div>
