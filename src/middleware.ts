@@ -64,6 +64,6 @@ export const config = {
         /*
          * Match ALL paths except static assets.
          */
-        "/((?!_next/static|_next/image|favicon.ico|icons|sw.js|manifest.json|clear.html).*)",
+        "/((?!_next/static|_next/image|favicon.ico|images|icons|sw.js|manifest.json|clear.html).*)",
     ],
 }
