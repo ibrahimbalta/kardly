@@ -2423,7 +2423,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 gap-6">
                                     {[
                                         { id: "instagram", icon: <Instagram />, color: "text-pink-500", label: "Instagram" },
                                         { id: "whatsapp", icon: <Phone />, color: "text-emerald-500", label: "WhatsApp" },
@@ -2434,28 +2434,36 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         { id: "website", icon: <Globe />, color: "text-indigo-500", label: "Website" },
                                         { id: "email", icon: <Mail />, color: "text-rose-500", label: "Email" },
                                     ].map((social) => (
-                                        <div key={social.id} className="flex flex-col gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100/50">
-                                            <div className="flex items-center gap-3">
-                                                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm", social.color)}>
+                                        <div key={social.id} className="flex flex-col md:flex-row md:items-center gap-6 p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100/50 hover:border-primary/20 transition-all group">
+                                            <div className="flex items-center gap-5 flex-1 min-w-0">
+                                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center bg-white shadow-sm group-hover:scale-110 transition-transform shrink-0", social.color)}>
                                                     {social.icon}
                                                 </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder={`${social.label} URL`}
-                                                    value={getSocialUrl(social.id)}
-                                                    onChange={(e) => updateSocialLink(social.id, e.target.value)}
-                                                    className="flex-1 bg-transparent border-none text-xs font-bold text-slate-800 placeholder:text-slate-300 focus:ring-0"
-                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">{social.label}</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder={`${social.label} URL...`}
+                                                        value={getSocialUrl(social.id)}
+                                                        onChange={(e) => updateSocialLink(social.id, e.target.value)}
+                                                        className="w-full bg-white border border-slate-200 rounded-2xl h-14 px-5 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="flex justify-end pt-1">
+                                            <div className="flex justify-end shrink-0">
                                                 <button
                                                     onClick={() => toggleSocialHero(social.id)}
                                                     className={cn(
-                                                        "text-[9px] font-black uppercase tracking-widest transition-all px-2 py-1 rounded-lg",
-                                                        isSocialHero(social.id) ? "bg-amber-100 text-amber-600" : "bg-white text-slate-400 hover:bg-slate-100"
+                                                        "h-14 px-8 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border shadow-sm",
+                                                        isSocialHero(social.id) ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-white text-slate-400 border-slate-200 hover:bg-slate-100 hover:text-slate-600"
                                                     )}
                                                 >
-                                                    {isSocialHero(social.id) ? t('heroButton') : t('makeHero')}
+                                                    {isSocialHero(social.id) ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                                                            {t('heroButton')}
+                                                        </div>
+                                                    ) : t('makeHero')}
                                                 </button>
                                             </div>
                                         </div>
@@ -2499,22 +2507,28 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
 
                                     {/* Link Form */}
-                                    <div className="bg-slate-50 rounded-[2rem] p-6 space-y-4 border border-slate-100">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <input
-                                                type="text"
-                                                placeholder={t('linkTitlePlaceholder')}
-                                                value={newLink.title}
-                                                onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
-                                                className="w-full h-12 bg-white border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder={t('linkUrlPlaceholder')}
-                                                value={newLink.url}
-                                                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                                className="w-full h-12 bg-white border-none rounded-xl px-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20"
-                                            />
+                                    <div className="bg-slate-50 rounded-[2.5rem] p-8 space-y-6 border border-slate-100">
+                                        <div className="grid grid-cols-1 gap-4">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{t('linkTitlePlaceholder')}</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder={t('linkTitlePlaceholder')}
+                                                    value={newLink.title}
+                                                    onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                                                    className="w-full h-14 bg-white border border-slate-200 rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                                                />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{t('linkUrlPlaceholder')}</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder={t('linkUrlPlaceholder')}
+                                                    value={newLink.url}
+                                                    onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                                    className="w-full h-14 bg-white border border-slate-200 rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/10 transition-all outline-none"
+                                                />
+                                            </div>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
