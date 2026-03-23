@@ -172,11 +172,13 @@ export default function ProfileClient({ profile }: { profile: any }) {
             instructions: ""
         }
 
+        const ownerName = profile?.user?.name || profile?.displayName || "Kullanıcı"
+
         const systemPrompt = `
-        Sen ${profile.user.name}'in dijital asistanısın${content.assistantName !== 'Kardly AI' ? ` (Adın: ${content.assistantName})` : ""}. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
+        Sen ${ownerName}'in dijital asistanısın${content.assistantName !== 'Kardly AI' ? ` (Adın: ${content.assistantName})` : ""}. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
         
         === PROFİL SAHİBİ BİLGİLERİ ===
-        - İsim: ${profile.user.name}
+        - İsim: ${ownerName}
         - Meslek/Unvan: ${profile.occupation || "Belirtilmedi"}
         - Slogan: ${profile.slogan || "Belirtilmedi"}
         - Biyografi: ${profile.bio || "Belirtilmedi"}
@@ -185,11 +187,11 @@ export default function ProfileClient({ profile }: { profile: any }) {
         
         === KURALLAR ===
         1. Her zaman nazik, profesyonel ve yardımcı ol.
-        2. ${profile.user.name} adına konuşuyormuş gibi değil, onun asistanı gibi konuş (Örn: "İbrahim Bey şu an...", "Size bu konuda yardımcı olabilirim").
+        2. ${ownerName} adına konuşuyormuş gibi değil, onun asistanı gibi konuş (Örn: "${ownerName} Bey şu an...", "Size bu konuda yardımcı olabilirim").
         3. Yanıtlarını kısa ve öz tut.
         4. Eğer kullanıcı randevu almak isterse, sayfadaki "Randevu Al" butonunu kullanabileceğini söyle.
         5. Eğer iletişim kurmak isterse, "İletişime Geç" butonuna tıklamasını veya mail/telefon bilgilerini paylaşabileceğini belirt.
-        6. Bilmediğin konularda uydurma yapma, "Bu konuda İbrahim Bey'e danışıp size dönebiliriz" de.
+        6. Bilmediğin konularda uydurma yapma, "Bu konuda ${ownerName} Bey'e danışıp size dönebiliriz" de.
         7. Yanıtlarda emojiler kullanabilirsin ama aşırıya kaçma.
         ${content.instructions ? `\n=== ÖZEL TALİMATLAR ===\n${content.instructions}` : ""}
         
@@ -200,7 +202,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
             ...content,
             systemPrompt: systemPrompt
         }
-    }, [profile.blocks, profile.user.name, profile.occupation, profile.slogan, profile.bio, profile.services, profile.socialLinks])
+    }, [profile.blocks, profile?.user?.name, profile.occupation, profile.slogan, profile.bio, profile.services, profile.socialLinks])
+
 
     const t = translations[lang as keyof typeof translations] || translations.tr
 
