@@ -285,7 +285,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
         }
     }
 
-    const handleCVView = async () => {
+    const handleCVView = () => {
         if (!profile.cvUrl) return;
         trackEvent("cv")
 
@@ -312,19 +312,14 @@ export default function ProfileClient({ profile }: { profile: any }) {
                 console.error("CV açma hatası:", err);
                 window.open(url, '_blank');
             }
+        } else if (url.includes('res.cloudinary.com')) {
+            // Cloudinary URL'leri için sunucu tarafında proxy kullan
+            // Bu CORS ve Content-Disposition sorunlarını çözer
+            const proxyUrl = `/api/cv-proxy?url=${encodeURIComponent(url)}`;
+            window.open(proxyUrl, '_blank');
         } else {
-            // Cloudinary veya herhangi bir PDF URL'si: blob olarak indir ve tarayıcıda göster
-            // Bu sayede Content-Disposition: attachment sorunu aşılır
-            try {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, '_blank');
-            } catch (err) {
-                // Fetch başarısız olursa doğrudan aç
-                console.error("CV fetch hatası:", err);
-                window.open(url, '_blank');
-            }
+            // Diğer URL'ler için doğrudan aç
+            window.open(url, '_blank');
         }
     }
 
