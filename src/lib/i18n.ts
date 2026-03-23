@@ -489,12 +489,12 @@ export const translations: any = {
             "Sürükle-bırak sıralama"
         ],
         dive2Label: "İstatistikler & Analiz",
-        dive2Title: "Kim bakıyor, nereden geliyor?",
-        dive2Desc: "Her ziyaretçiyi takip edin. Hangi linklerinize tıklanıyor, hangi şehirden geliyorlar? Veriye dayalı kararlar alın ve profilinizi sürekli geliştirin.",
+        dive2Title: "Performans ve Kitle Analizi",
+        dive2Desc: "Profilinizin etkileşim gücünü ve erişim trendlerini analiz edin. Hangi şehirlerden ilgi görüyorsunuz ve en popüler içerikleriniz hangileri? Anonimleştirilmiş verilerle stratejinizi geliştirin.",
         dive2List: [
-            "Gerçek zamanlı ziyaretçi takibi",
-            "Coğrafi konum analizi",
-            "Link bazlı tıklama raporu"
+            "Genel etkileşim oranları",
+            "Bölgesel popülerlik haritası",
+            "İçerik bazlı tıklama istatistikleri"
         ],
         dive3Label: "Ödeme & Kazanç",
         dive3Title: "Profiliniz, kasanız olsun",
