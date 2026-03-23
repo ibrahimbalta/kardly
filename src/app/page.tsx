@@ -206,11 +206,29 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-            <div className="bg-slate-50 rounded-3xl border border-slate-200 p-8 shadow-sm">
+            <div className="bg-slate-50 rounded-3xl border border-slate-200 p-6 shadow-sm">
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="aspect-[4/3] bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center">
-                    <Briefcase size={24} className="text-slate-200" />
+                {[
+                  { title: "E-Commerce App", category: "Mobile UI", color: "bg-blue-500", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
+                  { title: "Branding Project", category: "Logo Design", color: "bg-rose-500", img: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c" },
+                  { title: "Dashboard UI", category: "Web Design", color: "bg-emerald-500", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
+                  { title: "SaaS Website", category: "Development", color: "bg-amber-500", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
+                ].map((item, i) => (
+                  <div key={i} className="group bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-transform hover:scale-[1.02]">
+                    <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
+                      <img 
+                        src={`${item.img}?q=80&w=400&auto=format&fit=crop`} 
+                        alt={item.title} 
+                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                      />
+                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                         <Eye size={10} className="text-slate-400" />
+                      </div>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-[10px] font-bold text-slate-900 truncate leading-tight">{item.title}</div>
+                      <div className="text-[8px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">{item.category}</div>
+                    </div>
                   </div>
                 ))}
               </div>
