@@ -11,15 +11,52 @@ export async function GET(req: Request) {
 
         // Sadece güvenilir domainlerden dosya çekmeye izin ver
         const allowedDomains = ["res.cloudinary.com", "cloudinary.com"]
-        const urlObj = new URL(fileUrl)
+        let urlObj: URL
+        try {
+            urlObj = new URL(fileUrl)
+        } catch {
+            return NextResponse.json({ error: "Geçersiz URL formatı", url: fileUrl }, { status: 400 })
+        }
+
         if (!allowedDomains.some(d => urlObj.hostname.includes(d))) {
-            return NextResponse.json({ error: "Bu domain desteklenmiyor" }, { status: 403 })
+            // Cloudinary değilse doğrudan yönlendir
+            return NextResponse.redirect(fileUrl)
         }
 
         // Dosyayı Cloudinary'den çek
-        const response = await fetch(fileUrl)
+        const response = await fetch(fileUrl, {
+            headers: {
+                'Accept': '*/*',
+            }
+        })
+
         if (!response.ok) {
-            return NextResponse.json({ error: "Dosya bulunamadı" }, { status: 404 })
+            // İlk URL çalışmazsa, versiyon numarasını kaldırarak tekrar dene
+            // Cloudinary URL: .../image/upload/v1234567890/folder/file.pdf
+            // Versiyonsuz: .../image/upload/folder/file.pdf
+            const versionlessUrl = fileUrl.replace(/\/v\d+\//, '/')
+            if (versionlessUrl !== fileUrl) {
+                const retryResponse = await fetch(versionlessUrl, {
+                    headers: { 'Accept': '*/*' }
+                })
+                if (retryResponse.ok) {
+                    const buffer = await retryResponse.arrayBuffer()
+                    let contentType = retryResponse.headers.get("content-type") || "application/octet-stream"
+                    if (fileUrl.toLowerCase().endsWith(".pdf")) contentType = "application/pdf"
+                    
+                    return new NextResponse(buffer, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": contentType,
+                            "Content-Disposition": "inline",
+                            "Cache-Control": "public, max-age=86400",
+                        },
+                    })
+                }
+            }
+            
+            // Her iki URL de başarısız olursa, doğrudan Cloudinary URL'sine yönlendir
+            return NextResponse.redirect(fileUrl)
         }
 
         const buffer = await response.arrayBuffer()
@@ -46,6 +83,6 @@ export async function GET(req: Request) {
         })
     } catch (error: any) {
         console.error("CV Proxy Error:", error)
-        return NextResponse.json({ error: "Dosya yüklenemedi" }, { status: 500 })
+        return NextResponse.json({ error: "Dosya yüklenemedi", details: error?.message }, { status: 500 })
     }
 }

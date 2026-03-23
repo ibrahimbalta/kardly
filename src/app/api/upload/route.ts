@@ -47,10 +47,14 @@ export async function POST(req: Request) {
         // Convert the buffer to a base64 string
         const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`
 
+        // PDF ve DOC dosyaları raw olarak yükle (doğrudan görüntülenebilir)
+        // Resimler auto olarak yükle
+        const isDocument = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file.type)
+
         // Upload to Cloudinary using the base64 string
         const result = await cloudinary.uploader.upload(base64Image, {
             folder: "kardly_uploads",
-            resource_type: "auto",
+            resource_type: isDocument ? "raw" : "auto",
         });
 
         return NextResponse.json({ url: result.secure_url })
