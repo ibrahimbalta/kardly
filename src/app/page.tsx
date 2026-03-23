@@ -192,48 +192,56 @@ export default function Home() {
           {/* Feature 1: Portfolio */}
           <motion.div
             initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+            className="flex flex-col items-center"
           >
-            <div>
+            <div className="text-center max-w-3xl mb-16">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive1Label')}</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive1Title')}</h3>
+              <h3 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive1Title')}</h3>
               <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive1Desc')}</p>
-              <ul className="space-y-3">
+              <div className="flex flex-wrap justify-center gap-6">
                 {(t('dive1List') as unknown as string[]).map((text, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                  <div key={i} className="flex items-center gap-2 text-sm text-slate-600 font-semibold bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
                     <Check size={16} className="text-emerald-500 shrink-0" /> {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-slate-50 rounded-3xl border border-slate-200 p-6 shadow-sm">
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { title: "E-Commerce App", category: "Mobile UI", color: "bg-blue-500", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
-                  { title: "Branding Project", category: "Logo Design", color: "bg-rose-500", img: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c" },
-                  { title: "Dashboard UI", category: "Web Design", color: "bg-emerald-500", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
-                  { title: "SaaS Website", category: "Development", color: "bg-amber-500", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
-                ].map((item, i) => (
-                  <div key={i} className="group bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-transform hover:scale-[1.02]">
-                    <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
-                      <img 
-                        src={`${item.img}?q=80&w=400&auto=format&fit=crop`} 
-                        alt={item.title} 
-                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                      />
-                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
-                         <Eye size={10} className="text-slate-400" />
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <div className="text-[10px] font-bold text-slate-900 truncate leading-tight">{item.title}</div>
-                      <div className="text-[8px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">{item.category}</div>
-                    </div>
                   </div>
                 ))}
               </div>
             </div>
+
+            <div className="w-full max-w-5xl">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { title: "E-Commerce App", category: "Mobile UI", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
+                  { title: "Brand Identity", category: "Logo Design", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d" },
+                  { title: "Admin Portal", category: "Web Design", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
+                  { title: "Product Landing", category: "Development", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    whileHover={{ y: -10 }}
+                    className="group bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-xl"
+                  >
+                    <div className="aspect-[4/5] relative overflow-hidden bg-slate-100">
+                      <img 
+                        src={`${item.img}?q=80&w=500&auto=format&fit=crop`} 
+                        alt={item.title} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                            <Eye size={18} className="text-slate-900" />
+                         </div>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <div className="text-sm font-bold text-slate-900 mb-1">{item.title}</div>
+                      <div className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">{item.category}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </motion.div>
+
 
           {/* Feature 2: Stats */}
           <motion.div
