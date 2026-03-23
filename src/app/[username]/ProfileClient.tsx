@@ -311,11 +311,11 @@ export default function ProfileClient({ profile }: { profile: any }) {
         const website = `${window.location.origin}/${profile.username}`
         const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:${profile.user.name}
-N:${profile.user.name.split(" ").reverse().join(";") || ""};;;;
+FN:${profile.user?.name || ""}
+N:${(profile.user?.name || "").split(" ").reverse().join(";") || ""};;;;
 ORG:${profile.occupation || ""}
 TEL;TYPE=CELL:${phone}
-EMAIL:${profile.user.email || ""}
+EMAIL:${profile.user?.email || ""}
 URL:${website}
 NOTE:${profile.bio || profile.slogan || ""}
 END:VCARD`
@@ -324,7 +324,7 @@ END:VCARD`
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement("a")
         link.href = url
-        link.setAttribute("download", `${profile.user.name}.vcf`)
+        link.setAttribute("download", `${profile.user?.name || "contact"}.vcf`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -4334,109 +4334,47 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
-                {/* Projects Section (Toggleable Marquee/Grid) */}
+                {/* Projects Section */}
                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                    <div className="w-full mt-12 space-y-4 group/marquee">
-                        <style>{`
-                            @keyframes marquee-right-elite {
-                                0% { transform: translateX(-50%); }
-                                100% { transform: translateX(0); }
-                            }
-                            .animate-marquee-right-elite {
-                                display: flex;
-                                width: max-content;
-                                animation: marquee-right-elite 20s linear infinite;
-                            }
-                            .group\\/marquee:hover .animate-marquee-right-elite {
-                                animation-play-state: paused;
-                            }
-                        `}</style>
-                        <div className={cn("w-full bg-slate-50 border border-slate-100 p-6 rounded-[2.5rem] shadow-sm relative z-20 overflow-hidden")}>
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                                        {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
-                                    </h3>
-                                </div>
-                                <div className="flex gap-2 bg-white p-1 rounded-2xl border border-slate-100 shadow-sm">
-                                    <button
-                                        onClick={() => setLayoutMode('marquee')}
-                                        className={cn("p-2 rounded-xl transition-all", layoutMode === 'marquee' ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600")}
-                                        title={t.standardView}
-                                    >
-                                        <Layers size={14} />
-                                    </button>
-                                    <button
-                                        onClick={() => setLayoutMode('grid')}
-                                        className={cn("p-2 rounded-xl transition-all", layoutMode === 'grid' ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-600")}
-                                        title={t.portfolioView}
-                                    >
-                                        <Layout size={14} />
-                                    </button>
-                                </div>
+                    <div className="w-full mt-24 space-y-8">
+                        <div className="flex items-center justify-between px-2">
+                             <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.myProjects || "PROJELER"}</h3>
                             </div>
+                        </div>
 
-                            {layoutMode === 'marquee' ? (
-                                <div className="relative h-20 flex items-center overflow-visible">
-                                    <div className="animate-marquee-right-elite flex gap-6 h-full items-center overflow-visible">
-                                        {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
-                                            <div
-                                                key={i}
-                                                className="w-16 h-16 rounded-2xl border border-slate-200 overflow-hidden shadow-md flex-shrink-0 bg-white p-1 group/prj transition-all hover:scale-110 cursor-pointer relative"
-                                                onClick={() => {
-                                                    trackEvent("product_marquee", project.name);
-                                                    if (project.link) window.open(formatUrl(project.link), "_blank");
-                                                }}
-                                            >
-                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
-
-                                                {/* Elite Project Tooltip */}
-                                                <div className="absolute bottom-[calc(100%+12px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 bg-white border border-slate-100 p-4 rounded-3xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-50">
-                                                    <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-wider mb-1.5">{project.name}</h4>
-                                                    <p className="text-[10px] text-slate-500 font-medium leading-relaxed line-clamp-3">{project.description}</p>
-                                                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 border-r border-b rotate-45 bg-white border-slate-100" />
-                                                </div>
+                        <div className="grid grid-cols-1 gap-6">
+                            {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    whileHover={{ y: -5 }}
+                                    className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group cursor-pointer"
+                                    onClick={() => {
+                                        trackEvent("product_grid", project.name);
+                                        if (project.link) window.open(formatUrl(project.link), "_blank");
+                                    }}
+                                >
+                                    <div className="aspect-video relative overflow-hidden">
+                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                        <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+                                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                                                <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
                                             </div>
-                                        ))}
+                                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
+                                                <ExternalLink size={16} className="text-slate-900" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none bg-gradient-to-r from-slate-50 to-transparent" />
-                                    <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none bg-gradient-to-l from-slate-50 to-transparent" />
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 gap-6">
-                                    {profile.products.map((project: any, i: number) => (
-                                        <motion.div
-                                            key={i}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            whileHover={{ y: -5 }}
-                                            className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group cursor-pointer"
-                                            onClick={() => {
-                                                trackEvent("product_grid", project.name);
-                                                if (project.link) window.open(formatUrl(project.link), "_blank");
-                                            }}
-                                        >
-                                            <div className="aspect-video relative overflow-hidden">
-                                                <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                                <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
-                                                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                                                        <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
-                                                    </div>
-                                                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
-                                                        <ExternalLink size={16} className="text-slate-900" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="p-6">
-                                                <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
-                                                <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            )}
+                                    <div className="p-6">
+                                        <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
+                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 )}
@@ -4457,25 +4395,25 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                             <Quote className="absolute top-10 right-6 opacity-[0.03] text-slate-900 group-hover:scale-110 transition-transform" size={80} />
                             <AnimatePresence mode="wait">
                                 <motion.div
-                                    key={reviews[0].name}
+                                    key={reviews[0]?.name || 'review'}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     className="space-y-4 relative z-10"
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1 shadow-sm">
-                                            <img src={reviews[0].image} className="w-full h-full object-cover rounded-xl" />
+                                            <img src={reviews[0]?.image} className="w-full h-full object-cover rounded-xl" />
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="text-[11px] font-black text-slate-900">{reviews[0].name}</h4>
-                                            <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{reviews[0].title || "Müşteri"}</p>
+                                            <h4 className="text-[11px] font-black text-slate-900">{reviews[0]?.name}</h4>
+                                            <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{reviews[0]?.title || "Müşteri"}</p>
                                         </div>
                                         <div className="flex gap-0.5 text-amber-400">
-                                            {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < reviews[0].rating ? "currentColor" : "none"} />)}
+                                            {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < (reviews[0]?.rating || 5) ? "currentColor" : "none"} />)}
                                         </div>
                                     </div>
-                                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed italic">"{reviews[0].content}"</p>
-                                    {reviews[0].isVerified && (
+                                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed italic">"{reviews[0]?.content}"</p>
+                                    {reviews[0]?.isVerified && (
                                         <div className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.2em] text-emerald-500 pt-2">
                                             <CheckCircle2 size={12} /> DOĞRULANMIŞ GÖRÜŞ
                                         </div>
