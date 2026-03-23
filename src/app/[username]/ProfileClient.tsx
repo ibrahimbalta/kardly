@@ -289,12 +289,14 @@ export default function ProfileClient({ profile }: { profile: any }) {
         if (!profile.cvUrl) return;
         trackEvent("cv")
 
+        const url = profile.cvUrl.trim();
+
         // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
-        if (profile.cvUrl.startsWith('data:')) {
+        if (url.startsWith('data:')) {
             try {
-                const parts = profile.cvUrl.split(';');
+                const parts = url.split(';');
                 const contentType = parts[0].split(':')[1];
-                const base64Data = profile.cvUrl.split(',')[1];
+                const base64Data = url.split(',')[1];
 
                 const byteCharacters = atob(base64Data);
                 const byteNumbers = new Array(byteCharacters.length);
@@ -308,10 +310,26 @@ export default function ProfileClient({ profile }: { profile: any }) {
                 window.open(blobUrl, '_blank');
             } catch (err) {
                 console.error("CV açma hatası:", err);
-                window.open(profile.cvUrl, '_blank');
+                window.open(url, '_blank');
             }
         } else {
-            window.open(profile.cvUrl, '_blank');
+            // Cloudinary PDF URL'leri için: .pdf uzantılı Cloudinary linkleri
+            // Google Docs Viewer ile aç (tarayıcıda görüntüleme için)
+            const isPdf = url.toLowerCase().endsWith('.pdf') || url.includes('/image/upload/') && url.includes('.pdf');
+            const isCloudinary = url.includes('res.cloudinary.com');
+
+            if (isPdf && isCloudinary) {
+                // Cloudinary PDF dosyalarını Google Docs Viewer ile aç
+                const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+                window.open(viewerUrl, '_blank');
+            } else if (isPdf) {
+                // Diğer PDF dosyalarını da Google Docs Viewer ile aç
+                const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+                window.open(viewerUrl, '_blank');
+            } else {
+                // Resim veya diğer dosyalar → doğrudan aç
+                window.open(url, '_blank');
+            }
         }
     }
 
