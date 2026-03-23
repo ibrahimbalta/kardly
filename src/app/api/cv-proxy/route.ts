@@ -24,20 +24,26 @@ export async function GET(req: Request) {
         }
 
         // Dosyayı Cloudinary'den çek
+        console.log("Proxying file:", fileUrl)
         const response = await fetch(fileUrl, {
             headers: {
                 'Accept': '*/*',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
             }
         })
 
         if (!response.ok) {
+            console.error(`Cloudinary error ${response.status}:`, response.statusText)
+            
             // İlk URL çalışmazsa, versiyon numarasını kaldırarak tekrar dene
-            // Cloudinary URL: .../image/upload/v1234567890/folder/file.pdf
-            // Versiyonsuz: .../image/upload/folder/file.pdf
             const versionlessUrl = fileUrl.replace(/\/v\d+\//, '/')
             if (versionlessUrl !== fileUrl) {
+                console.log("Retrying without version:", versionlessUrl)
                 const retryResponse = await fetch(versionlessUrl, {
-                    headers: { 'Accept': '*/*' }
+                    headers: { 
+                        'Accept': '*/*',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+                    }
                 })
                 if (retryResponse.ok) {
                     const buffer = await retryResponse.arrayBuffer()
@@ -55,8 +61,34 @@ export async function GET(req: Request) {
                 }
             }
             
-            // Her iki URL de başarısız olursa, doğrudan Cloudinary URL'sine yönlendir
-            return NextResponse.redirect(fileUrl)
+            // Eğer 404 veya 401 ise, bir de 'raw' denemeyi deneyelim (her ihtimale karşı)
+            if (fileUrl.includes('/image/upload/') && (response.status === 404 || response.status === 401)) {
+                const rawUrl = fileUrl.replace('/image/upload/', '/raw/upload/')
+                console.log("Retrying as raw:", rawUrl)
+                const rawResponse = await fetch(rawUrl, {
+                    headers: { 
+                        'Accept': '*/*',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
+                    }
+                })
+                if (rawResponse.ok) {
+                    const buffer = await rawResponse.arrayBuffer()
+                    return new NextResponse(buffer, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "application/pdf",
+                            "Content-Disposition": "inline",
+                        },
+                    })
+                }
+            }
+
+            // Her şeye rağmen başarısız olursa, bir hata mesajı dön ama redirect yapma (kullanıcı hatayı görsün)
+            return NextResponse.json({ 
+                error: "Dosya Cloudinary tarafından reddedildi", 
+                status: response.status,
+                url: fileUrl 
+            }, { status: response.status })
         }
 
         const buffer = await response.arrayBuffer()
