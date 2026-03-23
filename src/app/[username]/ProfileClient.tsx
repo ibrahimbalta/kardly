@@ -205,7 +205,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const t = translations[lang as keyof typeof translations] || translations.tr
 
     const translateText = (text: string) => {
-        if (lang === 'tr' || !text) return text;
+        if (!text || typeof text !== 'string') return "";
+        if (lang === 'tr') return text;
         const mapping: Record<string, string> = {
             "Dış Doktoru": "Dentist",
             "Gülüşünüzü Aydınlatın": "Brighten Your Smile",
@@ -483,8 +484,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     }, [reviews.length])
 
 
-    const getIcon = (title: string) => {
-        const t = title.toLowerCase();
+    const getIcon = (title: string = "") => {
+        const t = (title || "").toLowerCase();
         if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('mağaza') || t.includes('market')) return <ShoppingBag size={14} />;
         if (t.includes('strateji') || t.includes('strategy') || t.includes('plan') || t.includes('yönetim')) return <Target size={14} />;
         if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process') || t.includes('teknoloji')) return <Zap size={14} />;
@@ -4013,8 +4014,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
 
-    const getIcon = (title: string) => {
-        const t = title.toLowerCase();
+    const getIcon = (title: string = "") => {
+        const t = (title || "").toLowerCase();
         if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('mağaza') || t.includes('market')) return <ShoppingBag size={14} />;
         if (t.includes('strateji') || t.includes('strategy') || t.includes('plan') || t.includes('yönetim')) return <Target size={14} />;
         if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process') || t.includes('teknoloji')) return <Zap size={14} />;
