@@ -54,7 +54,10 @@ export default async function ProfilePage({ params }: any) {
         }
     }).catch((e: any) => console.error("Analytics error:", e))
 
-    return <ProfileClient profile={profile} />
+    // Serialize data to avoid issues with Dates or other non-serializable objects
+    const serializedProfile = JSON.parse(JSON.stringify(profile))
+
+    return <ProfileClient profile={serializedProfile} />
 }
 
 function ProfilePreview({ username }: { username: string }) {

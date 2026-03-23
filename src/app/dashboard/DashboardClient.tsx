@@ -13,6 +13,7 @@ import {
     MousePointer2,
     Users,
     CheckCircle2,
+    ShieldAlert,
     ShoppingBag,
     Plus,
     Trash2,
@@ -1874,6 +1875,37 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                 ) : activeTab === "overview" ? (
                     <div className="space-y-10">
+                        {/* Mandatory Terms Banner */}
+                        {!isTermsAccepted && (
+                            <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-4 duration-700">
+                                <div className="flex items-center gap-6">
+                                    <div className="w-16 h-16 bg-rose-500 text-white rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-rose-200 shrink-0">
+                                        <ShieldAlert size={32} />
+                                    </div>
+                                    <div className="text-left">
+                                        <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-1">
+                                            {t('acceptTermsError')}
+                                        </h3>
+                                        <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-xl">
+                                            Hizmetlerimizi kullanmaya devam etmek için Kullanıcı Taahhütnamesini onaylamanız gerekmektedir. Bu işlem KVKK sorumluluğunuzu beyan eder.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setActiveTab("edit");
+                                        setTimeout(() => {
+                                            const el = document.getElementById('terms-checkbox');
+                                            el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        }, 100);
+                                    }}
+                                    className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-rose-600 transition-all shadow-xl whitespace-nowrap"
+                                >
+                                    HEMEN ONAYLA 👋
+                                </button>
+                            </div>
+                        )}
+
                         {/* Summary Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <StatCard
