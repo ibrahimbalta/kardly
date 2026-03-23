@@ -4551,7 +4551,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 setMessages={setChatMessages} 
                 aiConfig={aiConfig} 
             />
-            <LegalAccountabilityBadge t={t} name={profile?.displayName || profile?.user?.name || ""} />
         </div>
     );
 }
