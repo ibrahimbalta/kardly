@@ -3936,6 +3936,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 t={t}
                 lang={lang}
                 toneStyle={toneStyle}
+                profileName={profile.user.name}
             />
 
             <SocialProof t={t} theme={theme} />
@@ -4594,6 +4595,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 t={t} 
                 lang={lang}
                 toneStyle={toneStyle}
+                profileName={profile.user.name}
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
@@ -5131,6 +5133,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 t={t} 
                 lang={lang}
                 toneStyle={toneStyle}
+                profileName={profile.user.name}
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
@@ -5931,7 +5934,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
         </div>
     )
 }
-function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmbed = false }: any) {
+function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmbed = false, profileName }: any) {
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -6015,9 +6018,9 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 <div className="mt-4 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05]">
                     <p className={cn("text-[9px] leading-relaxed opacity-40 font-medium", theme.text)}>
                         {lang === 'tr' ? (
-                            <>Bu form aracılığıyla iletilen veriler KVKK kapsamında bizzat <strong>{profile.user.name}</strong> tarafından işlenmektedir. Kardly.site sadece teknik altyapı hizmeti vermektedir.</>
+                            <>Bu form aracılığıyla iletilen veriler KVKK kapsamında bizzat <strong>{profileName}</strong> tarafından işlenmektedir. Kardly.site sadece teknik altyapı hizmeti vermektedir.</>
                         ) : (
-                            <>Data submitted via this form is processed by <strong>{profile.user.name}</strong>. Kardly.site serves only as a technical infrastructure provider.</>
+                            <>Data submitted via this form is processed by <strong>{profileName}</strong>. Kardly.site serves only as a technical infrastructure provider.</>
                         )}
                     </p>
                 </div>
