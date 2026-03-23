@@ -437,9 +437,10 @@ END:VCARD`
     }
 
     return (
-        <>
+        <div className="relative min-h-screen">
             {renderTemplate()}
-        </>
+            <LegalAccountabilityBadge t={t} name={profile?.displayName || profile?.user?.name || ""} />
+        </div>
     )
 }
 
@@ -3033,9 +3034,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             return (
                                 <div className={cn("text-center p-8 border", theme.card, theme.border, toneStyle.rounded)}>
                                     <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2" style={{ borderColor: theme.accent }}>
-                                        <img src={profile.user.image} className="w-full h-full object-cover" alt="" />
+                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover" alt="" />
                                     </div>
-                                    <h2 className={cn("text-xl font-black mb-1", theme.text)}>{profile.user.name}</h2>
+                                    <h2 className={cn("text-xl font-black mb-1", theme.text)}>{profile?.user?.name || ""}</h2>
                                     <p className={cn("text-xs opacity-60 mb-8 uppercase tracking-widest font-bold", theme.text)}>{translateText(profile.occupation)}</p>
                                     <button
                                         onClick={() => setIsAppointmentOpen(true)}
@@ -3176,7 +3177,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             frameBorder="0"
                                         />
                                     ) : (
-                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className={cn("w-full h-full object-cover")} />
+                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className={cn("w-full h-full object-cover")} />
                                     )}
 
                                     {/* Profession Overlays */}
@@ -3937,7 +3938,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 t={t}
                 lang={lang}
                 toneStyle={toneStyle}
-                profileName={profile.user.name}
+                profileName={profile?.user?.name || ""}
             />
 
             <SocialProof t={t} theme={theme} />
@@ -4493,13 +4494,13 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         onClick={handleCVView}
                         className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a]")}
                     >
-                        <FileText size={16} /> {profile.isCatalog ? t.viewCatalog || "KATALOG GÖRÜNTÜLE" : t.viewCV || "CV GÖRÜNTÜLE"}
+                        <FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "KATALOG GÖRÜNTÜLE") : (t.viewCV || "CV GÖRÜNTÜLE")}
                     </button>
                     {aiConfig?.isEnabled && (
                         <button
                             onClick={() => setIsAIChatOpen(true)}
                             className="w-[60px] h-[60px] rounded-full bg-slate-900 text-white flex items-center justify-center transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a] hover:brightness-110"
-                            title={aiConfig.assistantName}
+                            title={aiConfig?.assistantName || "AI Assistant"}
                         >
                             <Bot size={20} />
                         </button>
@@ -4534,31 +4535,22 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 t={t} 
                 lang={lang}
                 toneStyle={toneStyle}
-                profileName={profile.user.name}
+                profileName={profile?.user?.name || ""}
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
-            <SocialProof t={t} theme={theme} />
-            <CVPreviewModal 
-                isOpen={isCVModalOpen} 
-                onClose={() => setIsCVModalOpen(false)} 
-                url={cvViewUrl} 
-                theme={theme} 
+            <AIChatAssistant 
+                isOpen={isAIChatOpen} 
+                onClose={() => setIsAIChatOpen(false)} 
+                profile={profile} 
                 t={t} 
+                theme={theme} 
                 toneStyle={toneStyle} 
+                messages={chatMessages} 
+                setMessages={setChatMessages} 
+                aiConfig={aiConfig} 
             />
-            <AIChatAssistant
-                isOpen={isAIChatOpen}
-                onClose={() => setIsAIChatOpen(false)}
-                profile={profile}
-                t={t}
-                theme={theme}
-                toneStyle={toneStyle}
-                messages={chatMessages}
-                setMessages={setChatMessages}
-                aiConfig={aiConfig}
-            />
-            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
+            <LegalAccountabilityBadge t={t} name={profile?.displayName || profile?.user?.name || ""} />
         </div>
     );
 }
@@ -4631,7 +4623,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
-        { label: t.emailBtn || "E-MAIL", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, active: !!profile.user.email },
+        { label: t.emailBtn || "E-MAIL", icon: <Mail size={20} />, href: `mailto:${profile?.user?.email || ""}`, active: !!profile?.user?.email },
         { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: t.locationsBtn || "KONUM", icon: <MapPin size={20} />, onClick: () => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }), active: !!profile.blocks?.find((b: any) => b.type === 'map') }
     ].filter(a => a.active);
@@ -4677,12 +4669,12 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     <div className="relative group">
                         <div className="absolute -inset-6 rounded-full opacity-20 blur-3xl transition-all duration-1000 group-hover:opacity-35" style={{ backgroundColor: theme.accent }} />
                         <div className="relative w-44 h-44 p-2 rounded-full bg-zinc-950 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden transition-transform duration-700 group-hover:scale-105">
-                            <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile.user.name} />
+                            <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile?.user?.name || ""} />
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile.user.name}</h1>
+                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile?.user?.name || ""}</h1>
                         <div className="flex items-center justify-center gap-4">
                             <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
                             <p className="text-[12px] font-black uppercase tracking-[0.4em] drop-shadow-lg" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
@@ -5072,7 +5064,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 t={t} 
                 lang={lang}
                 toneStyle={toneStyle}
-                profileName={profile.user.name}
+                profileName={profile?.user?.name || ""}
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
