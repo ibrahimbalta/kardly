@@ -97,6 +97,7 @@ model Profile {
   businessCardOrientation String? @default("landscape")
   qrColorDark        String? @default("#0f172a")
   qrColorLight       String? @default("#ffffff")
+  hasAcceptedTerms Boolean     @default(false)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?

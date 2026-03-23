@@ -6844,26 +6844,27 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
     );
 }
 
-function LegalAccountabilityBadge({ t, name, lang }: any) {
+function LegalAccountabilityBadge({ t, name }: any) {
     return (
         <div className="py-12 px-6 text-center opacity-30 hover:opacity-100 transition-opacity">
             <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2">
-                    <Shield size={10} className="text-white" />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white">
-                        {lang === 'tr' ? "YAYIN VE VERİ SORUMLULUĞU" : "PUBLISHING & DATA RESPONSIBILITY"}
+                <div className="flex items-center gap-2 text-white">
+                    <Shield size={10} />
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em]">
+                        {t('legalResponsibilityTitle')}
                     </span>
                 </div>
-                <p className="text-[7px] max-w-[200px] mx-auto leading-relaxed text-white/60 font-medium uppercase tracking-[0.15em]">
-                    {lang === 'tr' ? (
-                        <>BU PROFİL İÇERİĞİ VE TOPLANAN VERİLERDEN BİZZAT <span className="text-white font-black">{name}</span> SORUMLUDUR. KARDLY.SITE ARACI TEKNİK ALTYAPI SAĞLAYICIDIR.</>
-                    ) : (
-                        <>THIS PROFILE CONTENT AND COLLECTED DATA IS UNDER THE SOLE RESPONSIBILITY OF <span className="text-white font-black">{name}</span>. KARDLY.SITE IS THE TECHNICAL PROVIDER.</>
-                    )}
+                <p className="text-[7px] max-w-[250px] mx-auto leading-relaxed text-white/60 font-medium uppercase tracking-[0.15em]">
+                    {t('legalResponsibilityDesc', name)}
                 </p>
                 <div className="flex items-center gap-4 mt-2">
-                     <Link href="/" className="text-[7px] font-black underline underline-offset-4 text-white/40 hover:text-white uppercase tracking-tighter">KARDLY.SITE</Link>
-                     <button className="text-[7px] font-black underline underline-offset-4 text-red-500/40 hover:text-red-500 uppercase tracking-tighter">İHLAL BİLDİR / REPORT</button>
+                     <Link href="/" className="text-[7px] font-black underline underline-offset-4 text-white/40 hover:text-white uppercase tracking-tighter transition-colors">KARDLY.SITE</Link>
+                     <Link 
+                        href="/iletisim?subject=Report%20Violation" 
+                        className="text-[7px] font-black underline underline-offset-4 text-red-500/40 hover:text-red-500 uppercase tracking-tighter transition-colors"
+                     >
+                        {t('reportViolation')}
+                     </Link>
                 </div>
             </div>
         </div>

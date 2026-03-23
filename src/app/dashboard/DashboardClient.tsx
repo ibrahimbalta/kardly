@@ -174,9 +174,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
         qrColorDark: profile?.qrColorDark || "#0f172a",
         qrColorLight: profile?.qrColorLight || "#ffffff",
         businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
-        businessCardOrientation: profile?.businessCardOrientation || "landscape"
+        businessCardOrientation: profile?.businessCardOrientation || "landscape",
+        hasAcceptedTerms: profile?.hasAcceptedTerms || false
     })
 
+    const [isTermsAccepted, setIsTermsAccepted] = useState(profile?.hasAcceptedTerms || false)
     const [selectedTplCat, setSelectedTplCat] = useState("all")
     const [isTplCatOpen, setIsTplCatOpen] = useState(false)
     const [isQuickTplMenuOpen, setIsQuickTplMenuOpen] = useState(false)
@@ -581,6 +583,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleSave = async (overrides?: any) => {
+        if (!isTermsAccepted && !overrides?.hasAcceptedTerms) {
+            setShowToast(t('acceptTermsError'))
+            setTimeout(() => setShowToast(null), 4000)
+            return
+        }
         setIsSaving(true)
         try {
             const validation = profileSchema.safeParse({
@@ -634,7 +641,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     businessCardTemplateId: overrides?.businessCardTemplateId ?? profileData.businessCardTemplateId,
                     businessCardOrientation: overrides?.businessCardOrientation ?? profileData.businessCardOrientation,
                     qrColorDark: overrides?.qrColorDark ?? profileData.qrColorDark,
-                    qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight
+                    qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight,
+                    hasAcceptedTerms: isTermsAccepted
                 })
             })
 
@@ -2557,6 +2565,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Legal Safeguard: User Agreement Checkbox */}
+                            <div className="mb-6 p-5 bg-white/60 backdrop-blur-md border border-slate-200/60 rounded-[2rem] shadow-sm hover:shadow-md transition-all duration-300">
+                                <label className="flex items-start gap-4 cursor-pointer group">
+                                    <div className="mt-1 relative flex items-center justify-center">
+                                        <input 
+                                            type="checkbox" 
+                                            id="terms-checkbox"
+                                            checked={isTermsAccepted}
+                                            onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                                            className="peer h-6 w-6 cursor-pointer appearance-none rounded-lg border-2 border-slate-300 bg-white transition-all checked:border-rose-500 checked:bg-rose-500 hover:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                                        />
+                                        <Check className="absolute h-4 w-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                                    </div>
+                                    <span className="text-[13px] text-slate-500 font-medium leading-[1.6] group-hover:text-slate-800 transition-colors select-none">
+                                        {t('userAgreementCheckbox')}
+                                    </span>
+                                </label>
                             </div>
 
                             {/* Global Save Button */}

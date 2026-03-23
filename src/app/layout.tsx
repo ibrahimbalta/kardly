@@ -49,6 +49,7 @@ export const viewport: Viewport = {
 import { AuthProvider } from "@/components/AuthProvider";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { PWAInstallPrompt, OfflineIndicator } from "@/components/PWAProvider";
+import { CookieBanner } from "@/components/CookieBanner";
 
 export default function RootLayout({
   children,
@@ -79,6 +80,7 @@ export default function RootLayout({
         <AuthProvider>
           <LanguageProvider>
             {children}
+            <CookieBanner />
             <PWAInstallPrompt />
             <OfflineIndicator />
           </LanguageProvider>

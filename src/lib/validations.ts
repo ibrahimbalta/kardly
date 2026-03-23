@@ -34,6 +34,7 @@ export const ProfileUpdateSchema = z.object({
     businessCardOrientation: z.string().optional().nullable(),
     qrColorDark: z.string().optional().nullable(),
     qrColorLight: z.string().optional().nullable(),
+    hasAcceptedTerms: z.boolean().optional(),
 }).passthrough();
 
 // Ürün ekleme şeması
