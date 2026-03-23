@@ -4003,6 +4003,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
+            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
         </div>
     )
 }
@@ -4616,6 +4617,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
+            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
         </div>
     );
 }
@@ -5142,6 +5144,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             />
             <SocialProof t={t} theme={theme} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
+            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
         </div>
     );
 }
@@ -6007,6 +6010,17 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                     <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
                     <span className="relative z-10">{t.sendMyInfoBtn}</span>
                 </button>
+
+                {/* Legal Safeguard (KVKK/GDPR Shield) */}
+                <div className="mt-4 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+                    <p className={cn("text-[9px] leading-relaxed opacity-40 font-medium", theme.text)}>
+                        {lang === 'tr' ? (
+                            <>Bu form aracılığıyla iletilen veriler KVKK kapsamında bizzat <strong>{profile.user.name}</strong> tarafından işlenmektedir. Kardly.site sadece teknik altyapı hizmeti vermektedir.</>
+                        ) : (
+                            <>Data submitted via this form is processed by <strong>{profile.user.name}</strong>. Kardly.site serves only as a technical infrastructure provider.</>
+                        )}
+                    </p>
+                </div>
             </div>
         </div>
     )
@@ -6829,3 +6843,30 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
         </AnimatePresence>
     );
 }
+
+function LegalAccountabilityBadge({ t, name, lang }: any) {
+    return (
+        <div className="py-12 px-6 text-center opacity-30 hover:opacity-100 transition-opacity">
+            <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2">
+                    <Shield size={10} className="text-white" />
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white">
+                        {lang === 'tr' ? "YAYIN VE VERİ SORUMLULUĞU" : "PUBLISHING & DATA RESPONSIBILITY"}
+                    </span>
+                </div>
+                <p className="text-[7px] max-w-[200px] mx-auto leading-relaxed text-white/60 font-medium uppercase tracking-[0.15em]">
+                    {lang === 'tr' ? (
+                        <>BU PROFİL İÇERİĞİ VE TOPLANAN VERİLERDEN BİZZAT <span className="text-white font-black">{name}</span> SORUMLUDUR. KARDLY.SITE ARACI TEKNİK ALTYAPI SAĞLAYICIDIR.</>
+                    ) : (
+                        <>THIS PROFILE CONTENT AND COLLECTED DATA IS UNDER THE SOLE RESPONSIBILITY OF <span className="text-white font-black">{name}</span>. KARDLY.SITE IS THE TECHNICAL PROVIDER.</>
+                    )}
+                </p>
+                <div className="flex items-center gap-4 mt-2">
+                     <Link href="/" className="text-[7px] font-black underline underline-offset-4 text-white/40 hover:text-white uppercase tracking-tighter">KARDLY.SITE</Link>
+                     <button className="text-[7px] font-black underline underline-offset-4 text-red-500/40 hover:text-red-500 uppercase tracking-tighter">İHLAL BİLDİR / REPORT</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
