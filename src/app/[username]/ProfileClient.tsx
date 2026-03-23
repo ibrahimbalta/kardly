@@ -285,11 +285,11 @@ export default function ProfileClient({ profile }: { profile: any }) {
         }
     }
 
-    const handleCVView = () => {
+    const handleCVView = async () => {
         if (!profile.cvUrl) return;
         trackEvent("cv")
 
-        let url = profile.cvUrl.trim();
+        const url = profile.cvUrl.trim();
 
         // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
         if (url.startsWith('data:')) {
@@ -313,12 +313,18 @@ export default function ProfileClient({ profile }: { profile: any }) {
                 window.open(url, '_blank');
             }
         } else {
-            // Cloudinary PDF/DOC dosyaları /image/upload/ altında saklanıyor
-            // Tarayıcıda görüntülenebilmesi için /raw/upload/ olarak değiştir
-            if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
-                url = url.replace('/image/upload/', '/raw/upload/');
+            // Cloudinary veya herhangi bir PDF URL'si: blob olarak indir ve tarayıcıda göster
+            // Bu sayede Content-Disposition: attachment sorunu aşılır
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+            } catch (err) {
+                // Fetch başarısız olursa doğrudan aç
+                console.error("CV fetch hatası:", err);
+                window.open(url, '_blank');
             }
-            window.open(url, '_blank');
         }
     }
 
