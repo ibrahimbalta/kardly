@@ -6742,10 +6742,11 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
     const isPdf = url.toLowerCase().includes('.pdf');
     const isDoc = url.toLowerCase().includes('.doc') || url.toLowerCase().includes('.docx');
     
-    // Word/Excel/PPT dosyaları için Google Docs Viewer kullan, diğerleri için (PDF/Resim) doğrudan iframede proxy'yi göster
-    const embedUrl = isDoc 
-        ? `https://docs.google.com/gview?url=${encodeURIComponent(url.startsWith('/') ? `https://www.kardly.site${url}` : url)}&embedded=true`
-        : url;
+    // Google Docs Viewer, Cloudinary proxy üzerinden gelen dosyaları (PDF, Word, vs.) her ortamda kusursuz gösterir
+    // Sadece data URL ise doğrudan iframe içinde gösterilebilir
+    const embedUrl = url.startsWith('data:') 
+        ? url 
+        : `https://docs.google.com/gview?url=${encodeURIComponent(url.startsWith('/') ? `https://www.kardly.site${url}` : url)}&embedded=true`;
 
     return (
         <AnimatePresence>

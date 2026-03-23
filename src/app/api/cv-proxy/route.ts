@@ -96,13 +96,16 @@ export async function GET(req: Request) {
         // Content type belirleme
         let contentType = response.headers.get("content-type") || "application/octet-stream"
         
-        // PDF uzantısı varsa content type'ı zorla
-        if (fileUrl.toLowerCase().endsWith(".pdf")) {
+        // URL uzantısına göre Content-Type zorla
+        const lowercaseUrl = fileUrl.toLowerCase()
+        if (lowercaseUrl.endsWith(".pdf") || contentType.includes("pdf")) {
             contentType = "application/pdf"
-        } else if (fileUrl.toLowerCase().endsWith(".doc")) {
-            contentType = "application/msword"
-        } else if (fileUrl.toLowerCase().endsWith(".docx")) {
+        } else if (lowercaseUrl.endsWith(".doc") || lowercaseUrl.endsWith(".docx") || contentType.includes("msword") || contentType.includes("officedocument")) {
             contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        } else if (lowercaseUrl.endsWith(".png")) {
+            contentType = "image/png"
+        } else if (lowercaseUrl.endsWith(".jpg") || lowercaseUrl.endsWith(".jpeg")) {
+            contentType = "image/jpeg"
         }
 
         return new NextResponse(buffer, {
@@ -110,6 +113,7 @@ export async function GET(req: Request) {
             headers: {
                 "Content-Type": contentType,
                 "Content-Disposition": "inline",
+                "X-Content-Type-Options": "nosniff",
                 "Cache-Control": "public, max-age=86400",
             },
         })
