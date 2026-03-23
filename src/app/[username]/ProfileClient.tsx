@@ -6792,7 +6792,7 @@ function LegalAccountabilityBadge({ t, name }: any) {
                     </span>
                 </div>
                 <p className="text-[7px] max-w-[250px] mx-auto leading-relaxed text-white/60 font-medium uppercase tracking-[0.15em]">
-                    {t.legalResponsibilityDesc ? t.legalResponsibilityDesc.replace('{name}', name) : `Bu sayfa içeriği ${name} tarafından oluşturulmuştur.`}
+                    {typeof t.legalResponsibilityDesc === 'string' ? t.legalResponsibilityDesc.replace('{name}', name || '') : `Bu sayfa içeriği ${name || ''} tarafından oluşturulmuştur.`}
                 </p>
                 <div className="flex items-center gap-4 mt-2">
                      <Link href="/" className="text-[7px] font-black underline underline-offset-4 text-white/40 hover:text-white uppercase tracking-tighter transition-colors">KARDLY.SITE</Link>
