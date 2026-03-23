@@ -440,10 +440,9 @@ END:VCARD`
     }
 
     return (
-        <div className="relative min-h-screen">
+        <>
             {renderTemplate()}
-            <LegalAccountabilityBadge t={t} name={profile?.displayName || profile?.user?.name || ""} />
-        </div>
+        </>
     )
 }
 
@@ -4009,7 +4008,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setMessages={setChatMessages}
                 aiConfig={aiConfig}
             />
-            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
         </div>
     )
 }
@@ -5081,7 +5079,6 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             />
             <SocialProof t={t} theme={theme} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
-            <LegalAccountabilityBadge t={t} name={profile.user.name} lang={lang} />
         </div>
     );
 }
@@ -6781,30 +6778,4 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
     );
 }
 
-function LegalAccountabilityBadge({ t, name }: any) {
-    return (
-        <div className="py-12 px-6 text-center opacity-30 hover:opacity-100 transition-opacity">
-            <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2">
-                    <Shield size={10} className="text-white" />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white">
-                        {t.legalResponsibilityTitle || "YASAL SORUMLULUK"}
-                    </span>
-                </div>
-                <p className="text-[7px] max-w-[250px] mx-auto leading-relaxed text-white/60 font-medium uppercase tracking-[0.15em]">
-                    {typeof t.legalResponsibilityDesc === 'string' ? t.legalResponsibilityDesc.replace('{name}', name || '') : `Bu sayfa içeriği ${name || ''} tarafından oluşturulmuştur.`}
-                </p>
-                <div className="flex items-center gap-4 mt-2">
-                     <Link href="/" className="text-[7px] font-black underline underline-offset-4 text-white/40 hover:text-white uppercase tracking-tighter transition-colors">KARDLY.SITE</Link>
-                     <Link 
-                        href="/iletisim?subject=Report%20Violation" 
-                        className="text-[7px] font-black underline underline-offset-4 text-red-500/40 hover:text-red-500 uppercase tracking-tighter transition-colors"
-                     >
-                        {t.reportViolation || "İHLAL BİLDİR"}
-                     </Link>
-                </div>
-            </div>
-        </div>
-    )
-}
 
