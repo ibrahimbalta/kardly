@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         // but in production, we should enforce it.
 
         const body = await req.json()
-        const { occupation, targetAudience, tone, username: customUsername } = body
+        const { occupation, targetAudience, tone, username: customUsername, hasAcceptedTerms } = body
 
         if (!occupation || !targetAudience || !tone) {
             return NextResponse.json({ error: "Eksik bilgi" }, { status: 400 })
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
                     templateId: aiResult.templateId || "neon_blue",
                     username: finalUsername,
                     slug: finalUsername,
+                    hasAcceptedTerms: !!hasAcceptedTerms
                 },
                 create: {
                     userId: session.user.id,
@@ -61,6 +62,7 @@ export async function POST(req: Request) {
                     services: aiResult.services,
                     themeColor: aiResult.themeColor,
                     templateId: aiResult.templateId || "neon_blue",
+                    hasAcceptedTerms: !!hasAcceptedTerms
                 }
             })
         }

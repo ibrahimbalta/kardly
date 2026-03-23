@@ -4,6 +4,8 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Sparkles, ArrowRight, ArrowLeft, Check, Wand2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
+import { useTranslation } from "@/context/LanguageContext"
 
 const steps = [
     {
@@ -34,6 +36,7 @@ import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 
 export default function OnboardingPage() {
+    const { t } = useTranslation()
     const { data: session } = useSession()
     const isAdmin = session?.user?.email === "yanimdaki74@gmail.com"
     const router = useRouter()
@@ -52,6 +55,7 @@ export default function OnboardingPage() {
         tone: "profesyonel",
         services: "",
         username: "",
+        hasAcceptedTerms: false,
     })
 
     const handleNext = () => {
@@ -299,6 +303,39 @@ export default function OnboardingPage() {
                                     </div>
                                 )}
 
+                                {currentStep === 2 && (
+                                    <div className="mt-8 p-6 glass border-white/5 rounded-[2.5rem] bg-white/5 backdrop-blur-lg">
+                                        <label className="flex gap-4 cursor-pointer group">
+                                            <div className="relative flex items-start pt-1">
+                                                <input
+                                                    type="checkbox"
+                                                    id="terms-checkbox-onboarding"
+                                                    className="peer sr-only"
+                                                    checked={formData.hasAcceptedTerms}
+                                                    onChange={(e) => setFormData({ ...formData, hasAcceptedTerms: e.target.checked })}
+                                                />
+                                                <div className="w-6 h-6 border-2 border-white/20 rounded-lg transition-all peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center">
+                                                    <Check className="w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                                                </div>
+                                            </div>
+                                            <div className="text-[13px] text-foreground/60 leading-relaxed font-medium group-hover:text-foreground/80 transition-colors select-none">
+                                                {t('userAgreementCheckbox')}
+                                                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                                                    <Link href="/gizlilik" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                        {t('privacyPolicy')}
+                                                    </Link>
+                                                    <Link href="/kullanim-sartlari" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                        {t('termsOfUse')}
+                                                    </Link>
+                                                    <Link href="/gizlilik#cerezler" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                        {t('cookiePolicy') || "Çerez Politikası"}
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                )}
+
                                 <div className="mt-10 flex gap-4">
                                     {currentStep > 0 && currentStep < 3 && (
                                         <button
@@ -313,7 +350,8 @@ export default function OnboardingPage() {
                                             onClick={handleNext}
                                             disabled={
                                                 (currentStep === 0 && !formData.occupation) ||
-                                                (currentStep === 1 && !formData.username)
+                                                (currentStep === 1 && !formData.username) ||
+                                                (currentStep === 2 && !formData.hasAcceptedTerms)
                                             }
                                             className="flex-1 bg-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:hover:scale-100"
                                         >

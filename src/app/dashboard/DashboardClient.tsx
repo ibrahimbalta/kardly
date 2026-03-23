@@ -2580,9 +2580,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                         <Check className="absolute h-4 w-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
                                     </div>
-                                    <span className="text-[13px] text-slate-500 font-medium leading-[1.6] group-hover:text-slate-800 transition-colors select-none">
+                                    <div className="text-[13px] text-slate-500 font-medium leading-[1.6] group-hover:text-slate-800 transition-colors select-none">
                                         {t('userAgreementCheckbox')}
-                                    </span>
+                                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                                            <Link href="/gizlilik" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                {t('privacyPolicy')}
+                                            </Link>
+                                            <Link href="/kullanim-sartlari" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                {t('termsOfUse')}
+                                            </Link>
+                                            <Link href="/gizlilik#cerezler" target="_blank" className="text-[10px] text-primary hover:underline uppercase tracking-widest font-black">
+                                                {t('cookiePolicy')}
+                                            </Link>
+                                        </div>
+                                    </div>
                                 </label>
                             </div>
 
