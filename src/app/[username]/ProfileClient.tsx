@@ -136,6 +136,9 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [mounted, setMounted] = useState(false)
     const [copied, setCopied] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+    const [isCVModalOpen, setIsCVModalOpen] = useState(false)
+    const [cvViewUrl, setCvViewUrl] = useState("")
+    const [isCvLoading, setIsCvLoading] = useState(false)
     const [reviews, setReviews] = useState(profile.reviews?.length > 0 ? profile.reviews : [
         { id: '1', name: "Fatih Yaman", title: "CEO, XYZ Şirketi", content: "Şirketimizin test sürecini mükemmel bir şekilde yönetti. Kesinlikle tavsiye ederim!", rating: 5, gender: 'male', image: "https://ui-avatars.com/api/?name=Fatih+Yaman&background=0d0d0e&color=fff&size=128" },
         { id: '2', name: "Zeynep Kaya", title: "Yazılım Müdürü", content: "Teknik bilgisi ve problem çözme hızı gerçekten etkileyici.", rating: 5, gender: 'female', image: "https://ui-avatars.com/api/?name=Zeynep+Kaya&background=0d0d0e&color=fff&size=128" },
@@ -290,37 +293,15 @@ export default function ProfileClient({ profile }: { profile: any }) {
         trackEvent("cv")
 
         const url = profile.cvUrl.trim();
-
-        // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
-        if (url.startsWith('data:')) {
-            try {
-                const parts = url.split(';');
-                const contentType = parts[0].split(':')[1];
-                const base64Data = url.split(',')[1];
-
-                const byteCharacters = atob(base64Data);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: contentType });
-                const blobUrl = URL.createObjectURL(blob);
-
-                window.open(blobUrl, '_blank');
-            } catch (err) {
-                console.error("CV açma hatası:", err);
-                window.open(url, '_blank');
-            }
-        } else if (url.includes('res.cloudinary.com')) {
-            // Cloudinary URL'leri için sunucu tarafında proxy kullan
-            // Bu CORS ve Content-Disposition sorunlarını çözer
-            const proxyUrl = `/api/cv-proxy?url=${encodeURIComponent(url)}`;
-            window.open(proxyUrl, '_blank');
-        } else {
-            // Diğer URL'ler için doğrudan aç
-            window.open(url, '_blank');
+        
+        // Proxy URL'sini oluştur
+        let finalUrl = url;
+        if (url.includes('res.cloudinary.com')) {
+            finalUrl = `/api/cv-proxy?url=${encodeURIComponent(url)}`;
         }
+
+        setCvViewUrl(finalUrl);
+        setIsCVModalOpen(true);
     }
 
     const handleAddToContacts = () => {
@@ -5135,6 +5116,14 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
+            <CVPreviewModal 
+                isOpen={isCVModalOpen} 
+                onClose={() => setIsCVModalOpen(false)} 
+                url={cvViewUrl} 
+                theme={theme} 
+                t={t} 
+                toneStyle={toneStyle} 
+            />
             <SocialProof t={t} theme={theme} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
@@ -6744,5 +6733,82 @@ function BlogWidget({ rssUrl, theme, toneStyle, t, lang }: any) {
                 </div>
             )}
         </div>
+    );
+}
+
+function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
+    if (!url) return null;
+
+    const isPdf = url.toLowerCase().includes('.pdf');
+    const isDoc = url.toLowerCase().includes('.doc') || url.toLowerCase().includes('.docx');
+    
+    // Word/Excel/PPT dosyaları için Google Docs Viewer kullan, diğerleri için (PDF/Resim) doğrudan iframede proxy'yi göster
+    const embedUrl = isDoc 
+        ? `https://docs.google.com/gview?url=${encodeURIComponent(url.startsWith('/') ? `https://www.kardly.site${url}` : url)}&embedded=true`
+        : url;
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-xl p-4 sm:p-8"
+                >
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        className={cn(
+                            "relative w-full max-w-5xl h-[90vh] flex flex-col shadow-2xl border overflow-hidden",
+                            theme.card, theme.border, toneStyle.rounded
+                        )}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b border-white/10 shrink-0">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}20`, color: theme.accent }}>
+                                    <FileText size={18} />
+                                </div>
+                                <h3 className={cn("text-xs font-black uppercase tracking-widest", theme.text)}>
+                                    {t.cvPreview || "DOSYA ÖNİZLEME"}
+                                </h3>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a 
+                                    href={url} 
+                                    download 
+                                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                                    title={t.download || "İndir"}
+                                >
+                                    <Download size={20} />
+                                </a>
+                                <button
+                                    onClick={onClose}
+                                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Viewer Wrapper */}
+                        <div className="flex-1 bg-white/5 relative overflow-hidden">
+                            <iframe 
+                                src={embedUrl} 
+                                className="w-full h-full border-none bg-white" 
+                                title="CV Preview"
+                            />
+                            
+                            {/* Loading State Overlay (Subtle) */}
+                            <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <div className="text-[10px] font-black uppercase tracking-[0.5em] text-white/10">KARDLY PREVIEW ENGINE</div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
