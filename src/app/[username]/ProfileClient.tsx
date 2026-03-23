@@ -289,7 +289,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
         if (!profile.cvUrl) return;
         trackEvent("cv")
 
-        const url = profile.cvUrl.trim();
+        let url = profile.cvUrl.trim();
 
         // Eğer data URL ise (base64), Blob'a çevirip güvenli bir şekilde açalım
         if (url.startsWith('data:')) {
@@ -313,23 +313,12 @@ export default function ProfileClient({ profile }: { profile: any }) {
                 window.open(url, '_blank');
             }
         } else {
-            // Cloudinary PDF URL'leri için: .pdf uzantılı Cloudinary linkleri
-            // Google Docs Viewer ile aç (tarayıcıda görüntüleme için)
-            const isPdf = url.toLowerCase().endsWith('.pdf') || url.includes('/image/upload/') && url.includes('.pdf');
-            const isCloudinary = url.includes('res.cloudinary.com');
-
-            if (isPdf && isCloudinary) {
-                // Cloudinary PDF dosyalarını Google Docs Viewer ile aç
-                const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
-                window.open(viewerUrl, '_blank');
-            } else if (isPdf) {
-                // Diğer PDF dosyalarını da Google Docs Viewer ile aç
-                const viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
-                window.open(viewerUrl, '_blank');
-            } else {
-                // Resim veya diğer dosyalar → doğrudan aç
-                window.open(url, '_blank');
+            // Cloudinary PDF/DOC dosyaları /image/upload/ altında saklanıyor
+            // Tarayıcıda görüntülenebilmesi için /raw/upload/ olarak değiştir
+            if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+                url = url.replace('/image/upload/', '/raw/upload/');
             }
+            window.open(url, '_blank');
         }
     }
 
