@@ -724,10 +724,6 @@ export default function Home() {
 
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">© 2026 Kardly.site — {t('allRights')}</p>
-            <div className="flex items-center gap-2">
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-               <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">System Status: Operational</p>
-            </div>
           </div>
         </div>
       </footer>
