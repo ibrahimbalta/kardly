@@ -152,9 +152,54 @@ export default function Home() {
         </div>
       </section>
       {/* ─── FEATURES: COMPACT TECH HUB ─── */}
-      <section id="features" className="py-24 px-6 bg-white relative overflow-hidden border-b border-slate-100">
-        {/* Subtle grid background for light theme */}
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      <section id="features" className="py-24 px-6 relative overflow-hidden border-b border-slate-100" style={{ background: 'linear-gradient(135deg, #fff 0%, #fdf2f8 30%, #eef2ff 70%, #fff 100%)' }}>
+        {/* Animated Background Effects - Visible Wavy Feel */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+          {/* Rose blob - top left */}
+          <motion.div
+            animate={{
+              x: [0, 60, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-rose-100 blur-[100px] rounded-full opacity-80"
+          />
+          {/* Indigo blob - bottom right */}
+          <motion.div
+            animate={{
+              x: [0, -50, 0],
+              y: [0, -30, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-10%] right-[-5%] w-[55%] h-[55%] bg-indigo-100/80 blur-[100px] rounded-full opacity-70"
+          />
+          {/* Center accent blob */}
+          <motion.div
+            animate={{
+              x: [0, 20, -20, 0],
+              y: [0, -15, 15, 0],
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-violet-100/50 blur-[80px] rounded-full opacity-60"
+          />
+          {/* Grid pattern */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(#94a3b8 1px, transparent 1px), linear-gradient(90deg, #94a3b8 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
+          
+          {/* Organic Wave SVG - bottom */}
+          <div className="absolute bottom-0 left-0 w-full opacity-[0.06]">
+            <svg viewBox="0 0 1440 320" className="w-full" preserveAspectRatio="none">
+              <path fill="#6366f1" d="M0,224L60,213.3C120,203,240,181,360,186.7C480,192,600,224,720,229.3C840,235,960,213,1080,197.3C1200,181,1320,171,1380,165.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+            </svg>
+          </div>
+          {/* Second wave layer */}
+          <div className="absolute bottom-0 left-0 w-full opacity-[0.04]">
+            <svg viewBox="0 0 1440 320" className="w-full" preserveAspectRatio="none">
+              <path fill="#f43f5e" d="M0,288L60,272C120,256,240,224,360,218.7C480,213,600,235,720,245.3C840,256,960,256,1080,234.7C1200,213,1320,171,1380,149.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+            </svg>
+          </div>
+        </div>
         
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4">
@@ -261,32 +306,122 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Tiles: Super Compact Visual Block */}
+          {/* Interactive Visual Block - No Images */}
           <div className="flex-[1.5] w-full">
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { title: "E-Commerce", cat: "Mobile", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
-                { title: "Branding", cat: "Logo", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d" },
-                { title: "Admin", cat: "Web", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
-                { title: "Product", cat: "Dev", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  transition={{ delay: i * 0.05 }}
-                  className="group relative aspect-video rounded-xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-500"
-                >
-                  <img src={`${item.img}?q=80&w=400&fit=crop`} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                  <div className="absolute bottom-3 left-3">
-                    <div className="text-[8px] font-black text-rose-400 uppercase tracking-widest mb-0.5">{item.cat}</div>
-                    <div className="text-[10px] font-bold text-white tracking-tight">{item.title}</div>
+            <div className="grid grid-cols-2 gap-4">
+              {/* Card 1: Project Stats */}
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="group relative rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-6 text-white shadow-xl shadow-rose-200/40 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Briefcase size={18} />
                   </div>
-                </motion.div>
-              ))}
+                  <div className="text-3xl font-black mb-1">24+</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-white/70">{t('f1Title')}</div>
+                  {/* Mini bar chart */}
+                  <div className="flex items-end gap-1 mt-4 h-8">
+                    {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+                      <div key={i} className="flex-1 bg-white/20 rounded-t-sm transition-all group-hover:bg-white/30" style={{ height: `${h}%` }} />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 2: Template Preview Mock */}
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="group relative rounded-2xl bg-white border border-slate-100 p-6 shadow-lg shadow-slate-100/50 overflow-hidden"
+              >
+                <div className="absolute bottom-0 right-0 w-20 h-20 bg-indigo-50 rounded-full blur-2xl" />
+                <div className="relative z-10">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:rotate-6 transition-transform">
+                    <Palette size={18} />
+                  </div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">{t('f7Title')}</div>
+                  {/* Mock template cards */}
+                  <div className="flex gap-2">
+                    {['bg-gradient-to-br from-violet-500 to-indigo-600', 'bg-gradient-to-br from-rose-500 to-pink-500', 'bg-gradient-to-br from-amber-400 to-orange-500'].map((grad, i) => (
+                      <div key={i} className={`flex-1 h-16 rounded-lg ${grad} shadow-sm opacity-80 group-hover:opacity-100 transition-opacity`}>
+                        <div className="w-4 h-4 bg-white/30 rounded-full mx-auto mt-3" />
+                        <div className="w-6 h-1 bg-white/20 rounded-full mx-auto mt-1.5" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 3: Analytics Mock */}
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="group relative rounded-2xl bg-[#0f172a] p-6 text-white shadow-xl overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <BarChart3 size={18} />
+                    </div>
+                    <div className="text-[8px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">+14.2%</div>
+                  </div>
+                  <div className="text-[10px] font-bold text-slate-500 mb-3">{t('f6Title')}</div>
+                  {/* Mini line chart */}
+                  <svg viewBox="0 0 100 30" className="w-full h-8 text-cyan-500">
+                    <polyline
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      points="0,25 15,20 25,22 35,15 50,18 60,8 75,12 85,5 100,10"
+                    />
+                    <polyline
+                      fill="url(#chartFill)"
+                      stroke="none"
+                      points="0,25 15,20 25,22 35,15 50,18 60,8 75,12 85,5 100,10 100,30 0,30"
+                    />
+                    <defs>
+                      <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="rgb(34,211,238)" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="rgb(34,211,238)" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </motion.div>
+
+              {/* Card 4: QR & Share */}
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="group relative rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/50 p-6 shadow-lg shadow-amber-100/30 overflow-hidden"
+              >
+                <div className="relative z-10">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform shadow-lg shadow-amber-200">
+                    <QrCode size={18} />
+                  </div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-amber-700/60 mb-3">{t('f8Title')}</div>
+                  {/* Mock QR pattern */}
+                  <div className="grid grid-cols-5 gap-1 w-fit">
+                    {Array.from({ length: 25 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`w-3 h-3 rounded-sm transition-colors ${
+                          [0,1,2,4,5,6,10,12,14,15,18,20,21,22,24].includes(i)
+                            ? 'bg-amber-800/70 group-hover:bg-amber-600'
+                            : 'bg-amber-200/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* ─── FEATURE DEEP DIVE ─── */}
       <section className="py-24 md:py-32 px-6 bg-white relative overflow-hidden">
