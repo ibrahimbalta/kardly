@@ -860,12 +860,43 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
     return (
         <>
-            <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden">
+            <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex overflow-hidden relative">
+            {/* Background Decorations */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                <motion.div
+                    animate={{
+                        x: [0, 40, 0],
+                        y: [0, -40, 0],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "linear",
+                    }}
+                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-rose-400/10 blur-[100px] rounded-full"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -30, 0],
+                        y: [0, 30, 0],
+                        scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                        duration: 20,
+                        repeat: Infinity,
+                        ease: "linear",
+                    }}
+                    className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-indigo-400/10 blur-[120px] rounded-full"
+                />
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/blueprint.png')] opacity-[0.03]" />
+            </div>
+
             {/* Toast Notification */}
             {showToast && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce-in">
                     <div className="flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border bg-primary border-primary/20 text-white">
-                        <span className="font-bold">{showToast}</span>
+                        <span className="font-bold text-sm tracking-tight">{showToast}</span>
                     </div>
                 </div>
             )}
@@ -1068,7 +1099,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-10 overflow-auto pt-24 lg:pt-10">
+            <main className="flex-1 p-6 md:p-10 lg:p-12 overflow-auto pt-24 lg:pt-14 relative z-10">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
@@ -4436,6 +4467,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     )}
                 </AnimatePresence>
+
+                {/* Mobile Bottom Navigation */}
+                <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
             </main >
         </div >
         <style jsx>{`
@@ -4458,8 +4492,13 @@ function StatBar({ label, count, total, color }: any) {
                 <span className="opacity-60">{label}</span>
                 <span>{count} ({percentage}%)</span>
             </div>
-            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                <div className={`h-full ${color} rounded-full`} style={{ width: `${percentage}%` }} />
+            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden group">
+                <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className={`h-full ${color} rounded-full shadow-sm`} 
+                />
             </div>
         </div>
     );
@@ -4473,7 +4512,7 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
                 "w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-sm group",
                 active
                     ? "bg-primary text-white shadow-xl shadow-primary/20"
-                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                    : "text-slate-400 hover:bg-slate-100 hover:text-slate-900"
             )}
         >
             <div className={cn("transition-transform group-hover:scale-110", active && "scale-110")}>
@@ -4493,25 +4532,77 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
 function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label: string, value: string, trend: string }) {
     return (
         <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:border-primary/20 transition-all relative overflow-hidden group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            className="bg-white/70 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:border-primary/20 transition-all relative overflow-hidden group"
         >
             <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-sm">
-                    {icon}
+                <div className="w-14 h-14 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center text-primary group-hover:rotate-6 transition-transform duration-500 shadow-inner">
+                    {React.cloneElement(icon as React.ReactElement, { size: 24 })}
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
-                    <TrendingUp size={10} className="text-emerald-500" />
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20 backdrop-blur-sm">
+                    <TrendingUp size={12} className="text-emerald-500" />
                     <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
                         {trend}
                     </span>
                 </div>
             </div>
             <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mb-2">{label}</p>
-            <p className="text-3xl font-black tracking-tight text-slate-900">{value}</p>
+            <p className="text-4xl font-black tracking-tight text-slate-900 mb-1">{value}</p>
+            
+            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden mt-4">
+                <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "70%" }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="h-full bg-gradient-to-r from-primary to-rose-400 rounded-full"
+                />
+            </div>
 
-            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-primary/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-primary/10 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
+    );
+}
+
+function BottomNav({ activeTab, setActiveTab, t }: any) {
+    const navItems = [
+        { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Özet" },
+        { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "Düzenle" },
+        { id: "qrcode", icon: <QrCode className="w-6 h-6" />, label: t('qrcode') || "QR" },
+        { id: "businesscard", icon: <IdCard className="w-6 h-6" />, label: t('digitalCard') || "Kart" },
+    ]
+
+    return (
+        <div className="lg:hidden fixed bottom-6 left-6 right-6 z-[100]">
+            <nav className="bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                {navItems.map((item) => (
+                    <button
+                        key={item.id}
+                        onClick={() => setActiveTab(item.id)}
+                        className={cn(
+                            "flex-1 flex flex-col items-center gap-1.5 py-4 rounded-[2rem] transition-all",
+                            activeTab === item.id 
+                                ? "bg-white/10 text-white" 
+                                : "text-slate-500 active:scale-95"
+                        )}
+                    >
+                        <motion.div 
+                            animate={activeTab === item.id ? { scale: 1.1, y: -2 } : { scale: 1, y: 0 }}
+                            className={cn("transition-colors", activeTab === item.id ? "text-primary" : "text-inherit")}
+                        >
+                            {item.icon}
+                        </motion.div>
+                        <span className={cn(
+                            "text-[8px] font-black uppercase tracking-[0.15em] transition-opacity",
+                            activeTab === item.id ? "opacity-100" : "opacity-40"
+                        )}>
+                            {item.label}
+                        </span>
+                    </button>
+                ))}
+            </nav>
+        </div>
     );
 }
 
