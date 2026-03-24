@@ -373,12 +373,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const ALL_TEMPLATES = [
-        // Featured Mockups (Inspired by the actual designs)
-        { id: "neon_modern_pop", category: "neon", name: "Neon Modern", description: "En popüler neon tasarımı. Dinamik eğriler ve parlayan detaylar.", badge: "EN POPÜLER", isNew: true },
-        { id: "clean_slate_min", category: "minimal", name: "Clean Slate", description: "Sade ve şık minimalist tasarım. Saf beyaz estetik.", badge: "MİNİMAL", isNew: true },
-        { id: "creative_prem", category: "pop", name: "Creative", description: "Yaratıcı profesyoneller için asil ve modern dokunuşlar.", badge: "PREMİUM", isNew: true },
-        { id: "cyber_link_elite", category: "elite", name: "Cyber Link", description: "Gelecekten gelen elit siberpunk tasarımı.", badge: "ELİTE", isNew: true },
-
         // Mesleki
         { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
         { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
@@ -3902,18 +3896,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="flex flex-col gap-2">
                                                     <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
-                                                    {tpl.isNew && !tpl.badge && (
+                                                    {tpl.isNew && (
                                                         <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">{t('new')}</span>
-                                                    )}
-                                                    {tpl.badge && (
-                                                        <span className={cn(
-                                                            "w-fit px-2 py-1 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border shadow-sm",
-                                                            tpl.badge === "EN POPÜLER" ? "bg-rose-50 text-rose-600 border-rose-100" :
-                                                            tpl.badge === "MİNİMAL" ? "bg-slate-50 text-slate-600 border-slate-100" :
-                                                            tpl.badge === "PREMİUM" ? "bg-amber-50 text-amber-600 border-amber-100" :
-                                                            tpl.badge === "ELİTE" ? "bg-black text-yellow-500 border-yellow-500/30 shadow-none ring-1 ring-yellow-500/20 px-3" :
-                                                            "bg-primary/10 text-primary border-primary/20"
-                                                        )}>{tpl.badge}</span>
                                                     )}
                                                 </div>
                                                 {profileData.templateId === tpl.id && (
