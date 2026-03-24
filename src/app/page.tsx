@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, FormEvent } from "react"
 import Link from "next/link"
 // Build trigger: 2026-03-07T09:22:00
 import { Navbar } from "@/components/Navbar"
@@ -44,6 +45,30 @@ const fadeUp = {
 
 export default function Home() {
   const { t } = useTranslation()
+  const [newsEmail, setNewsEmail] = useState("")
+  const [newsStatus, setNewsStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+
+  const handleNewsletter = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!newsEmail || newsStatus === "loading") return
+    
+    setNewsStatus("loading")
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsEmail })
+      })
+      if (res.ok) {
+        setNewsStatus("success")
+        setNewsEmail("")
+      } else {
+        setNewsStatus("error")
+      }
+    } catch (err) {
+      setNewsStatus("error")
+    }
+  }
 
   return (
     <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
@@ -662,12 +687,29 @@ export default function Home() {
                <div className="p-6 rounded-3xl bg-white/5 border border-white/5 space-y-4">
                   <h6 className="text-xs font-black text-white uppercase tracking-widest">{t('newRegistration')}</h6>
                   <p className="text-[11px] text-slate-500 leading-relaxed">Topluluğumuza katılın ve güncellemelerden haberdar olun.</p>
-                  <div className="flex gap-2">
-                    <input type="email" placeholder="Email.." className="bg-white/10 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-rose-500/50 flex-grow" />
-                    <button className="p-2 bg-rose-500 text-white rounded-xl hover:bg-rose-600 transition-colors">
+                  <form onSubmit={handleNewsletter} className="flex gap-2">
+                    <input 
+                      type="email" 
+                      placeholder="Email.." 
+                      value={newsEmail}
+                      onChange={(e) => setNewsEmail(e.target.value)}
+                      required
+                      className="bg-white/10 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-rose-500/50 flex-grow" 
+                    />
+                    <button 
+                      type="submit"
+                      disabled={newsStatus === "loading"}
+                      className="p-2 bg-rose-500 text-white rounded-xl hover:bg-rose-600 transition-colors disabled:opacity-50"
+                    >
                       <ArrowRight size={16} />
                     </button>
-                  </div>
+                  </form>
+                  {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold">Kayıt başarılı! ✨</p>}
+                  {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold">Bir hata oluştu.</p>}
+                  
+                  <p className="text-[9px] text-slate-600 leading-tight">
+                    Kaydolarak <Link href="/kullanim-sartlari" className="underline hover:text-rose-500 transition-colors">Kullanım Şartları</Link> ve <Link href="/gizlilik" className="underline hover:text-rose-500 transition-colors">Gizlilik Sözleşmesi</Link>'ni kabul etmiş olursunuz.
+                  </p>
                   <div className="flex items-center gap-3 pt-2">
                     <div className="flex -space-x-2">
                       {[1,2,3].map(i => (

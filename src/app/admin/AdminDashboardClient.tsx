@@ -28,7 +28,8 @@ import {
     Check,
     Edit3,
     Send,
-    Layout
+    Layout,
+    Bell
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -51,6 +52,10 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
     const [showBlogForm, setShowBlogForm] = useState(false)
     const [editingPost, setEditingPost] = useState<any>(null)
     const [blogForm, setBlogForm] = useState({ title: '', slug: '', excerpt: '', content: '', coverImage: '', isPublished: false })
+    
+    // Newsletter
+    const [subscribers, setSubscribers] = useState<any[]>([])
+    const [subscribersLoading, setSubscribersLoading] = useState(false)
 
     const filteredUsers = localUsers.filter((u: any) =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -161,9 +166,30 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
         setShowBlogForm(true)
     }
 
+    // Newsletter
+    const loadSubscribers = async () => {
+        setSubscribersLoading(true)
+        try {
+            const res = await fetch('/api/admin/newsletter')
+            const data = await res.json()
+            if (Array.isArray(data)) setSubscribers(data)
+        } catch { } finally { setSubscribersLoading(false) }
+    }
+
+    const deleteSubscriber = async (id: string) => {
+        if (!window.confirm("Bu aboneyi silmek istediğinizden emin misiniz?")) return
+        await fetch('/api/admin/newsletter', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        })
+        setSubscribers(subscribers.filter(s => s.id !== id))
+    }
+
     useEffect(() => {
         if (activeTab === 'messages') loadMessages()
         if (activeTab === 'blog') loadBlogPosts()
+        if (activeTab === 'newsletter') loadSubscribers()
     }, [activeTab])
 
     const unreadCount = messages.filter(m => !m.isRead).length
@@ -243,6 +269,12 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                 active={activeTab === "blog"}
                                 onClick={() => { setActiveTab("blog"); setIsSidebarOpen(false); }}
                             />
+                            <AdminNavItem
+                                icon={<Bell className="w-5 h-5" />}
+                                label="E-Bülten Kayıtları"
+                                active={activeTab === "newsletter"}
+                                onClick={() => { setActiveTab("newsletter"); setIsSidebarOpen(false); }}
+                            />
 
                             <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Hızlı Erişim</div>
                             <Link href="/dashboard" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-all group">
@@ -292,6 +324,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             {activeTab === 'payments' && <>Ödeme <span className="gradient-text">Kayıtları.</span></>}
                             {activeTab === 'messages' && <>İletişim <span className="gradient-text">Mesajları.</span></>}
                             {activeTab === 'blog' && <>Blog <span className="gradient-text">Yönetimi.</span></>}
+                            {activeTab === 'newsletter' && <>E-Bülten <span className="gradient-text">Kayıtları.</span></>}
                         </h1>
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
