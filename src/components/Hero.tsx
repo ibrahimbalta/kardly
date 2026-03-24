@@ -19,21 +19,47 @@ export function Hero() {
         <section className="relative pt-32 pb-24 px-6 overflow-hidden min-h-[90vh] flex items-center bg-white">
             {/* ─── BACKGROUND DECORATIONS ─── */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                {/* Subtle Grid */}
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+                {/* Refined Grid Pattern */}
+                <div className="absolute inset-0 opacity-[0.03]" 
+                    style={{ 
+                        backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', 
+                        backgroundSize: '40px 40px' 
+                    }} 
+                />
 
-                {/* Animated Orbs */}
+                {/* Animated Mesh Gradient Blobs */}
                 <motion.div
-                    animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-rose-100/40 rounded-full blur-[120px]"
+                    animate={{ 
+                        x: [0, 40, -20, 0], 
+                        y: [0, -30, 20, 0],
+                        scale: [1, 1.1, 0.9, 1]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-[15%] -left-[5%] w-[50%] h-[50%] bg-rose-100/40 rounded-full blur-[120px]"
                 />
+                
                 <motion.div
-                    animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
-                    transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-orange-50/40 rounded-full blur-[130px]"
+                    animate={{ 
+                        x: [0, -50, 30, 0], 
+                        y: [0, 40, -30, 0],
+                        scale: [1, 1.2, 0.8, 1]
+                    }}
+                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="absolute top-[10%] -right-[15%] w-[60%] h-[60%] bg-amber-50/50 rounded-full blur-[130px]"
                 />
-                <div className="absolute bottom-0 left-[20%] w-[30%] h-[30%] bg-blue-50/30 rounded-full blur-[100px]" />
+
+                <motion.div
+                    animate={{ 
+                        x: [0, 20, -40, 0], 
+                        y: [0, 20, 40, 0],
+                        scale: [1, 1.1, 0.9, 1]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+                    className="absolute bottom-[-10%] left-[10%] w-[40%] h-[40%] bg-indigo-50/40 rounded-full blur-[100px]"
+                />
+
+                {/* Subtle Linear Gradients for depth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
             </div>
 
             <div className="max-w-6xl mx-auto relative z-10 w-full mt-10">

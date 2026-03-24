@@ -425,7 +425,21 @@ export default function Home() {
 
       {/* ─── FEATURE DEEP DIVE ─── */}
       <section className="py-24 md:py-32 px-6 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          
+          <motion.div
+            animate={{ x: [0, 40, 0], y: [0, 60, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-violet-100/30 rounded-full blur-[100px]"
+          />
+          <motion.div
+            animate={{ x: [0, -40, 0], y: [0, -30, 0], scale: [1, 1.2, 1] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            className="absolute bottom-[20%] -left-[10%] w-[50%] h-[50%] bg-indigo-50/40 rounded-full blur-[120px]"
+          />
+        </div>
         
         <div className="max-w-5xl mx-auto space-y-24 relative">
 
@@ -597,6 +611,16 @@ export default function Home() {
 
       {/* ─── TEMPLATES: HIGH-END GRID ─── */}
       <section id="templates" className="py-24 px-6 relative overflow-hidden bg-white">
+        {/* Dynamic Background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <motion.div
+            animate={{ x: [0, -30, 0], y: [0, 50, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-0 right-1/4 w-[40%] h-[40%] bg-violet-100/30 rounded-full blur-[100px]"
+          />
+        </div>
+        
         <div className="max-w-6xl mx-auto relative">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 border-b border-slate-100 pb-12">
             <div className="max-w-xl">
@@ -715,7 +739,20 @@ export default function Home() {
 
       {/* ─── CTA: COMPACT LIGHT ─── */}
       <section className="py-24 px-6 relative bg-white overflow-hidden">
-        <div className="absolute inset-0 bg-slate-50/40 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
+        {/* Dynamic Background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 bg-slate-50/40" />
+            <motion.div
+                animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
+                transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-0 right-1/4 w-[30%] h-[40%] bg-rose-100/30 rounded-full blur-[100px]"
+            />
+            <motion.div
+                animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
+                transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute bottom-0 left-1/4 w-[30%] h-[40%] bg-indigo-100/20 rounded-full blur-[100px]"
+            />
+        </div>
         
         <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
@@ -755,8 +792,10 @@ export default function Home() {
 
       {/* ─── FOOTER: PREMIUM DARK ─── */}
       <footer className="py-24 px-6 relative bg-[#0a0a0f] overflow-hidden">
-        {/* Subtle ambient glow */}
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-rose-500/5 blur-[120px] pointer-events-none" />
+        {/* Subtle ambient glows */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-rose-500/[0.03] blur-[150px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/[0.03] blur-[130px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(244,63,94,0.02)_0%,transparent_70%)] pointer-events-none" />
         
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-16 mb-20 items-start">
