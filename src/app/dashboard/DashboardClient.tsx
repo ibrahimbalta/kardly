@@ -4539,7 +4539,7 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
         >
             <div className="flex justify-between items-start mb-6">
                 <div className="w-14 h-14 bg-gradient-to-tr from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center text-primary group-hover:rotate-6 transition-transform duration-500 shadow-inner">
-                    {React.cloneElement(icon as React.ReactElement, { size: 24 })}
+                    {icon}
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20 backdrop-blur-sm">
                     <TrendingUp size={12} className="text-emerald-500" />
