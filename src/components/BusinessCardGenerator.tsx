@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
@@ -704,7 +704,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         "text-[9px] font-black uppercase tracking-[0.2em] px-4 py-1.5 bg-white/5 rounded-full",
                         tp.accentText
                     )}>
-                        {profileData?.occupation || user.occupation || "D─░J─░TAL UZMAN"}
+                        {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
                     </p>
                 </div>
 
@@ -713,7 +713,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     {[
                         { icon: Phone, value: profileData?.phone || user.phone, label: 'TELEFON' },
                         { icon: Mail, value: profileData?.email || user.email, label: 'E-POSTA' },
-                        { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROF─░L' }
+                        { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
                     ].filter(item => item.value).map((item, idx) => (
                         <div key={idx} className={cn(
                             "flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all",
@@ -739,7 +739,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
 
                 {/* Footer Branding */}
                 <div className="mt-5 opacity-20">
-                    <span className={cn("text-[6px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY ÔÇó PREMIUM</span>
+                    <span className={cn("text-[6px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY · PREMIUM</span>
                 </div>
             </div>
         </div>
@@ -781,7 +781,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                         {tab === 'Premium' && <Star size={14} />}
                                         {tab === 'Ultimate' && <Crown size={14} />}
                                         {tab === 'Extraordinary' && <Zap size={14} />}
-                                        {tab === 'Extraordinary' ? 'S─▒rad─▒┼ş─▒' : tab}
+                                        {tab === 'Extraordinary' ? 'Sıradışı' : tab}
                                     </button>
                                 ))}
                             </div>
@@ -868,10 +868,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         
                         <div className="flex flex-col items-start leading-none">
                             <span className="text-white font-black text-[11px] uppercase tracking-[0.2em]">
-                                {downloadSuccess ? 'BA┼ŞARIYLA KAYDED─░LD─░' : 'TASARIMI ─░ND─░R'}
+                                {downloadSuccess ? 'BAŞARIYLA KAYDEDİLDİ' : 'TASARIMI İNDİR'}
                             </span>
                             <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium group-hover:text-white/50 transition-colors">
-                                Y├╝ksek Kaliteli G├Ârsel (PNG)
+                                Yüksek Kaliteli Görsel (PNG)
                             </span>
                         </div>
                     </div>

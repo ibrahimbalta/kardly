@@ -6740,14 +6740,34 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                                 </h3>
                             </div>
                             <div className="flex items-center gap-2">
-                                <a 
-                                    href={url} 
-                                    download 
+                                <button 
+                                    onClick={async () => {
+                                        try {
+                                            const res = await fetch(url);
+                                            const blob = await res.blob();
+                                            const contentType = res.headers.get('content-type') || 'application/pdf';
+                                            const ext = contentType.includes('pdf') ? '.pdf' 
+                                                : contentType.includes('word') || contentType.includes('docx') ? '.docx'
+                                                : contentType.includes('doc') ? '.doc'
+                                                : '.pdf';
+                                            const downloadBlob = new Blob([blob], { type: contentType });
+                                            const blobUrl = URL.createObjectURL(downloadBlob);
+                                            const link = document.createElement('a');
+                                            link.href = blobUrl;
+                                            link.download = `kardly-cv${ext}`;
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                            URL.revokeObjectURL(blobUrl);
+                                        } catch (e) {
+                                            window.open(url, '_blank');
+                                        }
+                                    }}
                                     className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/60 hover:text-white"
                                     title={t.download || "İndir"}
                                 >
                                     <Download size={20} />
-                                </a>
+                                </button>
                                 <button
                                     onClick={onClose}
                                     className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/60 hover:text-white"
