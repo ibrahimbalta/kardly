@@ -1099,7 +1099,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-10 lg:p-12 overflow-auto pt-24 lg:pt-14 relative z-10">
+            <main className="flex-1 p-6 md:p-10 lg:p-12 overflow-auto pt-24 lg:pt-14 relative z-10 pb-32 lg:pb-12">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
