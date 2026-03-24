@@ -26,7 +26,10 @@ import {
   Globe,
   Users,
   ChevronRight,
-  Check
+  Check,
+  Instagram,
+  Twitter,
+  Linkedin
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { useTranslation } from "@/context/LanguageContext"
@@ -48,240 +51,270 @@ export default function Home() {
       <Hero />
 
       {/* ─── HOW IT WORKS ─── */}
-      <section className="py-32 px-6 relative bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <motion.p
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >{t('howItWorks')}</motion.p>
+      <section className="py-32 md:py-40 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>
+        {/* Decorative mesh background */}
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4, backgroundImage: 'radial-gradient(at 20% 80%, rgba(244,63,94,0.08) 0%, transparent 50%), radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%)' }} />
+        
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-rose-50 to-indigo-50 border border-rose-100/50 mb-6"
+            >
+              <Zap size={13} className="text-rose-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent">{t('howItWorks')}</span>
+            </motion.div>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]"
             >{t('buildProfileTitle')}</motion.h2>
             <motion.p
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-slate-500 text-lg max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
             >{t('buildProfileDesc')}</motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { step: '01', title: t('step1Title'), desc: t('step1Desc'), icon: <MousePointer2 size={24} /> },
-              { step: '02', title: t('step2Title'), desc: t('step2Desc'), icon: <Palette size={24} /> },
-              { step: '03', title: t('step3Title'), desc: t('step3Desc'), icon: <Share2 size={24} /> }
-            ].map((item, i) => (
+          {/* Timeline Steps */}
+          <div className="relative">
+            {/* Connector line */}
+            <div className="hidden md:block absolute top-[72px] left-[16.6%] right-[16.6%] h-[2px]">
               <motion.div
-                key={i}
-                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="relative"
-              >
-                <div className="bg-white border border-slate-200 rounded-3xl p-10 hover:border-slate-300 hover:shadow-lg transition-all duration-300 h-full">
-                  <div className="text-[80px] font-extrabold text-slate-100 leading-none mb-6 select-none">{item.step}</div>
-                  <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mb-6">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
-                </div>
-                {i < 2 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-4 z-10 w-8 h-8 rounded-full bg-white border border-slate-200 items-center justify-center shadow-sm">
-                    <ChevronRight size={14} className="text-slate-400" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── FEATURES ─── */}
-      <section id="features" className="py-32 px-6 bg-slate-50 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <motion.p
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >{t('features')}</motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >{t('featuresTitle')}</motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-slate-500 text-lg max-w-2xl mx-auto"
-            >{t('featuresDesc')}</motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: <Briefcase size={24} />,
-                title: t('f1Title'),
-                desc: t('f1Desc'),
-                accent: 'bg-rose-50 text-rose-500'
-              },
-              {
-                icon: <CheckCircle2 size={24} />,
-                title: t('f2Title'),
-                desc: t('f2Desc'),
-                accent: 'bg-amber-50 text-amber-500'
-              },
-              {
-                icon: <FileText size={24} />,
-                title: t('f3Title'),
-                desc: t('f3Desc'),
-                accent: 'bg-indigo-50 text-indigo-500'
-              },
-              {
-                icon: <CreditCard size={24} />,
-                title: t('f4Title'),
-                desc: t('f4Desc'),
-                accent: 'bg-emerald-50 text-emerald-500'
-              },
-              {
-                icon: <Calendar size={24} />,
-                title: t('f5Title'),
-                desc: t('f5Desc'),
-                accent: 'bg-sky-50 text-sky-500'
-              },
-              {
-                icon: <BarChart3 size={24} />,
-                title: t('f6Title'),
-                desc: t('f6Desc'),
-                accent: 'bg-violet-50 text-violet-500'
-              },
-              {
-                icon: <Palette size={24} />,
-                title: t('f7Title'),
-                desc: t('f7Desc'),
-                accent: 'bg-pink-50 text-pink-500'
-              },
-              {
-                icon: <QrCode size={24} />,
-                title: t('f8Title'),
-                desc: t('f8Desc'),
-                accent: 'bg-slate-100 text-slate-600'
-              },
-              {
-                icon: <Shield size={24} />,
-                title: t('f9Title'),
-                desc: t('f9Desc'),
-                accent: 'bg-teal-50 text-teal-500'
-              },
-            ].map((f, i) => (
-              <motion.div
-                key={i}
-                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="bg-white rounded-2xl border border-slate-200 p-8 hover:border-slate-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${f.accent} transition-transform group-hover:scale-110`}>
-                  {f.icon}
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── FEATURE DEEP DIVE (THE "AHA" SECTION) ─── */}
-      <section className="py-32 px-6 bg-white">
-        <div className="max-w-6xl mx-auto space-y-24">
-          {/* Feature 1: Portfolio */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="flex flex-col items-center"
-          >
-            <div className="text-center max-w-3xl mb-16">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive1Label')}</p>
-              <h3 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive1Title')}</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive1Desc')}</p>
-              <div className="flex flex-wrap justify-center gap-6">
-                {(t('dive1List') as unknown as string[]).map((text, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm text-slate-600 font-semibold bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
-                  </div>
-                ))}
-              </div>
+                initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full h-full origin-left"
+                style={{ background: 'linear-gradient(90deg, #f43f5e, #8b5cf6, #06b6d4)' }}
+              />
             </div>
 
-            <div className="w-full max-w-5xl">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  { title: "E-Commerce App", category: "Mobile UI", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
-                  { title: "Brand Identity", category: "Logo Design", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d" },
-                  { title: "Admin Portal", category: "Web Design", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
-                  { title: "Product Landing", category: "Development", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
-                ].map((item, i) => (
-                  <motion.div 
-                    key={i}
-                    whileHover={{ y: -10 }}
-                    className="group bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-xl"
-                  >
-                    <div className="aspect-[4/5] relative overflow-hidden bg-slate-100">
-                      <img 
-                        src={`${item.img}?q=80&w=500&auto=format&fit=crop`} 
-                        alt={item.title} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                            <Eye size={18} className="text-slate-900" />
-                         </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+              {[
+                { step: '01', title: t('step1Title'), desc: t('step1Desc'), icon: <MousePointer2 size={22} />, gradient: 'from-rose-500 to-pink-500', glow: 'shadow-rose-500/20' },
+                { step: '02', title: t('step2Title'), desc: t('step2Desc'), icon: <Palette size={22} />, gradient: 'from-violet-500 to-indigo-500', glow: 'shadow-violet-500/20' },
+                { step: '03', title: t('step3Title'), desc: t('step3Desc'), icon: <Share2 size={22} />, gradient: 'from-cyan-500 to-teal-500', glow: 'shadow-cyan-500/20' }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative group"
+                >
+                  {/* Step circle on timeline */}
+                  <div className="flex justify-center mb-8">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className={`w-[56px] h-[56px] rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-xl ${item.glow} relative z-10 rotate-3 group-hover:rotate-0 transition-transform duration-500`}
+                    >
+                      {item.icon}
+                    </motion.div>
+                  </div>
+
+                  {/* Card */}
+                  <div className="relative bg-white/80 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-200/60 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] group-hover:border-slate-300/80 transition-all duration-500 group-hover:-translate-y-1">
+                    {/* Step number */}
+                    <div className={`text-[11px] font-extrabold uppercase tracking-[0.2em] bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent mb-4`}>
+                      Step {item.step}
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight">{item.title}</h3>
+                    <p className="text-slate-500 text-[15px] leading-relaxed">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ─── FEATURES: COMPACT TECH HUB ─── */}
+      <section id="features" className="py-24 px-6 bg-white relative overflow-hidden border-b border-slate-100">
+        {/* Subtle grid background for light theme */}
+        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+        
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4">
+            <div className="max-w-xl text-left">
+              <motion.div
+                initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
+                className="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] mb-4 flex items-center gap-2"
+              >
+                <div className="w-8 h-px bg-rose-500" /> {t('features')}
+              </motion.div>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none mb-4 italic">
+                {t('featuresTitle')}
+              </h2>
+              <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                {t('featuresDesc')}
+              </p>
+            </div>
+            <div className="hidden lg:block">
+              <div className="px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-400 text-[10px] uppercase font-bold tracking-widest">
+                Hub v2.0
+              </div>
+            </div>
+          </div>
+
+          {/* Ultra-Compact Micro-Tile Grid - Light Theme */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { icon: <Briefcase size={18} />, title: t('f1Title'), bg: 'group-hover:bg-rose-500' },
+              { icon: <CheckCircle2 size={18} />, title: t('f2Title'), bg: 'group-hover:bg-amber-500' },
+              { icon: <FileText size={18} />, title: t('f3Title'), bg: 'group-hover:bg-blue-500' },
+              { icon: <CreditCard size={18} />, title: t('f4Title'), bg: 'group-hover:bg-emerald-500' },
+              { icon: <Calendar size={18} />, title: t('f5Title'), bg: 'group-hover:bg-indigo-500' },
+              { icon: <BarChart3 size={18} />, title: t('f6Title'), bg: 'group-hover:bg-purple-500' },
+              { icon: <Palette size={18} />, title: t('f7Title'), bg: 'group-hover:bg-pink-500' },
+              { icon: <QrCode size={18} />, title: t('f8Title'), bg: 'group-hover:bg-sky-500' },
+              { icon: <Shield size={18} />, title: t('f9Title'), bg: 'group-hover:bg-teal-500' },
+            ].map((f, i) => {
+              const colors = [
+                { bg: 'bg-rose-50', border: 'border-rose-100', accent: 'bg-rose-500', shadow: 'shadow-rose-100' },
+                { bg: 'bg-indigo-50', border: 'border-indigo-100', accent: 'bg-indigo-500', shadow: 'shadow-indigo-100' },
+                { bg: 'bg-violet-50', border: 'border-violet-100', accent: 'bg-violet-500', shadow: 'shadow-violet-100' },
+                { bg: 'bg-emerald-50', border: 'border-emerald-100', accent: 'bg-emerald-500', shadow: 'shadow-emerald-100' },
+                { bg: 'bg-amber-50', border: 'border-amber-100', accent: 'bg-amber-500', shadow: 'shadow-amber-100' },
+                { bg: 'bg-cyan-50', border: 'border-cyan-100', accent: 'bg-cyan-500', shadow: 'shadow-cyan-100' },
+                { bg: 'bg-fuchsia-50', border: 'border-fuchsia-100', accent: 'bg-fuchsia-500', shadow: 'shadow-fuchsia-100' },
+                { bg: 'bg-orange-50', border: 'border-orange-100', accent: 'bg-orange-500', shadow: 'shadow-orange-100' },
+                { bg: 'bg-sky-50', border: 'border-sky-100', accent: 'bg-sky-500', shadow: 'shadow-sky-100' }
+              ][i] || { bg: 'bg-slate-50', border: 'border-slate-100', accent: 'bg-slate-500', shadow: 'shadow-slate-100' };
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+                  transition={{ delay: i * 0.04 }}
+                  className="group relative h-[84px] cursor-pointer"
+                >
+                  <div className={`absolute inset-0 ${colors.bg} border ${colors.border} rounded-[24px] shadow-sm transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-lg ${colors.shadow}`} />
+                  
+                  <div className="relative h-full flex items-center p-2.5">
+                    <div className="flex items-center gap-4 w-full h-full rounded-[20px] p-2 pr-6 overflow-hidden">
+                      {/* Icon Container with matching accent */}
+                      <div className={`relative shrink-0 w-12 h-12 rounded-[16px] ${colors.accent} border-2 border-white/20 shadow-sm flex items-center justify-center transition-all duration-500 group-hover:rotate-6`}>
+                         <span className="text-white">{f.icon}</span>
+                      </div>
+
+                      {/* Text Container: Increased font size */}
+                      <div className="flex-1">
+                        <div className="inline-block relative">
+                           <h3 className="relative z-10 text-[15px] font-black text-slate-950 tracking-tight leading-none">
+                             {f.title}
+                           </h3>
+                        </div>
+                      </div>
+
+                      <div className="opacity-30 group-hover:opacity-100 transition-all duration-300">
+                         <ArrowRight size={12} className="text-slate-400 group-hover:text-slate-900" />
                       </div>
                     </div>
-                    <div className="p-5">
-                      <div className="text-sm font-bold text-slate-900 mb-1">{item.title}</div>
-                      <div className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">{item.category}</div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-
-          {/* Feature 2: Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
-          >
-            <div className="order-2 lg:order-1 bg-slate-900 rounded-3xl p-8 shadow-lg">
-              <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-6">{t('last30Days')}</div>
-              <div className="flex items-end gap-2 h-40 mb-6">
-                {[30, 50, 45, 70, 55, 90, 75, 60, 85, 65, 95, 80].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    transition={{ delay: i * 0.05, duration: 0.5 }}
-                    className="flex-1 bg-rose-500/30 rounded-sm border-t border-rose-500"
-                  />
-                ))}
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { val: '2.4K', label: t('viewsLabel') },
-                  { val: '389', label: t('clicksLabel') },
-                  { val: '%16', label: t('conversionLabel') }
-                ].map((s, i) => (
-                  <div key={i} className="text-center">
-                    <div className="text-2xl font-bold text-white">{s.val}</div>
-                    <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{s.label}</div>
                   </div>
-                ))}
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SHOWCASE: COMPACT REFINED TILES ─── */}
+      <section className="py-24 px-6 bg-slate-50/50 relative overflow-hidden border-b border-slate-100">
+        <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
+          {/* Text: Compact and Side-by-Side on Desktop */}
+          <div className="flex-1 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 mb-6">
+              <Sparkles size={11} className="text-rose-500" />
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-rose-600">{t('dive1Label')}</span>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive1Title')}</h3>
+            <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive1Desc')}</p>
+            <div className="flex flex-wrap gap-2">
+              {(t('dive1List') as unknown as string[]).slice(0, 3).map((text, i) => (
+                <div key={i} className="text-[10px] font-bold text-slate-500 border border-slate-200 px-3 py-1.5 rounded-lg bg-white shadow-sm">
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tiles: Super Compact Visual Block */}
+          <div className="flex-[1.5] w-full">
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { title: "E-Commerce", cat: "Mobile", img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c" },
+                { title: "Branding", cat: "Logo", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d" },
+                { title: "Admin", cat: "Web", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71" },
+                { title: "Product", cat: "Dev", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f" }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  transition={{ delay: i * 0.05 }}
+                  className="group relative aspect-video rounded-xl overflow-hidden bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all duration-500"
+                >
+                  <img src={`${item.img}?q=80&w=400&fit=crop`} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <div className="absolute bottom-3 left-3">
+                    <div className="text-[8px] font-black text-rose-400 uppercase tracking-widest mb-0.5">{item.cat}</div>
+                    <div className="text-[10px] font-bold text-white tracking-tight">{item.title}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FEATURE DEEP DIVE ─── */}
+      <section className="py-24 md:py-32 px-6 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
+        
+        <div className="max-w-5xl mx-auto space-y-24 relative">
+
+          {/* Feature 2: Stats & Analytics */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row items-center gap-12"
+          >
+            <div className="flex-1 w-full order-2 md:order-1">
+              <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl shadow-slate-200/40">
+                <div className="bg-[#0f172a] p-5 md:p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{t('last30Days')}</div>
+                    <div className="flex gap-1">
+                      {[1,2,3].map(d => <div key={d} className="w-1.5 h-1.5 rounded-full bg-slate-800" />)}
+                    </div>
+                  </div>
+                  <div className="flex items-end gap-1 h-32 mb-6">
+                    {[30, 60, 45, 80, 50, 95, 70, 40, 85, 60, 100, 75].map((h, i) => (
+                      <div key={i} className="flex-1 rounded-t-sm bg-rose-500/30 border-t border-rose-500/50" style={{ height: `${h}%` }} />
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[t('viewsLabel'), t('clicksLabel'), t('conversionLabel')].map((l, i) => (
+                      <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/5">
+                        <div className="text-lg font-bold text-white mb-0.5 tracking-tight">{['2.4K', '389', '%16'][i]}</div>
+                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">{l}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive2Label')}</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive2Title')}</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive2Desc')}</p>
-              <ul className="space-y-3">
-                {(t('dive2List') as unknown as string[]).map((text, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
+
+            <div className="flex-1 order-1 md:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 mb-6">
+                <BarChart3 size={11} className="text-indigo-500" />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-600">{t('dive2Label')}</span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive2Title')}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive2Desc')}</p>
+              <ul className="grid grid-cols-1 gap-3">
+                {(t('dive2List') as unknown as string[]).slice(0, 3).map((text, i) => (
+                  <li key={i} className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
+                    <div className="w-5 h-5 rounded-lg bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
+                      <Check size={10} className="text-white" />
+                    </div>
+                    {text}
                   </li>
                 ))}
               </ul>
@@ -290,77 +323,159 @@ export default function Home() {
 
           {/* Feature 3: Payments */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="flex flex-col md:flex-row items-center gap-12 pt-12"
           >
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4">{t('dive3Label')}</p>
-              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-6">{t('dive3Title')}</h3>
-              <p className="text-slate-500 text-lg leading-relaxed mb-8">{t('dive3Desc')}</p>
-              <ul className="space-y-3">
-                {(t('dive3List') as unknown as string[]).map((text, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                    <Check size={16} className="text-emerald-500 shrink-0" /> {text}
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 mb-6">
+                <CreditCard size={11} className="text-emerald-500" />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">{t('dive3Label')}</span>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive3Title')}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive3Desc')}</p>
+              <ul className="grid grid-cols-1 gap-3">
+                {(t('dive3List') as unknown as string[]).slice(0, 3).map((text, i) => (
+                  <li key={i} className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
+                    <div className="w-5 h-5 rounded-lg bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
+                      <Check size={10} className="text-white" />
+                    </div>
+                    {text}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-emerald-50 rounded-3xl border border-emerald-100 p-10 flex flex-col items-center justify-center shadow-sm">
-              <CreditCard size={64} className="text-emerald-500 mb-6" />
-              <div className="flex gap-4 mb-6">
-                {['Stripe', 'PayTR'].map(p => (
-                  <div key={p} className="px-5 py-2.5 bg-white rounded-xl border border-emerald-100 text-xs font-semibold text-emerald-600 shadow-sm">{p}</div>
-                ))}
+
+            <div className="flex-1 w-full">
+              <div className="relative rounded-3xl overflow-hidden bg-emerald-50 border border-emerald-100 p-8 flex flex-col items-center">
+                <motion.div
+                  animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}
+                  className="w-full max-w-[240px] bg-white rounded-2xl shadow-xl shadow-emerald-200/50 p-5 border border-white"
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
+                      <ArrowRight size={20} className="text-white" />
+                    </div>
+                    <div className="text-[7px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-widest border border-emerald-100">Pay Direct</div>
+                  </div>
+                  <div className="space-y-3 mb-5">
+                    <div className="h-2 w-1/2 bg-slate-100 rounded-full" />
+                    <div className="h-8 rounded-xl bg-slate-50 border border-slate-100 flex items-center px-3 text-[9px] text-slate-400 font-mono">stripe.com/p/kardly...</div>
+                  </div>
+                  <div className="w-full h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all cursor-pointer">
+                    {t('ctaStart')}
+                  </div>
+                </motion.div>
+                <div className="mt-6 flex items-center gap-2 text-emerald-700/60">
+                  <Shield size={14} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">{t('securePayment')}</span>
+                </div>
               </div>
-              <div className="text-sm text-emerald-600/70 font-medium">{t('securePayment')}</div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── TEMPLATES ─── */}
-      <section id="templates" className="py-32 relative bg-slate-50 overflow-hidden px-6">
+      {/* ─── ABOUT US ─── */}
+      <section id="about" className="py-32 md:py-40 px-6 relative overflow-hidden bg-white">
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
+        
         <div className="max-w-6xl mx-auto relative">
-          <div className="text-center mb-20">
-            <motion.p
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >{t('templates')}</motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
-            >{t('templateTitle')}</motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-slate-500 text-lg max-w-xl mx-auto"
-            >{t('templateDesc')}</motion.p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 border border-rose-100 mb-6">
+                <Users size={14} className="text-rose-500" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-rose-600">{t('about')}</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
+                {t('aboutTitle')}
+              </h2>
+              <p className="text-slate-600 text-lg leading-relaxed mb-10">
+                {t('aboutDescription')}
+              </p>
+              
+              <div className="p-8 rounded-[32px] bg-slate-50 border border-slate-100">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900 mb-4 flex items-center gap-2">
+                  <Sparkles size={16} className="text-rose-500" />
+                  {t('aboutPurpose')}
+                </h4>
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  {t('aboutPurposeDesc')}
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <h3 className="text-2xl font-bold text-slate-900 mb-10">{t('aboutHowItWorksTitle')}</h3>
+              
+              {[
+                { title: t('aboutPoint1Title'), desc: t('aboutPoint1Desc'), icon: <Globe className="text-rose-500" /> },
+                { title: t('aboutPoint2Title'), desc: t('aboutPoint2Desc'), icon: <Shield className="text-indigo-500" /> },
+                { title: t('aboutPoint3Title'), desc: t('aboutPoint3Desc'), icon: <Zap className="text-amber-500" /> }
+              ].map((point, i) => (
+                <div key={i} className="flex gap-6">
+                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center shrink-0">
+                    {point.icon}
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-900 mb-2">{point.title}</h4>
+                    <p className="text-slate-500 text-sm leading-relaxed">{point.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TEMPLATES: HIGH-END GRID ─── */}
+      <section id="templates" className="py-24 px-6 relative overflow-hidden bg-white">
+        <div className="max-w-6xl mx-auto relative">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 border-b border-slate-100 pb-12">
+            <div className="max-w-xl">
+              <motion.div
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 mb-6"
+              >
+                <Palette size={11} className="text-violet-500" />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-violet-600 font-sans">{t('templates')}</span>
+              </motion.div>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none mb-4 italic italic">{t('templateTitle')}</h2>
+              <p className="text-slate-500 text-sm font-medium max-w-sm">{t('templateDesc')}</p>
+            </div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden lg:block">Architecture v4.0</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: "Neon Modern", color: "#f43f5e", tag: t('tagPopular'), desc: t('neonDesc'), image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
-              { title: "Clean Slate", color: "#0ea5e9", tag: t('tagMinimal'), desc: t('minimalDesc'), image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400" },
-              { title: "Soft Creative", color: "#8b5cf6", tag: t('tagPremium'), desc: t('softDesc'), image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e" }
+              { title: "Neon Modern", cat: t('tagPopular'), img: "/images/templates/neon.png", gradient: "from-rose-500 to-pink-500" },
+              { title: "Clean Slate", cat: t('tagMinimal'), img: "/images/templates/minimal.png", gradient: "from-sky-500 to-cyan-500" },
+              { title: "Creative", cat: t('tagPremium'), img: "/images/templates/creative.png", gradient: "from-violet-500 to-purple-500" },
+              { title: "Cyber Link", cat: "Elite", img: "/images/templates/cyber.png", gradient: "from-amber-500 to-orange-500" }
             ].map((tmpl, i) => (
               <motion.div
                 key={i}
-                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="group bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-slate-300 transition-all duration-500"
+                initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="group relative bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 hover:border-slate-200 transition-all duration-500"
               >
-                <div className="aspect-[4/5] relative overflow-hidden">
-                  <img src={`${tmpl.image}?q=80&w=800&auto=format&fit=crop`} alt={tmpl.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute top-5 right-5 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-slate-700 tracking-wider shadow-sm">{tmpl.tag}</div>
-                </div>
-                <div className="p-8">
-                  <h4 className="text-xl font-bold text-slate-900 mb-2">{tmpl.title}</h4>
-                  <p className="text-sm text-slate-500 mb-5">{tmpl.desc}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-2 items-center">
-                      <div className="w-4 h-4 rounded-full" style={{ backgroundColor: tmpl.color }} />
-                      <div className="w-4 h-4 rounded-full bg-slate-100" />
-                      <div className="w-4 h-4 rounded-full bg-slate-50" />
+                <div className="aspect-[4/5] relative overflow-hidden bg-slate-100">
+                  <img src={tmpl.img} alt={tmpl.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" />
+                  <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-md bg-gradient-to-r ${tmpl.gradient} text-[8px] font-black text-white uppercase tracking-widest`}>
+                    {tmpl.cat}
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent">
+                    <h4 className="text-[11px] font-bold text-white tracking-tight leading-tight">{tmpl.title}</h4>
+                    <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                       <button className="w-full py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-[9px] font-black text-white uppercase tracking-widest">Preview</button>
                     </div>
-                    <span className="text-xs font-semibold text-rose-500 group-hover:underline">{t('preview')} →</span>
                   </div>
                 </div>
               </motion.div>
@@ -370,41 +485,66 @@ export default function Home() {
       </section>
 
       {/* ─── SOCIAL PROOF ─── */}
-      <section className="py-32 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <motion.p
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-500 mb-4"
-            >{t('usersLabel')}</motion.p>
+      <section className="py-32 md:py-40 px-6 relative overflow-hidden bg-white">
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 80% 20%, rgba(244,63,94,0.04) 0%, transparent 50%), radial-gradient(at 20% 80%, rgba(99,102,241,0.04) 0%, transparent 50%)' }} />
+        
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center mb-20 md:mb-24">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100/50 mb-6"
+            >
+              <Star size={13} className="fill-amber-500 text-amber-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">{t('usersLabel')}</span>
+            </motion.div>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]"
             >{t('usersTitle')}</motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
-              { name: 'Ayşe Kara', role: 'UX Designer', text: t('testimonial1') },
-              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: t('testimonial2') },
-              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: t('testimonial3') }
-            ].map((t, i) => (
+              { name: 'Ayşe Kara', role: 'UX Designer', text: t('testimonial1'), gradient: 'from-rose-500 to-pink-500' },
+              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: t('testimonial2'), gradient: 'from-violet-500 to-indigo-500' },
+              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: t('testimonial3'), gradient: 'from-cyan-500 to-teal-500' }
+            ].map((item, i) => (
               <motion.div
                 key={i}
-                custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="bg-slate-50 rounded-2xl border border-slate-200 p-8"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative bg-white rounded-[28px] border border-slate-200/60 p-8 md:p-9 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:border-slate-300/80 transition-all duration-500 hover:-translate-y-1"
               >
-                <div className="flex gap-1 mb-5">
-                  {[1, 2, 3, 4, 5].map(s => <Star key={s} size={14} className="fill-amber-400 text-amber-400" />)}
+                {/* Gradient top accent */}
+                <div className={`absolute top-0 left-8 right-8 h-[3px] rounded-b-full bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                
+                {/* Stars */}
+                <div className="flex gap-1 mb-6">
+                  {[1, 2, 3, 4, 5].map(s => (
+                    <div key={s} className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
+                      <Star size={13} className="fill-amber-400 text-amber-400" />
+                    </div>
+                  ))}
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-8 italic">"{t.text}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-500">
-                    {t.name.split(' ').map(n => n[0]).join('')}
+                
+                {/* Quote */}
+                <p className="text-slate-600 text-[15px] leading-relaxed mb-8">&ldquo;{item.text}&rdquo;</p>
+                
+                {/* Author */}
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-sm font-bold text-white shadow-lg`}>
+                    {item.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-slate-900">{t.name}</div>
-                    <div className="text-xs text-slate-400">{t.role}</div>
+                    <div className="text-[15px] font-bold text-slate-900">{item.name}</div>
+                    <div className="text-xs text-slate-400 font-medium">{item.role}</div>
+                  </div>
+                  <div className="ml-auto">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <Check size={11} className="text-emerald-600" />
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -413,84 +553,139 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── CTA ─── */}
-      <section className="py-32 px-6 relative bg-slate-900 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-transparent to-indigo-500/10" />
-        <div className="max-w-3xl mx-auto text-center relative z-10">
+      {/* ─── CTA: COMPACT LIGHT ─── */}
+      <section className="py-24 px-6 relative bg-white overflow-hidden">
+        <div className="absolute inset-0 bg-slate-50/40 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
+        
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-            className="space-y-8"
+            initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+            className="p-12 md:p-16 rounded-[40px] bg-white border border-slate-100 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.08)] text-center relative overflow-hidden"
           >
-            <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-              {t('ctaTitle')}
-            </h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto">{t('ctaDesc')}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register" className="group px-10 py-5 bg-rose-500 text-white rounded-2xl font-semibold text-base hover:bg-rose-600 active:scale-[0.98] transition-all shadow-lg shadow-rose-500/20 flex items-center justify-center gap-3">
-                {t('ctaStart')} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link href="#features" className="px-10 py-5 bg-white/5 border border-white/10 text-white rounded-2xl font-semibold text-base hover:bg-white/10 transition-all flex items-center justify-center">
-                {t('ctaExplore')}
-              </Link>
+            {/* Ambient pattern */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#f43f5e 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+            
+            <div className="relative z-10 space-y-8">
+              <motion.div
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-100"
+              >
+                <Sparkles size={11} className="text-rose-500" />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-rose-600">{t('getStarted')}</span>
+              </motion.div>
+              
+              <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none italic italic">
+                {t('ctaTitle')}
+              </h2>
+              <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">{t('ctaDesc')}</p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Link href="/register" className="group px-8 py-3.5 bg-rose-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-200 active:scale-95 flex items-center justify-center gap-2">
+                  <span>{t('ctaStart')}</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link href="#features" className="px-8 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center justify-center">
+                  {t('ctaExplore')}
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── FOOTER ─── */}
-      <footer className="py-20 bg-white border-t border-slate-100 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
-            <div className="col-span-2 md:col-span-4">
-              <Link href="/" className="flex items-center gap-3 mb-6 group">
-                <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200/40 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <Layout className="text-white w-5 h-5 relative z-10" />
+      {/* ─── FOOTER: PREMIUM DARK ─── */}
+      <footer className="py-24 px-6 relative bg-[#0a0a0f] overflow-hidden">
+        {/* Subtle ambient glow */}
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-rose-500/5 blur-[120px] pointer-events-none" />
+        
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-16 mb-20 items-start">
+            {/* Brand Column */}
+            <div className="col-span-2 md:col-span-3 space-y-8">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform duration-300">
+                  <Layout className="text-white w-5 h-5" />
                 </div>
-                <div className="flex flex-col items-start px-1">
-                  <span className="text-xl font-black tracking-tighter leading-none text-slate-950 flex items-center">
+                <div className="flex flex-col">
+                  <span className="text-lg font-black tracking-tighter text-white">
                     Kardly<span className="text-rose-500">.site</span>
                   </span>
-                  <span className="text-[9px] font-bold text-slate-500 tracking-[0.1em] mt-1">link to success</span>
+                  <span className="text-[8px] font-bold text-slate-500 tracking-[0.2em] uppercase">link to success</span>
                 </div>
               </Link>
-              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">{t('footerDesc')}</p>
+              <p className="text-slate-500 text-sm leading-relaxed">{t('footerDesc')}</p>
+              
+              <div className="flex gap-4">
+                {[
+                  { name: 'Instagram', icon: <Instagram size={18} /> },
+                  { name: 'Twitter', icon: <Twitter size={18} /> },
+                  { name: 'LinkedIn', icon: <Linkedin size={18} /> }
+                ].map((s) => (
+                  <a key={s.name} href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-slate-400 hover:bg-rose-500 hover:text-white transition-all duration-300">
+                     {s.icon}
+                  </a>
+                ))}
+              </div>
             </div>
+
+            {/* Product Column */}
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('product')}</h5>
-              <ul className="space-y-3">
-                <li><a href="#features" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('features')}</a></li>
-                <li><a href="#templates" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('templates')}</a></li>
-                <li><a href="#" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('pricing')}</a></li>
+              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('product')}</h5>
+              <ul className="space-y-4">
+                <li><a href="#features" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Zap size={14} className="text-amber-500" /> {t('features')}</a></li>
+                <li><a href="#templates" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Palette size={14} className="text-indigo-500" /> {t('templates')}</a></li>
+                <li><a href="#" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><CreditCard size={14} className="text-rose-500" /> {t('pricing')}</a></li>
               </ul>
             </div>
+
+            {/* Support Column */}
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('support')}</h5>
-              <ul className="space-y-3">
-                <li><Link href="/blog" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('blog')}</Link></li>
-                <li><Link href="/iletisim" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('contact')}</Link></li>
-                <li><Link href="/sss" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('faq')}</Link></li>
+              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('support')}</h5>
+              <ul className="space-y-4">
+                <li><Link href="/blog" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><FileText size={14} className="text-sky-500" /> {t('blog')}</Link></li>
+                <li><Link href="/iletisim" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><Globe size={14} className="text-emerald-500" /> {t('contact')}</Link></li>
+                <li><Link href="/sss" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><CheckCircle2 size={14} className="text-orange-500" /> {t('faq')}</Link></li>
               </ul>
             </div>
+
+            {/* Legal Column */}
             <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('legal')}</h5>
-              <ul className="space-y-3">
-                <li><Link href="/kullanim-sartlari" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('terms')}</Link></li>
-                <li><Link href="/gizlilik" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">{t('privacy')}</Link></li>
+              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('legal')}</h5>
+              <ul className="space-y-4">
+                <li><Link href="/kullanim-sartlari" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 block"><Shield size={14} className="text-slate-400" /> {t('terms')}</Link></li>
+                <li><Link href="/gizlilik" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 block"><Sparkles size={14} className="text-slate-400" /> {t('privacy')}</Link></li>
               </ul>
             </div>
-            <div className="md:col-span-2">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-5">{t('social')}</h5>
-              <ul className="space-y-3">
-                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Instagram</a></li>
-                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">Twitter</a></li>
-                <li><a href="#" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-rose-500 transition-colors">LinkedIn</a></li>
-              </ul>
+
+            {/* Newsletter / Join Column */}
+            <div className="col-span-2 md:col-span-3 space-y-8">
+               <div className="p-6 rounded-3xl bg-white/5 border border-white/5 space-y-4">
+                  <h6 className="text-xs font-black text-white uppercase tracking-widest">{t('newRegistration')}</h6>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">Topluluğumuza katılın ve güncellemelerden haberdar olun.</p>
+                  <div className="flex gap-2">
+                    <input type="email" placeholder="Email.." className="bg-white/10 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-rose-500/50 flex-grow" />
+                    <button className="p-2 bg-rose-500 text-white rounded-xl hover:bg-rose-600 transition-colors">
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="flex -space-x-2">
+                      {[1,2,3].map(i => (
+                        <div key={i} className="w-6 h-6 rounded-full border-2 border-[#0a0a0f] bg-slate-800" />
+                      ))}
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">50,000+ Members</span>
+                  </div>
+               </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-300 font-medium">© 2026 KARDLY.SİTE {t('allRights')}</p>
-            <p className="text-xs text-slate-300 font-medium">{t('designedIn')}</p>
+
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">© 2026 Kardly.site — {t('allRights')}</p>
+            <div className="flex items-center gap-2">
+               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+               <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">System Status: Operational</p>
+            </div>
           </div>
         </div>
       </footer>

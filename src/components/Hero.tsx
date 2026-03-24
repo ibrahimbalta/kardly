@@ -190,21 +190,18 @@ export function Hero() {
                                                     { label: 'Portfolio', icon: <Globe size={14} />, color: 'bg-emerald-50 text-emerald-600' },
                                                     { label: 'Instagram', icon: <Instagram size={14} />, color: 'bg-pink-50 text-pink-600' },
                                                 ].map((link, i) => (
-                                                    <motion.div
+                                                    <div
                                                         key={i}
-                                                        initial={{ opacity: 0, x: -10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        transition={{ delay: 1.5 + i * 0.1 }}
                                                         className="group bg-slate-50 border border-slate-100 p-3.5 rounded-2xl flex items-center justify-between hover:bg-white hover:shadow-md transition-all cursor-pointer"
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             <div className={`w-8 h-8 rounded-xl ${link.color} flex items-center justify-center transition-transform group-hover:scale-110`}>
-                                                                {link.icon}
+                                                                  {link.icon}
                                                             </div>
                                                             <span className="text-[11px] font-bold text-slate-700">{link.label}</span>
                                                         </div>
                                                         <ExternalLink size={12} className="text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                    </motion.div>
+                                                    </div>
                                                 ))}
                                             </div>
 

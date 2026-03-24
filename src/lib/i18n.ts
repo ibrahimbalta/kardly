@@ -496,19 +496,31 @@ export const translations: any = {
             "Bölgesel popülerlik haritası",
             "İçerik bazlı tıklama istatistikleri"
         ],
-        dive3Label: "Ödeme & Kazanç",
-        dive3Title: "Profiliniz, kasanız olsun",
-        dive3Desc: "Stripe ve PayTR entegrasyonuyla profiliniz üzerinden doğrudan ödeme alın. Hizmet satışı, danışmanlık ücreti veya bağış toplama — hepsi tek yerden.",
+        dive3Label: "Ödeme & Bağış",
+        dive3Title: "Tek tıkla ödeme veya bağış alın",
+        dive3Desc: "Kendi ödeme sayfanızın (Stripe, PayTR, Ko-fi, Patreon vb.) linkini profilinize ekleyerek doğrudan ödeme almaya başlayın. Ekstra komisyon veya karmaşık entegrasyonlar yok.",
         dive3List: [
-            "Stripe ile global ödeme",
-            "PayTR ile yerel çözüm",
-            "Otomatik fatura & bildirim"
+            "Favori ödeme linkinizi ekleyin",
+            "Ödeme sayfanıza direkt yönlendirme",
+            "%0 platform komisyonu"
         ],
         last30Days: "Son 30 Gün",
         viewsLabel: "Görüntülenme",
         clicksLabel: "Tıklama",
         conversionLabel: "Dönüşüm",
-        securePayment: "Güvenli ödeme altyapısı",
+        securePayment: "Doğrudan ödeme sayfanıza yönlendirilir",
+        about: "Hakkımızda",
+        aboutTitle: "Kardly Nedir?",
+        aboutDescription: "Dijital varlığınızı tek bir çatı altında toplayan, modern ve özelleştirilebilir bir mini site oluşturucudur.",
+        aboutPurpose: "Amacımız",
+        aboutPurposeDesc: "Profesyonellerin, sanatçıların ve içerik üreticilerinin sosyal medya linklerini, portfolyolarını, randevu sistemlerini ve ödeme kanallarını saniyeler içinde şık bir sayfaya dönüştürmelerini sağlamaktır.",
+        aboutHowItWorksTitle: "Neden Kardly?",
+        aboutPoint1Title: "Ücretsiz ve Sınırsız",
+        aboutPoint1Desc: "Kardly ticari bir kuruluş değil, bir topluluk projesidir. Temel özellikler her zaman ücretsiz kalacaktır.",
+        aboutPoint2Title: "Tam Kontrol",
+        aboutPoint2Desc: "Verileriniz üzerinde tam kontrole sahipsiniz. Karmaşık entegrasyonlar olmadan kendi sistemlerinizi bağlayabilirsiniz.",
+        aboutPoint3Title: "Modern Estetik",
+        aboutPoint3Desc: "AI destekli tasarım motorumuz ile teknik bilgi gerekmeden dünya standartlarında şık bir sayfaya sahip olursunuz.",
 
         // Templates Section
         templateTitle: "Tarzınızı yansıtan tasarımlar",
@@ -650,35 +662,31 @@ export const translations: any = {
         faqs: [
             {
                 q: "Kardly nedir?",
-                a: "Kardly, profesyonel dijital kartvizit ve kişisel profil oluşturma platformudur. Projelerinizi, uzmanlıklarınızı, iletişim bilgilerinizi ve hizmetlerinizi tek bir link altında toplayarak kolayca paylaşmanızı sağlar."
+                a: "Kardly, bireysel bir geliştirici tarafından topluluk yararına oluşturulmuş, tamamen ücretsiz ve açık bir dijital kartvizit projesidir. Profesyonel dünyada şık bir dijital iz bırakmanızı sağlar."
             },
             {
-                q: "Kardly ücretsiz mi?",
-                a: "Evet! Temel özellikler ücretsiz olarak kullanılabilir. Premium şablonlar ve gelişmiş özellikler için uygun fiyatlı planlarımız mevcuttur."
+                q: "Kardly gerçekten ücretsiz mi?",
+                a: "Evet! Kardly ticari bir girişim değildir. Tüm özellikler, şablonlar ve araçlar herkes için sonsuza kadar ücretsiz kalacaktır. Kayıt sırasında kredi kartı bilgisi istenmez."
             },
             {
-                q: "QR kod nasıl oluşturuluyor?",
-                a: "Profilinizi oluşturduktan sonra otomatik olarak bir QR kod üretilir. Bu kodu kartvizitinize, sunumlarınıza veya sosyal medyanıza ekleyebilirsiniz."
+                q: "Gelir modeliniz nedir?",
+                a: "Kar amacı gütmeyen bir projeyiz. Sunucu ve altyapı masrafları gönüllü bağışlar ve geliştirici ekibin bireysel katkılarıyla karşılanmaktadır. Platform üzerinden yapılan işlemlerden komisyon almayız."
             },
             {
-                q: "Ödeme almak için ne yapmalıyım?",
-                a: "Dashboard üzerinden Stripe veya PayTR entegrasyonunuzu aktifleştirin. Ardından profilinize ödeme butonu ekleyerek müşterilerinizden doğrudan ödeme alabilirsiniz."
-            },
-            {
-                q: "Profilimi özelleştirebilir miyim?",
-                a: "Evet. Farklı şablon temaları, renk paleti seçenekleri ve blok düzeni ile profilinizi tamamen kişiselleştirebilirsiniz."
+                q: "Kendi alan adımı kullanabilir miyim?",
+                a: "Şu an için kullanıcıadı.kardly.site formatında ücretsiz adresler sunuyoruz. Yakın gelecekte özel alan adı (.com, .net vb.) yönlendirme desteği de tamamen ücretsiz olarak eklenecektir."
             },
             {
                 q: "Verilerim güvende mi?",
-                a: "Kesinlikle. Tüm veriler şifrelenmiş bağlantılar üzerinden iletilir ve güvenli sunucularda saklanır. Kişisel bilgileriniz üçüncü taraflarla paylaşılmaz."
+                a: "Verileriniz SSL şifrelemesi ile korunur ve asla üçüncü taraflarla paylaşılmaz. Açık ve şeffaf bir altyapı sunmaya özen gösteriyoruz."
             },
             {
-                q: "Randevu sistemi nasıl çalışıyor?",
-                a: "Profilinizde randevu butonunu etkinleştirdikten sonra, ziyaretçileriniz sizinle doğrudan randevu talebi oluşturabilir. Gelen talepler dashboard üzerinden yönetilir."
+                q: "Randevu ve ödeme özellikleri de mi ücretsiz?",
+                a: "Kesinlikle. Randevu takibi, portfolyo yönetimi ve ödeme butonu gibi tüm gelişmiş araçlar Kardly topluluğu için ücretsizdir."
             },
             {
-                q: "Kardly'yi hangi cihazlarda kullanabilirim?",
-                a: "Kardly tamamen responsive bir platformdur. Bilgisayar, tablet ve mobil cihazlarda sorunsuz çalışır."
+                q: "Kardly'ye nasıl destek olabilirim?",
+                a: "Projeyi arkadaşlarınızla paylaşarak, geri bildirim vererek veya geliştirme sürecine katkıda bulunarak bize destek olabilirsiniz."
             }
         ],
 
@@ -1256,19 +1264,31 @@ export const translations: any = {
             "Geographic location analysis",
             "Link-based click report"
         ],
-        dive3Label: "Payment & Earnings",
-        dive3Title: "Let your profile be your cash desk",
-        dive3Desc: "Directly receive payments through your profile with Stripe and PayTR integration. Selling services, consulting fees, or collecting donations — all in one place.",
+        dive3Label: "Payment & Tips",
+        dive3Title: "Accept payments or tips in one click",
+        dive3Desc: "Add your personal payment link (Stripe, PayPal, Ko-fi, Patreon etc.) to your profile and start receiving payments directly. No extra commissions or complex integrations.",
         dive3List: [
-            "Global payment with Stripe",
-            "Local solution with PayTR",
-            "Automatic invoice & notification"
+            "Add your favorite payment provider",
+            "Direct redirect to your payment page",
+            "0% platform commission"
         ],
         last30Days: "Last 30 Days",
         viewsLabel: "Views",
         clicksLabel: "Clicks",
         conversionLabel: "Conversion",
-        securePayment: "Secure payment infrastructure",
+        securePayment: "Directly redirects to your payment provider",
+        about: "About Us",
+        aboutTitle: "What is Kardly?",
+        aboutDescription: "A modern and customizable mini-site builder that consolidates your digital presence under one roof.",
+        aboutPurpose: "Our Purpose",
+        aboutPurposeDesc: "To enable professionals, artists, and content creators to transform their social media links, portfolios, appointment systems, and payment channels into a stylish page in seconds.",
+        aboutHowItWorksTitle: "Why Kardly?",
+        aboutPoint1Title: "Free and Unlimited",
+        aboutPoint1Desc: "Kardly is not a commercial company, it's a community project. Core features will always remain free.",
+        aboutPoint2Title: "Total Control",
+        aboutPoint2Desc: "You have full control over your data. You can connect your own systems without complex integrations.",
+        aboutPoint3Title: "Modern Aesthetics",
+        aboutPoint3Desc: "With our AI-powered design engine, you get a world-class stylish page without needing technical knowledge.",
 
         // Templates Section
         templateTitle: "Designs that reflect your style",
@@ -1410,35 +1430,31 @@ export const translations: any = {
         faqs: [
             {
                 q: "What is Kardly?",
-                a: "Kardly is a professional digital business card and personal profile platform. It allows you to gather and share your projects, expertise, contact information, and services under a single link."
+                a: "Kardly is a completely free and open digital business card project created by an individual developer for the benefit of the community. It allows you to leave a stylish digital trace in the professional world."
             },
             {
-                q: "Is Kardly free?",
-                a: "Yes! Basic features are available for free. We have affordable plans for premium templates and advanced features."
+                q: "Is Kardly really free?",
+                a: "Yes! Kardly is not a commercial venture. All features, templates, and tools will remain free for everyone forever. No credit card information is required during registration."
             },
             {
-                q: "How is the QR code generated?",
-                a: "A QR code is automatically generated after you create your profile. You can add this code to your business cards, presentations, or social media."
+                q: "What is your revenue model?",
+                a: "We are a non-profit project. Server and infrastructure costs are covered by voluntary donations and individual contributions from the development team. We do not take commissions from transactions made on the platform."
             },
             {
-                q: "What should I do to receive payments?",
-                a: "Activate your Stripe or PayTR integration via the Dashboard. Then you can receive payments directly from your customers by adding a payment button to your profile."
-            },
-            {
-                q: "Can I customize my profile?",
-                a: "Yes. You can fully personalize your profile with different template themes, color palette options, and block layout."
+                q: "Can I use my own domain name?",
+                a: "Currently, we offer free addresses in the format username.kardly.site. In the near future, support for custom domain name (.com, .net, etc.) redirection will be added completely free of charge."
             },
             {
                 q: "Is my data safe?",
-                a: "Absolutely. All data is transmitted over encrypted connections and stored on secure servers. Your personal information is not shared with third parties."
+                a: "Your data is protected by SSL encryption and is never shared with third parties. We take care to provide an open and transparent infrastructure."
             },
             {
-                q: "How does the appointment system work?",
-                a: "After you activate the appointment button on your profile, your visitors can create appointment requests directly with you. Incoming requests are managed via the dashboard."
+                q: "Are appointment and payment features free too?",
+                a: "Absolutely. All advanced tools such as appointment tracking, portfolio management, and payment buttons are free for the Kardly community."
             },
             {
-                q: "On which devices can I use Kardly?",
-                a: "Kardly is a fully responsive platform. It works seamlessly on computers, tablets, and mobile devices."
+                q: "How can I support Kardly?",
+                a: "You can support us by sharing the project with your friends, providing feedback, or contributing to the development process."
             }
         ],
 

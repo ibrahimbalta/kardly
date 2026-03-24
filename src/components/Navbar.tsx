@@ -30,8 +30,9 @@ export function Navbar() {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-widest text-slate-500">
-                    <Link href="#features" className="hover:text-rose-500 transition-colors">{t('features')}</Link>
-                    <Link href="#templates" className="hover:text-rose-500 transition-colors">{t('templates')}</Link>
+                    <Link href="#features" className="hover:text-rose-500 transition-colors uppercase">{t('features')}</Link>
+                    <Link href="#templates" className="hover:text-rose-500 transition-colors uppercase">{t('templates')}</Link>
+                    <Link href="#about" className="hover:text-rose-500 transition-colors uppercase">{t('about')}</Link>
                 </div>
 
                 <div className="hidden md:flex items-center gap-6">
@@ -65,6 +66,7 @@ export function Navbar() {
                     >
                         <Link href="#features" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('features')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <Link href="#templates" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('templates')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
+                        <Link href="#about" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('about')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <hr className="border-slate-100 my-2" />
                         <div className="grid grid-cols-2 gap-4">
                             <Link href="/login" className="flex items-center justify-center py-4 rounded-2xl font-black border border-slate-100 text-slate-500">{t('login')}</Link>
