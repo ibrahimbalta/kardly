@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
       <Navbar />
-      <Hero />
+      <Hero onHowItWorksClick={() => setIsHowItWorksOpen(true)} />
 
       {/* ─── HOW IT WORKS ─── */}
       <section className="py-32 md:py-40 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>

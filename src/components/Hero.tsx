@@ -13,7 +13,11 @@ const fadeUp = {
     })
 }
 
-export function Hero() {
+interface HeroProps {
+    onHowItWorksClick?: () => void
+}
+
+export function Hero({ onHowItWorksClick }: HeroProps) {
     const { t } = useTranslation()
     return (
         <section className="relative pt-32 pb-24 px-6 overflow-hidden min-h-[90vh] flex items-center bg-white">
@@ -102,7 +106,10 @@ export function Hero() {
                             <Link href="/register" className="group px-10 py-5 bg-slate-900 text-white font-bold text-base rounded-[20px] transition-all hover:bg-rose-500 active:scale-[0.97] shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3">
                                 {t('ctaStart')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
-                            <button className="px-10 py-5 bg-white text-slate-700 border border-slate-200/80 font-bold text-base rounded-[20px] hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-sm active:scale-[0.97]">
+                            <button 
+                                onClick={onHowItWorksClick}
+                                className="px-10 py-5 bg-white text-slate-700 border border-slate-200/80 font-bold text-base rounded-[20px] hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-sm active:scale-[0.97]"
+                            >
                                 <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500">
                                     <Play size={18} fill="currentColor" />
                                 </div>
