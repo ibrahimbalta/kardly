@@ -449,6 +449,7 @@ export const translations: any = {
 
         // Steps
         howItWorks: "Nasıl Çalışır?",
+        nasıl_çalışır_btn: "Nasıl Çalışır?",
         step1Title: "Kayıt Olun",
         step1Desc: "E-posta adresinizle saniyeler içinde hesap oluşturun. Kredi kartı gerekmez.",
         step2Title: "Profilinizi Doldurun",
@@ -1218,6 +1219,7 @@ export const translations: any = {
 
         // Steps
         howItWorks: "How It Works",
+        nasıl_çalışır_btn: "How It Works",
         step1Title: "Sign Up",
         step1Desc: "Create an account in seconds with your email. No credit card required.",
         step2Title: "Fill Your Profile",

@@ -30,10 +30,12 @@ import {
   Check,
   Instagram,
   Twitter,
-  Linkedin
+  Linkedin,
+  Play
 } from "lucide-react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { useTranslation } from "@/context/LanguageContext"
+import { HowItWorksModal } from "@/components/HowItWorksModal"
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -47,6 +49,7 @@ export default function Home() {
   const { t } = useTranslation()
   const [newsEmail, setNewsEmail] = useState("")
   const [newsStatus, setNewsStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false)
 
   const handleNewsletter = async (e: FormEvent) => {
     e.preventDefault()
@@ -96,8 +99,25 @@ export default function Home() {
             <motion.p
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
             >{t('buildProfileDesc')}</motion.p>
+            
+            <motion.div
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="flex justify-center"
+            >
+                <button
+                    onClick={() => setIsHowItWorksOpen(true)}
+                    className="group flex items-center gap-6 px-1.5 py-1.5 pr-8 bg-white border border-slate-200/60 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:border-slate-300 transition-all duration-500 active:scale-95"
+                >
+                    <div className="w-14 h-14 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 overflow-hidden relative">
+                         <div className="absolute inset-0 bg-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                         <Play size={24} className="relative z-10 fill-rose-500 group-hover:fill-white group-hover:text-white transition-all duration-500 translate-x-0.5" />
+                    </div>
+                    <span className="text-sm font-black text-slate-900 tracking-tight uppercase italic">{t('nasıl_çalışır_btn') || "Nasıl Çalışır?"}</span>
+                </button>
+            </motion.div>
           </div>
 
           {/* Timeline Steps */}
@@ -901,6 +921,12 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <HowItWorksModal 
+        isOpen={isHowItWorksOpen} 
+        onClose={() => setIsHowItWorksOpen(false)} 
+        t={t}
+      />
     </main>
   )
 }
