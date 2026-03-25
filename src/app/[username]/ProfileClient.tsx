@@ -368,7 +368,9 @@ END:VCARD`
             minimal_graphite: "#4b5563", ind_concrete: "#64748b", ind_rusty: "#b45309",
             vibe_bolt: "#facc15", vibe_pulse: "#ef4444", royal_velvet: "#a855f7",
             royal_emerald: "#10b981", tech_core: "#38bdf8", tech_atom: "#6366f1",
-            meta_portal: "#f472b6", meta_pixel: "#38bdf8"
+            meta_portal: "#f472b6", meta_pixel: "#38bdf8",
+            tour_resort: "#009688", tour_adventure: "#ff6d00", tour_yacht: "#1976d2",
+            tour_guide: "#6d4c41", tour_agency: "#3f51b5", tour_winter: "#1e88e5"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
@@ -2763,7 +2765,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             </svg>
                         </div>
                         {/* Palm tree patterns */}
-                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 60 L40 30 Q30 10 15 15 Q25 20 35 30 M40 30 Q50 10 65 15 Q55 20 45 30' stroke='%23009688' fill='none' stroke-width='1.5'/%3E%3C/svg%3E")`, backgroundSize: '100px 100px' }} />
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            RESORT
+                        </div>
                     </>
                 )}
                 {theme.special === "tour_adventure" && (
@@ -2777,7 +2781,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             </svg>
                         </div>
                         {/* Dust particles */}
-                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3' cy='3' r='1' fill='%23ff9800' fill-opacity='0.5'/%3E%3C/svg%3E")`, backgroundSize: '10px 10px' }} />
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            SAFARI
+                        </div>
                     </>
                 )}
                 {theme.special === "tour_yacht" && (
@@ -2801,6 +2807,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 <polygon points="50,10 45,50 50,15 55,50" fill="#42a5f5" opacity="0.5"/>
                             </svg>
                         </div>
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[15vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            YACHTING
+                        </div>
                     </>
                 )}
                 {theme.special === "tour_guide" && (
@@ -2813,7 +2822,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             backgroundSize: '120px 120px'
                         }} />
                         {/* Location pins */}
-                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' fill='%236d4c41'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            GUIDE
+                        </div>
                     </>
                 )}
                 {theme.special === "tour_agency" && (
@@ -2829,6 +2840,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                         <div className="absolute top-[15%] left-0 right-0 h-[2px] opacity-[0.08] pointer-events-none" style={{ background: `linear-gradient(90deg, transparent, #3f51b5 30%, #3f51b5 70%, transparent)` }} />
                         <div className="absolute top-[15%] right-[15%] opacity-[0.08] pointer-events-none">
                             <svg width="30" height="30" viewBox="0 0 24 24" fill="#3f51b5"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                        </div>
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            TRAVEL
                         </div>
                     </>
                 )}
@@ -2859,6 +2873,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     style={{ left: `${10 + i * 12}%`, top: '-5%' }}
                                 />
                             ))}
+                        </div>
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[20vw] font-black opacity-[0.03] select-none pointer-events-none text-center whitespace-nowrap uppercase tracking-tighter" style={{ color: theme.accent }}>
+                            WINTER
                         </div>
                     </>
                 )}

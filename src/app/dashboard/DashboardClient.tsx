@@ -2779,6 +2779,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         // New Specialized Templates
                                         else if (tid === "minimal_glass") { accent = "#6366f1"; bg = "#f1f5f9"; glow = "linear-gradient(135deg, #6366f110 0%, #a855f710 100%)"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='%236366f1' fill-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "nature_dawn") { accent = "#f59e0b"; bg = "#0f172a"; glow = "linear-gradient(to bottom, #1e1b4b, #312e81, #4338ca, #6366f1, #fb923c)"; }
+                                         
+                                         // Turizm & Seyahat (Tourism & Travel)
+                                         else if (tid === "tour_resort") { accent = "#009688"; bg = "#e0f7fa"; }
+                                         else if (tid === "tour_adventure") { accent = "#ff6d00"; bg = "#1a0f00"; glow = "linear-gradient(180deg, #1a0f00 0%, #2d1a05 100%)"; }
+                                         else if (tid === "tour_yacht") { accent = "#1976d2"; bg = "#0a1628"; }
+                                         else if (tid === "tour_guide") { accent = "#6d4c41"; bg = "#fff8e1"; }
+                                         else if (tid === "tour_agency") { accent = "#3f51b5"; bg = "#e8eaf6"; }
+                                         else if (tid === "tour_winter") { accent = "#1e88e5"; bg = "#e3f2fd"; }
 
                                         return (
                                             <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
