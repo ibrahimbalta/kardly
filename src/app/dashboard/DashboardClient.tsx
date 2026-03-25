@@ -151,7 +151,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "meta", name: t('catMeta'), icon: <Globe size={14} /> },
         { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> },
         { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> },
-        { id: "athletic", name: "Sporcu / Pro", icon: <Activity size={14} /> }
+        { id: "athletic", name: "Sporcu / Pro", icon: <Activity size={14} /> },
+        { id: "tourism", name: "Turizm & Seyahat", icon: <Map size={14} /> }
     ]
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -511,7 +512,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "athletic_pro", category: "athletic", name: "🏆 Athlete Pro (Dark)", description: "Yüksek performans odaklı, dinamik ve maskülen sporcu tasarımı.", isNew: true },
         { id: "athletic_football", category: "athletic", name: "⚽ Football Pro", description: "Futbolcular için yeşil saha ve enerji odaklı özel tasarım.", isNew: true },
         { id: "athletic_basketball", category: "athletic", name: "🏀 Basketball Pro", description: "Basketbolcular için turuncu vurgulu, sert hatlı parke estetiği.", isNew: true },
-        { id: "athletic_tennis", category: "athletic", name: "🎾 Tennis Pro", description: "Tenisçiler için asil, raket/top vurgulu modern kort tasarımı.", isNew: true }
+        { id: "athletic_tennis", category: "athletic", name: "🎾 Tennis Pro", description: "Tenisçiler için asil, raket/top vurgulu modern kort tasarımı.", isNew: true },
+        
+        // Turizm & Seyahat
+        { id: "tour_resort", category: "tourism", name: "🌴 Resort & Spa", description: "Turkuaz deniz esintisi, lüks otel ve dinlenme odaklı ferah tasarım.", isNew: true },
+        { id: "tour_adventure", category: "tourism", name: "🌋 Safari & Macera", description: "Toprak tonları, vahşi doğa ve macera tutkunları için dinamik hatlar.", isNew: true },
+        { id: "tour_yacht", category: "tourism", name: "⛵ Yat & Yelken", description: "Lacivert ve beyazın asaletinde, lüks denizcilik ve charter odaklı.", isNew: true },
+        { id: "tour_guide", category: "tourism", name: "🎒 Rehber / Gezgin", description: "Kişisel gezi notları tadında, harita detaylı ve dinamik bir yapı.", isNew: true },
+        { id: "tour_agency", category: "tourism", name: "✈️ Tatil Acentesi", description: "Dünya turu odaklı, güven veren kurumsal ve renkli bir atmosfer.", isNew: true },
+        { id: "tour_winter", category: "tourism", name: "❄️ Kayak & Kış Turizmi", description: "Buz mavisi ve kristal beyaz tonlarında kış sporları estetiği.", isNew: true }
     ]
 
     // Working Hours Management
