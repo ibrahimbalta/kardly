@@ -2071,6 +2071,86 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-indigo-100",
             icon: "text-indigo-400",
             special: "3d_quantum"
+        },
+
+        // Turizm & Seyahat
+        tour_resort: {
+            bg: "bg-[#e0f7fa]",
+            card: "bg-white/80",
+            text: "text-[#00695c]",
+            subtext: "text-[#00897b]/60",
+            border: "border-[#80cbc4]",
+            glow: "shadow-[0_0_30px_rgba(0,150,136,0.15)]",
+            accent: "#009688",
+            btn: "bg-white border-[#80cbc4]",
+            btnText: "text-[#00695c]",
+            icon: "text-[#009688]",
+            special: "tour_resort"
+        },
+        tour_adventure: {
+            bg: "bg-[#1a0f00]",
+            card: "bg-[#2d1a05]/80",
+            text: "text-[#ffb74d]",
+            subtext: "text-[#ff9800]/50",
+            border: "border-[#e65100]/30",
+            glow: "shadow-[0_0_40px_rgba(230,81,0,0.2)]",
+            accent: "#ff6d00",
+            btn: "bg-[#1a0f00] border-[#e65100]/30",
+            btnText: "text-[#ffb74d]",
+            icon: "text-[#ff9800]",
+            special: "tour_adventure"
+        },
+        tour_yacht: {
+            bg: "bg-[#0a1628]",
+            card: "bg-[#0d1f3c]/80",
+            text: "text-white",
+            subtext: "text-[#90caf9]/60",
+            border: "border-[#1565c0]/30",
+            glow: "shadow-[0_0_40px_rgba(21,101,192,0.2)]",
+            accent: "#1976d2",
+            btn: "bg-[#0d1f3c] border-[#1565c0]/30",
+            btnText: "text-[#90caf9]",
+            icon: "text-[#42a5f5]",
+            special: "tour_yacht"
+        },
+        tour_guide: {
+            bg: "bg-[#fff8e1]",
+            card: "bg-white/80",
+            text: "text-[#4e342e]",
+            subtext: "text-[#6d4c41]/60",
+            border: "border-[#bcaaa4]",
+            glow: "shadow-[0_0_20px_rgba(78,52,46,0.08)]",
+            accent: "#6d4c41",
+            btn: "bg-white border-[#bcaaa4]",
+            btnText: "text-[#4e342e]",
+            icon: "text-[#8d6e63]",
+            special: "tour_guide"
+        },
+        tour_agency: {
+            bg: "bg-[#e8eaf6]",
+            card: "bg-white/80",
+            text: "text-[#283593]",
+            subtext: "text-[#3949ab]/60",
+            border: "border-[#9fa8da]",
+            glow: "shadow-[0_0_30px_rgba(40,53,147,0.1)]",
+            accent: "#3f51b5",
+            btn: "bg-white border-[#9fa8da]",
+            btnText: "text-[#283593]",
+            icon: "text-[#5c6bc0]",
+            special: "tour_agency"
+        },
+        tour_winter: {
+            bg: "bg-[#e3f2fd]",
+            card: "bg-white/80",
+            text: "text-[#0d47a1]",
+            subtext: "text-[#1565c0]/60",
+            border: "border-[#90caf9]",
+            glow: "shadow-[0_0_40px_rgba(13,71,161,0.1)]",
+            accent: "#1e88e5",
+            btn: "bg-white border-[#90caf9]",
+            btnText: "text-[#0d47a1]",
+            icon: "text-[#42a5f5]",
+            special: "tour_winter"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
