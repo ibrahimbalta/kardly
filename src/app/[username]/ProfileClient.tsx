@@ -438,6 +438,10 @@ END:VCARD`
             return <AthleticProTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
+        if (templateId.startsWith('tour_')) {
+            return <TourismTravelTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
+        }
+
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
@@ -4762,6 +4766,113 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 setMessages={setChatMessages} 
                 aiConfig={aiConfig} 
             />
+        </div>
+    );
+}
+
+function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl }: any) {
+    const themes: any = {
+        tour_resort: {
+            bg: "bg-[#e0f7fa]",
+            card: "bg-white/90 shadow-[0_20px_50px_rgba(0,105,92,0.1)]",
+            text: "text-[#004d40]",
+            subtext: "text-[#00796b]",
+            accent: "#009688",
+            border: "border-[#b2dfdb]",
+            btn: "bg-white border-[#80cbc4]",
+            special: "tour_resort",
+            icon: "🌴"
+        },
+        tour_adventure: {
+            bg: "bg-[#1a0f00]",
+            card: "bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.5)]",
+            text: "text-[#ffcc80]",
+            subtext: "text-[#ffb74d]/60",
+            accent: "#ff9800",
+            border: "border-orange-900/40",
+            btn: "bg-orange-950 border-orange-700/30",
+            special: "tour_adventure",
+            icon: "🦁"
+        },
+        tour_yacht: {
+            bg: "bg-[#0a1628]",
+            card: "bg-white/5 backdrop-blur-3xl border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.4)]",
+            text: "text-white",
+            subtext: "text-blue-300/60",
+            accent: "#1976d2",
+            border: "border-blue-500/20",
+            btn: "bg-blue-900/20 border-blue-400/20",
+            special: "tour_yacht",
+            icon: "⚓"
+        },
+        tour_guide: {
+            bg: "bg-[#fff8e1]",
+            card: "bg-white/95 shadow-[0_15px_40px_rgba(78,52,46,0.05)]",
+            text: "text-[#3e2723]",
+            subtext: "text-[#5d4037]",
+            accent: "#795548",
+            border: "border-[#d7ccc8]",
+            btn: "bg-white border-[#bcaaa4]",
+            special: "tour_guide",
+            icon: "📍"
+        },
+        tour_agency: {
+            bg: "bg-[#e8eaf6]",
+            card: "bg-white/90 shadow-[0_20px_50px_rgba(63,81,181,0.1)]",
+            text: "text-[#1a237e]",
+            subtext: "text-[#303f9f]",
+            accent: "#3f51b5",
+            border: "border-[#c5cae9]",
+            btn: "bg-indigo-50 border-indigo-200",
+            special: "tour_agency",
+            icon: "✈️"
+        },
+        tour_winter: {
+            bg: "bg-[#e3f2fd]",
+            card: "bg-white/40 backdrop-blur-2xl border-white/40 shadow-[0_20px_60px_rgba(13,71,161,0.05)]",
+            text: "text-[#01579b]",
+            subtext: "text-[#0277bd]",
+            accent: "#039be5",
+            border: "border-blue-100",
+            btn: "bg-white/60 border-blue-200",
+            special: "tour_winter",
+            icon: "❄️"
+        }
+    };
+
+    const theme = themes[colorScheme] || themes.tour_resort;
+    const socialLinks = profile.socialLinks || [];
+    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl };
+
+    return (
+        <div className={cn("min-h-screen relative overflow-x-hidden", theme.bg, toneStyle.font)}>
+            {/* Dedicated Tourism Background Effects */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                {theme.special === "tour_resort" && (
+                    <div className="absolute inset-0">
+                         {/* Water flow effect */}
+                         <div className="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-[#009688]/20 to-transparent" />
+                         <div className="absolute top-[10%] left-[10%] w-64 h-64 rounded-full bg-white opacity-40 blur-3xl animate-pulse" />
+                    </div>
+                )}
+                {theme.special === "tour_adventure" && (
+                    <div className="absolute inset-0">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-10" />
+                        <div className="absolute bottom-0 inset-x-0 h-1/2 bg-gradient-to-t from-orange-950/40 to-transparent" />
+                    </div>
+                )}
+                {theme.special === "tour_guide" && (
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 H100 V100 H0 Z' fill='none' stroke='%233e2723' stroke-width='0.5'/%3E%3C/svg%3E")` }} />
+                )}
+            </div>
+
+            {/* In-component Background Overlay (Reusing logic from NeonModernTemplate but specialized) */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                 {/* Reusing existing tour backgrounds from NeonModern - wait, I'll just use the same theme objects */}
+            </div>
+
+            {/* Specialized Tourism Layout */}
+            <NeonModernTemplate {...props} colorScheme={colorScheme} tone={tone} toneStyle={toneStyle} translateText={translateText} />
         </div>
     );
 }

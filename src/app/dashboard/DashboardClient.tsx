@@ -2781,12 +2781,30 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "nature_dawn") { accent = "#f59e0b"; bg = "#0f172a"; glow = "linear-gradient(to bottom, #1e1b4b, #312e81, #4338ca, #6366f1, #fb923c)"; }
                                          
                                          // Turizm & Seyahat (Tourism & Travel)
-                                         else if (tid === "tour_resort") { accent = "#009688"; bg = "#e0f7fa"; }
-                                         else if (tid === "tour_adventure") { accent = "#ff6d00"; bg = "#1a0f00"; glow = "linear-gradient(180deg, #1a0f00 0%, #2d1a05 100%)"; }
-                                         else if (tid === "tour_yacht") { accent = "#1976d2"; bg = "#0a1628"; }
-                                         else if (tid === "tour_guide") { accent = "#6d4c41"; bg = "#fff8e1"; }
-                                         else if (tid === "tour_agency") { accent = "#3f51b5"; bg = "#e8eaf6"; }
-                                         else if (tid === "tour_winter") { accent = "#1e88e5"; bg = "#e3f2fd"; }
+                                         else if (tid === "tour_resort") { 
+                                             accent = "#009688"; bg = "#e0f7fa"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='40' viewBox='0 0 100 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q 25 10 50 20 T 100 20 V 40 H 0 Z' fill='%23009688' fill-opacity='0.05'/%3E%3C/svg%3E")`;
+                                         }
+                                         else if (tid === "tour_adventure") { 
+                                             accent = "#ff9800"; bg = "#1a0f00"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 L30 0 L60 60 Z' fill='%23ff9800' fill-opacity='0.03'/%3E%3C/svg%3E")`;
+                                         }
+                                         else if (tid === "tour_yacht") { 
+                                             accent = "#1976d2"; bg = "#0a1628"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%231976d2' stroke-width='0.5' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`;
+                                         }
+                                         else if (tid === "tour_guide") { 
+                                             accent = "#795548"; bg = "#fff8e1"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='none' stroke='%23795548' stroke-width='0.2' stroke-opacity='0.1'/%3E%3C/svg%3E")`;
+                                         }
+                                         else if (tid === "tour_agency") { 
+                                             accent = "#3f51b5"; bg = "#e8eaf6"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%233f51b5' stroke-width='0.5' fill='none' stroke-opacity='0.05'/%3E%3Cellipse cx='50' cy='50' rx='40' ry='15' stroke='%233f51b5' stroke-width='0.5' fill='none' stroke-opacity='0.05'/%3E%3C/svg%3E")`;
+                                         }
+                                         else if (tid === "tour_winter") { 
+                                             accent = "#039be5"; bg = "#e3f2fd"; 
+                                             patternSvg = `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='%23039be5' fill-opacity='0.05'/%3E%3C/svg%3E")`;
+                                         }
 
                                         return (
                                             <div className={cn("w-full h-full overflow-hidden flex flex-col pt-12 p-6 pointer-events-none relative transition-all duration-700", mTone.rounded, mTone.font)} style={{ backgroundColor: bg }}>
