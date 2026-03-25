@@ -80,6 +80,8 @@ model Profile {
   services       Json?
   socialLinks    Json?
   themeColor     String?     @default("#6366f1")
+  bioColor       String?
+  sloganColor    String?
   templateId     String      @default("modern")
   slug           String      @unique
   qrCodeUrl      String?

@@ -17,6 +17,8 @@ export const ProfileUpdateSchema = z.object({
         .optional(),
     phone: z.string().optional().or(z.literal("")).nullable(),
     themeColor: z.string().optional().nullable(),
+    bioColor: z.string().optional().nullable(),
+    sloganColor: z.string().optional().nullable(),
     slogan: z.string().max(100, "Slogan 100 karakteri geçemez.").optional().or(z.literal("")).nullable(),
     bio: z.string().max(1500, "Biyografi 1500 karakteri geçemez.").optional().or(z.literal("")).nullable(),
     displayName: z.string().optional().or(z.literal("")).nullable(),

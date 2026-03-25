@@ -3755,7 +3755,12 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 )}
 
 
-                                {profile.slogan && <p className={cn("text-sm font-bold mt-4 opacity-70 italic", theme.text)}>“{translateText(profile.slogan)}”</p>}
+                                {profile.slogan && (
+                                    <p className={cn("text-sm font-bold mt-4 opacity-70 italic", !profile.sloganColor && theme.text)}
+                                       style={profile.sloganColor ? { color: profile.sloganColor } : {}}>
+                                        “{translateText(profile.slogan)}”
+                                    </p>
+                                )}
                             </div>
 
                             {(() => {
@@ -3841,7 +3846,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             {/* Bio */}
                             {
                                 profile.bio && (
-                                    <p className={cn("text-center text-xs font-medium leading-relaxed px-4", theme.subtext)}>
+                                    <p className={cn("text-center text-xs font-medium leading-relaxed px-4", !profile.bioColor && theme.subtext)}
+                                       style={profile.bioColor ? { color: profile.bioColor } : {}}>
                                         {profile.bio}
                                     </p>
                                 )
@@ -4461,7 +4467,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <span className="w-6 h-[1px] bg-slate-200"></span>
                     </p>
                     {profile.slogan && (
-                        <p className="text-[11px] font-medium text-slate-500 mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4">
+                        <p className="text-[11px] font-medium mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4"
+                           style={{ color: profile.sloganColor || "rgb(100, 116, 139)" }}>
                             "{translateText(profile.slogan)} 🚀"
                         </p>
                     )}
@@ -4516,7 +4523,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 {/* Bio Section */}
                 {profile.bio && (
                     <div className="w-full mt-12 px-4 text-center">
-                        <p className="text-xs text-slate-500 leading-relaxed font-medium opacity-80 whitespace-pre-wrap">
+                        <p className="text-xs leading-relaxed font-medium opacity-80 whitespace-pre-wrap"
+                           style={{ color: profile.bioColor || "rgb(100, 116, 139)" }}>
                             {profile.bio}
                         </p>
                     </div>
@@ -5004,7 +5012,10 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                         {profile.slogan && (
                             <div className="px-6 py-3 border border-white/5 bg-white/[0.04] rounded-[2rem] inline-block backdrop-blur-2xl shadow-xl">
-                                <p className="text-[11px] font-bold italic text-white/50 tracking-[0.2em] uppercase">“{translateText(profile.slogan)}”</p>
+                                <p className="text-[11px] font-bold italic tracking-[0.2em] uppercase"
+                                   style={{ color: profile.sloganColor || "rgba(255,255,255,0.5)" }}>
+                                    “{translateText(profile.slogan)}”
+                                </p>
                             </div>
                         )}
                     </div>
@@ -5236,7 +5247,10 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 {/* Slogan Text Center Banner */}
                 {profile.bio && (
                     <div className="text-center px-8 py-12 border-y border-white/5 bg-white/[0.01] backdrop-blur-md rounded-3xl">
-                        <p className="text-sm font-medium text-white/30 leading-relaxed italic max-w-xs mx-auto drop-shadow-md">“{translateText(profile.bio)}” 🏔️</p>
+                        <p className="text-sm font-medium leading-relaxed italic max-w-xs mx-auto drop-shadow-md"
+                           style={{ color: profile.bioColor || "rgba(255,255,255,0.3)" }}>
+                            “{translateText(profile.bio)}” 🏔️
+                        </p>
                     </div>
                 )}
 

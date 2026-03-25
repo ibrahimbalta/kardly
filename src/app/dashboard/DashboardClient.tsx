@@ -110,6 +110,8 @@ const profileSchema = z.object({
     displayName: z.string().optional().or(z.literal("")).nullable(),
     slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")).nullable(),
     bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")).nullable(),
+    bioColor: z.string().optional().or(z.literal("")).nullable(),
+    sloganColor: z.string().optional().or(z.literal("")).nullable(),
     phone: z.string().optional().or(z.literal("")).nullable(),
     occupation: z.string().optional().or(z.literal("")).nullable(),
     targetAudience: z.string().optional().or(z.literal("")).nullable(),
@@ -175,6 +177,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         profileBgImage: profile?.profileBgImage || "",
         qrColorDark: profile?.qrColorDark || "#0f172a",
         qrColorLight: profile?.qrColorLight || "#ffffff",
+        bioColor: profile?.bioColor || "",
+        sloganColor: profile?.sloganColor || "",
         businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
         businessCardOrientation: profile?.businessCardOrientation || "landscape",
         hasAcceptedTerms: profile?.hasAcceptedTerms || false
@@ -632,6 +636,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     phone: overrides?.phone ?? profileData.phone,
                     socialLinks: overrides?.socialLinks ?? profileData.socialLinks,
                     themeColor: overrides?.themeColor ?? profileData.themeColor,
+                    bioColor: overrides?.bioColor ?? profileData.bioColor,
+                    sloganColor: overrides?.sloganColor ?? profileData.sloganColor,
                     templateId: overrides?.templateId ?? profileData.templateId,
                     tone: overrides?.tone ?? profileData.tone,
                     services: overrides?.services ?? serviceList,
@@ -2184,6 +2190,22 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('sloganLabel')}</label>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] font-black text-slate-400 opacity-50 uppercase tracking-tighter">RENK</span>
+                                                <div className="relative group w-8 h-8 rounded-full border border-slate-200 overflow-hidden shadow-sm hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
+                                                    <input
+                                                        type="color"
+                                                        value={profileData.sloganColor || "#000000"}
+                                                        onChange={(e) => setProfileData({ ...profileData, sloganColor: e.target.value })}
+                                                        className="absolute inset-x-[-10px] inset-y-[-10px] w-[150%] h-[150%] cursor-pointer"
+                                                    />
+                                                </div>
+                                                {profileData.sloganColor && (
+                                                    <button onClick={() => setProfileData({ ...profileData, sloganColor: "" })} className="text-slate-300 hover:text-slate-500 transition-colors">
+                                                        <X size={12} />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                         <input
                                             type="text"
@@ -2196,7 +2218,23 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex justify-between items-center px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('bioLabel')}</label>
-                                            <div className="flex flex-wrap items-center gap-2 my-1">
+                                            <div className="flex flex-wrap items-center gap-4 my-1">
+                                                <div className="flex items-center gap-2 pr-3 border-r border-slate-100">
+                                                    <span className="text-[10px] font-black text-slate-400 opacity-50 uppercase tracking-tighter">RENK</span>
+                                                    <div className="relative group w-8 h-8 rounded-full border border-slate-200 overflow-hidden shadow-sm hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
+                                                        <input
+                                                            type="color"
+                                                            value={profileData.bioColor || "#000000"}
+                                                            onChange={(e) => setProfileData({ ...profileData, bioColor: e.target.value })}
+                                                            className="absolute inset-x-[-10px] inset-y-[-10px] w-[150%] h-[150%] cursor-pointer"
+                                                        />
+                                                    </div>
+                                                    {profileData.bioColor && (
+                                                        <button onClick={() => setProfileData({ ...profileData, bioColor: "" })} className="text-slate-300 hover:text-slate-500 transition-colors">
+                                                            <X size={12} />
+                                                        </button>
+                                                    )}
+                                                </div>
                                                 <button
                                                     onClick={handleGenerateBio}
                                                     disabled={isGeneratingBio}
