@@ -178,7 +178,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
         qrColorDark: profile?.qrColorDark || "#0f172a",
         qrColorLight: profile?.qrColorLight || "#ffffff",
         bioColor: profile?.bioColor || "",
+        bioFontFamily: profile?.bioFontFamily || "",
+        bioFontSize: profile?.bioFontSize || "",
         sloganColor: profile?.sloganColor || "",
+        sloganFontFamily: profile?.sloganFontFamily || "",
+        sloganFontSize: profile?.sloganFontSize || "",
         businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
         businessCardOrientation: profile?.businessCardOrientation || "landscape",
         hasAcceptedTerms: profile?.hasAcceptedTerms || false
@@ -637,7 +641,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     socialLinks: overrides?.socialLinks ?? profileData.socialLinks,
                     themeColor: overrides?.themeColor ?? profileData.themeColor,
                     bioColor: overrides?.bioColor ?? profileData.bioColor,
+                    bioFontFamily: overrides?.bioFontFamily ?? profileData.bioFontFamily,
+                    bioFontSize: overrides?.bioFontSize ?? profileData.bioFontSize,
                     sloganColor: overrides?.sloganColor ?? profileData.sloganColor,
+                    sloganFontFamily: overrides?.sloganFontFamily ?? profileData.sloganFontFamily,
+                    sloganFontSize: overrides?.sloganFontSize ?? profileData.sloganFontSize,
                     templateId: overrides?.templateId ?? profileData.templateId,
                     tone: overrides?.tone ?? profileData.tone,
                     services: overrides?.services ?? serviceList,
@@ -2190,8 +2198,32 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="md:col-span-2 space-y-2">
                                         <div className="flex flex-wrap justify-between items-center gap-2 px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('sloganLabel')}</label>
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-[10px] font-black text-slate-400 opacity-50 uppercase tracking-tighter">RENK</span>
+                                            <div className="flex flex-wrap items-center gap-3">
+                                                {/* Font Size */}
+                                                <select 
+                                                    value={profileData.sloganFontSize || "11px"}
+                                                    onChange={(e) => setProfileData({ ...profileData, sloganFontSize: e.target.value })}
+                                                    className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-black uppercase tracking-tighter outline-none focus:border-primary transition-all"
+                                                >
+                                                    {["9px", "10px", "11px", "12px", "13px", "14px", "15px", "16px"].map(size => (
+                                                        <option key={size} value={size}>{size}</option>
+                                                    ))}
+                                                </select>
+                                                
+                                                {/* Font Family */}
+                                                <select 
+                                                    value={profileData.sloganFontFamily || ""}
+                                                    onChange={(e) => setProfileData({ ...profileData, sloganFontFamily: e.target.value })}
+                                                    className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-black uppercase tracking-tighter outline-none focus:border-primary transition-all max-w-[100px]"
+                                                >
+                                                    <option value="">VARSY.(FONT)</option>
+                                                    <option value="'Inter', sans-serif">Inter</option>
+                                                    <option value="'Playfair Display', serif">Playfair</option>
+                                                    <option value="'Roboto Mono', monospace">Mono</option>
+                                                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                                                    <option value="'Lexend', sans-serif">Lexend</option>
+                                                </select>
+
                                                 <div className="relative group w-8 h-8 rounded-full border border-slate-200 overflow-hidden shadow-sm hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
                                                     <input
                                                         type="color"
@@ -2219,8 +2251,32 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="flex justify-between items-center px-1">
                                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('bioLabel')}</label>
                                             <div className="flex flex-wrap items-center gap-4 my-1">
-                                                <div className="flex items-center gap-2 pr-3 border-r border-slate-100">
-                                                    <span className="text-[10px] font-black text-slate-400 opacity-50 uppercase tracking-tighter">RENK</span>
+                                                <div className="flex items-center gap-3 pr-3 border-r border-slate-100">
+                                                    {/* Font Size */}
+                                                    <select 
+                                                        value={profileData.bioFontSize || "14px"}
+                                                        onChange={(e) => setProfileData({ ...profileData, bioFontSize: e.target.value })}
+                                                        className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-black uppercase tracking-tighter outline-none focus:border-primary transition-all"
+                                                    >
+                                                        {["12px", "13px", "14px", "15px", "16px", "18px", "20px", "22px"].map(size => (
+                                                            <option key={size} value={size}>{size}</option>
+                                                        ))}
+                                                    </select>
+                                                    
+                                                    {/* Font Family */}
+                                                    <select 
+                                                        value={profileData.bioFontFamily || ""}
+                                                        onChange={(e) => setProfileData({ ...profileData, bioFontFamily: e.target.value })}
+                                                        className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] font-black uppercase tracking-tighter outline-none focus:border-primary transition-all max-w-[100px]"
+                                                    >
+                                                        <option value="">VARSY.(FONT)</option>
+                                                        <option value="'Inter', sans-serif">Inter</option>
+                                                        <option value="'Playfair Display', serif">Playfair</option>
+                                                        <option value="'Roboto Mono', monospace">Mono</option>
+                                                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                                                        <option value="'Lexend', sans-serif">Lexend</option>
+                                                    </select>
+
                                                     <div className="relative group w-8 h-8 rounded-full border border-slate-200 overflow-hidden shadow-sm hover:ring-2 hover:ring-primary/20 transition-all cursor-pointer">
                                                         <input
                                                             type="color"

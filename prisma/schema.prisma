@@ -81,7 +81,11 @@ model Profile {
   socialLinks    Json?
   themeColor     String?     @default("#6366f1")
   bioColor       String?
+  bioFontFamily  String?
+  bioFontSize    String?
   sloganColor    String?
+  sloganFontFamily String?
+  sloganFontSize String?
   templateId     String      @default("modern")
   slug           String      @unique
   qrCodeUrl      String?
