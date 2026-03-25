@@ -2749,6 +2749,120 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%2300ff9f' fill-opacity='0.2'/%3E%3C/svg%3E")` }} />
                 )}
 
+                {/* Turizm & Seyahat Background Effects */}
+                {theme.special === "tour_resort" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 30%, #80deea 50%, #4dd0e1 70%, #00acc1 100%)' }} />
+                        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(0,150,136,0.4) 0%, transparent 60%), radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.5) 0%, transparent 50%)' }} />
+                        {/* Wave effect */}
+                        <div className="absolute bottom-0 left-0 right-0 h-[30%] opacity-20 pointer-events-none overflow-hidden">
+                            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-[200%] h-full" style={{ fill: '#00695c' }}>
+                                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/>
+                                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"/>
+                                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"/>
+                            </svg>
+                        </div>
+                        {/* Palm tree patterns */}
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 60 L40 30 Q30 10 15 15 Q25 20 35 30 M40 30 Q50 10 65 15 Q55 20 45 30' stroke='%23009688' fill='none' stroke-width='1.5'/%3E%3C/svg%3E")`, backgroundSize: '100px 100px' }} />
+                    </>
+                )}
+                {theme.special === "tour_adventure" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #1a0f00 0%, #2d1a05 20%, #4a2c0a 40%, #6b3e10 55%, #c4722a 70%, #e8a54c 85%, #f5c76e 100%)' }} />
+                        <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(255,165,0,0.3) 0%, transparent 60%), radial-gradient(ellipse at 30% 70%, rgba(139,69,19,0.3) 0%, transparent 50%)' }} />
+                        {/* Savanna silhouette */}
+                        <div className="absolute bottom-0 left-0 right-0 h-[25%] opacity-10 pointer-events-none">
+                            <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="w-full h-full" style={{ fill: '#ff6d00' }}>
+                                <path d="M0,200 L0,150 C50,120 80,80 100,60 C110,70 120,90 130,100 C140,90 150,70 160,50 C165,60 170,80 180,90 C200,120 220,140 250,160 L300,170 C320,160 340,130 350,100 C355,110 360,130 370,140 L400,160 L500,170 L600,165 C620,160 640,130 650,80 C655,100 660,120 680,140 L700,150 L800,160 L900,155 C920,140 940,100 950,60 C960,80 970,120 990,140 L1000,155 L1100,165 L1200,160 L1200,200 Z"/>
+                            </svg>
+                        </div>
+                        {/* Dust particles */}
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3' cy='3' r='1' fill='%23ff9800' fill-opacity='0.5'/%3E%3C/svg%3E")`, backgroundSize: '10px 10px' }} />
+                    </>
+                )}
+                {theme.special === "tour_yacht" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a1628 0%, #0d2040 25%, #102a55 45%, #1565c0 65%, #1976d2 80%, #42a5f5 95%, #90caf9 100%)' }} />
+                        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 60%, rgba(25,118,210,0.4) 0%, transparent 50%)' }} />
+                        {/* Ocean wave lines */}
+                        <div className="absolute bottom-0 left-0 right-0 h-[40%] opacity-15 pointer-events-none overflow-hidden">
+                            <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="w-full h-full">
+                                <path d="M0,80 Q150,40 300,80 T600,80 T900,80 T1200,80 L1200,200 L0,200 Z" fill="#90caf9" opacity="0.3"/>
+                                <path d="M0,100 Q150,60 300,100 T600,100 T900,100 T1200,100 L1200,200 L0,200 Z" fill="#64b5f6" opacity="0.4"/>
+                                <path d="M0,130 Q150,90 300,130 T600,130 T900,130 T1200,130 L1200,200 L0,200 Z" fill="#42a5f5" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        {/* Compass rose */}
+                        <div className="absolute top-10 right-10 opacity-[0.06] pointer-events-none">
+                            <svg width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="45" stroke="#90caf9" fill="none" strokeWidth="1"/>
+                                <circle cx="50" cy="50" r="35" stroke="#90caf9" fill="none" strokeWidth="0.5"/>
+                                <path d="M50 5 L50 95 M5 50 L95 50 M18 18 L82 82 M82 18 L18 82" stroke="#90caf9" strokeWidth="0.5" fill="none"/>
+                                <polygon points="50,10 45,50 50,15 55,50" fill="#42a5f5" opacity="0.5"/>
+                            </svg>
+                        </div>
+                    </>
+                )}
+                {theme.special === "tour_guide" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #fff8e1 0%, #ffecb3 30%, #ffe082 60%, #ffd54f 85%, #ffca28 100%)' }} />
+                        <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.6) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(109,76,65,0.15) 0%, transparent 50%)' }} />
+                        {/* Map grid pattern */}
+                        <div className="absolute inset-0 opacity-[0.06]" style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%236d4c41' fill='none' stroke-width='0.5'/%3E%3Cpath d='M50 10 V 90 M 10 50 H 90' stroke='%236d4c41' stroke-width='0.3'/%3E%3Ccircle cx='50' cy='50' r='20' stroke='%236d4c41' fill='none' stroke-width='0.3'/%3E%3C/svg%3E")`,
+                            backgroundSize: '120px 120px'
+                        }} />
+                        {/* Location pins */}
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' fill='%236d4c41'/%3E%3C/svg%3E")`, backgroundSize: '80px 80px' }} />
+                    </>
+                )}
+                {theme.special === "tour_agency" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 30%, #9fa8da 60%, #7986cb 85%, #5c6bc0 100%)' }} />
+                        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.5) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(63,81,181,0.2) 0%, transparent 50%)' }} />
+                        {/* World grid */}
+                        <div className="absolute inset-0 opacity-[0.06]" style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='80' stroke='%233f51b5' fill='none' stroke-width='0.5'/%3E%3Cellipse cx='100' cy='100' rx='80' ry='40' stroke='%233f51b5' fill='none' stroke-width='0.5'/%3E%3Cellipse cx='100' cy='100' rx='40' ry='80' stroke='%233f51b5' fill='none' stroke-width='0.5'/%3E%3Cpath d='M20 100 H 180 M100 20 V 180' stroke='%233f51b5' stroke-width='0.3'/%3E%3C/svg%3E")`,
+                            backgroundSize: '200px 200px'
+                        }} />
+                        {/* Plane trail */}
+                        <div className="absolute top-[15%] left-0 right-0 h-[2px] opacity-[0.08] pointer-events-none" style={{ background: `linear-gradient(90deg, transparent, #3f51b5 30%, #3f51b5 70%, transparent)` }} />
+                        <div className="absolute top-[15%] right-[15%] opacity-[0.08] pointer-events-none">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="#3f51b5"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                        </div>
+                    </>
+                )}
+                {theme.special === "tour_winter" && (
+                    <>
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #e3f2fd 0%, #bbdefb 25%, #90caf9 50%, #64b5f6 70%, #42a5f5 85%, #1e88e5 100%)' }} />
+                        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.7) 0%, transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(30,136,229,0.3) 0%, transparent 50%)' }} />
+                        {/* Snow mountain silhouette */}
+                        <div className="absolute bottom-0 left-0 right-0 h-[35%] opacity-10 pointer-events-none">
+                            <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="w-full h-full" style={{ fill: '#0d47a1' }}>
+                                <path d="M0,200 L0,160 L100,100 L200,140 L300,60 L400,120 L500,40 L600,100 L700,30 L800,90 L900,50 L1000,110 L1100,70 L1200,130 L1200,200 Z"/>
+                            </svg>
+                        </div>
+                        {/* Snowflakes */}
+                        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5 L20 35 M5 20 L35 20 M9 9 L31 31 M31 9 L9 31' stroke='%231e88e5' fill='none' stroke-width='0.5'/%3E%3Ccircle cx='20' cy='20' r='3' stroke='%231e88e5' fill='none' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '50px 50px' }} />
+                        {/* Animated snowfall */}
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                            {Array(8).fill(0).map((_, i) => (
+                                <motion.div
+                                    key={`snow-${i}`}
+                                    animate={{
+                                        y: [-20, 800],
+                                        x: [0, i % 2 === 0 ? 30 : -30, 0],
+                                        opacity: [0, 0.15, 0]
+                                    }}
+                                    transition={{ duration: 6 + i * 1.5, repeat: Infinity, delay: i * 0.8, ease: "linear" }}
+                                    className="absolute w-2 h-2 rounded-full bg-white"
+                                    style={{ left: `${10 + i * 12}%`, top: '-5%' }}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
+
                 {/* 3D Frost Background */}
                 {theme.special === "3d_frost" && (
                     <>
