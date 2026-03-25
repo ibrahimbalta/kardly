@@ -152,6 +152,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const [isAIChatOpen, setIsAIChatOpen] = useState(false)
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
+    const [isEmbedMode, setIsEmbedMode] = useState(false)
     const [previewTpl, setPreviewTpl] = useState<string | null>(null)
 
     useEffect(() => {
