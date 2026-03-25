@@ -152,13 +152,16 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [qrDataUrl, setQrDataUrl] = useState<string>("")
     const [isAIChatOpen, setIsAIChatOpen] = useState(false)
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
-    const [isEmbedMode, setIsEmbedMode] = useState(false)
+    const [previewTpl, setPreviewTpl] = useState<string | null>(null)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search)
             if (params.get('embed') === 'true') {
                 setIsEmbedMode(true)
+            }
+            if (params.get('previewTpl')) {
+                setPreviewTpl(params.get('previewTpl'))
             }
         }
     }, [])
@@ -426,7 +429,7 @@ END:VCARD`
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
-        const templateId = profile.templateId || "black"
+        const templateId = previewTpl || profile.templateId || "black"
 
         if (templateId.startsWith('elite_')) {
             return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
@@ -2071,6 +2074,138 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-indigo-100",
             icon: "text-indigo-400",
             special: "3d_quantum"
+        },
+        // ─── Tourism & Travel ───
+        tour_resort: {
+            bg: "bg-[#f0f9ff]",
+            card: "bg-white/80 backdrop-blur-md",
+            text: "text-sky-900",
+            subtext: "text-sky-600/70",
+            border: "border-sky-100",
+            glow: "shadow-[0_10px_40px_rgba(14,165,233,0.1)]",
+            accent: "#0ea5e9",
+            btn: "bg-sky-50 border-sky-100",
+            btnText: "text-sky-900",
+            icon: "text-sky-500",
+            special: "tour_resort"
+        },
+        tour_adventure: {
+            bg: "bg-[#faf7ed]",
+            card: "bg-white/90",
+            text: "text-orange-950",
+            subtext: "text-orange-800/60",
+            border: "border-orange-200",
+            glow: "none",
+            accent: "#d97706",
+            btn: "bg-orange-50 border-orange-200",
+            btnText: "text-orange-950",
+            icon: "text-orange-700",
+            special: "adventure_safari"
+        },
+        tour_yacht: {
+            bg: "bg-[#0f172a]",
+            card: "bg-slate-900/60 backdrop-blur-xl",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-slate-800",
+            glow: "shadow-[0_15px_50px_rgba(30,58,138,0.3)]",
+            accent: "#38bdf8",
+            btn: "bg-slate-950 border-slate-800",
+            btnText: "text-white",
+            icon: "text-sky-400",
+            special: "liquid_ocean"
+        },
+        tour_guide: {
+            bg: "bg-[#fdfcf0]",
+            card: "bg-white/95 border-dashed border-2",
+            text: "text-emerald-950",
+            subtext: "text-emerald-800/50",
+            border: "border-emerald-200",
+            glow: "none",
+            accent: "#059669",
+            btn: "bg-emerald-50 border-emerald-200 border-dashed",
+            btnText: "text-emerald-950",
+            icon: "text-emerald-600",
+            special: "zen_garden"
+        },
+        tour_agency: {
+            bg: "bg-[#f8fafc]",
+            card: "bg-white/90 shadow-2xl",
+            text: "text-slate-900",
+            subtext: "text-slate-500",
+            border: "border-slate-200",
+            glow: "shadow-[0_20px_60px_rgba(0,0,0,0.05)]",
+            accent: "#6366f1",
+            btn: "bg-white border-slate-200",
+            btnText: "text-slate-900",
+            icon: "text-primary",
+            special: "light_prism"
+        },
+        tour_winter: {
+            bg: "bg-[#f0f9ff]",
+            card: "bg-white/40 backdrop-blur-2xl",
+            text: "text-sky-950",
+            subtext: "text-sky-700/60",
+            border: "border-white/40",
+            glow: "shadow-[0_10px_40px_rgba(186,230,253,0.3)]",
+            accent: "#0ea5e9",
+            btn: "bg-white/50 border-white/20",
+            btnText: "text-sky-900",
+            icon: "text-sky-500",
+            special: "tour_winter"
+        },
+        // ─── Athletic Pro ───
+        athletic_pro: {
+            bg: "bg-black",
+            card: "bg-zinc-900/40 border-l-4 border-l-red-600",
+            text: "text-white",
+            subtext: "text-zinc-500",
+            border: "border-zinc-800",
+            glow: "shadow-[0_0_30px_rgba(220,38,38,0.1)]",
+            accent: "#dc2626",
+            btn: "bg-zinc-900 border-zinc-800",
+            btnText: "text-white",
+            icon: "text-red-600",
+            special: "vibe_pulse"
+        },
+        athletic_football: {
+            bg: "bg-[#062016]",
+            card: "bg-[#0a2e1f]/60 border-b-4 border-b-emerald-500",
+            text: "text-emerald-400",
+            subtext: "text-emerald-600",
+            border: "border-emerald-900/30",
+            glow: "shadow-[0_20px_50px_rgba(16,185,129,0.1)]",
+            accent: "#10b981",
+            btn: "bg-emerald-950/40 border-emerald-900/30",
+            btnText: "text-emerald-400",
+            icon: "text-emerald-500",
+            special: "greenblack"
+        },
+        athletic_basketball: {
+            bg: "bg-[#1a0c02]",
+            card: "bg-[#2d1504]/60",
+            text: "text-orange-500",
+            subtext: "text-orange-800",
+            border: "border-orange-500/20",
+            glow: "shadow-[0_20px_50px_rgba(249,115,22,0.1)]",
+            accent: "#f97316",
+            btn: "bg-orange-950/40 border-orange-500/30",
+            btnText: "text-orange-500",
+            icon: "text-orange-600",
+            special: "orangeblack"
+        },
+        athletic_tennis: {
+            bg: "bg-[#2d2d2d]",
+            card: "bg-white/5 border-t-4 border-t-lime-400",
+            text: "text-white",
+            subtext: "text-lime-200/40",
+            border: "border-white/10",
+            glow: "shadow-[0_20px_50px_rgba(132,204,22,0.1)]",
+            accent: "#a3e635",
+            btn: "bg-white/5 border-white/10",
+            btnText: "text-lime-400",
+            icon: "text-lime-500",
+            special: "neon_acid"
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
@@ -2483,18 +2618,33 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </div>
                 )}
 
-                {theme.special === "meta_portal" && (
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden bg-black">
+                {theme.special === "meta_pixel" && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='10' height='10' fill='%2338bdf8'/%3E%3C/svg%3E")` }} />
+                )}
+                {theme.special === "tour_resort" && (
+                    <div className="absolute inset-0 z-0 bg-gradient-to-b from-sky-100 to-white">
                         <motion.div
-                            animate={{
-                                scale: [1, 1.5, 1],
-                                opacity: [0.3, 0.6, 0.3],
-                                rotate: [0, 180, 360]
-                            }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[conic-gradient(from_0deg,#ec489911,#0ea5e911,#ec489911)] rounded-full blur-[60px]"
+                            animate={{ y: [0, -20, 0] }}
+                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-amber-200/20 blur-[100px] rounded-full"
                         />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-pink-500/10 rounded-full animate-pulse" />
+                        <div className="absolute bottom-0 left-0 w-full h-[300px] bg-gradient-to-t from-sky-400/10 to-transparent" />
+                    </div>
+                )}
+                {theme.special === "tour_winter" && (
+                    <div className="absolute inset-0 z-0 overflow-hidden bg-white/50">
+                        {[...Array(20)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{
+                                    y: ['-10%', '110%'],
+                                    x: [`${Math.random() * 100}%`, `${Math.random() * 100 + 10}%`],
+                                }}
+                                transition={{ duration: 5 + Math.random() * 5, repeat: Infinity, ease: "linear" }}
+                                className="absolute w-2 h-2 bg-sky-200 rounded-full blur-[1px]"
+                                style={{ top: '-10%', left: `${Math.random() * 100}%` }}
+                            />
+                        ))}
                     </div>
                 )}
 

@@ -106,10 +106,10 @@ import { z } from "zod"
 
 
 const profileSchema = z.object({
-    username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-zA-Z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
+    username: z.string().min(3, "KullanÄ±cÄ± adÄ± en az 3 karakter olmalÄ±dÄ±r").regex(/^[a-zA-Z0-9_-]+$/, "KullanÄ±cÄ± adÄ± sadece harf, rakam, alt tire ve tire iÃ§erebilir"),
     displayName: z.string().optional().or(z.literal("")).nullable(),
-    slogan: z.string().max(100, "Slogan 100 karakteri geçemez").optional().or(z.literal("")).nullable(),
-    bio: z.string().max(1000, "Biyografi 1000 karakteri geçemez").optional().or(z.literal("")).nullable(),
+    slogan: z.string().max(100, "Slogan 100 karakteri geÃ§emez").optional().or(z.literal("")).nullable(),
+    bio: z.string().max(1000, "Biyografi 1000 karakteri geÃ§emez").optional().or(z.literal("")).nullable(),
     phone: z.string().optional().or(z.literal("")).nullable(),
     occupation: z.string().optional().or(z.literal("")).nullable(),
     targetAudience: z.string().optional().or(z.literal("")).nullable(),
@@ -196,10 +196,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
     })
     const [extraWidgetConfig, setExtraWidgetConfig] = useState({
         videoUrl: "",
-        videoBtnText: "Tanıtım Videosu",
+        videoBtnText: "TanÄ±tÄ±m Videosu",
         skills: "Design:95,Marketing:80,Coding:85",
         countdownDate: "",
-        countdownTitle: "Özel Teklif",
+        countdownTitle: "Ã–zel Teklif",
         portfolioImages: "",
         githubUrl: "",
         dribbbleUrl: "",
@@ -210,7 +210,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
     const handleGenerateBio = async () => {
         if (!profileData.occupation) {
-            setShowToast("Lütfen önce meslek alanını doldurun.")
+            setShowToast("LÃ¼tfen Ã¶nce meslek alanÄ±nÄ± doldurun.")
             setTimeout(() => setShowToast(null), 3000)
             return
         }
@@ -221,19 +221,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     occupation: profileData.occupation,
-                    targetAudience: profileData.targetAudience || "Potansiyel müşteriler",
+                    targetAudience: profileData.targetAudience || "Potansiyel mÃ¼ÅŸteriler",
                     tone: profileData.tone || "profesyonel"
                 })
             })
             const data = await res.json()
             if (data.bio) {
                 setProfileData({ ...profileData, bio: data.bio })
-                setShowToast("Bio başarıyla oluşturuldu! ✨")
+                setShowToast("Bio baÅŸarÄ±yla oluÅŸturuldu! âœ¨")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
             console.error(err)
-            setShowToast("AI oluşturma hatası.")
+            setShowToast("AI oluÅŸturma hatasÄ±.")
             setTimeout(() => setShowToast(null), 3000)
         } finally {
             setIsGeneratingBio(false)
@@ -294,7 +294,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleDeleteLead = async (id: string) => {
-        if (!confirm("Bu talebi silmek istediğinize emin misiniz?")) return
+        if (!confirm("Bu talebi silmek istediÄŸinize emin misiniz?")) return
         try {
             const res = await fetch(`/api/leads/delete?id=${id}`, { method: "DELETE" })
             if (res.ok) {
@@ -316,7 +316,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setLeads(leads.map(l => l.id === id ? { ...l, status } : l))
-                setShowToast("Talep durumu güncellendi!")
+                setShowToast("Talep durumu gÃ¼ncellendi!")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
@@ -375,152 +375,152 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
     const ALL_TEMPLATES = [
         // Mesleki
-        { id: "pro_software", category: "pro", name: "💻 Yazılım / Teknoloji", description: "Terminal esintili dark mod ve kod satırlı teknolojik görünüm.", isNew: true },
-        { id: "pro_doctor", category: "pro", name: "👨‍⚕️ Doktor / Sağlık", description: "Güven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
-        { id: "pro_chef", category: "pro", name: "👨‍🍳 Şef / Gastronomi", description: "Bistronomi temalı, sıcak tonlar ve mutfak sanatları dokusu.", isNew: true },
-        { id: "pro_barber", category: "pro", name: "💈 Berber / Kuaför", description: "Vintage salon estetiği, monokrom şıklık ve maskülen hatlar.", isNew: true },
-        { id: "pro_fitness", category: "pro", name: "🏋️ Fitness / Spor", description: "Yüksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
-        { id: "pro_lawyer", category: "pro", name: "⚖️ Avukat / Hukuk", description: "Ciddi, güven veren profesyonel mermer ve altın dokusu.", isNew: true },
-        { id: "pro_architect", category: "pro", name: "🏗️ Mimar / Mühendis", description: "Teknik çizimler ve blueprint esintili modern tasarım.", isNew: true },
-        { id: "pro_realestate", category: "pro", name: "🏢 Gayrimenkul / Yatırım", description: "Lüks, yatırım odaklı gold ve lacivert mükemmel uyumu.", isNew: true },
-        { id: "pro_finance", category: "pro", name: "📈 Finans / Danışmanlık", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarımı.", isNew: true },
+        { id: "pro_software", category: "pro", name: "ğŸ’» YazÄ±lÄ±m / Teknoloji", description: "Terminal esintili dark mod ve kod satÄ±rlÄ± teknolojik gÃ¶rÃ¼nÃ¼m.", isNew: true },
+        { id: "pro_doctor", category: "pro", name: "ğŸ‘¨â€âš•ï¸ Doktor / SaÄŸlÄ±k", description: "GÃ¼ven veren medikal mavi, temiz ve profesyonel klinik hatlar.", isNew: true },
+        { id: "pro_chef", category: "pro", name: "ğŸ‘¨â€ğŸ³ Åef / Gastronomi", description: "Bistronomi temalÄ±, sÄ±cak tonlar ve mutfak sanatlarÄ± dokusu.", isNew: true },
+        { id: "pro_barber", category: "pro", name: "ğŸ’ˆ Berber / KuafÃ¶r", description: "Vintage salon estetiÄŸi, monokrom ÅŸÄ±klÄ±k ve maskÃ¼len hatlar.", isNew: true },
+        { id: "pro_fitness", category: "pro", name: "ğŸ‹ï¸ Fitness / Spor", description: "YÃ¼ksek enerji, karbon fiber doku ve dinamik sporcu ruhu.", isNew: true },
+        { id: "pro_lawyer", category: "pro", name: "âš–ï¸ Avukat / Hukuk", description: "Ciddi, gÃ¼ven veren profesyonel mermer ve altÄ±n dokusu.", isNew: true },
+        { id: "pro_architect", category: "pro", name: "ğŸ—ï¸ Mimar / MÃ¼hendis", description: "Teknik Ã§izimler ve blueprint esintili modern tasarÄ±m.", isNew: true },
+        { id: "pro_realestate", category: "pro", name: "ğŸ¢ Gayrimenkul / YatÄ±rÄ±m", description: "LÃ¼ks, yatÄ±rÄ±m odaklÄ± gold ve lacivert mÃ¼kemmel uyumu.", isNew: true },
+        { id: "pro_finance", category: "pro", name: "ğŸ“ˆ Finans / DanÄ±ÅŸmanlÄ±k", description: "Borsa grafikleri ve kurumsal ciddiyetin modern tasarÄ±mÄ±.", isNew: true },
 
         // Neon
-        { id: "neon_cyber", category: "neon", name: "🌈 Cyber Neon", description: "Sayyan mavisi ve fuşya pembenin iç içe geçtiği siberpunk estetiği.", isNew: true },
-        { id: "neon_galaxy", category: "neon", name: "🌈 Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yıldız parıltılı kozmik atmosfer.", isNew: true },
-        { id: "neon_acid", category: "neon", name: "🌈 Acid Neon", description: "Neon yeşili, sarı ve limon renklerinin kesiştiği çarpıcı enerji.", isNew: true },
-        { id: "neon_black", category: "neon", name: "Neon Modern (Siyah)", description: "Karanlık ve gizemli, mavi neon detaylı şık tasarım." },
-        { id: "neon_blue", category: "neon", name: "Neon Modern (Mavi)", description: "Derin mavi tonları ve parlak neon hatlar." },
-        { id: "neon_purple", category: "neon", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlık atmosfer." },
+        { id: "neon_cyber", category: "neon", name: "ğŸŒˆ Cyber Neon", description: "Sayyan mavisi ve fuÅŸya pembenin iÃ§ iÃ§e geÃ§tiÄŸi siberpunk estetiÄŸi.", isNew: true },
+        { id: "neon_galaxy", category: "neon", name: "ğŸŒˆ Galaxy Neon", description: "Mor, turkuaz ve gece mavisi yÄ±ldÄ±z parÄ±ltÄ±lÄ± kozmik atmosfer.", isNew: true },
+        { id: "neon_acid", category: "neon", name: "ğŸŒˆ Acid Neon", description: "Neon yeÅŸili, sarÄ± ve limon renklerinin kesiÅŸtiÄŸi Ã§arpÄ±cÄ± enerji.", isNew: true },
+        { id: "neon_black", category: "neon", name: "Neon Modern (Siyah)", description: "KaranlÄ±k ve gizemli, mavi neon detaylÄ± ÅŸÄ±k tasarÄ±m." },
+        { id: "neon_blue", category: "neon", name: "Neon Modern (Mavi)", description: "Derin mavi tonlarÄ± ve parlak neon hatlar." },
+        { id: "neon_purple", category: "neon", name: "Neon Modern (Mor)", description: "Asil mor neon ve modern karanlÄ±k atmosfer." },
 
         // Pattern & Art
-        { id: "pro_artistic", category: "pattern", name: "🎨 Dövme & Sanat", description: "Sıradışı, sanatsal hatlar ve premium koyu mod estetiği.", isNew: true },
-        { id: "pattern_ottoman", category: "pattern", name: "🕌 Osmanlı Motifi", description: "Geleneksel motifler ve altın varaklı asil tasarım." },
-        { id: "pattern_geometric", category: "pattern", name: "📐 Geometrik Desen", description: "Modern, keskin ve teknolojik çizgiler." },
-        { id: "pattern_marble", category: "pattern", name: "🏛️ Mermer Doku", description: "Lüks ve temiz mermer dokulu klasik görünüm." },
-        { id: "pattern_circuit", category: "pattern", name: "🔌 Siber Devre", description: "Teknolojik devre kartı deseni ve fütüristik hava." },
+        { id: "pro_artistic", category: "pattern", name: "ğŸ¨ DÃ¶vme & Sanat", description: "SÄ±radÄ±ÅŸÄ±, sanatsal hatlar ve premium koyu mod estetiÄŸi.", isNew: true },
+        { id: "pattern_ottoman", category: "pattern", name: "ğŸ•Œ OsmanlÄ± Motifi", description: "Geleneksel motifler ve altÄ±n varaklÄ± asil tasarÄ±m." },
+        { id: "pattern_geometric", category: "pattern", name: "ğŸ“ Geometrik Desen", description: "Modern, keskin ve teknolojik Ã§izgiler." },
+        { id: "pattern_marble", category: "pattern", name: "ğŸ›ï¸ Mermer Doku", description: "LÃ¼ks ve temiz mermer dokulu klasik gÃ¶rÃ¼nÃ¼m." },
+        { id: "pattern_circuit", category: "pattern", name: "ğŸ”Œ Siber Devre", description: "Teknolojik devre kartÄ± deseni ve fÃ¼tÃ¼ristik hava." },
 
         // Nature & Minimal
-        { id: "pro_dietitian", category: "nature", name: "🌿 Diyetisyen / Sağlık", description: "Doğal tonlar, ferah görünüm ve sağlık odaklı çizgiler." },
-        { id: "pro_photographer", category: "nature", name: "📸 Fotoğrafçı", description: "Minimalist galeri stili, lens odağı ve saf beyaz asalet." },
-        { id: "pattern_topo", category: "nature", name: "🗺️ Topografik", description: "Doğa ve derinlik hissi veren modern çizgiler." },
-        { id: "minimal_glass", category: "nature", name: "💎 Kristal Cam", description: "Yumuşak buzlu cam efekti ve transparan modern şıklık.", isNew: true },
-        { id: "nature_dawn", category: "nature", name: "🌅 Şafak Vakti", description: "Turuncu ve morun soft geçişli gökyüzü estetiği.", isNew: true },
+        { id: "pro_dietitian", category: "nature", name: "ğŸŒ¿ Diyetisyen / SaÄŸlÄ±k", description: "DoÄŸal tonlar, ferah gÃ¶rÃ¼nÃ¼m ve saÄŸlÄ±k odaklÄ± Ã§izgiler." },
+        { id: "pro_photographer", category: "nature", name: "ğŸ“¸ FotoÄŸrafÃ§Ä±", description: "Minimalist galeri stili, lens odaÄŸÄ± ve saf beyaz asalet." },
+        { id: "pattern_topo", category: "nature", name: "ğŸ—ºï¸ Topografik", description: "DoÄŸa ve derinlik hissi veren modern Ã§izgiler." },
+        { id: "minimal_glass", category: "nature", name: "ğŸ’ Kristal Cam", description: "YumuÅŸak buzlu cam efekti ve transparan modern ÅŸÄ±klÄ±k.", isNew: true },
+        { id: "nature_dawn", category: "nature", name: "ğŸŒ… Åafak Vakti", description: "Turuncu ve morun soft geÃ§iÅŸli gÃ¶kyÃ¼zÃ¼ estetiÄŸi.", isNew: true },
 
         // Retro & Nostalji
-        { id: "retro_mac", category: "retro", name: "💾 Retro Macintosh", description: "Eskitilmiş bej tonları, piksel dokunuşu ve nostaljik bloklar.", isNew: true },
-        { id: "retro_news", category: "retro", name: "🗞️ Eski Gazete", description: "Saman kağıdı dokusu ve yüksek kontrastlı siyah-beyaz şıklık.", isNew: true },
-        { id: "retro_synth", category: "retro", name: "🕹️ 80s Synthwave", description: "Mor, pembe ve neon grid çizgileriyle enerjik retro atmosfer.", isNew: true },
+        { id: "retro_mac", category: "retro", name: "ğŸ’¾ Retro Macintosh", description: "EskitilmiÅŸ bej tonlarÄ±, piksel dokunuÅŸu ve nostaljik bloklar.", isNew: true },
+        { id: "retro_news", category: "retro", name: "ğŸ—ï¸ Eski Gazete", description: "Saman kaÄŸÄ±dÄ± dokusu ve yÃ¼ksek kontrastlÄ± siyah-beyaz ÅŸÄ±klÄ±k.", isNew: true },
+        { id: "retro_synth", category: "retro", name: "ğŸ•¹ï¸ 80s Synthwave", description: "Mor, pembe ve neon grid Ã§izgileriyle enerjik retro atmosfer.", isNew: true },
 
-        // Lüks & Premium
-        { id: "luxury_gold", category: "luxury", name: "💎 Mat Siyah & Altın", description: "Derin mat siyah zemin üzerinde asil altın varaklı detaylar.", isNew: true },
-        { id: "luxury_silver", category: "luxury", name: "🥈 Gece Mavisi & Gümüş", description: "Lacivert ve gümüşün kurumsal ağırlıkla mükemmel uyumu.", isNew: true },
-        { id: "luxury_marble", category: "luxury", name: "🏛️ Mermer Asalet", description: "Beyaz mermer dokusu üzerine ince siyah estetik hatlar.", isNew: true },
+        // LÃ¼ks & Premium
+        { id: "luxury_gold", category: "luxury", name: "ğŸ’ Mat Siyah & AltÄ±n", description: "Derin mat siyah zemin Ã¼zerinde asil altÄ±n varaklÄ± detaylar.", isNew: true },
+        { id: "luxury_silver", category: "luxury", name: "ğŸ¥ˆ Gece Mavisi & GÃ¼mÃ¼ÅŸ", description: "Lacivert ve gÃ¼mÃ¼ÅŸÃ¼n kurumsal aÄŸÄ±rlÄ±kla mÃ¼kemmel uyumu.", isNew: true },
+        { id: "luxury_marble", category: "luxury", name: "ğŸ›ï¸ Mermer Asalet", description: "Beyaz mermer dokusu Ã¼zerine ince siyah estetik hatlar.", isNew: true },
 
         // Lifestyle & Hobi
-        { id: "life_gamer", category: "lifestyle", name: "🎮 Gamer Kırmızı", description: "Karbon fiber doku ve dinamik neon kırmızı oyuncu tasarımı.", isNew: true },
-        { id: "life_travel", category: "lifestyle", name: "🗺️ Gezgin Haritası", description: "Eski harita desenleri ve toprak tonlarıyla macera ruhu.", isNew: true },
-        { id: "life_zen", category: "lifestyle", name: "🎋 Zen Bahçesi", description: "Sakinleştirici boşluklar ve huzurlu doğal yeşil tonları.", isNew: true },
+        { id: "life_gamer", category: "lifestyle", name: "ğŸ® Gamer KÄ±rmÄ±zÄ±", description: "Karbon fiber doku ve dinamik neon kÄ±rmÄ±zÄ± oyuncu tasarÄ±mÄ±.", isNew: true },
+        { id: "life_travel", category: "lifestyle", name: "ğŸ—ºï¸ Gezgin HaritasÄ±", description: "Eski harita desenleri ve toprak tonlarÄ±yla macera ruhu.", isNew: true },
+        { id: "life_zen", category: "lifestyle", name: "ğŸ‹ Zen BahÃ§esi", description: "SakinleÅŸtirici boÅŸluklar ve huzurlu doÄŸal yeÅŸil tonlarÄ±.", isNew: true },
 
         // Future & Glass
-        { id: "future_holo", category: "future", name: "🛸 Hologram Pro", description: "Işık kırılmalı kenarlar ve fütüristik parlayan hologram kartları.", isNew: true },
-        { id: "future_glass", category: "future", name: "❄️ Buzul Cam (Frost)", description: "Bulanık cam arkası efekti ve pastel yüzen ışık balonları.", isNew: true },
+        { id: "future_holo", category: "future", name: "ğŸ›¸ Hologram Pro", description: "IÅŸÄ±k kÄ±rÄ±lmalÄ± kenarlar ve fÃ¼tÃ¼ristik parlayan hologram kartlarÄ±.", isNew: true },
+        { id: "future_glass", category: "future", name: "â„ï¸ Buzul Cam (Frost)", description: "BulanÄ±k cam arkasÄ± efekti ve pastel yÃ¼zen Ä±ÅŸÄ±k balonlarÄ±.", isNew: true },
 
-        // Büyülü Akış (Dream)
-        { id: "dream_mist", category: "dream", name: "☁️ Sisli Rüya", description: "Pastel renk geçişleri ve yumuşak sis efektli huzurlu tasarım.", isNew: true },
-        { id: "dream_nebula", category: "dream", name: "🌌 Kozmik Bulut", description: "Derin uzay moru ve parlayan nebulalarla dolu masalsı atmosfer.", isNew: true },
+        // BÃ¼yÃ¼lÃ¼ AkÄ±ÅŸ (Dream)
+        { id: "dream_mist", category: "dream", name: "â˜ï¸ Sisli RÃ¼ya", description: "Pastel renk geÃ§iÅŸleri ve yumuÅŸak sis efektli huzurlu tasarÄ±m.", isNew: true },
+        { id: "dream_nebula", category: "dream", name: "ğŸŒŒ Kozmik Bulut", description: "Derin uzay moru ve parlayan nebulalarla dolu masalsÄ± atmosfer.", isNew: true },
 
         // Gizemli Gece (Dark)
-        { id: "dark_onyx", category: "dark", name: "🕶️ Saf Oniks", description: "Tam karanlık, sadece en önemli detayların parladığı gizemli şıklık.", isNew: true },
-        { id: "dark_stealth", category: "dark", name: "⬛ Karbon Stealth", description: "Mat siyah karbon fiber doku ve teknolojik kırmızı detaylar.", isNew: true },
+        { id: "dark_onyx", category: "dark", name: "ğŸ•¶ï¸ Saf Oniks", description: "Tam karanlÄ±k, sadece en Ã¶nemli detaylarÄ±n parladÄ±ÄŸÄ± gizemli ÅŸÄ±klÄ±k.", isNew: true },
+        { id: "dark_stealth", category: "dark", name: "â¬› Karbon Stealth", description: "Mat siyah karbon fiber doku ve teknolojik kÄ±rmÄ±zÄ± detaylar.", isNew: true },
 
-        // Prizmatik Işık (Light)
-        { id: "light_prism", category: "light", name: "🌈 Prizma Yansıması", description: "Işığın kırılma efektleri ve gökkuşağı çizgileriyle modern beyaz.", isNew: true },
-        { id: "light_solar", category: "light", name: "☀️ Gün Batımı", description: "Sıcak turuncu ve altın sarısı güneş ışığı huzmeleri.", isNew: true },
+        // Prizmatik IÅŸÄ±k (Light)
+        { id: "light_prism", category: "light", name: "ğŸŒˆ Prizma YansÄ±masÄ±", description: "IÅŸÄ±ÄŸÄ±n kÄ±rÄ±lma efektleri ve gÃ¶kkuÅŸaÄŸÄ± Ã§izgileriyle modern beyaz.", isNew: true },
+        { id: "light_solar", category: "light", name: "â˜€ï¸ GÃ¼n BatÄ±mÄ±", description: "SÄ±cak turuncu ve altÄ±n sarÄ±sÄ± gÃ¼neÅŸ Ä±ÅŸÄ±ÄŸÄ± huzmeleri.", isNew: true },
 
-        // Siber Gerçeklik
-        { id: "cyber_glitch", category: "cyber", name: "📟 Glitch Art", description: "Dijital bozulma efektleri ve vhs estetiğiyle siber bir dünya.", isNew: true },
-        { id: "cyber_vapor", category: "cyber", name: "🌸 Vaporwave", description: "80'lerin Japon estetiği, pembe-mavi tonları ve heykeller.", isNew: true },
+        // Siber GerÃ§eklik
+        { id: "cyber_glitch", category: "cyber", name: "ğŸ“Ÿ Glitch Art", description: "Dijital bozulma efektleri ve vhs estetiÄŸiyle siber bir dÃ¼nya.", isNew: true },
+        { id: "cyber_vapor", category: "cyber", name: "ğŸŒ¸ Vaporwave", description: "80'lerin Japon estetiÄŸi, pembe-mavi tonlarÄ± ve heykeller.", isNew: true },
 
         // Antik Miras
-        { id: "antique_gold", category: "antique", name: "🏺 Antik Altın", description: "Eskitilmiş altın dokular ve klasik Roma desenleri.", isNew: true },
-        { id: "antique_myth", category: "antique", name: "🏛️ Mitolojik", description: "Yunan mitolojisinden esintiler ve mermer sütun detayları.", isNew: true },
+        { id: "antique_gold", category: "antique", name: "ğŸº Antik AltÄ±n", description: "EskitilmiÅŸ altÄ±n dokular ve klasik Roma desenleri.", isNew: true },
+        { id: "antique_myth", category: "antique", name: "ğŸ›ï¸ Mitolojik", description: "Yunan mitolojisinden esintiler ve mermer sÃ¼tun detaylarÄ±.", isNew: true },
 
-        // Likit Akış
-        { id: "liquid_lava", category: "liquid", name: "🔥 Lav Akışı", description: "Akışkan kırmızı ve turuncu tonları, organik hareketler.", isNew: true },
-        { id: "liquid_ocean", category: "liquid", name: "🌊 Derin Okyanus", description: "Su altı efektleri ve yavaşça süzülen dalgalar.", isNew: true },
+        // Likit AkÄ±ÅŸ
+        { id: "liquid_lava", category: "liquid", name: "ğŸ”¥ Lav AkÄ±ÅŸÄ±", description: "AkÄ±ÅŸkan kÄ±rmÄ±zÄ± ve turuncu tonlarÄ±, organik hareketler.", isNew: true },
+        { id: "liquid_ocean", category: "liquid", name: "ğŸŒŠ Derin Okyanus", description: "Su altÄ± efektleri ve yavaÅŸÃ§a sÃ¼zÃ¼len dalgalar.", isNew: true },
 
         // Dinamik Pop
-        { id: "pop_comic", category: "pop", name: "💥 Pop Comic", description: "Çizgi roman tarzı konuşma balonları ve canlı noktalar.", isNew: true },
-        { id: "pop_graffiti", category: "pop", name: "🎨 Sokak Sanatı", description: "Grafiti dokuları ve sprey boya sıçramaları.", isNew: true },
+        { id: "pop_comic", category: "pop", name: "ğŸ’¥ Pop Comic", description: "Ã‡izgi roman tarzÄ± konuÅŸma balonlarÄ± ve canlÄ± noktalar.", isNew: true },
+        { id: "pop_graffiti", category: "pop", name: "ğŸ¨ Sokak SanatÄ±", description: "Grafiti dokularÄ± ve sprey boya sÄ±Ã§ramalarÄ±.", isNew: true },
 
         // Zihinsel Odak
-        { id: "zen_garden", category: "zen", name: "🎍 Zen Bahçesi", description: "Taş ve kum desenleri, minimalist denge ve huzur.", isNew: true },
-        { id: "zen_focus", category: "zen", name: "🎯 Derin Odak", description: "Zihni dinlendiren sade geometrik formlar.", isNew: true },
+        { id: "zen_garden", category: "zen", name: "ğŸ Zen BahÃ§esi", description: "TaÅŸ ve kum desenleri, minimalist denge ve huzur.", isNew: true },
+        { id: "zen_focus", category: "zen", name: "ğŸ¯ Derin Odak", description: "Zihni dinlendiren sade geometrik formlar.", isNew: true },
 
         // Macera Ruhu
-        { id: "adventure_peak", category: "adventure", name: "🏔️ Zirve Hikayesi", description: "Dağ manzaraları ve tırmanış esintili detaylar.", isNew: true },
-        { id: "adventure_safari", category: "adventure", name: "🐆 Vahşi Safari", description: "Toprak tonları ve vahşi doğa desenleri.", isNew: true },
+        { id: "adventure_peak", category: "adventure", name: "ğŸ”ï¸ Zirve Hikayesi", description: "DaÄŸ manzaralarÄ± ve tÄ±rmanÄ±ÅŸ esintili detaylar.", isNew: true },
+        { id: "adventure_safari", category: "adventure", name: "ğŸ† VahÅŸi Safari", description: "Toprak tonlarÄ± ve vahÅŸi doÄŸa desenleri.", isNew: true },
 
-        // İlahi Işıltı (Celestial)
-        { id: "celestial_star", category: "celestial", name: "⭐ Yıldız Tozu", description: "Parlayan yıldızlar ve gece mavisi derinlik.", isNew: true },
-        { id: "celestial_sun", category: "celestial", name: "🔆 Güneş Tanrısı", description: "Altın sarısı ışık patlamaları ve antik güneş sembolleri.", isNew: true },
+        // Ä°lahi IÅŸÄ±ltÄ± (Celestial)
+        { id: "celestial_star", category: "celestial", name: "â­ YÄ±ldÄ±z Tozu", description: "Parlayan yÄ±ldÄ±zlar ve gece mavisi derinlik.", isNew: true },
+        { id: "celestial_sun", category: "celestial", name: "ğŸ”† GÃ¼neÅŸ TanrÄ±sÄ±", description: "AltÄ±n sarÄ±sÄ± Ä±ÅŸÄ±k patlamalarÄ± ve antik gÃ¼neÅŸ sembolleri.", isNew: true },
 
-        // Yalın Estetik (Minimal)
-        { id: "minimal_pure", category: "minimal", name: "⚪ Bembeyaz", description: "Sıfır gürültü, sadece saf içerik odağı.", isNew: true },
-        { id: "minimal_graphite", category: "minimal", name: "🌑 Grafit Gri", description: "Mat gri tonları ve incecik kalem çizgileri.", isNew: true },
+        // YalÄ±n Estetik (Minimal)
+        { id: "minimal_pure", category: "minimal", name: "âšª Bembeyaz", description: "SÄ±fÄ±r gÃ¼rÃ¼ltÃ¼, sadece saf iÃ§erik odaÄŸÄ±.", isNew: true },
+        { id: "minimal_graphite", category: "minimal", name: "ğŸŒ‘ Grafit Gri", description: "Mat gri tonlarÄ± ve incecik kalem Ã§izgileri.", isNew: true },
 
-        // Endüstriyel Hamlık (Industrial)
-        { id: "ind_concrete", category: "industrial", name: "🏗️ Brüt Beton", description: "Ham beton dokusu ve inşaat estetiği.", isNew: true },
-        { id: "ind_rusty", category: "industrial", name: "⚙️ Paslı Metal", description: "Eskitilmiş demir ve endüstriyel pas detayları.", isNew: true },
+        // EndÃ¼striyel HamlÄ±k (Industrial)
+        { id: "ind_concrete", category: "industrial", name: "ğŸ—ï¸ BrÃ¼t Beton", description: "Ham beton dokusu ve inÅŸaat estetiÄŸi.", isNew: true },
+        { id: "ind_rusty", category: "industrial", name: "âš™ï¸ PaslÄ± Metal", description: "EskitilmiÅŸ demir ve endÃ¼striyel pas detaylarÄ±.", isNew: true },
 
-        // Enerji Patlaması (Vibrant)
-        { id: "vibe_bolt", category: "vibrant", name: "⚡ Yıldırım Hızı", description: "Yüksek kontrast, elektrik sarısı ve siyah uyumu.", isNew: true },
-        { id: "vibe_pulse", category: "vibrant", name: "💓 Nabız Atışı", description: "Dinamik vuruşlar ve kalp atışı ritimli çizgiler.", isNew: true },
+        // Enerji PatlamasÄ± (Vibrant)
+        { id: "vibe_bolt", category: "vibrant", name: "âš¡ YÄ±ldÄ±rÄ±m HÄ±zÄ±", description: "YÃ¼ksek kontrast, elektrik sarÄ±sÄ± ve siyah uyumu.", isNew: true },
+        { id: "vibe_pulse", category: "vibrant", name: "ğŸ’“ NabÄ±z AtÄ±ÅŸÄ±", description: "Dinamik vuruÅŸlar ve kalp atÄ±ÅŸÄ± ritimli Ã§izgiler.", isNew: true },
 
-        // Hanedan Mirası (Royal)
-        { id: "royal_velvet", category: "royal", name: "👑 Mor Kadife", description: "Kraliyet moru ve altın işlemeli detaylar.", isNew: true },
-        { id: "royal_emerald", category: "royal", name: "💎 Zümrüt Saray", description: "Derin zümrüt yeşili ve elmas pırıltıları.", isNew: true },
+        // Hanedan MirasÄ± (Royal)
+        { id: "royal_velvet", category: "royal", name: "ğŸ‘‘ Mor Kadife", description: "Kraliyet moru ve altÄ±n iÅŸlemeli detaylar.", isNew: true },
+        { id: "royal_emerald", category: "royal", name: "ğŸ’ ZÃ¼mrÃ¼t Saray", description: "Derin zÃ¼mrÃ¼t yeÅŸili ve elmas pÄ±rÄ±ltÄ±larÄ±.", isNew: true },
 
-        // Yüksek Teknoloji (Tech)
-        { id: "tech_core", category: "tech", name: "🧬 Çekirdek Gücü", description: "Moleküler animasyonlar ve DNA süzülmeleri.", isNew: true },
-        { id: "tech_atom", category: "tech", name: "⚛️ Atomik Yapı", description: "Parçacık fiziği ve kuantum enerji efektleri.", isNew: true },
+        // YÃ¼ksek Teknoloji (Tech)
+        { id: "tech_core", category: "tech", name: "ğŸ§¬ Ã‡ekirdek GÃ¼cÃ¼", description: "MolekÃ¼ler animasyonlar ve DNA sÃ¼zÃ¼lmeleri.", isNew: true },
+        { id: "tech_atom", category: "tech", name: "âš›ï¸ Atomik YapÄ±", description: "ParÃ§acÄ±k fiziÄŸi ve kuantum enerji efektleri.", isNew: true },
 
         // Metaverse & 3D
-        { id: "meta_portal", category: "meta", name: "🌀 Metaverse Portal", description: "3D derinlik hissi veren parlayan bir geçit.", isNew: true },
-        { id: "meta_pixel", category: "meta", name: "👾 8-Bit Evren", description: "Piksel piksel bir dünya ve retro dijital parıltılar.", isNew: true },
+        { id: "meta_portal", category: "meta", name: "ğŸŒ€ Metaverse Portal", description: "3D derinlik hissi veren parlayan bir geÃ§it.", isNew: true },
+        { id: "meta_pixel", category: "meta", name: "ğŸ‘¾ 8-Bit Evren", description: "Piksel piksel bir dÃ¼nya ve retro dijital parÄ±ltÄ±lar.", isNew: true },
 
-        // 3D Sürükleyici (Immersive)
-        { id: "3d_frost", category: "3d", name: "❄️ 3D Buzul", description: "Buz kristalleri, neon mavi halka ve karlı dağ atmosferi.", isNew: true },
-        { id: "3d_magma", category: "3d", name: "🌋 3D Volkan", description: "Lavanta-tur. gradient butonlar, kor ateşi parıltısı ve sıcak enerji.", isNew: true },
-        { id: "3d_cyber", category: "3d", name: "🌃 3D Siber Şehir", description: "Matrix yağmuru, neon ızgara ve cyberpunk gece atmosferi.", isNew: true },
-        { id: "3d_aurora", category: "3d", name: "✨ 3D Aurora", description: "Kuzey ışıkları geçişleri, shimmer efektli butonlar ve mistik atmosfer.", isNew: true },
-        { id: "3d_neoncity", category: "3d", name: "🌆 3D Neon City", description: "Tokyo gecesi, dikey neon yağmuru ve parlayan tabela butonlar.", isNew: true },
-        { id: "3d_galaxy", category: "3d", name: "🌌 3D Galaxy", description: "Derin uzay nebulası, dönen galaksi bulutu ve yıldız tozu butonlar.", isNew: true },
-        { id: "3d_luxegold", category: "3d", name: "🏆 3D Luxe Gold", description: "Sıvı altın efekti, metalik gold butonlar ve premium lüks doku.", isNew: true },
-        { id: "3d_hologram", category: "3d", name: "💿 3D Hologram", description: "İridyum gökkuşağı yansıması, krom butonlar ve prizmatik ızgara.", isNew: true },
-        { id: "3d_quantum", category: "3d", name: "🧬 3D Quantum Liquid", description: "Oval (pill) butonlar, hareketli akışkanlar ve ileri seviye derinlik.", isNew: true },
+        // 3D SÃ¼rÃ¼kleyici (Immersive)
+        { id: "3d_frost", category: "3d", name: "â„ï¸ 3D Buzul", description: "Buz kristalleri, neon mavi halka ve karlÄ± daÄŸ atmosferi.", isNew: true },
+        { id: "3d_magma", category: "3d", name: "ğŸŒ‹ 3D Volkan", description: "Lavanta-tur. gradient butonlar, kor ateÅŸi parÄ±ltÄ±sÄ± ve sÄ±cak enerji.", isNew: true },
+        { id: "3d_cyber", category: "3d", name: "ğŸŒƒ 3D Siber Åehir", description: "Matrix yaÄŸmuru, neon Ä±zgara ve cyberpunk gece atmosferi.", isNew: true },
+        { id: "3d_aurora", category: "3d", name: "âœ¨ 3D Aurora", description: "Kuzey Ä±ÅŸÄ±klarÄ± geÃ§iÅŸleri, shimmer efektli butonlar ve mistik atmosfer.", isNew: true },
+        { id: "3d_neoncity", category: "3d", name: "ğŸŒ† 3D Neon City", description: "Tokyo gecesi, dikey neon yaÄŸmuru ve parlayan tabela butonlar.", isNew: true },
+        { id: "3d_galaxy", category: "3d", name: "ğŸŒŒ 3D Galaxy", description: "Derin uzay nebulasÄ±, dÃ¶nen galaksi bulutu ve yÄ±ldÄ±z tozu butonlar.", isNew: true },
+        { id: "3d_luxegold", category: "3d", name: "ğŸ† 3D Luxe Gold", description: "SÄ±vÄ± altÄ±n efekti, metalik gold butonlar ve premium lÃ¼ks doku.", isNew: true },
+        { id: "3d_hologram", category: "3d", name: "ğŸ’¿ 3D Hologram", description: "Ä°ridyum gÃ¶kkuÅŸaÄŸÄ± yansÄ±masÄ±, krom butonlar ve prizmatik Ä±zgara.", isNew: true },
+        { id: "3d_quantum", category: "3d", name: "ğŸ§¬ 3D Quantum Liquid", description: "Oval (pill) butonlar, hareketli akÄ±ÅŸkanlar ve ileri seviye derinlik.", isNew: true },
 
         // Elite Modern (Image inspired)
-        { id: "elite_pink", category: "elite", name: "💖 Elite Pink Wave", description: "Modern eğrisel başlık, pembe-turuncu geçiş ve profesyonel butonlar.", isNew: true },
-        { id: "elite_blue", category: "elite", name: "💙 Elite Ocean Wave", description: "Derin okyanus mavisi geçişleri ve ferah modern tasarım.", isNew: true },
-        { id: "elite_purple", category: "elite", name: "💜 Elite Violet Wave", description: "Asil mor geçişler ve premium minimalist yaklaşım.", isNew: true },
-        { id: "elite_emerald", category: "elite", name: "💚 Elite Mint Wave", description: "Taze nane yeşili geçişler ve teknolojik şıklık.", isNew: true },
-        { id: "elite_sunset", category: "elite", name: "🧡 Elite Sunset Wave", description: "Sıcak gün batımı tonları ve enerjik modern çizgiler.", isNew: true },
+        { id: "elite_pink", category: "elite", name: "ğŸ’– Elite Pink Wave", description: "Modern eÄŸrisel baÅŸlÄ±k, pembe-turuncu geÃ§iÅŸ ve profesyonel butonlar.", isNew: true },
+        { id: "elite_blue", category: "elite", name: "ğŸ’™ Elite Ocean Wave", description: "Derin okyanus mavisi geÃ§iÅŸleri ve ferah modern tasarÄ±m.", isNew: true },
+        { id: "elite_purple", category: "elite", name: "ğŸ’œ Elite Violet Wave", description: "Asil mor geÃ§iÅŸler ve premium minimalist yaklaÅŸÄ±m.", isNew: true },
+        { id: "elite_emerald", category: "elite", name: "ğŸ’š Elite Mint Wave", description: "Taze nane yeÅŸili geÃ§iÅŸler ve teknolojik ÅŸÄ±klÄ±k.", isNew: true },
+        { id: "elite_sunset", category: "elite", name: "ğŸ§¡ Elite Sunset Wave", description: "SÄ±cak gÃ¼n batÄ±mÄ± tonlarÄ± ve enerjik modern Ã§izgiler.", isNew: true },
 
         // Athlete Pro
-        { id: "athletic_pro", category: "athletic", name: "🏆 Athlete Pro (Dark)", description: "Yüksek performans odaklı, dinamik ve maskülen sporcu tasarımı.", isNew: true },
-        { id: "athletic_football", category: "athletic", name: "⚽ Football Pro", description: "Futbolcular için yeşil saha ve enerji odaklı özel tasarım.", isNew: true },
-        { id: "athletic_basketball", category: "athletic", name: "🏀 Basketball Pro", description: "Basketbolcular için turuncu vurgulu, sert hatlı parke estetiği.", isNew: true },
-        { id: "athletic_tennis", category: "athletic", name: "🎾 Tennis Pro", description: "Tenisçiler için asil, raket/top vurgulu modern kort tasarımı.", isNew: true },
+        { id: "athletic_pro", category: "athletic", name: "ğŸ† Athlete Pro (Dark)", description: "YÃ¼ksek performans odaklÄ±, dinamik ve maskÃ¼len sporcu tasarÄ±mÄ±.", isNew: true },
+        { id: "athletic_football", category: "athletic", name: "âš½ Football Pro", description: "Futbolcular iÃ§in yeÅŸil saha ve enerji odaklÄ± Ã¶zel tasarÄ±m.", isNew: true },
+        { id: "athletic_basketball", category: "athletic", name: "ğŸ€ Basketball Pro", description: "Basketbolcular iÃ§in turuncu vurgulu, sert hatlÄ± parke estetiÄŸi.", isNew: true },
+        { id: "athletic_tennis", category: "athletic", name: "ğŸ¾ Tennis Pro", description: "TenisÃ§iler iÃ§in asil, raket/top vurgulu modern kort tasarÄ±mÄ±.", isNew: true },
         
         // Turizm & Seyahat
-        { id: "tour_resort", category: "tourism", name: "🌴 Resort & Spa", description: "Turkuaz deniz esintisi, lüks otel ve dinlenme odaklı ferah tasarım.", isNew: true },
-        { id: "tour_adventure", category: "tourism", name: "🌋 Safari & Macera", description: "Toprak tonları, vahşi doğa ve macera tutkunları için dinamik hatlar.", isNew: true },
-        { id: "tour_yacht", category: "tourism", name: "⛵ Yat & Yelken", description: "Lacivert ve beyazın asaletinde, lüks denizcilik ve charter odaklı.", isNew: true },
-        { id: "tour_guide", category: "tourism", name: "🎒 Rehber / Gezgin", description: "Kişisel gezi notları tadında, harita detaylı ve dinamik bir yapı.", isNew: true },
-        { id: "tour_agency", category: "tourism", name: "✈️ Tatil Acentesi", description: "Dünya turu odaklı, güven veren kurumsal ve renkli bir atmosfer.", isNew: true },
-        { id: "tour_winter", category: "tourism", name: "❄️ Kayak & Kış Turizmi", description: "Buz mavisi ve kristal beyaz tonlarında kış sporları estetiği.", isNew: true }
+        { id: "tour_resort", category: "tourism", name: "ğŸŒ´ Resort & Spa", description: "Turkuaz deniz esintisi, lÃ¼ks otel ve dinlenme odaklÄ± ferah tasarÄ±m.", isNew: true },
+        { id: "tour_adventure", category: "tourism", name: "ğŸŒ‹ Safari & Macera", description: "Toprak tonlarÄ±, vahÅŸi doÄŸa ve macera tutkunlarÄ± iÃ§in dinamik hatlar.", isNew: true },
+        { id: "tour_yacht", category: "tourism", name: "â›µ Yat & Yelken", description: "Lacivert ve beyazÄ±n asaletinde, lÃ¼ks denizcilik ve charter odaklÄ±.", isNew: true },
+        { id: "tour_guide", category: "tourism", name: "ğŸ’ Rehber / Gezgin", description: "KiÅŸisel gezi notlarÄ± tadÄ±nda, harita detaylÄ± ve dinamik bir yapÄ±.", isNew: true },
+        { id: "tour_agency", category: "tourism", name: "âœˆï¸ Tatil Acentesi", description: "DÃ¼nya turu odaklÄ±, gÃ¼ven veren kurumsal ve renkli bir atmosfer.", isNew: true },
+        { id: "tour_winter", category: "tourism", name: "â„ï¸ Kayak & KÄ±ÅŸ Turizmi", description: "Buz mavisi ve kristal beyaz tonlarÄ±nda kÄ±ÅŸ sporlarÄ± estetiÄŸi.", isNew: true }
     ]
 
     // Working Hours Management
@@ -528,7 +528,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [workingHours, setWorkingHours] = useState<string[]>(profile?.workingHours || defaultHours)
     const [newHour, setNewHour] = useState("")
 
-    // Modül Yönetimi (Bento Store)
+    // ModÃ¼l YÃ¶netimi (Bento Store)
     const [blocks, setBlocks] = useState<any[]>(profile?.blocks || [])
     const [isBlocksLoading, setIsBlocksLoading] = useState(false)
 
@@ -536,15 +536,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const configBlock = blocks.find(b => b.type === 'template_config')
     const [premiumConfig, setPremiumConfig] = useState(configBlock?.content || {
         videoTitle: "Video",
-        videoLabel: "Tanıtım Videomu İzle",
+        videoLabel: "TanÄ±tÄ±m Videomu Ä°zle",
         videoUrl: "",
         videoThumbnail: "",
-        radarTitle: "Yetenek Pusulası",
+        radarTitle: "Yetenek PusulasÄ±",
         servicesTitle: "Hizmetlerim",
-        portfolioTitle: "Çalışmalarım",
-        contactTitle: "İletişime Geç",
-        emailBtnText: "E-posta Gönder",
-        consultBtnText: "Ücretsiz Danışma",
+        portfolioTitle: "Ã‡alÄ±ÅŸmalarÄ±m",
+        contactTitle: "Ä°letiÅŸime GeÃ§",
+        emailBtnText: "E-posta GÃ¶nder",
+        consultBtnText: "Ãœcretsiz DanÄ±ÅŸma",
         ringColors: ["#FACC15", "#A3E635", "#22D3EE", "#D946EF"]
     })
 
@@ -588,7 +588,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text)
-        setShowToast(t('widgetCopied') || "Kopyalandı!")
+        setShowToast(t('widgetCopied') || "KopyalandÄ±!")
         setTimeout(() => setShowToast(null), 2000)
     }
 
@@ -673,18 +673,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 })
             }
             if (res.ok) {
-                setShowToast("Değişiklikler kaydedildi!")
+                setShowToast("DeÄŸiÅŸiklikler kaydedildi!")
                 setTimeout(() => setShowToast(null), 3000)
                 router.refresh()
             } else {
                 const err = await res.json().catch(() => ({}))
                 console.error("Save error:", err)
-                setShowToast(err.error || "Kaydetme başarısız! Lütfen tekrar deneyin.")
+                setShowToast(err.error || "Kaydetme baÅŸarÄ±sÄ±z! LÃ¼tfen tekrar deneyin.")
                 setTimeout(() => setShowToast(null), 4000)
             }
         } catch (err) {
             console.error(err)
-            setShowToast("Bağlantı hatası!")
+            setShowToast("BaÄŸlantÄ± hatasÄ±!")
             setTimeout(() => setShowToast(null), 4000)
         } finally {
             setIsSaving(false)
@@ -696,10 +696,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
         if (editingServiceIndex !== null) {
             newList = [...serviceList]
             newList[editingServiceIndex] = newService
-            setShowToast("Uzmanlık güncellendi!")
+            setShowToast("UzmanlÄ±k gÃ¼ncellendi!")
         } else {
             newList = [...serviceList, newService]
-            setShowToast("Uzmanlık eklendi!")
+            setShowToast("UzmanlÄ±k eklendi!")
         }
         setServiceList(newList)
         setShowServiceModal(false)
@@ -731,10 +731,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 const updatedProduct = await res.json()
                 if (editingProduct) {
                     setProductList(productList.map((p: any) => p.id === editingProduct.id ? updatedProduct : p))
-                    setShowToast("Proje güncellendi!")
+                    setShowToast("Proje gÃ¼ncellendi!")
                 } else {
                     setProductList([updatedProduct, ...productList])
-                    setShowToast("Ürün eklendi!")
+                    setShowToast("ÃœrÃ¼n eklendi!")
                 }
                 setShowProductModal(false)
                 setEditingProduct(null)
@@ -743,7 +743,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             }
         } catch (err) {
             console.error(err)
-            setShowToast("İşlem başarısız!")
+            setShowToast("Ä°ÅŸlem baÅŸarÄ±sÄ±z!")
             setTimeout(() => setShowToast(null), 3000)
         } finally {
             setIsProductSaving(false)
@@ -751,12 +751,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleDeleteProduct = async (id: string) => {
-        if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return
+        if (!confirm("Bu Ã¼rÃ¼nÃ¼ silmek istediÄŸinize emin misiniz?")) return
         try {
             const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" })
             if (res.ok) {
                 setProductList(productList.filter((p: any) => p.id !== id))
-                setShowToast("Ürün silindi!")
+                setShowToast("ÃœrÃ¼n silindi!")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
@@ -773,14 +773,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setReviewList(reviewList.map((r: any) => r.id === id ? { ...r, isActive: !currentStatus } : r))
-                setShowToast(!currentStatus ? "Yorum onaylandı!" : "Yorum gizlendi!")
+                setShowToast(!currentStatus ? "Yorum onaylandÄ±!" : "Yorum gizlendi!")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) { console.error(err) }
     }
 
     const handleDeleteReview = async (id: string) => {
-        if (!confirm("Bu yorumu silmek istediğinize emin misiniz?")) return
+        if (!confirm("Bu yorumu silmek istediÄŸinize emin misiniz?")) return
         try {
             const res = await fetch("/api/review/delete", {
                 method: "POST",
@@ -804,7 +804,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setAppointmentList(appointmentList.map((a: any) => a.id === id ? { ...a, status } : a))
-                setShowToast(status === "confirmed" ? "Randevu onaylandı!" : "Randevu tamamlandı!")
+                setShowToast(status === "confirmed" ? "Randevu onaylandÄ±!" : "Randevu tamamlandÄ±!")
                 setTimeout(() => setShowToast(null), 3000)
                 setSelectedAppointment(null)
             }
@@ -812,7 +812,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleDeleteAppointment = async (id: string) => {
-        if (!confirm("Bu randevuyu silmek istediğinize emin misiniz?")) return
+        if (!confirm("Bu randevuyu silmek istediÄŸinize emin misiniz?")) return
         try {
             const res = await fetch("/api/appointments/delete", {
                 method: "POST",
@@ -959,7 +959,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     </div>
                     <NavItem
                         icon={<Monitor className="w-5 h-5" />}
-                        label={t('overview') || "Genel Bakış"}
+                        label={t('overview') || "Genel BakÄ±ÅŸ"}
                         active={activeTab === "overview"}
                         onClick={() => {
                             setActiveTab("overview")
@@ -1061,7 +1061,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                     <NavItem
                         icon={<Boxes className="w-5 h-5" />}
-                        label={t('widgets') || "Araçlar"}
+                        label={t('widgets') || "AraÃ§lar"}
                         active={activeTab === "widgets"}
                         onClick={() => {
                             setActiveTab("widgets")
@@ -1114,7 +1114,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                     >
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">{t('welcome')}, <span className="gradient-text">{session?.user?.name}</span> 👋</h1>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-2 text-slate-900">{t('welcome')}, <span className="gradient-text">{session?.user?.name}</span> ğŸ‘‹</h1>
                         <p className="text-slate-400 text-sm font-medium tracking-wide">{t('welcomeSub')}</p>
                     </motion.div>
                     {profile && (
@@ -1160,11 +1160,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                                             <Zap size={20} />
                                         </div>
-                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Standard Araçlar</h3>
+                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Standard AraÃ§lar</h3>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÇ SEÇİN"}</label>
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetSelection') || "ARAÃ‡ SEÃ‡Ä°N"}</label>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {[
                                                 { id: "booking", name: t('widgetBooking'), icon: <Calendar size={18} /> },
@@ -1174,7 +1174,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 { id: "skills", name: t('widgetSkills'), icon: <Zap size={18} /> },
                                                 { id: "countdown", name: t('widgetCountdown'), icon: <Clock size={18} /> },
                                                 { id: "portfolio", name: "Portfolyo", icon: <ImageIcon size={18} /> },
-                                                { id: "tech", name: "Yazılımcı Seti", icon: <Code size={18} /> },
+                                                { id: "tech", name: "YazÄ±lÄ±mcÄ± Seti", icon: <Code size={18} /> },
                                                 { id: "blog", name: "Otomatik Blog", icon: <Rss size={18} /> }
                                             ].map(w => (
                                                 <button
@@ -1261,14 +1261,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="space-y-3 text-left">
 
                                                 <div className="flex items-center justify-between">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESİMLERİ</label>
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">PORTFOLYO RESÄ°MLERÄ°</label>
                                                     <button
                                                         onClick={() => document.getElementById('portfolio-upload')?.click()}
                                                         disabled={isUploadingPortfolio}
                                                         className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
                                                     >
                                                         {isUploadingPortfolio ? <Clock className="w-3 h-3 animate-spin" /> : <Upload className="w-3 h-3" />}
-                                                        RESİM YÜKLE
+                                                        RESÄ°M YÃœKLE
                                                     </button>
                                                     <input
                                                         id="portfolio-upload"
@@ -1288,7 +1288,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     if (!file.type.startsWith('image/')) continue;
 
                                                                     if (file.size > 2 * 1024 * 1024) {
-                                                                        setShowToast(`${file.name} çok büyük (Max 2MB).`);
+                                                                        setShowToast(`${file.name} Ã§ok bÃ¼yÃ¼k (Max 2MB).`);
                                                                         continue;
                                                                     }
 
@@ -1312,7 +1312,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 setTimeout(() => setShowToast(null), 3000);
                                                             } catch (err) {
                                                                 console.error("Processing error:", err);
-                                                                setShowToast("İşlem sırasında bir hata oluştu.");
+                                                                setShowToast("Ä°ÅŸlem sÄ±rasÄ±nda bir hata oluÅŸtu.");
                                                             } finally {
                                                                 setIsUploadingPortfolio(false);
                                                             }
@@ -1380,13 +1380,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 ) : (
                                                     <div className="py-8 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-slate-400 bg-white/50">
                                                         <ImageIcon size={24} className="opacity-20" />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest italic">Henüz resim eklenmedi</span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest italic">HenÃ¼z resim eklenmedi</span>
                                                     </div>
                                                 )}
 
                                                 <details className="group">
                                                     <summary className="text-[9px] font-black uppercase tracking-widest text-slate-400 cursor-pointer hover:text-primary transition-colors flex items-center gap-1 list-none outline-none">
-                                                        <Code size={10} /> Ham Veri (Düzenle)
+                                                        <Code size={10} /> Ham Veri (DÃ¼zenle)
                                                     </summary>
                                                     <textarea
                                                         className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-[10px] font-mono focus:outline-none focus:border-primary min-h-[80px] mt-2 shadow-inner"
@@ -1395,11 +1395,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, portfolioImages: e.target.value })}
                                                     />
                                                 </details>
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yükleyin veya URL'leri dikey çizgi (|) ile ayırarak girin.</p>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Resimleri yÃ¼kleyin veya URL'leri dikey Ã§izgi (|) ile ayÄ±rarak girin.</p>
 
                                                 <div className="space-y-4 pt-4 border-t border-slate-100">
                                                     <div className="space-y-2">
-                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">GitHub Profili (İsteğe Bağlı)</label>
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">GitHub Profili (Ä°steÄŸe BaÄŸlÄ±)</label>
                                                         <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
                                                             <div className="px-3 text-slate-400"><Github size={16} /></div>
                                                             <input
@@ -1412,7 +1412,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Dribbble Profili (İsteğe Bağlı)</label>
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Dribbble Profili (Ä°steÄŸe BaÄŸlÄ±)</label>
                                                         <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
                                                             <div className="px-3 text-slate-400"><Dribbble size={16} /></div>
                                                             <input
@@ -1425,7 +1425,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
-                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Behance Profili (İsteğe Bağlı)</label>
+                                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Behance Profili (Ä°steÄŸe BaÄŸlÄ±)</label>
                                                         <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-primary">
                                                             <div className="px-3 text-slate-400"><Palette size={16} /></div>
                                                             <input
@@ -1445,14 +1445,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     {activeWidget === 'tech' && (
                                         <div className="space-y-4 p-5 bg-slate-50 rounded-[2rem] border border-slate-100 animate-in slide-in-from-top-2">
                                             <div className="space-y-1 text-left">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">KULLANDIĞINIZ TEKNOLOJİLER</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">KULLANDIÄINIZ TEKNOLOJÄ°LER</label>
                                                 <textarea
                                                     className="w-full bg-white border border-slate-200 p-3.5 rounded-xl text-xs font-bold focus:outline-none focus:border-primary min-h-[100px]"
                                                     value={extraWidgetConfig.techStack}
                                                     placeholder="React, Next.js, TypeScript, Node.js"
                                                     onChange={(e) => setExtraWidgetConfig({ ...extraWidgetConfig, techStack: e.target.value })}
                                                 />
-                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Teknolojileri virgülle ayırarak ekleyin.</p>
+                                                <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1">Teknolojileri virgÃ¼lle ayÄ±rarak ekleyin.</p>
                                             </div>
                                         </div>
                                     )}
@@ -1472,9 +1472,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     />
                                                 </div>
                                                 <p className="text-[9px] opacity-40 font-bold uppercase tracking-wider italic px-1 pt-2">
-                                                    Medium için: https://medium.com/feed/@kullaniciadi<br />
-                                                    Substack için: https://kullanici.substack.com/feed<br />
-                                                    Herhangi bir RSS bağlantısı da kullanılabilir.
+                                                    Medium iÃ§in: https://medium.com/feed/@kullaniciadi<br />
+                                                    Substack iÃ§in: https://kullanici.substack.com/feed<br />
+                                                    Herhangi bir RSS baÄŸlantÄ±sÄ± da kullanÄ±labilir.
                                                 </p>
                                             </div>
                                         </div>
@@ -1521,8 +1521,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                     const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
                                                     copyToClipboard(code);
-                                                    // Otomatik olarak harici araç koduna da yerleştir
-                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'Yazılımcı Seti' : activeWidget === 'blog' ? 'Blog Akışı' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
+                                                    // Otomatik olarak harici araÃ§ koduna da yerleÅŸtir
+                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri SayÄ±m' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'YazÄ±lÄ±mcÄ± Seti' : activeWidget === 'blog' ? 'Blog AkÄ±ÅŸÄ±' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'Ä°letiÅŸim' : 'AI Asistan') });
                                                 }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
@@ -1611,15 +1611,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                                                 <Globe size={20} />
                                             </div>
-                                            <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Harici Servis Aracı</h3>
+                                            <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Harici Servis AracÄ±</h3>
                                         </div>
 
                                         <div className="space-y-4 text-left">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Araç Başlığı</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">AraÃ§ BaÅŸlÄ±ÄŸÄ±</label>
                                                 <input
                                                     type="text"
-                                                    placeholder="Örn: Randevu / İletişim Butonu"
+                                                    placeholder="Ã–rn: Randevu / Ä°letiÅŸim Butonu"
                                                     className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-slate-900 focus:outline-none focus:border-emerald-500 transition-all font-bold text-xs"
                                                     value={externalWidget.title}
                                                     onChange={(e) => setExternalWidget({ ...externalWidget, title: e.target.value })}
@@ -1627,7 +1627,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Embed / Gömme Kodu</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Embed / GÃ¶mme Kodu</label>
                                                 <textarea
                                                     rows={4}
                                                     placeholder="<script src='...' data-id='...'></script>"
@@ -1645,8 +1645,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     {externalWidget.code.includes('data-style="floating"') ? <Zap size={20} /> : <Layout size={20} />}
                                                     <span className="text-[10px] font-black uppercase tracking-widest">
                                                         {externalWidget.code.includes('data-style="floating"')
-                                                            ? "Bu araç yüzen buton olarak çalışacaktır (Blok gözükmeyecektir)."
-                                                            : "Bu araç profilinizde blok olarak görünecektir."}
+                                                            ? "Bu araÃ§ yÃ¼zen buton olarak Ã§alÄ±ÅŸacaktÄ±r (Blok gÃ¶zÃ¼kmeyecektir)."
+                                                            : "Bu araÃ§ profilinizde blok olarak gÃ¶rÃ¼necektir."}
                                                     </span>
                                                 </div>
                                             </div>
@@ -1654,7 +1654,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <button
                                                 onClick={async () => {
                                                     if (!externalWidget.code) {
-                                                        setShowToast("Lütfen bir gömme kodu girin!");
+                                                        setShowToast("LÃ¼tfen bir gÃ¶mme kodu girin!");
                                                         return;
                                                     }
                                                     const newBlocks = [...(blocks || [])];
@@ -1676,14 +1676,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     }
 
                                                     await handleSyncBlocks(newBlocks);
-                                                    setShowToast(editingWidgetId ? "Araç başarıyla güncellendi!" : "Yeni araç başarıyla eklendi!");
+                                                    setShowToast(editingWidgetId ? "AraÃ§ baÅŸarÄ±yla gÃ¼ncellendi!" : "Yeni araÃ§ baÅŸarÄ±yla eklendi!");
                                                     setEditingWidgetId(null);
                                                     setExternalWidget({ title: "", code: "", position: "inline" });
                                                     setTimeout(() => setShowToast(null), 3000);
                                                 }}
                                                 className="w-full py-4 bg-emerald-500 text-white font-black uppercase tracking-widest rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-emerald-500/20"
                                             >
-                                                {editingWidgetId ? "GÜNCELLE VE KAYDET" : "YENİ ARAÇ OLARAK EKLE"}
+                                                {editingWidgetId ? "GÃœNCELLE VE KAYDET" : "YENÄ° ARAÃ‡ OLARAK EKLE"}
                                             </button>
 
                                             {editingWidgetId && (
@@ -1694,7 +1694,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     }}
                                                     className="w-full py-4 bg-slate-100 text-slate-500 font-black uppercase tracking-widest rounded-2xl hover:bg-slate-200 transition-all"
                                                 >
-                                                    İPTAL ET
+                                                    Ä°PTAL ET
                                                 </button>
                                             )}
 
@@ -1705,7 +1705,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
                                                             <Boxes size={20} />
                                                         </div>
-                                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Mevcut Araçlar ({(blocks || []).filter((b: any) => b.type === 'external_widget').length})</h3>
+                                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Mevcut AraÃ§lar ({(blocks || []).filter((b: any) => b.type === 'external_widget').length})</h3>
                                                     </div>
 
                                                     <div className="grid grid-cols-1 gap-4">
@@ -1716,9 +1716,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         {block.content?.code?.includes('data-style="floating"') ? <Zap size={18} /> : <Layout size={18} />}
                                                                     </div>
                                                                     <div className="text-left">
-                                                                        <h5 className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{block.content?.title || "İsimsiz Araç"}</h5>
+                                                                        <h5 className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{block.content?.title || "Ä°simsiz AraÃ§"}</h5>
                                                                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                                                                            {block.content?.code?.includes('data-style="floating"') ? "Yüzen Buton" : "Blok (Gömülü)"}
+                                                                            {block.content?.code?.includes('data-style="floating"') ? "YÃ¼zen Buton" : "Blok (GÃ¶mÃ¼lÃ¼)"}
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -1736,12 +1736,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                                 if (prevIdx !== -1) {
                                                                                     [newBlocks[idx], newBlocks[prevIdx]] = [newBlocks[prevIdx], newBlocks[idx]];
                                                                                     await handleSyncBlocks(newBlocks);
-                                                                                    setShowToast("Sıralama güncellendi.");
+                                                                                    setShowToast("SÄ±ralama gÃ¼ncellendi.");
                                                                                     setTimeout(() => setShowToast(null), 2000);
                                                                                 }
                                                                             }}
                                                                             className="p-1 text-slate-400 hover:text-indigo-500 transition-colors"
-                                                                            title="Yukarı Taşı"
+                                                                            title="YukarÄ± TaÅŸÄ±"
                                                                         >
                                                                             <ChevronUp size={16} />
                                                                         </button>
@@ -1757,12 +1757,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                                 if (nextIdx !== -1) {
                                                                                     [newBlocks[idx], newBlocks[nextIdx]] = [newBlocks[nextIdx], newBlocks[idx]];
                                                                                     await handleSyncBlocks(newBlocks);
-                                                                                    setShowToast("Sıralama güncellendi.");
+                                                                                    setShowToast("SÄ±ralama gÃ¼ncellendi.");
                                                                                     setTimeout(() => setShowToast(null), 2000);
                                                                                 }
                                                                             }}
                                                                             className="p-1 text-slate-400 hover:text-indigo-500 transition-colors"
-                                                                            title="Aşağı Taşı"
+                                                                            title="AÅŸaÄŸÄ± TaÅŸÄ±"
                                                                         >
                                                                             <ChevronDown size={16} />
                                                                         </button>
@@ -1775,16 +1775,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                                 window.scrollTo({ top: 300, behavior: 'smooth' });
                                                                             }}
                                                                             className="p-2 text-indigo-500 hover:bg-white rounded-lg transition-all"
-                                                                            title="Düzenle"
+                                                                            title="DÃ¼zenle"
                                                                         >
                                                                             <Edit2 size={16} />
                                                                         </button>
                                                                         <button
                                                                             onClick={async () => {
-                                                                                if (confirm("Bu aracı silmek istediğinize emin misiniz?")) {
+                                                                                if (confirm("Bu aracÄ± silmek istediÄŸinize emin misiniz?")) {
                                                                                     const newBlocks = (blocks || []).filter((b: any) => b.id !== block.id);
                                                                                     await handleSyncBlocks(newBlocks);
-                                                                                    setShowToast("Araç başarıyla silindi.");
+                                                                                    setShowToast("AraÃ§ baÅŸarÄ±yla silindi.");
                                                                                     setTimeout(() => setShowToast(null), 3000);
                                                                                 }
                                                                             }}
@@ -1822,9 +1822,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto">
                                                 <Globe size={20} />
                                             </div>
-                                            <h4 className="font-black text-slate-900 uppercase tracking-tighter text-sm">{externalWidget.title || "Dış Seçili Araç"}</h4>
+                                            <h4 className="font-black text-slate-900 uppercase tracking-tighter text-sm">{externalWidget.title || "DÄ±ÅŸ SeÃ§ili AraÃ§"}</h4>
                                             <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 text-[10px] font-bold">
-                                                WIDGET BURADA<br />GÖMÜLÜ OLARAK GÖRÜNECEK
+                                                WIDGET BURADA<br />GÃ–MÃœLÃœ OLARAK GÃ–RÃœNECEK
                                             </div>
                                         </div>
                                     ) : widgetStyle === "floating" ? (
@@ -1832,13 +1832,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className="space-y-4 flex flex-col items-end">
                                                 <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100 max-w-[280px] animate-in slide-in-from-bottom-4 duration-500 text-left">
                                                     <p className="text-sm font-bold text-slate-900 mb-2">
-                                                        {activeWidget === "booking" ? "📆 Randevu talep edin" : activeWidget === "lead" ? "👋 Bizimle iletişime geçin" : "✨ Size nasıl yardımcı olabilirim?"}
+                                                        {activeWidget === "booking" ? "ğŸ“† Randevu talep edin" : activeWidget === "lead" ? "ğŸ‘‹ Bizimle iletiÅŸime geÃ§in" : "âœ¨ Size nasÄ±l yardÄ±mcÄ± olabilirim?"}
                                                     </p>
                                                     <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
-                                                        {activeWidget === "booking" ? "Size en uygun saati seçerek hemen randevu oluşturun." : activeWidget === "lead" ? "Mesajınızı bırakın, en kısa sürede size geri dönelim." : "Yapay zeka asistanımız her türlü sorunuz için burada."}
+                                                        {activeWidget === "booking" ? "Size en uygun saati seÃ§erek hemen randevu oluÅŸturun." : activeWidget === "lead" ? "MesajÄ±nÄ±zÄ± bÄ±rakÄ±n, en kÄ±sa sÃ¼rede size geri dÃ¶nelim." : "Yapay zeka asistanÄ±mÄ±z her tÃ¼rlÃ¼ sorunuz iÃ§in burada."}
                                                     </p>
                                                     <button className="w-full mt-4 py-3 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20">
-                                                        {activeWidget === "booking" ? "RANDEVU AL" : activeWidget === "lead" ? "MESAJ GÖNDER" : "SOHBETE BAŞLA"}
+                                                        {activeWidget === "booking" ? "RANDEVU AL" : activeWidget === "lead" ? "MESAJ GÃ–NDER" : "SOHBETE BAÅLA"}
                                                     </button>
                                                 </div>
                                                 <div className="w-16 h-16 bg-primary rounded-full shadow-2xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform">
@@ -1865,7 +1865,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     })()}
                                                 </div>
                                                 <h4 className="font-black text-slate-900 uppercase tracking-tighter">
-                                                    {activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'tech' ? 'Teknoloji Seti' : activeWidget === 'blog' ? 'Blog Akışı' : activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}
+                                                    {activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'tech' ? 'Teknoloji Seti' : activeWidget === 'blog' ? 'Blog AkÄ±ÅŸÄ±' : activeWidget === "booking" ? t('widgetBooking') : activeWidget === "lead" ? t('widgetLead') : t('widgetAI')}
                                                 </h4>
                                             </div>
 
@@ -1894,7 +1894,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             )}
 
                                             <button className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20">
-                                                {activeWidget === 'video' ? (extraWidgetConfig.videoBtnText || 'GÖRÜNTÜLE') : activeWidget === 'portfolio' ? 'İNCELE' : (t('confirmBooking') || "GÖNDER")}
+                                                {activeWidget === 'video' ? (extraWidgetConfig.videoBtnText || 'GÃ–RÃœNTÃœLE') : activeWidget === 'portfolio' ? 'Ä°NCELE' : (t('confirmBooking') || "GÃ–NDER")}
                                             </button>
                                         </div>
                                     )}
@@ -1905,7 +1905,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group text-left">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">{t('widgetCustomization')}</h4>
                                     <p className="text-xs text-white/50 leading-relaxed font-medium">
-                                        Kardly profili üzerinde yaptığınız renk, yazı ve içerik değişiklikleri widget üzerinde de anlık olarak güncellenir. Ekstra kod değişikliği gerektirmez. Dış site araçları ise kendi panelindeki ayarlarınıza göre şekillenir.
+                                        Kardly profili Ã¼zerinde yaptÄ±ÄŸÄ±nÄ±z renk, yazÄ± ve iÃ§erik deÄŸiÅŸiklikleri widget Ã¼zerinde de anlÄ±k olarak gÃ¼ncellenir. Ekstra kod deÄŸiÅŸikliÄŸi gerektirmez. DÄ±ÅŸ site araÃ§larÄ± ise kendi panelindeki ayarlarÄ±nÄ±za gÃ¶re ÅŸekillenir.
                                     </p>
                                     <div className="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-[60px] rounded-full group-hover:bg-primary/30 transition-all" />
                                 </div>
@@ -1927,7 +1927,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             {t('acceptTermsError')}
                                         </h3>
                                         <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-xl">
-                                            Hizmetlerimizi kullanmaya devam etmek için Kullanıcı Taahhütnamesini onaylamanız gerekmektedir. Bu işlem KVKK sorumluluğunuzu beyan eder.
+                                            Hizmetlerimizi kullanmaya devam etmek iÃ§in KullanÄ±cÄ± TaahhÃ¼tnamesini onaylamanÄ±z gerekmektedir. Bu iÅŸlem KVKK sorumluluÄŸunuzu beyan eder.
                                         </p>
                                     </div>
                                 </div>
@@ -1941,7 +1941,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     }}
                                     className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-rose-600 transition-all shadow-xl whitespace-nowrap"
                                 >
-                                    HEMEN ONAYLA 👋
+                                    HEMEN ONAYLA ğŸ‘‹
                                 </button>
                             </div>
                         )}
@@ -2308,13 +2308,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     const data = await res.json()
                                                                     if (res.ok && data.url) {
                                                                         setProfileData((prev: any) => ({ ...prev, image: data.url }))
-                                                                        setShowToast("Profil resmi yüklendi! ✨")
+                                                                        setShowToast("Profil resmi yÃ¼klendi! âœ¨")
                                                                     } else {
-                                                                        setShowToast(data.error || "Yükleme hatası")
+                                                                        setShowToast(data.error || "YÃ¼kleme hatasÄ±")
                                                                     }
                                                                 } catch (err) { 
                                                                     console.error(err)
-                                                                    setShowToast("Bağlantı hatası")
+                                                                    setShowToast("BaÄŸlantÄ± hatasÄ±")
                                                                 } finally {
                                                                     setIsProfileImageUploading(false)
                                                                     setTimeout(() => setShowToast(null), 3000)
@@ -2391,13 +2391,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 const data = await res.json()
                                                                 if (res.ok && data.url) {
                                                                     setProfileData((prev: any) => ({ ...prev, profileBgImage: data.url }))
-                                                                    setShowToast("Arka plan görseli yüklendi! ✨")
+                                                                    setShowToast("Arka plan gÃ¶rseli yÃ¼klendi! âœ¨")
                                                                 } else {
-                                                                    setShowToast(data.error || "Yükleme hatası")
+                                                                    setShowToast(data.error || "YÃ¼kleme hatasÄ±")
                                                                 }
                                                             } catch (err) { 
                                                                 console.error(err)
-                                                                setShowToast("Bağlantı hatası")
+                                                                setShowToast("BaÄŸlantÄ± hatasÄ±")
                                                             } finally {
                                                                 setIsBgImageUploading(false)
                                                                 setTimeout(() => setShowToast(null), 3000)
@@ -2412,7 +2412,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 {/* CV / Catalog File */}
                                 <div className="space-y-4 pt-4 border-t border-slate-50">
                                     <div className="flex items-center justify-between px-1">
-                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('cvLabel') || 'CV Dosyası / Katalog'}</label>
+                                        <label className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('cvLabel') || 'CV DosyasÄ± / Katalog'}</label>
                                         <div className="flex items-center gap-3 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100/50">
                                             <input
                                                 type="checkbox"
@@ -2468,13 +2468,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 const data = await res.json()
                                                                 if (res.ok && data.url) {
                                                                     setProfileData((prev: any) => ({ ...prev, cvUrl: data.url }))
-                                                                    setShowToast("Dosya başarıyla yüklendi! ✨")
+                                                                    setShowToast("Dosya baÅŸarÄ±yla yÃ¼klendi! âœ¨")
                                                                 } else {
-                                                                    setShowToast(data.error || "Dosya yükleme hatası")
+                                                                    setShowToast(data.error || "Dosya yÃ¼kleme hatasÄ±")
                                                                 }
                                                             } catch (err) { 
                                                                 console.error(err)
-                                                                setShowToast("Bağlantı hatası")
+                                                                setShowToast("BaÄŸlantÄ± hatasÄ±")
                                                             } finally {
                                                                 setIsCvUploading(false)
                                                                 setTimeout(() => setShowToast(null), 3000)
@@ -2486,7 +2486,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
                                     <p className="text-[9px] text-slate-400 font-medium px-1 italic">
-                                        {profileData.isCatalog ? (t('catalogHint') || "CV butonu yerine 'Katalog Görüntüle' etiketini kullanın.") : (t('cvHint') || "CV dosya linki veya dosyayı yükleyin")}
+                                        {profileData.isCatalog ? (t('catalogHint') || "CV butonu yerine 'Katalog GÃ¶rÃ¼ntÃ¼le' etiketini kullanÄ±n.") : (t('cvHint') || "CV dosya linki veya dosyayÄ± yÃ¼kleyin")}
                                     </p>
                                 </div>
                             </div>
@@ -2716,8 +2716,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         const getMockupTone = (t: string) => {
                                             switch (t) {
                                                 case "samimi": return { rounded: "rounded-[3.5rem]", font: "font-sans", border: "border-none" };
-                                                case "yaratıcı": return { rounded: "rounded-xl skew-x-1", font: "font-mono", border: "border-dashed" };
-                                                case "lüks": return { rounded: "rounded-[2.5rem]", font: "font-serif", border: "border-double border-4" };
+                                                case "yaratÄ±cÄ±": return { rounded: "rounded-xl skew-x-1", font: "font-mono", border: "border-dashed" };
+                                                case "lÃ¼ks": return { rounded: "rounded-[2.5rem]", font: "font-serif", border: "border-double border-4" };
                                                 default: return { rounded: "rounded-[2.8rem]", font: "font-sans", border: "border-solid" };
                                             }
                                         }
@@ -3187,7 +3187,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 type="text"
                                                 value={aiConfig.assistantName}
                                                 onChange={(e) => setAiConfig({ ...aiConfig, assistantName: e.target.value })}
-                                                placeholder="Örn: Kardly AI"
+                                                placeholder="Ã–rn: Kardly AI"
                                                 className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
                                             />
                                         </div>
@@ -3228,7 +3228,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     newBlocks = [...blocks, { type: 'ai_assistant', content: aiConfig, order: 100, isActive: true }]
                                                 }
                                                 await handleSyncBlocks(newBlocks)
-                                                setShowToast(t('aiSettingsSaved') || "Ayarlar kaydedildi! ✨")
+                                                setShowToast(t('aiSettingsSaved') || "Ayarlar kaydedildi! âœ¨")
                                                 setTimeout(() => setShowToast(null), 3000)
                                             } catch (err) {
                                                 setShowToast(t('errorBooking'))
@@ -3394,7 +3394,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 onSelect={(id) => setProfileData({ ...profileData, businessCardTemplateId: id })}
                                 onOrientationChange={(o) => setProfileData({ ...profileData, businessCardOrientation: o })}
                                 user={{
-                                    name: profileData.name || session?.user?.name || "Kullanıcı",
+                                    name: profileData.name || session?.user?.name || "KullanÄ±cÄ±",
                                     username: profile?.username || "demo",
                                     occupation: profileData.occupation,
                                     phone: profileData.phone,
@@ -3425,11 +3425,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     
                                     <div className="flex flex-col items-start leading-none">
                                         <span className="text-white font-black text-xs uppercase tracking-[0.25em]">
-                                            {isSaving ? t('saving') || 'GÜNCELLENİYOR...' : t('saveChanges') || 'DEĞİŞİKLİKLERİ YAYINLA'}
+                                            {isSaving ? t('saving') || 'GÃœNCELLENÄ°YOR...' : t('saveChanges') || 'DEÄÄ°ÅÄ°KLÄ°KLERÄ° YAYINLA'}
                                         </span>
                                         {!isSaving && (
                                             <span className="text-white/40 text-[8px] uppercase tracking-widest mt-1 font-bold group-hover:text-white/60 transition-colors">
-                                                Anında Sitede Güncellenir
+                                                AnÄ±nda Sitede GÃ¼ncellenir
                                             </span>
                                         )}
                                     </div>
@@ -3449,12 +3449,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             {/* Domain Settings */}
                             <div className="md:col-span-2 glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
                                 <h3 className="font-bold flex items-center gap-2">
-                                    <Globe className="w-5 h-5 text-blue-400" /> {t('domainSettings') || 'Alan Adı Ayarları'}
+                                    <Globe className="w-5 h-5 text-blue-400" /> {t('domainSettings') || 'Alan AdÄ± AyarlarÄ±'}
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="block text-sm font-medium mb-2 opacity-60">{t('usernameLabel') || 'Kullanıcı Adı'}</label>
+                                            <label className="block text-sm font-medium mb-2 opacity-60">{t('usernameLabel') || 'KullanÄ±cÄ± AdÄ±'}</label>
                                             <div className="flex gap-2">
                                                 <div className="relative flex-1">
                                                     <input
@@ -3470,7 +3470,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
                                             </div>
                                             <p className="text-[10px] text-foreground/40 mt-2 italic px-1">
-                                                {t('usernameHint') || 'Bu senin profil adresini belirler. Örn: username.kardly.site'}
+                                                {t('usernameHint') || 'Bu senin profil adresini belirler. Ã–rn: username.kardly.site'}
                                             </p>
                                         </div>
                                     </div>
@@ -3478,7 +3478,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <div className="space-y-4">
                                         <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/20 relative overflow-hidden group">
                                             <div className="relative z-10">
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">{t('liveUrl') || 'Canlı Profil Adresi'}</p>
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">{t('liveUrl') || 'CanlÄ± Profil Adresi'}</p>
                                                 <div className="flex items-center justify-between gap-4">
                                                     <a
                                                         href={`https://${profileData.username}.kardly.site`}
@@ -3507,7 +3507,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     className="w-full py-4 bg-primary/10 border border-primary/20 text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
                                 >
                                     {isSaving ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : <CheckCircle2 size={14} />}
-                                    {t('updateSubdomain') || 'ALAN ADINI GÜNCELLE'}
+                                    {t('updateSubdomain') || 'ALAN ADINI GÃœNCELLE'}
                                 </button>
                             </div>
 
@@ -3533,10 +3533,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <label className="block text-sm font-medium mb-4 opacity-60">{t('designVibeLabel')}</label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {[
-                                            { id: "profesyonel", name: `💼 ${t('vibeProfessional')}`, desc: t('vibeProfessionalDesc') },
-                                            { id: "samimi", name: `✨ ${t('vibeSincere')}`, desc: t('vibeSincereDesc') },
-                                            { id: "yaratıcı", name: `🎨 ${t('vibeCreative')}`, desc: t('vibeCreativeDesc') },
-                                            { id: "lüks", name: `👔 ${t('vibeLuxury')}`, desc: t('vibeLuxuryDesc') }
+                                            { id: "profesyonel", name: `ğŸ’¼ ${t('vibeProfessional')}`, desc: t('vibeProfessionalDesc') },
+                                            { id: "samimi", name: `âœ¨ ${t('vibeSincere')}`, desc: t('vibeSincereDesc') },
+                                            { id: "yaratÄ±cÄ±", name: `ğŸ¨ ${t('vibeCreative')}`, desc: t('vibeCreativeDesc') },
+                                            { id: "lÃ¼ks", name: `ğŸ‘” ${t('vibeLuxury')}`, desc: t('vibeLuxuryDesc') }
                                         ].map(tone => (
                                             <button
                                                 key={tone.id}
@@ -3782,7 +3782,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                     {/* Stats Grid */}
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                                        {/* Ziyaretçi Trendi */}
+                                        {/* ZiyaretÃ§i Trendi */}
                                         <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-primary/30 transition-all duration-300 group">
                                             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
                                                 <Users size={20} />
@@ -3798,7 +3798,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         </div>
 
-                                        {/* İçerik Etkileşimi */}
+                                        {/* Ä°Ã§erik EtkileÅŸimi */}
                                         <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 group">
                                             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
                                                 <Activity size={20} />
@@ -3811,7 +3811,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         </div>
 
-                                        {/* Ağ Yayılımı */}
+                                        {/* AÄŸ YayÄ±lÄ±mÄ± */}
                                         <div className="bg-white/5 rounded-3xl p-6 border border-white/10 hover:border-amber-500/30 transition-all duration-300 group">
                                             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-6">
                                                 <Share2 size={20} />
@@ -3910,50 +3910,114 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
-                        <motion.div
-                            layout
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        >
-                            <AnimatePresence mode="popLayout">
-                                {ALL_TEMPLATES.filter(t => selectedTplCat === "all" || t.category === selectedTplCat).map((tpl) => (
-                                    <motion.div
-                                        key={tpl.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        whileHover={{ y: -5 }}
-                                        className={cn(
-                                            "bg-white rounded-[2rem] border overflow-hidden group cursor-pointer transition-all shadow-sm",
-                                            profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary shadow-xl shadow-primary/10" : "border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
-                                        )}
-                                        onClick={() => {
-                                            setProfileData({ ...profileData, templateId: tpl.id });
-                                            handleSave({ templateId: tpl.id });
-                                        }}
-                                    >
-                                        <div className="p-8">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div className="flex flex-col gap-2">
-                                                    <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
+                        <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+                            <div className="xl:col-span-8">
+                                <motion.div
+                                    layout
+                                    className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                                >
+                                    <AnimatePresence mode="popLayout">
+                                        {ALL_TEMPLATES.filter(t => selectedTplCat === "all" || t.category === selectedTplCat).map((tpl) => (
+                                            <motion.div
+                                                key={tpl.id}
+                                                layout
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                whileHover={{ y: -5 }}
+                                                className={cn(
+                                                    "bg-white rounded-[2.5rem] border-2 overflow-hidden group cursor-pointer transition-all h-full flex flex-col",
+                                                    profileData.templateId === tpl.id ? "border-primary bg-primary/[0.02] shadow-[0_20px_50px_-10px_rgba(var(--primary-rgb),0.2)]" : "border-slate-100 hover:border-primary/20 hover:bg-slate-50"
+                                                )}
+                                                onClick={() => {
+                                                    setProfileData({ ...profileData, templateId: tpl.id });
+                                                    handleSave({ templateId: tpl.id });
+                                                }}
+                                            >
+                                                <div className="aspect-[16/10] bg-slate-100 relative overflow-hidden">
+                                                    {(tpl as any).image ? (
+                                                        <img src={(tpl as any).image} alt={tpl.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                                                            <Layout className="w-12 h-12 text-slate-300" />
+                                                        </div>
+                                                    )}
                                                     {tpl.isNew && (
-                                                        <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">{t('new')}</span>
+                                                        <div className="absolute top-4 left-4">
+                                                            <span className="px-3 py-1 bg-emerald-500 text-white text-[9px] font-black rounded-lg uppercase tracking-widest shadow-lg shadow-emerald-500/20">{t('new')}</span>
+                                                        </div>
+                                                    )}
+                                                    {profileData.templateId === tpl.id && (
+                                                        <div className="absolute top-4 right-4 bg-primary text-white p-2 rounded-xl shadow-lg shadow-primary/30">
+                                                            <CheckCircle2 size={16} />
+                                                        </div>
                                                     )}
                                                 </div>
-                                                {profileData.templateId === tpl.id && (
-                                                    <div className="bg-primary text-white p-1.5 rounded-xl shadow-lg shadow-primary/20">
-                                                        <CheckCircle2 size={16} />
+                                                <div className="p-8 flex-1 flex flex-col justify-between">
+                                                    <div>
+                                                        <h3 className="font-black text-slate-900 text-lg mb-2 tracking-tight group-hover:text-primary transition-colors">{tpl.name}</h3>
+                                                        <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2">{tpl.description}</p>
                                                     </div>
-                                                )}
-                                            </div>
-                                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{tpl.description}</p>
-                                        </div>
-                                        {/* Preview Strip */}
-                                        <div className="h-2 bg-slate-50 border-t border-slate-100 group-hover:bg-primary/5 transition-colors" />
-                                    </motion.div>
+                                                    <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between">
+                                                        <span className={cn(
+                                                            "text-[10px] font-black uppercase tracking-widest",
+                                                            profileData.templateId === tpl.id ? "text-primary" : "text-slate-400"
+                                                        )}>
+                                                            {profileData.templateId === tpl.id ? t('active') || "AKTİF" : t('select') || "SEÇ"}
+                                                        </span>
+                                                        <ArrowRight size={14} className={cn(
+                                                            "transition-all",
+                                                            profileData.templateId === tpl.id ? "text-primary translate-x-1" : "text-slate-300 group-hover:text-primary group-hover:translate-x-1"
+                                                        )} />
+                                                    </div>
+                                                </div>
+                                            </motion.div>
                                 ))}
                             </AnimatePresence>
-                        </motion.div>
+                                </motion.div>
+                            </div>
+
+                            <div className="xl:col-span-4 hidden xl:block">
+                                <div className="sticky top-24">
+                                    <div className="bg-slate-900 rounded-[3.5rem] p-4 text-white shadow-3xl shadow-slate-900/40 border-8 border-slate-800 relative z-20 overflow-hidden">
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-3xl z-30" />
+                                        <div className="bg-white rounded-[2.5rem] overflow-hidden aspect-[9/19] relative group">
+                                            <div className="absolute inset-0 bg-slate-50">
+                                                <div className="h-full flex flex-col overflow-hidden">
+                                                    {profileData.username && (
+                                                        <iframe 
+                                                            src={`/${profileData.username}?embed=true&previewTpl=${profileData.templateId}`} 
+                                                            className="w-full h-full border-none pointer-events-none"
+                                                            title="Profile Preview"
+                                                        />
+                                                    )}
+                                                    <AnimatePresence>
+                                                        {isSaving && (
+                                                            <motion.div 
+                                                                initial={{ opacity: 0 }}
+                                                                animate={{ opacity: 1 }}
+                                                                exit={{ opacity: 0 }}
+                                                                className="absolute inset-0 bg-white/60 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-50"
+                                                            >
+                                                                <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Güncelleniyor</p>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-8 px-4 text-center">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full mb-3">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                            <span className="text-[9px] font-black uppercase tracking-widest">Canlı Önizleme</span>
+                                        </div>
+                                        <p className="text-slate-400 text-[10px] font-medium leading-relaxed italic">Şu an seçili olan <span className="text-slate-900 font-bold">{ALL_TEMPLATES.find(t => t.id === profileData.templateId)?.name}</span> tasarımının canlı moddaki hali.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 ) : activeTab === "reviews" ? (
                     <div className="space-y-6">
@@ -4265,13 +4329,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     const data = await res.json();
                                                     if (res.ok && data.url) {
                                                         setNewProduct((prev: any) => ({ ...prev, image: data.url }));
-                                                        setShowToast("Proje resmi yüklendi! ✨");
+                                                        setShowToast("Proje resmi yÃ¼klendi! âœ¨");
                                                     } else {
-                                                        setShowToast(data.error || "Yükleme hatası");
+                                                        setShowToast(data.error || "YÃ¼kleme hatasÄ±");
                                                     }
                                                 } catch (err) {
                                                     console.error(err);
-                                                    setShowToast("Bağlantı hatası");
+                                                    setShowToast("BaÄŸlantÄ± hatasÄ±");
                                                 } finally {
                                                     setIsProductImageUploading(false);
                                                     setTimeout(() => setShowToast(null), 3000);
@@ -4461,7 +4525,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </button>
                                         <button
                                             onClick={() => {
-                                                if (confirm("Bu talebi silmek istediğinize emin misiniz?")) {
+                                                if (confirm("Bu talebi silmek istediÄŸinize emin misiniz?")) {
                                                     handleDeleteLead(selectedLead.id)
                                                     setSelectedLead(null)
                                                 }
@@ -4576,8 +4640,8 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
 
 function BottomNav({ activeTab, setActiveTab, t }: any) {
     const navItems = [
-        { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Özet" },
-        { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "Düzenle" },
+        { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Ã–zet" },
+        { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "DÃ¼zenle" },
         { id: "qrcode", icon: <QrCode className="w-6 h-6" />, label: t('qrcode') || "QR" },
         { id: "businesscard", icon: <IdCard className="w-6 h-6" />, label: t('digitalCard') || "Kart" },
     ]
