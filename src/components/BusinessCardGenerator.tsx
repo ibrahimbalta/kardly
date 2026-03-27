@@ -25,67 +25,30 @@ interface BusinessCardGeneratorProps {
 }
 
 export const TEMPLATES = [
-    // Standard
-    { id: 'minimal_white', name: 'Zen White', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-600', accentText: 'text-indigo-600', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'dots', category: 'Standard' },
-    { id: 'modern_dark', name: 'Obsidian', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-emerald-400', accentText: 'text-emerald-400', secondary: 'text-slate-400', hex: '#020617', pattern: 'grid', category: 'Standard' },
-    { id: 'minimal_noir', name: 'Noir Luxe', bg: 'bg-neutral-900', text: 'text-neutral-100', accent: 'bg-white', accentText: 'text-white', secondary: 'text-neutral-500', hex: '#171717', pattern: 'lines', category: 'Standard' },
-    { id: 'standard_waves', name: 'Soft Waves', bg: 'bg-indigo-50', text: 'text-indigo-950', accent: 'bg-indigo-500', accentText: 'text-indigo-500', secondary: 'text-indigo-700/60', hex: '#eef2ff', pattern: 'waves', category: 'Standard' },
+    // Standard - Upgraded with premium vibes
+    { id: 'minimal_white', name: 'Alabaster', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#6366f1]', accentText: 'text-[#6366f1]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'mesh_standard', category: 'Standard', colors: ['#f8fafc', '#eff6ff', '#f5f3ff'] },
+    { id: 'modern_dark', name: 'Midnight', bg: 'bg-[#030712]', text: 'text-white', accent: 'bg-[#10b981]', accentText: 'text-[#10b981]', secondary: 'text-slate-400', hex: '#030712', pattern: 'mesh_standard', category: 'Standard', colors: ['#030712', '#0f172a', '#1e1b4b'] },
+    { id: 'minimal_noir', name: 'Slate Matte', bg: 'bg-[#0a0a0a]', text: 'text-neutral-100', accent: 'bg-white', accentText: 'text-white', secondary: 'text-neutral-500', hex: '#0a0a0a', pattern: 'grid_subtle', category: 'Standard' },
+    { id: 'standard_waves', name: 'Azure Flow', bg: 'bg-[#f0f9ff]', text: 'text-[#0c4a6e]', accent: 'bg-[#0ea5e9]', accentText: 'text-[#0ea5e9]', secondary: 'text-[#0284c7]/60', hex: '#f0f9ff', pattern: 'waves_layered', category: 'Standard', colors: ['#e0f2fe', '#bae6fd', '#7dd3fc'] },
 
-    // Premium
-    { id: 'vibe_wave', name: 'Vibe Wave', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#24292e' },
-    { id: 'vibe_wave_blue', name: 'Wave Ocean', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#2563eb]', accentText: 'text-[#2563eb]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#1e3a5f' },
-    { id: 'vibe_wave_emerald', name: 'Wave Emerald', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#059669]', accentText: 'text-[#059669]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#064e3b' },
-    { id: 'vibe_wave_purple', name: 'Wave Royal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#7c3aed]', accentText: 'text-[#7c3aed]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#2e1065' },
-    { id: 'vibe_wave_ruby', name: 'Wave Ruby', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#dc2626]', accentText: 'text-[#dc2626]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#7f1d1d' },
-    { id: 'vibe_wave_teal', name: 'Wave Teal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#0d9488]', accentText: 'text-[#0d9488]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#134e4a' },
-    { id: 'vibe_wave_rose', name: 'Wave Ros├®', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c0519' },
-    { id: 'vibe_wave_midnight', name: 'Wave Midnight', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#06b6d4]', accentText: 'text-[#06b6d4]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#0f172a' },
-    { id: 'vibe_wave_forest', name: 'Wave Forest', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#84cc16]', accentText: 'text-[#84cc16]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#14532d' },
-    { id: 'vibe_wave_gold', name: 'Wave Gold', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#d4af37]', accentText: 'text-[#d4af37]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#000000' },
-    { id: 'vibe_wave_slate', name: 'Wave Slate', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#64748b]', accentText: 'text-[#64748b]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#334155' },
-    { id: 'vibe_wave_sunset', name: 'Wave Sunset', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#f97316]', accentText: 'text-[#f97316]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c1d95' },
-    { id: 'vibe_wave_neon', name: 'Wave Neon', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#a3e635]', accentText: 'text-[#a3e635]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#0a0a0a' },
-    { id: 'vibe_geometric', name: 'Vibe Geometric', bg: 'bg-[#1a1a1a]', text: 'text-white', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-300', hex: '#1a1a1a', pattern: 'vibe_geo', category: 'Premium' },
-    { id: 'vibe_elegant', name: 'Vibe Elegant', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e67e22]', accentText: 'text-[#e67e22]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_elegant', category: 'Premium' },
-    { id: 'premium_glass', name: 'Glass Frost', bg: 'bg-white/10', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-[#60a5fa]', secondary: 'text-white/40', hex: '#1e293b', pattern: 'glass', category: 'Premium' },
-    { id: 'premium_luxury', name: 'Golden Era', bg: 'bg-neutral-950', text: 'text-amber-100', accent: 'bg-amber-500', accentText: 'text-[#f59e0b]', secondary: 'text-amber-500/20', hex: '#0a0a0a', pattern: 'luxury', category: 'Premium' },
+    // Premium - Enhanced with Mesh & Gradients
+    { id: 'vibe_wave', name: 'Sunset Vibe', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#f59e0b]', accentText: 'text-[#f59e0b]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_wave', category: 'Premium', colors: ['#f59e0b', '#ef4444', '#7c3aed'], waveColor: '#1e293b' },
+    { id: 'vibe_wave_blue', name: 'Oceanic', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#3b82f6]', accentText: 'text-[#3b82f6]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_wave', category: 'Premium', colors: ['#3b82f6', '#06b6d4', '#2563eb'], waveColor: '#0f172a' },
+    { id: 'vibe_wave_purple', name: 'Royal Velvet', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#8b5cf6]', accentText: 'text-[#8b5cf6]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_gradient_wave', category: 'Premium', colors: ['#8b5cf6', '#d946ef', '#6366f1'], waveColor: '#2e1065' },
+    { id: 'premium_glass', name: 'Ethereal Glass', bg: 'bg-white/10', text: 'text-white', accent: 'bg-[#60a5fa]', accentText: 'text-[#60a5fa]', secondary: 'text-white/40', hex: '#0f172a', pattern: 'mesh_prism', category: 'Premium', colors: ['#1e3a8a', '#3b82f6', '#9333ea'] },
+    { id: 'premium_luxury', name: 'Royal Gold', bg: 'bg-[#050505]', text: 'text-[#fef3c7]', accent: 'bg-[#d97706]', accentText: 'text-[#fbbf24]', secondary: 'text-[#d97706]/20', hex: '#050505', pattern: 'luxury_refined', category: 'Premium', colors: ['#050505', '#1a0b0b', '#422006'] },
 
-    // Ultimate (Elite)
-    { id: 'elite_aurora', name: 'Aurora', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-cyan-500', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_spatial', name: 'Spatial Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_cyber', name: 'Cyberpunk', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-[#d946ef]', colors: ['#c026d3', '#7c3aed', '#db2777'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_mesh', name: 'Mesh Prism', bg: 'bg-black', text: 'text-white', accent: 'bg-fuchsia-600', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_glass', name: 'Frosty Glass', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-blue-500', accentText: 'text-[#3b82f6]', colors: ['#3b82f6', '#6366f1', '#a5b4fc'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_royal', name: 'Elite Royal', bg: 'bg-[#1a0b0b]', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-[#d97706]', colors: ['#92400e', '#d97706', '#f59e0b'], animate: true, hex: '#1a0b0b', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'elite_nebula', name: 'Deep Nebula', bg: 'bg-black', text: 'text-white', accent: 'bg-purple-500', accentText: 'text-[#a855f7]', colors: ['#6b21a8', '#4c1d95', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
+    // Ultimate (Elite) - Pushing the boundaries
+    { id: 'elite_aurora', name: 'Aurora Borealis', bg: 'bg-[#020617]', text: 'text-white', accent: 'bg-[#22d3ee]', accentText: 'text-[#22d3ee]', colors: ['#4facfe', '#00f2fe', '#89f7fe'], animate: true, hex: '#020617', pattern: 'elite_aurora_3d', category: 'Ultimate' },
+    { id: 'elite_spatial', name: 'Cosmos Pro', bg: 'bg-[#050510]', text: 'text-white', accent: 'bg-[#3b82f6]', accentText: 'text-[#3b82f6]', colors: ['#1e3a8a', '#3b82f6', '#0ea5e9'], animate: true, hex: '#050510', pattern: 'elite_spatial_refined', category: 'Ultimate' },
+    { id: 'elite_cyber', name: 'Neo Cyber', bg: 'bg-black', text: 'text-white', accent: 'bg-[#f43f5e]', accentText: 'text-[#f43f5e]', colors: ['#f43f5e', '#8b5cf6', '#000000'], animate: true, hex: '#000000', pattern: 'elite_cyber_glitch_3d', category: 'Ultimate' },
+    { id: 'elite_mesh', name: 'Holographic', bg: 'bg-black', text: 'text-white', accent: 'bg-[#d946ef]', accentText: 'text-[#d946ef]', colors: ['#d946ef', '#06b6d4', '#8b5cf6'], animate: true, hex: '#000000', pattern: 'elite_mesh_complex', category: 'Ultimate' },
 
-    // New 10 Modern Tech Templates
-    { id: 'tech_cyber_pulse', name: 'Cyber Pulse', bg: 'bg-[#0a0a0f]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#0891b2', '#06b6d4', '#0a0a0f'], animate: true, hex: '#0a0a0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_hud_command', name: 'HUD Command', bg: 'bg-[#0c0c0c]', text: 'text-emerald-50', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#059669', '#10b981', '#064e3b'], animate: true, hex: '#0c0c0c', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_circuitry', name: 'Neon Circuit', bg: 'bg-[#050505]', text: 'text-fuchsia-50', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-500', colors: ['#c026d3', '#a21caf', '#701a75'], animate: true, hex: '#050505', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_abstract_flow', name: 'Modern Flow', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1d4ed8', '#3b82f6', '#60a5fa'], animate: true, hex: '#0f172a', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_quantum_grid', name: 'Quantum Grid', bg: 'bg-[#020617]', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4338ca', '#6366f1', '#4f46e5'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_holo_shard', name: 'Holo Shard', bg: 'bg-[#0f0f0f]', text: 'text-white', accent: 'bg-purple-400', accentText: 'text-purple-400', colors: ['#7c3aed', '#8b5cf6', '#c026d3'], animate: true, hex: '#0f0f0f', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_prism_shift', name: 'Prism Shift', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-rose-400', accentText: 'text-rose-400', colors: ['#e11d48', '#f43f5e', '#fb7185'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_minimal_edge', name: 'Minimal Edge', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#000000', '#333333'], animate: false, hex: '#000000', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'elite_wave_layered', category: 'Ultimate' },
-    { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
-
-    // Extraordinary (S─▒rad─▒┼ş─▒) - 3D & Advanced Effects
-    { id: 'extra_3d_glass', name: '3D Crystal', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#0ea5e9', '#6366f1', '#a855f7'], animate: true, hex: '#0f172a', pattern: 'extra_glass_3d', category: 'Extraordinary' },
-    { id: 'extra_neon_portal', name: 'Neon Portal', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#f43f5e', '#8b5cf6', '#d946ef'], animate: true, hex: '#000000', pattern: 'extra_neon_3d', category: 'Extraordinary' },
-    { id: 'extra_liquid_mercury', name: 'Mercury Flow', bg: 'bg-zinc-900', text: 'text-white', accent: 'bg-zinc-400', accentText: 'text-zinc-400', colors: ['#71717a', '#a1a1aa', '#f4f4f5'], animate: true, hex: '#18181b', pattern: 'extra_metal_3d', category: 'Extraordinary' },
-    { id: 'extra_space_warp', name: 'Space Warp', bg: 'bg-[#020205]', text: 'text-indigo-50', accent: 'bg-indigo-500', accentText: 'text-indigo-500', colors: ['#4f46e5', '#312e81', '#000000'], animate: true, hex: '#020205', pattern: 'extra_space_3d', category: 'Extraordinary' },
-    { id: 'extra_holo_mesh', name: 'Holo Web', bg: 'bg-[#050510]', text: 'text-cyan-50', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#22d3ee', '#8b5cf6', '#06b6d4'], animate: true, hex: '#050510', pattern: 'extra_holo_3d', category: 'Extraordinary' },
-    { id: 'extra_magma_stone', name: 'Molten Magma', bg: 'bg-stone-950', text: 'text-orange-50', accent: 'bg-orange-600', accentText: 'text-orange-500', colors: ['#ea580c', '#9a3412', '#431407'], animate: true, hex: '#0c0a09', pattern: 'extra_magma', category: 'Extraordinary' },
-    { id: 'extra_glitch_vibe', name: 'Cyber Glitch', bg: 'bg-[#050505]', text: 'text-white', accent: 'bg-fuchsia-500', accentText: 'text-fuchsia-400', colors: ['#ff00ff', '#00ffff', '#0000ff'], animate: true, hex: '#050505', pattern: 'extra_glitch', category: 'Extraordinary' },
-    { id: 'extra_cosmic_void', name: 'Cosmic Void', bg: 'bg-black', text: 'text-white', accent: 'bg-white', accentText: 'text-white', colors: ['#ffffff', '#1e293b', '#000000'], animate: true, hex: '#000000', pattern: 'extra_void', category: 'Extraordinary' },
-    { id: 'extra_pearl_iris', name: 'Pearl Iris', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-indigo-400', accentText: 'text-sky-500', colors: ['#f0f9ff', '#e0f2fe', '#fdf4ff'], animate: true, hex: '#ffffff', pattern: 'extra_pearl', category: 'Extraordinary' },
-    { id: 'extra_toxic_bio', name: 'Bio Hazard', bg: 'bg-[#020617]', text: 'text-lime-50', accent: 'bg-lime-400', accentText: 'text-lime-400', colors: ['#84cc16', '#3f6212', '#1a2e05'], animate: true, hex: '#020617', pattern: 'extra_bio', category: 'Extraordinary' },
-    { id: 'extra_plasma_flow', name: 'Plasma Flow', bg: 'bg-indigo-950', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4f46e5', '#9333ea', '#db2777'], animate: true, hex: '#1e1b4b', pattern: 'extra_plasma', category: 'Extraordinary' },
-    { id: 'extra_crystal_prism', name: 'Crystal Prism', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#7dd3fc', '#f472b6', '#fbbf24'], animate: true, hex: '#0f172a', pattern: 'extra_crystal', category: 'Extraordinary' },
-    { id: 'extra_matrix_digital', name: 'Matrix Digital', bg: 'bg-black', text: 'text-green-400', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#22c55e', '#166534', '#052e16'], animate: true, hex: '#000000', pattern: 'extra_matrix', category: 'Extraordinary' },
-    { id: 'extra_abstract_origami', name: 'Origami Fold', bg: 'bg-slate-100', text: 'text-slate-900', accent: 'bg-primary', accentText: 'text-primary', colors: ['#ffffff', '#f1f5f9', '#e2e8f0'], animate: true, hex: '#f8fafc', pattern: 'extra_origami', category: 'Extraordinary' }
+    // Extraordinary - Visual Masterpieces
+    { id: 'extra_3d_glass', name: 'Diamond Glass', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-[#38bdf8]', accentText: 'text-[#38bdf8]', colors: ['#0ea5e9', '#6366f1', '#a855f7'], animate: true, hex: '#0f172a', pattern: 'extra_glass_diamond', category: 'Extraordinary' },
+    { id: 'extra_liquid_mercury', name: 'Chrome Flow', bg: 'bg-[#09090b]', text: 'text-white', accent: 'bg-[#d4d4d8]', accentText: 'text-[#d4d4d8]', colors: ['#27272a', '#52525b', '#e4e4e7'], animate: true, hex: '#09090b', pattern: 'extra_chrome_3d', category: 'Extraordinary' },
+    { id: 'extra_magma_stone', name: 'Volcanic Rift', bg: 'bg-[#0c0a09]', text: 'text-[#fff7ed]', accent: 'bg-[#ea580c]', accentText: 'text-[#fb923c]', colors: ['#431407', '#9a3412', '#ea580c'], animate: true, hex: '#0c0a09', pattern: 'extra_magma_refined', category: 'Extraordinary' },
+    { id: 'extra_pearl_iris', name: 'Opaline', bg: 'bg-white', text: 'text-[#0f172a]', accent: 'bg-[#a78bfa]', accentText: 'text-[#8b5cf6]', colors: ['#fdf4ff', '#f0f9ff', '#fff1f2'], animate: true, hex: '#ffffff', pattern: 'extra_opal_3d', category: 'Extraordinary' }
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -245,428 +208,58 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         >
             {/* Background Graphics */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                {tp.pattern === 'dots' && (
-                    <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `radial-gradient(${tp.hex === '#ffffff' ? '#94a3b8' : '#fff'} 1px, transparent 1px)`, backgroundSize: '16px 16px' }} />
-                )}
-                {tp.pattern === 'grid' && (
-                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${tp.hex === '#ffffff' ? '#94a3b8' : '#fff'} 1px, transparent 1px), linear-gradient(90deg, ${tp.hex === '#ffffff' ? '#94a3b8' : '#fff'} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
-                )}
-                {tp.pattern === 'lines' && (
-                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 40px)` }} />
-                )}
-                {tp.pattern === 'waves' && (
-                    <svg className="absolute bottom-0 left-0 w-full opacity-10" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill={tp.hex === '#ffffff' ? '#6366f1' : '#fff'} d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,138.7C960,160,1056,224,1152,240C1248,256,1344,224,1392,208L1440,192L1440,320L0,320Z"></path></svg>
-                )}
-                {tp.pattern === 'luxury' && (
-                    <>
-                        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-amber-500/10 blur-[80px] rounded-full" />
-                        <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-amber-500/5 blur-[80px] rounded-full" />
-                    </>
-                )}
-                {tp.pattern === 'elite_wave_layered' && (
-                    <div className="absolute inset-0 overflow-hidden">
-                        {/* Layer 1: Base Liquid Flow (Animated) */}
-                        <svg className="absolute -left-[30%] top-[-20%] w-[160%] h-[140%] opacity-40 blur-[50px] animate-elite-bg" style={{ animationDuration: '25s' }} viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id={`gradBase-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} stopOpacity="0.8" />
-                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.hex} stopOpacity="0.2" />
-                                </linearGradient>
-                            </defs>
-                            <circle cx="20" cy="20" r="60" fill={`url(#gradBase-${tp.id})`} />
-                        </svg>
-
-                        {/* Layer 2: Major Bold Wave ( matches the large gold waves in 2nd image) */}
-                        <svg className="absolute -left-[50%] top-0 w-[130%] h-full drop-shadow-[25px_0_50px_rgba(0,0,0,0.7)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id={`gradMain-${tp.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor={tp.colors?.[0] || tp.hex} />
-                                    <stop offset="100%" stopColor={tp.colors?.[1] || tp.colors?.[0] || tp.hex} />
-                                </linearGradient>
-                            </defs>
-                            <path d="M0,0 C70,15 70,85 0,100 L100,100 L100,0 Z" fill={`url(#gradMain-${tp.id})`} />
-                        </svg>
-
-                        {/* Layer 3: Secondary Accent Wave with Texture (matches the dotted gold layer) */}
-                        <svg className="absolute -left-[40%] top-0 w-[110%] h-full opacity-50 drop-shadow-[5px_0_15px_rgba(0,0,0,0.4)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <defs>
-                                <pattern id={`waveDots-${tp.id}`} x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                                    <circle cx="1.5" cy="1.5" r="0.7" fill="#fff" fillOpacity="0.3" />
-                                </pattern>
-                            </defs>
-                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={tp.colors?.[2] || tp.colors?.[1] || tp.hex} />
-                            <path d="M0,0 C60,25 60,75 0,100 L25,100 C80,75 80,25 25,0 Z" fill={`url(#waveDots-${tp.id})`} />
-                        </svg>
-
-                        {/* Layer 4: Floating Accent Glow */}
-                        <div className="absolute top-1/2 left-[-10%] w-40 h-40 rounded-full blur-[80px] opacity-30 animate-pulse" style={{ backgroundColor: tp.colors?.[0] || tp.hex }} />
-
-                        {/* Subtle noise/grain overlay */}
-                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                {/* 1. MESH & DYNAMIC GRADIENTS (Standard & Premium Upgrade) */}
+                {(tp.pattern?.includes('mesh') || tp.pattern === 'waves_layered') && (
+                    <div className="absolute inset-0 opacity-40 blur-[120px] animate-elite-bg">
+                        <div className="absolute top-[-20%] left-[-20%] w-full h-full rounded-full opacity-60" style={{ backgroundColor: tp.colors?.[0] || 'rgba(99,102,241,0.2)' }} />
+                        <div className="absolute bottom-[-20%] right-[-20%] w-full h-full rounded-full opacity-40" style={{ backgroundColor: tp.colors?.[1] || 'rgba(244,63,94,0.1)' }} />
+                        {tp.colors?.[2] && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full opacity-30" style={{ backgroundColor: tp.colors[2] }} />}
                     </div>
                 )}
-                {tp.pattern === 'nebula' && (
-                    <>
-                        <div className="absolute top-[-20%] right-[-20%] w-full h-full bg-purple-600/20 blur-[130px] rounded-full animate-pulse" />
-                        <div className="absolute bottom-[-20%] left-[-20%] w-full h-full bg-indigo-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-                        <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/20 via-transparent to-indigo-900/20 animate-elite-bg" />
-                    </>
-                )}
-                {tp.pattern === 'elite_spatial' && (
-                    <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15)_0%,transparent_70%)] animate-elite-bg" />
-                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-blue-500/5 blur-[100px] rounded-full" />
-                    </>
-                )}
-                {tp.pattern === 'elite_cyber' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0a0a0a]" />
-                        <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'linear-gradient(#f0f 1px, transparent 1px), linear-gradient(90deg, #f0f 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(192,38,211,0.2)_0%,transparent_70%)] animate-elite-bg" />
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-fuchsia-500/50 shadow-[0_0_20px_#f0f]" />
-                    </>
-                )}
-                {tp.pattern === 'elite_royal' && (
-                    <>
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0b0b] to-[#0a0a0a]" />
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent shadow-[0_0_15px_rgba(245,158,11,0.3)]" />
-                        <div className="absolute top-[-10%] right-[-10%] w-60 h-60 bg-amber-500/10 blur-[80px] rounded-full animate-pulse" />
-                        <div className="absolute bottom-0 left-0 w-full h-[150px] bg-gradient-to-t from-amber-900/20 to-transparent" />
-                    </>
-                )}
-                {tp.pattern === 'aurora' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#050510]" />
-                        <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[80%] opacity-40 blur-[100px] animate-elite-bg" style={{ background: 'radial-gradient(circle at 30% 30%, #4facfe 0%, transparent 50%), radial-gradient(circle at 70% 60%, #00f2fe 0%, transparent 50%)' }} />
-                        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] bg-indigo-500/10 blur-[80px] rounded-full" />
-                    </>
-                )}
-                {tp.pattern === 'mesh' && (
-                    <div className="absolute inset-0 opacity-[0.2] blur-[70px] animate-elite-bg" style={{ background: 'radial-gradient(circle at 20% 20%, #f0f 0%, transparent 50%), radial-gradient(circle at 80% 80%, #0ff 0%, transparent 50%), radial-gradient(circle at 50% 50%, #8b5cf6 0%, transparent 60%)' }} />
-                )}
-                {tp.pattern === 'frosty' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute top-[10%] right-[10%] w-64 h-64 bg-blue-500/20 blur-[110px] rounded-full" />
-                        <div className="absolute bottom-[20%] left-[-10%] w-80 h-80 bg-indigo-600/15 blur-[130px] rounded-full" />
-                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                    </>
-                )}
-                {tp.pattern === 'glass' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#1e293b]" />
-                        <div className="absolute top-[-50px] right-[-50px] w-[250px] h-[250px] bg-blue-500/20 blur-[90px] rounded-full" />
-                        <div className="absolute bottom-[-50px] left-[-50px] w-[250px] h-[250px] bg-indigo-500/15 blur-[90px] rounded-full" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-white/5" />
-                    </>
-                )}
 
-                {tp.pattern === 'vibe_wave' && (
-                    <>
-                        <div className="absolute top-0 left-0 w-full h-[40%]" style={{ backgroundColor: (tp as any).waveColor || '#24292e' }} />
-                        <svg className="absolute top-[35%] left-0 w-full h-24" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                            <path fill={(tp as any).waveColor || '#24292e'} d="M0,160L80,181.3C160,203,320,245,480,245.3C640,245,800,203,960,176C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+                {/* 2. SPECIFIC SVG OVERLAYS */}
+                {tp.pattern === 'grid_subtle' && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(${tp.hex === '#ffffff' ? '#000' : '#fff'} 1px, transparent 1px), linear-gradient(90deg, ${tp.hex === '#ffffff' ? '#000' : '#fff'} 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+                )}
+                {tp.pattern?.includes('wave') && (
+                    <div className="absolute inset-0 overflow-hidden">
+                        {(tp.pattern === 'vibe_gradient_wave' || tp.pattern === 'vibe_wave') && (
+                            <div className="absolute top-0 left-0 w-full h-[42%] shadow-2xl" style={{ background: tp.colors ? `linear-gradient(135deg, ${tp.colors[0]}, ${tp.colors[1]})` : ((tp as any).waveColor || '#24292e') }} />
+                        )}
+                        <svg className="absolute top-[38%] left-0 w-full h-32" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                            <path fill={tp.colors?.[1] || (tp as any).waveColor || '#fff'} d="M0,160L80,181.3C160,203,320,245,480,245.3C640,245,800,203,960,176C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
                         </svg>
-                    </>
-                )}
-                {tp.pattern === 'vibe_geo' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0a0a0a]" />
-                        <div className="absolute -top-10 -left-10 w-48 h-48 bg-[#e67e22]/15 rounded-full blur-[60px]" />
-                        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#e67e22]/10 rounded-full blur-[60px]" />
-                    </>
-                )}
-                {tp.pattern === 'vibe_elegant' && (
-                    <>
-                        <div className="absolute top-0 left-0 w-full h-6 bg-[#e67e22]" />
-                        <div className="absolute bottom-0 left-0 w-full h-16 bg-[#e67e22]" />
-                    </>
-                )}
-                {tp.pattern === 'cyber_pulse' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0a0a0f]" />
-                        <div className="absolute inset-0 opacity-20 animate-elite-bg" style={{ backgroundImage: 'linear-gradient(rgba(34,211,238,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                        <div className="absolute inset-0 border-[3px] border-cyan-500/30 rounded-[2.5rem]" />
-                        <div className="absolute inset-0 border border-cyan-400/10 rounded-[2.5rem] animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.2)_0%,transparent_70%)] animate-pulse" />
-                    </>
-                )}
-                {tp.pattern === 'hud_command' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0c0c0c]" />
-                        <div className="absolute top-0 left-0 w-full h-full border-[10px] border-emerald-500/5 rounded-[2.5rem]" />
-                        <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-emerald-500/40 animate-pulse" />
-                        <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-emerald-500/40 animate-pulse" />
-                        <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-emerald-500/40 animate-pulse" />
-                        <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-emerald-500/40 animate-pulse" />
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,rgba(52,211,153,0.15)_0%,transparent_60%)] animate-elite-bg" />
-                    </>
-                )}
-                {tp.pattern === 'circuitry' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#050505]" />
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 100h100v100h100v-100h100M50 200v100h150v-50h100" stroke="#f0f" strokeWidth="2" fill="none" className="animate-pulse" />
-                            <circle cx="100" cy="100" r="3" fill="#f0f" className="animate-ping" style={{ animationDuration: '3s' }} />
-                            <circle cx="200" cy="200" r="3" fill="#f0f" className="animate-ping" style={{ animationDuration: '4s' }} />
-                        </svg>
-                        <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-900/20 via-transparent to-transparent animate-elite-bg" />
-                    </>
-                )}
-                {tp.pattern === 'abstract_flow' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0f172a]" />
-                        <div className="absolute -top-1/4 -left-1/4 w-full h-full bg-blue-600/20 rounded-full blur-[100px] animate-elite-bg" />
-                        <div className="absolute -bottom-1/4 -right-1/4 w-full h-full bg-indigo-600/20 rounded-full blur-[100px] animate-elite-bg" style={{ animationDelay: '2s' }} />
-                    </>
-                )}
-                {tp.pattern === 'quantum_grid' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#020617]" />
-                        <div className="absolute inset-0 opacity-[0.1] animate-elite-bg" style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                        <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_0_100px_rgba(99,102,241,0.2)]" />
-                        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-indigo-500/30 animate-pulse" />
-                    </>
-                )}
-                {tp.pattern === 'holo_shard' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#0f0f0f]" />
-                        <div className="absolute top-[10%] left-[10%] w-40 h-40 bg-purple-500/15 rotate-45 skew-x-12 blur-[40px] animate-elite-bg" />
-                        <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-blue-500/15 -rotate-12 skew-y-12 blur-[40px] animate-elite-bg" style={{ animationDelay: '3s' }} />
-                    </>
-                )}
-                {tp.pattern === 'prism_shift' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute inset-0 opacity-15 animate-elite-bg" style={{ background: 'linear-gradient(135deg, #f43f5e 0%, transparent 40%), linear-gradient(225deg, #3b82f6 0%, transparent 40%)' }} />
-                        <div className="absolute top-0 left-0 w-full h-full border-[1px] border-white/10 rounded-[2.5rem]" />
-                    </>
-                )}
-                {tp.pattern === 'minimal_edge' && (
-                    <>
-                        <div className="absolute inset-0 bg-black" />
-                        <div className="absolute inset-2 border-[1px] border-white/20 rounded-[2rem]" />
-                        <div className="absolute top-4 left-4 right-4 h-[1px] bg-white/10 animate-pulse" />
-                    </>
-                )}
-                {tp.pattern === 'data_rain' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#030712]" />
-                        <div className="absolute top-0 left-10 w-[2px] h-20 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-40 animate-bounce" style={{ animationDuration: '3s' }} />
-                        <div className="absolute top-40 right-20 w-[2px] h-32 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-40 animate-bounce" style={{ animationDuration: '5s' }} />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,197,94,0.1)_0%,transparent_70%)] animate-pulse" />
-                    </>
-                )}
-                {tp.pattern === 'liquid_neon' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute -top-[10%] -left-[10%] w-[120%] h-[40%] bg-amber-500/15 blur-[60px] rounded-full rotate-6 animate-elite-bg" />
-                        <div className="absolute top-[30%] -right-[10%] w-60 h-60 bg-blue-500/15 blur-[80px] rounded-full animate-elite-bg" style={{ animationDelay: '4s' }} />
-                    </>
+                    </div>
                 )}
 
-                {/* Extraordinary Patterns (3D & Visual Effects) */}
-                {tp.pattern === 'extra_glass_3d' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] opacity-20 blur-[100px] animate-pulse" style={{ background: `radial-gradient(circle, ${tp.colors?.[0]} 0%, transparent 70%)` }} />
+                {/* 3. LUXURY & ELITE REFINED PATTERNS */}
+                {tp.pattern?.includes('luxury') && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#050505] via-[#1a0b0b] to-black">
+                        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(217,119,6,0.15)_0%,transparent_50%)] animate-pulse" />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `radial-gradient(#fbbf24 0.5px, transparent 0.5px)`, backgroundSize: '20px 20px' }} />
+                    </div>
+                )}
+
+                {/* 4. ADVANCED ELITE & EXTRAORDINARY EFFECTS (Layered 3D) */}
+                {(tp.pattern?.includes('elite_') || tp.pattern?.includes('extra_')) && (
+                    <div className="absolute inset-0">
+                        {/* Dynamic 3D Highlights */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-black/20" />
                         
-                        {/* 3D Embossed Layer 1 */}
-                        <svg className="absolute -left-[20%] top-0 w-full h-full opacity-30 drop-shadow-[20px_0_40px_rgba(0,0,0,0.8)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M0,0 C80,20 80,80 0,100 L100,100 L100,0 Z" fill={tp.colors?.[0] || tp.accent} />
-                        </svg>
-
-                        {/* 3D Embossed Layer 2 */}
-                        <svg className="absolute -left-[10%] top-0 w-full h-full opacity-20 drop-shadow-[10px_0_20px_rgba(0,0,0,0.5)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M0,0 C60,30 60,70 0,100 L50,100 C80,70 80,30 50,0 Z" fill={tp.colors?.[1] || "#fff"} />
-                        </svg>
-
-                        <div className="absolute top-[20%] right-[10%] w-40 h-40 bg-indigo-500/20 blur-[60px] rounded-full animate-floating" />
-                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-sky-500/10 to-transparent" />
-                    </>
+                        {/* Shimmering Elements */}
+                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] animate-rotate-slow opacity-20" style={{ background: `conic-gradient(from 0deg at 50% 50%, transparent, ${tp.colors?.[0] || tp.hex}, transparent)` }} />
+                        
+                        {/* Noise Texture for Depth */}
+                        <div className="absolute inset-0 opacity-[0.05] mix-blend-overlay" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")' }} />
+                        
+                        {/* Specific Extraordinary Enhancements */}
+                        {tp.pattern?.includes('glass') && <div className="absolute inset-0 backdrop-blur-[1px] border border-white/10" />}
+                        {tp.pattern?.includes('chrome') && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/40" />}
+                    </div>
                 )}
 
-                {tp.pattern === 'extra_neon_3d' && (
-                    <>
-                        <div className="absolute inset-0 bg-black" />
-                        
-                        {/* Perspective Emboss Layer */}
-                        <svg className="absolute right-0 top-0 h-full w-1/2 opacity-20 drop-shadow-[-25px_0_50px_rgba(244,63,94,0.6)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M100,0 L20,0 C50,50 50,50 20,100 L100,100 Z" fill={tp.colors?.[0] || "#f43f5e"} />
-                        </svg>
-
-                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ backgroundImage: 'linear-gradient(rgba(244,63,94,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,63,94,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-50%)' }} />
-                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-rose-500/20" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-rose-500/20 blur-[80px] rounded-full animate-pulse" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_metal_3d' && (
-                    <>
-                        <div className="absolute inset-0 bg-zinc-900" />
-                        
-                        {/* Chiseled Edge Emboss */}
-                        <div className="absolute inset-0 opacity-40" style={{ backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.3) 100%)' }} />
-                        <div className="absolute top-0 left-0 w-full h-1 bg-white/10" />
-                        
-                        <div className="absolute inset-0 opacity-[0.15] animate-elite-bg" style={{ background: 'radial-gradient(circle at 20% 30%, #fff 0%, transparent 60%), radial-gradient(circle at 80% 70%, #555 0%, transparent 60%)' }} />
-                        <div className="absolute top-[-20%] left-[-20%] w-[140%] h-[140%] bg-gradient-to-br from-white/10 via-transparent to-black/30 pointer-events-none shadow-[25px_0_50px_rgba(0,0,0,0.7)]" />
-                        <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_space_3d' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#020205]" />
-                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #fff 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }} />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent shadow-[0_0_30px_rgba(79,70,229,0.5)] rotate-[-15deg]" />
-                        <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full animate-pulse" />
-                        <div className="absolute bottom-[-10%] left-[-10%] w-48 h-48 bg-purple-600/10 blur-[80px] rounded-full animate-floating" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_holo_3d' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#050510]" />
-                        <div className="absolute inset-0 opacity-30 animate-elite-bg" style={{ background: 'conic-gradient(from 180deg at 50% 50%, #22d3ee 0%, #8b5cf6 25%, #d946ef 50%, #22d3ee 75%, #22d3ee 100%)', filter: 'blur(60px)' }} />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,5,16,0.8)_100%)]" />
-                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_magma' && (
-                    <>
-                        <div className="absolute inset-0 bg-stone-950" />
-                        
-                        {/* Embossed Magma Layer */}
-                        <svg className="absolute left-0 top-0 w-full h-full opacity-50 drop-shadow-[0_0_20px_rgba(234,88,12,0.4)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M0,20 Q40,50 0,80 L0,100 L100,100 L100,0 L0,0 Z" fill="#1c1917" />
-                        </svg>
-
-                        <div className="absolute top-0 left-0 w-full h-full opacity-30 animate-pulse" style={{ background: 'radial-gradient(circle at 30% 20%, #ea580c 0%, transparent 60%), radial-gradient(circle at 70% 80%, #9a3412 0%, transparent 60%)', filter: 'blur(40px)' }} />
-                        <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 100">
-                            <filter id="lava-crack">
-                                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="4" seed="5" />
-                                <feDisplacementMap in="SourceGraphic" scale="10" />
-                            </filter>
-                            <rect width="100" height="100" filter="url(#lava-crack)" fill="none" stroke="#f97316" strokeWidth="0.5" />
-                        </svg>
-                    </>
-                )}
-
-                {tp.pattern === 'extra_glitch' && (
-                    <>
-                        <div className="absolute inset-0 bg-black" />
-                        <div className="absolute inset-0 opacity-15 overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-500 animate-glitch-line" />
-                            <div className="absolute top-1/4 left-0 w-full h-[1px] bg-rose-500 animate-glitch-line" style={{ animationDelay: '1s' }} />
-                            <div className="absolute top-2/3 left-0 w-full h-[3px] bg-purple-500 animate-glitch-line" style={{ animationDelay: '2s' }} />
-                        </div>
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/asfalt-light.png')] opacity-[0.4] mix-blend-overlay" />
-                        <div className="absolute -left-[10%] top-[-10%] w-[120%] h-[40%] bg-fuchsia-600/10 blur-[100px] animate-pulse" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_void' && (
-                    <>
-                        <div className="absolute inset-0 bg-black" />
-                        
-                        {/* Deep Void Emboss */}
-                        <svg className="absolute inset-0 w-full h-full opacity-40 drop-shadow-[inset_0_0_50px_rgba(255,255,255,0.2)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
-                            <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="5" />
-                        </svg>
-
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border-2 border-white/5 rounded-full animate-rotate-slow" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/5 blur-3xl rounded-full animate-floating" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,1)_85%)]" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_pearl' && (
-                    <>
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-pink-50" />
-                        
-                        {/* Iridescent Emboss Layers */}
-                        <svg className="absolute -left-1/2 top-[-10%] w-[150%] h-[120%] opacity-15 drop-shadow-[20px_20px_40px_rgba(0,0,0,0.1)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M0,0 C100,10 100,90 0,100 Z" fill="rgba(255,255,255,0.8)" />
-                        </svg>
-
-                        <div className="absolute inset-0 opacity-40 animate-elite-bg" style={{ background: 'linear-gradient(45deg, rgba(255,0,255,0.08) 0%, rgba(0,255,255,0.08) 50%, rgba(255,255,0,0.08) 100%)' }} />
-                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-rotate-slow opacity-25" style={{ backgroundImage: 'conic-gradient(from 0deg at 50% 50%, transparent, rgba(255,255,255,1), transparent)' }} />
-                        <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(255,255,255,1)]" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_bio' && (
-                    <>
-                        <div className="absolute inset-0 bg-[#020617]" />
-                        <div className="absolute inset-0 opacity-20 animate-pulse" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #84cc16 0.5px, transparent 0px)', backgroundSize: '15px 15px' }} />
-                        
-                        {/* Bio Emboss Membrane */}
-                        <div className="absolute inset-8 border border-lime-400/20 rounded-full shadow-[0_0_50px_rgba(132,204,22,0.1),inset_0_0_50px_rgba(132,204,22,0.1)] animate-floating" />
-                        
-                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(132,204,22,0.1)_0%,transparent_70%)]" />
-                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-lime-400/50 to-transparent" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_plasma' && (
-                    <>
-                        <div className="absolute inset-0 bg-indigo-950" />
-                        
-                        {/* Plasma Cavities (Embossed) */}
-                        <svg className="absolute -right-1/4 top-0 h-full w-full opacity-30 drop-shadow-[-30px_0_60px_rgba(0,0,0,0.7)]" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M100,0 C20,30 20,70 100,100 Z" fill={tp.colors?.[1] || "#9333ea"} />
-                        </svg>
-
-                        <div className="absolute inset-0 opacity-40 blur-[60px] animate-elite-bg" style={{ background: `radial-gradient(circle at 20% 30%, ${tp.colors?.[0]} 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${tp.colors?.[1]} 0%, transparent 50%), radial-gradient(circle at 50% 50%, ${tp.colors?.[2]} 0%, transparent 50%)` }} />
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.15]" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_crystal' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-950" />
-                        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-                        
-                        {/* Embossed Crystal Layers */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] border border-white/10 rounded-full animate-rotate-slow shadow-[0_0_40px_rgba(255,255,255,0.05)]" />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] border border-white/5 rounded-full animate-rotate-slow" style={{ animationDirection: 'reverse' }} />
-                        
-                        <div className="absolute top-[15%] left-[15%] w-32 h-32 bg-sky-500/15 rotate-45 animate-floating blur-2xl" />
-                        <div className="absolute bottom-[15%] right-[15%] w-32 h-32 bg-rose-500/15 -rotate-12 animate-floating blur-2xl" style={{ animationDelay: '2s' }} />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_matrix' && (
-                    <>
-                        <div className="absolute inset-0 bg-black" />
-                        
-                        {/* Digital Emboss Frames */}
-                        <div className="absolute inset-4 border border-green-500/10 rounded-2xl shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]" />
-                        
-                        <div className="absolute inset-0 opacity-20 overflow-hidden">
-                            {[...Array(12)].map((_, i) => (
-                                <div key={i} className="absolute top-0 w-px h-full bg-gradient-to-b from-transparent via-green-500 to-transparent animate-matrix-rain" style={{ left: `${i * 8.5}%`, animationDelay: `${Math.random() * 4}s`, animationDuration: `${2.5 + Math.random() * 3.5}s` }} />
-                            ))}
-                        </div>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.85)_100%)]" />
-                    </>
-                )}
-
-                {tp.pattern === 'extra_origami' && (
-                    <>
-                        <div className="absolute inset-0 bg-slate-50" />
-                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(30deg, #000 1px, transparent 1px), linear-gradient(150deg, #000 1px, transparent 1px), linear-gradient(270deg, #000 1px, transparent 1px)', backgroundSize: '60px 52px' }} />
-                        
-                        {/* 3D Folded Emboss Layers */}
-                        <div className="absolute top-0 right-0 w-2/3 h-full bg-white shadow-[-30px_0_60px_rgba(0,0,0,0.05)] rotate-[-8deg] origin-top-right border-l border-black/[0.02]" />
-                        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-slate-100/40 shadow-[0_-30px_60px_rgba(0,0,0,0.05)] rotate-[3deg] origin-bottom-left border-t border-black/[0.02]" />
-                    </>
-                )}
+                {/* Common Texture Overlay for all tiers */}
+                <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
             </div>
 
             {/* Card Inner Content (Portrait) */}
