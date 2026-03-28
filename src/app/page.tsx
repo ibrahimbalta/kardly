@@ -709,9 +709,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
-              { name: 'Ayşe Kara', role: 'UX Designer', text: t('testimonial1'), gradient: 'from-rose-500 to-pink-500' },
-              { name: 'Mehmet Yılmaz', role: 'Gayrimenkul Danışmanı', text: t('testimonial2'), gradient: 'from-violet-500 to-indigo-500' },
-              { name: 'Elif Demir', role: 'Freelance Fotoğrafçı', text: t('testimonial3'), gradient: 'from-cyan-500 to-teal-500' }
+              { name: t('tagDesigner'), role: t('f1Title'), text: t('testimonial1'), gradient: 'from-rose-500 to-pink-500', icon: <Palette size={20} /> },
+              { name: t('tagRealEstate'), role: t('f8Title'), text: t('testimonial2'), gradient: 'from-violet-500 to-indigo-500', icon: <MapPin size={20} /> },
+              { name: t('tagFreelance'), role: t('f5Title'), text: t('testimonial3'), gradient: 'from-cyan-500 to-teal-500', icon: <Briefcase size={20} /> }
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -724,29 +724,27 @@ export default function Home() {
                 {/* Gradient top accent */}
                 <div className={`absolute top-0 left-8 right-8 h-[3px] rounded-b-full bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 
-                {/* Stars */}
-                <div className="flex gap-1 mb-6">
-                  {[1, 2, 3, 4, 5].map(s => (
-                    <div key={s} className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
-                      <Star size={13} className="fill-amber-400 text-amber-400" />
+                {/* Label */}
+                <div className="mb-6">
+                    <div className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full w-fit bg-slate-50 text-slate-400 group-hover:text-white transition-colors duration-500", `group-hover:${item.gradient}`)}>
+                        PREMIUM
                     </div>
-                  ))}
                 </div>
                 
-                {/* Quote */}
-                <p className="text-slate-600 text-[15px] leading-relaxed mb-8">&ldquo;{item.text}&rdquo;</p>
+                {/* Description */}
+                <p className="text-slate-600 text-[15px] leading-relaxed mb-8">{item.text}</p>
                 
-                {/* Author */}
+                {/* Author Info (Repurposed for Category) */}
                 <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
                   <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-sm font-bold text-white shadow-lg`}>
-                    {item.name.split(' ').map(n => n[0]).join('')}
+                    {item.icon}
                   </div>
                   <div>
                     <div className="text-[15px] font-bold text-slate-900">{item.name}</div>
                     <div className="text-xs text-slate-400 font-medium">{item.role}</div>
                   </div>
                   <div className="ml-auto">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shadow-sm">
                       <Check size={11} className="text-emerald-600" />
                     </div>
                   </div>
@@ -909,7 +907,7 @@ export default function Home() {
                         <div key={i} className="w-6 h-6 rounded-full border-2 border-[#0a0a0f] bg-slate-800" />
                       ))}
                     </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">50,000+ Members</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{t('footerCommunity')}</span>
                   </div>
                </div>
             </div>

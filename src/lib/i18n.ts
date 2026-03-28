@@ -536,11 +536,14 @@ export const translations: any = {
         preview: "Önizleme",
 
         // Social Proof
-        usersLabel: "Kullanıcılarımız",
-        usersTitle: "Binlerce profesyonel Kardly kullanıyor",
-        testimonial1: "Müşterilerime projelerimi göstermek hiç bu kadar kolay olmamıştı. QR kodum hep yanımda.",
-        testimonial2: "Randevu takibi ve istatistikler sayesinde satışlarım %30 arttı. Süper bir araç.",
-        testimonial3: "Portfolyomu tek linkte toplamak işlerimi kat kat hızlandırdı. Herkes soruyor nasıl yaptığımı.",
+        usersLabel: "Kullanım Alanları",
+        usersTitle: "Profesyonel ağınızı Kardly ile büyütün",
+        testimonial1: "Tüm portfolyonuzu tek bir şık linkte toplayın. Müşterileriniz projelerinizi saniyeler içinde inceler.",
+        testimonial2: "QR kodlu kartvizitinizle müşterilerinizi doğrudan ilanlarınıza yönlendirin. Randevu sistemini aktif edin.",
+        testimonial3: "Hizmetlerinizi sergileyin, ödeme alın ve görüşme taleplerinizi tek yerden yönetin. Profesyonelliğinizi artırın.",
+        tagDesigner: "Tasarımcılar & Kreatifler",
+        tagRealEstate: "Gayrimenkul & Satış",
+        tagFreelance: "Freelancerlar & Eğitmenler",
 
         // CTA
         ctaTitle: "Dijital kimliğinizi bugün oluşturun",
@@ -573,6 +576,10 @@ export const translations: any = {
         heroDesc2: "Projeleriniz, randevularınız ve ödemeleriniz — hepsi tek bir modern profilde. Dakikalar içinde oluşturun, dünyayla paylaşın.",
         activeUsers: "Aktif Kullanıcı",
         satisfaction: "5.0 Müşteri Memnuniyeti",
+        heroStat1Value: "ÜCRETSİZ",
+        heroStat1Label: "Ömür Boyu Kullanım",
+        heroStat2Value: "LİMİTSİZ",
+        heroStat2Label: "Bağlantı Paylaşımı",
         callNow: "Hemen Ara",
         statusNew: "YENİ",
         statusContacted: "İLETİŞİME GEÇİLDİ",
@@ -582,6 +589,7 @@ export const translations: any = {
         contactedLeads: "Görüşülen",
         completedLeads: "Tamamlanan",
         sendEmail: "E-posta Gönder",
+        footerCommunity: "Sende Kaliteli Bağlantılar Kur",
 
         // Terms of Use
         termsOfUse: "Kullanım Şartları",
@@ -1343,6 +1351,10 @@ export const translations: any = {
         heroDesc2: "Your projects, appointments, and payments — all in one modern profile. Create in minutes, share with the world.",
         activeUsers: "Active Users",
         satisfaction: "5.0 Customer Satisfaction",
+        heroStat1Value: "FREE",
+        heroStat1Label: "Lifetime Use",
+        heroStat2Value: "UNLIMITED",
+        heroStat2Label: "Link Sharing",
         callNow: "Call Now",
         statusNew: "NEW",
         statusContacted: "CONTACTED",
@@ -1352,6 +1364,7 @@ export const translations: any = {
         contactedLeads: "Contacted",
         completedLeads: "Completed",
         sendEmail: "Send Email",
+        footerCommunity: "Join the Quality Network",
 
         // Terms of Use
         termsOfUse: "Terms of Use",

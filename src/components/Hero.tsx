@@ -135,16 +135,17 @@ export function Hero({ onHowItWorksClick }: HeroProps) {
                                 ))}
                                 <div className="w-10 h-10 rounded-full border-2 border-white bg-rose-500 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">+</div>
                             </div>
-                            <div>
-                                <div className="text-xl font-black text-slate-900 leading-none mb-1">2,400+</div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('activeUsers')}</div>
+                             <div>
+                                <div className="text-xl font-black text-slate-900 leading-none mb-1">{t('heroStat1Value')}</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('heroStat1Label')}</div>
                             </div>
                             <div className="h-10 w-[1px] bg-slate-100" />
                             <div className="hidden sm:block">
-                                <div className="flex items-center gap-1 text-amber-500 mb-1">
-                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                                <div className="text-xl font-black text-slate-900 leading-none mb-1 flex items-center gap-1.5 text-emerald-500">
+                                    <ShieldCheck size={18} />
+                                    {t('heroStat2Value')}
                                 </div>
-                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('satisfaction')}</div>
+                                <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{t('heroStat2Label')}</div>
                             </div>
                         </motion.div>
                     </div>
