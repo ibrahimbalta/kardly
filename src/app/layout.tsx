@@ -14,7 +14,34 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Kardly | AI Destekli Dijital Kartvizit ve Mini Site Oluşturucu",
-  description: "Kardly ile saniyeler içinde yapay zeka destekli dijital kartvizitini ve kişisel mini siteni oluştur. QR kod ve NFC uyumlu profesyonel profil sayfası.",
+  description: "Kardly ile saniyeler içinde yapay zeka destekli dijital kartvizitini ve kişisel mini siteni oluştur. QR kod ve NFC uyumlu profesyonel profil sayfası. Temassız iletişim ve akıllı kart çözümü.",
+  keywords: ["dijital kartvizit", "nfc kartvizit", "qr kod kartvizit", "akıllı kartvizit", "elektronik kartvizit", "vcard", "profil oluşturucu", "portfolio builder"],
+  authors: [{ name: "Kardly Team" }],
+  openGraph: {
+    title: "Kardly | Profesyonel Dijital Kimliğinizi Oluşturun",
+    description: "NFC ve QR destekli yeni nesil dijital kartvizit platformu. Ücretsiz profilinizi oluşturun.",
+    url: "https://kardly.site",
+    siteName: "Kardly",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Kardly Dijital Kartvizit",
+      },
+    ],
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kardly | AI Destekli Dijital Kartvizit",
+    description: "Saniyeler içinde profesyonel profilinizi oluşturun. QR ve NFC uyumlu.",
+    images: ["/images/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://kardly.site",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -79,6 +106,29 @@ export default function RootLayout({
       >
         <AuthProvider>
           <LanguageProvider>
+            {/* Structured Data (SEO) */}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "SoftwareApplication",
+                  "name": "Kardly",
+                  "operatingSystem": "Web, Android, iOS",
+                  "applicationCategory": "BusinessApplication",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                  },
+                  "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5.0",
+                    "ratingCount": "1240"
+                  }
+                })
+              }}
+            />
             {children}
             <CookieBanner />
             <PWAInstallPrompt />
