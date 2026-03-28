@@ -35,6 +35,7 @@ import {
   MapPin
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
 import { HowItWorksModal } from "@/components/HowItWorksModal"
 
