@@ -540,10 +540,10 @@ export const translations: any = {
         usersTitle: "Profesyonel ağınızı Kardly ile büyütün",
         testimonial1: "Tüm portfolyonuzu tek bir şık linkte toplayın. Müşterileriniz projelerinizi saniyeler içinde inceler.",
         testimonial2: "QR kodlu kartvizitinizle müşterilerinizi doğrudan ilanlarınıza yönlendirin. Randevu sistemini aktif edin.",
-        testimonial3: "Işıklı tabela, kutu harf ve dijital baskı projelerinizi galeri olarak sergileyin. Müşterileriniz modellerinizi telefonundan incelesin.",
+        testimonial3: "Hizmetlerinizi sergileyin, ödeme alın ve görüşme taleplerinizi tek yerden yönetin. Profesyonelliğinizi artırın.",
         tagDesigner: "Tasarımcılar & Kreatifler",
         tagRealEstate: "Gayrimenkul & Satış",
-        tagSignage: "Tabela & Reklam Hizmetleri",
+        tagFreelance: "Freelancerlar & Danışmanlar",
 
         // CTA
         ctaTitle: "Dijital kimliğinizi bugün oluşturun",
