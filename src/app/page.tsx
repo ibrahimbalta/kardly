@@ -853,7 +853,6 @@ export default function Home() {
               <ul className="space-y-4">
                 <li><a href="#features" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Zap size={14} className="text-amber-500" /> {t('features')}</a></li>
                 <li><a href="#templates" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Palette size={14} className="text-indigo-500" /> {t('templates')}</a></li>
-                <li><a href="#" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><CreditCard size={14} className="text-rose-500" /> {t('pricing')}</a></li>
               </ul>
             </div>
 
