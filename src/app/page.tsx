@@ -31,7 +31,8 @@ import {
   Instagram,
   Twitter,
   Linkedin,
-  Play
+  Play,
+  MapPin
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTranslation } from "@/context/LanguageContext"
