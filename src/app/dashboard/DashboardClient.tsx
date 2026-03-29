@@ -561,8 +561,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
         isEnabled: true,
         assistantName: "Kardly AI",
         greeting: "",
-        instructions: ""
+        instructions: "",
+        knowledgeBase: []
     })
+    const [newKbPair, setNewKbPair] = useState({ q: "", a: "" })
 
     // Update aiConfig when blocks are loaded
     useEffect(() => {
@@ -3333,6 +3335,75 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 rows={4}
                                                 className="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                                             />
+                                        </div>
+
+                                        <div className="space-y-4 pt-4 border-t border-slate-100">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-500">
+                                                    <FileText size={16} />
+                                                </div>
+                                                <div>
+                                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{t('aiKnowledgeBaseLabel')}</h4>
+                                                    <p className="text-[9px] text-slate-400 font-medium">{t('aiKnowledgeBaseSub')}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <input
+                                                    type="text"
+                                                    value={newKbPair.q}
+                                                    onChange={(e) => setNewKbPair({ ...newKbPair, q: e.target.value })}
+                                                    placeholder={t('addQuestionPlaceholder')}
+                                                    className="w-full h-12 bg-slate-50 border-none rounded-xl px-5 text-sm font-bold text-slate-900 focus:ring-1 focus:ring-primary/20 transition-all"
+                                                />
+                                                <textarea
+                                                    value={newKbPair.a}
+                                                    onChange={(e) => setNewKbPair({ ...newKbPair, a: e.target.value })}
+                                                    placeholder={t('addAnswerPlaceholder')}
+                                                    rows={2}
+                                                    className="w-full bg-slate-50 border-none rounded-xl p-5 text-sm font-bold text-slate-900 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
+                                                />
+                                                <button
+                                                    onClick={() => {
+                                                        if (!newKbPair.q || !newKbPair.a) return
+                                                        const currentKb = aiConfig.knowledgeBase || []
+                                                        setAiConfig({
+                                                            ...aiConfig,
+                                                            knowledgeBase: [...currentKb, newKbPair]
+                                                        })
+                                                        setNewKbPair({ q: "", a: "" })
+                                                    }}
+                                                    className="w-full py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    <Plus size={14} /> {t('addPairBtn')}
+                                                </button>
+                                            </div>
+
+                                            <div className="space-y-2 mt-4 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
+                                                {(aiConfig.knowledgeBase || []).length === 0 ? (
+                                                    <div className="py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{t('noKnowledgeBase')}</p>
+                                                    </div>
+                                                ) : (
+                                                    (aiConfig.knowledgeBase || []).map((kb: any, i: number) => (
+                                                        <div key={i} className="bg-white p-4 rounded-2xl border border-slate-100 flex gap-4 group hover:border-slate-300 transition-all relative">
+                                                            <div className="flex-1 space-y-1">
+                                                                <p className="text-xs font-black text-slate-900 leading-tight">Q: {kb.q}</p>
+                                                                <p className="text-[11px] font-medium text-slate-500 leading-relaxed">A: {kb.a}</p>
+                                                            </div>
+                                                            <button 
+                                                                onClick={() => {
+                                                                    const updatedKb = aiConfig.knowledgeBase.filter((_: any, idx: number) => idx !== i)
+                                                                    setAiConfig({ ...aiConfig, knowledgeBase: updatedKb })
+                                                                }}
+                                                                className="opacity-0 group-hover:opacity-100 p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all absolute top-2 right-2 shadow-sm"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </button>
+                                                        </div>
+                                                    ))
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 

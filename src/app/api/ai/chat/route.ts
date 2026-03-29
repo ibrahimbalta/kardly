@@ -16,8 +16,16 @@ export async function POST(req: Request) {
         const aiBlock = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
         const aiConfig = aiBlock?.content || {
             assistantName: "Kardly AI",
-            instructions: ""
+            instructions: "",
+            knowledgeBase: []
         }
+
+        const knowledgeBase = aiConfig.knowledgeBase || []
+        const kbPrompt = knowledgeBase.length > 0 ? `
+        === ÖZEL BİLGİLER & SIKÇA SORULAN SORULAR ===
+        Aşağıdaki bilgiler profil sahibi tarafından asistan olarak senin bilmen için özel olarak girilmiştir. Kullanıcı benzer sorular sorduğunda bu yanıtları esas al:
+        ${knowledgeBase.map((kb: any) => `Soru: ${kb.q}\nCevap: ${kb.a}`).join("\n\n")}
+        ` : ""
 
         const systemPrompt = `
         Sen ${profile.user.name}'in dijital asistanısın${aiConfig.assistantName !== 'Kardly AI' ? ` (Adın: ${aiConfig.assistantName})` : ""}. Görevin, profil sayfasını ziyaret eden kişilerin sorularını yanıtlamak ve onlara yardımcı olmaktır.
@@ -29,6 +37,7 @@ export async function POST(req: Request) {
         - Biyografi: ${profile.bio || "Belirtilmedi"}
         - Hizmetler: ${JSON.stringify(profile.services || [])}
         - Sosyal Medya: ${JSON.stringify(profile.socialLinks || [])}
+        ${kbPrompt}
         
         === KURALLAR ===
         1. Her zaman nazik, profesyonel ve yardımcı ol.
@@ -36,7 +45,7 @@ export async function POST(req: Request) {
         3. Yanıtlarını kısa ve öz tut.
         4. Eğer kullanıcı randevu almak isterse, sayfadaki "Randevu Al" butonunu kullanabileceğini söyle.
         5. Eğer iletişim kurmak isterse, "İletişime Geç" butonuna tıklamasını veya mail/telefon bilgilerini paylaşabileceğini belirt.
-        6. Bilmediğin konularda uydurma yapma, "Bu konuda İbrahim Bey'e danışıp size dönebiliriz" de.
+        6. Bilmediğin konularda uydurma yapma. Eğer "ÖZEL BİLGİLER" kısmında cevap yoksa, "Bu konuda ${profile.user.name}'e danışıp size dönebiliriz" de.
         7. Yanıtlarda emojiler kullanabilirsin ama aşırıya kaçma.
         ${aiConfig.instructions ? `\n=== ÖZEL TALİMATLAR ===\n${aiConfig.instructions}` : ""}
         

@@ -146,8 +146,14 @@ export const translations: any = {
         exampleInstruction: "Örnek Talimat",
         aiInstructionExampleText: "Sorulara esprili yanıtlar ver ve mutlaka her cümlenin sonuna ✨ ekle.",
         aiFeature1: "7/24 Aktif Destek",
-        aiFeature2: "Bilgi Tabanlı Yanıtlar",
+        aiFeature2: "Bilgi Odaklı Yanıtlar",
         aiFeature3: "Kişiselleştirilmiş Karakter",
+        aiKnowledgeBaseLabel: "Bilgi Bankası (Soru & Cevap)",
+        aiKnowledgeBaseSub: "Asistanın bilmesi gereken özel bilgileri (fiyatlar, özellikler vb.) soru-cevap şeklinde ekleyin.",
+        addQuestionPlaceholder: "Soru (Örn: Oda fiyatlarınız ne kadar?)",
+        addAnswerPlaceholder: "Cevap (Örn: Çift kişilik odalarımız gecelik $100'dan başlamaktadır.)",
+        addPairBtn: "Bilgi Ekle",
+        noKnowledgeBase: "Henüz özel bilgi eklenmemiş.",
 
         // Profile Sections
         myProjects: "Projelerim",
@@ -927,6 +933,12 @@ export const translations: any = {
         aiFeature1: "24/7 Active Support",
         aiFeature2: "Knowledge-Based Responses",
         aiFeature3: "Personalized Character",
+        aiKnowledgeBaseLabel: "Knowledge Base (Q&A)",
+        aiKnowledgeBaseSub: "Add specific info (prices, features, etc.) that the assistant should know in Q&A format.",
+        addQuestionPlaceholder: "Question (E.g. What are your room rates?)",
+        addAnswerPlaceholder: "Answer (E.g. Our double rooms start at $100 per night.)",
+        addPairBtn: "Add Information",
+        noKnowledgeBase: "No custom information added yet.",
 
         // Profile Sections
         myProjects: "Projects",
