@@ -5,6 +5,7 @@ import Link from "next/link"
 // Build trigger: 2026-03-07T09:22:00
 import { Navbar } from "@/components/Navbar"
 import { Hero } from "@/components/Hero"
+import { TemplateGallery } from "@/components/TemplateGallery"
 import {
   Layout,
   Shield,
@@ -32,7 +33,18 @@ import {
   Twitter,
   Linkedin,
   Play,
-  MapPin
+  MapPin,
+  MessageSquare,
+  Music,
+  Heart,
+  ShoppingCart,
+  Anchor,
+  BookOpen,
+  Camera,
+  Coffee,
+  Code2,
+  Stethoscope,
+  Scale
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -79,6 +91,9 @@ export default function Home() {
     <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
       <Navbar />
       <Hero onHowItWorksClick={() => setIsHowItWorksOpen(true)} />
+      
+      {/* ─── TEMPLATE GALLERY ─── */}
+      <TemplateGallery />
 
       {/* ─── HOW IT WORKS ─── */}
       <section className="py-32 md:py-40 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>
@@ -690,69 +705,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── SOCIAL PROOF ─── */}
-      <section className="py-32 md:py-40 px-6 relative overflow-hidden bg-white">
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 80% 20%, rgba(244,63,94,0.04) 0%, transparent 50%), radial-gradient(at 20% 80%, rgba(99,102,241,0.04) 0%, transparent 50%)' }} />
-        
-        <div className="max-w-6xl mx-auto relative">
-          <div className="text-center mb-20 md:mb-24">
+      {/* ─── INDUSTRY SHOWCASE: BROADENING THE SCOPE ─── */}
+      <section id="industries" className="py-32 md:py-40 px-6 relative overflow-hidden bg-slate-50/50">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100/50 mb-6"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100/50 mb-6"
             >
-              <Star size={13} className="fill-amber-500 text-amber-500" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">{t('usersLabel')}</span>
+              <Zap size={13} className="text-indigo-500" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-indigo-600">{t('industriesTitle')}</span>
             </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]"
-            >{t('usersTitle')}</motion.h2>
+              className="text-4xl md:text-6xl font-black tracking-tighter text-slate-950 mb-6 leading-none italic"
+            >{t('industriesTitle')}</motion.h2>
+            <p className="text-slate-500 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">{t('industriesSubTitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
             {[
-              { name: t('tagDesigner'), role: t('f1Title'), text: t('testimonial1'), gradient: 'from-rose-500 to-pink-500', icon: <Palette size={20} /> },
-              { name: t('tagRealEstate'), role: t('f8Title'), text: t('testimonial2'), gradient: 'from-violet-500 to-indigo-500', icon: <MapPin size={20} /> },
-              { name: t('tagFreelance'), role: t('f5Title'), text: t('testimonial3'), gradient: 'from-cyan-500 to-teal-500', icon: <Briefcase size={20} /> }
+              { label: t('industryLaw'), icon: <Scale />, color: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
+              { label: t('industryHealth'), icon: <Stethoscope />, color: 'bg-rose-50 text-rose-600 border-rose-100' },
+              { label: t('industryCreative'), icon: <Palette />, color: 'bg-violet-50 text-violet-600 border-violet-100' },
+              { label: t('industryIT'), icon: <Code2 />, color: 'bg-sky-50 text-sky-600 border-sky-100' },
+              { label: t('industryRealEstate'), icon: <MapPin />, color: 'bg-amber-50 text-amber-600 border-amber-100' },
+              { label: t('industryInfluencer'), icon: <Instagram />, color: 'bg-pink-50 text-pink-600 border-pink-100' },
+              { label: t('industryFood'), icon: <Coffee />, color: 'bg-orange-50 text-orange-600 border-orange-100' },
+              { label: t('industryEducation'), icon: <BookOpen />, color: 'bg-blue-50 text-blue-600 border-blue-100' },
+              { label: t('industryBeauty'), icon: <Heart />, color: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
+              { label: t('industryTrade'), icon: <ShoppingCart />, color: 'bg-fuchsia-50 text-fuchsia-600 border-fuchsia-100' },
+              { label: t('industryArtist'), icon: <Camera />, color: 'bg-slate-50 text-slate-600 border-slate-100' },
+              { label: t('industrySport'), icon: <Zap />, color: 'bg-teal-50 text-teal-600 border-teal-100' }
             ].map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative bg-white rounded-[28px] border border-slate-200/60 p-8 md:p-9 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:border-slate-300/80 transition-all duration-500 hover:-translate-y-1"
+                transition={{ delay: i * 0.05 }}
+                className={`group relative p-6 rounded-3xl border ${item.color} hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center`}
               >
-                {/* Gradient top accent */}
-                <div className={`absolute top-0 left-8 right-8 h-[3px] rounded-b-full bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
-                {/* Label */}
-                <div className="mb-6">
-                    <div className={cn("text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full w-fit bg-slate-50 text-slate-400 group-hover:text-white transition-colors duration-500", `group-hover:${item.gradient}`)}>
-                        PREMIUM
-                    </div>
+                <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 transition-transform group-hover:rotate-6 group-hover:scale-110">
+                  {item.icon}
                 </div>
+                <span className="text-[11px] md:text-xs font-black uppercase tracking-widest leading-tight">{item.label}</span>
                 
-                {/* Description */}
-                <p className="text-slate-600 text-[15px] leading-relaxed mb-8">{item.text}</p>
-                
-                {/* Author Info (Repurposed for Category) */}
-                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-sm font-bold text-white shadow-lg`}>
-                    {item.icon}
-                  </div>
-                  <div>
-                    <div className="text-[15px] font-bold text-slate-900">{item.name}</div>
-                    <div className="text-xs text-slate-400 font-medium">{item.role}</div>
-                  </div>
-                  <div className="ml-auto">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shadow-sm">
-                      <Check size={11} className="text-emerald-600" />
+                {/* Decorative dots */}
+                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex gap-1">
+                        <div className="w-1 h-1 rounded-full bg-current" />
+                        <div className="w-1 h-1 rounded-full bg-current opacity-60" />
+                        <div className="w-1 h-1 rounded-full bg-current opacity-30" />
                     </div>
-                  </div>
                 </div>
               </motion.div>
             ))}
+          </div>
+          
+          {/* Trust badge */}
+          <div className="mt-20 flex justify-center">
+            <div className="px-8 py-4 rounded-3xl bg-white border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-6">
+                <div className="flex -space-x-3">
+                    {[1,2,3,4].map(i => <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 shadow-sm" />)}
+                </div>
+                <div className="text-left">
+                    <div className="text-sm font-bold text-slate-900 leading-tight">10.000+ Profesyonel</div>
+                    <div className="text-[10px] font-medium text-slate-400 uppercase tracking-widest tracking-widest">{t('usersTitle')}</div>
+                </div>
+            </div>
           </div>
         </div>
       </section>
