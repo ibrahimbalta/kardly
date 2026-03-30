@@ -41,10 +41,14 @@ export default function SSSPage() {
             <div className="bg-slate-50 border-b border-slate-100">
                 <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-rose-200">
-                            <Layout className="text-white w-5 h-5" />
+                        <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-rose-200/40 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Layout className="text-white w-5 h-5 relative z-10" />
                         </div>
-                        <span className="text-xl font-extrabold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
+                        <div className="flex flex-col items-start">
+                            <span className="text-xl font-black tracking-tighter leading-none text-slate-950">Kardly<span className="text-rose-500">.site</span></span>
+                            <span className="text-[9px] font-bold text-slate-400 tracking-[0.1em] mt-0.5 ml-0.5">link to success</span>
+                        </div>
                     </Link>
                     <Link href="/" className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-slate-900 transition-colors">
                         <ArrowLeft size={16} /> {t('back')}

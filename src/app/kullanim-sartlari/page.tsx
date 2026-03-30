@@ -13,11 +13,15 @@ export default function KullanimSartlariPage() {
             {/* Header / Navigation */}
             <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:bg-rose-600 shadow-sm">
-                            <Layout className="text-white w-4 h-4" />
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-rose-200/40 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-rose-600 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Layout className="text-white w-5 h-5 relative z-10" />
                         </div>
-                        <span className="text-lg font-bold tracking-tight text-slate-900">Kardly<span className="text-rose-500">.</span></span>
+                        <div className="flex flex-col items-start">
+                            <span className="text-xl font-black tracking-tighter leading-none text-slate-950">Kardly<span className="text-rose-500">.site</span></span>
+                            <span className="text-[9px] font-bold text-slate-400 tracking-[0.1em] mt-0.5 ml-0.5">link to success</span>
+                        </div>
                     </Link>
                     <Link href="/" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500 hover:text-slate-900 transition-colors">
                         <ArrowLeft size={14} /> {t('back')}
