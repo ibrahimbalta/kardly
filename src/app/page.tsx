@@ -759,24 +759,11 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-          
-          {/* Trust badge */}
-          <div className="mt-20 flex justify-center">
-            <div className="px-8 py-4 rounded-3xl bg-white border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-6">
-                <div className="flex -space-x-3">
-                    {[1,2,3,4].map(i => <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 shadow-sm" />)}
-                </div>
-                <div className="text-left">
-                    <div className="text-sm font-bold text-slate-900 leading-tight">10.000+ Profesyonel</div>
-                    <div className="text-[10px] font-medium text-slate-400 uppercase tracking-widest tracking-widest">{t('usersTitle')}</div>
-                </div>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* ─── CTA: COMPACT LIGHT ─── */}
-      <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
+      <section className="py-16 md:py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
         {/* Dynamic Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute inset-0 bg-slate-50/40" />
