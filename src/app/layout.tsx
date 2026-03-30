@@ -13,13 +13,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kardly | AI Destekli Dijital Kartvizit ve Mini Site Oluşturucu",
-  description: "Kardly ile saniyeler içinde yapay zeka destekli dijital kartvizitini ve kişisel mini siteni oluştur. QR kod ve NFC uyumlu profesyonel profil sayfası. Temassız iletişim ve akıllı kart çözümü.",
-  keywords: ["dijital kartvizit", "nfc kartvizit", "qr kod kartvizit", "akıllı kartvizit", "elektronik kartvizit", "vcard", "profil oluşturucu", "portfolio builder"],
-  authors: [{ name: "Kardly Team" }],
+  title: {
+    default: "Kardly | AI Destekli Dijital Kartvizit ve Mini Site Oluşturucu",
+    template: "%s | Kardly"
+  },
+  description: "Kardly ile saniyeler içinde yapay zeka destekli dijital kartvizit ve kişisel mini site oluşturun. QR kod ve NFC uyumlu profesyonel profil sayfası ile yeni nesil temassız iletişim.",
+  keywords: [
+    "dijital kartvizit", "nfc kartvizit", "qr kod kartvizit", "akıllı kartvizit", "elektronik kartvizit", 
+    "vcard", "profil oluşturucu", "portfolio builder", "temassız kartvizit", "yeni nesil kartvizit", 
+    "dijital kimlik", "akıllı kimlik", "digital business card", "nfc card", "qr business card"
+  ],
+  authors: [{ name: "Kardly Team", url: "https://kardly.site" }],
+  creator: "Kardly",
+  publisher: "Kardly",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: "Kardly | Profesyonel Dijital Kimliğinizi Oluşturun",
-    description: "NFC ve QR destekli yeni nesil dijital kartvizit platformu. Ücretsiz profilinizi oluşturun.",
+    title: "Kardly | AI Destekli Profesyonel Dijital Kimliğinizi Oluşturun",
+    description: "NFC ve QR destekli yeni nesil dijital kartvizit platformu. Ücretsiz profesyonel profilinizi oluşturun ve paylaşın.",
     url: "https://kardly.site",
     siteName: "Kardly",
     images: [
@@ -27,7 +41,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Kardly Dijital Kartvizit",
+        alt: "Kardly Dijital Kartvizit Oluşturucu",
       },
     ],
     locale: "tr_TR",
@@ -35,30 +49,27 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kardly | AI Destekli Dijital Kartvizit",
-    description: "Saniyeler içinde profesyonel profilinizi oluşturun. QR ve NFC uyumlu.",
+    title: "Kardly | AI Destekli Yeni Nesil Dijital Kartvizit",
+    description: "Saniyeler içinde profesyonel dijital kartvizitinizi oluşturun. QR ve NFC uyumlu akıllı çözümler.",
     images: ["/images/og-image.png"],
+    creator: "@kardlysite",
   },
   alternates: {
     canonical: "https://kardly.site",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Kardly",
-    startupImage: [
-      {
-        url: "/icons/icon-512x512.png",
-      },
-    ],
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  other: {
-    "mobile-web-app-capable": "yes",
-  },
+  category: "technology",
 };
 
 export const viewport: Viewport = {
@@ -110,23 +121,72 @@ export default function RootLayout({
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "SoftwareApplication",
-                  "name": "Kardly",
-                  "operatingSystem": "Web, Android, iOS",
-                  "applicationCategory": "BusinessApplication",
-                  "offers": {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
+                __html: JSON.stringify([
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "Organization",
+                    "name": "Kardly",
+                    "url": "https://kardly.site",
+                    "logo": "https://kardly.site/icons/icon-512x512.png",
+                    "description": "AI destekli dijital kartvizit ve mini site oluşturucu platform.",
+                    "sameAs": [
+                      "https://instagram.com/kardlysite",
+                      "https://twitter.com/kardlysite",
+                      "https://linkedin.com/company/kardly"
+                    ],
+                    "contactPoint": {
+                      "@type": "ContactPoint",
+                      "contactType": "customer service",
+                      "url": "https://kardly.site/iletisim",
+                      "availableLanguage": ["Turkish", "English"]
+                    }
                   },
-                  "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "5.0",
-                    "ratingCount": "1240"
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "name": "Kardly",
+                    "url": "https://kardly.site",
+                    "description": "Yapay zeka destekli dijital kartvizit ve kişisel mini site oluşturucu.",
+                    "inLanguage": "tr",
+                    "potentialAction": {
+                      "@type": "SearchAction",
+                      "target": "https://kardly.site/?q={search_term_string}",
+                      "query-input": "required name=search_term_string"
+                    }
+                  },
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "WebApplication",
+                    "name": "Kardly",
+                    "url": "https://kardly.site",
+                    "applicationCategory": "BusinessApplication",
+                    "operatingSystem": "Web",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "0",
+                      "priceCurrency": "TRY",
+                      "description": "Ücretsiz dijital kartvizit oluşturma"
+                    },
+                    "featureList": [
+                      "AI destekli dijital kartvizit oluşturma",
+                      "QR kod ve NFC uyumlu paylaşım",
+                      "Profesyonel şablonlar",
+                      "Gerçek zamanlı analitik",
+                      "Kişisel mini site",
+                      "Online ödeme entegrasyonu"
+                    ]
+                  },
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                      { "@type": "ListItem", "position": 1, "name": "Ana Sayfa", "item": "https://kardly.site/" },
+                      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://kardly.site/blog" },
+                      { "@type": "ListItem", "position": 3, "name": "SSS", "item": "https://kardly.site/sss" },
+                      { "@type": "ListItem", "position": 4, "name": "İletişim", "item": "https://kardly.site/iletisim" }
+                    ]
                   }
-                })
+                ])
               }}
             />
             {children}
