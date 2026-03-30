@@ -93,7 +93,7 @@ export default function Home() {
       <Hero onHowItWorksClick={() => setIsHowItWorksOpen(true)} />
 
       {/* ─── HOW IT WORKS ─── */}
-      <section className="py-32 md:py-40 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}>
+      <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
         {/* Decorative mesh background */}
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4, backgroundImage: 'radial-gradient(at 20% 80%, rgba(244,63,94,0.08) 0%, transparent 50%), radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%)' }} />
         
@@ -186,7 +186,7 @@ export default function Home() {
         </div>
       </section>
       {/* ─── FEATURES: COMPACT TECH HUB ─── */}
-      <section id="features" className="py-24 px-6 relative overflow-hidden border-b border-slate-100" style={{ background: 'linear-gradient(135deg, #fff 0%, #fdf2f8 30%, #eef2ff 70%, #fff 100%)' }}>
+      <section id="features" className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #fff 0%, #fdf2f8 30%, #eef2ff 70%, #fff 100%)' }}>
         {/* Animated Background Effects - Visible Wavy Feel */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           {/* Rose blob - top left */}
@@ -321,7 +321,7 @@ export default function Home() {
       </section>
 
       {/* ─── SHOWCASE: COMPACT REFINED TILES ─── */}
-      <section className="py-24 px-6 bg-slate-50/50 relative overflow-hidden border-b border-slate-100">
+      <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #eef2ff 0%, #fff 50%, #fdf2f8 100%)' }}>
         <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           {/* Text: Compact and Side-by-Side on Desktop */}
           <div className="flex-1 text-left">
@@ -458,7 +458,7 @@ export default function Home() {
 
 
       {/* ─── FEATURE DEEP DIVE ─── */}
-      <section className="py-24 md:py-32 px-6 bg-white relative overflow-hidden">
+      <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #fdf2f8 0%, #ffffff 50%, #eef2ff 100%)' }}>
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -585,7 +585,7 @@ export default function Home() {
       </section>
 
       {/* ─── ABOUT US ─── */}
-      <section id="about" className="py-32 md:py-40 px-6 relative overflow-hidden bg-white">
+      <section id="about" className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #eef2ff 0%, #ffffff 50%, #fff 100%)' }}>
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
         
         <div className="max-w-6xl mx-auto relative">
@@ -644,7 +644,7 @@ export default function Home() {
       </section>
 
       {/* ─── TEMPLATES: HIGH-END GRID ─── */}
-      <section id="templates" className="py-24 px-6 relative overflow-hidden bg-white">
+      <section id="templates" className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
         {/* Dynamic Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -703,7 +703,7 @@ export default function Home() {
       </section>
 
       {/* ─── INDUSTRY SHOWCASE: BROADENING THE SCOPE ─── */}
-      <section id="industries" className="py-32 md:py-40 px-6 relative overflow-hidden bg-slate-50/50">
+      <section id="industries" className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #eef2ff 0%, #fdf2f8 50%, #ffffff 100%)' }}>
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-20">
             <motion.div
@@ -776,7 +776,7 @@ export default function Home() {
       </section>
 
       {/* ─── CTA: COMPACT LIGHT ─── */}
-      <section className="py-24 px-6 relative bg-white overflow-hidden">
+      <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
         {/* Dynamic Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute inset-0 bg-slate-50/40" />
