@@ -153,6 +153,7 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [isAIChatOpen, setIsAIChatOpen] = useState(false)
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
     const [isEmbedMode, setIsEmbedMode] = useState(false)
+    const [selectedProject, setSelectedProject] = useState<any>(null)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -336,7 +337,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }
 
     // Get active accent color for review modal
     const getActiveAccent = (): string => {
@@ -448,6 +449,53 @@ END:VCARD`
     return (
         <>
             {renderTemplate()}
+            <AnimatePresence>
+                {selectedProject && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedProject(null)}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative w-full max-w-2xl bg-[#0a0a0f] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl z-10"
+                            style={{ boxShadow: `0 30px 100px -20px ${activeAccent}40` }}
+                        >
+                            <button
+                                onClick={() => setSelectedProject(null)}
+                                className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            <div className="aspect-video w-full overflow-hidden">
+                                <img
+                                    src={selectedProject.image}
+                                    alt={selectedProject.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
+                            <div className="p-8 sm:p-12">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-1 h-6 rounded-full" style={{ backgroundColor: activeAccent }} />
+                                    <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight italic">
+                                        {translateText(selectedProject.name)}
+                                    </h3>
+                                </div>
+                                <p className="text-white/60 text-sm sm:text-base leading-relaxed font-medium">
+                                    {translateText(selectedProject.description) || t.noProjectDesc}
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </>
     )
 }
@@ -455,7 +503,7 @@ END:VCARD`
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -3679,11 +3727,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 >
                                                     <div className="animate-marquee-right flex gap-6 h-full items-center overflow-visible">
                                                         {[...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image), ...profile.products.filter((p: any) => p.image)].map((project: any, i: number) => (
-                                                            <a
+                                                            <motion.div
                                                                 key={i}
-                                                                href={formatUrl(project.link) || "#"}
-                                                                target="_blank"
-                                                                onClick={() => trackEvent("product", project.name)}
+                                                                onClick={() => {
+                                                                    trackEvent("product", project.name);
+                                                                    if (project.link) {
+                                                                        window.open(formatUrl(project.link), "_blank");
+                                                                    } else {
+                                                                        setSelectedProject(project);
+                                                                    }
+                                                                }}
                                                                 className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
                                                             >
                                                                 <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
@@ -3711,7 +3764,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                                         )}
                                                                     </div>
                                                                 </div>
-                                                            </a>
+                                                            </motion.div>
                                                         ))}
                                                     </div>
 
@@ -3729,7 +3782,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                             className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl border border-white/10 shadow-lg"
                                                             onClick={() => {
                                                                 trackEvent("product_grid", project.name);
-                                                                if (project.link) window.open(formatUrl(project.link), "_blank");
+                                                                if (project.link) {
+                                                                    window.open(formatUrl(project.link), "_blank");
+                                                                } else {
+                                                                    setSelectedProject(project);
+                                                                }
                                                             }}
                                                         >
                                                             <img
@@ -4241,7 +4298,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     )
 }
 
-function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl }: any) {
+function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
 
@@ -4595,7 +4652,11 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group cursor-pointer"
                                     onClick={() => {
                                         trackEvent("product_grid", project.name);
-                                        if (project.link) window.open(formatUrl(project.link), "_blank");
+                                        if (project.link) {
+                                            window.open(formatUrl(project.link), "_blank");
+                                        } else {
+                                            setSelectedProject(project);
+                                        }
                                     }}
                                 >
                                     <div className="aspect-video relative overflow-hidden">
@@ -4866,7 +4927,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
 
     const theme = themes[colorScheme] || themes.tour_resort;
     const socialLinks = profile.socialLinks || [];
-    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl };
+    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject };
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden", theme.bg, toneStyle.font)}>
@@ -4901,7 +4962,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     );
 }
 
-function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl }: any) {
+function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -5140,6 +5201,8 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                         if (project.link) {
                                             const url = project.link.startsWith('http') ? project.link : `https://${project.link}`;
                                             window.open(url, "_blank");
+                                        } else {
+                                            setSelectedProject(project);
                                         }
                                     }}
                                 >
