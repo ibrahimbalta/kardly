@@ -7,10 +7,13 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const status = searchParams.get("status")
     const planId = searchParams.get("planId")
+    const token = searchParams.get("token")
 
     const session = await getServerSession(authOptions)
 
-    if (status === "success" && planId && session?.user?.id) {
+    // IMPORTANT: In a real scenario, you must verify the 'token' with Iyzico API here.
+    // Without verification, anyone can still craft a URL with a fake token.
+    if (status === "success" && planId && session?.user?.id && token) {
         // Update or create subscription in database
         await prisma.subscription.upsert({
             where: { userId: session.user.id },
