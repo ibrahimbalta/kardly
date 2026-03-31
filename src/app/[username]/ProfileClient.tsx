@@ -463,14 +463,14 @@ END:VCARD`
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-2xl bg-[#0a0a0f] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl z-10"
+                            className="relative w-full max-w-[440px] bg-[#0a0a0f] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl z-10 mx-auto"
                             style={{ boxShadow: `0 30px 100px -20px ${activeAccent}40` }}
                         >
                             <button
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                                className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors shadow-2xl"
                             >
-                                <X size={20} />
+                                <X size={18} />
                             </button>
 
                             <div className="aspect-video w-full overflow-hidden">
@@ -481,14 +481,14 @@ END:VCARD`
                                 />
                             </div>
 
-                            <div className="p-8 sm:p-12">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-1 h-6 rounded-full" style={{ backgroundColor: activeAccent }} />
-                                    <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight italic">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-1 h-5 rounded-full" style={{ backgroundColor: activeAccent }} />
+                                    <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight italic">
                                         {translateText(selectedProject.name)}
                                     </h3>
                                 </div>
-                                <p className="text-white/60 text-sm sm:text-base leading-relaxed font-medium">
+                                <p className="text-white/60 text-[13px] leading-relaxed font-medium break-words overflow-hidden">
                                     {translateText(selectedProject.description) || t.noProjectDesc}
                                 </p>
                             </div>
