@@ -49,6 +49,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
+import { AdvertisementSlot } from "@/components/AdvertisementSlot"
 import { HowItWorksModal } from "@/components/HowItWorksModal"
 
 const fadeUp = {
@@ -91,6 +92,9 @@ export default function Home() {
     <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden">
       <Navbar />
       <Hero onHowItWorksClick={() => setIsHowItWorksOpen(true)} />
+      
+      {/* ─── AD SLOT 1: HERO BOTTOM ─── */}
+      <AdvertisementSlot position="home_hero_bottom" />
 
       {/* ─── HOW IT WORKS ─── */}
       <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #ffffff 0%, #fdf2f8 50%, #eef2ff 100%)' }}>
@@ -319,6 +323,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── AD SLOT 2: FEATURES BOTTOM ─── */}
+      <AdvertisementSlot position="home_features_bottom" />
 
       {/* ─── SHOWCASE: COMPACT REFINED TILES ─── */}
       <section className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #eef2ff 0%, #fff 50%, #fdf2f8 100%)' }}>
@@ -701,6 +708,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── AD SLOT 3: TEMPLATES BOTTOM ─── */}
+      <AdvertisementSlot position="home_templates_bottom" />
 
       {/* ─── INDUSTRY SHOWCASE: BROADENING THE SCOPE ─── */}
       <section id="industries" className="py-24 md:py-32 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #eef2ff 0%, #fdf2f8 50%, #ffffff 100%)' }}>

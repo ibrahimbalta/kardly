@@ -29,7 +29,9 @@ import {
     Edit3,
     Send,
     Layout,
-    Bell
+    Bell,
+    Sparkles,
+    Image as ImageIcon
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -56,6 +58,20 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
     // Newsletter
     const [subscribers, setSubscribers] = useState<any[]>([])
     const [subscribersLoading, setSubscribersLoading] = useState(false)
+
+    // Advertisements
+    const [ads, setAds] = useState<any[]>([])
+    const [adsLoading, setAdsLoading] = useState(false)
+    const [showAdForm, setShowAdForm] = useState(false)
+    const [editingAd, setEditingAd] = useState<any>(null)
+    const [adForm, setAdForm] = useState({ 
+        title: '', 
+        imageUrl: '', 
+        link: '', 
+        position: 'home_hero_bottom', 
+        isActive: true,
+        order: 0 
+    })
 
     const filteredUsers = localUsers.filter((u: any) =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -186,10 +202,73 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
         setSubscribers(subscribers.filter(s => s.id !== id))
     }
 
+    // Advertisements
+    const loadAds = async () => {
+        setAdsLoading(true)
+        try {
+            const res = await fetch('/api/ads')
+            const data = await res.json()
+            if (Array.isArray(data)) setAds(data)
+        } catch { } finally { setAdsLoading(false) }
+    }
+
+    const saveAd = async () => {
+        const method = editingAd ? 'PUT' : 'POST'
+        const body = editingAd ? { id: editingAd.id, ...adForm } : adForm
+
+        const res = await fetch('/api/ads', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        if (res.ok) {
+            setShowAdForm(false)
+            setEditingAd(null)
+            setAdForm({ title: '', imageUrl: '', link: '', position: 'home_hero_bottom', isActive: true, order: 0 })
+            loadAds()
+        }
+    }
+
+    const deleteAd = async (id: string) => {
+        if (!window.confirm("Bu reklamı silmek istediğinizden emin misiniz?")) return
+        await fetch('/api/ads', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+        })
+        setAds(ads.filter(a => a.id !== id))
+    }
+
+    const toggleAdStatus = async (ad: any) => {
+        const res = await fetch('/api/ads', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: ad.id, isActive: !ad.isActive })
+        })
+        if (res.ok) {
+            setAds(ads.map(a => a.id === ad.id ? { ...a, isActive: !ad.isActive } : a))
+        }
+    }
+
+    const startEditAd = (ad: any) => {
+        setEditingAd(ad)
+        setAdForm({
+            title: ad.title,
+            imageUrl: ad.imageUrl,
+            link: ad.link,
+            position: ad.position,
+            isActive: ad.isActive,
+            order: ad.order || 0
+        })
+        setShowAdForm(true)
+    }
+
     useEffect(() => {
         if (activeTab === 'messages') loadMessages()
         if (activeTab === 'blog') loadBlogPosts()
         if (activeTab === 'newsletter') loadSubscribers()
+        if (activeTab === 'ads') loadAds()
     }, [activeTab])
 
     const unreadCount = messages.filter(m => !m.isRead).length
@@ -275,6 +354,12 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                 active={activeTab === "newsletter"}
                                 onClick={() => { setActiveTab("newsletter"); setIsSidebarOpen(false); }}
                             />
+                            <AdminNavItem
+                                icon={<Sparkles className="w-5 h-5 text-amber-500" />}
+                                label="Reklam Yönetimi"
+                                active={activeTab === "ads"}
+                                onClick={() => { setActiveTab("ads"); setIsSidebarOpen(false); }}
+                            />
 
                             <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Hızlı Erişim</div>
                             <Link href="/dashboard" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-all group">
@@ -325,6 +410,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             {activeTab === 'messages' && <>İletişim <span className="gradient-text">Mesajları.</span></>}
                             {activeTab === 'blog' && <>Blog <span className="gradient-text">Yönetimi.</span></>}
                             {activeTab === 'newsletter' && <>E-Bülten <span className="gradient-text">Kayıtları.</span></>}
+                            {activeTab === 'ads' && <>Reklam <span className="gradient-text">Yönetimi.</span></>}
                         </h1>
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
@@ -845,6 +931,195 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                         <ExternalLink size={14} />
                                                     </Link>
                                                 )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
+                    {activeTab === "ads" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-6"
+                        >
+                            <div className="flex justify-between items-center mb-8">
+                                <div>
+                                    <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900 font-sans">Sponsorlu İçerikler</h1>
+                                    <p className="text-xs text-slate-400 mt-1">Anasayfa reklam alanlarını buradan yönetin.</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setEditingAd(null)
+                                        setAdForm({ title: '', imageUrl: '', link: '', position: 'home_hero_bottom', isActive: true, order: 0 })
+                                        setShowAdForm(true)
+                                    }}
+                                    className="px-6 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold font-sans flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-sm"
+                                >
+                                    <Plus size={14} /> Yeni Reklam
+                                </button>
+                            </div>
+
+                            {/* Ad Form Modal */}
+                            {showAdForm && (
+                                <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-6">
+                                    <div className="flex justify-between items-center pb-4 border-b border-slate-50">
+                                        <h3 className="text-lg font-black text-slate-900 font-sans uppercase tracking-tight">{editingAd ? 'Reklam Düzenle' : 'Yeni Reklam Ekle'}</h3>
+                                        <button onClick={() => { setShowAdForm(false); setEditingAd(null) }} className="text-slate-400 hover:text-slate-600">
+                                            <X size={18} />
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Reklam Başlığı (Firma Adı)</label>
+                                                <input
+                                                    type="text"
+                                                    value={adForm.title}
+                                                    onChange={e => setAdForm({ ...adForm, title: e.target.value })}
+                                                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-rose-300 transition-all font-sans"
+                                                    placeholder="Örn: ABC Kartvizit Dünyası"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Hedef Bağlantı (URL)</label>
+                                                <input
+                                                    type="text"
+                                                    value={adForm.link}
+                                                    onChange={e => setAdForm({ ...adForm, link: e.target.value })}
+                                                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-rose-300 transition-all font-sans"
+                                                    placeholder="https://abc-kartvizit.com"
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Reklam Alanı (Pozisyon)</label>
+                                                <select
+                                                    value={adForm.position}
+                                                    onChange={e => setAdForm({ ...adForm, position: e.target.value })}
+                                                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-rose-300 transition-all font-sans appearance-none"
+                                                >
+                                                    <option value="home_hero_bottom">Hero Altı (Giriş)</option>
+                                                    <option value="home_features_bottom">Özellikler Altı (Orta)</option>
+                                                    <option value="home_templates_bottom">Şablonlar Altı (Alt)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Görsel URL / Logo (Opsiyonel)</label>
+                                                <input
+                                                    type="text"
+                                                    value={adForm.imageUrl}
+                                                    onChange={e => setAdForm({ ...adForm, imageUrl: e.target.value })}
+                                                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-rose-300 transition-all font-sans"
+                                                    placeholder="https://..."
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-4">
+                                        <div className="flex gap-6">
+                                            <label className="flex items-center gap-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={adForm.isActive}
+                                                    onChange={e => setAdForm({ ...adForm, isActive: e.target.checked })}
+                                                    className="w-5 h-5 rounded-lg border-slate-200 text-rose-500 focus:ring-rose-500 checked:bg-rose-500"
+                                                />
+                                                <span className="text-xs font-black uppercase tracking-widest text-slate-600 font-sans">Aktif</span>
+                                            </label>
+                                        </div>
+                                        
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => { setShowAdForm(false); setEditingAd(null); }}
+                                                className="px-6 py-3 bg-slate-50 text-slate-500 rounded-xl text-xs font-bold hover:bg-slate-100 transition-colors font-sans"
+                                            >
+                                                İptal
+                                            </button>
+                                            <button
+                                                onClick={saveAd}
+                                                className="px-8 py-3 bg-rose-500 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-600 transition-all flex items-center gap-2 shadow-lg shadow-rose-200 font-sans"
+                                            >
+                                                <Check size={14} /> {editingAd ? 'Güncelle' : 'Reklamı Kaydet'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Ads List */}
+                            {adsLoading ? (
+                                <div className="flex justify-center py-20">
+                                    <div className="w-10 h-10 border-4 border-slate-100 border-t-rose-500 rounded-full animate-spin" />
+                                </div>
+                            ) : ads.length === 0 && !showAdForm ? (
+                                <div className="bg-white rounded-[3rem] border border-slate-200 p-24 text-center">
+                                    <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <Sparkles size={40} className="text-slate-200" />
+                                    </div>
+                                    <p className="text-slate-400 font-black uppercase tracking-widest font-sans">Aktif reklam bulunamadı</p>
+                                    <p className="text-slate-300 text-sm mt-2 font-medium font-sans">İş ortaklarınız için yeni bir reklam alanı oluşturun.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-4">
+                                    {ads.map((ad: any) => (
+                                        <div key={ad.id} className={cn(
+                                            "bg-white rounded-[2rem] border p-6 transition-all group hover:shadow-xl hover:shadow-slate-200/40",
+                                            ad.isActive ? "border-slate-200" : "border-slate-100 opacity-60"
+                                        )}>
+                                            <div className="flex items-center justify-between gap-6">
+                                                <div className="flex items-center gap-6 flex-1 min-w-0">
+                                                    <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-105 transition-transform">
+                                                        {ad.imageUrl ? (
+                                                            <img src={ad.imageUrl} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <ImageIcon size={24} className="text-slate-300" />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-3 mb-1.5">
+                                                            <h4 className="text-base font-black text-slate-900 font-sans tracking-tight truncate uppercase italic">{ad.title}</h4>
+                                                            <span className={cn(
+                                                                "px-2.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest",
+                                                                ad.position === 'home_hero_bottom' ? 'bg-rose-50 text-rose-600 border border-rose-100' :
+                                                                ad.position === 'home_features_bottom' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' :
+                                                                'bg-amber-50 text-amber-600 border border-amber-100'
+                                                            )}>
+                                                                {ad.position === 'home_hero_bottom' ? 'Hero' : ad.position === 'home_features_bottom' ? 'Özellikler' : 'Şablonlar'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-[10px] text-slate-400 font-mono font-bold truncate max-w-sm">{ad.link}</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => toggleAdStatus(ad)}
+                                                        className={cn(
+                                                            "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border",
+                                                            ad.isActive ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-100 text-slate-400 border-slate-200"
+                                                        )}
+                                                    >
+                                                        {ad.isActive ? 'AKTİF' : 'PASİF'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => startEditAd(ad)}
+                                                        className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-slate-100"
+                                                    >
+                                                        <Edit3 size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteAd(ad.id)}
+                                                        className="p-3 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

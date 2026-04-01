@@ -239,3 +239,14 @@ model Newsletter {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+model Advertisement {
+  id          String   @id @default(cuid())
+  title       String
+  imageUrl    String
+  link        String
+  position    String   // 'home_hero_bottom', 'home_features_bottom', 'home_templates_bottom'
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
