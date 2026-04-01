@@ -64,6 +64,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
     const [adsLoading, setAdsLoading] = useState(false)
     const [showAdForm, setShowAdForm] = useState(false)
     const [editingAd, setEditingAd] = useState<any>(null)
+    const [isUploading, setIsUploading] = useState(false)
     const [adForm, setAdForm] = useState({ 
         title: '', 
         imageUrl: '', 
@@ -227,6 +228,51 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
             setEditingAd(null)
             setAdForm({ title: '', imageUrl: '', link: '', position: 'home_hero_bottom', isActive: true, order: 0 })
             loadAds()
+        }
+    }
+
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (!files || files.length === 0) return
+
+        setIsUploading(true)
+        try {
+            for (let i = 0; i < files.length; i++) {
+                const formData = new FormData()
+                formData.append("file", files[i])
+
+                const res = await fetch("/api/upload", {
+                    method: "POST",
+                    body: formData
+                })
+
+                if (res.ok) {
+                    const data = await res.json()
+                    // If it's a single upload for a single ad being edited/created
+                    if (files.length === 1) {
+                        setAdForm(prev => ({ ...prev, imageUrl: data.url }))
+                    } else {
+                        // Bulk upload: Create ads immediately for each image
+                        await fetch('/api/ads', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                ...adForm,
+                                imageUrl: data.url,
+                                title: adForm.title || files[i].name.split('.')[0]
+                            })
+                        })
+                    }
+                }
+            }
+            if (files.length > 1) {
+                setShowAdForm(false)
+                loadAds()
+            }
+        } catch (err) {
+            console.error("Upload error:", err)
+        } finally {
+            setIsUploading(false)
         }
     }
 
@@ -1007,6 +1053,35 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                                     <option value="home_features_bottom">Özellikler Altı (Orta)</option>
                                                     <option value="home_templates_bottom">Şablonlar Altı (Alt)</option>
                                                 </select>
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Görsel Yükle (Local)</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="file"
+                                                        multiple
+                                                        onChange={handleUpload}
+                                                        className="hidden"
+                                                        id="ad-image-upload"
+                                                        accept="image/*"
+                                                    />
+                                                    <label
+                                                        htmlFor="ad-image-upload"
+                                                        className={cn(
+                                                            "w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-100 transition-all",
+                                                            isUploading && "opacity-50 pointer-events-none"
+                                                        )}
+                                                    >
+                                                        {isUploading ? (
+                                                            <div className="w-4 h-4 border-2 border-slate-300 border-t-rose-500 rounded-full animate-spin" />
+                                                        ) : (
+                                                            <ImageIcon size={18} className="text-slate-400" />
+                                                        )}
+                                                        <span className="text-slate-600 uppercase tracking-widest text-[10px]">
+                                                            {isUploading ? 'Yükleniyor...' : 'Görüntüleri Seç (Toplu Yüklenebilir)'}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">Görsel URL / Logo (Opsiyonel)</label>
