@@ -24,8 +24,9 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   
-  // Check if user is admin (Assuming user email is ibrahimbalta@icloud.com based on repo)
-  if (!session || session.user?.email !== "ibrahimbalta@icloud.com") {
+  const allowedEmail = process.env.ADMIN_EMAIL || "yanimdaki74@gmail.com";
+
+  if (!session || session.user?.email !== allowedEmail) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -34,13 +35,16 @@ export async function POST(req: Request) {
     const ad = await prisma.advertisement.create({ data });
     return NextResponse.json(ad);
   } catch (error) {
+    console.error("Ad creation error:", error);
     return NextResponse.json({ error: "Failed to create ad" }, { status: 500 });
   }
 }
 
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== "ibrahimbalta@icloud.com") {
+  const allowedEmail = process.env.ADMIN_EMAIL || "yanimdaki74@gmail.com";
+  
+  if (!session || session.user?.email !== allowedEmail) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -58,7 +62,9 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || session.user?.email !== "ibrahimbalta@icloud.com") {
+  const allowedEmail = process.env.ADMIN_EMAIL || "yanimdaki74@gmail.com";
+
+  if (!session || session.user?.email !== allowedEmail) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
