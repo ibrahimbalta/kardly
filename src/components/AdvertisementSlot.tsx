@@ -37,18 +37,9 @@ export function AdvertisementSlot({ position, className }: AdvertisementSlotProp
     fetchAds();
   }, [position]);
 
-  useEffect(() => {
-    if (ads.length > 1) {
-      const timer = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % ads.length);
-      }, 5000);
-      return () => clearInterval(timer);
-    }
-  }, [ads]);
-
   if (ads.length === 0) return null;
 
-  const currentAd = ads[currentIndex];
+
 
   return (
     <div className={cn("px-6 my-12", className)}>
@@ -65,40 +56,45 @@ export function AdvertisementSlot({ position, className }: AdvertisementSlotProp
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white">Sponsor</span>
           </div>
 
-          <Link
-            href={currentAd.link}
-            target="_blank"
-            className="block relative w-full h-24 sm:h-32 rounded-[2rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 bg-white group-hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
-          >
-            {/* Background Image / Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-indigo-50 opacity-50 group-hover:opacity-100 transition-opacity" />
-            
-            <div className="relative h-full flex items-center px-8 md:px-12 gap-8">
-              {/* Ad Image / Icon */}
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-xl border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 group-hover:rotate-3 transition-transform">
-                {currentAd.imageUrl ? (
-                  <img src={currentAd.imageUrl} alt={currentAd.title} className="w-full h-full object-cover" />
-                ) : (
-                  <Sparkles size={24} className="text-rose-500" />
-                )}
-              </div>
+          <div className="flex flex-col gap-4">
+            {ads.map((ad, idx) => (
+              <Link
+                key={ad.id}
+                href={ad.link}
+                target="_blank"
+                className="block relative w-full h-32 sm:h-44 rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/40 bg-white group-hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
+              >
+                {/* Background Image / Pattern */}
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-indigo-50 opacity-50 group-hover:opacity-100 transition-opacity" />
+                
+                <div className="relative h-full flex items-center px-8 md:px-12 gap-10">
+                  {/* Ad Image / Icon - DOUBLED SIZE */}
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-white shadow-2xl border border-slate-50 flex items-center justify-center overflow-hidden shrink-0 group-hover:rotate-3 transition-transform">
+                    {ad.imageUrl ? (
+                      <img src={ad.imageUrl} alt={ad.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <Sparkles size={40} className="text-rose-500" />
+                    )}
+                  </div>
 
-              {/* Text */}
-              <div className="flex-1 min-w-0">
-                <h4 className="text-base sm:text-xl font-black text-slate-950 tracking-tight leading-none mb-1 group-hover:text-rose-500 transition-colors">
-                  {currentAd.title}
-                </h4>
-                <div className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                  Premium İş Ortağı <ExternalLink size={10} />
+                  {/* Text */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tighter leading-none mb-2 group-hover:text-rose-500 transition-colors uppercase italic">
+                      {ad.title}
+                    </h4>
+                    <div className="text-[11px] sm:text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                      PREMIUM İŞ ORTAĞI <ExternalLink size={12} />
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="hidden sm:flex px-8 py-3.5 rounded-2xl bg-slate-950 text-white text-[11px] font-black uppercase tracking-[0.2em] transform group-hover:scale-105 group-hover:bg-rose-500 transition-all shadow-xl active:scale-95 italic">
+                    Visit Now
+                  </div>
                 </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="hidden sm:flex px-6 py-2.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] transform group-hover:scale-105 group-hover:bg-rose-500 transition-all shadow-lg active:scale-95">
-                Visit Now
-              </div>
-            </div>
-          </Link>
+              </Link>
+            ))}
+          </div>
         </motion.div>
       </div>
     </div>
