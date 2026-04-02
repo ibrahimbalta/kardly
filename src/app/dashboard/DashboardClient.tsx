@@ -81,6 +81,7 @@ import {
     ChevronUp,
     ChevronLeft,
     ChevronRight,
+    Compass,
     Quote,
     Edit2,
     ArrowUp,
@@ -281,6 +282,31 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [leads, setLeads] = useState<any[]>(initialLeads || [])
     const [isLeadsLoading, setIsLeadsLoading] = useState(false)
     const [selectedLead, setSelectedLead] = useState<any>(null)
+
+    // Network Management
+    const [networkUsers, setNetworkUsers] = useState<any[]>([])
+    const [isNetworkLoading, setIsNetworkLoading] = useState(false)
+    const [networkSearch, setNetworkSearch] = useState("")
+
+    useEffect(() => {
+        if (activeTab === "network") {
+            fetchNetwork()
+        }
+    }, [activeTab])
+
+    const fetchNetwork = async () => {
+        setIsNetworkLoading(true)
+        try {
+            const res = await fetch("/api/network")
+            if (!res.ok) throw new Error("Network error")
+            const data = await res.json()
+            if (Array.isArray(data)) setNetworkUsers(data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setIsNetworkLoading(false)
+        }
+    }
 
     useEffect(() => {
         if (activeTab === "leads") {
@@ -979,6 +1005,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "overview"}
                         onClick={() => {
                             setActiveTab("overview")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
+                        icon={<Compass className="w-5 h-5" />}
+                        label={t('businessHub')}
+                        active={activeTab === "network"}
+                        onClick={() => {
+                            setActiveTab("network")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -4384,7 +4419,106 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </table>
                         </div>
                     </div>
+                ) : activeTab === "network" ? (
+                    <div className="space-y-10">
+                        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t('businessHub')}</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">{t('businessHubSub')}</p>
+                            </div>
+                            <div className="relative w-full md:w-80 group">
+                                <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                    <Compass size={18} />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder={t('searchInHub')}
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                    className="w-full h-14 pl-14 pr-6 bg-white border border-slate-200 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm group-hover:shadow-md"
+                                />
+                            </div>
+                        </header>
+
+                        {isNetworkLoading ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                                    <div key={i} className="aspect-[4/5] bg-white rounded-[3rem] border border-slate-100 animate-pulse shadow-sm" />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                {networkUsers
+                                    .filter(u => {
+                                        const searchLower = networkSearch.toLowerCase()
+                                        return (
+                                            u.name?.toLowerCase().includes(searchLower) ||
+                                            u.profile?.occupation?.toLowerCase().includes(searchLower) ||
+                                            u.profile?.username?.toLowerCase().includes(searchLower) ||
+                                            u.profile?.displayName?.toLowerCase().includes(searchLower)
+                                        )
+                                    })
+                                    .map((user: any) => (
+                                        <div 
+                                            key={user.id} 
+                                            className="group relative bg-white rounded-[3rem] border border-slate-200 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+                                            onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
+                                        >
+                                            <div className="aspect-[4/3] relative overflow-hidden bg-slate-50">
+                                                {user.profile?.image ? (
+                                                    <img src={user.profile.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={user.name} />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                        <User size={64} />
+                                                    </div>
+                                                )}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
+                                                    <div className="flex items-center gap-2 px-6 py-3 bg-white text-slate-900 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
+                                                        {t('visitProfile')} <ExternalLink size={14} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="p-8">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">AKTİF PROFİL</span>
+                                                </div>
+                                                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-1 truncate">
+                                                    {user.profile?.displayName || user.name}
+                                                </h3>
+                                                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-6 truncate">
+                                                    {user.profile?.occupation || "Profesyonel"}
+                                                </p>
+                                                
+                                                <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+                                                            <Globe size={14} />
+                                                        </div>
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[100px]">
+                                                            {user.profile?.username}.kardly.site
+                                                        </span>
+                                                    </div>
+                                                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-primary group-hover:text-white transition-all">
+                                                        <ArrowRight size={14} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        )}
+                        
+                        {!isNetworkLoading && networkUsers.length === 0 && (
+                            <div className="py-32 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
+                                <Compass className="w-16 h-16 mx-auto mb-6 text-slate-200" />
+                                <h3 className="text-xl font-black text-slate-900 mb-2">Henüz kullanıcı bulunmuyor</h3>
+                                <p className="text-sm text-slate-400 font-medium">Topluluğumuz her geçen gün büyüyor. İlk keşfeden siz olun.</p>
+                            </div>
+                        )}
+                    </div>
                 ) : null
+
                 }
 
                 {/* Modals outside of conditional tabs */}
@@ -4768,6 +4902,7 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
 function BottomNav({ activeTab, setActiveTab, t }: any) {
     const navItems = [
         { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Özet" },
+        { id: "network", icon: <Compass className="w-6 h-6" />, label: "Hub" },
         { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "Düzenle" },
         { id: "qrcode", icon: <QrCode className="w-6 h-6" />, label: t('qrcode') || "QR" },
         { id: "businesscard", icon: <IdCard className="w-6 h-6" />, label: t('digitalCard') || "Kart" },
