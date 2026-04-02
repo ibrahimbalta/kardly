@@ -6192,6 +6192,12 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
 function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, toneStyle }: any) {
     if (!isOpen) return null
 
+    const bgClass = theme.bg || theme.body || "bg-[#0a0a0f]"
+    const isLight = theme.body === "bg-white" || theme.bg?.includes("white") || theme.bg?.includes("slate-50")
+    const textColor = theme.text || (isLight ? "text-slate-900" : "text-white")
+    const subTextColor = theme.subtext || (isLight ? "text-slate-500" : "text-white/60")
+    const borderColor = theme.border || (isLight ? "border-slate-200" : "border-white/10")
+
     return (
         <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
             <motion.div
@@ -6206,11 +6212,15 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.98 }}
                 className={cn(
-                    "relative w-full max-w-[320px] p-8 rounded-[2.5rem] shadow-2xl overflow-hidden border transition-all bg-[#0a0a0a] border-white/5",
+                    "relative w-full max-w-[320px] p-8 rounded-[2.5rem] shadow-2xl overflow-hidden border transition-all",
+                    bgClass,
+                    borderColor,
                     toneStyle?.font
                 )}
                 style={{
-                    boxShadow: `0 30px 60px -12px rgba(0,0,0,0.8), 0 0 40px ${theme.accent}15`
+                    boxShadow: isLight 
+                        ? `0 30px 60px -12px rgba(0,0,0,0.15), 0 0 40px ${theme.accent}10`
+                        : `0 30px 60px -12px rgba(0,0,0,0.8), 0 0 40px ${theme.accent}15`
                 }}
             >
                 {/* Visual Flair */}
@@ -6229,14 +6239,12 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
 
                     <div className="space-y-1.5">
                         <h3 
-                            className={cn("text-xl font-black px-2 leading-tight uppercase tracking-[0.1em]", toneStyle?.font)}
-                            style={{ color: theme.accent }}
+                            className={cn("text-xl font-black px-2 leading-tight uppercase tracking-[0.1em]", toneStyle?.font, textColor)}
                         >
                             {t.addToWallet ? t.addToWallet.toUpperCase() : "CÜZDANA EKLE"}
                         </h3>
                         <p 
-                            className={cn("text-[10px] font-black tracking-[0.1em] uppercase opacity-60")}
-                            style={{ color: theme.accent }}
+                            className={cn("text-[10px] font-black tracking-[0.1em] uppercase", subTextColor)}
                         >
                             {t.savePassDesc ? t.savePassDesc.toUpperCase() : "KARTINIZI TELEFONUNUZA KAYDEDİN."}
                         </p>
@@ -6268,7 +6276,8 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                                 key={idx}
                                 onClick={() => { btn.action(); onClose(); }}
                                 className={cn(
-                                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden bg-white/5 border border-white/5 hover:bg-white/10"
+                                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden border",
+                                    isLight ? "bg-slate-50 border-slate-100 hover:bg-slate-100" : "bg-white/5 border-white/5 hover:bg-white/10"
                                 )}
                             >
                                 <div className="flex items-center gap-4 z-10">
@@ -6279,8 +6288,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                                         {btn.icon}
                                     </div>
                                     <span 
-                                        className={cn("text-[12px] font-black tracking-tight group-hover:text-white transition-colors")}
-                                        style={{ color: theme.accent }}
+                                        className={cn("text-[12px] font-black tracking-tight transition-colors", textColor)}
                                     >
                                         {btn.label}
                                     </span>
@@ -6288,14 +6296,14 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                                 {btn.badge ? (
                                     <span 
                                         className="text-[8px] font-black opacity-30 tracking-widest"
-                                        style={{ color: theme.accent }}
+                                        style={{ color: isLight ? '#000' : theme.accent }}
                                     >
                                         {btn.badge}
                                     </span>
                                 ) : (
                                     <ArrowRight 
                                         size={14} 
-                                        className="opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all mr-1 z-10" 
+                                        className={cn("transition-all mr-1 z-10", isLight ? "opacity-30 group-hover:opacity-100 group-hover:translate-x-1" : "opacity-20 group-hover:opacity-100 group-hover:translate-x-1")}
                                         style={{ color: theme.accent }}
                                     />
                                 )}
@@ -6305,8 +6313,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
 
                     <button
                         onClick={onClose}
-                        className={cn("text-[10px] font-black uppercase tracking-[0.5em] transition-all pt-4 opacity-60 hover:opacity-100")}
-                        style={{ color: theme.accent }}
+                        className={cn("text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-110 active:scale-95 pt-2", subTextColor)}
                     >
                         {t.cancel ? t.cancel.toUpperCase() : "VAZGEÇ"}
                     </button>
