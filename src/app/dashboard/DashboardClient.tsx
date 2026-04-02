@@ -81,7 +81,6 @@ import {
     ChevronUp,
     ChevronLeft,
     ChevronRight,
-    Compass,
     Quote,
     Edit2,
     ArrowUp,
