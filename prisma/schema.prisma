@@ -104,6 +104,7 @@ model Profile {
   qrColorDark        String? @default("#0f172a")
   qrColorLight       String? @default("#ffffff")
   hasAcceptedTerms Boolean     @default(false)
+  showInHub      Boolean     @default(true)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   workingHours   Json?

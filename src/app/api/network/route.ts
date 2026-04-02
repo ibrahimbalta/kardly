@@ -7,7 +7,8 @@ export async function GET() {
             where: {
                 isActive: true,
                 profile: {
-                    isNot: null
+                    isNot: null,
+                    showInHub: true
                 }
             },
             include: {

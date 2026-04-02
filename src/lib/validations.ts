@@ -41,6 +41,7 @@ export const ProfileUpdateSchema = z.object({
     qrColorDark: z.string().optional().nullable(),
     qrColorLight: z.string().optional().nullable(),
     hasAcceptedTerms: z.boolean().optional(),
+    showInHub: z.boolean().optional(),
 }).passthrough();
 
 // Ürün ekleme şeması

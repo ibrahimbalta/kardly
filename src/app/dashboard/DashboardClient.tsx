@@ -185,7 +185,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         sloganFontSize: profile?.sloganFontSize || "",
         businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
         businessCardOrientation: profile?.businessCardOrientation || "landscape",
-        hasAcceptedTerms: profile?.hasAcceptedTerms || false
+        hasAcceptedTerms: profile?.hasAcceptedTerms || false,
+        showInHub: profile?.showInHub ?? true
     })
 
     const [isTermsAccepted, setIsTermsAccepted] = useState(profile?.hasAcceptedTerms || false)
@@ -693,7 +694,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     businessCardOrientation: overrides?.businessCardOrientation ?? profileData.businessCardOrientation,
                     qrColorDark: overrides?.qrColorDark ?? profileData.qrColorDark,
                     qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight,
-                    hasAcceptedTerms: isTermsAccepted
+                    hasAcceptedTerms: isTermsAccepted,
+                    showInHub: overrides?.showInHub ?? profileData.showInHub
                 })
             })
 
@@ -2374,6 +2376,24 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             className="w-full h-14 bg-slate-50 border-none rounded-2xl px-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/20 transition-all"
                                             placeholder={t('targetAudiencePlaceholder')}
                                         />
+                                    </div>
+                                    <div className="md:col-span-2 pt-4 border-t border-slate-50">
+                                        <label className="flex items-center gap-4 p-5 bg-primary/5 rounded-[2rem] border border-primary/10 cursor-pointer hover:bg-primary/10 transition-all group">
+                                            <div className="relative flex items-center justify-center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={profileData.showInHub}
+                                                    onChange={(e) => setProfileData({ ...profileData, showInHub: e.target.checked })}
+                                                    className="peer w-6 h-6 appearance-none rounded-lg border-2 border-primary/20 bg-white checked:bg-primary checked:border-primary transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                                />
+                                                <Check size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <span className="text-xs font-black uppercase tracking-widest text-slate-800 block mb-0.5">{t('showInHubLabel')}</span>
+                                                <p className="text-[10px] text-slate-400 font-medium tracking-wide">Business Hub ağında diğer profesyoneller tarafından keşfedilebilir olun.</p>
+                                            </div>
+                                            <Compass size={20} className="text-primary/40 group-hover:text-primary transition-colors" />
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -4440,13 +4460,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </header>
 
                         {isNetworkLoading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                                    <div key={i} className="aspect-[4/5] bg-white rounded-[3rem] border border-slate-100 animate-pulse shadow-sm" />
+                                    <div key={i} className="h-48 bg-white rounded-[2rem] border border-slate-100 animate-pulse shadow-sm" />
                                 ))}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {networkUsers
                                     .filter(u => {
                                         const searchLower = networkSearch.toLowerCase()
@@ -4458,52 +4478,61 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         )
                                     })
                                     .map((user: any) => (
-                                        <div 
+                                        <motion.div 
                                             key={user.id} 
-                                            className="group relative bg-white rounded-[3rem] border border-slate-200 overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+                                            layout
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            whileHover={{ y: -5 }}
+                                            className="group relative bg-white/70 backdrop-blur-md rounded-[2.5rem] border border-white/50 overflow-hidden hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
                                             onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
                                         >
-                                            <div className="aspect-[4/3] relative overflow-hidden bg-slate-50">
-                                                {user.profile?.image ? (
-                                                    <img src={user.profile.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={user.name} />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-slate-200">
-                                                        <User size={64} />
-                                                    </div>
-                                                )}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
-                                                    <div className="flex items-center gap-2 px-6 py-3 bg-white text-slate-900 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
-                                                        {t('visitProfile')} <ExternalLink size={14} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="p-8">
-                                                <div className="flex items-center gap-3 mb-4">
-                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">AKTİF PROFİL</span>
-                                                </div>
-                                                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-1 truncate">
-                                                    {user.profile?.displayName || user.name}
-                                                </h3>
-                                                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-6 truncate">
-                                                    {user.profile?.occupation || "Profesyonel"}
-                                                </p>
-                                                
-                                                <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                                                            <Globe size={14} />
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            
+                                            <div className="p-6 relative z-10 flex-1 flex flex-col">
+                                                <div className="flex items-start gap-4 mb-6">
+                                                    <div className="relative shrink-0">
+                                                        <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-slate-50 group-hover:scale-105 transition-transform duration-500">
+                                                            {user.profile?.image ? (
+                                                                <img src={user.profile.image} className="w-full h-full object-cover" alt={user.name} />
+                                                            ) : (
+                                                                <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                                    <User size={28} />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[100px]">
-                                                            {user.profile?.username}.kardly.site
+                                                        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
+                                                    </div>
+                                                    
+                                                    <div className="flex-1 min-w-0 pt-1">
+                                                        <h3 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors truncate mb-0.5">
+                                                            {user.profile?.displayName || user.name}
+                                                        </h3>
+                                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
+                                                            {user.profile?.occupation || "Profesyonel"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {user.profile?.slogan && (
+                                                    <p className="text-[10px] text-slate-500 font-medium line-clamp-2 mb-6 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+                                                        "{user.profile.slogan}"
+                                                    </p>
+                                                )}
+
+                                                <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50">
+                                                    <div className="flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                                                        <Globe size={12} className="text-slate-300 group-hover:text-primary" />
+                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[120px]">
+                                                            {user.profile?.username}.site
                                                         </span>
                                                     </div>
-                                                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-primary group-hover:text-white transition-all">
-                                                        <ArrowRight size={14} />
+                                                    <div className="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-300 transition-all shadow-sm">
+                                                        <ExternalLink size={14} />
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))}
                             </div>
                         )}
