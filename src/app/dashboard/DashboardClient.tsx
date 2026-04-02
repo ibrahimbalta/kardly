@@ -3167,33 +3167,33 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {productList.map((product: any) => (
-                                <div key={product.id} className="group bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
-                                    <div className="aspect-video bg-slate-50 relative overflow-hidden">
+                                <div key={product.id} className="group bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col h-full">
+                                    <div className="aspect-[4/3] bg-slate-50 relative overflow-hidden">
                                         {product.image ? (
                                             <img src={product.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={product.name} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <ShoppingBag className="w-12 h-12 text-slate-200" />
+                                                <ShoppingBag className="w-10 h-10 text-slate-200" />
                                             </div>
                                         )}
-                                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => handleDeleteProduct(product.id)}
-                                                className="w-10 h-10 flex items-center justify-center bg-rose-500 text-white rounded-xl shadow-lg hover:bg-rose-600 transition-all"
+                                                className="w-9 h-9 flex items-center justify-center bg-rose-500 text-white rounded-xl shadow-lg hover:bg-rose-600 transition-all"
                                             >
-                                                <Trash2 size={18} />
+                                                <Trash2 size={16} />
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="p-8">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h3 className="font-black text-slate-900 uppercase tracking-tight line-clamp-1">{product.name}</h3>
-                                            <span className="shrink-0 font-black text-primary text-[10px] bg-primary/5 px-2.5 py-1 rounded-lg uppercase tracking-widest">{product.price}</span>
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <div className="flex justify-between items-start mb-2 gap-2">
+                                            <h3 className="font-black text-slate-900 text-sm uppercase tracking-tight line-clamp-1">{product.name}</h3>
+                                            <span className="shrink-0 font-black text-primary text-[8px] bg-primary/5 px-2 py-0.5 rounded-lg uppercase tracking-widest">{product.price}</span>
                                         </div>
-                                        <p className="text-sm text-slate-500 font-medium mb-8 line-clamp-2 leading-relaxed">{product.description || t('noProjectDesc')}</p>
-                                        <div className="flex gap-3">
+                                        <p className="text-[11px] text-slate-500 font-medium mb-5 line-clamp-2 leading-relaxed flex-1">{product.description || t('noProjectDesc')}</p>
+                                        <div className="flex gap-2">
                                             <button
                                                 onClick={() => {
                                                     setEditingProduct(product)
@@ -3206,7 +3206,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     })
                                                     setShowProductModal(true)
                                                 }}
-                                                className="flex-1 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:bg-primary/5 hover:text-primary transition-all shadow-sm"
+                                                className="flex-1 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-primary/5 hover:text-primary transition-all shadow-sm"
                                             >
                                                 {t('edit')}
                                             </button>
@@ -3215,9 +3215,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     href={product.link}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="w-14 h-14 flex items-center justify-center bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-primary hover:border-primary/20 transition-all shadow-sm"
+                                                    className="w-10 h-10 flex items-center justify-center bg-white border border-slate-100 rounded-xl text-slate-400 hover:text-primary hover:border-primary/20 transition-all shadow-sm shrink-0"
                                                 >
-                                                    <ExternalLink size={20} />
+                                                    <ExternalLink size={16} />
                                                 </a>
                                             )}
                                         </div>
