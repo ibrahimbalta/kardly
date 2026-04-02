@@ -1121,15 +1121,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             setIsSidebarOpen(false)
                         }}
                     />
-                    <NavItem
-                        icon={<QrCode className="w-5 h-5" />}
-                        label={t('qrcode')}
-                        active={activeTab === "qrcode"}
-                        onClick={() => {
-                            setActiveTab("qrcode")
-                            setIsSidebarOpen(false)
-                        }}
-                    />
+
                     <NavItem
                         icon={<IdCard className="w-5 h-5" />}
                         label={t('digitalCard')}
@@ -2177,12 +2169,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                             <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('addProject')}</span>
                                         </button>
-                                        <button onClick={() => setActiveTab("qrcode")} className="group p-6 bg-white border border-slate-200 rounded-[2rem] hover:border-slate-500/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all text-center">
-                                            <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 mx-auto mb-4 group-hover:scale-110 transition-transform">
-                                                <QrCode size={20} />
-                                            </div>
-                                            <span className="text-xs font-black uppercase tracking-widest text-slate-600 block">{t('shareQR')}</span>
-                                        </button>
+
                                     </div>
                                 </section>
                             </div>
@@ -5118,7 +5105,6 @@ function BottomNav({ activeTab, setActiveTab, t }: any) {
         { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Özet" },
         { id: "network", icon: <Compass className="w-6 h-6" />, label: "Hub" },
         { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "Düzenle" },
-        { id: "qrcode", icon: <QrCode className="w-6 h-6" />, label: t('qrcode') || "QR" },
         { id: "businesscard", icon: <IdCard className="w-6 h-6" />, label: t('digitalCard') || "Kart" },
     ]
 
