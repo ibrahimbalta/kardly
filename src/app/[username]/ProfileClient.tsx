@@ -5872,12 +5872,12 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     };
 
     return (
-        <div className="fixed inset-0 z-[1000] flex flex-col bg-[#030308]/95 backdrop-blur-3xl overflow-hidden">
+        <div className={cn("fixed inset-0 z-[1000] flex flex-col backdrop-blur-3xl overflow-hidden transition-all duration-700", theme.bg || "bg-[#030308]/95")}>
             {/* Ambient Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-[10%] left-[20%] w-[35%] h-[35%] blur-[150px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
-                <div className="absolute bottom-[10%] right-[15%] w-[30%] h-[30%] blur-[120px] opacity-[0.06] rounded-full bg-purple-500" />
-                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] blur-[200px] opacity-[0.04] rounded-full bg-indigo-500" />
+                <div className="absolute bottom-[10%] right-[15%] w-[30%] h-[30%] blur-[120px] opacity-[0.06] rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] blur-[200px] opacity-[0.04] rounded-full" style={{ backgroundColor: theme.accent }} />
             </div>
 
             {/* Top Bar */}
@@ -5892,13 +5892,13 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                         <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.accent }} />
                         <div className="absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-30" style={{ backgroundColor: theme.accent }} />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">DİJİTAL KARTVİZİT</span>
+                    <span className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-30", theme.text)}>DİJİTAL KARTVİZİT</span>
                 </div>
                 <button
                     onClick={onClose}
-                    className="fixed top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all active:scale-90 backdrop-blur-2xl z-[2000] group"
+                    className={cn("fixed top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl border transition-all active:scale-90 backdrop-blur-2xl z-[2000] group", theme.btn, theme.border)}
                 >
-                    <X size={22} className="transition-transform group-hover:rotate-90 duration-300" />
+                    <X size={22} className={cn("transition-transform group-hover:rotate-90 duration-300", theme.text)} />
                 </button>
             </motion.div>
 
@@ -5956,7 +5956,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 transition={{ delay: 0.3 }}
                 className="relative z-[1001] p-6 pb-10 shrink-0 flex items-center justify-center"
             >
-                <div className="bg-white/[0.04] border border-white/[0.06] backdrop-blur-3xl rounded-full p-2 flex items-center gap-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]">
+                <div className={cn("backdrop-blur-3xl rounded-full p-2 flex items-center gap-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] border", theme.card, theme.border)}>
                     <button
                         onClick={handleDownloadCard}
                         disabled={isDownloading}
@@ -5967,9 +5967,9 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                     </button>
                     <button
                         onClick={handleShareCard}
-                        className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/[0.06] border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.12] transition-all hover:scale-110 active:scale-90"
+                        className={cn("w-[52px] h-[52px] flex items-center justify-center rounded-full border transition-all hover:scale-110 active:scale-90", theme.btn, theme.border, theme.text)}
                     >
-                        <Share2 size={19} />
+                        <Share2 size={19} className="opacity-60 group-hover:opacity-100" />
                     </button>
                 </div>
             </motion.div>
