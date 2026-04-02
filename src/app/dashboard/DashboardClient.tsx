@@ -4901,6 +4901,133 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 animation: shimmer 2s infinite;
             }
         `}</style>
+            {/* Business Hub AI Assistant Slide-over */}
+            <AnimatePresence mode="wait">
+                {isHubAiOpen && (
+                    <>
+                        <motion.div
+                            key="overlay"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsHubAiOpen(false)}
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60]"
+                        />
+                        <motion.div
+                            key="panel"
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="fixed top-0 right-0 h-full w-full sm:w-[500px] bg-white shadow-2xl z-[110] flex flex-col border-l border-slate-100"
+                        >
+                            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-indigo-600 rounded-[1.25rem] flex items-center justify-center text-white shadow-xl shadow-primary/20">
+                                        <Sparkles size={24} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-black text-slate-900 uppercase tracking-tight">Kardly Ağ Asistanı</h3>
+                                        <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                            Yapay Zeka Destekli
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setIsHubAiOpen(false)}
+                                    className="w-10 h-10 rounded-2xl hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-all hover:rotate-90"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-8 space-y-8">
+                                {hubAiChat.length === 0 && (
+                                    <div className="text-center py-20 space-y-6">
+                                        <div className="w-24 h-24 bg-primary/5 rounded-[3rem] flex items-center justify-center mx-auto text-primary relative">
+                                            <Search size={40} className="relative z-10" />
+                                            <div className="absolute inset-0 bg-primary/10 rounded-[3rem] animate-ping opacity-20" />
+                                        </div>
+                                        <div className="space-y-3 max-w-xs mx-auto">
+                                            <h4 className="font-black text-xl text-slate-900 uppercase tracking-tight">Arama Yapın</h4>
+                                            <p className="text-xs text-slate-500 font-bold leading-relaxed">
+                                                Ağdaki profesyonelleri bulmanıza yardım edebilirim. Meslek, yetenek veya bölgeye göre sormanız yeterli.
+                                            </p>
+                                        </div>
+                                        <div className="flex flex-wrap justify-center gap-2 pt-4">
+                                            {[
+                                                "Yazılımcı bul",
+                                                "Grafik tasarımcı var mı?",
+                                                "E-ticaret uzmanı öner",
+                                                "İstanbul'da kimler var?"
+                                            ].map((hint, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => setHubAiMessage(hint)}
+                                                    className="px-5 py-2.5 rounded-2xl border border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
+                                                >
+                                                    {hint}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {hubAiChat.map((m, i) => (
+                                    <div key={i} className={cn("flex w-full", m.role === 'user' ? "justify-end" : "justify-start")}>
+                                        <div className={cn(
+                                            "max-w-[90%] p-5 rounded-[2rem] text-sm font-semibold leading-relaxed shadow-sm",
+                                            m.role === 'user' 
+                                                ? "bg-primary text-white rounded-tr-none shadow-lg shadow-primary/20" 
+                                                : "bg-slate-50 text-slate-700 border border-slate-100 rounded-tl-none whitespace-pre-wrap"
+                                        )}>
+                                            {m.content}
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {isHubAiLoading && (
+                                    <div className="flex justify-start">
+                                        <div className="bg-slate-50 p-5 rounded-[2rem] rounded-tl-none border border-slate-100">
+                                            <div className="flex gap-2 px-1">
+                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="p-8 border-t border-slate-100 bg-white">
+                                <div className="relative group flex items-center gap-3">
+                                    <input
+                                        type="text"
+                                        value={hubAiMessage}
+                                        onChange={(e) => setHubAiMessage(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && handleHubAiChat()}
+                                        placeholder="Kimi arıyorsunuz?"
+                                        className="flex-1 h-16 pl-6 pr-14 bg-slate-50 border border-slate-200 rounded-3xl text-sm font-bold text-slate-900 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all shadow-inner"
+                                    />
+                                    <button
+                                        onClick={handleHubAiChat}
+                                        disabled={!hubAiMessage.trim() || isHubAiLoading}
+                                        className="absolute right-3 top-3 w-10 h-10 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                                    >
+                                        <Send size={18} />
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest text-center mt-6 flex items-center justify-center gap-2">
+                                    <span className="w-8 h-[1px] bg-slate-100" />
+                                    GÜCÜNÜ KARDLY AI'DAN ALIR
+                                    <span className="w-8 h-[1px] bg-slate-100" />
+                                </p>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     );
 }
@@ -5025,133 +5152,7 @@ function BottomNav({ activeTab, setActiveTab, t }: any) {
                 ))}
             </nav>
 
-            {/* Business Hub AI Assistant Slide-over */}
-            <AnimatePresence mode="wait">
-                {isHubAiOpen && (
-                    <>
-                        <motion.div
-                            key="overlay"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsHubAiOpen(false)}
-                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[60]"
-                        />
-                        <motion.div
-                            key="panel"
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white shadow-2xl z-[70] flex flex-col border-l border-slate-100"
-                        >
-                            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-indigo-600 rounded-[1.25rem] flex items-center justify-center text-white shadow-xl shadow-primary/20">
-                                        <Sparkles size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-black text-slate-900 uppercase tracking-tight">Kardly Ağ Asistanı</h3>
-                                        <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                            Yapay Zeka Destekli
-                                        </p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setIsHubAiOpen(false)}
-                                    className="w-10 h-10 rounded-2xl hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-all hover:rotate-90"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
 
-                            <div className="flex-1 overflow-y-auto p-8 space-y-8">
-                                {hubAiChat.length === 0 && (
-                                    <div className="text-center py-20 space-y-6">
-                                        <div className="w-24 h-24 bg-primary/5 rounded-[3rem] flex items-center justify-center mx-auto text-primary relative">
-                                            <Search size={40} className="relative z-10" />
-                                            <div className="absolute inset-0 bg-primary/10 rounded-[3rem] animate-ping opacity-20" />
-                                        </div>
-                                        <div className="space-y-3 max-w-xs mx-auto">
-                                            <h4 className="font-black text-xl text-slate-900 uppercase tracking-tight">Arama Yapın</h4>
-                                            <p className="text-xs text-slate-500 font-bold leading-relaxed">
-                                                Ağdaki profesyonelleri bulmanıza yardım edebilirim. Meslek, yetenek veya bölgeye göre sormanız yeterli.
-                                            </p>
-                                        </div>
-                                        <div className="flex flex-wrap justify-center gap-2 pt-4">
-                                            {[
-                                                "Yazılımcı bul",
-                                                "Grafik tasarımcı var mı?",
-                                                "E-ticaret uzmanı öner",
-                                                "İstanbul'da kimler var?"
-                                            ].map((hint, i) => (
-                                                <button
-                                                    key={i}
-                                                    onClick={() => setHubAiMessage(hint)}
-                                                    className="px-5 py-2.5 rounded-2xl border border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all"
-                                                >
-                                                    {hint}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {hubAiChat.map((m, i) => (
-                                    <div key={i} className={cn("flex w-full", m.role === 'user' ? "justify-end" : "justify-start")}>
-                                        <div className={cn(
-                                            "max-w-[90%] p-5 rounded-[2rem] text-sm font-semibold leading-relaxed shadow-sm",
-                                            m.role === 'user' 
-                                                ? "bg-primary text-white rounded-tr-none shadow-lg shadow-primary/20" 
-                                                : "bg-slate-50 text-slate-700 border border-slate-100 rounded-tl-none whitespace-pre-wrap"
-                                        )}>
-                                            {m.content}
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {isHubAiLoading && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-slate-50 p-5 rounded-[2rem] rounded-tl-none border border-slate-100">
-                                            <div className="flex gap-2 px-1">
-                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                                <div className="w-2 h-2 bg-primary/30 rounded-full animate-bounce" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="p-8 border-t border-slate-100 bg-white">
-                                <div className="relative group flex items-center gap-3">
-                                    <input
-                                        type="text"
-                                        value={hubAiMessage}
-                                        onChange={(e) => setHubAiMessage(e.target.value)}
-                                        onKeyPress={(e) => e.key === 'Enter' && handleHubAiChat()}
-                                        placeholder="Kimi arıyorsunuz?"
-                                        className="flex-1 h-16 pl-6 pr-14 bg-slate-50 border border-slate-200 rounded-3xl text-sm font-bold text-slate-900 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all shadow-inner"
-                                    />
-                                    <button
-                                        onClick={handleHubAiChat}
-                                        disabled={!hubAiMessage.trim() || isHubAiLoading}
-                                        className="absolute right-3 top-3 w-10 h-10 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
-                                    >
-                                        <Send size={18} />
-                                    </button>
-                                </div>
-                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest text-center mt-6 flex items-center justify-center gap-2">
-                                    <div className="w-8 h-[1px] bg-slate-100" />
-                                    GÜCÜNÜ KARDLY AI'DAN ALIR
-                                    <div className="w-8 h-[1px] bg-slate-100" />
-                                </p>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
         </div>
     );
 }
