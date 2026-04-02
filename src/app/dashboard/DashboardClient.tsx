@@ -4493,8 +4493,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="flex items-start gap-4 mb-6">
                                                     <div className="relative shrink-0">
                                                         <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-slate-50 group-hover:scale-105 transition-transform duration-500">
-                                                            {user.profile?.image ? (
-                                                                <img src={user.profile.image} className="w-full h-full object-cover" alt={user.name} />
+                                                            {user.image ? (
+                                                                <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
                                                             ) : (
                                                                 <div className="w-full h-full flex items-center justify-center text-slate-200">
                                                                     <User size={28} />
