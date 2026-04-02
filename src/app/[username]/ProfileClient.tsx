@@ -5900,7 +5900,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                     onClick={onClose}
                     className={cn("fixed top-6 right-6 w-12 h-12 flex items-center justify-center rounded-2xl border transition-all active:scale-90 backdrop-blur-2xl z-[2000] group", theme.btn, theme.border)}
                 >
-                    <X size={22} className={cn("transition-transform group-hover:rotate-90 duration-300", theme.text)} />
+                    <X size={22} className={cn("transition-transform group-hover:rotate-90 duration-300", theme.btnText || theme.text)} />
                 </button>
             </motion.div>
 
@@ -5969,9 +5969,9 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                     </button>
                     <button
                         onClick={handleShareCard}
-                        className={cn("w-[52px] h-[52px] flex items-center justify-center rounded-full border transition-all hover:scale-110 active:scale-90", theme.btn, theme.border, theme.text)}
+                        className={cn("w-[52px] h-[52px] flex items-center justify-center rounded-full border transition-all hover:scale-110 active:scale-90", theme.btn, theme.border)}
                     >
-                        <Share2 size={19} className="opacity-60 group-hover:opacity-100" />
+                        <Share2 size={19} className={cn("transition-opacity", theme.btnText || theme.text)} />
                     </button>
                 </div>
             </motion.div>
