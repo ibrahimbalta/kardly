@@ -5871,8 +5871,10 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
         }
     };
 
+    const modalBg = theme.bg || theme.body || "bg-[#030308]/95";
+
     return (
-        <div className={cn("fixed inset-0 z-[1000] flex flex-col backdrop-blur-3xl overflow-hidden transition-all duration-700", theme.bg || "bg-[#030308]/95")}>
+        <div className={cn("fixed inset-0 z-[1000] flex flex-col backdrop-blur-3xl overflow-hidden transition-all duration-700", modalBg)}>
             {/* Ambient Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-[10%] left-[20%] w-[35%] h-[35%] blur-[150px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
