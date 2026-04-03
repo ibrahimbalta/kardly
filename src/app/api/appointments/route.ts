@@ -40,7 +40,53 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-    // This could be used by dashboard to fetch appointments
-    // Security check should be added here (getServerSession)
-    return NextResponse.json({ message: "Not implemented yet" })
+    try {
+        const { searchParams } = new URL(req.url)
+        const profileId = searchParams.get("profileId")
+        const date = searchParams.get("date")
+
+        if (!profileId || !date) {
+            return NextResponse.json({ error: "Eksik parametre" }, { status: 400 })
+        }
+
+        // Get start and end of the day in UTC
+        // We'll compare dates carefully. Appointment date in DB is UTC.
+        // If user picks 2026-04-05, we want all appointments on that day.
+        const dayStart = new Date(date)
+        dayStart.setHours(0, 0, 0, 0)
+        const dayEnd = new Date(date)
+        dayEnd.setHours(23, 59, 59, 999)
+
+        const appointments = await prisma.appointment.findMany({
+            where: {
+                user: {
+                    profile: {
+                        id: profileId
+                    }
+                },
+                date: {
+                    gte: dayStart,
+                    lte: dayEnd
+                },
+                status: {
+                    not: "cancelled"
+                }
+            },
+            select: {
+                date: true
+            }
+        })
+
+        // Extract hour:minute strings in TRT (UTC+3)
+        const bookedSlots = appointments.map(a => {
+            const date = new Date(a.date)
+            // Force return in TRT for comparison
+            return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })
+        })
+
+        return NextResponse.json({ bookedSlots })
+    } catch (error) {
+        console.error("Fetch Booked Slots Error:", error)
+        return NextResponse.json({ error: "Müsaitlik bilgisi alınamadı" }, { status: 500 })
+    }
 }

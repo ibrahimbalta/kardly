@@ -47,6 +47,26 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
         close: "Kapat"
     }
 
+    const [bookedHours, setBookedHours] = useState<string[]>([])
+    const [isLoadingSlots, setIsLoadingSlots] = useState(false)
+
+    // Fetch booked slots when date changes
+    const fetchBookedSlots = async (selectedDate: string) => {
+        if (!selectedDate || !profile.id) return
+        setIsLoadingSlots(true)
+        try {
+            const res = await fetch(`/api/appointments?profileId=${profile.id}&date=${selectedDate}`)
+            if (res.ok) {
+                const data = await res.json()
+                setBookedHours(data.bookedSlots || [])
+            }
+        } catch (err) {
+            console.error("Müsaitlik hatası:", err)
+        } finally {
+            setIsLoadingSlots(false)
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
@@ -58,7 +78,8 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                 body: JSON.stringify({
                     profileId: profile.id,
                     ...formData,
-                    scheduledAt: `${formData.date}T${formData.time}:00`
+                    // Türkiye saatine (UTC+3) zorla sabitlemek için +03:00 ekliyoruz
+                    scheduledAt: `${formData.date}T${formData.time}:00+03:00`
                 })
             })
 
@@ -119,38 +140,54 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                                     backgroundColor: `${modalTheme.accent}05`,
                                     borderColor: `${modalTheme.accent}15`
                                 }}
-                                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                                min={new Date().toISOString().split('T')[0]}
+                                value={formData.date}
+                                onChange={(e) => {
+                                    setFormData({ ...formData, date: e.target.value, time: "" })
+                                    fetchBookedSlots(e.target.value)
+                                }}
+                                min={new Date().toLocaleDateString('en-CA')} // YYYY-MM-DD
                             />
                         </div>
                         <div>
-                            <label className={cn("block text-[8px] font-black uppercase tracking-[0.3em] mb-1.5 ml-1 opacity-40", modalTheme.text)}>{labels.time}</label>
+                            <div className="flex items-center justify-between mb-1.5 ml-1">
+                                <label className={cn("block text-[8px] font-black uppercase tracking-[0.3em] opacity-40", modalTheme.text)}>{labels.time}</label>
+                                {isLoadingSlots && <div className="w-2.5 h-2.5 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />}
+                            </div>
                             <div className="grid grid-cols-4 gap-1.5">
                                 {(profile.workingHours && (profile.workingHours as string[]).length > 0
                                     ? (profile.workingHours as string[]).sort()
                                     : ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
-                                ).map(t_val => (
-                                    <button
-                                        key={t_val}
-                                        onClick={() => setFormData({ ...formData, time: t_val })}
-                                        className={cn(
-                                            "py-2 rounded-lg text-[9px] font-black tracking-tighter border transition-all",
-                                            formData.time === t_val
-                                                ? "shadow-md"
-                                                : "bg-white/5 opacity-50 hover:opacity-100"
-                                        )}
-                                        style={formData.time === t_val ? {
-                                            backgroundColor: modalTheme.accent,
-                                            borderColor: modalTheme.accent,
-                                            color: '#000'
-                                        } : {
-                                            borderColor: `${modalTheme.accent}15`,
-                                            color: modalTheme.text.includes('white') ? 'rgba(255,255,255,0.8)' : modalTheme.accent
-                                        }}
-                                    >
-                                        {t_val}
-                                    </button>
-                                ))}
+                                ).map(t_val => {
+                                    const isBooked = bookedHours.includes(t_val)
+                                    return (
+                                        <button
+                                            key={t_val}
+                                            disabled={isBooked || isLoadingSlots}
+                                            onClick={() => setFormData({ ...formData, time: t_val })}
+                                            className={cn(
+                                                "py-2 rounded-lg text-[9px] font-black tracking-tighter border transition-all relative overflow-hidden",
+                                                formData.time === t_val
+                                                    ? "shadow-md"
+                                                    : isBooked ? "opacity-20 cursor-not-allowed bg-slate-900" : "bg-white/5 opacity-50 hover:opacity-100"
+                                            )}
+                                            style={formData.time === t_val ? {
+                                                backgroundColor: modalTheme.accent,
+                                                borderColor: modalTheme.accent,
+                                                color: '#000'
+                                            } : {
+                                                borderColor: isBooked ? 'transparent' : `${modalTheme.accent}15`,
+                                                color: modalTheme.text.includes('white') ? 'rgba(255,255,255,0.8)' : modalTheme.accent
+                                            }}
+                                        >
+                                            {t_val}
+                                            {isBooked && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                                                    <div className="w-full h-[1px] bg-white/20 rotate-12" />
+                                                </div>
+                                            )}
+                                        </button>
+                                    )
+                                })}
                             </div>
                         </div>
                     </div>
