@@ -3311,8 +3311,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="text-xs text-slate-400">{appointment.clientPhone}</div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <div className="font-medium text-slate-700">{new Date(appointment.date).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US')}</div>
-                                                <div className="text-xs text-slate-400 font-bold">{new Date(appointment.date).toLocaleTimeString(language === 'tr' ? 'tr-TR' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+                                                <div className="font-medium text-slate-700">
+                                                    {new Date(appointment.date).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { 
+                                                        timeZone: profileData.timezone || 'Europe/Istanbul' 
+                                                    })}
+                                                </div>
+                                                <div className="text-xs text-slate-400 font-bold">
+                                                    {new Date(appointment.date).toLocaleTimeString(language === 'tr' ? 'tr-TR' : 'en-US', { 
+                                                        hour: '2-digit', 
+                                                        minute: '2-digit',
+                                                        timeZone: profileData.timezone || 'Europe/Istanbul' 
+                                                    })}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-sm ${appointment.status === 'pending'
