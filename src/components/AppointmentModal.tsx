@@ -71,6 +71,7 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
         e.preventDefault()
         setIsSubmitting(true)
 
+        try {
             // Get the numeric offset for the profile's timezone (e.g. +03:00)
             const targetTimeZone = profile.timezone || "Europe/Istanbul"
             const parts = new Intl.DateTimeFormat('en-US', {
