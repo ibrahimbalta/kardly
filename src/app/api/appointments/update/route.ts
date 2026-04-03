@@ -29,8 +29,13 @@ export async function POST(req: Request) {
         // If confirmed, send email
         if (status === 'confirmed' && appointment.clientEmail) {
             try {
-                const dateStr = new Date(appointment.date).toLocaleDateString('tr-TR')
-                const timeStr = new Date(appointment.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+                // Sunucu saati ne olursa olsun Türkiye saatine (UTC+3) göre formatla
+                const dateStr = new Date(appointment.date).toLocaleDateString('tr-TR', { timeZone: 'Europe/Istanbul' })
+                const timeStr = new Date(appointment.date).toLocaleTimeString('tr-TR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    timeZone: 'Europe/Istanbul' 
+                })
                 await sendAppointmentConfirmationEmail(
                     appointment.clientEmail,
                     appointment.clientName,
