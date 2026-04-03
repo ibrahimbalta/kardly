@@ -744,7 +744,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     qrColorDark: overrides?.qrColorDark ?? profileData.qrColorDark,
                     qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight,
                     hasAcceptedTerms: isTermsAccepted,
-                    showInHub: overrides?.showInHub ?? profileData.showInHub
+                    showInHub: overrides?.showInHub ?? profileData.showInHub,
+                    timezone: profileData.timezone
                 })
             })
 
