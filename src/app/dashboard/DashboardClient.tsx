@@ -3864,65 +3864,99 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
                             </div>
 
-                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-6">
-                                <h3 className="font-bold flex items-center gap-2">
-                                    <Clock className="w-5 h-5 text-emerald-400" /> {t('appointments')}
-                                </h3>
-                                <p className="text-[10px] text-foreground/40 leading-relaxed font-bold uppercase tracking-widest">{t('workingHoursSub')}</p>
-
-                                <div
-                                    className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-all group"
-                                    onClick={() => setProfileData({ ...profileData, showAppointmentBtn: !profileData.showAppointmentBtn })}
-                                >
-                                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${profileData.showAppointmentBtn ? 'bg-primary border-primary' : 'border-white/20'}`}>
-                                        {profileData.showAppointmentBtn && <CheckCircle2 size={12} className="text-white" />}
+                            <div className="glass p-8 rounded-[2.5rem] border-white/5 space-y-8">
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <h3 className="font-black text-slate-900 flex items-center gap-2 uppercase tracking-tight">
+                                            <Clock className="w-5 h-5 text-primary" /> {t('appointments')}
+                                        </h3>
+                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t('workingHoursSub')}</p>
                                     </div>
-                                    <span className="text-sm font-bold opacity-80 group-hover:opacity-100 transition-opacity">{t('enableAppointments')}</span>
+                                    <div 
+                                        onClick={() => setProfileData({ ...profileData, showAppointmentBtn: !profileData.showAppointmentBtn })}
+                                        className={cn(
+                                            "w-14 h-8 rounded-full p-1 cursor-pointer transition-all duration-300 relative",
+                                            profileData.showAppointmentBtn ? "bg-primary shadow-lg shadow-primary/20" : "bg-slate-200"
+                                        )}
+                                    >
+                                        <motion.div 
+                                            animate={{ x: profileData.showAppointmentBtn ? 24 : 0 }}
+                                            className="w-6 h-6 bg-white rounded-full shadow-sm"
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    {workingHours.sort().map((hour: string) => (
-                                        <div key={hour} className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl group hover:border-rose-500/30 transition-all">
-                                            <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                                            <span className="text-sm font-bold">{hour}</span>
+                                <div className="space-y-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        <button 
+                                            onClick={() => {
+                                                const slots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"]
+                                                setWorkingHours(slots)
+                                            }}
+                                            className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary transition-all"
+                                        >
+                                            {t('presetFullDay') || "Tam Gün (09-18)"}
+                                        </button>
+                                        <button 
+                                            onClick={() => setWorkingHours([])}
+                                            className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-rose-500 hover:text-rose-500 transition-all"
+                                        >
+                                            {t('clearAll') || "Temizle"}
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 bg-slate-50/50 p-4 rounded-3xl border border-dashed border-slate-200">
+                                        {workingHours.sort().map((hour: string) => (
+                                            <div key={hour} className="flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-2xl group hover:border-primary/30 hover:shadow-md transition-all">
+                                                <div className="flex items-center gap-2">
+                                                    <Clock className="w-3.5 h-3.5 text-primary/40" />
+                                                    <span className="text-sm font-black text-slate-700">{hour}</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        const updated = workingHours.filter((h: string) => h !== hour)
+                                                        setWorkingHours(updated)
+                                                    }}
+                                                    className="w-6 h-6 rounded-lg bg-rose-50 text-rose-500 opacity-0 group-hover:opacity-100 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center p-1"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+
+                                        <div className="flex items-center gap-2 px-2">
+                                            <input
+                                                type="time"
+                                                value={newHour}
+                                                onChange={(e) => setNewHour(e.target.value)}
+                                                onKeyPress={(e) => {
+                                                    if (e.key === 'Enter' && newHour && !workingHours.includes(newHour)) {
+                                                        setWorkingHours([...workingHours, newHour])
+                                                        setNewHour("")
+                                                    }
+                                                }}
+                                                className="w-full bg-white border-b-2 border-slate-200 px-2 py-1 focus:outline-none focus:border-primary text-sm font-black transition-all"
+                                            />
                                             <button
                                                 onClick={() => {
-                                                    const updated = workingHours.filter((h: string) => h !== hour)
-                                                    setWorkingHours(updated)
+                                                    if (newHour && !workingHours.includes(newHour)) {
+                                                        setWorkingHours([...workingHours, newHour])
+                                                        setNewHour("")
+                                                    }
                                                 }}
-                                                className="ml-auto text-white/20 hover:text-rose-500 transition-colors"
+                                                className="shrink-0 w-8 h-8 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
                                             >
-                                                <X className="w-3.5 h-3.5" />
+                                                <Plus size={16} />
                                             </button>
                                         </div>
-                                    ))}
-                                </div>
-
-                                <div className="flex gap-2">
-                                    <input
-                                        type="time"
-                                        value={newHour}
-                                        onChange={(e) => setNewHour(e.target.value)}
-                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white text-sm"
-                                    />
-                                    <button
-                                        onClick={() => {
-                                            if (newHour && !workingHours.includes(newHour)) {
-                                                setWorkingHours([...workingHours, newHour])
-                                                setNewHour("")
-                                            }
-                                        }}
-                                        className="px-5 py-3 bg-primary text-white rounded-xl text-sm font-bold hover:scale-[1.02] transition-all"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                    </button>
+                                    </div>
                                 </div>
 
                                 <button
                                     onClick={handleSave}
-                                    className="w-full py-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-2xl text-sm font-bold hover:bg-emerald-500/20 transition-all uppercase tracking-widest text-xs"
+                                    className="w-full py-5 bg-primary text-white rounded-[2rem] text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
                                 >
-                                    {t('saveHours')}
+                                    <CheckCircle2 size={18} /> {t('saveHours')}
                                 </button>
                             </div>
 
