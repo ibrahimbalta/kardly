@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { sendAppointmentConfirmationEmail } from "@/lib/mail"
 
 export async function POST(req: Request) {
     try {
@@ -24,6 +25,22 @@ export async function POST(req: Request) {
             },
             data: { status }
         })
+
+        // If confirmed, send email
+        if (status === 'confirmed' && appointment.clientEmail) {
+            try {
+                const dateStr = new Date(appointment.date).toLocaleDateString('tr-TR')
+                const timeStr = new Date(appointment.date).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+                await sendAppointmentConfirmationEmail(
+                    appointment.clientEmail,
+                    appointment.clientName,
+                    dateStr,
+                    timeStr
+                )
+            } catch (mailError) {
+                console.error("Failed to send confirmation email:", mailError)
+            }
+        }
 
         return NextResponse.json(appointment)
     } catch (error) {
