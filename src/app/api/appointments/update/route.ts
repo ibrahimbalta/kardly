@@ -29,12 +29,20 @@ export async function POST(req: Request) {
         // If confirmed, send email
         if (status === 'confirmed' && appointment.clientEmail) {
             try {
-                // Sunucu saati ne olursa olsun Türkiye saatine (UTC+3) göre formatla
-                const dateStr = new Date(appointment.date).toLocaleDateString('tr-TR', { timeZone: 'Europe/Istanbul' })
+                // Get profile timezone
+                const profile = await prisma.profile.findFirst({
+                    where: { userId: (session.user as any).id },
+                    select: { timezone: true }
+                })
+                
+                const userTimezone = profile?.timezone || "Europe/Istanbul"
+
+                // Sunucu saati ne olursa olsun kullanıcının seçtiği saat dilimine göre formatla
+                const dateStr = new Date(appointment.date).toLocaleDateString('tr-TR', { timeZone: userTimezone })
                 const timeStr = new Date(appointment.date).toLocaleTimeString('tr-TR', { 
                     hour: '2-digit', 
                     minute: '2-digit',
-                    timeZone: 'Europe/Istanbul' 
+                    timeZone: userTimezone 
                 })
                 await sendAppointmentConfirmationEmail(
                     appointment.clientEmail,

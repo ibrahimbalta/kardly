@@ -107,6 +107,7 @@ model Profile {
   showInHub      Boolean     @default(true)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+  timezone       String?     @default("Europe/Istanbul")
   workingHours   Json?
   analytics      Analytics[]
   blocks         Block[]

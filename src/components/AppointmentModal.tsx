@@ -71,15 +71,26 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
         e.preventDefault()
         setIsSubmitting(true)
 
-        try {
+            // Get the numeric offset for the profile's timezone (e.g. +03:00)
+            const targetTimeZone = profile.timezone || "Europe/Istanbul"
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: targetTimeZone,
+                timeZoneName: 'shortOffset'
+            }).formatToParts(new Date(`${formData.date}T${formData.time}:00`))
+            
+            const offsetPart = parts.find(p => p.type === 'timeZoneName')?.value || "+03:00"
+            // Convert "GMT+3" to "+03:00" or "GMT-5" to "-05:00"
+            const offset = offsetPart === "GMT" ? "Z" : offsetPart.replace("GMT", "").replace(":", "")
+            const formattedOffset = offset.length === 2 ? offset[0] + "0" + offset[1] + ":00" : offset.includes(":") ? offset : offset + ":00"
+
             const res = await fetch("/api/appointments", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     profileId: profile.id,
                     ...formData,
-                    // Türkiye saatine (UTC+3) zorla sabitlemek için +03:00 ekliyoruz
-                    scheduledAt: `${formData.date}T${formData.time}:00+03:00`
+                    timezone: targetTimeZone,
+                    scheduledAt: `${formData.date}T${formData.time}:00${formattedOffset}`
                 })
             })
 

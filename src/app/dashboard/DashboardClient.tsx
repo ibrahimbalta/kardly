@@ -3886,6 +3886,47 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                 </div>
 
+                                <div className="space-y-4 pt-4 border-t border-slate-100/50">
+                                    <div className="flex items-center justify-between">
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                            {t('timezoneLabel') || "Zaman Dilimi (Global Randevu İçin)"}
+                                        </label>
+                                        <div className="flex items-center gap-1 text-[9px] font-bold text-primary animate-pulse">
+                                            <Globe size={10} /> {t('globalReady') || "Global Desteği Aktif"}
+                                        </div>
+                                    </div>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                            <Globe size={14} />
+                                        </div>
+                                        <select 
+                                            value={profileData.timezone || "Europe/Istanbul"}
+                                            onChange={(e) => setProfileData({ ...profileData, timezone: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-10 py-3.5 text-xs font-black focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer"
+                                        >
+                                            <option value="Europe/Istanbul">İstanbul (UTC+3)</option>
+                                            <option value="Europe/Berlin">Berlin (UTC+1/2)</option>
+                                            <option value="Europe/London">Londra (UTC+0/1)</option>
+                                            <option value="Europe/Paris">Paris (UTC+1/2)</option>
+                                            <option value="America/New_York">New York (UTC-5/4)</option>
+                                            <option value="America/Los_Angeles">Los Angeles (UTC-8/7)</option>
+                                            <option value="Asia/Dubai">Dubai (UTC+4)</option>
+                                            <option value="Asia/Tokyo">Tokyo (UTC+9)</option>
+                                            <option value="Australia/Sydney">Sydney (UTC+10/11)</option>
+                                            <option value={Intl.DateTimeFormat().resolvedOptions().timeZone}>
+                                                {Intl.DateTimeFormat().resolvedOptions().timeZone} (Sizin Konumunuz)
+                                            </option>
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                            <ChevronDown size={14} />
+                                        </div>
+                                    </div>
+                                    <p className="text-[9px] text-slate-400 italic px-1 font-medium">
+                                        {t('timezoneSub') || "Randevularınız seçilen bu saat dilimi baz alınarak kaydedilir."}
+                                    </p>
+                                </div>
+
+
                                 <div className="space-y-4">
                                     <div className="flex flex-wrap gap-2">
                                         <button 
