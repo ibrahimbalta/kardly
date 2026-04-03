@@ -4600,7 +4600,72 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                         <div className="flex flex-col lg:flex-row gap-8">
                             {/* 2. Main Content Area */}
-                            <div className="flex-1 space-y-8">
+                            <div className="flex-1 space-y-8 min-w-0">
+                                {/* Top Picks / Recommended */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 px-2">
+                                        <h3 className="text-xl font-black text-slate-900 tracking-tight">🔥 Senin için önerilenler</h3>
+                                        <div className="h-0.5 flex-1 bg-slate-100 rounded-full" />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                        {networkUsers
+                                            .filter(u => u.id !== session?.user?.id && (u.profile?.occupation === profile?.occupation || u.profile?.avgRating >= 4.8))
+                                            .slice(0, 3)
+                                            .map((u: any, idx: number) => {
+                                                const matchPercent = 85 + Math.floor(Math.random() * 14);
+                                                return (
+                                                    <motion.div 
+                                                        key={`rec-${idx}`}
+                                                        whileHover={{ y: -5 }}
+                                                        className="bg-white p-6 rounded-[2.5rem] border border-primary/10 shadow-sm relative overflow-hidden group"
+                                                    >
+                                                        <div className="absolute top-0 right-0 p-4">
+                                                            <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                                                <Check size={14} strokeWidth={3} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-center text-center">
+                                                            <div className="relative mb-4">
+                                                                <div className="w-20 h-20 rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-slate-50">
+                                                                    <img src={u.image || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                                                </div>
+                                                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary border-2 border-white rounded-lg flex items-center justify-center text-white shadow-lg">
+                                                                    <Sparkles size={12} fill="currentColor" />
+                                                                </div>
+                                                            </div>
+                                                            <h4 className="font-black text-slate-900 mb-0.5 tracking-tight">{u.name}</h4>
+                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
+                                                                {u.profile?.occupation || "Profesyonel"}
+                                                            </p>
+                                                            
+                                                            <div className="w-full space-y-2 mb-6">
+                                                                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
+                                                                    <span>Eşleşme</span>
+                                                                    <span className="text-primary">%{matchPercent}</span>
+                                                                </div>
+                                                                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                                                    <motion.div 
+                                                                        initial={{ width: 0 }}
+                                                                        animate={{ width: `${matchPercent}%` }}
+                                                                        transition={{ duration: 1.5, ease: "easeOut" }}
+                                                                        className="h-full bg-primary" 
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                            <button 
+                                                                onClick={() => window.open(`https://${u.profile?.username || u.name}.kardly.site`, '_blank')}
+                                                                className="w-full py-3 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                                                            >
+                                                                Bağlantı Kur
+                                                            </button>
+                                                        </div>
+                                                    </motion.div>
+                                                );
+                                            })}
+                                    </div>
+                                </div>
+
                                 {/* Filter Bar */}
                                 <div className="bg-white/60 backdrop-blur-md p-4 rounded-[2rem] border border-slate-200/50 flex flex-col md:flex-row items-center gap-4 sticky top-4 z-40 shadow-sm">
                                     <div className="relative flex-1 w-full group">
