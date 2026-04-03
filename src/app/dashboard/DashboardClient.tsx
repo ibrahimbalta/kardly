@@ -73,6 +73,7 @@ import {
     Gem,
     Waves,
     Compass,
+    Filter,
     Crosshair,
     Dna,
     Atom,
