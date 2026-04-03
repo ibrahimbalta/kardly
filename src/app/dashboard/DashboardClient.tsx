@@ -4561,126 +4561,227 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "network" ? (
-                    <div className="space-y-10">
-                        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                            <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t('businessHub')}</h2>
-                                <p className="text-sm text-slate-500 font-medium tracking-wide">{t('businessHubSub')}</p>
-                            </div>
-                            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                                <div className="relative w-full md:w-80 group">
-                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-                                        <Compass size={18} />
+                    <div className="space-y-8 pb-20">
+                        {/* 1. Hub Welcome Header */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-white p-8 rounded-[3rem] border border-slate-200/60 shadow-sm relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -mr-32 -mt-32" />
+                            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                <div>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
+                                            Canlı Topluluk
+                                        </div>
+                                        <span className="text-xs text-slate-400 font-medium tracking-wide">
+                                            {networkUsers.length} Aktif Profesyonel
+                                        </span>
                                     </div>
-                                    <input
-                                        type="text"
-                                        placeholder={t('searchInHub')}
-                                        value={networkSearch}
-                                        onChange={(e) => setNetworkSearch(e.target.value)}
-                                        className="w-full h-14 pl-14 pr-6 bg-white border border-slate-200 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all shadow-sm group-hover:shadow-md"
-                                    />
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
+                                        Hoş geldin, <span className="text-primary">{session?.user?.name?.split(' ')[0]}!</span>
+                                    </h2>
+                                    <p className="text-sm text-slate-500 font-medium max-w-lg">
+                                        Kardly Hub ağında bugün sizin için 12 yeni bağlantı ve fırsat bekliyor.
+                                    </p>
                                 </div>
-                                <button 
-                                    onClick={() => setIsHubAiOpen(true)}
-                                    className="h-14 px-6 bg-primary text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all shrink-0 group relative overflow-hidden"
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                                    <Sparkles size={16} className="text-white" />
-                                    <span>AI ASİSTAN</span>
-                                </button>
+                                <div className="flex items-center gap-4">
+                                    <button 
+                                        onClick={() => setIsHubAiOpen(true)}
+                                        className="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl hover:bg-primary transition-all hover:scale-[1.02] active:scale-95 group"
+                                    >
+                                        <Sparkles size={18} className="text-primary group-hover:text-white transition-colors" />
+                                        <span>AI ASİSTAN ile BUL</span>
+                                    </button>
+                                </div>
                             </div>
-                        </header>
+                        </motion.div>
 
-                        {isNetworkLoading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                                    <div key={i} className="h-48 bg-white rounded-[2rem] border border-slate-100 animate-pulse shadow-sm" />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {networkUsers
-                                    .filter(u => {
-                                        const searchLower = networkSearch.toLowerCase()
-                                        return (
-                                            u.name?.toLowerCase().includes(searchLower) ||
-                                            u.profile?.occupation?.toLowerCase().includes(searchLower) ||
-                                            u.profile?.username?.toLowerCase().includes(searchLower) ||
-                                            u.profile?.displayName?.toLowerCase().includes(searchLower)
-                                        )
-                                    })
-                                    .map((user: any) => (
-                                        <motion.div 
-                                            key={user.id} 
-                                            layout
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            whileHover={{ y: -8, scale: 1.01 }}
-                                            className="group relative bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
-                                            onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
-                                        >
-                                            {/* Top Accent Bar */}
-                                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-indigo-500 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                            
-                                            {/* Ambient Glow */}
-                                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
-                                            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-[60px] group-hover:bg-indigo-500/10 transition-colors duration-500" />
+                        <div className="flex flex-col lg:flex-row gap-8">
+                            {/* 2. Main Content Area */}
+                            <div className="flex-1 space-y-8">
+                                {/* Filter Bar */}
+                                <div className="bg-white/60 backdrop-blur-md p-4 rounded-[2rem] border border-slate-200/50 flex flex-col md:flex-row items-center gap-4 sticky top-4 z-40 shadow-sm">
+                                    <div className="relative flex-1 w-full group">
+                                        <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+                                            <Compass size={18} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder={t('searchInHub')}
+                                            value={networkSearch}
+                                            onChange={(e) => setNetworkSearch(e.target.value)}
+                                            className="w-full h-12 pl-14 pr-6 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:ring-4 focus:ring-primary/5 focus:border-primary/20 transition-all outline-none"
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-3 w-full md:w-auto">
+                                        <div className="h-12 px-4 bg-white border border-slate-100 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-primary/20 transition-all">
+                                            <div className="w-5 h-5 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                            </div>
+                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest shrink-0">Online</span>
+                                            <div className="w-8 h-4 bg-emerald-500/20 rounded-full relative p-0.5 cursor-pointer">
+                                                <div className="w-3 h-3 bg-emerald-500 rounded-full translate-x-4" />
+                                            </div>
+                                        </div>
+                                        <button className="h-12 px-5 bg-white border border-slate-100 rounded-2xl text-[10px] font-black text-slate-500 uppercase tracking-widest hover:border-primary/20 transition-all flex items-center gap-2">
+                                            <Filter size={14} />
+                                            Uzmanlık
+                                        </button>
+                                    </div>
+                                </div>
 
-                                            <div className="p-7 relative z-10 flex-1 flex flex-col">
-                                                <div className="flex items-start gap-4 mb-6">
-                                                    <div className="relative shrink-0">
-                                                        <div className="w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 border-white shadow-md bg-slate-50 group-hover:rotate-3 transition-transform duration-500">
-                                                            {user.image ? (
-                                                                <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
-                                                            ) : (
-                                                                <div className="w-full h-full flex items-center justify-center text-slate-200">
-                                                                    <User size={32} />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm animate-pulse" />
-                                                    </div>
+                                {/* Profiles Grid */}
+                                {isNetworkLoading ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                        {[1, 2, 3, 4, 5, 6].map(i => (
+                                            <div key={i} className="h-64 bg-white rounded-[2.5rem] border border-slate-100 animate-pulse shadow-sm" />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                        {networkUsers
+                                            .filter(u => {
+                                                const searchLower = networkSearch.toLowerCase()
+                                                return (
+                                                    u.name?.toLowerCase().includes(searchLower) ||
+                                                    u.profile?.occupation?.toLowerCase().includes(searchLower) ||
+                                                    u.profile?.username?.toLowerCase().includes(searchLower) ||
+                                                    u.profile?.displayName?.toLowerCase().includes(searchLower)
+                                                )
+                                            })
+                                            .map((user: any) => (
+                                                <motion.div 
+                                                    key={user.id} 
+                                                    layout
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    whileHover={{ y: -8, scale: 1.01 }}
+                                                    className="group relative bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
+                                                    onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
+                                                >
+                                                    {/* Top Accent Bar */}
+                                                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-indigo-500 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                                     
-                                                    <div className="flex-1 min-w-0 pt-1">
-                                                        <h3 className="text-base font-black text-slate-900 group-hover:text-primary transition-colors truncate tracking-tight mb-0.5">
-                                                            {user.profile?.displayName || user.name}
-                                                        </h3>
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-1 h-1 rounded-full bg-primary" />
-                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
-                                                                {user.profile?.occupation || "Profesyonel"}
-                                                            </p>
+                                                    {/* Ambient Glow */}
+                                                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
+                                                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-[60px] group-hover:bg-indigo-500/10 transition-colors duration-500" />
+
+                                                    <div className="p-7 relative z-10 flex-1 flex flex-col">
+                                                        <div className="flex items-start gap-4 mb-6">
+                                                            <div className="relative shrink-0">
+                                                                <div className="w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 border-white shadow-md bg-slate-50 group-hover:rotate-3 transition-transform duration-500">
+                                                                    {user.image ? (
+                                                                        <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
+                                                                    ) : (
+                                                                        <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                                            <User size={32} />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm animate-pulse" />
+                                                            </div>
+                                                            
+                                                            <div className="flex-1 min-w-0 pt-1">
+                                                                <div className="flex items-center justify-between gap-2 mb-0.5">
+                                                                    <h3 className="text-base font-black text-slate-900 group-hover:text-primary transition-colors truncate tracking-tight">
+                                                                        {user.profile?.displayName || user.name}
+                                                                    </h3>
+                                                                    <div className="flex items-center gap-0.5 text-amber-500">
+                                                                        <Star size={10} fill="currentColor" />
+                                                                        <span className="text-[10px] font-bold">4.9</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="w-1 h-1 rounded-full bg-primary" />
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
+                                                                        {user.profile?.occupation || "Profesyonel"}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {user.profile?.slogan && (
+                                                            <div className="mb-6 relative">
+                                                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-100 rounded-full group-hover:bg-primary/20 transition-colors" />
+                                                                <p className="text-[11px] text-slate-500 font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+                                                                    "{user.profile.slogan}"
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="mt-auto pt-5 flex items-center justify-between border-t border-slate-50/50">
+                                                            <div className="flex items-center gap-2.5 group-hover:translate-x-1 transition-transform">
+                                                                <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                                                                    <Globe size={12} className="text-slate-400 group-hover:text-primary" />
+                                                                </div>
+                                                                <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-900 uppercase tracking-wider truncate max-w-[120px] transition-colors">
+                                                                    {user.profile?.username || user.name}.kardly.site
+                                                                </span>
+                                                            </div>
+                                                            <button className="w-10 h-10 rounded-2xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-400 transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-rotate-12">
+                                                                <ExternalLink size={16} />
+                                                            </button>
                                                         </div>
                                                     </div>
+                                                </motion.div>
+                                            ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 3. Sidebar (Trending & New Members) */}
+                            <aside className="w-full lg:w-80 space-y-6">
+                                {/* Trending Section */}
+                                <div className="bg-white rounded-[2.5rem] p-6 border border-slate-200/60 shadow-sm">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="w-10 h-10 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center">
+                                            <Zap size={20} />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-black text-slate-900 text-sm tracking-tight uppercase">Trendler</h4>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Popüler Profiller</p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        {networkUsers.slice(0, 3).map((u: any, idx: number) => (
+                                            <div key={idx} className="flex items-center gap-3 group cursor-pointer">
+                                                <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-100 group-hover:border-primary/30 transition-all">
+                                                    <img src={u.image || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full object-cover" alt="" />
                                                 </div>
-
-                                                {user.profile?.slogan && (
-                                                    <div className="mb-6 relative">
-                                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-100 rounded-full group-hover:bg-primary/20 transition-colors" />
-                                                        <p className="text-[11px] text-slate-500 font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
-                                                            "{user.profile.slogan}"
-                                                        </p>
-                                                    </div>
-                                                )}
-
-                                                <div className="mt-auto pt-5 flex items-center justify-between border-t border-slate-50/50">
-                                                    <div className="flex items-center gap-2.5 group-hover:translate-x-1 transition-transform">
-                                                        <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                                                            <Globe size={12} className="text-slate-400 group-hover:text-primary" />
-                                                        </div>
-                                                        <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-900 uppercase tracking-wider truncate max-w-[150px] transition-colors">
-                                                            {user.profile?.username || user.name}.kardly.site
-                                                        </span>
-                                                    </div>
-                                                    <button className="w-10 h-10 rounded-2xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-400 transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-rotate-12">
-                                                        <ExternalLink size={16} />
-                                                    </button>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-xs font-bold text-slate-900 group-hover:text-primary transition-colors truncate">{u.name}</div>
+                                                    <div className="text-[10px] text-slate-400 truncate uppercase tracking-widest font-black">{u.profile?.occupation}</div>
+                                                </div>
+                                                <div className="flex items-center gap-1 text-[10px] font-black text-primary">
+                                                    <Eye size={10} />
+                                                    {Math.floor(Math.random() * 500) + 100}
                                                 </div>
                                             </div>
-                                        </motion.div>
-                                    ))}
-                            </div>
-                        )}
+                                        ))}
+                                    </div>
+                                    <button className="w-full mt-6 py-3 bg-slate-50 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary transition-all">Tümünü Gör</button>
+                                </div>
+
+                                {/* Recomended Section */}
+                                <div className="bg-gradient-to-br from-primary to-primary-600 rounded-[2.5rem] p-6 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                                    <div className="relative z-10">
+                                        <Sparkles size={24} className="mb-4 text-white/50" />
+                                        <h4 className="text-xl font-black tracking-tight mb-2 leading-tight">İşinizi <br />Büyütmek mi İstiyorsunuz?</h4>
+                                        <p className="text-xs text-white/70 font-medium mb-6">AI Asistanımız ile sizin için en doğru iş ortaklarını saniyeler içinde bulun.</p>
+                                        <button 
+                                            onClick={() => setIsHubAiOpen(true)}
+                                            className="w-full py-3 bg-white text-primary rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"
+                                        >
+                                            Şimdi Dene
+                                        </button>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
                         
                         {!isNetworkLoading && networkUsers.length === 0 && (
                             <div className="py-32 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
