@@ -4615,53 +4615,66 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             layout
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            whileHover={{ y: -5 }}
-                                            className="group relative bg-white/70 backdrop-blur-md rounded-[2.5rem] border border-white/50 overflow-hidden hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
+                                            whileHover={{ y: -8, scale: 1.01 }}
+                                            className="group relative bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
                                             onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            {/* Top Accent Bar */}
+                                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-indigo-500 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                             
-                                            <div className="p-6 relative z-10 flex-1 flex flex-col">
+                                            {/* Ambient Glow */}
+                                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
+                                            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-[60px] group-hover:bg-indigo-500/10 transition-colors duration-500" />
+
+                                            <div className="p-7 relative z-10 flex-1 flex flex-col">
                                                 <div className="flex items-start gap-4 mb-6">
                                                     <div className="relative shrink-0">
-                                                        <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-slate-50 group-hover:scale-105 transition-transform duration-500">
+                                                        <div className="w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 border-white shadow-md bg-slate-50 group-hover:rotate-3 transition-transform duration-500">
                                                             {user.image ? (
                                                                 <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
                                                             ) : (
                                                                 <div className="w-full h-full flex items-center justify-center text-slate-200">
-                                                                    <User size={28} />
+                                                                    <User size={32} />
                                                                 </div>
                                                             )}
                                                         </div>
-                                                        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
+                                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm animate-pulse" />
                                                     </div>
                                                     
                                                     <div className="flex-1 min-w-0 pt-1">
-                                                        <h3 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors truncate mb-0.5">
+                                                        <h3 className="text-base font-black text-slate-900 group-hover:text-primary transition-colors truncate tracking-tight mb-0.5">
                                                             {user.profile?.displayName || user.name}
                                                         </h3>
-                                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
-                                                            {user.profile?.occupation || "Profesyonel"}
-                                                        </p>
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-1 h-1 rounded-full bg-primary" />
+                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
+                                                                {user.profile?.occupation || "Profesyonel"}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 {user.profile?.slogan && (
-                                                    <p className="text-[10px] text-slate-500 font-medium line-clamp-2 mb-6 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
-                                                        "{user.profile.slogan}"
-                                                    </p>
+                                                    <div className="mb-6 relative">
+                                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-100 rounded-full group-hover:bg-primary/20 transition-colors" />
+                                                        <p className="text-[11px] text-slate-500 font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+                                                            "{user.profile.slogan}"
+                                                        </p>
+                                                    </div>
                                                 )}
 
-                                                <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50">
-                                                    <div className="flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-                                                        <Globe size={12} className="text-slate-300 group-hover:text-primary" />
-                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[120px]">
-                                                            {user.profile?.username}.site
+                                                <div className="mt-auto pt-5 flex items-center justify-between border-t border-slate-50/50">
+                                                    <div className="flex items-center gap-2.5 group-hover:translate-x-1 transition-transform">
+                                                        <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                                                            <Globe size={12} className="text-slate-400 group-hover:text-primary" />
+                                                        </div>
+                                                        <span className="text-[10px] font-black text-slate-500 group-hover:text-slate-900 uppercase tracking-wider truncate max-w-[150px] transition-colors">
+                                                            {user.profile?.username || user.name}.kardly.site
                                                         </span>
                                                     </div>
-                                                    <div className="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-300 transition-all shadow-sm">
-                                                        <ExternalLink size={14} />
-                                                    </div>
+                                                    <button className="w-10 h-10 rounded-2xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-400 transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-rotate-12">
+                                                        <ExternalLink size={16} />
+                                                    </button>
                                                 </div>
                                             </div>
                                         </motion.div>
