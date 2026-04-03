@@ -290,6 +290,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [networkUsers, setNetworkUsers] = useState<any[]>([])
     const [isNetworkLoading, setIsNetworkLoading] = useState(false)
     const [networkSearch, setNetworkSearch] = useState("")
+    const [hubOnlineOnly, setHubOnlineOnly] = useState(false)
+    const [selectedHubCategory, setSelectedHubCategory] = useState("")
+    const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
 
     useEffect(() => {
         if (activeTab === "network") {
@@ -4682,20 +4685,56 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         />
                                     </div>
                                     
-                                    <div className="flex items-center gap-3 w-full md:w-auto">
-                                        <div className="h-12 px-4 bg-white border border-slate-100 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-primary/20 transition-all">
-                                            <div className="w-5 h-5 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center">
-                                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <div className="flex items-center gap-3 w-full md:w-auto relative">
+                                        <button 
+                                            onClick={() => setHubOnlineOnly(!hubOnlineOnly)}
+                                            className={`h-12 px-4 border rounded-2xl flex items-center gap-3 transition-all ${hubOnlineOnly ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'}`}
+                                        >
+                                            <div className={`w-5 h-5 rounded-lg flex items-center justify-center ${hubOnlineOnly ? 'bg-emerald-500 text-white' : 'bg-emerald-50 text-emerald-500'}`}>
+                                                <div className={`w-2 h-2 rounded-full bg-current ${hubOnlineOnly && 'animate-pulse'}`} />
                                             </div>
-                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest shrink-0">Online</span>
-                                            <div className="w-8 h-4 bg-emerald-500/20 rounded-full relative p-0.5 cursor-pointer">
-                                                <div className="w-3 h-3 bg-emerald-500 rounded-full translate-x-4" />
+                                            <span className={`text-[10px] font-black uppercase tracking-widest shrink-0 ${hubOnlineOnly ? 'text-emerald-700' : 'text-slate-500'}`}>Online</span>
+                                            <div className={`w-8 h-4 rounded-full relative p-0.5 transition-colors ${hubOnlineOnly ? 'bg-emerald-500' : 'bg-slate-200'}`}>
+                                                <div className={`w-3 h-3 bg-white rounded-full transition-transform ${hubOnlineOnly ? 'translate-x-4' : 'translate-x-0'}`} />
                                             </div>
-                                        </div>
-                                        <button className="h-12 px-5 bg-white border border-slate-100 rounded-2xl text-[10px] font-black text-slate-500 uppercase tracking-widest hover:border-primary/20 transition-all flex items-center gap-2">
-                                            <Filter size={14} />
-                                            Uzmanlık
                                         </button>
+
+                                        <div className="relative group/category">
+                                            <button 
+                                                onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                                                className={`h-12 px-5 border rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-primary/20 transition-all flex items-center gap-2 ${selectedHubCategory ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-white border-slate-100 text-slate-500'}`}
+                                            >
+                                                <Filter size={14} />
+                                                {selectedHubCategory || "Uzmanlık"}
+                                            </button>
+
+                                            <AnimatePresence>
+                                                {isCategoryDropdownOpen && (
+                                                    <motion.div 
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: 10 }}
+                                                        className="absolute top-full right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[60]"
+                                                    >
+                                                        <div 
+                                                            onClick={() => { setSelectedHubCategory(""); setIsCategoryDropdownOpen(false); }}
+                                                            className="px-4 py-3 hover:bg-slate-50 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer"
+                                                        >
+                                                            Tümü
+                                                        </div>
+                                                        {Array.from(new Set(networkUsers.map(u => u.profile?.occupation).filter(Boolean))).map((occ: any) => (
+                                                            <div 
+                                                                key={occ}
+                                                                onClick={() => { setSelectedHubCategory(occ); setIsCategoryDropdownOpen(false); }}
+                                                                className="px-4 py-3 hover:bg-primary/5 hover:text-primary rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer transition-colors"
+                                                            >
+                                                                {occ}
+                                                            </div>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -4711,12 +4750,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         {networkUsers
                                             .filter(u => {
                                                 const searchLower = networkSearch.toLowerCase()
-                                                return (
+                                                const matchesSearch = (
                                                     u.name?.toLowerCase().includes(searchLower) ||
                                                     u.profile?.occupation?.toLowerCase().includes(searchLower) ||
                                                     u.profile?.username?.toLowerCase().includes(searchLower) ||
                                                     u.profile?.displayName?.toLowerCase().includes(searchLower)
                                                 )
+                                                const matchesCategory = !selectedHubCategory || u.profile?.occupation === selectedHubCategory
+                                                const matchesOnline = !hubOnlineOnly || u.isActive === true
+
+                                                return matchesSearch && matchesCategory && matchesOnline
                                             })
                                             .map((user: any) => (
                                                 <motion.div 
