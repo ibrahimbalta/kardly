@@ -4577,17 +4577,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div>
                                     <div className="flex items-center gap-3 mb-2">
                                         <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
-                                            Canlı Topluluk
+                                            {t('liveCommunity')}
                                         </div>
                                         <span className="text-xs text-slate-400 font-medium tracking-wide">
-                                            {networkUsers.length} Aktif Profesyonel
+                                            {networkUsers.length} {t('activeProfessionals')}
                                         </span>
                                     </div>
                                     <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
-                                        Hoş geldin, <span className="text-primary">{session?.user?.name?.split(' ')[0]}!</span>
+                                        {t('welcomeBack')} <span className="text-primary">{session?.user?.name?.split(' ')[0]}!</span>
                                     </h2>
                                     <p className="text-sm text-slate-500 font-medium max-w-lg">
-                                        Kardly Hub ağında bugün sizin için 12 yeni bağlantı ve fırsat bekliyor.
+                                        {t('hubWelcomeDesc')}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4">
@@ -4596,7 +4596,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         className="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl hover:bg-primary transition-all hover:scale-[1.02] active:scale-95 group"
                                     >
                                         <Sparkles size={18} className="text-primary group-hover:text-white transition-colors" />
-                                        <span>AI ASİSTAN ile BUL</span>
+                                        <span>{t('findWithAi')}</span>
                                     </button>
                                 </div>
                             </div>
@@ -4608,7 +4608,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 {/* Top Picks / Recommended */}
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2 px-2">
-                                        <h3 className="text-xl font-black text-slate-900 tracking-tight">🔥 Senin için önerilenler</h3>
+                                        <h3 className="text-xl font-black text-slate-900 tracking-tight">🔥 {t('recommendedForYou')}</h3>
                                         <div className="h-0.5 flex-1 bg-slate-100 rounded-full" />
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -4639,12 +4639,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             </div>
                                                             <h4 className="font-black text-slate-900 mb-0.5 tracking-tight">{u.name}</h4>
                                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
-                                                                {u.profile?.occupation || "Profesyonel"}
+                                                                {u.profile?.occupation || t('user')}
                                                             </p>
                                                             
                                                             <div className="w-full space-y-2 mb-6">
                                                                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">
-                                                                    <span>Eşleşme</span>
+                                                                    <span>{t('match')}</span>
                                                                     <span className="text-primary">%{matchPercent}</span>
                                                                 </div>
                                                                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -4661,7 +4661,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 onClick={() => window.open(`https://${u.profile?.username || u.name}.kardly.site`, '_blank')}
                                                                 className="w-full py-3 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
                                                             >
-                                                                Bağlantı Kur
+                                                                {t('connect')}
                                                             </button>
                                                         </div>
                                                     </motion.div>
@@ -4693,7 +4693,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <div className={`w-5 h-5 rounded-lg flex items-center justify-center ${hubOnlineOnly ? 'bg-emerald-500 text-white' : 'bg-emerald-50 text-emerald-500'}`}>
                                                 <div className={`w-2 h-2 rounded-full bg-current ${hubOnlineOnly && 'animate-pulse'}`} />
                                             </div>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest shrink-0 ${hubOnlineOnly ? 'text-emerald-700' : 'text-slate-500'}`}>Online</span>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest shrink-0 ${hubOnlineOnly ? 'text-emerald-700' : 'text-slate-500'}`}>{t('onlineOnly')}</span>
                                             <div className={`w-8 h-4 rounded-full relative p-0.5 transition-colors ${hubOnlineOnly ? 'bg-emerald-500' : 'bg-slate-200'}`}>
                                                 <div className={`w-3 h-3 bg-white rounded-full transition-transform ${hubOnlineOnly ? 'translate-x-4' : 'translate-x-0'}`} />
                                             </div>
@@ -4705,7 +4705,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 className={`h-12 px-5 border rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-primary/20 transition-all flex items-center gap-2 ${selectedHubCategory ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-white border-slate-100 text-slate-500'}`}
                                             >
                                                 <Filter size={14} />
-                                                {selectedHubCategory || "Uzmanlık"}
+                                                {selectedHubCategory || t('expertise')}
                                             </button>
 
                                             <AnimatePresence>
@@ -4720,7 +4720,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             onClick={() => { setSelectedHubCategory(""); setIsCategoryDropdownOpen(false); }}
                                                             className="px-4 py-3 hover:bg-slate-50 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer"
                                                         >
-                                                            Tümü
+                                                            {t('all')}
                                                         </div>
                                                         {Array.from(new Set(networkUsers.map(u => u.profile?.occupation).filter(Boolean))).map((occ: any) => (
                                                             <div 
@@ -4805,7 +4805,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 <div className="flex items-center gap-2">
                                                                     <div className="w-1 h-1 rounded-full bg-primary" />
                                                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">
-                                                                        {user.profile?.occupation || "Profesyonel"}
+                                                                        {user.profile?.occupation || t('user')}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -4837,7 +4837,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank');
                                                                     }}
                                                                 >
-                                                                    Profili Gör
+                                                                    {t('visitProfile')}
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -4857,8 +4857,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <Zap size={20} />
                                         </div>
                                         <div>
-                                            <h4 className="font-black text-slate-900 text-sm tracking-tight uppercase">Trendler</h4>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Popüler Profiller</p>
+                                            <h4 className="font-black text-slate-900 text-sm tracking-tight uppercase">{t('trending')}</h4>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">{t('popularProfiles')}</p>
                                         </div>
                                     </div>
                                     <div className="space-y-4">
@@ -4872,7 +4872,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="text-xs font-bold text-slate-900 group-hover:text-primary transition-colors truncate">{u.name}</div>
-                                                    <div className="text-[10px] text-slate-400 truncate uppercase tracking-widest font-black leading-none">{u.profile?.occupation}</div>
+                                                    <div className="text-[10px] text-slate-400 truncate uppercase tracking-widest font-black leading-none">{u.profile?.occupation || t('user')}</div>
                                                 </div>
                                                 <div className="flex items-center gap-1 text-[10px] font-black text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-lg">
                                                     <Star size={10} fill="currentColor" />
@@ -4890,13 +4890,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
                                             <Sparkles size={24} className="text-primary" />
                                         </div>
-                                        <h4 className="text-xl font-black tracking-tight mb-2 leading-tight">İşinizi <br />Büyütmek mi İstiyorsunuz?</h4>
-                                        <p className="text-xs text-slate-400 font-medium mb-6">AI Asistanımız ile sizin için en doğru iş ortaklarını saniyeler içinde bulun.</p>
+                                        <h4 className="text-xl font-black tracking-tight mb-2 leading-tight">{t('wantToGrow')}</h4>
+                                        <p className="text-xs text-slate-400 font-medium mb-6">{t('growDesc')}</p>
                                         <button 
                                             onClick={() => setIsHubAiOpen(true)}
                                             className="w-full py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                                         >
-                                            Şimdi Dene
+                                            {t('tryNow')}
                                         </button>
                                     </div>
                                 </div>
@@ -4906,8 +4906,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         {!isNetworkLoading && networkUsers.length === 0 && (
                             <div className="py-32 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
                                 <Compass className="w-16 h-16 mx-auto mb-6 text-slate-200" />
-                                <h3 className="text-xl font-black text-slate-900 mb-2">Henüz kullanıcı bulunmuyor</h3>
-                                <p className="text-sm text-slate-400 font-medium">Topluluğumuz her geçen gün büyüyor. İlk keşfeden siz olun.</p>
+                                <h3 className="text-xl font-black text-slate-900 mb-2">{t('noUsersFound')}</h3>
+                                <p className="text-sm text-slate-400 font-medium">{t('hubEmptyDesc')}</p>
                             </div>
                         )}
                     </div>
