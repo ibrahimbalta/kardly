@@ -13,23 +13,42 @@ export async function GET() {
                 }
             },
             include: {
-                user: true
+                user: true,
+                reviews: {
+                    where: { isActive: true },
+                    select: { rating: true }
+                },
+                _count: {
+                    select: { analytics: true }
+                }
             },
             orderBy: {
-                id: 'desc'
+                // @ts-ignore
+                createdAt: 'desc'
             }
         })
 
-        // Map back to expected format: Array of users with profile included
+        // Map back to expected format: Array of users with profile included + metrics
         // @ts-ignore
         const users = profiles.map(p => {
             // @ts-ignore
-            const { user, ...profile } = p
+            const { user, reviews, _count, ...profile } = p
+            
+            // Calculate average rating
+            const avgRating = reviews.length > 0 
+                ? (reviews.reduce((acc: number, cur: any) => acc + cur.rating, 0) / reviews.length).toFixed(1)
+                : "5.0"
+
             return {
                 ...user,
-                profile
+                profile: {
+                    ...profile,
+                    avgRating,
+                    totalViews: _count.analytics || 0
+                }
             }
         })
+
         return NextResponse.json(users)
     } catch (error) {
         console.error("Network Fetch Error:", error)

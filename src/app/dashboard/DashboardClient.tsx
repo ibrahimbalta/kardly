@@ -4667,7 +4667,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     
                                                     {/* Ambient Glow */}
                                                     <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
-                                                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-[60px] group-hover:bg-indigo-500/10 transition-colors duration-500" />
 
                                                     <div className="p-7 relative z-10 flex-1 flex flex-col">
                                                         <div className="flex items-start gap-4 mb-6">
@@ -4691,7 +4690,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     </h3>
                                                                     <div className="flex items-center gap-0.5 text-amber-500">
                                                                         <Star size={10} fill="currentColor" />
-                                                                        <span className="text-[10px] font-bold">4.9</span>
+                                                                        <span className="text-[10px] font-bold">{user.profile?.avgRating || "5.0"}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
@@ -4713,7 +4712,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         )}
 
                                                         <div className="mt-auto pt-5 flex items-center justify-between border-t border-slate-50/50">
-                                                            <div className="flex items-center gap-2.5 group-hover:translate-x-1 transition-transform">
+                                                            <div className="flex items-center gap-2.5">
                                                                 <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                                                                     <Globe size={12} className="text-slate-400 group-hover:text-primary" />
                                                                 </div>
@@ -4721,9 +4720,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     {user.profile?.username || user.name}.kardly.site
                                                                 </span>
                                                             </div>
-                                                            <button className="w-10 h-10 rounded-2xl bg-slate-50 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-400 transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-primary/30 group-hover:-rotate-12">
-                                                                <ExternalLink size={16} />
-                                                            </button>
+                                                            <div className="flex items-center gap-2">
+                                                                <button 
+                                                                    className="h-10 px-4 bg-slate-50 hover:bg-primary hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank');
+                                                                    }}
+                                                                >
+                                                                    Profili Gör
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </motion.div>
@@ -4746,35 +4753,39 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
                                     <div className="space-y-4">
-                                        {networkUsers.slice(0, 3).map((u: any, idx: number) => (
-                                            <div key={idx} className="flex items-center gap-3 group cursor-pointer">
+                                        {[...networkUsers]
+                                            .sort((a, b) => (b.profile?.totalViews || 0) - (a.profile?.totalViews || 0))
+                                            .slice(0, 4)
+                                            .map((u: any, idx: number) => (
+                                            <div key={idx} className="flex items-center gap-3 group cursor-pointer" onClick={() => window.open(`https://${u.profile?.username || u.name}.kardly.site`, '_blank')}>
                                                 <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-100 group-hover:border-primary/30 transition-all">
                                                     <img src={u.image || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full object-cover" alt="" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="text-xs font-bold text-slate-900 group-hover:text-primary transition-colors truncate">{u.name}</div>
-                                                    <div className="text-[10px] text-slate-400 truncate uppercase tracking-widest font-black">{u.profile?.occupation}</div>
+                                                    <div className="text-[10px] text-slate-400 truncate uppercase tracking-widest font-black leading-none">{u.profile?.occupation}</div>
                                                 </div>
-                                                <div className="flex items-center gap-1 text-[10px] font-black text-primary">
-                                                    <Eye size={10} />
-                                                    {Math.floor(Math.random() * 500) + 100}
+                                                <div className="flex items-center gap-1 text-[10px] font-black text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-lg">
+                                                    <Star size={10} fill="currentColor" />
+                                                    {u.profile?.avgRating || "5.0"}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <button className="w-full mt-6 py-3 bg-slate-50 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary transition-all">Tümünü Gör</button>
                                 </div>
 
-                                {/* Recomended Section */}
-                                <div className="bg-gradient-to-br from-primary to-primary-600 rounded-[2.5rem] p-6 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                                {/* AI Recommendation Section */}
+                                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[2.5rem] p-6 text-white shadow-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -mr-16 -mt-16 blur-2xl group-hover:scale-150 transition-transform duration-700" />
                                     <div className="relative z-10">
-                                        <Sparkles size={24} className="mb-4 text-white/50" />
+                                        <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
+                                            <Sparkles size={24} className="text-primary" />
+                                        </div>
                                         <h4 className="text-xl font-black tracking-tight mb-2 leading-tight">İşinizi <br />Büyütmek mi İstiyorsunuz?</h4>
-                                        <p className="text-xs text-white/70 font-medium mb-6">AI Asistanımız ile sizin için en doğru iş ortaklarını saniyeler içinde bulun.</p>
+                                        <p className="text-xs text-slate-400 font-medium mb-6">AI Asistanımız ile sizin için en doğru iş ortaklarını saniyeler içinde bulun.</p>
                                         <button 
                                             onClick={() => setIsHubAiOpen(true)}
-                                            className="w-full py-3 bg-white text-primary rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"
+                                            className="w-full py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                                         >
                                             Şimdi Dene
                                         </button>
