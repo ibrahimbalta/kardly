@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard, Smartphone } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
@@ -732,46 +732,67 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 )}
             </div>
 
-            {/* Card Inner Content (Portrait) */}
-            <div className="flex-1 p-6 flex flex-col relative z-20 items-center text-center justify-between">
-                {/* QR Code Top Section */}
-                <div className="flex items-center justify-center pt-4 mb-6 relative">
-                    <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-150 animate-pulse" />
-                    <div className="p-3.5 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[1.8rem] ring-[8px] ring-white/10 relative z-10 border border-white/50">
-                        {qrDataUrl ? (
-                            <img src={qrDataUrl} alt="QR Code" className="w-[100px] h-[100px] image-render-crisp" />
-                        ) : (
-                            <div className="w-[100px] h-[100px] animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
-                                <RefreshCw className="animate-spin text-slate-200" />
-                            </div>
-                        )}
+            {/* Card Inner Content (Dynamic Orientation) */}
+            <div className={cn(
+                "flex flex-1 p-6 relative z-20 items-center justify-between",
+                orientation === 'portrait' ? "flex-col text-center" : "flex-row text-left gap-8"
+            )}>
+                {/* QR & Profile Side (Left in Landscape, Top in Portrait) */}
+                <div className={cn(
+                    "flex flex-col items-center",
+                    orientation === 'portrait' ? "mb-4" : "w-1/3 shrink-0"
+                )}>
+                    {/* QR Code */}
+                    <div className="relative mb-6">
+                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 animate-pulse" />
+                        <div className={cn(
+                            "p-3 bg-white shadow-2xl relative z-10 border border-white/50",
+                            orientation === 'portrait' ? "rounded-[1.8rem]" : "rounded-3xl"
+                        )}>
+                            {qrDataUrl ? (
+                                <img src={qrDataUrl} alt="QR Code" className={cn(
+                                    "image-render-crisp transition-all",
+                                    orientation === 'portrait' ? "w-[100px] h-[100px]" : "w-[85px] h-[85px]"
+                                )} />
+                            ) : (
+                                <div className="w-[100px] h-[100px] animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
+                                    <RefreshCw className="animate-spin text-slate-200" />
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                {/* Profile Section */}
-                <div className="flex flex-col items-center mb-6 relative z-10">
+                    {/* Profile Photo */}
                     <div className={cn(
-                        "w-24 h-24 rounded-[1.8rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] mb-5 border-[4px] ring-[12px] ring-white/5 relative group",
-                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30"
+                        "rounded-full overflow-hidden shadow-2xl border-[3px] ring-[10px] ring-white/5 relative group transition-all",
+                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30",
+                        orientation === 'portrait' ? "w-24 h-24" : "w-16 h-16"
                     )}>
                         <img
                             src={profileData?.profileImage || profileData?.image || user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileData?.displayName || user.name)}&background=6366f1&color=fff&size=256`}
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             alt="Profile"
                             onError={(e) => {
-                                // Fallback if image fails to load
                                 (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
                             }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                     </div>
+                </div>
+
+                {/* Name & Details Section (Right in Landscape, Bottom in Portrait) */}
+                <div className={cn(
+                    "flex flex-col relative z-10",
+                    orientation === 'portrait' ? "items-center" : "flex-1 items-start justify-center py-4"
+                )}>
                     <h1 className={cn(
-                        "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors",
+                        "font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors",
                         tp.text,
+                        orientation === 'portrait' ? "text-2xl" : "text-xl",
                         customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
                     )} style={{ color: customTextColor || undefined }}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+                    
                     <div className={cn(
-                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors",
+                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors mb-6",
                         customAccent || tp.accentText,
                         customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
                     )} style={{ color: customTextColor || undefined }}>
@@ -779,40 +800,38 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
                         </p>
                     </div>
-                </div>
 
-                {/* Contact Info Cards */}
-                <div className="w-full space-y-2.5 mt-auto">
-                    {[
-                        { icon: Phone, value: profileData?.phone || user.phone, label: 'TELEFON' },
-                        { icon: Mail, value: profileData?.email || user.email, label: 'E-POSTA' },
-                        { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
-                    ].filter(item => item.value).map((item, idx) => (
-                        <div key={idx} className={cn(
-                            "flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all",
-                            tp.hex === '#ffffff'
-                                ? "bg-slate-50 border-slate-100"
-                                : tp.category === 'Ultimate'
-                                    ? "bg-white/[0.06] border-white/[0.08] backdrop-blur-xl"
-                                    : "bg-white/[0.03] border-white/[0.05]"
-                        )}>
-                            <div className={cn(
-                                "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
-                                tp.hex === '#ffffff' ? "bg-indigo-50" : "bg-white/10"
+                    {/* Contact Info Cards (Condensed in Landscape) */}
+                    <div className={cn(
+                        "w-full space-y-2 mt-auto",
+                        orientation === 'portrait' ? "max-w-[280px]" : "w-full"
+                    )}>
+                        {[
+                            { icon: Phone, value: profileData?.phone || user.phone, label: 'TELEFON' },
+                            { icon: Mail, value: profileData?.email || user.email, label: 'E-POSTA' },
+                            { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
+                        ].filter(item => item.value).map((item, idx) => (
+                            <div key={idx} className={cn(
+                                "flex items-center gap-3 px-3.5 py-2.5 rounded-xl border transition-all",
+                                tp.hex === '#ffffff'
+                                    ? "bg-slate-50 border-slate-100"
+                                    : "bg-white/[0.04] border-white/[0.06]"
                             )}>
-                                <item.icon size={13} className={customAccent || tp.accentText} strokeWidth={2.5} />
+                                <item.icon size={12} className={cn("shrink-0", customAccent || tp.accentText)} strokeWidth={2.5} />
+                                <div className="text-left min-w-0">
+                                    <span className={cn("block text-[6px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
+                                    <span className={cn("block text-[9px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
+                                </div>
                             </div>
-                             <div className="text-left min-w-0">
-                                <span className={cn("block text-[7px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
-                                <span className={cn("block text-[10px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                {/* Footer Branding */}
-                <div className="mt-5 opacity-20">
-                    <span className={cn("text-[6px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY · PREMIUM</span>
+                    {/* Footer Branding (Portrait Only for Space) */}
+                    {orientation === 'portrait' && (
+                        <div className="mt-6 opacity-20">
+                            <span className={cn("text-[6px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY · PREMIUM</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -914,13 +933,13 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none" />
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-rose-500/5 blur-[100px] pointer-events-none" />
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
-                            {/* 1. Color Control */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 relative z-10">
+                            {/* 1. Bg Color Control */}
                             <div className="space-y-5">
                                 <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
-                                    <Palette size={16} className="text-primary" /> Renk Paleti
+                                    <Palette size={16} className="text-primary" /> Arka Plan Rengi
                                 </label>
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-2.5">
                                     {['#ffffff', '#000000', '#2563eb', '#dc2626', '#059669', '#7c3aed', '#f59e0b', '#ec4899', '#06b6d4', '#10b981'].map(c => (
                                         <button
                                             key={c}
@@ -941,12 +960,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 </div>
                             </div>
 
-                            {/* 4. Text Color Control */}
+                            {/* 2. Text Color Control */}
                             <div className="space-y-5">
                                 <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
                                     <Type size={16} className="text-primary" /> Metin Rengi
                                 </label>
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-2.5">
                                     {['#ffffff', '#000000', '#fbbf24', '#cbd5e1', '#f472b6', '#34d399'].map(c => (
                                         <button
                                             key={c}
@@ -967,7 +986,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 </div>
                             </div>
 
-                            {/* 2. Font Control */}
+                            {/* 3. Typography Control */}
                             <div className="space-y-5">
                                 <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
                                     <Type size={16} className="text-primary" /> Tipografi Atölyesi
@@ -979,7 +998,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             onClick={() => setCustomFont(f)}
                                             className={cn(
                                                 "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg group relative",
-                                                customFont === f ? "bg-primary border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-300 hover:text-white hover:bg-white/10"
+                                                customFont === f ? "border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-300 hover:text-white hover:bg-white/10"
                                             )}
                                         >
                                             <span className="relative z-10">{f === 'sans' ? 'Modern' : f === 'mono' ? 'Teknik' : 'Klasik'}</span>
@@ -989,7 +1008,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 </div>
                             </div>
 
-                            {/* 3. Pattern Layers */}
+                            {/* 4. Pattern Layers */}
                             <div className="space-y-5">
                                 <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
                                     <Zap size={16} className="text-primary" /> Efekt Katmanı
@@ -1001,13 +1020,44 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             onClick={() => setCustomPattern(p)}
                                             className={cn(
                                                 "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg group relative",
-                                                customPattern === p ? "border-primary bg-primary text-white scale-105 shadow-primary/30" : "border-white/5 bg-white/5 text-slate-300 hover:text-white"
+                                                customPattern === p ? "border-primary text-white scale-105 shadow-primary/30" : "border-white/5 bg-white/5 text-slate-300 hover:text-white"
                                             )}
                                         >
                                             <span className="relative z-10">{p === 'dots' ? 'Noktalı' : p === 'grid' ? 'Izgara' : 'Yok'}</span>
                                             {customPattern === p && <motion.div layoutId="patternTab" className="absolute inset-0 bg-primary rounded-2xl -z-0" />}
                                         </button>
                                     ))}
+                                </div>
+                            </div>
+
+                            {/* 5. Orientation Switch */}
+                            <div className="space-y-5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
+                                    <Layout size={16} className="text-primary" /> Kart Yönü
+                                </label>
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => onOrientationChange?.('portrait')}
+                                        className={cn(
+                                            "flex-1 px-5 py-3 rounded-2xl flex flex-col items-center gap-2 border transition-all shadow-lg group relative",
+                                            orientation === 'portrait' ? "border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-400 hover:text-white"
+                                        )}
+                                    >
+                                        <Smartphone size={18} className={cn("relative z-10 transition-transform", orientation === 'portrait' && "animate-bounce")} />
+                                        <span className="relative z-10 text-[9px] font-black uppercase tracking-widest">Dikey</span>
+                                        {orientation === 'portrait' && <motion.div layoutId="orientTab" className="absolute inset-0 bg-primary rounded-2xl -z-0" />}
+                                    </button>
+                                    <button
+                                        onClick={() => onOrientationChange?.('landscape')}
+                                        className={cn(
+                                            "flex-1 px-5 py-3 rounded-2xl flex flex-col items-center gap-2 border transition-all shadow-lg group relative",
+                                            orientation === 'landscape' ? "border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-400 hover:text-white"
+                                        )}
+                                    >
+                                        <CreditCard size={18} className={cn("relative z-10 transition-transform", orientation === 'landscape' && "scale-110")} />
+                                        <span className="relative z-10 text-[9px] font-black uppercase tracking-widest">Yatay</span>
+                                        {orientation === 'landscape' && <motion.div layoutId="orientTab" className="absolute inset-0 bg-primary rounded-2xl -z-0" />}
+                                    </button>
                                 </div>
                             </div>
                         </div>
