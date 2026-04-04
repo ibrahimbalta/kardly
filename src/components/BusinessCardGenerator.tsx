@@ -264,16 +264,16 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             ref={cardRef}
             data-card-actual
             className={cn(
-                "flex flex-col overflow-hidden relative shadow-2xl",
+                "flex flex-col overflow-hidden relative shadow-2xl transition-all duration-500",
                 tp.bg,
                 "rounded-[2.5rem]",
-                customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
+                customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif italic' : 'font-sans'
             )}
             style={{
                 width: `${cardWidth}px`,
                 height: `${cardHeight}px`,
                 backgroundColor: customBg || tp.hex,
-                border: (customBg || tp.hex) === '#ffffff' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)'
+                border: (customBg || tp.hex) === '#ffffff' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.1)'
             }}
         >
             {/* Background Graphics */}
@@ -724,10 +724,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 )}
                 {/* Custom pattern overlay if set */}
                 {customPattern === 'dots' && (
-                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`, backgroundSize: '12px 12px' }} />
+                    <div className="absolute inset-0 opacity-[0.35] z-0" style={{ backgroundImage: `radial-gradient(${customAccent ? 'currentColor' : 'rgba(255,255,255,0.4)'} 1.5px, transparent 1.5px)`, backgroundSize: '16px 16px' }} />
                 )}
                 {customPattern === 'grid' && (
-                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`, backgroundSize: '24px 24px' }} />
+                    <div className="absolute inset-0 opacity-[0.25] z-0" style={{ backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
                 )}
             </div>
 
@@ -761,11 +761,13 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     </div>
                     <h1 className={cn(
                         "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm",
-                        tp.text
+                        tp.text,
+                        customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
                     )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
                     <div className={cn(
                         "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10",
-                        customAccent || tp.accentText
+                        customAccent || tp.accentText,
+                        customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
                     )}>
                         <p className="text-[10px] font-black uppercase tracking-[0.25em]">
                             {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
@@ -944,11 +946,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             key={f}
                                             onClick={() => setCustomFont(f)}
                                             className={cn(
-                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg",
+                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg group relative",
                                                 customFont === f ? "bg-primary border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-300 hover:text-white hover:bg-white/10"
                                             )}
                                         >
-                                            {f === 'sans' ? 'Modern' : f === 'mono' ? 'Teknik' : 'Klasik'}
+                                            <span className="relative z-10">{f === 'sans' ? 'Modern' : f === 'mono' ? 'Teknik' : 'Klasik'}</span>
+                                            {customFont === f && <motion.div layoutId="fontTab" className="absolute inset-0 bg-primary rounded-2xl -z-0" />}
                                         </button>
                                     ))}
                                 </div>
@@ -965,11 +968,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                             key={p || 'none'}
                                             onClick={() => setCustomPattern(p)}
                                             className={cn(
-                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg",
+                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg group relative",
                                                 customPattern === p ? "border-primary bg-primary text-white scale-105 shadow-primary/30" : "border-white/5 bg-white/5 text-slate-300 hover:text-white"
                                             )}
                                         >
-                                            {p === 'dots' ? 'Noktalı' : p === 'grid' ? 'Izgara' : 'Yok'}
+                                            <span className="relative z-10">{p === 'dots' ? 'Noktalı' : p === 'grid' ? 'Izgara' : 'Yok'}</span>
+                                            {customPattern === p && <motion.div layoutId="patternTab" className="absolute inset-0 bg-primary rounded-2xl -z-0" />}
                                         </button>
                                     ))}
                                 </div>
