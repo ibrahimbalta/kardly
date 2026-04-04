@@ -794,113 +794,110 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── FOOTER: PREMIUM DARK ─── */}
-      <footer className="py-24 px-6 relative bg-[#0a0a0f] overflow-hidden">
-        {/* Subtle ambient glows */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-rose-500/[0.03] blur-[150px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/[0.03] blur-[130px] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(244,63,94,0.02)_0%,transparent_70%)] pointer-events-none" />
+      <footer className="relative bg-[#020617] pt-24 pb-12 px-6 overflow-hidden border-t border-slate-900">
+        {/* Grain Texture Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
         
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-16 mb-20 items-start">
-            {/* Brand Column */}
-            <div className="col-span-2 md:col-span-3 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 items-start">
+            {/* Brand Section */}
+            <div className="space-y-8">
               <Link href="/" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform duration-300">
-                  <Layout className="text-white w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white shadow-lg shadow-rose-500/20 group-hover:rotate-6 transition-all duration-500">
+                  <Layout className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-black tracking-tighter text-white">
+                  <div className="font-black text-2xl text-white tracking-tighter">
                     Kardly<span className="text-rose-500">.site</span>
-                  </span>
-                  <span className="text-[8px] font-bold text-slate-500 tracking-[0.2em] uppercase">link to success</span>
+                  </div>
+                  <span className="text-[9px] font-black text-slate-600 tracking-[0.3em] uppercase italic">link to success</span>
                 </div>
               </Link>
-              <p className="text-slate-500 text-sm leading-relaxed">{t('footerDesc')}</p>
-              
+              <p className="text-slate-500 text-sm leading-relaxed font-medium max-w-xs">
+                {t('footerDesc') || "Profesyonel dijital kartvizit platformu. İş dünyasını tek linkte birleştirin."}
+              </p>
               <div className="flex gap-4">
                 {[
                   { name: 'Instagram', icon: <Instagram size={18} /> },
                   { name: 'Twitter', icon: <Twitter size={18} /> },
                   { name: 'LinkedIn', icon: <Linkedin size={18} /> }
                 ].map((s) => (
-                  <a key={s.name} href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-slate-400 hover:bg-rose-500 hover:text-white transition-all duration-300">
-                     {s.icon}
-                  </a>
+                  <motion.a 
+                    key={s.name} href="#" whileHover={{ y: -3 }}
+                    className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 hover:text-white hover:border-slate-700 transition-all duration-300"
+                  >
+                    {s.icon}
+                  </motion.a>
                 ))}
               </div>
             </div>
 
-            {/* Product Column */}
-            <div className="md:col-span-2">
-              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('product')}</h5>
+            {/* Links Columns */}
+            <div className="lg:pl-8">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-8 italic">{t('productCaps')}</h4>
               <ul className="space-y-4">
-                <li><a href="#features" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Zap size={14} className="text-amber-500" /> {t('features')}</a></li>
-                <li><a href="#templates" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 underline-offset-4 hover:underline"><Palette size={14} className="text-indigo-500" /> {t('templates')}</a></li>
+                <li><a href="#features" className="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm font-medium"><Zap size={14} className="text-amber-500" /> {t('features')}</a></li>
+                <li><a href="#templates" className="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm font-medium"><Palette size={14} className="text-indigo-500" /> {t('templates')}</a></li>
               </ul>
             </div>
 
-            {/* Support Column */}
-            <div className="md:col-span-2">
-              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('support')}</h5>
+            <div>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-500 mb-8 italic">{t('supportCaps')}</h4>
               <ul className="space-y-4">
-                <li><Link href="/blog" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><FileText size={14} className="text-sky-500" /> {t('blog')}</Link></li>
-                <li><Link href="/iletisim" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><Globe size={14} className="text-emerald-500" /> {t('contact')}</Link></li>
-                <li><Link href="/sss" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2"><CheckCircle2 size={14} className="text-orange-500" /> {t('faq')}</Link></li>
+                <li><Link href="/blog" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><FileText size={14} className="text-sky-500" /> {t('blog')}</Link></li>
+                <li><Link href="/iletisim" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><Globe size={14} className="text-emerald-500" /> {t('contact')}</Link></li>
+                <li><Link href="/sss" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><CheckCircle2 size={14} className="text-orange-500" /> {t('faq')}</Link></li>
               </ul>
             </div>
 
-            {/* Legal Column */}
-            <div className="md:col-span-2">
-              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-8 italic">{t('legal')}</h5>
-              <ul className="space-y-4">
-                <li><Link href="/kullanim-sartlari" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 block"><Shield size={14} className="text-slate-400" /> {t('terms')}</Link></li>
-                <li><Link href="/gizlilik" className="text-[13px] font-medium text-slate-500 hover:text-white transition-colors flex items-center gap-2 block"><Sparkles size={14} className="text-slate-400" /> {t('privacy')}</Link></li>
-              </ul>
-            </div>
-
-            {/* Newsletter / Join Column */}
-            <div className="col-span-2 md:col-span-3 space-y-8">
-               <div className="p-6 rounded-3xl bg-white/5 border border-white/5 space-y-4">
-                  <h6 className="text-xs font-black text-white uppercase tracking-widest">{t('newRegistration')}</h6>
-                  <p className="text-[11px] text-slate-500 leading-relaxed">{t('newsletterDesc')}</p>
-                  <form onSubmit={handleNewsletter} className="flex gap-2">
-                    <input 
-                      type="email" 
-                      placeholder="Email.." 
-                      value={newsEmail}
-                      onChange={(e) => setNewsEmail(e.target.value)}
-                      required
-                      className="bg-white/10 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-rose-500/50 flex-grow" 
-                    />
-                    <button 
-                      type="submit"
-                      disabled={newsStatus === "loading"}
-                      className="p-2 bg-rose-500 text-white rounded-xl hover:bg-rose-600 transition-colors disabled:opacity-50"
-                    >
-                      <ArrowRight size={16} />
-                    </button>
-                  </form>
-                  {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold">{t('registrationSuccess')}</p>}
-                  {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold">{t('registrationError')}</p>}
-                  
-                  <p className="text-[9px] text-slate-600 leading-tight">
-                    {t('termsAgreement')}
-                  </p>
-                  <div className="flex items-center gap-3 pt-2">
-                    <div className="flex -space-x-2">
-                      {[1,2,3].map(i => (
-                        <div key={i} className="w-6 h-6 rounded-full border-2 border-[#0a0a0f] bg-slate-800" />
-                      ))}
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{t('footerCommunity')}</span>
+            {/* Newsletter Column: Compact Glass Card */}
+            <div className="relative">
+              <div className="p-8 rounded-[40px] bg-white/[0.03] backdrop-blur-3xl border border-white/5 shadow-2xl space-y-6">
+                <div className="space-y-2">
+                  <h6 className="text-lg font-black text-white italic tracking-tight">{t('newRegistration')}</h6>
+                  <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{t('newsletterDesc')}</p>
+                </div>
+                
+                <form onSubmit={handleNewsletter} className="relative flex items-center">
+                  <input 
+                    type="email" 
+                    placeholder="Email.." 
+                    value={newsEmail}
+                    onChange={(e) => setNewsEmail(e.target.value)}
+                    required
+                    className="w-full bg-slate-900 border border-slate-800 rounded-full py-3 px-5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500/50 transition-colors" 
+                  />
+                  <button 
+                    type="submit"
+                    disabled={newsStatus === "loading"}
+                    className="absolute right-1.5 p-2 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20 disabled:opacity-50"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </form>
+                
+                {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold italic">{t('registrationSuccess')}</p>}
+                {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold italic">{t('registrationError')}</p>}
+                
+                <div className="flex items-center gap-4 pt-2">
+                  <div className="flex -space-x-2">
+                    {[1,2,3].map(i => (
+                      <div key={i} className="w-8 h-8 rounded-full border-4 border-[#020617] bg-slate-800 shadow-sm" />
+                    ))}
                   </div>
-               </div>
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('footerCommunity')}</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">© 2026 Kardly.site — {t('allRights')}</p>
+          
+          <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">© 2026 Kardly.site — {t('allRights')}</p>
+            <div className="flex gap-8">
+              {[t('terms'), t('privacy')].map((link, i) => (
+                <a key={i} href="#" className="text-slate-600 hover:text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] transition-colors">{link}</a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
