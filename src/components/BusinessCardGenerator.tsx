@@ -167,9 +167,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         generateQr()
     }, [profileUrl])
 
-    // ALWAYS portrait: 340x600
-    const cardWidth = 340
-    const cardHeight = 600
+    // Card dimensions based on orientation
+    const cardWidth = orientation === 'landscape' ? 600 : 340
+    const cardHeight = orientation === 'landscape' ? 340 : 600
     const cardScale = mode === 'modal' ? 1 : Math.min(1, containerWidth / (cardWidth + 20))
 
     const [isDownloading, setIsDownloading] = useState(false)
