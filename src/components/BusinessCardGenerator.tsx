@@ -750,14 +750,19 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 {/* Profile Section */}
                 <div className="flex flex-col items-center mb-6 relative z-10">
                     <div className={cn(
-                        "w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] mb-5 border-[3px] ring-[10px] ring-white/5",
-                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
+                        "w-24 h-24 rounded-[1.8rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] mb-5 border-[4px] ring-[12px] ring-white/5 relative group",
+                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30"
                     )}>
                         <img
-                            src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128`}
-                            className="w-full h-full object-cover"
-                            alt=""
+                            src={profileData?.profileImage || profileData?.image || user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileData?.displayName || user.name)}&background=6366f1&color=fff&size=256`}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Profile"
+                            onError={(e) => {
+                                // Fallback if image fails to load
+                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
+                            }}
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                     </div>
                     <h1 className={cn(
                         "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm",
