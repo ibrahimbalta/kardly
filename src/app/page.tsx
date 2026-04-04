@@ -297,57 +297,75 @@ export default function Home() {
           </div>
 
           {/* Ultra-Compact Micro-Tile Grid - Light Theme */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 relative">
             {[
-              { icon: <Briefcase size={18} />, title: t('f1Title'), bg: 'group-hover:bg-rose-500' },
-              { icon: <CheckCircle2 size={18} />, title: t('f2Title'), bg: 'group-hover:bg-amber-500' },
-              { icon: <FileText size={18} />, title: t('f3Title'), bg: 'group-hover:bg-blue-500' },
-              { icon: <CreditCard size={18} />, title: t('f4Title'), bg: 'group-hover:bg-emerald-500' },
-              { icon: <Calendar size={18} />, title: t('f5Title'), bg: 'group-hover:bg-indigo-500' },
-              { icon: <BarChart3 size={18} />, title: t('f6Title'), bg: 'group-hover:bg-purple-500' },
-              { icon: <Palette size={18} />, title: t('f7Title'), bg: 'group-hover:bg-pink-500' },
-              { icon: <QrCode size={18} />, title: t('f8Title'), bg: 'group-hover:bg-sky-500' },
-              { icon: <Shield size={18} />, title: t('f9Title'), bg: 'group-hover:bg-teal-500' },
+              { icon: <Briefcase size={22} />, title: t('f1Title'), color: 'rose', delay: 0 },
+              { icon: <CheckCircle2 size={22} />, title: t('f2Title'), color: 'amber', delay: 0.1 },
+              { icon: <FileText size={22} />, title: t('f3Title'), color: 'blue', delay: 0.2 },
+              { icon: <CreditCard size={22} />, title: t('f4Title'), color: 'emerald', delay: 0.3 },
+              { icon: <Calendar size={22} />, title: t('f5Title'), color: 'indigo', delay: 0.4 },
+              { icon: <BarChart3 size={22} />, title: t('f6Title'), color: 'purple', delay: 0.5 },
+              { icon: <Palette size={22} />, title: t('f7Title'), color: 'pink', delay: 0.6 },
+              { icon: <QrCode size={22} />, title: t('f8Title'), color: 'sky', delay: 0.7 },
+              { icon: <Shield size={22} />, title: t('f9Title'), color: 'teal', delay: 0.8 },
             ].map((f, i) => {
-              const colors = [
-                { bg: 'bg-rose-50', border: 'border-rose-100', accent: 'bg-rose-500', shadow: 'shadow-rose-100' },
-                { bg: 'bg-indigo-50', border: 'border-indigo-100', accent: 'bg-indigo-500', shadow: 'shadow-indigo-100' },
-                { bg: 'bg-violet-50', border: 'border-violet-100', accent: 'bg-violet-500', shadow: 'shadow-violet-100' },
-                { bg: 'bg-emerald-50', border: 'border-emerald-100', accent: 'bg-emerald-500', shadow: 'shadow-emerald-100' },
-                { bg: 'bg-amber-50', border: 'border-amber-100', accent: 'bg-amber-500', shadow: 'shadow-amber-100' },
-                { bg: 'bg-cyan-50', border: 'border-cyan-100', accent: 'bg-cyan-500', shadow: 'shadow-cyan-100' },
-                { bg: 'bg-fuchsia-50', border: 'border-fuchsia-100', accent: 'bg-fuchsia-500', shadow: 'shadow-fuchsia-100' },
-                { bg: 'bg-orange-50', border: 'border-orange-100', accent: 'bg-orange-500', shadow: 'shadow-orange-100' },
-                { bg: 'bg-sky-50', border: 'border-sky-100', accent: 'bg-sky-500', shadow: 'shadow-sky-100' }
-              ][i] || { bg: 'bg-slate-50', border: 'border-slate-100', accent: 'bg-slate-500', shadow: 'shadow-slate-100' };
+              const theme = {
+                rose: { bg: 'from-rose-500/10 to-rose-500/5', icon: 'bg-rose-500', glow: 'shadow-rose-500/20', text: 'text-rose-950', shape: 'bg-rose-500/5' },
+                amber: { bg: 'from-amber-500/10 to-amber-500/5', icon: 'bg-amber-500', glow: 'shadow-amber-500/20', text: 'text-amber-950', shape: 'bg-amber-500/5' },
+                blue: { bg: 'from-blue-500/10 to-blue-500/5', icon: 'bg-blue-500', glow: 'shadow-blue-500/20', text: 'text-blue-950', shape: 'bg-blue-500/5' },
+                emerald: { bg: 'from-emerald-500/10 to-emerald-500/5', icon: 'bg-emerald-500', glow: 'shadow-emerald-500/20', text: 'text-emerald-950', shape: 'bg-emerald-500/5' },
+                indigo: { bg: 'from-indigo-500/10 to-indigo-500/5', icon: 'bg-indigo-500', glow: 'shadow-indigo-500/20', text: 'text-indigo-950', shape: 'bg-indigo-500/5' },
+                purple: { bg: 'from-purple-500/10 to-purple-500/5', icon: 'bg-purple-500', glow: 'shadow-purple-500/20', text: 'text-purple-950', shape: 'bg-purple-500/5' },
+                pink: { bg: 'from-pink-500/10 to-pink-500/5', icon: 'bg-pink-500', glow: 'shadow-pink-500/20', text: 'text-pink-950', shape: 'bg-pink-500/5' },
+                sky: { bg: 'from-sky-500/10 to-sky-500/5', icon: 'bg-sky-500', glow: 'shadow-sky-500/20', text: 'text-sky-950', shape: 'bg-sky-500/5' },
+                teal: { bg: 'from-teal-500/10 to-teal-500/5', icon: 'bg-teal-500', glow: 'shadow-teal-500/20', text: 'text-teal-950', shape: 'bg-teal-500/5' }
+              }[f.color as keyof typeof theme] || { bg: 'bg-slate-50', icon: 'bg-slate-500', glow: 'shadow-slate-500/20', text: 'text-slate-950', shape: 'bg-slate-500/5' };
 
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className={cn("group relative h-[100px] cursor-pointer", i % 2 === 1 && "lg:translate-y-6")}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: f.delay, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  className={cn(
+                    "group relative min-h-[140px] p-8 rounded-[40px] overflow-hidden transition-all duration-700",
+                    i % 3 === 1 ? "lg:translate-y-12" : "",
+                    i % 3 === 2 ? "lg:translate-y-24" : ""
+                  )}
                 >
-                  <div className={`absolute inset-0 bg-white/40 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[32px] transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] group-hover:bg-white/80`} />
+                  {/* Glass Background */}
+                  <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br backdrop-blur-2xl border border-white/40 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.02]",
+                    theme.bg
+                  )} />
                   
-                  <div className="relative h-full flex items-center p-2.5">
-                    <div className="flex items-center gap-4 w-full h-full rounded-[20px] p-2 pr-6 overflow-hidden">
-                      {/* Icon Container with matching accent */}
-                      <div className={`relative shrink-0 w-12 h-12 rounded-[16px] ${colors.accent} border-2 border-white/20 shadow-sm flex items-center justify-center transition-all duration-500 group-hover:rotate-6`}>
-                         <span className="text-white">{f.icon}</span>
-                      </div>
+                  {/* Abstract Geometric Shapes */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+                    <div className={cn("absolute -top-4 -right-4 w-24 h-24 rounded-full blur-xl transition-transform duration-700 group-hover:scale-150", theme.shape)} />
+                    <div className={cn("absolute -bottom-8 -left-8 w-32 h-32 rotate-12 transition-transform duration-1000 group-hover:rotate-45", theme.shape)} />
+                    {/* Decorative geometric icon */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05] scale-[2] group-hover:scale-[3] transition-transform duration-1000">
+                      {f.icon}
+                    </div>
+                  </div>
 
-                      {/* Text Container: Increased font size */}
-                      <div className="flex-1">
-                        <div className="inline-block relative">
-                           <h3 className="relative z-10 text-[15px] font-black text-slate-950 tracking-tight leading-none">
-                             {f.title}
-                           </h3>
-                        </div>
-                      </div>
-
-                      <div className="opacity-30 group-hover:opacity-100 transition-all duration-300">
-                         <ArrowRight size={12} className="text-slate-400 group-hover:text-slate-900" />
+                  <div className="relative z-10 flex flex-col items-start gap-5">
+                    {/* Icon Core */}
+                    <div className={cn(
+                      "w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transition-all duration-700 group-hover:rotate-[15deg] group-hover:scale-110",
+                      theme.icon, theme.glow
+                    )}>
+                      {f.icon}
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <h3 className={cn("text-lg font-black tracking-tighter leading-none italic", theme.text)}>
+                        {f.title}
+                      </h3>
+                      <div className="flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
+                         <div className={cn("h-1 w-8 rounded-full", theme.icon)} />
+                         <ArrowRight size={12} className={theme.text} />
                       </div>
                     </div>
                   </div>
