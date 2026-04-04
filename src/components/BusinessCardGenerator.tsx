@@ -125,6 +125,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     // Customization States
     const [customBg, setCustomBg] = useState<string | null>(null)
     const [customAccent, setCustomAccent] = useState<string | null>(null)
+    const [customTextColor, setCustomTextColor] = useState<string | null>(null)
     const [customFont, setCustomFont] = useState<'sans' | 'mono' | 'serif' | 'display'>('sans')
     const [customPattern, setCustomPattern] = useState<string | null>(null)
     const [glassIntensity, setGlassIntensity] = useState(10)
@@ -765,15 +766,15 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                     </div>
                     <h1 className={cn(
-                        "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm",
+                        "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors",
                         tp.text,
                         customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
-                    )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+                    )} style={{ color: customTextColor || undefined }}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
                     <div className={cn(
-                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10",
+                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors",
                         customAccent || tp.accentText,
                         customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
-                    )}>
+                    )} style={{ color: customTextColor || undefined }}>
                         <p className="text-[10px] font-black uppercase tracking-[0.25em]">
                             {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
                         </p>
@@ -801,9 +802,9 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             )}>
                                 <item.icon size={13} className={customAccent || tp.accentText} strokeWidth={2.5} />
                             </div>
-                            <div className="text-left min-w-0">
-                                <span className={cn("block text-[7px] font-black uppercase tracking-widest opacity-30 mb-0.5", tp.text)}>{item.label}</span>
-                                <span className={cn("block text-[10px] font-bold tracking-tight truncate", tp.text)}>{item.value}</span>
+                             <div className="text-left min-w-0">
+                                <span className={cn("block text-[7px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
+                                <span className={cn("block text-[10px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
                             </div>
                         </div>
                     ))}
@@ -932,7 +933,33 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                         />
                                     ))}
                                     <button
-                                        onClick={() => { setCustomBg(null); setCustomAccent(null); }}
+                                        onClick={() => { setCustomBg(null); setCustomAccent(null); setCustomTextColor(null); }}
+                                        className="h-9 px-5 bg-white/10 rounded-full text-[10px] font-black text-white hover:bg-primary transition-all uppercase tracking-widest border border-white/10 shadow-lg"
+                                    >
+                                        Sıfırla
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* 4. Text Color Control */}
+                            <div className="space-y-5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
+                                    <Type size={16} className="text-primary" /> Metin Rengi
+                                </label>
+                                <div className="flex flex-wrap gap-3">
+                                    {['#ffffff', '#000000', '#fbbf24', '#cbd5e1', '#f472b6', '#34d399'].map(c => (
+                                        <button
+                                            key={c}
+                                            onClick={() => setCustomTextColor(c)}
+                                            className={cn(
+                                                "w-9 h-9 rounded-full border-2 transition-all shadow-xl",
+                                                customTextColor === c ? "border-primary scale-110 ring-4 ring-primary/30" : "border-white/10 opacity-70 hover:opacity-100 hover:scale-105"
+                                            )}
+                                            style={{ backgroundColor: c }}
+                                        />
+                                    ))}
+                                    <button
+                                        onClick={() => setCustomTextColor(null)}
                                         className="h-9 px-5 bg-white/10 rounded-full text-[10px] font-black text-white hover:bg-primary transition-all uppercase tracking-widest border border-white/10 shadow-lg"
                                     >
                                         Sıfırla
