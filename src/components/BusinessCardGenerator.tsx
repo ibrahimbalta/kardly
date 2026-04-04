@@ -3,7 +3,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard, Smartphone } from 'lucide-react'
+import { jsPDF } from "jspdf"
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard, Smartphone, Printer } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
@@ -23,6 +24,12 @@ interface BusinessCardGeneratorProps {
     orientation?: 'landscape' | 'portrait'
     onSelect?: (templateId: string) => void
     onOrientationChange?: (orientation: 'landscape' | 'portrait') => void
+    // Customization Props (Restoration)
+    initialCustomBg?: string | null
+    initialCustomAccent?: string | null
+    initialCustomTextColor?: string | null
+    initialCustomFont?: 'sans' | 'mono' | 'serif' | 'display'
+    initialCustomPattern?: string | null
 }
 
 export const TEMPLATES = [
@@ -39,7 +46,7 @@ export const TEMPLATES = [
     { id: 'vibe_wave_purple', name: 'Wave Royal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#7c3aed]', accentText: 'text-[#7c3aed]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#2e1065' },
     { id: 'vibe_wave_ruby', name: 'Wave Ruby', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#dc2626]', accentText: 'text-[#dc2626]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#7f1d1d' },
     { id: 'vibe_wave_teal', name: 'Wave Teal', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#0d9488]', accentText: 'text-[#0d9488]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#134e4a' },
-    { id: 'vibe_wave_rose', name: 'Wave Ros├®', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c0519' },
+    { id: 'vibe_wave_rose', name: 'Wave Rosé', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#e11d48]', accentText: 'text-[#e11d48]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#4c0519' },
     { id: 'vibe_wave_midnight', name: 'Wave Midnight', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#06b6d4]', accentText: 'text-[#06b6d4]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#0f172a' },
     { id: 'vibe_wave_forest', name: 'Wave Forest', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#84cc16]', accentText: 'text-[#84cc16]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#14532d' },
     { id: 'vibe_wave_gold', name: 'Wave Gold', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-[#d4af37]', accentText: 'text-[#d4af37]', secondary: 'text-slate-500', hex: '#ffffff', pattern: 'vibe_wave', category: 'Premium', waveColor: '#000000' },
@@ -72,7 +79,7 @@ export const TEMPLATES = [
     { id: 'tech_data_rain', name: 'Data Rain', bg: 'bg-[#030712]', text: 'text-green-50', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#16a34a', '#22c55e', '#14532d'], animate: true, hex: '#030712', pattern: 'elite_wave_layered', category: 'Ultimate' },
     { id: 'tech_liquid_neon', name: 'Liquid Neon', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-amber-400', accentText: 'text-amber-400', colors: ['#fbbf24', '#f59e0b', '#d97706'], animate: true, hex: '#020617', pattern: 'elite_wave_layered', category: 'Ultimate' },
 
-    // Extraordinary (S─▒rad─▒┼ş─▒) - 3D & Advanced Effects
+    // Extraordinary (Sıradışı) - 3D & Advanced Effects
     { id: 'extra_3d_glass', name: '3D Crystal', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#0ea5e9', '#6366f1', '#a855f7'], animate: true, hex: '#0f172a', pattern: 'extra_glass_3d', category: 'Extraordinary' },
     { id: 'extra_neon_portal', name: 'Neon Portal', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#f43f5e', '#8b5cf6', '#d946ef'], animate: true, hex: '#000000', pattern: 'extra_neon_3d', category: 'Extraordinary' },
     { id: 'extra_liquid_mercury', name: 'Mercury Flow', bg: 'bg-zinc-900', text: 'text-white', accent: 'bg-zinc-400', accentText: 'text-zinc-400', colors: ['#71717a', '#a1a1aa', '#f4f4f5'], animate: true, hex: '#18181b', pattern: 'extra_metal_3d', category: 'Extraordinary' },
@@ -113,7 +120,20 @@ export const TEMPLATES = [
     { id: 'studio_electric_violet', name: 'Violet Blaze', bg: 'bg-[#1e1b4b]', text: 'text-white', accent: 'bg-violet-400', accentText: 'text-violet-400', colors: ['#7c3aed', '#4c1d95'], animate: true, hex: '#1e1b4b', pattern: 'studio_holo', category: 'Studio' },
 ]
 
-export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
+export default function BusinessCardGenerator({ 
+    user, 
+    profileData, 
+    mode = 'full', 
+    selectedTemplateId, 
+    orientation = 'portrait', 
+    onSelect, 
+    onOrientationChange,
+    initialCustomBg = null,
+    initialCustomAccent = null,
+    initialCustomTextColor = null,
+    initialCustomFont = 'sans',
+    initialCustomPattern = null
+}: BusinessCardGeneratorProps) {
     const { t } = useTranslation()
     const cardRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -122,12 +142,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const [qrDataUrl, setQrDataUrl] = useState<string>('')
     const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate' | 'Extraordinary' | 'Studio'>('Studio')
 
-    // Customization States
-    const [customBg, setCustomBg] = useState<string | null>(null)
-    const [customAccent, setCustomAccent] = useState<string | null>(null)
-    const [customTextColor, setCustomTextColor] = useState<string | null>(null)
-    const [customFont, setCustomFont] = useState<'sans' | 'mono' | 'serif' | 'display'>('sans')
-    const [customPattern, setCustomPattern] = useState<string | null>(null)
+    // Customization States (Initialized with Props)
+    const [customBg, setCustomBg] = useState<string | null>(initialCustomBg)
+    const [customAccent, setCustomAccent] = useState<string | null>(initialCustomAccent)
+    const [customTextColor, setCustomTextColor] = useState<string | null>(initialCustomTextColor)
+    const [customFont, setCustomFont] = useState<'sans' | 'mono' | 'serif' | 'display'>(initialCustomFont)
+    const [customPattern, setCustomPattern] = useState<string | null>(initialCustomPattern)
     const [glassIntensity, setGlassIntensity] = useState(10)
 
     useEffect(() => {
@@ -182,20 +202,52 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         setIsDownloading(true)
         try {
             await new Promise(r => setTimeout(r, 800))
-            const dataUrl = await htmlToImage.toJpeg(cardRef.current, {
-                quality: 0.98,
-                pixelRatio: 3,
-                backgroundColor: tp.hex,
+            const dataUrl = await htmlToImage.toPng(cardRef.current, {
+                pixelRatio: 6, // ultra-high resolution for printing (~300-600 DPI)
+                backgroundColor: customBg || tp.hex,
                 cacheBust: true,
             })
             const link = document.createElement('a')
             link.href = dataUrl
-            link.download = `kardly-${user.username}.jpg`
+            link.download = `kardly-HD-${user.username}-${orientation}.png`
             link.click()
             setDownloadSuccess(true)
             setTimeout(() => setDownloadSuccess(false), 3000)
         } catch (error) {
             console.error('Download error:', error)
+        } finally {
+            setIsDownloading(false)
+        }
+    }
+
+    const handleDownloadPDF = async () => {
+        if (!cardRef.current || isDownloading) return
+        setIsDownloading(true)
+        try {
+            await new Promise(r => setTimeout(r, 800))
+            const dataUrl = await htmlToImage.toPng(cardRef.current, {
+                pixelRatio: 4, // 4 is sufficient for PDF inclusion
+                backgroundColor: customBg || tp.hex,
+                cacheBust: true,
+            })
+            
+            const pdf = new jsPDF({
+                orientation: orientation === 'landscape' ? 'l' : 'p',
+                unit: 'mm',
+                format: orientation === 'landscape' ? [85, 54] : [54, 85]
+            })
+
+            const imgProps = pdf.getImageProperties(dataUrl)
+            const pdfWidth = pdf.internal.pageSize.getWidth()
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+            
+            pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight)
+            pdf.save(`kardly-PRINT-${user.username}-${orientation}.pdf`)
+            
+            setDownloadSuccess(true)
+            setTimeout(() => setDownloadSuccess(false), 3000)
+        } catch (error) {
+            console.error('PDF error:', error)
         } finally {
             setIsDownloading(false)
         }
@@ -259,7 +311,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const locationData = (profileData?.socialLinks as any[])?.find((l: any) => l.platform?.toLowerCase() === 'location')?.url || profileData?.location || ""
     const whatsappData = (profileData?.socialLinks as any[])?.find((l: any) => l.platform?.toLowerCase() === 'whatsapp')?.url || ""
 
-    /* ÔöÇÔöÇÔöÇ CARD CONTENT (always portrait / vertical) ÔöÇÔöÇÔöÇ */
+    /* --- CARD CONTENT (always portrait / vertical) --- */
     const CardContent = (
         <div
             ref={cardRef}
@@ -837,7 +889,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         </div>
     )
 
-    /* ÔöÇÔöÇÔöÇ MODAL MODE (Profile Page) ÔöÇÔöÇÔöÇ */
+    /* --- MODAL MODE (Profile Page) --- */
     if (mode === 'modal') {
         return (
             <div className="w-full flex flex-col items-center">
@@ -849,7 +901,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
         )
     }
 
-    /* ÔöÇÔöÇÔöÇ SELECTOR MODE (Dashboard) ÔöÇÔöÇÔöÇ */
+    /* --- SELECTOR MODE (Dashboard) --- */
     return (
         <div className="w-full flex flex-col items-center">
             {mode === 'selector' && (
@@ -1082,69 +1134,97 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             </div>
 
             {/* Download & Share Buttons - Professional Redesign */}
-            <div className="w-full max-w-[400px] flex gap-4 mt-16 relative z-50">
-                <button
-                    onClick={handleDownload}
-                    disabled={isDownloading}
-                    className="flex-[2.5] relative group"
-                >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-primary via-rose-500 to-primary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                    <div className="relative h-16 bg-slate-950 rounded-2xl flex items-center justify-center gap-3 overflow-hidden border border-white/10 transition-all active:scale-95">
-                        {/* Animated Background Shimmer */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                        
-                        {isDownloading ? (
-                            <RefreshCw className="w-5 h-5 animate-spin text-primary" />
-                        ) : downloadSuccess ? (
-                            <Check size={20} className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
-                        ) : (
-                            <Download size={20} className="text-white group-hover:-translate-y-1 transition-transform duration-300" />
-                        )}
-                        
-                        <div className="flex flex-col items-start leading-none">
-                            <span className="text-white font-black text-[11px] uppercase tracking-[0.2em]">
-                                {downloadSuccess ? 'BAŞARIYLA KAYDEDİLDİ' : 'TASARIMI İNDİR'}
-                            </span>
-                            <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium group-hover:text-white/50 transition-colors">
-                                Yüksek Kaliteli Görsel (PNG)
-                            </span>
+            <div className="w-full max-w-[500px] flex flex-col gap-4 mt-12 relative z-50">
+                <div className="flex gap-4">
+                    {/* PNG Download */}
+                    <button
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className="flex-1 relative group"
+                    >
+                        <div className="absolute -inset-1 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500" />
+                        <div className="relative h-16 bg-slate-950 rounded-2xl flex items-center justify-center gap-3 overflow-hidden border border-white/10 transition-all active:scale-95">
+                            {isDownloading ? (
+                                <RefreshCw className="w-5 h-5 animate-spin text-primary" />
+                            ) : downloadSuccess ? (
+                                <Check size={20} className="text-emerald-400" />
+                            ) : (
+                                <Download size={20} className="text-white group-hover:-translate-y-1 transition-transform" />
+                            )}
+                            <div className="flex flex-col items-start leading-none">
+                                <span className="text-white font-black text-[10px] uppercase tracking-[0.2em]">PNG İNDİR</span>
+                                <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium">HD GÖRSEL</span>
+                            </div>
                         </div>
-                    </div>
-                </button>
+                    </button>
 
-                {/* PHYSICAL CARD PURCHASE BUTTON */}
+                    {/* PDF Download */}
+                    <button
+                        onClick={handleDownloadPDF}
+                        disabled={isDownloading}
+                        className="flex-1 relative group"
+                    >
+                        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-900 to-indigo-800 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500" />
+                        <div className="relative h-16 bg-indigo-950 rounded-2xl flex items-center justify-center gap-3 overflow-hidden border border-white/10 transition-all active:scale-95">
+                            {isDownloading ? (
+                                <RefreshCw className="w-5 h-5 animate-spin text-indigo-400" />
+                            ) : (
+                                <Printer size={20} className="text-white group-hover:-translate-y-1 transition-transform" />
+                            )}
+                            <div className="flex flex-col items-start leading-none">
+                                <span className="text-white font-black text-[10px] uppercase tracking-[0.2em]">PDF İNDİR</span>
+                                <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium">BASKI KALİTESİ</span>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    {/* Share Button */}
+                    <button
+                        onClick={handleShare}
+                        className="w-16 relative group"
+                    >
+                        <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
+                        <div className="relative h-16 bg-white border border-slate-200 rounded-2xl flex items-center justify-center transition-all group-hover:bg-slate-50 active:scale-90 shadow-lg">
+                            {shareSuccess ? (
+                                <Check size={22} className="text-emerald-500" />
+                            ) : (
+                                <Share2 size={22} className="text-slate-600 group-hover:text-primary transition-all" />
+                            )}
+                        </div>
+                    </button>
+                </div>
+
+                {/* PHYSICAL CARD PURCHASE BUTTON - Redirect to Checkout */}
                 <button
                     onClick={() => {
-                        // Plan: Redirect to checkout/card with design details
-                        alert("Fiziksel NFC Kart Sipariş Sistemi Çok Yakında! Tasarımınız Kaydedildi.")
+                        const params = new URLSearchParams({
+                            tpl: internalSelectedTplId,
+                            orient: orientation,
+                            bg: customBg || '',
+                            acc: customAccent || '',
+                            txt: customTextColor || '',
+                            font: customFont || '',
+                            patt: customPattern || '',
+                            from: 'studio'
+                        })
+                        window.location.href = `/checkout/card?${params.toString()}`
                     }}
-                    className="flex-[2.5] relative group"
+                    className="w-full relative group"
                 >
                     <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-500 animate-pulse" />
-                    <div className="relative h-16 bg-white rounded-2xl flex items-center justify-center gap-3 overflow-hidden transition-all shadow-2xl active:scale-95 border-2 border-transparent">
-                        <CreditCard size={22} className="text-orange-600 group-hover:rotate-12 transition-transform" />
-                        <div className="flex flex-col items-start leading-tight">
-                            <span className="text-slate-900 font-black text-[12px] uppercase tracking-[0.1em]">
-                                FİZİKSEL KART AL
+                    <div className="relative h-20 bg-white rounded-2xl flex items-center justify-center gap-4 overflow-hidden transition-all shadow-2xl active:scale-95 border-2 border-slate-900/5 hover:border-slate-900/20">
+                        <CreditCard size={28} className="text-orange-600 group-hover:scale-110 transition-transform" />
+                        <div className="flex flex-col items-start text-left">
+                            <span className="text-slate-900 font-black text-[14px] uppercase tracking-[0.05em] leading-none mb-1">
+                                FİZİKSEL NFC KART TEKLİFİ AL
                             </span>
-                            <span className="text-orange-600 text-[9px] font-black uppercase tracking-widest opacity-80">
-                                NFC AKILLI KART
+                            <span className="text-orange-600 text-[10px] font-black uppercase tracking-widest opacity-80 leading-none">
+                                KIŞİYE ÖZEL TASARIM & ÜCRETSİZ KARGO
                             </span>
                         </div>
-                    </div>
-                </button>
-
-                <button
-                    onClick={handleShare}
-                    className="flex-1 relative group"
-                >
-                    <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                    <div className="relative h-16 bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center transition-all group-hover:bg-slate-200 active:scale-90 shadow-lg">
-                        {shareSuccess ? (
-                            <Check size={22} className="text-emerald-500" />
-                        ) : (
-                            <Share2 size={22} className="text-slate-600 group-hover:text-primary group-hover:rotate-12 transition-all" />
-                        )}
+                        <div className="absolute top-0 right-0 p-2">
+                             <div className="bg-emerald-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Yeni</div>
+                        </div>
                     </div>
                 </button>
             </div>

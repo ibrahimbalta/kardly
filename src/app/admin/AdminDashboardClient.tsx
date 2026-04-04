@@ -39,8 +39,12 @@ import {
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
+import BusinessCardGenerator from "@/components/BusinessCardGenerator"
 
-export default function AdminDashboardClient({ users, payments, stats, initialSettings }: any) {
+
+export default function AdminDashboardClient({ users, payments, orders, stats, initialSettings }: any) {
+    const [localOrders, setLocalOrders] = useState(orders || [])
+
     const [activeTab, setActiveTab] = useState("overview")
     const [searchQuery, setSearchQuery] = useState("")
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -57,6 +61,28 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
     const [showBlogForm, setShowBlogForm] = useState(false)
     const [editingPost, setEditingPost] = useState<any>(null)
     const [blogForm, setBlogForm] = useState({ title: '', slug: '', excerpt: '', content: '', coverImage: '', isPublished: false })
+    
+    // Physical Card Orders Management
+    const [previewOrder, setPreviewOrder] = useState<any>(null)
+    const [updateLoading, setUpdateLoading] = useState<string | null>(null)
+
+    const handleUpdateOrderStatus = async (orderId: string, status: string) => {
+        setUpdateLoading(orderId)
+        try {
+            const res = await fetch('/api/admin/orders/status', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, status })
+            })
+            if (res.ok) {
+                setLocalOrders(localOrders.map((o: any) => o.id === orderId ? { ...o, status } : o))
+            }
+        } catch (error) {
+            console.error("Order status update error:", error)
+        } finally {
+            setUpdateLoading(null)
+        }
+    }
     
     // Newsletter
     const [subscribers, setSubscribers] = useState<any[]>([])
@@ -407,6 +433,13 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
                                 active={activeTab === "payments"}
                                 onClick={() => { setActiveTab("payments"); setIsSidebarOpen(false); }}
                             />
+                            <AdminNavItem
+                                icon={<Layout className="w-5 h-5 text-orange-500" />}
+                                label="Kart Siparişleri"
+                                active={activeTab === "orders"}
+                                onClick={() => { setActiveTab("orders"); setIsSidebarOpen(false); }}
+                                badge={stats.pendingQuotes > 0 ? stats.pendingQuotes : undefined}
+                            />
 
                             <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">İçerik Yönetimi</div>
                             <AdminNavItem
@@ -487,6 +520,7 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
                             {activeTab === 'overview' && <>Sistem <span className="gradient-text">Özeti.</span></>}
                             {activeTab === 'users' && <>Kullanıcı <span className="gradient-text">Yönetimi.</span></>}
                             {activeTab === 'payments' && <>Ödeme <span className="gradient-text">Kayıtları.</span></>}
+                            {activeTab === 'orders' && <>Kart <span className="gradient-text">Siparişleri.</span></>}
                             {activeTab === 'messages' && <>İletişim <span className="gradient-text">Mesajları.</span></>}
                             {activeTab === 'blog' && <>Blog <span className="gradient-text">Yönetimi.</span></>}
                             {activeTab === 'newsletter' && <>E-Bülten <span className="gradient-text">Kayıtları.</span></>}
@@ -520,8 +554,8 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 <AdminStatCard icon={<Users className="w-6 h-6" />} label="Toplam Kullanıcı" value={stats.totalUsers} color="text-blue-600" bgColor="bg-blue-50" />
                                 <AdminStatCard icon={<TrendingUp className="w-6 h-6" />} label="Toplam Ciro" value={`₺${stats.totalRevenue}`} color="text-emerald-600" bgColor="bg-emerald-50" />
-                                <AdminStatCard icon={<BadgeCheck className="w-6 h-6" />} label="Premium Üyeler" value={stats.activeSubscriptions} color="text-purple-600" bgColor="bg-purple-50" />
-                                <AdminStatCard icon={<Activity className="w-6 h-6" />} label="Etkileşim" value={stats.totalViews} color="text-amber-600" bgColor="bg-amber-50" />
+                                <AdminStatCard icon={<Layout className="w-6 h-6" />} label="Bekleyen Teklifler" value={stats.pendingQuotes} color="text-orange-600" bgColor="bg-orange-50" />
+                                <AdminStatCard icon={<Activity className="w-6 h-6" />} label="Tekil Ziyaret" value={stats.totalViews} color="text-amber-600" bgColor="bg-amber-50" />
                             </div>
 
                             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -1238,6 +1272,124 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
                         </motion.div>
                     )}
 
+                    {activeTab === "orders" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="space-y-6"
+                        >
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
+                                <h1 className="text-2xl font-black uppercase tracking-tighter text-slate-900 italic">Gelen Teklifler & Siparişler</h1>
+                                <div className="px-4 py-2 bg-rose-50 rounded-xl text-rose-600 text-[10px] font-black uppercase tracking-widest border border-rose-100 shadow-sm">
+                                    {(localOrders || []).length} Toplam İşlem
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-[3.5rem] border border-slate-200 shadow-sm overflow-hidden p-4">
+                                <div className="overflow-x-auto no-scrollbar">
+                                    <table className="w-full text-left min-w-[900px]">
+                                        <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                                            <tr>
+                                                <th className="px-8 py-5">Müşteri / Teklif Sahibi</th>
+                                                <th className="px-8 py-5">Tasarım / Ürün</th>
+                                                <th className="px-8 py-5">Yönelim</th>
+                                                <th className="px-8 py-5 text-center">Durum</th>
+                                                <th className="px-8 py-5 text-right">Aksiyonlar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-50">
+                                            {(localOrders || []).map((order: any) => {
+                                                const item = order.items?.[0]
+                                                return (
+                                                    <tr key={order.id} className="group hover:bg-slate-50/50 transition-all">
+                                                        <td className="px-8 py-6">
+                                                            <div className="font-black text-sm text-slate-700 tracking-tight group-hover:text-slate-950 transition-colors uppercase italic">{order.shippingName}</div>
+                                                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{order.shippingEmail} • {order.shippingPhone}</div>
+                                                            <div className="text-[9px] font-medium text-slate-300 mt-2 truncate max-w-[200px] italic">{order.shippingAddress}, {order.shippingCity}</div>
+                                                        </td>
+                                                        <td className="px-8 py-6">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-xl shadow-slate-200/50">
+                                                                    <Layout size={18} />
+                                                                </div>
+                                                                <div>
+                                                                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-900">
+                                                                        {item?.templateId?.replace('studio_', '') || 'Standart'}
+                                                                    </div>
+                                                                    <div className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 italic">ÖZEL NFC KART</div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-8 py-6">
+                                                            <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[9px] font-black uppercase tracking-widest border border-slate-200 shadow-inner">
+                                                                {item?.orientation === 'landscape' ? 'Yatay' : 'Dikey'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-8 py-6 text-center">
+                                                            <select
+                                                                value={order.status}
+                                                                onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
+                                                                disabled={updateLoading === order.id}
+                                                                className={cn(
+                                                                    "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all outline-none border cursor-pointer",
+                                                                    order.status === 'quote_requested' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                                                                    order.status === 'processing' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                                                                    order.status === 'shipped' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                                                                    order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                                                    'bg-slate-50 text-slate-400 border-slate-200'
+                                                                )}
+                                                            >
+                                                                <option value="quote_requested">Teklif İstendi</option>
+                                                                <option value="processing">İşleniyor</option>
+                                                                <option value="shipped">Kargolandı</option>
+                                                                <option value="delivered">Teslim Edildi</option>
+                                                                <option value="cancelled">İptal Edildi</option>
+                                                            </select>
+                                                        </td>
+                                                        <td className="px-8 py-6 text-right">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <button
+                                                                    onClick={() => setPreviewOrder(order)}
+                                                                    className="p-3 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-indigo-100"
+                                                                    title="Tasarımı Önizle"
+                                                                >
+                                                                    <Eye size={16} />
+                                                                </button>
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        if (window.confirm("Bu siparişi/teklifi silmek istediğinizden emin misiniz?")) {
+                                                                            setUpdateLoading(order.id)
+                                                                            await fetch('/api/admin/orders/delete', {
+                                                                                method: 'DELETE',
+                                                                                headers: { 'Content-Type': 'application/json' },
+                                                                                body: JSON.stringify({ orderId: order.id })
+                                                                            })
+                                                                            setLocalOrders(localOrders.filter((o: any) => o.id !== order.id))
+                                                                            setUpdateLoading(null)
+                                                                        }
+                                                                    }}
+                                                                    className="p-3 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100"
+                                                                    title="Siparişi Sil"
+                                                                >
+                                                                    <Trash2 size={16} />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                            {(localOrders || []).length === 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="px-8 py-20 text-center text-slate-200 font-black uppercase tracking-[0.5em] italic">Henüz Bir Sipariş veya Teklif Bulunamadı</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+
                     {activeTab === "ayarlar" && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.98 }}
@@ -1352,6 +1504,93 @@ export default function AdminDashboardClient({ users, payments, stats, initialSe
                     )}
                 </div>
             </main>
+
+            {/* Design Preview Modal */}
+            <AnimatePresence>
+                {previewOrder && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setPreviewOrder(null)}
+                            className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative bg-white rounded-[4rem] p-12 max-w-5xl w-full shadow-2xl border border-white/10 overflow-hidden"
+                        >
+                            <div className="flex justify-between items-start mb-12">
+                                <div>
+                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Gelen Sipariş / Teklif</p>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">{previewOrder.shippingName}</h2>
+                                    <p className="text-xs text-slate-400 mt-1 font-bold italic tracking-wide">{previewOrder.shippingEmail} • {previewOrder.shippingPhone}</p>
+                                </div>
+                                <button
+                                    onClick={() => setPreviewOrder(null)}
+                                    className="p-4 bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white rounded-full transition-all shadow-inner"
+                                >
+                                    <X size={24} />
+                                </button>
+                            </div>
+
+                            <div className="grid md:grid-cols-12 gap-12 items-center">
+                                <div className="md:col-span-7 flex justify-center">
+                                    <BusinessCardGenerator
+                                        user={previewOrder.user || { name: previewOrder.shippingName, username: 'customer' }}
+                                        profileData={previewOrder.user?.profile || {}}
+                                        mode="modal"
+                                        selectedTemplateId={previewOrder.items?.[0]?.templateId}
+                                        orientation={previewOrder.items?.[0]?.orientation}
+                                        initialCustomBg={previewOrder.items?.[0]?.bgColor}
+                                        initialCustomAccent={previewOrder.items?.[0]?.accentColor}
+                                        initialCustomTextColor={previewOrder.items?.[0]?.textColor}
+                                        initialCustomFont={previewOrder.items?.[0]?.fontFamily}
+                                        initialCustomPattern={previewOrder.items?.[0]?.pattern}
+                                    />
+                                </div>
+                                <div className="md:col-span-5 space-y-8">
+                                    <div className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                                        <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 italic border-b border-slate-200 pb-4">Tasarım Kodları</h3>
+                                        <div className="space-y-5">
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Şablon:</span>
+                                                <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.templateId}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Yön:</span>
+                                                <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.orientation}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Renk (Arkaplan):</span>
+                                                <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.bgColor || 'N/A'}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Vurgu Rengi:</span>
+                                                <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.accentColor || 'N/A'}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Yazı Tipi:</span>
+                                                <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.fontFamily || 'sans'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="p-8 bg-indigo-50/50 rounded-[2.5rem] border border-indigo-100/50">
+                                        <h3 className="text-sm font-black text-indigo-900 uppercase tracking-widest mb-4 italic">Baskı Hazırlığı</h3>
+                                        <div className="flex items-center gap-3 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-4">
+                                            <Check size={14} /> Tasarım Doğrulandı
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 leading-relaxed font-medium italic">Taslak onaylandıktan sonra yüksek çözünürlüklü (6.0 Pixel Ratio) çıktı alarak baskıya gönderebilirsiniz.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

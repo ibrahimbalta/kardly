@@ -47,6 +47,7 @@ model User {
   profile       Profile?
   sessions      Session[]
   subscription  Subscription?
+  orders        Order[]
 }
 
 model VerificationToken {
@@ -260,4 +261,42 @@ model GlobalSettings {
   customCss       String?  @db.Text
   customJs        String?  @db.Text
   updatedAt       DateTime @updatedAt
+}
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  status          String      @default("pending") // pending, paid, processing, shipped, delivered, cancelled
+  totalAmount     Float
+  currency        String      @default("TRY")
+  shippingName    String
+  shippingEmail   String
+  shippingPhone   String
+  shippingAddress String
+  shippingCity    String
+  shippingDistrict String?
+  trackingNumber  String?
+  paymentId       String?     // For Iyzico/Shopier reference
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id            String   @id @default(cuid())
+  orderId       String
+  productType   String   @default("nfc_card")
+  quantity      Int      @default(1)
+  price         Float
+  
+  // Design Snapshot for Printing
+  templateId    String
+  orientation   String
+  bgColor       String?
+  accentColor   String?
+  textColor     String?
+  fontFamily    String?
+  pattern       String?
+  
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

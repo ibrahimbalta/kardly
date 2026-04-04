@@ -40,17 +40,28 @@ export default async function AdminPage() {
         where: { id: "main" }
     })
 
+    // @ts-ignore
+    const orders = await prisma.order.findMany({
+        include: {
+            user: true,
+            items: true
+        },
+        orderBy: { createdAt: 'desc' }
+    })
+
     const stats = {
         totalUsers: users.length,
-        totalRevenue: payments.filter((p: any) => p.status === 'success').reduce((acc: number, p: any) => acc + p.amount, 0),
+        totalRevenue: payments.filter((p: any) => p.status === 'success' || p.status === 'paid').reduce((acc: number, p: any) => acc + p.amount, 0),
         totalViews: analyticsSummary._count.id,
-        activeSubscriptions: users.filter((u: any) => u.subscription?.status === 'active' && u.subscription?.plan !== 'free').length
+        activeSubscriptions: users.filter((u: any) => u.subscription?.status === 'active' && u.subscription?.plan !== 'free').length,
+        pendingQuotes: orders.filter((o: any) => o.status === 'quote_requested').length
     }
 
     return (
         <AdminDashboardClient
             users={users}
             payments={payments}
+            orders={orders}
             stats={stats}
             initialSettings={globalSettings || {}}
         />
