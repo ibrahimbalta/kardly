@@ -90,24 +90,29 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-rose-100 selection:text-rose-600 overflow-x-hidden relative">
-      {/* ─── GLOBAL AMBIENT GLOWS ─── */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
-          <motion.div
-            animate={{ x: [0, 100, 0], y: [0, 50, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-rose-100/50 blur-[120px] rounded-full"
-          />
-          <motion.div
-            animate={{ x: [0, -80, 0], y: [0, 100, 0], scale: [1, 1.1, 1] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute top-[20%] left-[-15%] w-[70%] h-[70%] bg-indigo-100/40 blur-[150px] rounded-full"
-          />
-          <motion.div
-            animate={{ x: [0, 50, -50, 0], y: [0, -30, 30, 0] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] bg-violet-100/30 blur-[130px] rounded-full"
-          />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      {/* ─── GLOBAL PREMIUM LAYERS ─── */}
+      <div className="fixed inset-0 pointer-events-none z-[1]">
+          {/* Grain Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] contrast-150 brightness-100 mix-blend-multiply pointer-events-none" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+          
+          {/* Advanced Mesh Glows */}
+          <div className="absolute inset-0 overflow-hidden select-none">
+              <motion.div
+                animate={{ x: [0, 80, 0], y: [0, 40, 0], scale: [1, 1.2, 1] }}
+                transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-[-15%] right-[-10%] w-[70%] h-[70%] bg-rose-200/40 blur-[140px] rounded-full mix-blend-soft-light"
+              />
+              <motion.div
+                animate={{ x: [0, -60, 0], y: [0, 80, 0], scale: [1, 1.15, 1] }}
+                transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-[10%] left-[-20%] w-[80%] h-[80%] bg-indigo-200/30 blur-[180px] rounded-full mix-blend-overlay"
+              />
+              <motion.div
+                animate={{ x: [0, 40, -40, 0], y: [0, -40, 40, 0] }}
+                transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute bottom-[10%] left-1/4 w-[60%] h-[60%] bg-violet-200/20 blur-[150px] rounded-full mix-blend-overlay"
+              />
+          </div>
       </div>
 
       <Navbar />
@@ -131,9 +136,13 @@ export default function Home() {
               <span className="text-[11px] font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent">{t('howItWorks')}</span>
             </motion.div>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]"
-            >{t('buildProfileTitle')}</motion.h2>
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-5xl md:text-[7.5rem] font-black tracking-[-0.07em] text-slate-950 mb-8 leading-[0.82] select-none"
+            >
+              {t('buildProfileTitle').split(' ').map((word, i) => (
+                <span key={i} className={cn("inline-block mr-[0.2em]", i % 2 === 1 ? "italic font-light opacity-50" : "italic")}>{word}</span>
+              ))}
+            </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: 0.1 }}
@@ -195,13 +204,16 @@ export default function Home() {
                   </div>
 
                   {/* Card */}
-                  <div className="relative bg-white/80 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-200/60 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] group-hover:border-slate-300/80 transition-all duration-500 group-hover:-translate-y-1">
-                    {/* Step number */}
-                    <div className={`text-[11px] font-extrabold uppercase tracking-[0.2em] bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent mb-4`}>
-                      {t('step')} {item.step}
+                  <div className="relative bg-white/40 backdrop-blur-3xl rounded-[40px] p-10 md:p-12 border border-white/50 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.05)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] group-hover:bg-white/60 transition-all duration-700 group-hover:-translate-y-2">
+                    {/* Step number: Vertical floating label */}
+                    <div className="absolute -left-4 top-12 -rotate-90 origin-center opacity-20 group-hover:opacity-100 transition-opacity">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.4em] bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
+                        {t('step')} {item.step}
+                      </span>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight">{item.title}</h3>
-                    <p className="text-slate-500 text-[15px] leading-relaxed">{item.desc}</p>
+                    
+                    <h3 className="text-2xl font-black text-slate-950 mb-4 tracking-tighter leading-tight italic">{item.title}</h3>
+                    <p className="text-slate-500 text-[14px] leading-relaxed font-medium">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -268,10 +280,12 @@ export default function Home() {
               >
                 <div className="w-8 h-px bg-rose-500" /> {t('features')}
               </motion.div>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none mb-4 italic">
-                {t('featuresTitle')}
+              <h2 className="text-4xl md:text-[5rem] font-black text-slate-950 tracking-[-0.05em] leading-[0.9] mb-6 italic">
+                {t('featuresTitle').split(' ').map((w, i) => (
+                  <span key={i} className={i % 2 === 0 ? "text-slate-950" : "text-slate-400 font-light"}>{w} </span>
+                ))}
               </h2>
-              <p className="text-slate-500 text-sm font-medium leading-relaxed">
+              <p className="text-slate-500 text-base font-medium leading-relaxed max-w-sm">
                 {t('featuresDesc')}
               </p>
             </div>
@@ -310,11 +324,11 @@ export default function Home() {
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.04 }}
-                  className="group relative h-[84px] cursor-pointer"
+                  initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className={cn("group relative h-[100px] cursor-pointer", i % 2 === 1 && "lg:translate-y-6")}
                 >
-                  <div className={`absolute inset-0 ${colors.bg} border ${colors.border} rounded-[24px] shadow-sm transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-lg ${colors.shadow}`} />
+                  <div className={`absolute inset-0 bg-white/40 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[32px] transition-all duration-700 group-hover:scale-[1.05] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] group-hover:bg-white/80`} />
                   
                   <div className="relative h-full flex items-center p-2.5">
                     <div className="flex items-center gap-4 w-full h-full rounded-[20px] p-2 pr-6 overflow-hidden">
@@ -356,8 +370,12 @@ export default function Home() {
               <Sparkles size={11} className="text-rose-500" />
               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-rose-600">{t('dive1Label')}</span>
             </div>
-            <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive1Title')}</h3>
-            <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive1Desc')}</p>
+            <h3 className="text-3xl md:text-5xl font-black text-slate-950 tracking-[-0.05em] leading-[0.9] mb-8 italic">
+              {t('dive1Title').split(' ').map((w, i) => (
+                <span key={i} className={i % 2 === 1 ? "opacity-30 font-light" : ""}>{w} </span>
+              ))}
+            </h3>
+            <p className="text-slate-500 text-base leading-relaxed mb-10 max-w-sm font-medium">{t('dive1Desc')}</p>
             <div className="flex flex-wrap gap-2">
               {(t('dive1List') as unknown as string[]).slice(0, 3).map((text, i) => (
                 <div key={i} className="text-[10px] font-bold text-slate-500 border border-slate-200 px-3 py-1.5 rounded-lg bg-white shadow-sm">
