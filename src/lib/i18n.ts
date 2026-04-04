@@ -847,6 +847,19 @@ export const translations: any = {
         passwordsDoNotMatch: "Şifreler uyuşmuyor.",
         passwordTooShort: "Şifre en az 6 karakter olmalıdır.",
         invalidToken: "Geçersiz veya eksik token. Lütfen şifre sıfırlama talebini tekrar başlatın.",
+
+        // NFC Card Section
+        nfcSectionBadge: "Fiziksel Devrim",
+        nfcSectionTitle: "Dijital Profilini Cebinde Taşı.",
+        nfcSectionDesc: "Kardly sadece bir link değil, profesyonel bir imajdır. Tasarladığın dijital kartvizitini lüks bir NFC karta dönüştür ve sadece dokundurarak paylaş.",
+        nfcFeature1Title: "Sınırsız Paylaşım",
+        nfcFeature1Desc: "Tek kartla binlerce kez dokun ve tüm iletişim bilgilerini anında aktar.",
+        nfcFeature2Title: "Özel Tasarım",
+        nfcFeature2Desc: "Matbaa kalitesinde HD baskı ve sana özel tasarım seçenekleri.",
+        nfcCtaBtn: "Hemen Kartını Tasarla",
+        nfcCardType: "Elite Cardholder",
+        nfcUserMock: "Profesyonel Kullanıcı",
+        nfcNewBadge: "YENİ",
     },
     en: {
         // Profile & Appointments
@@ -1695,5 +1708,18 @@ export const translations: any = {
         passwordsDoNotMatch: "Passwords do not match.",
         passwordTooShort: "Password must be at least 6 characters.",
         invalidToken: "Invalid or missing token. Please start the password reset request again.",
+
+        // NFC Card Section
+        nfcSectionBadge: "Physical Revolution",
+        nfcSectionTitle: "Carry Your Digital Profile in Your Pocket.",
+        nfcSectionDesc: "Kardly is not just a link, it's a professional image. Turn your digital business card into a luxury NFC card and share it with just a tap.",
+        nfcFeature1Title: "Unlimited Sharing",
+        nfcFeature1Desc: "Tap thousands of times with a single card and instantly transfer all contact information.",
+        nfcFeature2Title: "Custom Design",
+        nfcFeature2Desc: "Print-ready HD quality and personalized design options for you.",
+        nfcCtaBtn: "Design Your Card Now",
+        nfcCardType: "Elite Cardholder",
+        nfcUserMock: "Professional User",
+        nfcNewBadge: "NEW",
     }
 }
