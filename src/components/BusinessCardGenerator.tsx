@@ -1138,12 +1138,12 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     onClick={handleShare}
                     className="flex-1 relative group"
                 >
-                    <div className="absolute -inset-1 bg-white/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                    <div className="relative h-16 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center transition-all group-hover:bg-white/[0.08] active:scale-90 shadow-2xl">
+                    <div className="absolute -inset-1 bg-primary/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                    <div className="relative h-16 bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center transition-all group-hover:bg-slate-200 active:scale-90 shadow-lg">
                         {shareSuccess ? (
-                            <Check size={22} className="text-emerald-400" />
+                            <Check size={22} className="text-emerald-500" />
                         ) : (
-                            <Share2 size={22} className="text-white/70 group-hover:text-white group-hover:rotate-12 transition-all" />
+                            <Share2 size={22} className="text-slate-600 group-hover:text-primary group-hover:rotate-12 transition-all" />
                         )}
                     </div>
                 </button>
