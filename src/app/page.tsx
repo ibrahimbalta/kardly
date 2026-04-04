@@ -539,62 +539,6 @@ export default function Home() {
             className="absolute bottom-[20%] -left-[10%] w-[50%] h-[50%] bg-indigo-50/40 rounded-full blur-[120px]"
           />
         </div>
-        
-        <div className="max-w-5xl mx-auto space-y-24 relative">
-
-          {/* Feature 2: Stats & Analytics */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col md:flex-row items-center gap-12"
-          >
-            <div className="flex-1 w-full order-2 md:order-1">
-              <div className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-xl shadow-slate-200/40">
-                <div className="bg-[#0f172a] p-5 md:p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{t('last30Days')}</div>
-                    <div className="flex gap-1">
-                      {[1,2,3].map(d => <div key={d} className="w-1.5 h-1.5 rounded-full bg-slate-800" />)}
-                    </div>
-                  </div>
-                  <div className="flex items-end gap-1 h-32 mb-6">
-                    {[30, 60, 45, 80, 50, 95, 70, 40, 85, 60, 100, 75].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-t-sm bg-rose-500/30 border-t border-rose-500/50" style={{ height: `${h}%` }} />
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[t('viewsLabel'), t('clicksLabel'), t('conversionLabel')].map((l, i) => (
-                      <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/5">
-                        <div className="text-lg font-bold text-white mb-0.5 tracking-tight">{['2.4K', '389', '%16'][i]}</div>
-                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">{l}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1 order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 mb-6">
-                <BarChart3 size={11} className="text-indigo-500" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-600">{t('dive2Label')}</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive2Title')}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive2Desc')}</p>
-              <ul className="grid grid-cols-1 gap-3">
-                {(t('dive2List') as unknown as string[]).slice(0, 3).map((text, i) => (
-                  <li key={i} className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
-                    <div className="w-5 h-5 rounded-lg bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
-                      <Check size={10} className="text-white" />
-                    </div>
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-
-        </div>
       </section>
 
       {/* ─── ABOUT US ─── */}
