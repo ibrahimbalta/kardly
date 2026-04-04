@@ -122,7 +122,7 @@ export default function Home() {
       <AdvertisementSlot position="home_hero_bottom" />
 
       {/* ─── HOW IT WORKS ─── */}
-      <section className="py-32 md:py-48 px-6 relative z-10">
+      <section className="py-20 md:py-28 px-6 relative z-10">
         {/* Decorative mesh background */}
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4, backgroundImage: 'radial-gradient(at 20% 80%, rgba(244,63,94,0.08) 0%, transparent 50%), radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%)' }} />
         
@@ -222,7 +222,7 @@ export default function Home() {
         </div>
       </section>
       {/* ─── FEATURES: COMPACT TECH HUB ─── */}
-      <section id="features" className="py-32 md:py-48 px-6 relative z-10">
+      <section id="features" className="py-20 md:py-28 px-6 relative z-10">
         {/* Animated Background Effects - Visible Wavy Feel */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           {/* Rose blob - top left */}
@@ -382,7 +382,7 @@ export default function Home() {
       <AdvertisementSlot position="home_features_bottom" />
 
       {/* ─── SHOWCASE: COMPACT REFINED TILES ─── */}
-      <section className="py-32 md:py-48 px-6 relative z-10">
+      <section className="py-20 md:py-28 px-6 relative z-10">
         <div className="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           {/* Text: Compact and Side-by-Side on Desktop */}
           <div className="flex-1 text-left">
@@ -522,27 +522,8 @@ export default function Home() {
       </section>
 
 
-      {/* ─── FEATURE DEEP DIVE ─── */}
-      <section className="py-32 md:py-48 px-6 relative z-10">
-        {/* Background Effects */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-          
-          <motion.div
-            animate={{ x: [0, 40, 0], y: [0, 60, 0], scale: [1, 1.1, 1] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-violet-100/30 rounded-full blur-[100px]"
-          />
-          <motion.div
-            animate={{ x: [0, -40, 0], y: [0, -30, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute bottom-[20%] -left-[10%] w-[50%] h-[50%] bg-indigo-50/40 rounded-full blur-[120px]"
-          />
-        </div>
-      </section>
-
       {/* ─── ABOUT US ─── */}
-      <section id="about" className="py-32 md:py-48 px-6 relative z-10">
+      <section id="about" className="py-20 md:py-28 px-6 relative z-10">
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(at 0% 0%, rgba(244,63,94,0.03) 0%, transparent 40%), radial-gradient(at 100% 100%, rgba(99,102,241,0.03) 0%, transparent 40%)' }} />
         
         <div className="max-w-6xl mx-auto relative">
@@ -601,7 +582,7 @@ export default function Home() {
       </section>
 
       {/* ─── TEMPLATES: HIGH-END GRID ─── */}
-      <section id="templates" className="py-32 md:py-48 px-6 relative z-10">
+      <section id="templates" className="py-20 md:py-28 px-6 relative z-10">
         {/* Dynamic Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
@@ -663,7 +644,7 @@ export default function Home() {
       <AdvertisementSlot position="home_templates_bottom" />
 
       {/* ─── INDUSTRY SHOWCASE: BROADENING THE SCOPE ─── */}
-      <section id="industries" className="py-32 md:py-48 px-6 relative z-10">
+      <section id="industries" className="py-20 md:py-28 px-6 relative z-10">
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-20">
             <motion.div
@@ -723,7 +704,7 @@ export default function Home() {
       </section>
 
       {/* ─── NFC CARD SECTION: PHYSICAL REVOLUTION ─── */}
-      <section id="nfc-card" className="py-32 md:py-48 px-6 relative z-10">
+      <section id="nfc-card" className="py-20 md:py-28 px-6 relative z-10">
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#f97316 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
         
         <div className="max-w-6xl mx-auto relative z-10">
