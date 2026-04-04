@@ -556,58 +556,6 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Feature 3: Payments */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex flex-col md:flex-row items-center gap-12 pt-12"
-          >
-            <div className="flex-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 mb-6">
-                <CreditCard size={11} className="text-emerald-500" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">{t('dive3Label')}</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-black text-slate-950 tracking-tighter leading-none mb-6 italic">{t('dive3Title')}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed mb-8 max-w-sm">{t('dive3Desc')}</p>
-              <ul className="grid grid-cols-1 gap-3">
-                {(t('dive3List') as unknown as string[]).slice(0, 3).map((text, i) => (
-                  <li key={i} className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
-                    <div className="w-5 h-5 rounded-lg bg-emerald-500 flex items-center justify-center shadow-sm shadow-emerald-200">
-                      <Check size={10} className="text-white" />
-                    </div>
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex-1 w-full">
-              <div className="relative rounded-3xl overflow-hidden bg-emerald-50 border border-emerald-100 p-8 flex flex-col items-center">
-                <motion.div
-                  animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}
-                  className="w-full max-w-[240px] bg-white rounded-2xl shadow-xl shadow-emerald-200/50 p-5 border border-white"
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
-                      <ArrowRight size={20} className="text-white" />
-                    </div>
-                    <div className="text-[7px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-widest border border-emerald-100">Pay Direct</div>
-                  </div>
-                  <div className="space-y-3 mb-5">
-                    <div className="h-2 w-1/2 bg-slate-100 rounded-full" />
-                    <div className="h-8 rounded-xl bg-slate-50 border border-slate-100 flex items-center px-3 text-[9px] text-slate-400 font-mono">stripe.com/p/kardly...</div>
-                  </div>
-                  <div className="w-full h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-all cursor-pointer">
-                    {t('ctaStart')}
-                  </div>
-                </motion.div>
-                <div className="mt-6 flex items-center gap-2 text-emerald-700/60">
-                  <Shield size={14} />
-                  <span className="text-[10px] font-black uppercase tracking-widest">{t('securePayment')}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
