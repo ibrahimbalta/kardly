@@ -88,11 +88,29 @@ export const TEMPLATES = [
     { id: 'extra_matrix_digital', name: 'Matrix Digital', bg: 'bg-black', text: 'text-green-400', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#22c55e', '#166534', '#052e16'], animate: true, hex: '#000000', pattern: 'extra_matrix', category: 'Extraordinary' },
     { id: 'extra_abstract_origami', name: 'Origami Fold', bg: 'bg-slate-100', text: 'text-slate-900', accent: 'bg-primary', accentText: 'text-primary', colors: ['#ffffff', '#f1f5f9', '#e2e8f0'], animate: true, hex: '#f8fafc', pattern: 'extra_origami', category: 'Extraordinary' },
     
-    // STUDIO / MODERN EXPERIMENTAL
+    // STUDIO / MODERN EXPERIMENTAL (Expanded)
     { id: 'studio_holo_prism', name: 'Holo Prism', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#ff0080', '#7928ca', '#0070f3'], animate: true, hex: '#000000', pattern: 'studio_holo', category: 'Studio' },
     { id: 'studio_liquid_aura', name: 'Liquid Aura', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#ee0979', '#ff6a00', '#7a2828'], animate: true, hex: '#000000', pattern: 'studio_liquid', category: 'Studio' },
     { id: 'studio_glass_pro', name: 'Glass Pro', bg: 'bg-white/10', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#6366f1', '#a855f7', '#ec4899'], animate: true, hex: '#0f172a', pattern: 'studio_glass', category: 'Studio' },
     { id: 'studio_minimal_zinc', name: 'Modern Zinc', bg: 'bg-zinc-950', text: 'text-zinc-100', accent: 'bg-white', accentText: 'text-white', colors: ['#18181b', '#27272a', '#3f3f46'], animate: false, hex: '#09090b', pattern: 'dots', category: 'Studio' },
+    { id: 'studio_neon_sky', name: 'Neon Sky', bg: 'bg-[#000022]', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#00d2ff', '#3a7bd5'], animate: true, hex: '#000022', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_sunset_vibe', name: 'Sunset Vibe', bg: 'bg-[#1a0f00]', text: 'text-white', accent: 'bg-orange-500', accentText: 'text-orange-500', colors: ['#f83600', '#fe8c00'], animate: true, hex: '#1a0f00', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_midnight_forest', name: 'Midnight Forest', bg: 'bg-[#001a1a]', text: 'text-white', accent: 'bg-emerald-400', accentText: 'text-emerald-400', colors: ['#134e4a', '#065f46'], animate: true, hex: '#001a1a', pattern: 'studio_glass', category: 'Studio' },
+    { id: 'studio_royal_gold', name: 'Royal Gold', bg: 'bg-black', text: 'text-amber-100', accent: 'bg-amber-500', accentText: 'text-amber-500', colors: ['#92400e', '#78350f'], animate: false, hex: '#000000', pattern: 'dots', category: 'Studio' },
+    { id: 'studio_deep_ocean', name: 'Deep Ocean', bg: 'bg-[#000033]', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#1e3a8a', '#1e40af'], animate: true, hex: '#000033', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_pink_candy', name: 'Pink Candy', bg: 'bg-[#1a001a]', text: 'text-white', accent: 'bg-pink-400', accentText: 'text-pink-400', colors: ['#db2777', '#be185d'], animate: true, hex: '#1a001a', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_cyber_lime', name: 'Cyber Lime', bg: 'bg-black', text: 'text-white', accent: 'bg-lime-400', accentText: 'text-lime-400', colors: ['#84cc16', '#3f6212'], animate: true, hex: '#000000', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_ghost_white', name: 'Ghost White', bg: 'bg-white', text: 'text-slate-900', accent: 'bg-slate-800', accentText: 'text-slate-800', colors: ['#f8fafc', '#f1f5f9'], animate: false, hex: '#ffffff', pattern: 'grid', category: 'Studio' },
+    { id: 'studio_aurora_borealis', name: 'Aurora Sky', bg: 'bg-[#0f172a]', text: 'text-white', accent: 'bg-cyan-300', accentText: 'text-cyan-300', colors: ['#00c9ff', '#92fe9d'], animate: true, hex: '#0f172a', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_lavender_mist', name: 'Lavender Mist', bg: 'bg-[#1e1b4b]', text: 'text-white', accent: 'bg-purple-300', accentText: 'text-purple-300', colors: ['#a78bfa', '#c4b5fd'], animate: true, hex: '#1e1b4b', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_carbon_fiber', name: 'Carbon Stealth', bg: 'bg-black', text: 'text-neutral-100', accent: 'bg-neutral-400', accentText: 'text-neutral-400', colors: ['#262626', '#171717'], animate: false, hex: '#000000', pattern: 'grid', category: 'Studio' },
+    { id: 'studio_neon_sunset', name: 'Neon Horizon', bg: 'bg-[#2e1065]', text: 'text-white', accent: 'bg-orange-400', accentText: 'text-orange-400', colors: ['#f43f5e', '#fb923c'], animate: true, hex: '#2e1065', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_mint_fresh', name: 'Mint Fresh', bg: 'bg-[#064e3b]', text: 'text-white', accent: 'bg-teal-300', accentText: 'text-teal-300', colors: ['#2dd4bf', '#5eead4'], animate: true, hex: '#064e3b', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_silver_chrome', name: 'Silver Chrome', bg: 'bg-zinc-900', text: 'text-white', accent: 'bg-zinc-300', accentText: 'text-zinc-300', colors: ['#d4d4d8', '#71717a'], animate: false, hex: '#18181b', pattern: 'studio_glass', category: 'Studio' },
+    { id: 'studio_deep_blood', name: 'Crimson Night', bg: 'bg-[#2d0000]', text: 'text-white', accent: 'bg-red-500', accentText: 'text-red-500', colors: ['#991b1b', '#450a0a'], animate: true, hex: '#2d0000', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_arctic_ice', name: 'Arctic Ice', bg: 'bg-[#f0f9ff]', text: 'text-sky-950', accent: 'bg-sky-500', accentText: 'text-sky-600', colors: ['#e0f2fe', '#bae6fd'], animate: false, hex: '#f0f9ff', pattern: 'grid', category: 'Studio' },
+    { id: 'studio_obsidian_gold', name: 'Elite Obsidian', bg: 'bg-black', text: 'text-amber-100', accent: 'bg-amber-600', accentText: 'text-amber-500', colors: ['#000', '#1a1a1a'], animate: false, hex: '#000000', pattern: 'luxury', category: 'Studio' },
+    { id: 'studio_electric_violet', name: 'Violet Blaze', bg: 'bg-[#1e1b4b]', text: 'text-white', accent: 'bg-violet-400', accentText: 'text-violet-400', colors: ['#7c3aed', '#4c1d95'], animate: true, hex: '#1e1b4b', pattern: 'studio_holo', category: 'Studio' },
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -716,12 +734,13 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             {/* Card Inner Content (Portrait) */}
             <div className="flex-1 p-6 flex flex-col relative z-20 items-center text-center justify-between">
                 {/* QR Code Top Section */}
-                <div className="flex items-center justify-center pt-4 mb-6">
-                    <div className="p-3.5 bg-white shadow-2xl rounded-[1.5rem] ring-[6px] ring-white/10">
+                <div className="flex items-center justify-center pt-4 mb-6 relative">
+                    <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-150 animate-pulse" />
+                    <div className="p-3.5 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[1.8rem] ring-[8px] ring-white/10 relative z-10 border border-white/50">
                         {qrDataUrl ? (
-                            <img src={qrDataUrl} alt="QR Code" className="w-[90px] h-[90px]" />
+                            <img src={qrDataUrl} alt="QR Code" className="w-[100px] h-[100px] image-render-crisp" />
                         ) : (
-                            <div className="w-[90px] h-[90px] animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
+                            <div className="w-[100px] h-[100px] animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
                                 <RefreshCw className="animate-spin text-slate-200" />
                             </div>
                         )}
@@ -729,10 +748,10 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                 </div>
 
                 {/* Profile Section */}
-                <div className="flex flex-col items-center mb-6">
+                <div className="flex flex-col items-center mb-6 relative z-10">
                     <div className={cn(
-                        "w-20 h-20 rounded-2xl overflow-hidden shadow-2xl mb-4 border-2 ring-4 ring-white/5",
-                        tp.hex === '#ffffff' ? "border-slate-200" : "border-white/15"
+                        "w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] mb-5 border-[3px] ring-[10px] ring-white/5",
+                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/20"
                     )}>
                         <img
                             src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=128`}
@@ -741,15 +760,17 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         />
                     </div>
                     <h1 className={cn(
-                        "text-xl font-black tracking-tighter leading-none uppercase mb-2",
+                        "text-2xl font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm",
                         tp.text
                     )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
-                    <p className={cn(
-                        "text-[9px] font-black uppercase tracking-[0.2em] px-4 py-1.5 bg-white/5 rounded-full",
+                    <div className={cn(
+                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10",
                         customAccent || tp.accentText
                     )}>
-                        {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
-                    </p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.25em]">
+                            {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
+                        </p>
+                    </div>
                 </div>
 
                 {/* Contact Info Cards */}
@@ -879,29 +900,33 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="w-full mt-4 mb-12 flex flex-col gap-6 bg-slate-900/40 p-6 sm:p-8 rounded-[3rem] border border-white/5 shadow-2xl"
+                        className="w-full mt-4 mb-12 flex flex-col gap-6 bg-slate-950 p-6 sm:p-10 rounded-[3rem] border border-white/10 shadow-2xl relative overflow-hidden"
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Decorative Background for Panel */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-rose-500/5 blur-[100px] pointer-events-none" />
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
                             {/* 1. Color Control */}
-                            <div className="space-y-4">
-                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
-                                    <Palette size={14} className="text-primary" /> Renk Paleti
+                            <div className="space-y-5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
+                                    <Palette size={16} className="text-primary" /> Renk Paleti
                                 </label>
-                                <div className="flex flex-wrap gap-2.5">
-                                    {['#ffffff', '#000000', '#2563eb', '#dc2626', '#059669', '#7c3aed', '#f59e0b'].map(c => (
+                                <div className="flex flex-wrap gap-3">
+                                    {['#ffffff', '#000000', '#2563eb', '#dc2626', '#059669', '#7c3aed', '#f59e0b', '#ec4899', '#06b6d4', '#10b981'].map(c => (
                                         <button
                                             key={c}
                                             onClick={() => setCustomBg(c)}
                                             className={cn(
-                                                "w-8 h-8 rounded-full border-2 transition-all shadow-lg",
-                                                customBg === c ? "border-primary scale-110 ring-4 ring-primary/20" : "border-white/10 opacity-60 hover:opacity-100"
+                                                "w-9 h-9 rounded-full border-2 transition-all shadow-xl",
+                                                customBg === c ? "border-primary scale-110 ring-4 ring-primary/30" : "border-white/10 opacity-70 hover:opacity-100 hover:scale-105"
                                             )}
                                             style={{ backgroundColor: c }}
                                         />
                                     ))}
                                     <button
                                         onClick={() => { setCustomBg(null); setCustomAccent(null); }}
-                                        className="h-8 px-4 bg-white/5 rounded-full text-[9px] font-black text-slate-400 hover:text-white hover:bg-white/10 transition-all uppercase tracking-widest border border-white/5"
+                                        className="h-9 px-5 bg-white/10 rounded-full text-[10px] font-black text-white hover:bg-primary transition-all uppercase tracking-widest border border-white/10 shadow-lg"
                                     >
                                         Sıfırla
                                     </button>
@@ -909,18 +934,18 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             </div>
 
                             {/* 2. Font Control */}
-                            <div className="space-y-4">
-                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
-                                    <Type size={14} className="text-primary" /> Tipografi Atölyesi
+                            <div className="space-y-5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
+                                    <Type size={16} className="text-primary" /> Tipografi Atölyesi
                                 </label>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-2.5">
                                     {(['sans', 'mono', 'serif'] as const).map(f => (
                                         <button
                                             key={f}
                                             onClick={() => setCustomFont(f)}
                                             className={cn(
-                                                "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                                                customFont === f ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : "bg-white/5 border-white/5 text-slate-400 hover:text-white"
+                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg",
+                                                customFont === f ? "bg-primary border-primary text-white scale-105 shadow-primary/30" : "bg-white/5 border-white/5 text-slate-300 hover:text-white hover:bg-white/10"
                                             )}
                                         >
                                             {f === 'sans' ? 'Modern' : f === 'mono' ? 'Teknik' : 'Klasik'}
@@ -930,18 +955,18 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             </div>
 
                             {/* 3. Pattern Layers */}
-                            <div className="space-y-4">
-                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
-                                    <Zap size={14} className="text-primary" /> Efekt Katmanı
+                            <div className="space-y-5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3">
+                                    <Zap size={16} className="text-primary" /> Efekt Katmanı
                                 </label>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-2.5">
                                     {( [null, 'dots', 'grid'] as const).map(p => (
                                         <button
                                             key={p || 'none'}
                                             onClick={() => setCustomPattern(p)}
                                             className={cn(
-                                                "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                                                customPattern === p ? "border-primary bg-primary/20 text-white shadow-lg" : "border-white/5 bg-white/5 text-slate-400"
+                                                "px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border shadow-lg",
+                                                customPattern === p ? "border-primary bg-primary text-white scale-105 shadow-primary/30" : "border-white/5 bg-white/5 text-slate-300 hover:text-white"
                                             )}
                                         >
                                             {p === 'dots' ? 'Noktalı' : p === 'grid' ? 'Izgara' : 'Yok'}
@@ -1007,17 +1032,17 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         // Plan: Redirect to checkout/card with design details
                         alert("Fiziksel NFC Kart Sipariş Sistemi Çok Yakında! Tasarımınız Kaydedildi.")
                     }}
-                    className="flex-[2] relative group"
+                    className="flex-[2.5] relative group"
                 >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-60 transition duration-500" />
-                    <div className="relative h-16 bg-white/[0.05] backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center gap-3 overflow-hidden transition-all hover:bg-white/[0.1] active:scale-95">
-                        <CreditCard size={20} className="text-amber-400 group-hover:scale-110 transition-transform" />
-                        <div className="flex flex-col items-start leading-none">
-                            <span className="text-white font-black text-[11px] uppercase tracking-[0.2em]">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-500 animate-pulse" />
+                    <div className="relative h-16 bg-white rounded-2xl flex items-center justify-center gap-3 overflow-hidden transition-all shadow-2xl active:scale-95 border-2 border-transparent">
+                        <CreditCard size={22} className="text-orange-600 group-hover:rotate-12 transition-transform" />
+                        <div className="flex flex-col items-start leading-tight">
+                            <span className="text-slate-900 font-black text-[12px] uppercase tracking-[0.1em]">
                                 FİZİKSEL KART AL
                             </span>
-                            <span className="text-amber-400/50 text-[8px] uppercase tracking-widest mt-1 font-bold">
-                                NFC Akıllı Kart
+                            <span className="text-orange-600 text-[9px] font-black uppercase tracking-widest opacity-80">
+                                NFC AKILLI KART
                             </span>
                         </div>
                     </div>
