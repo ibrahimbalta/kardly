@@ -794,9 +794,9 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="relative bg-[#020617] pt-24 pb-12 px-6 overflow-hidden border-t border-slate-900">
+      <footer className="relative bg-[#0f172a] pt-16 pb-12 px-6 overflow-hidden border-t border-slate-800">
         {/* Grain Texture Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-0" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
         
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 items-start">
