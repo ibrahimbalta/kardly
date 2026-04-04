@@ -803,28 +803,28 @@ export default function Home() {
             {/* Brand Section */}
             <div className="space-y-8">
               <Link href="/" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white shadow-lg shadow-rose-500/20 group-hover:rotate-6 transition-all duration-500">
-                  <Layout className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center text-white shadow-xl shadow-rose-500/20 group-hover:rotate-6 transition-all duration-500">
+                  <Layout className="w-6 h-6" />
                 </div>
                 <div className="flex flex-col">
-                  <div className="font-black text-2xl text-white tracking-tighter">
+                  <div className="font-black text-3xl text-white tracking-tighter leading-none mb-1">
                     Kardly<span className="text-rose-500">.site</span>
                   </div>
-                  <span className="text-[9px] font-black text-slate-600 tracking-[0.3em] uppercase italic">link to success</span>
+                  <span className="text-[10px] font-black text-slate-500 tracking-[0.4em] uppercase italic opacity-60">link to success</span>
                 </div>
               </Link>
-              <p className="text-slate-500 text-sm leading-relaxed font-medium max-w-xs">
+              <p className="text-slate-300 text-[15px] leading-relaxed font-medium max-w-xs">
                 {t('footerDesc') || "Profesyonel dijital kartvizit platformu. İş dünyasını tek linkte birleştirin."}
               </p>
               <div className="flex gap-4">
                 {[
-                  { name: 'Instagram', icon: <Instagram size={18} /> },
-                  { name: 'Twitter', icon: <Twitter size={18} /> },
-                  { name: 'LinkedIn', icon: <Linkedin size={18} /> }
+                  { name: 'Instagram', icon: <Instagram size={22} /> },
+                  { name: 'Twitter', icon: <Twitter size={22} /> },
+                  { name: 'LinkedIn', icon: <Linkedin size={22} /> }
                 ].map((s) => (
                   <motion.a 
-                    key={s.name} href="#" whileHover={{ y: -3 }}
-                    className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500 hover:text-white hover:border-slate-700 transition-all duration-300"
+                    key={s.name} href="#" whileHover={{ y: -4, scale: 1.1 }}
+                    className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/5 flex items-center justify-center text-slate-300 hover:text-white hover:bg-rose-500 transition-all duration-300 shadow-lg"
                   >
                     {s.icon}
                   </motion.a>
@@ -833,29 +833,29 @@ export default function Home() {
             </div>
 
             {/* Links Columns */}
-            <div className="lg:pl-8">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-8 italic">{t('productCaps')}</h4>
-              <ul className="space-y-4">
-                <li><a href="#features" className="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm font-medium"><Zap size={14} className="text-amber-500" /> {t('features')}</a></li>
-                <li><a href="#templates" className="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors text-sm font-medium"><Palette size={14} className="text-indigo-500" /> {t('templates')}</a></li>
+            <div className="lg:pl-12">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-rose-500 mb-10 italic">{t('productCaps')}</h4>
+              <ul className="space-y-6">
+                <li><a href="#features" className="group flex items-center gap-4 text-slate-300 hover:text-white transition-colors text-[15px] font-bold"><Zap size={16} className="text-amber-500" /> {t('features')}</a></li>
+                <li><a href="#templates" className="group flex items-center gap-4 text-slate-300 hover:text-white transition-colors text-[15px] font-bold"><Palette size={16} className="text-indigo-500" /> {t('templates')}</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-500 mb-8 italic">{t('supportCaps')}</h4>
-              <ul className="space-y-4">
-                <li><Link href="/blog" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><FileText size={14} className="text-sky-500" /> {t('blog')}</Link></li>
-                <li><Link href="/iletisim" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><Globe size={14} className="text-emerald-500" /> {t('contact')}</Link></li>
-                <li><Link href="/sss" className="text-slate-400 hover:text-white transition-colors text-sm font-medium flex items-center gap-3"><CheckCircle2 size={14} className="text-orange-500" /> {t('faq')}</Link></li>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-indigo-500 mb-10 italic">{t('supportCaps')}</h4>
+              <ul className="space-y-6">
+                <li><Link href="/blog" className="text-slate-300 hover:text-white transition-colors text-[15px] font-bold flex items-center gap-4"><FileText size={16} className="text-sky-500" /> {t('blog')}</Link></li>
+                <li><Link href="/iletisim" className="text-slate-300 hover:text-white transition-colors text-[15px] font-bold flex items-center gap-4"><Globe size={16} className="text-emerald-500" /> {t('contact')}</Link></li>
+                <li><Link href="/sss" className="text-slate-300 hover:text-white transition-colors text-[15px] font-bold flex items-center gap-4"><CheckCircle2 size={16} className="text-orange-500" /> {t('faq')}</Link></li>
               </ul>
             </div>
 
             {/* Newsletter Column: Compact Glass Card */}
             <div className="relative">
-              <div className="p-8 rounded-[40px] bg-white/[0.03] backdrop-blur-3xl border border-white/5 shadow-2xl space-y-6">
-                <div className="space-y-2">
-                  <h6 className="text-lg font-black text-white italic tracking-tight">{t('newRegistration')}</h6>
-                  <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{t('newsletterDesc')}</p>
+              <div className="p-10 rounded-[48px] bg-white/[0.04] backdrop-blur-3xl border border-white/10 shadow-2xl space-y-8">
+                <div className="space-y-3">
+                  <h6 className="text-xl font-black text-white italic tracking-tight">{t('newRegistration')}</h6>
+                  <p className="text-xs text-slate-400 leading-relaxed font-bold">{t('newsletterDesc')}</p>
                 </div>
                 
                 <form onSubmit={handleNewsletter} className="relative flex items-center">
@@ -865,27 +865,27 @@ export default function Home() {
                     value={newsEmail}
                     onChange={(e) => setNewsEmail(e.target.value)}
                     required
-                    className="w-full bg-slate-900 border border-slate-800 rounded-full py-3 px-5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500/50 transition-colors" 
+                    className="w-full bg-[#0b0e14] border border-white/10 rounded-full py-4 px-6 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-rose-500/50 transition-colors shadow-inner" 
                   />
                   <button 
                     type="submit"
                     disabled={newsStatus === "loading"}
-                    className="absolute right-1.5 p-2 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20 disabled:opacity-50"
+                    className="absolute right-2 p-2.5 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/30 disabled:opacity-50"
                   >
-                    <ArrowRight size={18} />
+                    <ArrowRight size={20} />
                   </button>
                 </form>
                 
-                {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold italic">{t('registrationSuccess')}</p>}
-                {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold italic">{t('registrationError')}</p>}
+                {newsStatus === "success" && <p className="text-xs text-emerald-400 font-black italic">{t('registrationSuccess')}</p>}
+                {newsStatus === "error" && <p className="text-xs text-rose-400 font-black italic">{t('registrationError')}</p>}
                 
-                <div className="flex items-center gap-4 pt-2">
-                  <div className="flex -space-x-2">
+                <div className="flex items-center gap-5 pt-2">
+                  <div className="flex -space-x-3">
                     {[1,2,3].map(i => (
-                      <div key={i} className="w-8 h-8 rounded-full border-4 border-[#020617] bg-slate-800 shadow-sm" />
+                      <div key={i} className="w-10 h-10 rounded-full border-4 border-[#0f172a] bg-slate-800 shadow-lg" />
                     ))}
                   </div>
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('footerCommunity')}</span>
+                  <span className="text-[11px] font-black text-white/40 uppercase tracking-widest">{t('footerCommunity')}</span>
                 </div>
               </div>
             </div>
