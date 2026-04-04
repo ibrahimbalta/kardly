@@ -178,7 +178,7 @@ export default function Home() {
                   <div className="relative bg-white/80 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-200/60 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] group-hover:border-slate-300/80 transition-all duration-500 group-hover:-translate-y-1">
                     {/* Step number */}
                     <div className={`text-[11px] font-extrabold uppercase tracking-[0.2em] bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent mb-4`}>
-                      Step {item.step}
+                      {t('step')} {item.step}
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-tight">{item.title}</h3>
                     <p className="text-slate-500 text-[15px] leading-relaxed">{item.desc}</p>
@@ -699,7 +699,7 @@ export default function Home() {
                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent">
                     <h4 className="text-[11px] font-bold text-white tracking-tight leading-tight">{tmpl.title}</h4>
                     <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <button className="w-full py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-[9px] font-black text-white uppercase tracking-widest">Preview</button>
+                       <button className="w-full py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-[9px] font-black text-white uppercase tracking-widest">{t('preview')}</button>
                     </div>
                   </div>
                 </div>
@@ -894,7 +894,7 @@ export default function Home() {
             <div className="col-span-2 md:col-span-3 space-y-8">
                <div className="p-6 rounded-3xl bg-white/5 border border-white/5 space-y-4">
                   <h6 className="text-xs font-black text-white uppercase tracking-widest">{t('newRegistration')}</h6>
-                  <p className="text-[11px] text-slate-500 leading-relaxed">Topluluğumuza katılın ve güncellemelerden haberdar olun.</p>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">{t('newsletterDesc')}</p>
                   <form onSubmit={handleNewsletter} className="flex gap-2">
                     <input 
                       type="email" 
@@ -912,11 +912,11 @@ export default function Home() {
                       <ArrowRight size={16} />
                     </button>
                   </form>
-                  {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold">Kayıt başarılı! ✨</p>}
-                  {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold">Bir hata oluştu.</p>}
+                  {newsStatus === "success" && <p className="text-[10px] text-emerald-400 font-bold">{t('registrationSuccess')}</p>}
+                  {newsStatus === "error" && <p className="text-[10px] text-rose-400 font-bold">{t('registrationError')}</p>}
                   
                   <p className="text-[9px] text-slate-600 leading-tight">
-                    Kaydolarak <Link href="/kullanim-sartlari" className="underline hover:text-rose-500 transition-colors">Kullanım Şartları</Link> ve <Link href="/gizlilik" className="underline hover:text-rose-500 transition-colors">Gizlilik Sözleşmesi</Link>'ni kabul etmiş olursunuz.
+                    {t('termsAgreement')}
                   </p>
                   <div className="flex items-center gap-3 pt-2">
                     <div className="flex -space-x-2">

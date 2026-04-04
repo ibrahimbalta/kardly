@@ -15,6 +15,7 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
         note: ""
     })
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
     // Fallback if theme is not provided
     const modalTheme = theme || {
@@ -69,10 +70,10 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setErrorMessage(null)
         setIsSubmitting(true)
 
         try {
-            // Get the numeric offset for the profile's timezone (e.g. +03:00)
             const targetTimeZone = profile.timezone || "Europe/Istanbul"
             const parts = new Intl.DateTimeFormat('en-US', {
                 timeZone: targetTimeZone,
@@ -80,7 +81,6 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
             }).formatToParts(new Date(`${formData.date}T${formData.time}:00`))
             
             const offsetPart = parts.find(p => p.type === 'timeZoneName')?.value || "+03:00"
-            // Convert "GMT+3" to "+03:00" or "GMT-5" to "-05:00"
             const offset = offsetPart === "GMT" ? "Z" : offsetPart.replace("GMT", "").replace(":", "")
             const formattedOffset = offset.length === 2 ? offset[0] + "0" + offset[1] + ":00" : offset.includes(":") ? offset : offset + ":00"
 
@@ -95,13 +95,15 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                 })
             })
 
+            const data = await res.json()
+
             if (res.ok) {
                 setStep(3)
             } else {
-                alert(labels.genericError)
+                setErrorMessage(labels[data.error] || labels.genericError)
             }
         } catch (err) {
-            alert(labels.connectionError)
+            setErrorMessage(labels.connectionError)
         } finally {
             setIsSubmitting(false)
         }
@@ -263,6 +265,12 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                         ))}
                     </div>
 
+                    {errorMessage && (
+                        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center animate-shake">
+                            <p className="text-[10px] font-bold text-rose-500">{errorMessage}</p>
+                        </div>
+                    )}
+                    
                     <div className="flex gap-3">
                         <button
                             type="button"

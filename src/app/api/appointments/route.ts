@@ -7,28 +7,76 @@ export async function POST(req: Request) {
         const { profileId, name, email, phone, scheduledAt, note, timezone: clientTimezone } = body
 
         if (!profileId || !name || !email || !scheduledAt) {
-            return NextResponse.json({ error: "Eksik bilgi" }, { status: 400 })
+            return NextResponse.json({ error: "genericError" }, { status: 400 })
         }
 
-        // Find the user associated with this profile
+        // 1. Basic Sanitization for Note
+        const cleanNote = note?.slice(0, 500).replace(/<[^>]*>?/gm, '') || ""
+
+        // Find the profile and user
         const profile = await prisma.profile.findUnique({
-            where: { id: profileId }
+            where: { id: profileId },
+            include: { user: true }
         })
 
         if (!profile) {
-            return NextResponse.json({ error: "Profil bulunamadı" }, { status: 404 })
+            return NextResponse.json({ error: "genericError" }, { status: 404 })
         }
 
-        // Use profile's timezone or fallback to Istanbul
-        const targetTimezone = profile.timezone || "Europe/Istanbul"
+        // 2. Check if appointments are enabled
+        if (!profile.showAppointmentBtn) {
+            return NextResponse.json({ error: "errorDisabled" }, { status: 403 })
+        }
 
-        // To create a Date object in a specific timezone without external libs:
-        // We can parse the YYYY-MM-DDTHH:mm string and use Intl to see how it maps to UTC
-        // But a simpler way for POST is to just trust the offset sent from client if they calculate it,
-        // or here we can assume the scheduledAt string is "YYYY-MM-DDTHH:mm:ss" and it's meant to be in targetTimezone.
-        
-        // Let's use a robust way to create the UTC date from a local string in a target timezone
         const dateObj = new Date(scheduledAt)
+        
+        // 3. Prevent past dates
+        if (dateObj < new Date()) {
+            return NextResponse.json({ error: "errorPastDate" }, { status: 400 })
+        }
+
+        // 4. Validate working hours (Server-side safety)
+        if (profile.workingHours) {
+            const appointmentDate = new Date(dateObj)
+            const dayOfWeek = appointmentDate.toLocaleDateString('en-US', { weekday: 'long' })
+            const profileTZ = (profile as any).timezone || "Europe/Istanbul"
+            
+            const timeString = appointmentDate.toLocaleTimeString('tr-TR', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false,
+                timeZone: profileTZ 
+            })
+
+            const hours: any = profile.workingHours
+            const dayConfig = hours[dayOfWeek]
+
+            if (!dayConfig || !dayConfig.active) {
+                return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+            }
+
+            if (timeString < dayConfig.start || timeString > dayConfig.end) {
+                return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+            }
+        }
+
+        // 5. Spam prevention (Optional Check: Same email/phone in last 1 hour)
+        const recentAppointment = await prisma.appointment.findFirst({
+            where: {
+                userId: profile.userId,
+                OR: [
+                    { clientEmail: email },
+                    { clientPhone: phone }
+                ],
+                createdAt: {
+                    gte: new Date(Date.now() - 60 * 60 * 1000) // 1 hour
+                }
+            }
+        })
+
+        if (recentAppointment) {
+            return NextResponse.json({ error: "errorSpam" }, { status: 429 })
+        }
 
         // Create appointment
         const appointment = await prisma.appointment.create({
@@ -38,7 +86,7 @@ export async function POST(req: Request) {
                 clientEmail: email,
                 clientPhone: phone,
                 date: dateObj,
-                note: note,
+                note: cleanNote,
                 status: "pending"
             }
         })
@@ -61,11 +109,10 @@ export async function GET(req: Request) {
         }
 
         const profile = await prisma.profile.findUnique({
-            where: { id: profileId },
-            select: { timezone: true }
+            where: { id: profileId }
         })
 
-        const userTimezone = profile?.timezone || "Europe/Istanbul"
+        const userTimezone = (profile as any)?.timezone || "Europe/Istanbul"
 
         // Get start and end of the day in UTC for that date
         const dayStart = new Date(date)

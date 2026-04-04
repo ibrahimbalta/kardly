@@ -828,10 +828,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 const updatedProduct = await res.json()
                 if (editingProduct) {
                     setProductList(productList.map((p: any) => p.id === editingProduct.id ? updatedProduct : p))
-                    setShowToast("Proje güncellendi!")
+                    setShowToast(t('projectUpdated'))
                 } else {
                     setProductList([updatedProduct, ...productList])
-                    setShowToast("Ürün eklendi!")
+                    setShowToast(t('itemAdded'))
                 }
                 setShowProductModal(false)
                 setEditingProduct(null)
@@ -840,7 +840,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             }
         } catch (err) {
             console.error(err)
-            setShowToast("İşlem başarısız!")
+            setShowToast(t('actionFailed'))
             setTimeout(() => setShowToast(null), 3000)
         } finally {
             setIsProductSaving(false)
@@ -848,12 +848,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleDeleteProduct = async (id: string) => {
-        if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return
+        if (!confirm(t('deleteConfirm'))) return
         try {
             const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" })
             if (res.ok) {
                 setProductList(productList.filter((p: any) => p.id !== id))
-                setShowToast("Ürün silindi!")
+                setShowToast(t('itemDeleted'))
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
@@ -870,14 +870,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setReviewList(reviewList.map((r: any) => r.id === id ? { ...r, isActive: !currentStatus } : r))
-                setShowToast(!currentStatus ? "Yorum onaylandı!" : "Yorum gizlendi!")
+                setShowToast(!currentStatus ? t('reviewConfirmed') : t('reviewHidden'))
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) { console.error(err) }
     }
 
     const handleDeleteReview = async (id: string) => {
-        if (!confirm("Bu yorumu silmek istediğinize emin misiniz?")) return
+        if (!confirm(t('deleteConfirm'))) return
         try {
             const res = await fetch("/api/review/delete", {
                 method: "POST",
@@ -886,7 +886,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setReviewList(reviewList.filter((r: any) => r.id !== id))
-                setShowToast("Yorum silindi!")
+                setShowToast(t('itemDeleted'))
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) { console.error(err) }
@@ -901,7 +901,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setAppointmentList(appointmentList.map((a: any) => a.id === id ? { ...a, status } : a))
-                setShowToast(status === "confirmed" ? "Randevu onaylandı!" : "Randevu tamamlandı!")
+                setShowToast(status === "confirmed" ? t('appointmentConfirmed') : t('appointmentCompleted'))
                 setTimeout(() => setShowToast(null), 3000)
                 setSelectedAppointment(null)
             }
@@ -909,7 +909,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     const handleDeleteAppointment = async (id: string) => {
-        if (!confirm("Bu randevuyu silmek istediğinize emin misiniz?")) return
+        if (!confirm(t('deleteConfirm'))) return
         try {
             const res = await fetch("/api/appointments/delete", {
                 method: "POST",
@@ -918,7 +918,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
             })
             if (res.ok) {
                 setAppointmentList(appointmentList.filter((a: any) => a.id !== id))
-                setShowToast("Randevu silindi!")
+                setShowToast(t('itemDeleted'))
                 setTimeout(() => setShowToast(null), 3000)
                 setSelectedAppointment(null)
             }
@@ -4510,7 +4510,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-xs text-slate-400 font-bold uppercase">
-                                                {new Date(lead.createdAt).toLocaleDateString("tr-TR")}
+                                                {new Date(lead.createdAt).toLocaleDateString(language === 'tr' ? "tr-TR" : "en-US")}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex justify-end gap-2">
@@ -4720,7 +4720,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             onClick={() => { setSelectedHubCategory(""); setIsCategoryDropdownOpen(false); }}
                                                             className="px-4 py-3 hover:bg-slate-50 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer"
                                                         >
-                                                            {t('all')}
+                                                            {t('categoryAll')}
                                                         </div>
                                                         {Array.from(new Set(networkUsers.map(u => u.profile?.occupation).filter(Boolean))).map((occ: any) => (
                                                             <div 
