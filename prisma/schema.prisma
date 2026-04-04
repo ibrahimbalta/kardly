@@ -296,6 +296,7 @@ model OrderItem {
   accentColor   String?
   textColor     String?
   fontFamily    String?
+  pattern       String?
   qrSize        Int?     @default(100)
   qrX           Int?     @default(0)
   qrY           Int?     @default(0)
