@@ -883,59 +883,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── CTA: COMPACT LIGHT ─── */}
-      <section className="py-32 md:py-48 px-6 relative z-10">
-        {/* Dynamic Background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 bg-slate-50/40" />
-            <motion.div
-                animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
-                transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-0 right-1/4 w-[30%] h-[40%] bg-rose-100/30 rounded-full blur-[100px]"
-            />
-            <motion.div
-                animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
-                transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-0 left-1/4 w-[30%] h-[40%] bg-indigo-100/20 rounded-full blur-[100px]"
-            />
-        </div>
-        
-        <div className="max-w-4xl mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="p-12 md:p-16 rounded-[40px] bg-white border border-slate-100 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.08)] text-center relative overflow-hidden"
-          >
-            {/* Ambient pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#f43f5e 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-            
-            <div className="relative z-10 space-y-8">
-              <motion.div
-                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-100"
-              >
-                <Sparkles size={11} className="text-rose-500" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-rose-600">{t('getStarted')}</span>
-              </motion.div>
-              
-              <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none italic italic">
-                {t('ctaTitle')}
-              </h2>
-              <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">{t('ctaDesc')}</p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Link href="/register" className="group px-8 py-3.5 bg-rose-500 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-200 active:scale-95 flex items-center justify-center gap-2">
-                  <span>{t('ctaStart')}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link href="#features" className="px-8 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center justify-center">
-                  {t('ctaExplore')}
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ─── FOOTER: PREMIUM DARK ─── */}
       <footer className="py-24 px-6 relative bg-[#0a0a0f] overflow-hidden">
         {/* Subtle ambient glows */}
