@@ -309,7 +309,7 @@ export default function Home() {
               { icon: <QrCode size={22} />, title: t('f8Title'), color: 'sky', delay: 0.7 },
               { icon: <Shield size={22} />, title: t('f9Title'), color: 'teal', delay: 0.8 },
             ].map((f, i) => {
-              const theme = {
+              const themeMap = {
                 rose: { bg: 'from-rose-500/10 to-rose-500/5', icon: 'bg-rose-500', glow: 'shadow-rose-500/20', text: 'text-rose-950', shape: 'bg-rose-500/5' },
                 amber: { bg: 'from-amber-500/10 to-amber-500/5', icon: 'bg-amber-500', glow: 'shadow-amber-500/20', text: 'text-amber-950', shape: 'bg-amber-500/5' },
                 blue: { bg: 'from-blue-500/10 to-blue-500/5', icon: 'bg-blue-500', glow: 'shadow-blue-500/20', text: 'text-blue-950', shape: 'bg-blue-500/5' },
@@ -319,7 +319,9 @@ export default function Home() {
                 pink: { bg: 'from-pink-500/10 to-pink-500/5', icon: 'bg-pink-500', glow: 'shadow-pink-500/20', text: 'text-pink-950', shape: 'bg-pink-500/5' },
                 sky: { bg: 'from-sky-500/10 to-sky-500/5', icon: 'bg-sky-500', glow: 'shadow-sky-500/20', text: 'text-sky-950', shape: 'bg-sky-500/5' },
                 teal: { bg: 'from-teal-500/10 to-teal-500/5', icon: 'bg-teal-500', glow: 'shadow-teal-500/20', text: 'text-teal-950', shape: 'bg-teal-500/5' }
-              }[f.color as keyof typeof theme] || { bg: 'bg-slate-50', icon: 'bg-slate-500', glow: 'shadow-slate-500/20', text: 'text-slate-950', shape: 'bg-slate-500/5' };
+              };
+              
+              const theme = themeMap[f.color as keyof typeof themeMap] || { bg: 'bg-slate-50', icon: 'bg-slate-500', glow: 'shadow-slate-500/20', text: 'text-slate-950', shape: 'bg-slate-500/5' };
 
               return (
                 <motion.div
