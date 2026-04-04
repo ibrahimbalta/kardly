@@ -31,13 +31,16 @@ import {
     Layout,
     Bell,
     Sparkles,
+    Settings,
+    Globe,
+    Code,
     Image as ImageIcon
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { signOut } from "next-auth/react"
 
-export default function AdminDashboardClient({ users, payments, stats }: any) {
+export default function AdminDashboardClient({ users, payments, stats, initialSettings }: any) {
     const [activeTab, setActiveTab] = useState("overview")
     const [searchQuery, setSearchQuery] = useState("")
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -73,6 +76,31 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
         isActive: true,
         order: 0 
     })
+    
+    // Global Settings
+    const [settings, setSettings] = useState(initialSettings || {})
+    const [isSavingSettings, setIsSavingSettings] = useState(false)
+    const [saveSuccess, setSaveSuccess] = useState(false)
+
+    const handleSaveSettings = async () => {
+        setIsSavingSettings(true)
+        setSaveSuccess(false)
+        try {
+            const res = await fetch('/api/admin/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            })
+            if (res.ok) {
+                setSaveSuccess(true)
+                setTimeout(() => setSaveSuccess(false), 3000)
+            }
+        } catch (error) {
+            console.error("Settings save error:", error)
+        } finally {
+            setIsSavingSettings(false)
+        }
+    }
 
     const filteredUsers = localUsers.filter((u: any) =>
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -406,6 +434,12 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                 active={activeTab === "ads"}
                                 onClick={() => { setActiveTab("ads"); setIsSidebarOpen(false); }}
                             />
+                            <AdminNavItem
+                                icon={<Settings className="w-5 h-5 text-indigo-500" />}
+                                label="Sistem Ayarları"
+                                active={activeTab === "ayarlar"}
+                                onClick={() => { setActiveTab("ayarlar"); setIsSidebarOpen(false); }}
+                            />
 
                             <div className="mt-8 mb-2 px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Hızlı Erişim</div>
                             <Link href="/dashboard" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-all group">
@@ -457,6 +491,7 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                             {activeTab === 'blog' && <>Blog <span className="gradient-text">Yönetimi.</span></>}
                             {activeTab === 'newsletter' && <>E-Bülten <span className="gradient-text">Kayıtları.</span></>}
                             {activeTab === 'ads' && <>Reklam <span className="gradient-text">Yönetimi.</span></>}
+                            {activeTab === 'ayarlar' && <>Sistem <span className="gradient-text">Ayarları.</span></>}
                         </h1>
                         <p className="text-slate-400 text-sm font-medium">Platform performansı ve kullanıcı analitiği.</p>
                     </motion.div>
@@ -1200,6 +1235,119 @@ export default function AdminDashboardClient({ users, payments, stats }: any) {
                                     ))}
                                 </div>
                             )}
+                        </motion.div>
+                    )}
+
+                    {activeTab === "ayarlar" && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="max-w-4xl space-y-8"
+                        >
+                            <div className="bg-white rounded-[3rem] border border-slate-200 p-10 shadow-sm space-y-10 relative overflow-hidden">
+                                <div className="relative z-10 space-y-10">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <div className="space-y-6">
+                                            <div>
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+                                                        <Sparkles size={18} />
+                                                    </div>
+                                                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Google AdSense</h3>
+                                                </div>
+                                                <p className="text-xs text-slate-400 mb-4 leading-relaxed">Sitede yayınlanacak reklam birimi kodlarını buraya ekleyin.</p>
+                                                <textarea
+                                                    value={settings.adSenseCode || ''}
+                                                    onChange={e => setSettings({ ...settings, adSenseCode: e.target.value })}
+                                                    rows={8}
+                                                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-3xl text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all resize-none"
+                                                    placeholder='<ins class="adsbygoogle" ...></ins>'
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                                                        <Activity size={18} />
+                                                    </div>
+                                                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Takip Kodları</h3>
+                                                </div>
+                                                <p className="text-xs text-slate-400 mb-4 leading-relaxed">Google Analytics, Facebook Pixel gibi kodlar.</p>
+                                                <textarea
+                                                    value={settings.analyticsCode || ''}
+                                                    onChange={e => setSettings({ ...settings, analyticsCode: e.target.value })}
+                                                    rows={8}
+                                                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-3xl text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+                                                    placeholder='<script async src="..."></script>'
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            <div>
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                                                        <Code size={18} />
+                                                    </div>
+                                                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Özel CSS</h3>
+                                                </div>
+                                                <p className="text-xs text-slate-400 mb-4 leading-relaxed">Site genelinde geçerli olacak CSS kodları.</p>
+                                                <textarea
+                                                    value={settings.customCss || ''}
+                                                    onChange={e => setSettings({ ...settings, customCss: e.target.value })}
+                                                    rows={8}
+                                                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-3xl text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-all resize-none"
+                                                    placeholder="body { background: ... }"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="p-2 bg-slate-50 rounded-lg text-slate-600">
+                                                        <Code size={18} />
+                                                    </div>
+                                                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Özel JS</h3>
+                                                </div>
+                                                <p className="text-xs text-slate-400 mb-4 leading-relaxed">Body sonuna eklenecek JS kodları.</p>
+                                                <textarea
+                                                    value={settings.customJs || ''}
+                                                    onChange={e => setSettings({ ...settings, customJs: e.target.value })}
+                                                    rows={8}
+                                                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-3xl text-[11px] font-mono focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all resize-none"
+                                                    placeholder="console.log('Kardly Custom JS');"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-8 border-t border-slate-50">
+                                        <div className="flex items-center gap-3">
+                                            {saveSuccess && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, x: -10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    className="flex items-center gap-2 text-emerald-600 text-[10px] font-black uppercase tracking-widest"
+                                                >
+                                                    <Check size={14} /> Ayarlar Kaydedildi
+                                                </motion.div>
+                                            )}
+                                        </div>
+                                        <button
+                                            onClick={handleSaveSettings}
+                                            disabled={isSavingSettings}
+                                            className="px-10 py-4 bg-slate-900 text-white rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-800 disabled:opacity-40 transition-all flex items-center justify-center gap-3 shadow-xl shadow-slate-200"
+                                        >
+                                            {isSavingSettings ? (
+                                                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <ShieldCheck size={16} />
+                                            )}
+                                            {isSavingSettings ? 'KAYDEDİLİYOR...' : 'SİSTEMİ GÜNCELLE'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 opacity-50" />
+                            </div>
                         </motion.div>
                     )}
                 </div>

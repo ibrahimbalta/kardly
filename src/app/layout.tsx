@@ -88,12 +88,17 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { PWAInstallPrompt, OfflineIndicator } from "@/components/PWAProvider";
 import { CookieBanner } from "@/components/CookieBanner";
+import prisma from "@/lib/prisma";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await prisma.globalSettings.findUnique({
+    where: { id: "main" }
+  })
+
   return (
     <html lang="tr">
       <head>
@@ -104,6 +109,16 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />
+        {/* AdSense & Analytics */}
+        {settings?.adSenseCode && (
+          <script dangerouslySetInnerHTML={{ __html: settings.adSenseCode }} />
+        )}
+        {settings?.analyticsCode && (
+          <script dangerouslySetInnerHTML={{ __html: settings.analyticsCode }} />
+        )}
+        {settings?.customCss && (
+          <style dangerouslySetInnerHTML={{ __html: settings.customCss }} />
+        )}
         {/* Splash screen color */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -193,6 +208,9 @@ export default function RootLayout({
             <CookieBanner />
             <PWAInstallPrompt />
             <OfflineIndicator />
+            {settings?.customJs && (
+              <div dangerouslySetInnerHTML={{ __html: settings.customJs }} />
+            )}
           </LanguageProvider>
         </AuthProvider>
       </body>

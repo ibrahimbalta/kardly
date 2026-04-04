@@ -36,6 +36,10 @@ export default async function AdminPage() {
         }
     })
 
+    const globalSettings = await prisma.globalSettings.findUnique({
+        where: { id: "main" }
+    })
+
     const stats = {
         totalUsers: users.length,
         totalRevenue: payments.filter((p: any) => p.status === 'success').reduce((acc: number, p: any) => acc + p.amount, 0),
@@ -48,6 +52,7 @@ export default async function AdminPage() {
             users={users}
             payments={payments}
             stats={stats}
+            initialSettings={globalSettings || {}}
         />
     )
 }
