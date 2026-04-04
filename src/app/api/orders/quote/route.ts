@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         }
 
         // Create the order as a quote request
+        // @ts-ignore
         const order = await prisma.order.create({
             data: {
                 // @ts-ignore
@@ -52,7 +53,10 @@ export async function POST(req: Request) {
                         accentColor: design.acc,
                         textColor: design.txt,
                         fontFamily: design.font,
-                        pattern: design.patt
+                        pattern: design.patt,
+                        qrSize: design.qrs,
+                        qrX: design.qrx,
+                        qrY: design.qry
                     }
                 }
             }

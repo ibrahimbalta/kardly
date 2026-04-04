@@ -1549,6 +1549,9 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                                         initialCustomTextColor={previewOrder.items?.[0]?.textColor}
                                         initialCustomFont={previewOrder.items?.[0]?.fontFamily}
                                         initialCustomPattern={previewOrder.items?.[0]?.pattern}
+                                        initialQrSize={previewOrder.items?.[0]?.qrSize || 100}
+                                        initialQrX={previewOrder.items?.[0]?.qrX || 0}
+                                        initialQrY={previewOrder.items?.[0]?.qrY || 0}
                                     />
                                 </div>
                                 <div className="md:col-span-5 space-y-8">
@@ -1574,6 +1577,12 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                                             <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Yazı Tipi:</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.fontFamily || 'sans'}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-[10px] font-bold text-indigo-400 uppercase tracking-widest pt-2 border-t border-slate-100">
+                                                <span>QR BOUT/X/Y:</span>
+                                                <span className="text-indigo-600 italic font-black">
+                                                    {previewOrder.items?.[0]?.qrSize}px / {previewOrder.items?.[0]?.qrX}px / {previewOrder.items?.[0]?.qrY}px
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

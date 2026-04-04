@@ -58,6 +58,9 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
     const txt = searchParams.get("txt")
     const font = (searchParams.get("font") as any) || "sans"
     const patt = searchParams.get("patt")
+    const qrs = parseInt(searchParams.get("qrs") || "100")
+    const qrx = parseInt(searchParams.get("qrx") || "0")
+    const qry = parseInt(searchParams.get("qry") || "0")
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -75,7 +78,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ...formData,
-                    design: { tpl, orient, bg, acc, txt, font, patt }
+                    design: { tpl, orient, bg, acc, txt, font, patt, qrs, qrx, qry }
                 })
             })
 
@@ -302,6 +305,9 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                     initialCustomTextColor={txt}
                                     initialCustomFont={font}
                                     initialCustomPattern={patt}
+                                    initialQrSize={qrs}
+                                    initialQrX={qrx}
+                                    initialQrY={qry}
                                 />
                             </div>
 

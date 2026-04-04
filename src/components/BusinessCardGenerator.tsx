@@ -30,6 +30,9 @@ interface BusinessCardGeneratorProps {
     initialCustomTextColor?: string | null
     initialCustomFont?: 'sans' | 'mono' | 'serif' | 'display'
     initialCustomPattern?: string | null
+    initialQrSize?: number
+    initialQrX?: number
+    initialQrY?: number
 }
 
 export const TEMPLATES = [
@@ -132,7 +135,10 @@ export default function BusinessCardGenerator({
     initialCustomAccent = null,
     initialCustomTextColor = null,
     initialCustomFont = 'sans',
-    initialCustomPattern = null
+    initialCustomPattern = null,
+    initialQrSize = 100,
+    initialQrX = 0,
+    initialQrY = 0
 }: BusinessCardGeneratorProps) {
     const { t } = useTranslation()
     const cardRef = useRef<HTMLDivElement>(null)
@@ -149,6 +155,11 @@ export default function BusinessCardGenerator({
     const [customFont, setCustomFont] = useState<'sans' | 'mono' | 'serif' | 'display'>(initialCustomFont)
     const [customPattern, setCustomPattern] = useState<string | null>(initialCustomPattern)
     const [glassIntensity, setGlassIntensity] = useState(10)
+
+    // QR Personalization States (Initialized with Restoration Props)
+    const [qrSize, setQrSize] = useState(initialQrSize)
+    const [qrX, setQrX] = useState(initialQrX)
+    const [qrY, setQrY] = useState(initialQrY)
 
     useEffect(() => {
         if (selectedTemplateId) {
@@ -795,19 +806,25 @@ export default function BusinessCardGenerator({
                     orientation === 'portrait' ? "mb-4" : "w-1/3 shrink-0"
                 )}>
                     {/* QR Code */}
-                    <div className="relative mb-6">
+                    <div 
+                        className="relative mb-6 transition-all duration-300 ease-out" 
+                        style={{ 
+                            transform: `translate(${qrX}px, ${qrY}px)`,
+                            width: `${qrSize}px`,
+                            height: `${qrSize}px`
+                        }}
+                    >
                         <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 animate-pulse" />
                         <div className={cn(
-                            "p-3 bg-white shadow-2xl relative z-10 border border-white/50",
-                            orientation === 'portrait' ? "rounded-[1.8rem]" : "rounded-3xl"
+                            "w-full h-full p-2 bg-white shadow-2xl relative z-10 border border-white/50 flex items-center justify-center",
+                            orientation === 'portrait' ? "rounded-[1.2rem]" : "rounded-2xl"
                         )}>
                             {qrDataUrl ? (
                                 <img src={qrDataUrl} alt="QR Code" className={cn(
-                                    "image-render-crisp transition-all",
-                                    orientation === 'portrait' ? "w-[100px] h-[100px]" : "w-[85px] h-[85px]"
+                                    "image-render-crisp w-full h-full object-contain transition-all"
                                 )} />
                             ) : (
-                                <div className="w-[100px] h-[100px] animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
+                                <div className="w-full h-full animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
                                     <RefreshCw className="animate-spin text-slate-200" />
                                 </div>
                             )}
@@ -1112,6 +1129,60 @@ export default function BusinessCardGenerator({
                                     </button>
                                 </div>
                             </div>
+
+                            {/* 6. QR Positioning Controls */}
+                            <div className="space-y-6 lg:col-span-3 pt-6 border-t border-white/5">
+                                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-white flex items-center gap-3 mb-6">
+                                    <QrCode size={16} className="text-primary" /> QR Kod Yerleşimi & Boyutu
+                                </label>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center px-1">
+                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Boyut (Size)</span>
+                                            <span className="text-[10px] font-mono text-primary">{qrSize}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min="40" max="220" step="1" 
+                                            value={qrSize} onChange={(e) => setQrSize(parseInt(e.target.value))}
+                                            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary" 
+                                        />
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center px-1">
+                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Yatay Konum (X)</span>
+                                            <span className="text-[10px] font-mono text-primary">{qrX}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min={orientation === 'portrait' ? -120 : -250} max={orientation === 'portrait' ? 120 : 250} step="1" 
+                                            value={qrX} onChange={(e) => setQrX(parseInt(e.target.value))}
+                                            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary" 
+                                        />
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center px-1">
+                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Dikey Konum (Y)</span>
+                                            <span className="text-[10px] font-mono text-primary">{qrY}px</span>
+                                        </div>
+                                        <input 
+                                            type="range" min={orientation === 'portrait' ? -250 : -150} max={orientation === 'portrait' ? 250 : 150} step="1" 
+                                            value={qrY} onChange={(e) => setQrY(parseInt(e.target.value))}
+                                            className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary" 
+                                        />
+                                    </div>
+                                    
+                                    <div className="md:col-span-3 flex justify-center pt-2">
+                                        <button 
+                                            onClick={() => { setQrSize(100); setQrX(0); setQrY(0); }}
+                                            className="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-full text-[9px] font-black text-white transition-all uppercase tracking-widest border border-white/5"
+                                        >
+                                            Yerleşimi Sıfırla
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 </>
@@ -1205,6 +1276,9 @@ export default function BusinessCardGenerator({
                             txt: customTextColor || '',
                             font: customFont || '',
                             patt: customPattern || '',
+                            qrs: qrSize.toString(),
+                            qrx: qrX.toString(),
+                            qry: qrY.toString(),
                             from: 'studio'
                         })
                         window.location.href = `/checkout/card?${params.toString()}`
