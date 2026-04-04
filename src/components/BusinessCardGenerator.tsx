@@ -3,9 +3,10 @@
 import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 interface BusinessCardGeneratorProps {
     user: {
@@ -85,7 +86,13 @@ export const TEMPLATES = [
     { id: 'extra_plasma_flow', name: 'Plasma Flow', bg: 'bg-indigo-950', text: 'text-indigo-50', accent: 'bg-indigo-400', accentText: 'text-indigo-400', colors: ['#4f46e5', '#9333ea', '#db2777'], animate: true, hex: '#1e1b4b', pattern: 'extra_plasma', category: 'Extraordinary' },
     { id: 'extra_crystal_prism', name: 'Crystal Prism', bg: 'bg-slate-900', text: 'text-white', accent: 'bg-sky-400', accentText: 'text-sky-400', colors: ['#7dd3fc', '#f472b6', '#fbbf24'], animate: true, hex: '#0f172a', pattern: 'extra_crystal', category: 'Extraordinary' },
     { id: 'extra_matrix_digital', name: 'Matrix Digital', bg: 'bg-black', text: 'text-green-400', accent: 'bg-green-500', accentText: 'text-green-500', colors: ['#22c55e', '#166534', '#052e16'], animate: true, hex: '#000000', pattern: 'extra_matrix', category: 'Extraordinary' },
-    { id: 'extra_abstract_origami', name: 'Origami Fold', bg: 'bg-slate-100', text: 'text-slate-900', accent: 'bg-primary', accentText: 'text-primary', colors: ['#ffffff', '#f1f5f9', '#e2e8f0'], animate: true, hex: '#f8fafc', pattern: 'extra_origami', category: 'Extraordinary' }
+    { id: 'extra_abstract_origami', name: 'Origami Fold', bg: 'bg-slate-100', text: 'text-slate-900', accent: 'bg-primary', accentText: 'text-primary', colors: ['#ffffff', '#f1f5f9', '#e2e8f0'], animate: true, hex: '#f8fafc', pattern: 'extra_origami', category: 'Extraordinary' },
+    
+    // STUDIO / MODERN EXPERIMENTAL
+    { id: 'studio_holo_prism', name: 'Holo Prism', bg: 'bg-slate-950', text: 'text-white', accent: 'bg-cyan-400', accentText: 'text-cyan-400', colors: ['#ff0080', '#7928ca', '#0070f3'], animate: true, hex: '#000000', pattern: 'studio_holo', category: 'Studio' },
+    { id: 'studio_liquid_aura', name: 'Liquid Aura', bg: 'bg-black', text: 'text-white', accent: 'bg-rose-500', accentText: 'text-rose-500', colors: ['#ee0979', '#ff6a00', '#7a2828'], animate: true, hex: '#000000', pattern: 'studio_liquid', category: 'Studio' },
+    { id: 'studio_glass_pro', name: 'Glass Pro', bg: 'bg-white/10', text: 'text-white', accent: 'bg-blue-400', accentText: 'text-blue-400', colors: ['#6366f1', '#a855f7', '#ec4899'], animate: true, hex: '#0f172a', pattern: 'studio_glass', category: 'Studio' },
+    { id: 'studio_minimal_zinc', name: 'Modern Zinc', bg: 'bg-zinc-950', text: 'text-zinc-100', accent: 'bg-white', accentText: 'text-white', colors: ['#18181b', '#27272a', '#3f3f46'], animate: false, hex: '#09090b', pattern: 'dots', category: 'Studio' },
 ]
 
 export default function BusinessCardGenerator({ user, profileData, mode = 'full', selectedTemplateId, orientation = 'portrait', onSelect, onOrientationChange }: BusinessCardGeneratorProps) {
@@ -95,7 +102,14 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     const [containerWidth, setContainerWidth] = useState(500)
     const [internalSelectedTplId, setInternalSelectedTplId] = useState(selectedTemplateId || TEMPLATES[0].id)
     const [qrDataUrl, setQrDataUrl] = useState<string>('')
-    const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate' | 'Extraordinary'>('Extraordinary')
+    const [activeTab, setActiveTab] = useState<'Standard' | 'Premium' | 'Ultimate' | 'Extraordinary' | 'Studio'>('Studio')
+
+    // Customization States
+    const [customBg, setCustomBg] = useState<string | null>(null)
+    const [customAccent, setCustomAccent] = useState<string | null>(null)
+    const [customFont, setCustomFont] = useState<'sans' | 'mono' | 'serif' | 'display'>('sans')
+    const [customPattern, setCustomPattern] = useState<string | null>(null)
+    const [glassIntensity, setGlassIntensity] = useState(10)
 
     useEffect(() => {
         if (selectedTemplateId) {
@@ -234,13 +248,14 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
             className={cn(
                 "flex flex-col overflow-hidden relative shadow-2xl",
                 tp.bg,
-                "rounded-[2.5rem]"
+                "rounded-[2.5rem]",
+                customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
             )}
             style={{
                 width: `${cardWidth}px`,
                 height: `${cardHeight}px`,
-                backgroundColor: tp.hex,
-                border: tp.hex === '#ffffff' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)'
+                backgroundColor: customBg || tp.hex,
+                border: (customBg || tp.hex) === '#ffffff' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)'
             }}
         >
             {/* Background Graphics */}
@@ -667,6 +682,35 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-slate-100/40 shadow-[0_-30px_60px_rgba(0,0,0,0.05)] rotate-[3deg] origin-bottom-left border-t border-black/[0.02]" />
                     </>
                 )}
+                {/* Studio Patterns */}
+                {tp.pattern === 'studio_holo' && (
+                    <div className="absolute inset-0">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-600 via-purple-600 to-cyan-500 opacity-20 animate-elite-bg" />
+                        <div className="absolute -inset-[100%] opacity-30 animate-rotate-slow" style={{ background: 'conic-gradient(from 0deg at 50% 50%, transparent, rgba(255,255,255,0.2), transparent, rgba(255,255,255,0.1), transparent)' }} />
+                        <div className="absolute inset-0 backdrop-blur-[2px]" />
+                    </div>
+                )}
+                {tp.pattern === 'studio_liquid' && (
+                    <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute -top-[20%] -left-[20%] w-[140%] h-[140%] bg-gradient-to-br from-rose-600/30 via-orange-600/20 to-transparent blur-[80px] animate-elite-bg" />
+                        <div className="absolute top-[30%] left-[10%] w-60 h-60 bg-primary/20 rounded-full blur-[100px] animate-floating" />
+                        <div className="absolute bottom-[10%] right-[10%] w-80 h-80 bg-rose-500/10 rounded-full blur-[120px] animate-floating" style={{ animationDelay: '2s' }} />
+                    </div>
+                )}
+                {tp.pattern === 'studio_glass' && (
+                    <div className="absolute inset-0">
+                        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[50%] bg-gradient-to-br from-white/10 to-transparent border-b border-white/5 backdrop-blur-xl" />
+                        <div className="absolute bottom-0 left-0 w-full h-[50%] bg-black/20" />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-purple-500/10" />
+                    </div>
+                )}
+                {/* Custom pattern overlay if set */}
+                {customPattern === 'dots' && (
+                    <div className="absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`, backgroundSize: '12px 12px' }} />
+                )}
+                {customPattern === 'grid' && (
+                    <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)`, backgroundSize: '24px 24px' }} />
+                )}
             </div>
 
             {/* Card Inner Content (Portrait) */}
@@ -702,7 +746,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                     )}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
                     <p className={cn(
                         "text-[9px] font-black uppercase tracking-[0.2em] px-4 py-1.5 bg-white/5 rounded-full",
-                        tp.accentText
+                        customAccent || tp.accentText
                     )}>
                         {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
                     </p>
@@ -727,7 +771,7 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                                 "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
                                 tp.hex === '#ffffff' ? "bg-indigo-50" : "bg-white/10"
                             )}>
-                                <item.icon size={13} className={tp.accentText} strokeWidth={2.5} />
+                                <item.icon size={13} className={customAccent || tp.accentText} strokeWidth={2.5} />
                             </div>
                             <div className="text-left min-w-0">
                                 <span className={cn("block text-[7px] font-black uppercase tracking-widest opacity-30 mb-0.5", tp.text)}>{item.label}</span>
@@ -761,73 +805,153 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
     return (
         <div className="w-full flex flex-col items-center">
             {mode === 'selector' && (
-                <div className="w-full mb-12 bg-slate-900/40 backdrop-blur-2xl rounded-[3rem] p-8 border border-white/5 shadow-2xl">
-                    <div className="flex flex-col gap-8">
-                        {/* Category Tabs */}
-                        <div className="max-w-full overflow-x-auto no-scrollbar py-2">
-                            <div className="flex bg-slate-950/50 p-1 rounded-full border border-white/5 w-fit mx-auto shadow-inner whitespace-nowrap">
-                                {(['Standard', 'Premium', 'Ultimate', 'Extraordinary'] as const).map((tab) => (
+                <>
+                    <div className="w-full mb-12 bg-slate-900/40 backdrop-blur-2xl rounded-[3rem] p-8 border border-white/5 shadow-2xl">
+                        <div className="flex flex-col gap-8">
+                            {/* Category Tabs */}
+                            <div className="max-w-full overflow-x-auto no-scrollbar py-2">
+                                <div className="flex bg-slate-950/50 p-1 rounded-full border border-white/5 w-fit mx-auto shadow-inner whitespace-nowrap">
+                                    {(['Standard', 'Premium', 'Ultimate', 'Extraordinary', 'Studio'] as const).map((tab) => (
+                                        <button
+                                            key={tab}
+                                            onClick={() => setActiveTab(tab)}
+                                            className={cn(
+                                                "px-4 sm:px-8 py-2.5 sm:py-3 rounded-full transition-all font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center gap-2",
+                                                activeTab === tab
+                                                    ? "bg-primary text-white shadow-xl scale-105"
+                                                    : "text-slate-400 hover:text-white"
+                                            )}
+                                        >
+                                            {tab === 'Standard' && <Palette size={14} />}
+                                            {tab === 'Premium' && <Star size={14} />}
+                                            {tab === 'Ultimate' && <Crown size={14} />}
+                                            {tab === 'Extraordinary' && <Zap size={14} />}
+                                            {tab === 'Studio' && <Layout size={14} />}
+                                            {tab === 'Extraordinary' ? 'Sıradışı' : tab === 'Studio' ? 'Stüdyo' : tab}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Template Picker */}
+                            <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 sm:gap-4 justify-center">
+                                {TEMPLATES.filter(t => t.category === activeTab).map((tpl) => (
                                     <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
+                                        key={tpl.id}
+                                        onClick={() => onSelect?.(tpl.id)}
                                         className={cn(
-                                            "px-4 sm:px-8 py-2.5 sm:py-3 rounded-full transition-all font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center gap-2",
-                                            activeTab === tab
-                                                ? "bg-primary text-white shadow-xl scale-105"
-                                                : "text-slate-400 hover:text-white"
+                                            "relative aspect-square rounded-2xl border-2 transition-all p-1.5 overflow-hidden",
+                                            internalSelectedTplId === tpl.id
+                                                ? "border-primary ring-4 ring-primary/20 scale-110 shadow-xl shadow-primary/20"
+                                                : "border-white/5 hover:border-white/10 hover:scale-105"
                                         )}
                                     >
-                                        {tab === 'Standard' && <Palette size={14} />}
-                                        {tab === 'Premium' && <Star size={14} />}
-                                        {tab === 'Ultimate' && <Crown size={14} />}
-                                        {tab === 'Extraordinary' && <Zap size={14} />}
-                                        {tab === 'Extraordinary' ? 'Sıradışı' : tab}
+                                        <div className="w-full h-full rounded-xl overflow-hidden relative" style={{
+                                            background: tpl.category === 'Ultimate' && tpl.colors
+                                                ? `linear-gradient(135deg, ${tpl.colors[0]}, ${tpl.colors[1] || tpl.colors[0]})`
+                                                : ((tpl as any).waveColor || tpl.hex)
+                                        }}>
+                                            {tpl.pattern === 'vibe_wave' && (
+                                                <div className="w-full h-[55%]" style={{ backgroundColor: (tpl as any).waveColor || '#24292e' }} />
+                                            )}
+                                            {tpl.category === 'Ultimate' && (
+                                                <>
+                                                    <div className="absolute inset-0 opacity-20 animate-pulse bg-white/10" />
+                                                    <svg className="absolute -left-[50%] top-0 w-[150%] h-full opacity-60" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                        <path d="M0,0 C60,10 60,90 0,100 L100,100 L100,0 Z" fill="rgba(0,0,0,0.2)" />
+                                                    </svg>
+                                                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 0.5px, transparent 0.5px)', backgroundSize: '6px 6px' }} />
+                                                </>
+                                            )}
+                                        </div>
+                                        {internalSelectedTplId === tpl.id && (
+                                            <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-2xl">
+                                                <Check size={20} className="text-white" strokeWidth={5} />
+                                            </div>
+                                        )}
                                     </button>
                                 ))}
                             </div>
                         </div>
-
-                        {/* Template Picker */}
-                        <div className="grid grid-cols-5 sm:grid-cols-7 gap-2 sm:gap-4 justify-center">
-                            {TEMPLATES.filter(t => t.category === activeTab).map((tpl) => (
-                                <button
-                                    key={tpl.id}
-                                    onClick={() => onSelect?.(tpl.id)}
-                                    className={cn(
-                                        "relative aspect-square rounded-2xl border-2 transition-all p-1.5 overflow-hidden",
-                                        internalSelectedTplId === tpl.id
-                                            ? "border-primary ring-4 ring-primary/20 scale-110 shadow-xl shadow-primary/20"
-                                            : "border-white/5 hover:border-white/10 hover:scale-105"
-                                    )}
-                                >
-                                    <div className="w-full h-full rounded-xl overflow-hidden relative" style={{
-                                        background: tpl.category === 'Ultimate' && tpl.colors
-                                            ? `linear-gradient(135deg, ${tpl.colors[0]}, ${tpl.colors[1] || tpl.colors[0]})`
-                                            : ((tpl as any).waveColor || tpl.hex)
-                                    }}>
-                                        {tpl.pattern === 'vibe_wave' && (
-                                            <div className="w-full h-[55%]" style={{ backgroundColor: (tpl as any).waveColor || '#24292e' }} />
-                                        )}
-                                        {tpl.category === 'Ultimate' && (
-                                            <>
-                                                <div className="absolute inset-0 opacity-20 animate-pulse bg-white/10" />
-                                                <svg className="absolute -left-[50%] top-0 w-[150%] h-full opacity-60" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                                    <path d="M0,0 C60,10 60,90 0,100 L100,100 L100,0 Z" fill="rgba(0,0,0,0.2)" />
-                                                </svg>
-                                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 0.5px, transparent 0.5px)', backgroundSize: '6px 6px' }} />
-                                            </>
-                                        )}
-                                    </div>
-                                    {internalSelectedTplId === tpl.id && (
-                                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center rounded-2xl">
-                                            <Check size={20} className="text-white" strokeWidth={5} />
-                                        </div>
-                                    )}
-                                </button>
-                            ))}
-                        </div>
                     </div>
-                </div>
+
+                    {/* Studio Customization Panel */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="w-full mt-4 mb-12 flex flex-col gap-6 bg-slate-900/40 p-6 sm:p-8 rounded-[3rem] border border-white/5 shadow-2xl"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* 1. Color Control */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+                                    <Palette size={14} className="text-primary" /> Renk Paleti
+                                </label>
+                                <div className="flex flex-wrap gap-2.5">
+                                    {['#ffffff', '#000000', '#2563eb', '#dc2626', '#059669', '#7c3aed', '#f59e0b'].map(c => (
+                                        <button
+                                            key={c}
+                                            onClick={() => setCustomBg(c)}
+                                            className={cn(
+                                                "w-8 h-8 rounded-full border-2 transition-all shadow-lg",
+                                                customBg === c ? "border-primary scale-110 ring-4 ring-primary/20" : "border-white/10 opacity-60 hover:opacity-100"
+                                            )}
+                                            style={{ backgroundColor: c }}
+                                        />
+                                    ))}
+                                    <button
+                                        onClick={() => { setCustomBg(null); setCustomAccent(null); }}
+                                        className="h-8 px-4 bg-white/5 rounded-full text-[9px] font-black text-slate-400 hover:text-white hover:bg-white/10 transition-all uppercase tracking-widest border border-white/5"
+                                    >
+                                        Sıfırla
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* 2. Font Control */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+                                    <Type size={14} className="text-primary" /> Tipografi Atölyesi
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {(['sans', 'mono', 'serif'] as const).map(f => (
+                                        <button
+                                            key={f}
+                                            onClick={() => setCustomFont(f)}
+                                            className={cn(
+                                                "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                                                customFont === f ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : "bg-white/5 border-white/5 text-slate-400 hover:text-white"
+                                            )}
+                                        >
+                                            {f === 'sans' ? 'Modern' : f === 'mono' ? 'Teknik' : 'Klasik'}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* 3. Pattern Layers */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+                                    <Zap size={14} className="text-primary" /> Efekt Katmanı
+                                </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {( [null, 'dots', 'grid'] as const).map(p => (
+                                        <button
+                                            key={p || 'none'}
+                                            onClick={() => setCustomPattern(p)}
+                                            className={cn(
+                                                "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                                                customPattern === p ? "border-primary bg-primary/20 text-white shadow-lg" : "border-white/5 bg-white/5 text-slate-400"
+                                            )}
+                                        >
+                                            {p === 'dots' ? 'Noktalı' : p === 'grid' ? 'Izgara' : 'Yok'}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </>
             )}
 
             {/* Card Preview */}
@@ -872,6 +996,28 @@ export default function BusinessCardGenerator({ user, profileData, mode = 'full'
                             </span>
                             <span className="text-white/30 text-[8px] uppercase tracking-widest mt-1 font-medium group-hover:text-white/50 transition-colors">
                                 Yüksek Kaliteli Görsel (PNG)
+                            </span>
+                        </div>
+                    </div>
+                </button>
+
+                {/* PHYSICAL CARD PURCHASE BUTTON */}
+                <button
+                    onClick={() => {
+                        // Plan: Redirect to checkout/card with design details
+                        alert("Fiziksel NFC Kart Sipariş Sistemi Çok Yakında! Tasarımınız Kaydedildi.")
+                    }}
+                    className="flex-[2] relative group"
+                >
+                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-60 transition duration-500" />
+                    <div className="relative h-16 bg-white/[0.05] backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-center gap-3 overflow-hidden transition-all hover:bg-white/[0.1] active:scale-95">
+                        <CreditCard size={20} className="text-amber-400 group-hover:scale-110 transition-transform" />
+                        <div className="flex flex-col items-start leading-none">
+                            <span className="text-white font-black text-[11px] uppercase tracking-[0.2em]">
+                                FİZİKSEL KART AL
+                            </span>
+                            <span className="text-amber-400/50 text-[8px] uppercase tracking-widest mt-1 font-bold">
+                                NFC Akıllı Kart
                             </span>
                         </div>
                     </div>
