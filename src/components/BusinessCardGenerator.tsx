@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import * as htmlToImage from 'html-to-image'
 import { jsPDF } from "jspdf"
-import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard, Smartphone, Printer } from 'lucide-react'
+import { Download, Share2, Check, RefreshCw, Phone, MapPin, Mail, Globe, MessageCircle, Star, Crown, Palette, Zap, Code, Type, Layout, CreditCard, Smartphone, Printer, QrCode } from 'lucide-react'
 import { useTranslation } from '@/context/LanguageContext'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
