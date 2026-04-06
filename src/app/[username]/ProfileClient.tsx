@@ -5635,7 +5635,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={cn(
-                    "relative w-full sm:max-w-[420px] p-8 sm:p-10 backdrop-blur-3xl overflow-y-auto max-h-[95vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-16 sm:pb-10",
+                    "relative w-full sm:max-w-[400px] p-6 sm:p-8 backdrop-blur-3xl no-scrollbar overflow-y-auto max-h-[90vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-16 sm:pb-10",
                     theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
@@ -6284,7 +6284,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={cn(
-                    "relative w-full sm:max-w-[420px] p-8 sm:p-10 overflow-y-auto max-h-[95vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", 
+                    "relative w-full sm:max-w-[400px] p-6 sm:p-8 no-scrollbar overflow-y-auto max-h-[90vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", 
                     theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
@@ -6510,7 +6510,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className={cn("relative w-full sm:max-w-[420px] p-8 overflow-y-auto max-h-[95vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
+                className={cn("relative w-full sm:max-w-[400px] p-6 sm:p-8 no-scrollbar overflow-y-auto max-h-[90vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}30`
                 }}
@@ -6695,7 +6695,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={cn(
-                    "relative w-full sm:max-w-[420px] h-[80vh] sm:h-[600px] overflow-hidden border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col transition-all", 
+                    "relative w-full sm:max-w-[400px] h-[80vh] sm:h-[580px] overflow-hidden no-scrollbar border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col transition-all", 
                     theme.card, 
                     theme.border, 
                     toneStyle?.font
