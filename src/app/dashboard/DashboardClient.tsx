@@ -220,6 +220,48 @@ export default function DashboardClient({ session, profile, subscription, appoin
         techStack: "React,Next.js,TypeScript,Tailwind CSS"
     })
 
+    const generateWidgetCode = (isDisplay = false) => {
+        let scriptAttrs = `data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"`;
+        if (activeWidget === 'video') scriptAttrs += ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"`;
+        if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
+        if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
+        if (activeWidget === 'portfolio') {
+            const pImages = extraWidgetConfig.portfolioImages || "";
+            // If it's for display, we truncate to keep UI clean, but for actual code we keep everything
+            const displayImages = (isDisplay && pImages.length > 50) ? pImages.substring(0, 50) + "..." : pImages;
+            scriptAttrs += ` data-pImages="${displayImages}"`;
+            if (extraWidgetConfig.githubUrl) scriptAttrs += ` data-ghUrl="${encodeURIComponent(extraWidgetConfig.githubUrl)}"`;
+            if (extraWidgetConfig.dribbbleUrl) scriptAttrs += ` data-drUrl="${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}"`;
+            if (extraWidgetConfig.behanceUrl) scriptAttrs += ` data-bhUrl="${encodeURIComponent(extraWidgetConfig.behanceUrl)}"`;
+        }
+        if (activeWidget === 'tech') scriptAttrs += ` data-tList="${extraWidgetConfig.techStack}"`;
+        if (activeWidget === 'blog') scriptAttrs += ` data-rss="${encodeURIComponent(extraWidgetConfig.blogRssUrl)}"`;
+
+        return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
+    };
+
+    useEffect(() => {
+        if (activeTab === 'widgets') {
+            const code = generateWidgetCode(false);
+            const titles: Record<string, string> = {
+                video: 'Video',
+                skills: 'Yetenekler',
+                countdown: 'Geri Sayım',
+                portfolio: 'Portfolyo',
+                tech: 'Yazılımcı Seti',
+                blog: 'Blog Akışı',
+                booking: 'Randevu',
+                lead: 'İletişim',
+                ai: 'AI Asistan'
+            };
+            setExternalWidget(prev => ({
+                ...prev,
+                code,
+                title: prev.title || titles[activeWidget] || 'Araç'
+            }));
+        }
+    }, [activeWidget, widgetStyle, extraWidgetConfig, activeTab]);
+
     const handleGenerateBio = async () => {
         if (!profileData.occupation) {
             setShowToast("Lütfen önce meslek alanını doldurun.")
@@ -1604,23 +1646,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">{t('widgetEmbedCode')}</label>
                                             <button
                                                 onClick={() => {
-                                                    let scriptAttrs = `data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"`;
-                                                    if (activeWidget === 'video') scriptAttrs += ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"`;
-                                                    if (activeWidget === 'skills') scriptAttrs += ` data-sList="${extraWidgetConfig.skills}"`;
-                                                    if (activeWidget === 'countdown') scriptAttrs += ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"`;
-                                                    if (activeWidget === 'portfolio') {
-                                                        scriptAttrs += ` data-pImages="${extraWidgetConfig.portfolioImages}"`;
-                                                        if (extraWidgetConfig.githubUrl) scriptAttrs += ` data-ghUrl="${encodeURIComponent(extraWidgetConfig.githubUrl)}"`;
-                                                        if (extraWidgetConfig.dribbbleUrl) scriptAttrs += ` data-drUrl="${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}"`;
-                                                        if (extraWidgetConfig.behanceUrl) scriptAttrs += ` data-bhUrl="${encodeURIComponent(extraWidgetConfig.behanceUrl)}"`;
-                                                    }
-                                                    if (activeWidget === 'tech') scriptAttrs += ` data-tList="${extraWidgetConfig.techStack}"`;
-                                                    if (activeWidget === 'blog') scriptAttrs += ` data-rss="${encodeURIComponent(extraWidgetConfig.blogRssUrl)}"`;
-
-                                                    const code = `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" ${scriptAttrs}></script>`;
+                                                    const code = generateWidgetCode(false);
                                                     copyToClipboard(code);
-                                                    // Otomatik olarak harici araç koduna da yerleştir
-                                                    setExternalWidget({ ...externalWidget, code, title: externalWidget.title || (activeWidget === 'video' ? 'Video' : activeWidget === 'skills' ? 'Yetenekler' : activeWidget === 'countdown' ? 'Geri Sayım' : activeWidget === 'portfolio' ? 'Portfolyo' : activeWidget === 'tech' ? 'Yazılımcı Seti' : activeWidget === 'blog' ? 'Blog Akışı' : activeWidget === 'booking' ? 'Randevu' : activeWidget === 'lead' ? 'İletişim' : 'AI Asistan') });
                                                 }}
                                                 className="text-primary font-black text-[10px] uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70"
                                             >
@@ -1629,30 +1656,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                         <div className="p-6 bg-slate-900 rounded-[2rem] relative group text-left">
                                             <code className="text-[11px] text-primary/80 font-mono leading-relaxed block break-all whitespace-pre-wrap">
-                                                {(() => {
-                                                    let urlParams = `?widget=${activeWidget}&embed=true&style=${widgetStyle}`;
-                                                    if (activeWidget === 'video') urlParams += `&vUrl=${encodeURIComponent(extraWidgetConfig.videoUrl)}&btn=${encodeURIComponent(extraWidgetConfig.videoBtnText)}`;
-                                                    if (activeWidget === 'skills') urlParams += `&sList=${encodeURIComponent(extraWidgetConfig.skills)}`;
-                                                    if (activeWidget === 'countdown') urlParams += `&date=${encodeURIComponent(extraWidgetConfig.countdownDate)}&title=${encodeURIComponent(extraWidgetConfig.countdownTitle)}`;
-                                                    if (activeWidget === 'portfolio') {
-                                                        urlParams += `&pImages=${encodeURIComponent(extraWidgetConfig.portfolioImages)}`;
-                                                        if (extraWidgetConfig.githubUrl) urlParams += `&ghUrl=${encodeURIComponent(extraWidgetConfig.githubUrl)}`;
-                                                        if (extraWidgetConfig.dribbbleUrl) urlParams += `&drUrl=${encodeURIComponent(extraWidgetConfig.dribbbleUrl)}`;
-                                                        if (extraWidgetConfig.behanceUrl) urlParams += `&bhUrl=${encodeURIComponent(extraWidgetConfig.behanceUrl)}`;
-                                                    }
-                                                    if (activeWidget === 'tech') urlParams += `&tList=${encodeURIComponent(extraWidgetConfig.techStack)}`;
-                                                    if (activeWidget === 'blog') urlParams += `&rssUrl=${encodeURIComponent(extraWidgetConfig.blogRssUrl)}`;
-
-                                                    let portfolioDataAttrs = '';
-                                                    if (activeWidget === 'portfolio') {
-                                                        portfolioDataAttrs = ` data-pImages="${(extraWidgetConfig.portfolioImages || "").length > 50 ? extraWidgetConfig.portfolioImages.substring(0, 50) + "..." : extraWidgetConfig.portfolioImages}"`;
-                                                        if (extraWidgetConfig.githubUrl) portfolioDataAttrs += ` data-ghUrl="${extraWidgetConfig.githubUrl}"`;
-                                                        if (extraWidgetConfig.dribbbleUrl) portfolioDataAttrs += ` data-drUrl="${extraWidgetConfig.dribbbleUrl}"`;
-                                                        if (extraWidgetConfig.behanceUrl) portfolioDataAttrs += ` data-bhUrl="${extraWidgetConfig.behanceUrl}"`;
-                                                    }
-
-                                                    return `<!-- Kardly Widget: ${activeWidget} -->\n<div id="kardly-widget-${activeWidget}"></div>\n<script src="https://www.kardly.site/api/widget.js" data-user="${profile?.username}" data-type="${activeWidget}" data-style="${widgetStyle}"${activeWidget === 'video' ? ` data-vUrl="${extraWidgetConfig.videoUrl}" data-btn="${extraWidgetConfig.videoBtnText}"` : ""}${activeWidget === 'skills' ? ` data-sList="${extraWidgetConfig.skills}"` : ""}${activeWidget === 'countdown' ? ` data-date="${extraWidgetConfig.countdownDate}" data-title="${extraWidgetConfig.countdownTitle}"` : ""}${portfolioDataAttrs}${activeWidget === 'tech' ? ` data-tList="${extraWidgetConfig.techStack}"` : ""}${activeWidget === 'blog' ? ` data-rss="${extraWidgetConfig.blogRssUrl}"` : ""}></script>`;
-                                                })()}
+                                                {generateWidgetCode(true)}
                                             </code>
                                         </div>
                                     </div>

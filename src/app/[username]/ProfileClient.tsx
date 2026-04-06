@@ -6832,9 +6832,9 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
     const isFloating = codeStr.includes('data-style="floating"');
     const isKardlyWidget = codeStr.includes('/api/widget.js');
 
-    // Extract attributes for Kardly widgets
+    // Extract attributes for Kardly widgets (supports both double and single quotes)
     const extractAttr = (attr: string) => {
-        const match = codeStr.match(new RegExp(`${attr}="([^"]*)"`));
+        const match = codeStr.match(new RegExp(`${attr}=["']([^"']*)["']`));
         return match ? match[1] : "";
     };
 
@@ -6916,7 +6916,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
             case 'chat':
                 return (
                     <iframe
-                        src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                        src={`/${widgetUser}?widget=${widgetType}&embed=true`}
                         className={`w-full ${iframeHeight} border-none`}
                         allow="autoplay; fullscreen"
                         style={{ borderRadius: 'inherit' }}
@@ -6925,7 +6925,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
             default:
                 return (
                     <iframe
-                        src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                        src={`/${widgetUser}?widget=${widgetType}&embed=true`}
                         className={`w-full ${iframeHeight} border-none`}
                         allow="autoplay; fullscreen"
                         style={{ borderRadius: 'inherit' }}
@@ -7009,7 +7009,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
                                 <div className="w-full h-full overflow-y-auto no-scrollbar">
                                     {isKardlyWidget ? renderInternalWidget(true) : (
                                         <iframe
-                                            src={`https://www.kardly.site/${widgetUser}?widget=${widgetType}&embed=true`}
+                                            src={`/${widgetUser}?widget=${widgetType}&embed=true`}
                                             className="w-full h-[600px] border-none"
                                             allow="autoplay; fullscreen"
                                         />
