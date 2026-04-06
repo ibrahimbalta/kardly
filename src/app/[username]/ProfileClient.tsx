@@ -7004,17 +7004,113 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
         );
     }
 
+    // ─── INLINE MODE: Action Buttons for interactive widgets, compact blocks for informational ones ───
+    const isInteractiveWidget = ['booking', 'lead', 'ai', 'chat'].includes(widgetType);
+
+    if (isInteractiveWidget) {
+        // Render as a sleek action button that opens a modal
+        const typeConfig: Record<string, { icon: any; label: string; desc: string }> = {
+            booking: { icon: <Calendar size={20} />, label: block.content?.title || t.bookingLabel || 'Randevu', desc: t.bookAppointmentDesc || 'Hemen randevu oluşturun' },
+            lead: { icon: <MessageSquare size={20} />, label: block.content?.title || t.leadLabel || 'İletişim', desc: t.sendMessageDesc || 'Mesaj gönderin' },
+            ai: { icon: <Bot size={20} />, label: block.content?.title || t.aiLabel || 'AI Asistan', desc: t.askAIDesc || 'Yapay zeka ile sohbet edin' },
+            chat: { icon: <Bot size={20} />, label: block.content?.title || t.aiLabel || 'AI Asistan', desc: t.askAIDesc || 'Yapay zeka ile sohbet edin' },
+        };
+        const config = typeConfig[widgetType] || typeConfig.booking;
+
+        return (
+            <>
+                <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setIsModalOpen(true)}
+                    className={cn(
+                        "w-full flex items-center gap-4 p-4 sm:p-5 border backdrop-blur-xl transition-all cursor-pointer group",
+                        toneStyle.rounded
+                    )}
+                    style={{
+                        background: `linear-gradient(135deg, ${theme.accent}12, ${theme.accent}06)`,
+                        borderColor: `${theme.accent}25`,
+                        boxShadow: `0 4px 20px -8px ${theme.accent}20`,
+                    }}
+                >
+                    <div
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
+                        style={{ background: `${theme.accent}18`, color: theme.accent }}
+                    >
+                        {config.icon}
+                    </div>
+                    <div className="flex-1 text-left min-w-0">
+                        <h4 className={cn("text-[11px] font-black uppercase tracking-widest truncate", theme.text)}>
+                            {config.label}
+                        </h4>
+                        <p className={cn("text-[9px] font-bold uppercase tracking-wider opacity-40 truncate", theme.text)}>
+                            {config.desc}
+                        </p>
+                    </div>
+                    <div
+                        className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 opacity-40 group-hover:opacity-100 transition-all"
+                        style={{ color: theme.accent }}
+                    >
+                        <ExternalLink size={16} />
+                    </div>
+                </motion.button>
+
+                <AnimatePresence>
+                    {isModalOpen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center p-4"
+                        >
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                                onClick={() => setIsModalOpen(false)}
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 50, scale: 0.95 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                className={cn(
+                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
+                                    theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]"
+                                )}
+                            >
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="absolute top-4 right-4 z-[600] w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                                    style={{ background: `${theme.accent}20`, color: theme.accent }}
+                                >
+                                    <X size={16} />
+                                </button>
+                                <div className="w-full h-full overflow-y-auto no-scrollbar">
+                                    {renderInternalWidget(true)}
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </>
+        );
+    }
+
+    // ─── NON-INTERACTIVE (informational) widgets: render directly but compact ───
     return (
-        <div className={cn("w-full p-0 flex flex-col items-center gap-4 relative", isKardlyWidget ? "" : cn("p-8 border text-center", theme.card, theme.border, toneStyle.rounded))} id="external-inline-widget">
+        <div className={cn("w-full p-0 flex flex-col items-center gap-4 relative", isKardlyWidget ? "" : cn("p-6 border text-center", theme.card, theme.border, toneStyle.rounded))} id="external-inline-widget">
             {!isKardlyWidget && (
                 <>
-                    <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
                     {block.content?.title && (
-                        <div className="space-y-1 mb-2">
-                            <h4 className={cn("text-xs font-black uppercase tracking-[0.3em] opacity-80 mb-1", theme.text)}>
+                        <div className="flex items-center gap-2 w-full mb-1">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${theme.accent}15`, color: theme.accent }}>
+                                {widgetType === 'skills' ? <Zap size={14} /> : widgetType === 'countdown' ? <Clock size={14} /> : widgetType === 'tech' ? <Code size={14} /> : widgetType === 'portfolio' ? <Image size={14} /> : widgetType === 'blog' ? <Rss size={14} /> : <Zap size={14} />}
+                            </div>
+                            <h4 className={cn("text-[10px] font-black uppercase tracking-[0.2em] opacity-60", theme.text)}>
                                 {block.content.title}
                             </h4>
-                            <div className="w-8 h-[2px] mx-auto rounded-full opacity-40" style={{ background: theme.accent }} />
                         </div>
                     )}
                 </>
