@@ -4413,6 +4413,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
+    const socialLinks = profile.socialLinks || [];
 
     const formatUrl = (url?: string) => {
         if (!url) return "";
