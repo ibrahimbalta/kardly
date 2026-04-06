@@ -540,7 +540,7 @@ END:VCARD`
                 '--profile-accent-rgb': activeAccent === '#ffffff' ? '255,255,255' : '14, 165, 233' // Default or dynamic if I had a helper
             } as any}
         >
-            <MotionWrapper style={animationStyle}>
+            <MotionWrapper style={animationStyle} activeAccent={activeAccent}>
                 {renderTemplate()}
             </MotionWrapper>
             
@@ -599,7 +599,7 @@ END:VCARD`
     )
 }
 
-function MotionWrapper({ children, style }: { children: React.ReactNode, style: string }) {
+function MotionWrapper({ children, style, activeAccent }: { children: React.ReactNode, style: string, activeAccent?: string }) {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
@@ -636,42 +636,48 @@ function MotionWrapper({ children, style }: { children: React.ReactNode, style: 
         );
     }
 
-    if (style === "float") {
+    if (style === "glow") {
         return (
-            <motion.div
-                animate={{ 
-                    y: [0, -15, 0],
-                    rotate: [0, 0.5, -0.5, 0]
-                }}
-                transition={{ 
-                    duration: 6, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                }}
-                className="w-full h-full"
-            >
-                {children}
-            </motion.div>
+            <div className="relative w-full h-full">
+                <motion.div
+                    animate={{ 
+                        opacity: [0.15, 0.35, 0.15],
+                        scale: [0.95, 1.05, 0.95],
+                    }}
+                    transition={{ 
+                        duration: 4, 
+                        repeat: Infinity, 
+                        ease: "easeInOut" 
+                    }}
+                    className="absolute inset-0 blur-[100px] rounded-full pointer-events-none z-0"
+                    style={{ backgroundColor: activeAccent || "#6366f1" }}
+                />
+                <div className="relative z-10 w-full h-full">
+                    {children}
+                </div>
+            </div>
         );
     }
 
-    if (style === "3d-dynamic") {
+    if (style === "shine") {
         return (
-            <motion.div
-                animate={{ 
-                    rotateX: [0, 3, -3, 0],
-                    rotateY: [0, -5, 5, 0],
-                }}
-                transition={{ 
-                    duration: 8, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                }}
-                style={{ perspective: 1000 }}
-                className="w-full h-full"
-            >
-                {children}
-            </motion.div>
+            <div className="relative w-full h-full overflow-hidden">
+                <div className="relative z-10 w-full h-full">
+                    {children}
+                </div>
+                <motion.div
+                    animate={{ 
+                        left: ["-100%", "200%"]
+                    }}
+                    transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        repeatDelay: 3,
+                        ease: "linear" 
+                    }}
+                    className="absolute top-0 bottom-0 w-48 skew-x-[-25deg] bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none z-50"
+                />
+            </div>
         );
     }
 

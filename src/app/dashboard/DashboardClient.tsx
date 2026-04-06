@@ -3963,7 +3963,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             { id: "none", name: t('animNone') },
                                             { id: "3d-manual", name: t('animTilt') },
                                             { id: "float", name: t('animFloat') },
-                                            { id: "3d-dynamic", name: t('animRotate') }
+                                            { id: "3d-dynamic", name: t('animRotate') },
+                                            { id: "glow", name: t('animGlow') },
+                                            { id: "shine", name: t('animShine') }
                                         ].map(anim => (
                                             <button
                                                 key={anim.id}
