@@ -4349,24 +4349,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     )}
                                 </div>
 
-                                {/* Widget Dock - Daha Estetik ve Derli Toplu */}
-                                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).length > 0 && (
-                                    <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
-                                        {profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                                            <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[54px] h-[54px] flex-shrink-0" />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-
-                {/* External Widgets (Embedded/Inline Block) - Only show non-floating ones */}
-                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget' && b.content?.position === 'inline' && !b.content?.code?.includes('data-style="floating"')).map((block: any) => (
-                    <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} />
-                ))}
-            </main>
+                                 {/* Widget Dock - Daha Estetik ve Derli Toplu */}
+                                 {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
+                                     <div className={cn("p-2 bg-white/[0.03] border border-white/5 backdrop-blur-2xl flex flex-wrap justify-center gap-2.5", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-3xl")}>
+                                         {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                                             <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[54px] h-[54px] flex-shrink-0" isMini={true} />
+                                         ))}
+                                     </div>
+                                 )}
+                             </div>
+                         </div>
+                     </motion.div>
+                 )}
+             </main>
 
             <ReviewModal
                 isOpen={isReviewModalOpen}
@@ -4764,25 +4759,34 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 </div>
 
                 {/* Vertical Action Stack */}
-                <div className="w-full mt-4 space-y-3">
-                    {otherActions.map((action, i) => (
-                        <motion.button
-                            key={i}
-                            whileHover={{ scale: 1.02, x: 5 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                                if (action.onClick) action.onClick();
-                                if (action.href) window.location.href = action.href;
-                            }}
-                            className="w-full flex items-center justify-center gap-4 py-5 rounded-[1.8rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-all group"
-                        >
-                            <span style={{ color: theme.accent }} className="group-hover:scale-125 transition-transform">
-                                {action.icon}
-                            </span>
-                            <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">{action.label}</span>
-                        </motion.button>
-                    ))}
-                </div>
+                 <div className="w-full mt-4 space-y-3">
+                     {otherActions.map((action, i) => (
+                         <motion.button
+                             key={i}
+                             whileHover={{ scale: 1.02, x: 5 }}
+                             whileTap={{ scale: 0.98 }}
+                             onClick={() => {
+                                 if (action.onClick) action.onClick();
+                                 if (action.href) window.location.href = action.href;
+                             }}
+                             className="w-full flex items-center justify-center gap-4 py-5 rounded-[1.8rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                         >
+                             <span style={{ color: theme.accent }} className="group-hover:scale-125 transition-transform">
+                                 {action.icon}
+                             </span>
+                             <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">{action.label}</span>
+                         </motion.button>
+                     ))}
+                 </div>
+
+                 {/* Widget Dock - Elite Style */}
+                 {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
+                     <div className="w-full mt-6 p-4 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex flex-wrap justify-center gap-3">
+                         {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                             <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[60px] h-[60px] flex-shrink-0" isMini={true} />
+                         ))}
+                     </div>
+                 )}
 
                 {/* Bio Section */}
                 {profile.bio && (
@@ -5311,30 +5315,39 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 </section>
 
                 {/* Vertical Interactive Buttons (Main Actions) */}
-                <div className="space-y-4">
-                    {actionButtons.map((btn, i) => (
-                        <motion.a
-                            key={i}
-                            href={btn.href}
-                            onClick={btn.onClick}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.05 }}
-                            className={cn("w-full py-5.5 rounded-[2.5rem] border flex items-center gap-6 px-10 transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", theme.card, theme.border)}
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
-                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner" style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}>
-                                {btn.icon}
-                            </div>
-                            <span className="text-[12px] font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors">{btn.label}</span>
-                        </motion.a>
-                    ))}
-                </div>
+                 <div className="space-y-4">
+                     {actionButtons.map((btn, i) => (
+                         <motion.a
+                             key={i}
+                             href={btn.href}
+                             onClick={btn.onClick}
+                             initial={{ opacity: 0, y: 10 }}
+                             whileInView={{ opacity: 1, y: 0 }}
+                             viewport={{ once: true }}
+                             transition={{ delay: i * 0.05 }}
+                             className={cn("w-full py-5.5 rounded-[2.5rem] border flex items-center gap-6 px-10 transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", theme.card, theme.border)}
+                         >
+                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                             <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner" style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}>
+                                 {btn.icon}
+                             </div>
+                             <span className="text-[12px] font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors">{btn.label}</span>
+                         </motion.a>
+                     ))}
+                 </div>
 
-                {/* Modular Content Blocks */}
-                <div className="space-y-12">
-                    {profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map').sort((a: any, b: any) => a.order - b.order).map((block: any) => (
+                 {/* Widget Dock - Athletic Pro Style */}
+                 {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
+                     <div className="flex flex-wrap justify-center gap-4 pt-4">
+                         {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                             <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[64px] h-[64px] flex-shrink-0" isMini={true} />
+                         ))}
+                     </div>
+                 )}
+
+                 {/* Modular Content Blocks */}
+                 <div className="space-y-12">
+                     {profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map' && b.type !== 'external_widget').sort((a: any, b: any) => a.order - b.order).map((block: any) => (
                         <div key={block.id} className="space-y-6">
                             <div className="flex items-center gap-4 px-2">
                                 <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
@@ -6823,13 +6836,13 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
     )
 }
 
-function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
+function ExternalWidget({ block, theme, toneStyle, className, t, isMini = false }: any) {
     const containerRef = useRef<HTMLDivElement>(null);
     const scriptInjected = useRef(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const codeStr = block.content.code || "";
-    const isFloating = codeStr.includes('data-style="floating"');
+    const isFloating = codeStr.includes('data-style="floating"') || isMini;
     const isKardlyWidget = codeStr.includes('/api/widget.js');
 
     // Extract attributes for Kardly widgets (supports both double and single quotes)
