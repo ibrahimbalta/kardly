@@ -4435,88 +4435,174 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </motion.div>
                     </div>
                 ) : activeTab === "reviews" ? (
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h2 className="text-xl font-bold text-slate-900">{t('customerReviews')}</h2>
-                                <p className="text-sm text-slate-500">{t('reviewManageSub')}</p>
+                    <div className="flex-1 flex flex-col p-4 sm:p-0 space-y-6 sm:space-y-10 pb-24 sm:pb-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                            <div className="relative">
+                                <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden sm:block" />
+                                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2 italic">
+                                    {t('customerReviews')}
+                                </h2>
+                                <p className="text-[11px] sm:text-sm text-slate-500 font-bold uppercase tracking-widest opacity-60">
+                                    {t('reviewManageSub')}
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl self-start sm:self-auto">
+                                <Star size={14} className="text-amber-400 fill-amber-400" />
+                                <span>{reviewList.length} {t('totalReviews') || 'TOPLAM YORUM'}</span>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
+                        {/* Mobile View: High-End Review Cards */}
+                        <div className="sm:hidden space-y-4">
+                            {reviewList.map((review: any) => (
+                                <motion.div
+                                    key={review.id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="p-6 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="relative">
+                                                <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 border-2 border-white shadow-md">
+                                                    <img
+                                                        src={review.image || `https://ui-avatars.com/api/?name=${review.name}&background=random`}
+                                                        className="w-full h-full object-cover"
+                                                        alt={review.name}
+                                                    />
+                                                </div>
+                                                <div className={cn(
+                                                    "absolute -bottom-1 -right-1 w-5 h-5 rounded-lg border-2 border-white flex items-center justify-center shadow-sm",
+                                                    review.isActive ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+                                                )}>
+                                                    {review.isActive ? <Check size={10} strokeWidth={3} /> : <Clock size={10} strokeWidth={3} />}
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <h4 className="text-[15px] font-black text-slate-900 tracking-tight italic uppercase">{review.name}</h4>
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{review.title}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-0.5 text-amber-500 pt-1">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={i} size={10} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-slate-100"} />
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-slate-50/50 p-5 rounded-[2rem] border border-slate-100/50 mb-8 relative">
+                                        <Quote size={24} className="absolute -top-3 -left-1 text-slate-200 opacity-30" />
+                                        <p className="text-sm text-slate-600 font-medium leading-relaxed italic opacity-90 leading-relaxed truncate-3-lines">
+                                            "{review.content}"
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => handleToggleReview(review.id, review.isActive)}
+                                            className={cn(
+                                                "flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all outline-none",
+                                                review.isActive 
+                                                    ? "bg-slate-900 text-white shadow-slate-200" 
+                                                    : "bg-primary text-white shadow-primary/20"
+                                            )}
+                                        >
+                                            {review.isActive ? <EyeOff size={14} /> : <Check size={14} />}
+                                            <span>{review.isActive ? t('hide') : t('publish')}</span>
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteReview(review.id)}
+                                            className="w-12 h-12 bg-rose-50 text-rose-500 border border-rose-100 rounded-2xl flex items-center justify-center active:scale-95 transition-all"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                            {reviewList.length === 0 && (
+                                <div className="p-12 text-center bg-white rounded-[3rem] border border-slate-100 italic">
+                                    <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-5" />
+                                    <p className="font-black uppercase tracking-[0.3em] text-[10px] text-slate-300">{t('noReviewsYet')}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Desktop View: Existing Table Refined */}
+                        <div className="hidden sm:block bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
                             <table className="w-full text-left min-w-[800px]">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('userLabel')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('commentLabel')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('ratingLabel')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('statusLabel')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('actionLabel')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('userLabel')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('commentLabel')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('ratingLabel')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('statusLabel')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">{t('actionLabel')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-slate-50">
                                     {reviewList.map((review: any) => (
-                                        <tr key={review.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+                                        <tr key={review.id} className="hover:bg-slate-50/40 transition-colors group">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm group-hover:rotate-3 transition-transform duration-500">
                                                         <img
                                                             src={review.image || `https://ui-avatars.com/api/?name=${review.name}&background=random`}
                                                             className="w-full h-full object-cover"
-                                                            onError={(e: any) => {
-                                                                e.target.src = `https://ui-avatars.com/api/?name=${review.name}&background=random`;
-                                                            }}
+                                                            alt={review.name}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-slate-900">{review.name}</div>
-                                                        <div className="text-[10px] text-slate-400 uppercase tracking-widest font-black">{review.title}</div>
+                                                        <div className="font-black text-slate-900 uppercase italic tracking-tight group-hover:text-primary transition-colors">{review.name}</div>
+                                                        <div className="text-[10px] text-slate-400 uppercase tracking-widest font-black mt-1">{review.title}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-slate-600 line-clamp-2 max-w-sm font-medium">{review.content}</p>
+                                            <td className="px-8 py-6">
+                                                <p className="text-[13px] text-slate-600 line-clamp-2 max-w-sm font-medium italic opacity-80 group-hover:opacity-100 transition-opacity leading-relaxed">
+                                                    "{review.content}"
+                                                </p>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-0.5 text-amber-500">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-1 text-amber-500">
                                                     {[...Array(5)].map((_, i) => (
-                                                        <Star key={i} size={14} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-slate-200"} />
+                                                        <Star key={i} size={13} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-slate-100"} />
                                                     ))}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-8 py-6">
                                                 <button
                                                     onClick={() => handleToggleReview(review.id, review.isActive)}
                                                     className={cn(
-                                                        "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border",
+                                                        "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all duration-300",
                                                         review.isActive
-                                                            ? "bg-emerald-50 border-emerald-100 text-emerald-600 shadow-sm"
-                                                            : "bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200"
+                                                            ? "bg-emerald-50 border-emerald-100 text-emerald-600 shadow-sm shadow-emerald-100"
+                                                            : "bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-100"
                                                     )}
                                                 >
                                                     {review.isActive ? t('approved') : t('pending')}
                                                 </button>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2">
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button
                                                         onClick={() => handleToggleReview(review.id, review.isActive)}
                                                         className={cn(
-                                                            "w-9 h-9 rounded-xl flex items-center justify-center transition-all border shadow-sm",
+                                                            "w-10 h-10 rounded-2xl flex items-center justify-center transition-all border shadow-sm hover:scale-110 active:scale-90",
                                                             review.isActive
                                                                 ? "bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300"
                                                                 : "bg-primary/10 border-primary/20 text-primary hover:bg-primary hover:text-white"
                                                         )}
                                                         title={review.isActive ? t('hide') : t('publish')}
                                                     >
-                                                        {review.isActive ? <EyeOff size={16} /> : <Check size={16} />}
+                                                        {review.isActive ? <EyeOff size={18} /> : <Check size={18} />}
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteReview(review.id)}
-                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        className="w-10 h-10 bg-rose-50 border border-rose-100 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm hover:scale-110 active:scale-90"
                                                         title={t('delete')}
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -4524,9 +4610,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     ))}
                                     {reviewList.length === 0 && (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-white/20">
-                                                <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-bold uppercase tracking-widest text-xs">{t('noReviewsYet')}</p>
+                                            <td colSpan={5} className="px-8 py-24 text-center text-slate-300">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <MessageSquare size={40} className="text-slate-100" />
+                                                </div>
+                                                <p className="font-black uppercase tracking-[0.5em] text-[11px] opacity-40 italic mt-4">{t('noReviewsYet')}</p>
                                             </td>
                                         </tr>
                                     )}
