@@ -128,7 +128,36 @@ const getHeroIcon = (platform: string = "", size: number = 20) => {
     }
 }
 
+// ─── HELPERS ─────────────────────────────────────────────────────
+
+const isDarkColor = (color: string) => {
+    if (!color) return true;
+    try {
+        const hex = color.startsWith('#') ? color.slice(1) : color;
+        if (hex.length !== 3 && hex.length !== 6) return false;
+        const r = parseInt(hex.length === 3 ? hex[0] + hex[0] : hex.slice(0, 2), 16);
+        const g = parseInt(hex.length === 3 ? hex[1] + hex[1] : hex.slice(2, 4), 16);
+        const b = parseInt(hex.length === 3 ? hex[2] + hex[2] : hex.slice(4, 6), 16);
+        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+        return luma < 100; // Adjusted threshold for better visibility
+    } catch (e) {
+        return false;
+    }
+};
+
+const getContrastingAccent = (accentColor: string, isLightBg: boolean) => {
+    if (!accentColor || accentColor === 'transparent') return isLightBg ? '#000000' : '#ffffff';
+    const dark = isDarkColor(accentColor);
+    if (!isLightBg && dark) return '#ffffff'; // On dark bg, if accent is dark, use white
+    if (isLightBg && !dark && accentColor.toLowerCase() !== '#ffffff') {
+        // On light bg, if accent is too light (like white), use a darker version or black
+        // But usually we just care about dark icons being visible on dark backgrounds
+    }
+    return accentColor;
+};
+
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
+
 
 export default function ProfileClient({ profile }: { profile: any }) {
     const [isAppointmentOpen, setIsAppointmentOpen] = useState(false)
@@ -2212,11 +2241,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
-    const theme = { ...baseTheme };
+    const isLightBg = (baseTheme.bg || "").includes('white') || (baseTheme.bg || "").includes('slate-') || (baseTheme.bg || "").includes('rose-') || (baseTheme.bg || "").includes('emerald-200') || (baseTheme.bg || "").includes('sky-200') || (baseTheme.bg || "").includes('amber-200') || (baseTheme.bg || "").includes('zinc-100');
+    const theme = { ...baseTheme, isLight: isLightBg };
 
     // Override accent color with custom selection if available
     if (profile.themeColor) {
-        theme.accent = profile.themeColor;
+        theme.accent = getContrastingAccent(profile.themeColor, isLightBg);
+    } else {
+        theme.accent = getContrastingAccent(baseTheme.accent, isLightBg);
     }
 
     const socialLinks = profile.socialLinks || []
@@ -4374,8 +4406,13 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         }
     };
 
-    const theme = themes[colorScheme] || themes.elite_pink;
-    const socialLinks = profile.socialLinks || [];
+    const baseTheme = themes[colorScheme] || themes.elite_pink;
+    const isLightBg = true; // Elite themes are always light in this template
+    const theme = { 
+        ...baseTheme, 
+        isLight: isLightBg,
+        accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
+    };
 
     const formatUrl = (url?: string) => {
         if (!url) return "";
@@ -4739,7 +4776,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                             whileTap={{ scale: 0.9 }}
                             href={formatUrl(link.url)}
                             target="_blank"
-                            className="text-slate-400 hover:text-slate-900 transition-colors"
+                            style={{ color: `${theme.accent}cc` }}
+                            className="hover:text-slate-900 transition-colors"
                         >
                             {link.platform === 'instagram' && <Instagram size={22} />}
                             {link.platform === 'facebook' && <Facebook size={22} />}
@@ -4753,7 +4791,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </motion.a>
                     ))}
                     {profile.cvUrl && (
-                        <motion.a whileHover={{ scale: 1.2, y: -5 }} href={profile.cvUrl} target="_blank" className="text-slate-400 hover:text-slate-900">
+                        <motion.a whileHover={{ scale: 1.2, y: -5 }} href={profile.cvUrl} target="_blank" style={{ color: `${theme.accent}cc` }} className="hover:text-slate-900">
                             <FileText size={22} />
                         </motion.a>
                     )}
@@ -4929,7 +4967,13 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
         }
     };
 
-    const theme = themes[colorScheme] || themes.tour_resort;
+    const baseTheme = themes[colorScheme] || themes.tour_resort;
+    const isLightBg = (baseTheme.bg || "").includes('white') || (baseTheme.bg || "").includes('slate-') || (baseTheme.bg || "").includes('e0f7fa') || (baseTheme.bg || "").includes('fff8e1') || (baseTheme.bg || "").includes('e8eaf6');
+    const theme = { 
+        ...baseTheme, 
+        isLight: isLightBg,
+        accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
+    };
     const socialLinks = profile.socialLinks || [];
     const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject };
 
@@ -5021,7 +5065,13 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         }
     }
 
-    const theme = themes[colorScheme] || themes.athletic_pro;
+    const baseTheme = themes[colorScheme] || themes.athletic_pro;
+    const isLightBg = false; // Athletic themes are dark
+    const theme = { 
+        ...baseTheme, 
+        isLight: isLightBg,
+        accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
+    };
     const socialLinks = profile.socialLinks || [];
 
     const formatUrl = (url?: string) => {
