@@ -1508,7 +1508,7 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
             {/* Design Preview Modal */}
             <AnimatePresence>
                 {previewOrder && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-6">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -1517,27 +1517,30 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                             className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl"
                         />
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative bg-white rounded-[4rem] p-12 max-w-5xl w-full shadow-2xl border border-white/10 overflow-hidden"
+                            initial={{ y: "100%", opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: "100%", opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="relative bg-white rounded-t-[4rem] sm:rounded-[4rem] p-8 sm:p-12 max-w-5xl w-full shadow-2xl border border-white/10 overflow-y-auto max-h-[95vh] no-scrollbar pb-24 sm:pb-12"
                         >
-                            <div className="flex justify-between items-start mb-12">
+                            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                            
+                            <div className="flex justify-between items-start mb-8 sm:mb-12">
                                 <div>
                                     <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Gelen Sipariş / Teklif</p>
-                                    <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">{previewOrder.shippingName}</h2>
-                                    <p className="text-xs text-slate-400 mt-1 font-bold italic tracking-wide">{previewOrder.shippingEmail} • {previewOrder.shippingPhone}</p>
+                                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tighter uppercase italic">{previewOrder.shippingName}</h2>
+                                    <p className="text-[10px] sm:text-xs text-slate-400 mt-1 font-bold italic tracking-wide">{previewOrder.shippingEmail} • {previewOrder.shippingPhone}</p>
                                 </div>
                                 <button
                                     onClick={() => setPreviewOrder(null)}
-                                    className="p-4 bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white rounded-full transition-all shadow-inner"
+                                    className="p-3 sm:p-4 bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white rounded-full transition-all shadow-inner"
                                 >
-                                    <X size={24} />
+                                    <X size={20} />
                                 </button>
                             </div>
 
-                            <div className="grid md:grid-cols-12 gap-12 items-center">
-                                <div className="md:col-span-7 flex justify-center">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 items-center">
+                                <div className="md:col-span-7 flex justify-center scale-90 sm:scale-100">
                                     <BusinessCardGenerator
                                         user={previewOrder.user || { name: previewOrder.shippingName, username: 'customer' }}
                                         profileData={previewOrder.user?.profile || {}}
@@ -1554,31 +1557,31 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                                         initialQrY={previewOrder.items?.[0]?.qrY || 0}
                                     />
                                 </div>
-                                <div className="md:col-span-5 space-y-8">
-                                    <div className="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
-                                        <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 italic border-b border-slate-200 pb-4">Tasarım Kodları</h3>
-                                        <div className="space-y-5">
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                <div className="md:col-span-5 space-y-6 sm:space-y-8">
+                                    <div className="p-6 sm:p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                                        <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest mb-4 sm:mb-6 italic border-b border-slate-200 pb-3">Tasarım Kodları</h3>
+                                        <div className="space-y-4 sm:space-y-5">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Şablon:</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.templateId}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Yön:</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.orientation}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Renk (Arkaplan):</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.bgColor || 'N/A'}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Vurgu Rengi:</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.accentColor || 'N/A'}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span>Yazı Tipi:</span>
                                                 <span className="text-slate-900 italic font-black">{previewOrder.items?.[0]?.fontFamily || 'sans'}</span>
                                             </div>
-                                            <div className="flex justify-between items-center text-[10px] font-bold text-indigo-400 uppercase tracking-widest pt-2 border-t border-slate-100">
+                                            <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-bold text-indigo-400 uppercase tracking-widest pt-2 border-t border-slate-100">
                                                 <span>QR BOUT/X/Y:</span>
                                                 <span className="text-indigo-600 italic font-black">
                                                     {previewOrder.items?.[0]?.qrSize}px / {previewOrder.items?.[0]?.qrX}px / {previewOrder.items?.[0]?.qrY}px
@@ -1587,12 +1590,12 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                                         </div>
                                     </div>
                                     
-                                    <div className="p-8 bg-indigo-50/50 rounded-[2.5rem] border border-indigo-100/50">
-                                        <h3 className="text-sm font-black text-indigo-900 uppercase tracking-widest mb-4 italic">Baskı Hazırlığı</h3>
-                                        <div className="flex items-center gap-3 text-emerald-600 font-black text-[10px] uppercase tracking-widest mb-4">
+                                    <div className="p-6 sm:p-8 bg-indigo-50/50 rounded-[2.5rem] border border-indigo-100/50">
+                                        <h3 className="text-xs font-black text-indigo-900 uppercase tracking-widest mb-3 italic">Baskı Hazırlığı</h3>
+                                        <div className="flex items-center gap-3 text-emerald-600 font-black text-[9px] uppercase tracking-widest mb-3">
                                             <Check size={14} /> Tasarım Doğrulandı
                                         </div>
-                                        <p className="text-[10px] text-slate-500 leading-relaxed font-medium italic">Taslak onaylandıktan sonra yüksek çözünürlüklü (6.0 Pixel Ratio) çıktı alarak baskıya gönderebilirsiniz.</p>
+                                        <p className="text-[9px] text-slate-500 leading-relaxed font-medium italic">Taslak onaylandıktan sonra yüksek çözünürlüklü (6.0 Pixel Ratio) çıktı alarak baskıya gönderebilirsiniz.</p>
                                     </div>
                                 </div>
                             </div>
