@@ -4427,80 +4427,159 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "leads" ? (
-                    <div className="flex-1 flex flex-col p-8">
-                        <div className="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase">{t('incomingLeads')}</h2>
-                                <p className="text-sm text-slate-400 font-medium">{t('incomingLeadsSub')}</p>
+                    <div className="flex-1 flex flex-col p-4 sm:p-8 space-y-6 sm:space-y-10 pb-24 sm:pb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                            <div className="relative">
+                                <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden sm:block" />
+                                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2 italic">
+                                    {t('incomingLeads')}
+                                </h2>
+                                <p className="text-[11px] sm:text-sm text-slate-500 font-bold uppercase tracking-widest opacity-60">
+                                    {t('incomingLeadsSub')}
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl self-start sm:self-auto">
+                                <Activity size={14} className="text-primary animate-pulse" />
+                                <span>{leads.length} {t('totalLeads')}</span>
                             </div>
                         </div>
 
-                        {/* Leads CRM Stats Recap */}
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        {/* Leads CRM Stats Recap - More Premium */}
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                             {[
-                                { label: t('totalLeads'), count: leads.length, icon: <Users size={16} />, color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
-                                { label: t('newLeads'), count: leads.filter((l: any) => l.status === 'new').length, icon: <Sparkles size={16} />, color: "bg-amber-50 text-amber-600 border-amber-100" },
-                                { label: t('contactedLeads'), count: leads.filter((l: any) => l.status === 'contacted').length, icon: <Phone size={16} />, color: "bg-sky-50 text-sky-600 border-sky-100" },
-                                { label: t('completedLeads'), count: leads.filter((l: any) => l.status === 'completed').length, icon: <CheckCircle2 size={16} />, color: "bg-emerald-50 text-emerald-600 border-emerald-100" }
+                                { label: t('totalLeads'), count: leads.length, icon: <Inbox size={18} />, bg: "from-indigo-500 to-blue-600", color: "text-white" },
+                                { label: t('newLeads'), count: leads.filter((l: any) => l.status === 'new').length, icon: <Sparkles size={18} />, bg: "from-amber-400 to-orange-500", color: "text-white" },
+                                { label: t('contactedLeads'), count: leads.filter((l: any) => l.status === 'contacted').length, icon: <Phone size={18} />, bg: "from-sky-400 to-indigo-500", color: "text-white" },
+                                { label: t('completedLeads'), count: leads.filter((l: any) => l.status === 'completed').length, icon: <CheckCircle2 size={18} />, bg: "from-emerald-400 to-teal-600", color: "text-white" }
                             ].map((stat, idx) => (
-                                <div key={idx} className={cn("p-4 rounded-2xl border flex items-center gap-4 shadow-sm", stat.color)}>
-                                    <div className="w-10 h-10 rounded-xl bg-white/50 flex items-center justify-center shadow-inner">
+                                <motion.div 
+                                    key={idx} 
+                                    whileHover={{ y: -5 }}
+                                    className="relative group p-5 rounded-[2rem] overflow-hidden flex flex-col justify-between h-[120px] sm:h-[140px] shadow-sm border border-slate-100 bg-white"
+                                >
+                                    <div className={cn("absolute inset-0 opacity-[0.03] bg-gradient-to-br transition-opacity group-hover:opacity-[0.07]", stat.bg)} />
+                                    <div className={cn("w-10 h-10 rounded-2xl flex items-center justify-center mb-2 shadow-sm bg-gradient-to-br", stat.bg, stat.color)}>
                                         {stat.icon}
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-black uppercase tracking-widest opacity-60 leading-none mb-1">{stat.label}</div>
-                                        <div className="text-xl font-black leading-none">{stat.count}</div>
+                                        <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">{stat.label}</div>
+                                        <div className="text-2xl sm:text-3xl font-black text-slate-900 leading-none tabular-nums">{stat.count}</div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
 
-                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
+                        {/* Mobile View: High-End Card List */}
+                        <div className="sm:hidden space-y-4">
+                            {leads.map((lead: any) => (
+                                <motion.div
+                                    key={lead.id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="p-6 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden"
+                                    onClick={() => setSelectedLead(lead)}
+                                >
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div className="flex-1">
+                                            <div className="text-xs font-black uppercase tracking-widest text-primary mb-1">
+                                                {new Date(lead.createdAt).toLocaleDateString("tr-TR")}
+                                            </div>
+                                            <h4 className="text-lg font-black text-slate-900 tracking-tight italic uppercase">{lead.name}</h4>
+                                        </div>
+                                        <div className={cn(
+                                            "px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border",
+                                            lead.status === "new" ? "bg-amber-50 border-amber-100 text-amber-600" :
+                                            lead.status === "contacted" ? "bg-sky-50 border-sky-100 text-sky-600" :
+                                            "bg-emerald-50 border-emerald-100 text-emerald-600"
+                                        )}>
+                                            {lead.status === "new" ? t('statusNew') : lead.status === "contacted" ? t('statusContacted') : t('statusCompleted')}
+                                        </div>
+                                    </div>
+
+                                    <p className="text-sm text-slate-500 font-medium line-clamp-2 mb-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100/50 italic opacity-80">
+                                        "{lead.message}"
+                                    </p>
+
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                window.open(`tel:${lead.phone}`, '_blank')
+                                                if (lead.status === 'new') handleUpdateLeadStatus(lead.id, 'contacted')
+                                            }}
+                                            className="flex-1 h-12 bg-primary text-white rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                                        >
+                                            <Phone size={14} />
+                                            <span>{t('phone')}</span>
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                handleDeleteLead(lead.id)
+                                            }}
+                                            className="w-12 h-12 bg-rose-50 text-rose-500 border border-rose-100 rounded-2xl flex items-center justify-center active:scale-95 transition-all"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                            {leads.length === 0 && (
+                                <div className="p-12 text-center bg-white rounded-[3rem] border border-slate-100 italic">
+                                    <Inbox className="w-12 h-12 mx-auto mb-4 opacity-5" />
+                                    <p className="font-black uppercase tracking-[0.3em] text-[10px] text-slate-300">{t('noLeadsYet')}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Desktop View: Existing Table with refinements */}
+                        <div className="hidden sm:block bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
                             <table className="w-full text-left min-w-[800px]">
-                                <thead className="bg-slate-50 border-b border-slate-100">
+                                <thead className="bg-slate-50/50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('client')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('message')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('status')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('date')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('action')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('client')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('message')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('status')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('date')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">{t('action')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-slate-50">
                                     {leads.map((lead: any) => (
                                         <tr
                                             key={lead.id}
                                             className="hover:bg-slate-50/80 transition-all cursor-pointer group"
                                             onClick={() => setSelectedLead(lead)}
                                         >
-                                            <td className="px-6 py-4">
-                                                <div className="font-bold text-slate-900 group-hover:text-primary transition-colors">{lead.name}</div>
-                                                <div className="flex flex-col gap-0.5 mt-1">
-                                                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                                                        <Phone size={12} className="text-slate-400" />
+                                            <td className="px-8 py-6">
+                                                <div className="font-black text-slate-900 group-hover:text-primary transition-colors uppercase italic tracking-tight">{lead.name}</div>
+                                                <div className="flex flex-col gap-1 mt-2">
+                                                    <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
+                                                        <Phone size={13} className="text-primary/50" />
                                                         {lead.phone}
                                                     </div>
                                                     {lead.email && (
-                                                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
-                                                            <Mail size={10} className="text-slate-300" />
+                                                        <div className="flex items-center gap-2 text-[11px] text-slate-400 font-medium">
+                                                            <Mail size={12} className="text-slate-300" />
                                                             {lead.email}
                                                         </div>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <p className="text-sm text-slate-600 font-medium line-clamp-2 max-w-[200px]">{lead.message}</p>
+                                            <td className="px-8 py-6">
+                                                <p className="text-[13px] text-slate-600 font-medium line-clamp-2 max-w-[250px] leading-relaxed italic">"{lead.message}"</p>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2">
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
                                                     <select
                                                         value={lead.status}
                                                         onChange={(e) => handleUpdateLeadStatus(lead.id, e.target.value)}
                                                         className={cn(
-                                                            "text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all",
+                                                            "text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border appearance-none cursor-pointer focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all",
                                                             lead.status === "new" ? "bg-amber-50 border-amber-200 text-amber-600" :
-                                                                lead.status === "contacted" ? "bg-sky-50 border-sky-200 text-sky-600" :
-                                                                    "bg-emerald-50 border-emerald-200 text-emerald-600"
+                                                            lead.status === "contacted" ? "bg-sky-50 border-sky-200 text-sky-600" :
+                                                            "bg-emerald-50 border-emerald-200 text-emerald-600"
                                                         )}
                                                     >
                                                         <option value="new">{t('statusNew')}</option>
@@ -4509,44 +4588,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-xs text-slate-400 font-bold uppercase">
-                                                {new Date(lead.createdAt).toLocaleDateString(language === 'tr' ? "tr-TR" : "en-US")}
+                                            <td className="px-8 py-6 text-[10px] text-slate-400 font-black uppercase tracking-widest">
+                                                {new Date(lead.createdAt).toLocaleDateString("tr-TR")}
                                             </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2">
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-3">
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation()
                                                             window.open(`tel:${lead.phone}`, '_blank')
                                                             if (lead.status === 'new') handleUpdateLeadStatus(lead.id, 'contacted')
                                                         }}
-                                                        className="w-9 h-9 bg-primary/10 border border-primary/20 text-primary rounded-xl flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm"
-                                                        title={t('phone')}
+                                                        className="w-10 h-10 bg-primary/10 border border-primary/20 text-primary rounded-2xl flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-sm hover:scale-110 active:scale-90"
                                                     >
-                                                        <Phone size={16} />
+                                                        <Phone size={18} />
                                                     </button>
-                                                    {lead.email && (
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation()
-                                                                window.open(`mailto:${lead.email}`, '_blank')
-                                                                if (lead.status === 'new') handleUpdateLeadStatus(lead.id, 'contacted')
-                                                            }}
-                                                            className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-500 rounded-xl flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm"
-                                                            title={t('sendEmail')}
-                                                        >
-                                                            <Mail size={16} />
-                                                        </button>
-                                                    )}
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation()
                                                             handleDeleteLead(lead.id)
                                                         }}
-                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                                                        title={t('delete')}
+                                                        className="w-10 h-10 bg-rose-50 border border-rose-100 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm hover:scale-110 active:scale-90"
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -4554,9 +4618,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     ))}
                                     {leads.length === 0 && (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-20 text-center text-slate-300">
-                                                <Inbox className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-black uppercase tracking-widest text-[10px]">{t('noLeadsYet')}</p>
+                                            <td colSpan={5} className="px-8 py-24 text-center text-slate-300">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <Inbox size={40} className="text-slate-100" />
+                                                </div>
+                                                <p className="font-black uppercase tracking-[0.5em] text-[11px] opacity-40 italic">{t('noLeadsYet')}</p>
                                             </td>
                                         </tr>
                                     )}
