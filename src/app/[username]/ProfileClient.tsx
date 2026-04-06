@@ -131,29 +131,68 @@ const getHeroIcon = (platform: string = "", size: number = 20) => {
 // ─── HELPERS ─────────────────────────────────────────────────────
 
 const isDarkColor = (color: string) => {
-    if (!color) return true;
+    if (!color || color === 'transparent' || color.startsWith('var')) return false;
     try {
-        const hex = color.startsWith('#') ? color.slice(1) : color;
-        if (hex.length !== 3 && hex.length !== 6) return false;
-        const r = parseInt(hex.length === 3 ? hex[0] + hex[0] : hex.slice(0, 2), 16);
-        const g = parseInt(hex.length === 3 ? hex[1] + hex[1] : hex.slice(2, 4), 16);
-        const b = parseInt(hex.length === 3 ? hex[2] + hex[2] : hex.slice(4, 6), 16);
-        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-        return luma < 100; // Adjusted threshold for better visibility
+        let hex = color;
+        if (color.startsWith('#')) hex = color.slice(1);
+        if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        if (hex.length !== 6) return false;
+        
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        
+        // standard luminance formula
+        const luma = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luma < 0.6; // Slightly higher threshold for icon contrast
     } catch (e) {
         return false;
     }
 };
 
 const getContrastingAccent = (accentColor: string, isLightBg: boolean) => {
-    if (!accentColor || accentColor === 'transparent') return isLightBg ? '#000000' : '#ffffff';
-    const dark = isDarkColor(accentColor);
-    if (!isLightBg && dark) return '#ffffff'; // On dark bg, if accent is dark, use white
-    if (isLightBg && !dark && accentColor.toLowerCase() !== '#ffffff') {
-        // On light bg, if accent is too light (like white), use a darker version or black
-        // But usually we just care about dark icons being visible on dark backgrounds
+    if (!accentColor || accentColor === 'transparent') return isLightBg ? '#1a1a1a' : '#ffffff';
+    
+    const isAccentDark = isDarkColor(accentColor);
+    
+    if (isLightBg) {
+        // If background is light, we MUST have a dark accent.
+        // If current accent is light (not dark), return a strong dark color.
+        return isAccentDark ? accentColor : '#1a1a1a';
+    } else {
+        // If background is dark, we MUST have a light accent.
+        // If current accent is dark, return white.
+        return isAccentDark ? '#ffffff' : accentColor;
     }
-    return accentColor;
+};
+
+const checkIfBgIsLight = (bgClass: string) => {
+    if (!bgClass) return false;
+    const lower = bgClass.toLowerCase();
+    
+    // Explicit light tailwind classes
+    const lightClasses = ['-white', '-slate-50', '-slate-100', '-gray-50', '-gray-100', '-zinc-50', '-zinc-100', '-amber-50', '-orange-50', '-yellow-50', '-rose-50', '-blue-50', '-sky-50', '-emerald-50', '-green-50', '-cyan-50'];
+    if (lightClasses.some(c => lower.includes(c)) || lower === 'bg-white') return true;
+    
+    // Hex detection in tailwind bg-[#...]
+    const hexMatch = lower.match(/#([a-f0-9]{6}|[a-f0-9]{3})/);
+    if (hexMatch) {
+        const hex = hexMatch[1];
+        let r, g, b;
+        if (hex.length === 3) {
+            r = parseInt(hex[0] + hex[0], 16);
+            g = parseInt(hex[1] + hex[1], 16);
+            b = parseInt(hex[2] + hex[2], 16);
+        } else {
+            r = parseInt(hex.slice(0, 2), 16);
+            g = parseInt(hex.slice(2, 4), 16);
+            b = parseInt(hex.slice(4, 6), 16);
+        }
+        const luma = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luma > 0.65; // Threshold for background to be considered "light"
+    }
+    
+    return false;
 };
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────
@@ -2241,17 +2280,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
-    const isLightBg = (baseTheme.bg || "").includes('white') || 
-                      (baseTheme.bg || "").includes('slate-') || 
-                      (baseTheme.bg || "").includes('rose-') || 
-                      (baseTheme.bg || "").includes('emerald-200') || 
-                      (baseTheme.bg || "").includes('sky-200') || 
-                      (baseTheme.bg || "").includes('amber-200') || 
-                      (baseTheme.bg || "").includes('zinc-100') ||
-                      (baseTheme.bg || "").includes('fff') || 
-                      (baseTheme.bg || "").includes('f8') ||
-                      (baseTheme.bg || "").includes('e0') ||
-                      (baseTheme.bg || "").includes('f0');
+    const isLightBg = checkIfBgIsLight(baseTheme.bg || "");
                       
     const theme = { 
         ...baseTheme, 
@@ -3384,7 +3413,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all relative group", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
                                 <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity animate-pulse" />
-                                <QrCode size={18} style={{ color: theme.accent }} />
+                                <QrCode size={18} style={{ color: theme.accent, filter: theme.isLight ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' : 'none' }} />
                             </motion.button>
                         </div>
 
@@ -3403,7 +3432,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 onClick={() => setIsWalletModalOpen(true)}
                                 className={cn("w-10 h-10 border flex items-center justify-center backdrop-blur-xl transition-all hover:scale-110 active:scale-95", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                             >
-                                <UserPlus size={18} style={{ color: theme.accent }} />
+                                <UserPlus size={18} style={{ color: theme.accent, filter: theme.isLight ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' : 'none' }} />
                             </button>
                         </div>
 
@@ -3891,7 +3920,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     style={{
                                                         backgroundColor: `${theme.accent}15`,
                                                         borderColor: `${theme.accent}40`,
-                                                        color: theme.accent
+                                                        color: theme.accent,
+                                                        filter: theme.isLight ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' : 'none'
                                                     }}
                                                 >
                                                     <Globe size={18} />
@@ -4785,7 +4815,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                             whileTap={{ scale: 0.9 }}
                             href={formatUrl(link.url)}
                             target="_blank"
-                            style={{ color: `${theme.accent}cc` }}
+                            style={{ color: `${theme.accent}cc`, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
                             className="hover:text-slate-900 transition-colors"
                         >
                             {link.platform === 'instagram' && <Instagram size={22} />}
@@ -4977,13 +5007,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     };
 
     const baseTheme = themes[colorScheme] || themes.tour_resort;
-    const isLightBg = (baseTheme.bg || "").includes('white') || 
-                      (baseTheme.bg || "").includes('slate-') || 
-                      (baseTheme.bg || "").includes('e0f7fa') || 
-                      (baseTheme.bg || "").includes('fff8e1') || 
-                      (baseTheme.bg || "").includes('e8eaf6') ||
-                      (baseTheme.bg || "").includes('f0') ||
-                      (baseTheme.bg || "").includes('f8');
+    const isLightBg = checkIfBgIsLight(baseTheme.bg || "");
     const theme = { 
         ...baseTheme, 
         isLight: isLightBg,
