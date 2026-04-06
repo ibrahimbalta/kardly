@@ -126,7 +126,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <button 
                 onClick={() => router.back()}
                 className="group flex items-center gap-2 text-slate-500 hover:text-slate-900 mb-8 transition-colors"
@@ -140,13 +140,13 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
             <div className="grid lg:grid-cols-12 gap-12">
                 {/* Left Side: Form */}
                 <div className="lg:col-span-7 space-y-8">
-                    <div>
-                        <h1 className="text-4xl font-black text-slate-900 mb-3 tracking-tighter uppercase">NFC Kart Teklif Formu</h1>
-                        <p className="text-slate-500 font-medium">Lütfen iletişim ve kargo bilgilerinizi girin, size en uygun teklifi hazırlayalım.</p>
+                    <div className="space-y-2">
+                        <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-tight sm:leading-none break-words">NFC Kart Teklif Formu</h1>
+                        <p className="text-slate-500 font-medium text-sm sm:text-base leading-relaxed">Lütfen iletişim ve kargo bilgilerinizi girin, size en uygun teklifi hazırlayalım.</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100 space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-xl border border-slate-100 space-y-5 sm:space-y-6">
                             <div className="flex items-center gap-3 text-slate-900 mb-2">
                                 <div className="p-2 bg-indigo-50 rounded-xl text-indigo-600">
                                     <User size={20} />
@@ -163,7 +163,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                         value={formData.shippingName}
                                         onChange={handleInputChange}
                                         placeholder="Adınız ve Soyadınız"
-                                        className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+                                        className="w-full h-12 sm:h-14 bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner text-sm sm:text-base"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -175,7 +175,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                         value={formData.shippingEmail}
                                         onChange={handleInputChange}
                                         placeholder="eposta@adresiniz.com"
-                                        className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+                                        className="w-full h-12 sm:h-14 bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner text-sm sm:text-base"
                                     />
                                 </div>
                             </div>
@@ -188,12 +188,12 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                     value={formData.shippingPhone}
                                     onChange={handleInputChange}
                                     placeholder="05XX XXX XX XX"
-                                    className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+                                    className="w-full h-12 sm:h-14 bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner text-sm sm:text-base"
                                 />
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100 space-y-6">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-xl border border-slate-100 space-y-5 sm:space-y-6">
                             <div className="flex items-center gap-3 text-slate-900 mb-2">
                                 <div className="p-2 bg-amber-50 rounded-xl text-amber-600">
                                     <MapPin size={20} />
@@ -209,7 +209,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                     onChange={handleInputChange}
                                     placeholder="Mahalle, sokak, no, daire..."
                                     rows={3}
-                                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner resize-none"
+                                    className="w-full bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 py-4 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner resize-none text-sm sm:text-base"
                                 />
                             </div>
 
@@ -221,7 +221,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                         value={formData.shippingCity}
                                         onChange={handleInputChange}
                                         placeholder="İstanbul"
-                                        className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+                                        className="w-full h-12 sm:h-14 bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner text-sm sm:text-base"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -231,13 +231,13 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                         value={formData.shippingDistrict}
                                         onChange={handleInputChange}
                                         placeholder="Beşiktaş"
-                                        className="w-full h-14 bg-slate-50 border-none rounded-2xl px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+                                        className="w-full h-12 sm:h-14 bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner text-sm sm:text-base"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100 space-y-4">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 shadow-xl border border-slate-100 space-y-4">
                             <div className="flex items-center gap-3 text-slate-900">
                                 <div className="p-2 bg-rose-50 rounded-xl text-rose-600">
                                     <MessageSquare size={20} />
@@ -250,7 +250,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                 onChange={handleInputChange}
                                 placeholder="Örn: 50 adet sipariş etmek istiyorum, kurumsal logo eklenmesini talep ediyorum..."
                                 rows={4}
-                                className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner resize-none"
+                                className="w-full bg-slate-50 border-none rounded-xl sm:rounded-2xl px-5 sm:px-6 py-4 font-bold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner resize-none text-sm sm:text-base"
                             />
                         </div>
 
@@ -265,7 +265,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                             type="submit"
                             disabled={isSubmitting}
                             className={cn(
-                                "w-full h-20 rounded-[2rem] flex items-center justify-center gap-3 transition-all relative overflow-hidden group shadow-2xl active:scale-95",
+                                "w-full h-16 sm:h-20 rounded-2xl sm:rounded-[2rem] flex items-center justify-center gap-3 transition-all relative overflow-hidden group shadow-2xl active:scale-95",
                                 isSubmitting ? "bg-slate-100 cursor-not-allowed" : "bg-slate-950 hover:bg-slate-900"
                             )}
                         >
@@ -274,8 +274,8 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                             ) : (
                                 <>
                                     <div className="absolute inset-x-0 bottom-0 h-1 bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                                    <Send size={20} className="text-white group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-                                    <span className="text-white font-black text-xl uppercase tracking-tighter">Teklif Talebini Gönder</span>
+                                    <Send size={18} className="text-white group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform sm:size-5" />
+                                    <span className="text-white font-black text-lg sm:text-xl uppercase tracking-tighter">Teklif Talebini Gönder</span>
                                 </>
                             )}
                         </button>
@@ -283,9 +283,9 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                 </div>
 
                 {/* Right Side: Preview */}
-                <div className="lg:col-span-5 relative">
+                <div className="lg:col-span-5 relative mt-8 lg:mt-0">
                     <div className="lg:sticky lg:top-24 space-y-6">
-                        <div className="bg-white rounded-[3rem] p-8 pb-12 shadow-2xl border border-slate-100/50">
+                        <div className="bg-white rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-8 pb-8 sm:pb-12 shadow-2xl border border-slate-100/50">
                             <div className="flex items-center justify-between mb-8">
                                 <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase">Tasarım Özeti</h2>
                                 <div className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black tracking-widest uppercase">
@@ -297,7 +297,7 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                                 <BusinessCardGenerator 
                                     user={user as any}
                                     profileData={profileData}
-                                    mode="modal"
+                                    mode="preview"
                                     selectedTemplateId={tpl}
                                     orientation={orient}
                                     initialCustomBg={bg}
@@ -328,13 +328,13 @@ export default function CheckoutClient({ user, profileData }: CheckoutClientProp
                         </div>
 
                         {/* Social Proof / Features */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-indigo-50/50 rounded-[2rem] p-6 border border-indigo-100/50">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="bg-indigo-50/50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-6 border border-indigo-100/50">
                                 <Truck className="text-indigo-600 mb-3" size={20} />
                                 <h3 className="text-xs font-black text-indigo-900 uppercase tracking-tight mb-1">Hızlı Teslimat</h3>
                                 <p className="text-[10px] text-indigo-700/60 font-medium">Baskı sonrası 2-4 iş günü içinde kapınızda.</p>
                             </div>
-                            <div className="bg-emerald-50/50 rounded-[2rem] p-6 border border-emerald-100/50">
+                            <div className="bg-emerald-50/50 rounded-2xl sm:rounded-[2rem] p-5 sm:p-6 border border-emerald-100/50">
                                 <ShieldCheck className="text-emerald-600 mb-3" size={20} />
                                 <h3 className="text-xs font-black text-emerald-900 uppercase tracking-tight mb-1">Güvenli Baskı</h3>
                                 <p className="text-[10px] text-emerald-700/60 font-medium">En son teknoloji UV baskı kalitesi.</p>
