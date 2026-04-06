@@ -535,15 +535,19 @@ END:VCARD`
 
     return (
         <div 
-            className="min-h-screen"
+            className="min-h-screen relative bg-[#030712] overflow-x-hidden"
             style={{ 
                 '--profile-accent': activeAccent,
-                '--profile-accent-rgb': activeAccent === '#ffffff' ? '255,255,255' : '14, 165, 233' // Default or dynamic if I had a helper
+                '--profile-accent-rgb': activeAccent === '#ffffff' ? '255,255,255' : '14, 165, 233'
             } as any}
         >
-            <MotionWrapper style={animationStyle} activeAccent={activeAccent}>
-                {renderTemplate()}
-            </MotionWrapper>
+            <MeshBackground activeAccent={activeAccent} />
+            
+            <div className="relative z-10 w-full h-full">
+                <MotionWrapper style={animationStyle} activeAccent={activeAccent}>
+                    {renderTemplate()}
+                </MotionWrapper>
+            </div>
             
             <AnimatePresence>
                 {selectedProject && (
@@ -600,16 +604,69 @@ END:VCARD`
     )
 }
 
+function MeshBackground({ activeAccent }: { activeAccent: string }) {
+    return (
+        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+            <motion.div
+                animate={{
+                    x: [0, 100, 0],
+                    y: [0, 50, 0],
+                    scale: [1, 1.2, 1],
+                }}
+                transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[120px]"
+                style={{ backgroundColor: `${activeAccent}33` }}
+            />
+            <motion.div
+                animate={{
+                    x: [0, -80, 0],
+                    y: [0, 100, 0],
+                    scale: [1, 1.3, 1],
+                }}
+                transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[140px]"
+                style={{ backgroundColor: `${activeAccent}22` }}
+            />
+            <motion.div
+                animate={{
+                    x: [0, 50, 0],
+                    y: [0, -100, 0],
+                    scale: [1, 1.1, 1],
+                }}
+                transition={{
+                    duration: 18,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[110px]"
+                style={{ backgroundColor: `${activeAccent}11` }}
+            />
+        </div>
+    );
+}
+
 function MotionWrapper({ children, style, activeAccent }: { children: React.ReactNode, style: string, activeAccent?: string }) {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
-    const rotateX = useTransform(y, [-100, 100], [5, -5]);
-    const rotateY = useTransform(x, [-100, 100], [-5, 5]);
+    const rotateX = useTransform(y, [-100, 100], [10, -10]);
+    const rotateY = useTransform(x, [-100, 100], [-10, 10]);
 
-    const springConfig = { damping: 20, stiffness: 150 };
+    const springConfig = { damping: 25, stiffness: 150 };
     const dx = useSpring(rotateX, springConfig);
     const dy = useSpring(rotateY, springConfig);
+
+    // Subtle gloss highlight that moves with the tilt
+    const glossX = useTransform(x, [-100, 100], ["-20%", "120%"]);
+    const glossY = useTransform(y, [-100, 100], ["-20%", "120%"]);
 
     function handleMouseMove(event: any) {
         const rect = event.currentTarget.getBoundingClientRect();
@@ -629,13 +686,29 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
             <motion.div
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                style={{ rotateX: dx, rotateY: dy, perspective: 1000 }}
-                className="w-full h-full"
+                style={{ 
+                    rotateX: dx, 
+                    rotateY: dy, 
+                    perspective: 1200,
+                    transformStyle: "preserve-3d"
+                }}
+                className="w-full h-full relative group/tilt"
             >
-                {children}
+                <div className="relative z-10 w-full h-full">
+                    {children}
+                </div>
+                
+                {/* Dynamic Gloss Interaction */}
+                <motion.div 
+                    className="absolute inset-0 z-20 pointer-events-none rounded-[inherit] opacity-0 group-hover/tilt:opacity-40 transition-opacity duration-500"
+                    style={{
+                        background: `radial-gradient(circle at ${glossX} ${glossY}, rgba(255,255,255,0.15) 0%, transparent 80%)`,
+                    }}
+                />
             </motion.div>
         );
     }
+
 
     if (style === "glow") {
         return (
@@ -4658,90 +4731,95 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             </div>
 
             {/* Main Content */}
-            <div className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center">
-                {/* Avatar with Glow and Floating Expertise Icons */}
-                <div className="relative">
-                    {toneStyle.expertiseStyle !== 'minimal' && (
-                        <motion.div
-                            className="absolute inset-0 z-20 pointer-events-none"
-                            animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
-                            transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                        >
-                            {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
-                                const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                const radius = 100; // Increased radius for Elite avatar size
-                                const x = Math.cos(angle) * radius;
-                                const y = Math.sin(angle) * radius;
+            <main className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center w-full">
+                <MotionWrapper style="3d-manual">
+                    <div className="flex flex-col items-center w-full">
+                        {/* Avatar with Glow and Floating Expertise Icons */}
+                        <div className="relative">
+                            {toneStyle.expertiseStyle !== 'minimal' && (
+                                <motion.div
+                                    className="absolute inset-0 z-20 pointer-events-none"
+                                    animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
+                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                >
+                                    {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
+                                        const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
+                                        const radius = 100; // Increased radius for Elite avatar size
+                                        const x = Math.cos(angle) * radius;
+                                        const y = Math.sin(angle) * radius;
 
-                                return (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, scale: 0 }}
-                                        animate={toneStyle.expertiseStyle === 'floating' ? {
-                                            opacity: 1, scale: 1,
-                                            y: [0, -10, 0],
-                                            transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
-                                        } : { opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.5 + i * 0.1 }}
-                                        className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
-                                        style={{
-                                            left: `calc(50% + ${x}px)`,
-                                            top: `calc(50% + ${y}px)`,
-                                            transform: 'translate(-50%, -50%)'
-                                        }}
-                                    >
-                                        <motion.div
-                                            animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
-                                            transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                                            className={cn("w-10 h-10 glass border border-slate-200/50 flex items-center justify-center shadow-lg transition-all hover:scale-125 hover:border-slate-300 hover:bg-white/90 relative rounded-full")}
-                                            style={{
-                                                color: theme.accent,
-                                                backgroundColor: 'rgba(255,255,255,0.7)',
-                                                backdropFilter: 'blur(10px)'
-                                            }}
-                                        >
-                                            {getIcon(service.title)}
+                                        return (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, scale: 0 }}
+                                                animate={toneStyle.expertiseStyle === 'floating' ? {
+                                                    opacity: 1, scale: 1,
+                                                    y: [0, -10, 0],
+                                                    transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
+                                                } : { opacity: 1, scale: 1 }}
+                                                transition={{ delay: 0.5 + i * 0.1 }}
+                                                className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
+                                                style={{
+                                                    left: `calc(50% + ${x}px)`,
+                                                    top: `calc(50% + ${y}px)`,
+                                                    transform: 'translate(-50%, -50%)'
+                                                }}
+                                            >
+                                                <motion.div
+                                                    animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
+                                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
+                                                    className={cn("w-10 h-10 glass border border-slate-200/50 flex items-center justify-center shadow-lg transition-all hover:scale-125 hover:border-slate-300 hover:bg-white/90 relative rounded-full")}
+                                                    style={{
+                                                        color: theme.accent,
+                                                        backgroundColor: 'rgba(255,255,255,0.7)',
+                                                        backdropFilter: 'blur(10px)'
+                                                    }}
+                                                >
+                                                    {getIcon(service.title)}
 
-                                            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[10px] font-black text-slate-800 pointer-events-none border border-slate-100 shadow-xl scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-widest">
-                                                {translateText(service.title)}
-                                            </div>
-                                        </motion.div>
-                                    </motion.div>
-                                );
-                            })}
-                        </motion.div>
-                    )}
+                                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[10px] font-black text-slate-800 pointer-events-none border border-slate-100 shadow-xl scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-widest">
+                                                        {translateText(service.title)}
+                                                    </div>
+                                                </motion.div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </motion.div>
+                            )}
 
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
-                    >
-                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
-                    </motion.div>
-                </div>
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
+                            >
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
+                            </motion.div>
+                        </div>
 
-                {/* Profile Information */}
-                <div className="text-center mt-6 space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
-                        <Sparkles size={18} style={{ color: theme.accent }} /> {profile.user.name}
-                    </h1>
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
-                        <span className="w-6 h-[1px] bg-slate-200"></span>
-                        {translateText(profile.occupation)}
-                        <span className="w-6 h-[1px] bg-slate-200"></span>
-                    </p>
-                    {profile.slogan && (
-                        <p className="font-medium mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4"
-                           style={{ 
-                               color: profile.sloganColor || "rgb(100, 116, 139)",
-                               fontSize: profile.sloganFontSize || "11px",
-                               fontFamily: profile.sloganFontFamily || "inherit"
-                           }}>
-                            "{translateText(profile.slogan)} 🚀"
-                        </p>
-                    )}
-                </div>
+                        {/* Profile Information */}
+                        <div className="text-center mt-6 space-y-1">
+                            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
+                                <Sparkles size={18} style={{ color: theme.accent }} /> {profile.user.name}
+                            </h1>
+                            <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
+                                <span className="w-6 h-[1px] bg-slate-200"></span>
+                                {translateText(profile.occupation)}
+                                <span className="w-6 h-[1px] bg-slate-200"></span>
+                            </p>
+                            {profile.slogan && (
+                                <p className="font-medium mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4"
+                                   style={{ 
+                                       color: profile.sloganColor || "rgb(100, 116, 139)",
+                                       fontSize: profile.sloganFontSize || "11px",
+                                       fontFamily: profile.sloganFontFamily || "inherit"
+                                   }}>
+                                    "{translateText(profile.slogan)} 🚀"
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </MotionWrapper>
+
 
                 {/* Hero Action Grid (Side-by-side) */}
                 <div className="grid grid-cols-2 gap-4 w-full mt-10">
@@ -4994,7 +5072,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <span className="text-sm font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
                     </Link>
                 </div>
-            </div>
+            </main>
 
             {/* Sticky Bottom Footer Bar */}
             <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[360px] px-6 z-[100]">
@@ -5297,36 +5375,34 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             </header>
 
             <main className="relative z-10 w-full max-w-lg mx-auto px-6 py-10 pb-48 space-y-12">
-                {/* Identity Area (Image 6907 High-end Style) */}
-                <section className="flex flex-col items-center text-center space-y-7">
-                    <div className="relative group">
-                        <div className="absolute -inset-6 rounded-full opacity-20 blur-3xl transition-all duration-1000 group-hover:opacity-35" style={{ backgroundColor: theme.accent }} />
-                        <div className="relative w-44 h-44 p-2 rounded-full bg-zinc-950 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden transition-transform duration-700 group-hover:scale-105">
-                            <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover rounded-full filter contrast-[1.15] saturate-[1.1] brightness-[1.1]" alt={profile?.user?.name || ""} />
+                <MotionWrapper style="3d-manual">
+                    <div className="flex flex-col items-center text-center space-y-6">
+                        <div className="relative w-32 h-32 group">
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden", theme.isLight ? "rounded-full" : "rounded-2xl")}
+                                style={{ borderColor: theme.accent, boxShadow: `0 0 40px ${theme.accent}33` }}
+                            >
+                                <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover" alt="" />
+                            </motion.div>
                         </div>
-                    </div>
 
-                    <div className="space-y-4">
-                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">{profile?.user?.name || ""}</h1>
-                        <div className="flex items-center justify-center gap-4">
-                            <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
-                            <p className="text-[12px] font-black uppercase tracking-[0.4em] drop-shadow-lg" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
-                            <div className="h-[2px] w-10 rounded-full shadow-inner opacity-40" style={{ backgroundColor: theme.accent }} />
-                        </div>
-                        {profile.slogan && (
-                            <div className="px-6 py-3 border border-white/5 bg-white/[0.04] rounded-[2rem] inline-block backdrop-blur-2xl shadow-xl">
-                                <p className="font-bold italic tracking-[0.2em] uppercase"
-                                   style={{ 
-                                       color: profile.sloganColor || "rgba(255,255,255,0.5)",
-                                       fontSize: profile.sloganFontSize || "11px",
-                                       fontFamily: profile.sloganFontFamily || "inherit"
-                                   }}>
+                        <div className="space-y-2">
+                            <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase drop-shadow-2xl">
+                                {profile.user.name}
+                            </h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">
+                                {translateText(profile.occupation)}
+                            </p>
+                            {profile.slogan && (
+                                <p className="text-[13px] font-medium text-white/60 italic leading-relaxed max-w-[280px] mx-auto">
                                     “{translateText(profile.slogan)}”
                                 </p>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </section>
+                </MotionWrapper>
 
                 {/* Vertical Interactive Buttons (Main Actions) */}
                  <div className="space-y-4">
@@ -5609,7 +5685,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     <div className="relative">
                                         <div className="w-20 h-20 rounded-[1.8rem] overflow-hidden border-2 p-1.5 shadow-2xl" style={{ borderColor: `${theme.accent}40` }}>
                                             <img src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" />
-                                        </div>
+            </div>
                                         <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 rounded-full border-[3px] border-zinc-950 flex items-center justify-center text-white shadow-xl">
                                             <Check size={14} strokeWidth={4} />
                                         </div>
