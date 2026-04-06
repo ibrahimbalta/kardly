@@ -49,14 +49,22 @@ export async function POST(req: Request) {
             })
 
             const hours: any = profile.workingHours
-            const dayConfig = hours[dayOfWeek]
 
-            if (!dayConfig || !dayConfig.active) {
-                return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
-            }
-
-            if (timeString < dayConfig.start || timeString > dayConfig.end) {
-                return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+            // Support both Array and Object formats
+            if (Array.isArray(hours)) {
+                // Scenario: Array of slots (e.g., ["09:00", "10:00"]) - This is what the dashboard currently saves
+                if (!hours.includes(timeString)) {
+                    return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+                }
+            } else if (typeof hours === 'object' && hours !== null) {
+                // Scenario: Day-based object (e.g., { Monday: { active: true, start: "09:00", end: "17:00" } })
+                const dayConfig = hours[dayOfWeek]
+                if (!dayConfig || !dayConfig.active) {
+                    return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+                }
+                if (timeString < dayConfig.start || timeString > dayConfig.end) {
+                    return NextResponse.json({ error: "errorWorkingHours" }, { status: 400 })
+                }
             }
         }
 
