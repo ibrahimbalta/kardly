@@ -68,7 +68,8 @@ import {
     CreditCard,
     Facebook,
     Award,
-    ExternalLink
+    ExternalLink,
+    Clock
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
