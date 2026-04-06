@@ -408,8 +408,12 @@ END:VCARD`
     const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }
 
     // Get active accent color for review modal
-    const getActiveAccent = (): string => {
+    const getActiveAccent = (scheme?: any): string => {
         if (profile.themeColor) return profile.themeColor;
+        
+        // If we have a theme object passed, use its accent
+        if (scheme?.accent) return scheme.accent;
+
         const colorMap: Record<string, string> = {
             black: "#0ea5e9", white: "#3b82f6", blue: "#38bdf8", green: "#22c55e", purple: "#a855f7",
             red: "#ef4444", gold: "#fbbf24", rose: "#f43f5e", cyan: "#06b6d4", pink: "#ec4899",
@@ -452,42 +456,54 @@ END:VCARD`
             case "profesyonel":
                 return {
                     font: "font-sans",
-                    rounded: "rounded-[2rem]",
+                    rounded: "rounded-[1.5rem]",
                     border: "border-solid",
                     headerSize: "text-2xl",
-                    expertiseStyle: "slow-rotate"
+                    expertiseStyle: "slow-rotate",
+                    shadow: "shadow-sm",
+                    glass: "backdrop-blur-md bg-white/5"
                 };
             case "samimi":
                 return {
                     font: "font-sans",
-                    rounded: "rounded-[4rem]",
+                    rounded: "rounded-[3.5rem]",
                     border: "border-none",
                     headerSize: "text-3xl",
-                    expertiseStyle: "floating"
+                    expertiseStyle: "floating",
+                    shadow: "shadow-2xl shadow-primary/20",
+                    glow: "animate-pulse-slow",
+                    glass: "backdrop-blur-3xl bg-white/10"
                 };
             case "yaratıcı":
                 return {
                     font: "font-mono",
-                    rounded: "rounded-xl skew-x-1",
-                    border: "border-dashed",
-                    headerSize: "text-3xl",
-                    expertiseStyle: "scattered"
+                    rounded: "rounded-[2rem] rotate-[-1deg]",
+                    border: "border-dashed border-2",
+                    headerSize: "text-3xl italic",
+                    expertiseStyle: "scattered",
+                    shadow: "shadow-[8px_8px_0px_rgba(0,0,0,0.2)]",
+                    glass: "backdrop-blur-lg bg-white/5 border-primary/30"
                 };
             case "lüks":
                 return {
                     font: "font-serif",
-                    rounded: "rounded-[3rem]",
-                    border: "border-double border-4",
-                    headerSize: "text-2xl uppercase tracking-[0.5em]",
-                    expertiseStyle: "slow-rotate"
+                    rounded: "rounded-[2.5rem]",
+                    border: "border-double border-2",
+                    headerSize: "text-2xl uppercase tracking-[0.4em] italic",
+                    expertiseStyle: "slow-rotate",
+                    shadow: "shadow-[20px_20px_50px_rgba(0,0,0,0.5)]",
+                    glass: "backdrop-blur-2xl bg-black/40 border-gold/40 shadow-inner",
+                    shimmer: "animate-shimmer"
                 };
             default:
                 return {
                     font: "font-sans",
-                    rounded: "rounded-[3rem]",
+                    rounded: "rounded-[2.5rem]",
                     border: "border-solid",
                     headerSize: "text-3xl",
-                    expertiseStyle: "rotate"
+                    expertiseStyle: "rotate",
+                    shadow: "shadow-xl",
+                    glass: "backdrop-blur-xl bg-white/5"
                 };
         }
     }
@@ -514,9 +530,20 @@ END:VCARD`
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
+    const animationStyle = profile.animationStyle || "none";
+
     return (
-        <>
-            {renderTemplate()}
+        <div 
+            className="min-h-screen"
+            style={{ 
+                '--profile-accent': activeAccent,
+                '--profile-accent-rgb': activeAccent === '#ffffff' ? '255,255,255' : '14, 165, 233' // Default or dynamic if I had a helper
+            } as any}
+        >
+            <MotionWrapper style={animationStyle}>
+                {renderTemplate()}
+            </MotionWrapper>
+            
             <AnimatePresence>
                 {selectedProject && (
                     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
@@ -568,8 +595,87 @@ END:VCARD`
                     </div>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     )
+}
+
+function MotionWrapper({ children, style }: { children: React.ReactNode, style: string }) {
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const rotateX = useTransform(y, [-100, 100], [5, -5]);
+    const rotateY = useTransform(x, [-100, 100], [-5, 5]);
+
+    const springConfig = { damping: 20, stiffness: 150 };
+    const dx = useSpring(rotateX, springConfig);
+    const dy = useSpring(rotateY, springConfig);
+
+    function handleMouseMove(event: any) {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        x.set(event.clientX - centerX);
+        y.set(event.clientY - centerY);
+    }
+
+    function handleMouseLeave() {
+        x.set(0);
+        y.set(0);
+    }
+
+    if (style === "3d-manual") {
+        return (
+            <motion.div
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{ rotateX: dx, rotateY: dy, perspective: 1000 }}
+                className="w-full h-full"
+            >
+                {children}
+            </motion.div>
+        );
+    }
+
+    if (style === "float") {
+        return (
+            <motion.div
+                animate={{ 
+                    y: [0, -15, 0],
+                    rotate: [0, 0.5, -0.5, 0]
+                }}
+                transition={{ 
+                    duration: 6, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                }}
+                className="w-full h-full"
+            >
+                {children}
+            </motion.div>
+        );
+    }
+
+    if (style === "3d-dynamic") {
+        return (
+            <motion.div
+                animate={{ 
+                    rotateX: [0, 3, -3, 0],
+                    rotateY: [0, -5, 5, 0],
+                }}
+                transition={{ 
+                    duration: 8, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                }}
+                style={{ perspective: 1000 }}
+                className="w-full h-full"
+            >
+                {children}
+            </motion.div>
+        );
+    }
+
+    return <div className="w-full h-full">{children}</div>;
 }
 
 
@@ -3767,7 +3873,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                        <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 rounded-[2rem] overflow-visible", theme.card, theme.border)}>
+                                        <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 overflow-visible", theme.card, theme.border, toneStyle.rounded)}>
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
@@ -3810,9 +3916,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                                         setSelectedProject(project);
                                                                     }
                                                                 }}
-                                                                className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative rounded-2xl")}
+                                                                className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative", toneStyle.rounded)}
                                                             >
-                                                                <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-xl" />
+                                                                <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")} />
 
                                                                 <div
                                                                     className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
@@ -3852,7 +3958,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                             initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                                                             animate={{ opacity: 1, scale: 1, rotate: 0 }}
                                                             transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
-                                                            className="aspect-square relative group cursor-pointer overflow-hidden rounded-xl border border-white/10 shadow-lg"
+                                                            className={cn("aspect-square relative group cursor-pointer overflow-hidden border border-white/10 shadow-lg", toneStyle.rounded)}
                                                             onClick={() => {
                                                                 trackEvent("product_grid", project.name);
                                                                 if (project.link) {
@@ -3959,7 +4065,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     onClick={() => {
                                                         if (action.onClick) action.onClick()
                                                     }}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded)}
                                                 >
                                                     <div style={{ color: theme.accent }}>{action.icon}</div>
                                                     <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
@@ -3967,7 +4073,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             ) : (
                                                 <button
                                                     onClick={action.onClick}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded)}
                                                 >
                                                     <div style={{ color: theme.accent }}>{action.icon}</div>
                                                     <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
@@ -4004,7 +4110,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setIsReviewModalOpen(true)}
-                                        className={cn("text-[10px] font-black uppercase tracking-widest px-4 py-2 border backdrop-blur-md transition-all flex items-center gap-2", theme.btn, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-full")}
+                                        className={cn("text-[10px] font-black uppercase tracking-widest px-4 py-2 border backdrop-blur-md transition-all flex items-center gap-2", theme.btn, toneStyle.rounded)}
                                         style={{ color: theme.accent, borderColor: `${theme.accent}40` }}
                                     >
                                         <Plus size={12} />
@@ -4021,7 +4127,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: -20, scale: 0.95 }}
                                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                                className={cn("absolute inset-0 p-6 border flex flex-col backdrop-blur-2xl shadow-2xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-[2rem]")}
+                                                className={cn("absolute inset-0 p-6 border flex flex-col backdrop-blur-2xl shadow-2xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}
                                                 style={{ boxShadow: `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 20px ${theme.accent}10` }}
                                             >
                                                 {/* Decorative Quote Icon */}
@@ -4128,7 +4234,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             whileTap={{ scale: 0.98 }}
                                             className={cn(
                                                 "w-full py-4.5 px-6 flex items-center justify-between font-black text-[11px] uppercase tracking-[0.25em] transition-all relative overflow-hidden group border-2 shadow-2xl",
-                                                toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl"
+                                                toneStyle.rounded
                                             )}
                                             style={{
                                                 backgroundColor: `${theme.accent}15`,
@@ -7351,9 +7457,9 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                                 </button>
                                 <button
                                     onClick={onClose}
-                                    className="w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+                                    className={cn("w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
                                 >
-                                    <X size={20} />
+                                    <X size={18} />
                                 </button>
                             </div>
                         </div>
