@@ -3287,74 +3287,180 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "appointments" ? (
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-bold">{t('appointmentRequests')}</h2>
-                            <div className="flex gap-2">
-                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white/40">{t('all')}</span>
-                                <span className="px-3 py-1 bg-primary/20 border border-primary/20 rounded-full text-xs font-bold text-primary">{t('pending')}</span>
+                    <div className="flex-1 flex flex-col p-4 sm:p-0 space-y-6 sm:space-y-10 pb-24 sm:pb-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                            <div className="relative">
+                                <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden sm:block" />
+                                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2 italic">
+                                    {t('appointmentRequests')}
+                                </h2>
+                                <p className="text-[11px] sm:text-sm text-slate-500 font-bold uppercase tracking-widest opacity-60">
+                                    Bize ulaşan tüm randevu ve görüşme taleplerini buradan yönetin.
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                                <button className="px-5 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm hover:bg-primary hover:text-white transition-all">
+                                    {t('all')}
+                                </button>
+                                <button className="px-5 py-2.5 bg-white text-slate-400 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm hover:border-primary/20 hover:text-primary transition-all">
+                                    {t('pending')}
+                                </button>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-[2rem] border border-slate-200 overflow-x-auto no-scrollbar shadow-sm">
+                        {/* Mobile View: Premium Appointment Cards */}
+                        <div className="sm:hidden space-y-4">
+                            {appointmentList.map((appointment: any) => (
+                                <motion.div
+                                    key={appointment.id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="p-6 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden"
+                                >
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="flex flex-col gap-1">
+                                            <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-500 mb-2">
+                                                <User size={20} />
+                                            </div>
+                                            <h4 className="text-lg font-black text-slate-900 tracking-tight italic uppercase">{appointment.clientName}</h4>
+                                            <div className="flex flex-col gap-0.5 opacity-60">
+                                                <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1.5 leading-none mt-1">
+                                                    <Mail size={10} className="text-primary/40" /> {appointment.clientEmail}
+                                                </span>
+                                                <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1.5 leading-none mt-1">
+                                                    <Phone size={10} className="text-primary/40" /> {appointment.clientPhone}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className={cn(
+                                            "px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border",
+                                            appointment.status === 'pending' ? "bg-amber-50 border-amber-100 text-amber-600" :
+                                            appointment.status === 'confirmed' ? "bg-emerald-50 border-emerald-100 text-emerald-600" :
+                                            "bg-slate-50 border-slate-100 text-slate-400"
+                                        )}>
+                                            {appointment.status === 'pending' ? t('pending') : appointment.status === 'confirmed' ? t('approved') : t('completed')}
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-slate-50 rounded-[2rem] p-5 border border-slate-100 mb-6 flex items-center justify-between">
+                                        <div className="flex flex-col">
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Tarih / Saat</span>
+                                            <div className="flex items-center gap-2">
+                                                <Calendar size={14} className="text-primary" />
+                                                <span className="text-sm font-black text-slate-900 tracking-tight">
+                                                    {new Date(appointment.date).toLocaleDateString("tr-TR")}
+                                                </span>
+                                                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                                <span className="text-sm font-black text-primary tracking-tight">
+                                                    {new Date(appointment.date).toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="w-10 h-10 rounded-full border-4 border-white bg-primary/10 flex items-center justify-center text-primary shadow-inner shrink-0">
+                                            <Clock size={16} />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        {appointment.status === 'pending' && (
+                                            <button
+                                                onClick={() => handleUpdateAppointmentStatus(appointment.id, 'confirmed')}
+                                                className="flex-1 h-12 bg-primary text-white rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                                            >
+                                                <Check size={14} />
+                                                <span>{t('approve')}</span>
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => handleDeleteAppointment(appointment.id)}
+                                            className={cn(
+                                                "h-12 bg-rose-50 text-rose-500 border border-rose-100 rounded-2xl flex items-center justify-center active:scale-95 transition-all",
+                                                appointment.status === 'pending' ? "w-12" : "flex-1"
+                                            )}
+                                        >
+                                            <Trash2 size={18} />
+                                            {appointment.status !== 'pending' && <span className="ml-2 font-black text-[10px] uppercase tracking-widest">{t('delete')}</span>}
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                            {appointmentList.length === 0 && (
+                                <div className="p-12 text-center bg-white rounded-[3rem] border border-slate-100 italic">
+                                    <Calendar className="w-12 h-12 mx-auto mb-4 opacity-5" />
+                                    <p className="font-black uppercase tracking-[0.3em] text-[10px] text-slate-300">{t('noAppointments')}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Desktop View: Existing Table Refined */}
+                        <div className="hidden sm:block bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
                             <table className="w-full text-left min-w-[700px]">
-                                <thead className="bg-slate-50 border-b border-slate-100">
+                                <thead className="bg-slate-50/50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('client')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('dateAndTime')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400">{t('status')}</th>
-                                        <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-400 text-right">{t('action')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('client')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('dateAndTime')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t('status')}</th>
+                                        <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">{t('action')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-slate-50">
                                     {appointmentList.map((appointment: any) => (
-                                        <tr key={appointment.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="font-bold text-slate-900">{appointment.clientName}</div>
-                                                <div className="text-xs text-slate-500">{appointment.clientEmail}</div>
-                                                <div className="text-xs text-slate-400">{appointment.clientPhone}</div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="font-medium text-slate-700">
-                                                    {new Date(appointment.date).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', { 
-                                                        timeZone: profileData.timezone || 'Europe/Istanbul' 
-                                                    })}
-                                                </div>
-                                                <div className="text-xs text-slate-400 font-bold">
-                                                    {new Date(appointment.date).toLocaleTimeString(language === 'tr' ? 'tr-TR' : 'en-US', { 
-                                                        hour: '2-digit', 
-                                                        minute: '2-digit',
-                                                        timeZone: profileData.timezone || 'Europe/Istanbul' 
-                                                    })}
+                                        <tr key={appointment.id} className="hover:bg-slate-50/40 transition-colors group">
+                                            <td className="px-8 py-6">
+                                                <div className="font-black text-slate-900 uppercase italic tracking-tight group-hover:text-primary transition-colors">{appointment.clientName}</div>
+                                                <div className="flex items-center gap-3 mt-2">
+                                                    <div className="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
+                                                        <Mail size={12} className="text-slate-300" /> {appointment.clientEmail}
+                                                    </div>
+                                                    <div className="text-[11px] text-slate-400 font-black flex items-center gap-1.5 uppercase tracking-tighter">
+                                                        <Phone size={12} className="text-primary/30" /> {appointment.clientPhone}
+                                                    </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-sm ${appointment.status === 'pending'
-                                                    ? 'bg-amber-50 border-amber-100 text-amber-600'
-                                                    : appointment.status === 'confirmed'
-                                                        ? 'bg-emerald-50 border-emerald-100 text-emerald-600'
-                                                        : 'bg-slate-100 border-slate-200 text-slate-600'
-                                                    }`}>
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Calendar size={13} className="text-primary/50" />
+                                                    <span className="text-sm font-black text-slate-700 tracking-tight tabular-nums">
+                                                        {new Date(appointment.date).toLocaleDateString("tr-TR")}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Clock size={13} className="text-slate-300" />
+                                                    <span className="text-xs text-slate-400 font-bold uppercase tracking-widest tabular-nums leading-none">
+                                                        {new Date(appointment.date).toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <span className={cn(
+                                                    "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all duration-300",
+                                                    appointment.status === 'pending'
+                                                        ? 'bg-amber-50 border-amber-100 text-amber-600 shadow-sm shadow-amber-100'
+                                                        : appointment.status === 'confirmed'
+                                                            ? 'bg-emerald-50 border-emerald-100 text-emerald-600 shadow-sm shadow-emerald-100'
+                                                            : 'bg-slate-50 border-slate-100 text-slate-400'
+                                                )}>
                                                     {appointment.status === 'pending' ? t('pending') : appointment.status === 'confirmed' ? t('approved') : t('completed')}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex justify-end gap-2">
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     {appointment.status === 'pending' && (
                                                         <button
                                                             onClick={() => handleUpdateAppointmentStatus(appointment.id, 'confirmed')}
-                                                            className="w-9 h-9 bg-emerald-50 border border-emerald-100 text-emerald-500 rounded-xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                                                            className="w-10 h-10 bg-emerald-50 border border-emerald-100 text-emerald-500 rounded-2xl flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-sm hover:scale-110 active:scale-90"
                                                             title={t('approve')}
                                                         >
-                                                            <Check size={16} />
+                                                            <Check size={18} />
                                                         </button>
                                                     )}
                                                     <button
                                                         onClick={() => handleDeleteAppointment(appointment.id)}
-                                                        className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                        className="w-10 h-10 bg-rose-50 border border-rose-100 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm hover:scale-110 active:scale-90"
                                                         title={t('delete')}
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -3362,9 +3468,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     ))}
                                     {appointmentList.length === 0 && (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-slate-300">
-                                                <Calendar className="w-12 h-12 mx-auto mb-4 opacity-10" />
-                                                <p className="font-bold uppercase tracking-widest text-[10px]">{t('noAppointments')}</p>
+                                            <td colSpan={4} className="px-8 py-24 text-center text-slate-300">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                    <Calendar size={40} className="text-slate-100" />
+                                                </div>
+                                                <p className="font-black uppercase tracking-[0.5em] text-[11px] opacity-40 italic">{t('noAppointments')}</p>
                                             </td>
                                         </tr>
                                     )}
