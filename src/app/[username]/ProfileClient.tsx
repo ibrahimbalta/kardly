@@ -7457,7 +7457,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                                 </button>
                                 <button
                                     onClick={onClose}
-                                    className={cn("w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
+                                    className={cn("w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
                                 >
                                     <X size={18} />
                                 </button>
