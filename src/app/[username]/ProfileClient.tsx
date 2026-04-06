@@ -5614,18 +5614,9 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
 
     const handleSubmit = () => {
         if (!formData.name || !formData.content) return
-
-        // Modern 3D/Glass Style Avatars based on gender
         const image = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=1a1a2e&color=${theme.accent.replace('#', '')}&bold=true&size=128`
-
         onSubmit({ ...formData, image, id: Date.now() })
-        setFormData({
-            name: "",
-            title: "",
-            content: "",
-            rating: 5,
-            gender: "male"
-        })
+        setFormData({ name: "", title: "", content: "", rating: 5, gender: "male" })
         onClose()
     }
 
@@ -5635,7 +5626,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                className="absolute inset-0 bg-black/40 backdrop-blur-md"
                 onClick={onClose}
             />
             <motion.div
@@ -5644,26 +5635,25 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={cn(
-                    "relative w-full sm:max-w-md p-8 sm:p-10 backdrop-blur-3xl overflow-y-auto max-h-[95vh] sm:max-h-[90vh] no-scrollbar rounded-t-[3rem] sm:rounded-[3rem] border shadow-2xl transition-all pb-24 sm:pb-10",
-                    theme.card,
-                    theme.border,
-                    toneStyle?.font
+                    "relative w-full sm:max-w-[420px] p-8 sm:p-10 backdrop-blur-3xl overflow-y-auto max-h-[95vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-16 sm:pb-10",
+                    theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
                     boxShadow: `0 30px 60px -12px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}20`
                 }}
             >
-                <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-8 sm:hidden" />
-                {/* Visual Flair */}
-                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                
+                {/* Decorative Flair */}
+                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-[0.05] rounded-full" style={{ backgroundColor: theme.accent }} />
 
-                <div className="relative z-10">
+                <div className="relative z-10 w-full">
                     <div className="flex justify-between items-start mb-8">
-                        <div className="space-y-1">
-                            <h3 className={cn("text-2xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
+                        <div className="space-y-1 text-left">
+                            <h3 className={cn("text-xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
                             <div className="flex items-center gap-2">
-                                <div className="w-6 h-[2px]" style={{ background: theme.accent }} />
-                                <p className={cn("text-[9px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
+                                <div className="w-5 h-[2px]" style={{ background: theme.accent }} />
+                                <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
                             </div>
                         </div>
                         <button
@@ -5674,76 +5664,57 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                         </button>
                     </div>
 
-                    <div className="space-y-6">
-                        {/* Rating & Gender Section */}
-                        <div className="space-y-4">
-                            <div className={cn("flex flex-col items-center gap-3 py-6 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
-                                <span className={cn("text-[10px] font-black uppercase tracking-[0.25em] opacity-40 mb-1", theme.text)}>{t.rateLabel}</span>
-                                <div className="flex gap-2">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <motion.button
-                                            key={star}
-                                            whileHover={{ scale: 1.15 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={() => setFormData({ ...formData, rating: star })}
-                                            className="transition-all"
-                                        >
-                                            <Star
-                                                size={28}
-                                                className={cn(
-                                                    "transition-all duration-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]",
-                                                    star <= formData.rating ? "fill-current" : "text-white/5"
-                                                )}
-                                                style={star <= formData.rating ? { color: '#fbbf24' } : {}}
-                                            />
-                                        </motion.button>
-                                    ))}
-                                </div>
+                    <div className="space-y-5">
+                        {/* Rating Section */}
+                        <div className={cn("flex flex-col items-center gap-3 py-5 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
+                            <span className={cn("text-[9px] font-black uppercase tracking-[0.25em] opacity-40 mb-1", theme.text)}>{t.rateLabel}</span>
+                            <div className="flex gap-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <motion.button
+                                        key={star}
+                                        whileHover={{ scale: 1.15 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={() => setFormData({ ...formData, rating: star })}
+                                        className="transition-all"
+                                    >
+                                        <Star
+                                            size={26}
+                                            className={cn(
+                                                "transition-all duration-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.2)]",
+                                                star <= formData.rating ? "fill-current" : "text-white/5"
+                                            )}
+                                            style={star <= formData.rating ? { color: '#fbbf24' } : {}}
+                                        />
+                                    </motion.button>
+                                ))}
                             </div>
+                        </div>
 
-                            <div className="flex gap-3">
+                        {/* Gender Pill Toggle */}
+                        <div className={cn("flex p-1.5 rounded-2xl border bg-black/10 backdrop-blur-xl", theme.border)}>
+                            {[
+                                { id: 'male', icon: <User size={16} />, label: t.male },
+                                { id: 'female', icon: <UserCircle size={16} />, label: t.female }
+                            ].map((g) => (
                                 <button
-                                    onClick={() => setFormData({ ...formData, gender: 'male' })}
+                                    key={g.id}
+                                    onClick={() => setFormData({ ...formData, gender: g.id })}
                                     className={cn(
-                                        "flex-1 flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
-                                        theme.border
+                                        "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl transition-all duration-500 text-[10px] font-black uppercase tracking-widest",
+                                        formData.gender === g.id ? "bg-white/10 shadow-lg" : "opacity-30 hover:opacity-100"
                                     )}
-                                    style={formData.gender === 'male' ? {
-                                        backgroundColor: `${theme.accent}15`,
-                                        borderColor: `${theme.accent}40`
-                                    } : {
-                                        backgroundColor: 'rgba(255,255,255,0.02)',
-                                        borderColor: 'rgba(255,255,255,0.05)'
-                                    }}
+                                    style={formData.gender === g.id ? { color: theme.accent } : { color: 'currentColor' }}
                                 >
-                                    <User size={18} className={cn("transition-all", formData.gender === 'male' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'male' ? theme.accent : 'currentColor' }} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'male' ? "opacity-100" : "opacity-30", theme.text)}>{t.male}</span>
+                                    {g.icon}
+                                    {g.label}
                                 </button>
-
-                                <button
-                                    onClick={() => setFormData({ ...formData, gender: 'female' })}
-                                    className={cn(
-                                        "flex-1 flex items-center justify-center gap-3 py-4 rounded-2xl border transition-all duration-300 relative group overflow-hidden",
-                                        theme.border
-                                    )}
-                                    style={formData.gender === 'female' ? {
-                                        backgroundColor: `${theme.accent}15`,
-                                        borderColor: `${theme.accent}40`
-                                    } : {
-                                        backgroundColor: 'rgba(255,255,255,0.02)',
-                                        borderColor: 'rgba(255,255,255,0.05)'
-                                    }}
-                                >
-                                    <UserCircle size={18} className={cn("transition-all", formData.gender === 'female' ? "scale-110" : "opacity-30")} style={{ color: formData.gender === 'female' ? theme.accent : 'currentColor' }} />
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", formData.gender === 'female' ? "opacity-100" : "opacity-30", theme.text)}>{t.female}</span>
-                                </button>
-                            </div>
+                            ))}
                         </div>
 
                         {/* Form Inputs */}
                         <div className="space-y-4">
-                            <div className="space-y-1.5">
-                                <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourName}</label>
+                            <div className="space-y-1.5 text-left">
+                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourName}</label>
                                 <input
                                     type="text"
                                     placeholder={t.yourName}
@@ -5754,8 +5725,8 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                 />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourTitle}</label>
+                            <div className="space-y-1.5 text-left">
+                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourTitle}</label>
                                 <input
                                     type="text"
                                     placeholder={t.yourTitle}
@@ -5766,12 +5737,12 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                 />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourMessage}</label>
+                            <div className="space-y-1.5 text-left">
+                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourMessage}</label>
                                 <textarea
-                                    rows={4}
+                                    rows={3}
                                     placeholder={t.yourMessage}
-                                    className={cn("w-full px-5 py-4 rounded-[2rem] focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
+                                    className={cn("w-full px-5 py-4 rounded-[1.5rem] focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -5788,11 +5759,11 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                             style={{
                                 backgroundColor: theme.accent,
                                 color: '#000',
-                                boxShadow: `0 20px 40px -10px ${theme.accent}60`
+                                boxShadow: `0 15px 35px ${theme.accent}40`
                             }}
                         >
                             <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                            <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <Send size={18} className="relative z-10" />
                             <span className="relative z-10">{t.publishReview}</span>
                         </motion.button>
                     </div>
@@ -6294,20 +6265,18 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
 function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, toneStyle }: any) {
     if (!isOpen) return null
 
-    const bgClass = theme.bg || theme.body || "bg-[#0a0a0f]"
     const isLight = theme.body === "bg-white" || theme.bg?.includes("white") || theme.bg?.includes("slate-50")
     const textColor = theme.text || (isLight ? "text-slate-900" : "text-white")
     const subTextColor = theme.subtext || (isLight ? "text-slate-500" : "text-white/60")
-    const borderColor = theme.border || (isLight ? "border-slate-200" : "border-white/10")
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4">
+        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-4">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                className="absolute inset-0 bg-black/40 backdrop-blur-md"
             />
             <motion.div
                 initial={{ y: "100%", opacity: 0 }}
@@ -6315,101 +6284,100 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className={cn(
-                    "relative w-full sm:max-w-md p-10 sm:p-12 rounded-t-[3rem] sm:rounded-[3rem] shadow-2xl overflow-hidden border transition-all pb-24 sm:pb-12",
-                    bgClass,
-                    borderColor,
-                    toneStyle?.font
+                    "relative w-full sm:max-w-[420px] p-8 sm:p-10 overflow-y-auto max-h-[95vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", 
+                    theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
-                    boxShadow: isLight 
-                        ? `0 30px 60px -12px rgba(0,0,0,0.15), 0 0 40px ${theme.accent}10`
-                        : `0 30px 60px -12px rgba(0,0,0,0.8), 0 0 40px ${theme.accent}15`
+                    boxShadow: `0 30px 60px -12px ${theme.accent}25`
                 }}
             >
-                <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-10 sm:hidden" />
-                {/* Visual Flair */}
-                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-10 rounded-full" style={{ backgroundColor: theme.accent }} />
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                
+                {/* Close Button Desktop */}
+                <button 
+                    onClick={onClose} 
+                    className={cn("absolute top-6 right-6 hidden sm:flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
+                >
+                    <X size={18} />
+                </button>
 
-                <div className="flex flex-col items-center text-center space-y-8 relative z-10">
+                {/* Visual Flair */}
+                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
+
+                <div className="flex flex-col items-center text-center space-y-6 relative z-10 w-full">
                     <div
-                        className="w-16 h-16 rounded-[1.5rem] flex items-center justify-center shadow-lg relative overflow-hidden group border"
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden group border"
                         style={{ 
-                            backgroundColor: `${theme.accent}15`,
-                            borderColor: `${theme.accent}30`
+                            backgroundColor: `${theme.accent}10`,
+                            borderColor: `${theme.accent}20`
                         }}
                     >
-                        <Smartphone size={28} style={{ color: theme.accent }} />
+                        <div className="absolute inset-0 blur-xl opacity-20" style={{ background: theme.accent }} />
+                        <Smartphone size={24} style={{ color: theme.accent }} className="relative z-10" />
                     </div>
 
-                    <div className="space-y-2">
-                        <h3 
-                            className={cn("text-2xl font-black px-2 leading-tight uppercase tracking-[0.1em]", toneStyle?.font, textColor)}
-                        >
-                            {t.addToWallet ? t.addToWallet.toUpperCase() : "CÜZDANA EKLE"}
+                    <div className="space-y-1.5">
+                        <h3 className={cn("text-xl font-black px-2 leading-tight uppercase tracking-tight", toneStyle?.font, textColor)}>
+                            {t.addToWallet || "CÜZDANA EKLE"}
                         </h3>
-                        <p 
-                            className={cn("text-[11px] font-black tracking-[0.2em] uppercase opacity-40 px-4", subTextColor)}
-                        >
-                            {t.savePassDesc ? t.savePassDesc.toUpperCase() : "KARTINIZI TELEFONUNUZA KAYDEDİN."}
+                        <p className={cn("text-[8px] font-black tracking-[0.25em] uppercase opacity-30 px-4", subTextColor)}>
+                            {t.savePassDesc || "KARTINIZI TELEFONUNUZA KAYDEDİN"}
                         </p>
                     </div>
 
-                    <div className="w-full space-y-3">
+                    <div className="w-full space-y-2.5">
                         {[
                             {
-                                icon: <UserPlus size={22} style={{ color: theme.accent }} />,
+                                icon: <UserPlus size={18} style={{ color: theme.accent }} />,
                                 label: t.vcfLabel || "Rehbere Kaydet (VCF)",
                                 action: handleAddToContacts,
-                                iconBgStyle: { backgroundColor: `${theme.accent}15` }
+                                iconBgStyle: { backgroundColor: `${theme.accent}10` }
                             },
                             {
-                                icon: <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={20} /></div>,
+                                icon: <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={18} /></div>,
                                 label: "Apple Wallet",
                                 action: handleAddToContacts,
                                 badge: "POPÜLER",
                                 iconBgStyle: { backgroundColor: "transparent" }
                             },
                             {
-                                icon: <Globe size={22} style={{ color: theme.accent }} />,
+                                icon: <Globe size={18} style={{ color: theme.accent }} />,
                                 label: "Google Wallet",
                                 action: handleAddToContacts,
-                                iconBgStyle: { backgroundColor: `${theme.accent}15` }
+                                iconBgStyle: { backgroundColor: `${theme.accent}10` }
                             }
                         ].map((btn, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => { btn.action(); onClose(); }}
                                 className={cn(
-                                    "w-full flex items-center justify-between p-5 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden border",
-                                    isLight ? "bg-slate-50 border-slate-100 hover:bg-slate-100" : "bg-white/5 border-white/5 hover:bg-white/10"
+                                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden border",
+                                    isLight ? "bg-slate-50/50 border-slate-100 hover:bg-slate-100" : "bg-white/[0.03] border-white/5 hover:bg-white/[0.08]"
                                 )}
                             >
-                                <div className="flex items-center gap-5 z-10">
+                                <div className="flex items-center gap-4 z-10">
                                     <div 
-                                        className="w-12 h-12 rounded-xl flex items-center justify-center transition-all"
-                                        style={btn.iconBgStyle}
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center transition-all border"
+                                        style={{ ...btn.iconBgStyle, borderColor: 'rgba(255,255,255,0.02)' }}
                                     >
                                         {btn.icon}
                                     </div>
                                     <span 
-                                        className={cn("text-[14px] font-black tracking-tight transition-colors", textColor)}
+                                        className={cn("text-[13px] font-bold tracking-tight transition-colors", textColor)}
                                     >
                                         {btn.label}
                                     </span>
                                 </div>
+                                
                                 {btn.badge ? (
                                     <span 
-                                        className="text-[9px] font-black opacity-30 tracking-widest px-3 py-1 bg-white/5 rounded-full"
+                                        className="text-[7px] font-black opacity-40 tracking-widest px-2 py-1 bg-white/5 rounded-full border border-white/5"
                                         style={{ color: isLight ? '#000' : theme.accent }}
                                     >
                                         {btn.badge}
                                     </span>
                                 ) : (
-                                    <ArrowRight 
-                                        size={18} 
-                                        className={cn("transition-all mr-2 z-10", isLight ? "opacity-30 group-hover:opacity-100 group-hover:translate-x-1" : "opacity-20 group-hover:opacity-100 group-hover:translate-x-1")}
-                                        style={{ color: theme.accent }}
-                                    />
+                                    <ArrowRight size={14} className={cn("opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all", textColor)} />
                                 )}
                             </button>
                         ))}
@@ -6417,9 +6385,9 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
 
                     <button
                         onClick={onClose}
-                        className={cn("text-[11px] font-black uppercase tracking-[0.25em] transition-all hover:scale-110 active:scale-95 pt-4 opacity-40 hover:opacity-100", subTextColor)}
+                        className={cn("text-[9px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 pt-4 opacity-30 hover:opacity-100", subTextColor)}
                     >
-                        {t.cancel ? t.cancel.toUpperCase() : "VAZGEÇ"}
+                        {t.cancel || "VAZGEÇ"}
                     </button>
                 </div>
             </motion.div>
@@ -6462,9 +6430,9 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 )}
             </div>
 
-            <div className="space-y-5">
-                <div className="space-y-2">
-                    <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.fullNameLabel}</label>
+            <div className="space-y-4">
+                <div className="space-y-1.5 text-left">
+                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.fullNameLabel}</label>
                     <input
                         type="text"
                         value={formData.name}
@@ -6474,8 +6442,8 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
+                <div className="space-y-1.5 text-left">
+                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
                     <input
                         type="tel"
                         value={formData.phone}
@@ -6485,12 +6453,12 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className={cn("text-[10px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.messageLabel}</label>
+                <div className="space-y-1.5 text-left">
+                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.messageLabel}</label>
                     <textarea
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className={cn("w-full border px-5 py-4 text-sm focus:outline-none transition-all font-medium min-h-[120px] resize-none rounded-[2rem] leading-relaxed", theme.btn, theme.border, theme.text)}
+                        className={cn("w-full border px-5 py-4 text-sm focus:outline-none transition-all font-medium min-h-[120px] resize-none rounded-[1.5rem] leading-relaxed", theme.btn, theme.border, theme.text)}
                         placeholder={t.helpMessagePlaceholder}
                     />
                 </div>
@@ -6498,10 +6466,11 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 <button
                     onClick={handleSubmit}
                     disabled={!formData.name || !formData.phone}
-                    className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-xl text-white mt-4")}
-                    style={{ background: theme.accent, boxShadow: `0 15px 35px ${theme.accent}40` }}
+                    className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-xl text-white mt-4 flex items-center justify-center gap-3")}
+                    style={{ background: theme.accent, boxShadow: `0 15px 35px ${theme.accent}40`, color: '#000' }}
                 >
                     <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
+                    <Send size={18} className="relative z-10" />
                     <span className="relative z-10">{t.sendMyInfoBtn}</span>
                 </button>
 
@@ -6521,7 +6490,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
 
     if (isEmbed) {
         return (
-            <div className={cn("relative w-full p-8 overflow-hidden border backdrop-blur-3xl rounded-[2.5rem] shadow-xl", theme.card, theme.border)}>
+            <div className={cn("relative w-full p-8 overflow-hidden border backdrop-blur-3xl rounded-[2rem] shadow-xl", theme.card, theme.border)}>
                 {content}
             </div>
         )
@@ -6533,7 +6502,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                className="absolute inset-0 bg-black/40 backdrop-blur-md"
                 onClick={onClose}
             />
             <motion.div
@@ -6541,13 +6510,20 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className={cn("relative w-full sm:max-w-md p-10 sm:p-12 overflow-y-auto max-h-[95vh] border backdrop-blur-3xl rounded-t-[3rem] sm:rounded-[3rem] shadow-2xl pb-24 sm:pb-12", theme.card, theme.border, toneStyle?.font)}
+                className={cn("relative w-full sm:max-w-[420px] p-8 overflow-y-auto max-h-[95vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}30`
                 }}
             >
-                <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-10 sm:hidden" />
-                {/* Decorative */}
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                
+                <button 
+                    onClick={onClose} 
+                    className={cn("absolute top-6 right-6 hidden sm:flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
+                >
+                    <X size={18} />
+                </button>
+
                 <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)` }} />
                 <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full blur-3xl opacity-[0.05]" style={{ background: theme.accent }} />
 
@@ -6613,106 +6589,126 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
     const content = (
         <div className={cn("flex flex-col h-full w-full relative z-10", isEmbed ? "" : "")}>
             {/* Header */}
-            <div className={cn("p-5 pb-3 flex items-center justify-between border-b relative z-10", theme.border)}>
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-                        <Bot size={20} />
+            <div className={cn("p-6 pb-4 flex items-center justify-between border-b relative z-10", theme.border)}>
+                <div className="flex items-center gap-4">
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+                        <Bot size={22} className="relative z-10" />
                         <div className="absolute inset-0 animate-pulse opacity-20" style={{ background: theme.accent }} />
                     </div>
                     <div className="text-left">
-                        <h3 className={cn("text-[11px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
-                        <div className="flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className={cn("text-[7px] font-bold uppercase tracking-widest opacity-40", theme.text)}>{t.onlineStatus}</span>
+                        <h3 className={cn("text-[13px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className={cn("text-[8px] font-black uppercase tracking-widest opacity-40", theme.text)}>{t.onlineStatus || "AKTİF"}</span>
                         </div>
                     </div>
                 </div>
                 {!isEmbed && (
-                    <button onClick={onClose} className={cn("w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
-                        <X size={16} />
+                    <button onClick={onClose} className={cn("w-9 h-9 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}>
+                        <X size={18} />
                     </button>
                 )}
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-3 no-scrollbar relative z-10">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative z-10">
                 {messages.map((m: any, i: number) => (
                     <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
                         className={cn(
-                            "max-w-[85%] p-3.5 text-[11px] font-medium leading-relaxed",
+                            "max-w-[85%] p-4 text-[12px] font-medium leading-relaxed shadow-sm",
                             m.role === "user"
-                                ? cn("ml-auto border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tr-none text-right")
-                                : cn("border", theme.btn, theme.border, theme.text, "rounded-[1.2rem] rounded-tl-none text-left")
+                                ? cn("ml-auto border", theme.btn, theme.border, theme.text, "rounded-2xl rounded-tr-none text-right bubble-user")
+                                : cn("border backdrop-blur-3xl", theme.border, theme.text, "rounded-2xl rounded-tl-none text-left bubble-ai")
                         )}
-                        style={m.role === "assistant" && !m.isError ? { borderColor: `${theme.accent}20`, backgroundColor: `${theme.accent}10` } : {}}
+                        style={m.role === "assistant" && !m.isError ? { 
+                            borderColor: `${theme.accent}20`, 
+                            backgroundColor: `${theme.accent}05`,
+                        } : {}}
                     >
                         {m.content}
                     </motion.div>
                 ))}
                 {isLoading && (
-                    <div className={cn("flex gap-1 p-3 border rounded-2xl w-14 items-center justify-center text-left", theme.btn, theme.border)}>
-                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
-                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
-                        <span className="w-0.5 h-0.5 bg-current rounded-full animate-bounce" />
+                    <div className={cn("flex gap-1.5 p-4 border rounded-2xl w-16 items-center justify-center shadow-inner", theme.btn, theme.border)}>
+                        <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
+                        <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
+                        <span className="w-1 h-1 bg-current rounded-full animate-bounce" />
                     </div>
                 )}
             </div>
 
-            {/* Input */}
-            <div className="p-5 pt-2 relative z-10">
-                <div className={cn("relative flex items-center border transition-all pr-1.5 rounded-2xl", theme.btn, theme.border)}>
+            {/* Input Area */}
+            <div className="p-6 pt-2 relative z-10">
+                <div 
+                    className={cn("relative flex items-center border transition-all pl-2 pr-2 py-1 gap-2 rounded-[1.5rem] bg-white/[0.03] backdrop-blur-xl", theme.border)}
+                    style={{ borderColor: `${theme.accent}20` }}
+                >
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
                         placeholder={t.askSomething}
-                        className={cn("bg-transparent border-none focus:ring-0 text-[11px] p-3.5 flex-1 placeholder:opacity-20", theme.text)}
+                        className={cn("bg-transparent border-none focus:ring-0 text-[12px] p-3 flex-1 placeholder:opacity-20 font-medium", theme.text)}
                     />
                     <button
                         onClick={handleSend}
                         disabled={!input.trim() || isLoading}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 hover:scale-105 active:scale-95 shadow-lg"
-                        style={{ backgroundColor: theme.accent, color: 'white' }}
+                        className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:grayscale disabled:opacity-20 shadow-lg")}
+                        style={{ background: theme.accent, color: '#000' }}
                     >
-                        <Send size={16} />
+                        <Send size={18} />
                     </button>
                 </div>
+                <p className={cn("text-[7px] font-black uppercase tracking-widest opacity-20 text-center mt-4", theme.text)}>
+                    Kardly AI can make mistakes. Check important info.
+                </p>
             </div>
         </div>
     )
 
     if (isEmbed) {
         return (
-            <div className={cn("relative w-full h-[500px] flex flex-col overflow-hidden", theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]")}>
+            <div className={cn("relative w-full h-full overflow-hidden border backdrop-blur-3xl rounded-[2.5rem] shadow-xl", theme.card, theme.border)}>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 pointer-events-none" />
                 {content}
             </div>
         )
     }
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center sm:p-4 text-left font-sans">
+        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-4">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/40 backdrop-blur-md"
                 onClick={onClose}
             />
             <motion.div
-                initial={{ opacity: 0, y: "100%" }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: "100%" }}
+                initial={{ y: "100%", opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className={cn("relative w-full sm:max-w-md h-[85vh] sm:h-[580px] flex flex-col overflow-hidden shadow-2xl border backdrop-blur-3xl transition-all rounded-t-[3rem] sm:rounded-[2.5rem] pb-8 sm:pb-0", theme.card, theme.border, toneStyle?.rounded)}
+                className={cn(
+                    "relative w-full sm:max-w-[420px] h-[80vh] sm:h-[600px] overflow-hidden border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col transition-all", 
+                    theme.card, 
+                    theme.border, 
+                    toneStyle?.font
+                )}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}30`
                 }}
             >
-                <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto my-5 sm:hidden shrink-0" />
+                <div className="w-10 h-1.5 bg-white/10 rounded-full mx-auto mt-3 absolute top-0 left-1/2 -translate-x-1/2 sm:hidden shrink-0 z-[100]" />
+                
+                {/* Visual Flair */}
+                <div className="absolute -top-32 -left-32 w-64 h-64 blur-[80px] opacity-[0.05] rounded-full pointer-events-none" style={{ backgroundColor: theme.accent }} />
+
                 {content}
             </motion.div>
         </div>
