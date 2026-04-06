@@ -5644,6 +5644,13 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
             >
                 <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
                 
+                <button 
+                    onClick={onClose} 
+                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
+                >
+                    <X size={18} />
+                </button>
+                
                 {/* Decorative Flair */}
                 <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-[0.05] rounded-full" style={{ backgroundColor: theme.accent }} />
 
@@ -5656,12 +5663,6 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                 <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
                             </div>
                         </div>
-                        <button
-                            onClick={onClose}
-                            className={cn("w-10 h-10 flex items-center justify-center rounded-2xl transition-all active:scale-90 bg-white/5 hover:bg-white/10 group", theme.text)}
-                        >
-                            <X size={20} className="opacity-40 group-hover:opacity-100 transition-opacity" />
-                        </button>
                     </div>
 
                     <div className="space-y-5">
@@ -6293,10 +6294,9 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
             >
                 <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
                 
-                {/* Close Button Desktop */}
                 <button 
                     onClick={onClose} 
-                    className={cn("absolute top-6 right-6 hidden sm:flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
+                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
                 >
                     <X size={18} />
                 </button>
@@ -6423,11 +6423,6 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                         {t.contactMeSub}
                     </p>
                 </div>
-                {!isEmbed && (
-                    <button onClick={onClose} className={cn("absolute top-0 right-0 p-2.5 rounded-2xl hover:bg-white/5 transition-colors opacity-40 hover:opacity-100", theme.text)}>
-                        <X size={22} />
-                    </button>
-                )}
             </div>
 
             <div className="space-y-4">
@@ -6519,7 +6514,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 
                 <button 
                     onClick={onClose} 
-                    className={cn("absolute top-6 right-6 hidden sm:flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
+                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
                 >
                     <X size={18} />
                 </button>
