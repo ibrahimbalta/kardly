@@ -2241,15 +2241,23 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         }
     };
     const baseTheme = themes[colorScheme as string] || themes.black;
-    const isLightBg = (baseTheme.bg || "").includes('white') || (baseTheme.bg || "").includes('slate-') || (baseTheme.bg || "").includes('rose-') || (baseTheme.bg || "").includes('emerald-200') || (baseTheme.bg || "").includes('sky-200') || (baseTheme.bg || "").includes('amber-200') || (baseTheme.bg || "").includes('zinc-100');
-    const theme = { ...baseTheme, isLight: isLightBg };
-
-    // Override accent color with custom selection if available
-    if (profile.themeColor) {
-        theme.accent = getContrastingAccent(profile.themeColor, isLightBg);
-    } else {
-        theme.accent = getContrastingAccent(baseTheme.accent, isLightBg);
-    }
+    const isLightBg = (baseTheme.bg || "").includes('white') || 
+                      (baseTheme.bg || "").includes('slate-') || 
+                      (baseTheme.bg || "").includes('rose-') || 
+                      (baseTheme.bg || "").includes('emerald-200') || 
+                      (baseTheme.bg || "").includes('sky-200') || 
+                      (baseTheme.bg || "").includes('amber-200') || 
+                      (baseTheme.bg || "").includes('zinc-100') ||
+                      (baseTheme.bg || "").includes('fff') || 
+                      (baseTheme.bg || "").includes('f8') ||
+                      (baseTheme.bg || "").includes('e0') ||
+                      (baseTheme.bg || "").includes('f0');
+                      
+    const theme = { 
+        ...baseTheme, 
+        isLight: isLightBg,
+        accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
+    };
 
     const socialLinks = profile.socialLinks || []
 
@@ -4969,7 +4977,13 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     };
 
     const baseTheme = themes[colorScheme] || themes.tour_resort;
-    const isLightBg = (baseTheme.bg || "").includes('white') || (baseTheme.bg || "").includes('slate-') || (baseTheme.bg || "").includes('e0f7fa') || (baseTheme.bg || "").includes('fff8e1') || (baseTheme.bg || "").includes('e8eaf6');
+    const isLightBg = (baseTheme.bg || "").includes('white') || 
+                      (baseTheme.bg || "").includes('slate-') || 
+                      (baseTheme.bg || "").includes('e0f7fa') || 
+                      (baseTheme.bg || "").includes('fff8e1') || 
+                      (baseTheme.bg || "").includes('e8eaf6') ||
+                      (baseTheme.bg || "").includes('f0') ||
+                      (baseTheme.bg || "").includes('f8');
     const theme = { 
         ...baseTheme, 
         isLight: isLightBg,
