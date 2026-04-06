@@ -95,9 +95,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await prisma.globalSettings.findUnique({
-    where: { id: "main" }
-  })
+  let settings = null;
+  try {
+    settings = await prisma.globalSettings.findUnique({
+      where: { id: "main" }
+    })
+  } catch (error) {
+    console.error("Prisma Settings Error:", error);
+  }
 
   return (
     <html lang="tr">
