@@ -6838,7 +6838,25 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
         return match ? match[1] : "";
     };
 
-    const widgetType = extractAttr('data-type') || 'booking';
+    const extractedType = extractAttr('data-type');
+    
+    // Fallback: detect widget type from title if data-type extraction fails
+    const detectTypeFromTitle = (titleStr: string): string => {
+        if (!titleStr) return '';
+        const t2 = titleStr.toLowerCase();
+        if (t2.includes('randevu') || t2.includes('booking') || t2.includes('appointment')) return 'booking';
+        if (t2.includes('iletişim') || t2.includes('iletisim') || t2.includes('lead') || t2.includes('contact')) return 'lead';
+        if (t2.includes('ai') || t2.includes('asistan') || t2.includes('assistant') || t2.includes('sohbet')) return 'ai';
+        if (t2.includes('video') || t2.includes('izle')) return 'video';
+        if (t2.includes('yetenek') || t2.includes('skill')) return 'skills';
+        if (t2.includes('geri sayım') || t2.includes('countdown') || t2.includes('sayım')) return 'countdown';
+        if (t2.includes('portfolyo') || t2.includes('portfolio') || t2.includes('galeri')) return 'portfolio';
+        if (t2.includes('yazılımcı') || t2.includes('yazilimci') || t2.includes('tech') || t2.includes('teknoloji')) return 'tech';
+        if (t2.includes('blog') || t2.includes('rss') || t2.includes('makale')) return 'blog';
+        return '';
+    };
+    
+    const widgetType = extractedType || detectTypeFromTitle(block.content?.title || '') || 'booking';
     const widgetUser = extractAttr('data-user');
     const vUrl = extractAttr('data-vUrl');
     const btnText = extractAttr('data-btn');
@@ -7006,7 +7024,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
     }
 
     // ─── INLINE MODE: Action Buttons for interactive widgets, compact blocks for informational ones ───
-    const isInteractiveWidget = ['booking', 'lead', 'ai', 'chat'].includes(widgetType);
+    const isInteractiveWidget = ['booking', 'lead', 'ai', 'chat', 'video'].includes(widgetType);
 
     if (isInteractiveWidget) {
         // Render as a sleek action button that opens a modal
@@ -7015,6 +7033,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t }: any) {
             lead: { icon: <MessageSquare size={20} />, label: block.content?.title || t.leadLabel || 'İletişim', desc: t.sendMessageDesc || 'Mesaj gönderin' },
             ai: { icon: <Bot size={20} />, label: block.content?.title || t.aiLabel || 'AI Asistan', desc: t.askAIDesc || 'Yapay zeka ile sohbet edin' },
             chat: { icon: <Bot size={20} />, label: block.content?.title || t.aiLabel || 'AI Asistan', desc: t.askAIDesc || 'Yapay zeka ile sohbet edin' },
+            video: { icon: <Play size={20} />, label: block.content?.title || t.videoLabel || 'Video', desc: t.watchVideoDesc || 'Videoyu izleyin' },
         };
         const config = typeConfig[widgetType] || typeConfig.booking;
 
