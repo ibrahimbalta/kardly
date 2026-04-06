@@ -4198,21 +4198,22 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 <div className="flex items-stretch gap-3">
                                     <button
                                         onClick={handleShare}
-                                        className={cn("flex-1 h-[60px] border flex items-center justify-center gap-2.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-white/5 active:translate-y-[4px] active:shadow-none backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        className={cn("flex-1 h-[60px] border flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-widest transition-all hover:bg-white/10 active:translate-y-[4px] active:shadow-none backdrop-blur-xl", theme.border, theme.text, toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         style={{ 
-                                            backgroundColor: 'rgba(255,255,255,0.03)',
+                                            backgroundColor: 'rgba(255,255,255,0.05)',
                                             boxShadow: '0 4px 0 0 rgba(255,255,255,0.1)'
                                         }}
                                     >
-                                        <Share2 size={16} className="opacity-60" /> {t.shareLabel}
+                                        <Share2 size={16} style={{ color: theme.accent }} /> {t.shareLabel}
                                     </button>
 
                                     <button
                                         onClick={handleCVView}
-                                        className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none text-white shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                        className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2.5 font-black text-[10px] uppercase tracking-[0.15em] transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none shadow-xl", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                         style={{
                                             background: `linear-gradient(135deg, ${(theme as any).cvAccent || theme.accent}, ${(theme as any).cvAccent || theme.accent}cc)`,
-                                            boxShadow: `0 4px 0 0 ${(theme as any).cvAccent || theme.accent}66, 0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`
+                                            boxShadow: `0 4px 0 0 ${(theme as any).cvAccent || theme.accent}66, 0 12px 24px -10px ${(theme as any).cvAccent || theme.accent}70`,
+                                            color: isDarkColor((theme as any).cvAccent || theme.accent) ? '#ffffff' : '#1a1a1a'
                                         }}
                                     >
                                         <FileText size={16} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
@@ -4222,10 +4223,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     {aiConfig?.isEnabled && (
                                         <button
                                             onClick={() => setIsAIChatOpen(true)}
-                                            className={cn("w-[62px] h-[60px] flex-shrink-0 flex items-center justify-center text-white shadow-xl transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
+                                            className={cn("w-[62px] h-[60px] flex-shrink-0 flex items-center justify-center shadow-xl transition-all hover:brightness-110 active:translate-y-[4px] active:shadow-none", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")}
                                             style={{
                                                 background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}cc)`,
-                                                boxShadow: `0 4px 0 0 ${theme.accent}66, 0 12px 24px -10px ${theme.accent}70`
+                                                boxShadow: `0 4px 0 0 ${theme.accent}66, 0 12px 24px -10px ${theme.accent}70`,
+                                                color: isDarkColor(theme.accent) ? '#ffffff' : '#1a1a1a'
                                             }}
                                             title={aiConfig.assistantName}
                                         >
