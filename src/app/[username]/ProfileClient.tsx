@@ -457,7 +457,7 @@ END:VCARD`
             case "profesyonel":
                 return {
                     font: "font-sans",
-                    rounded: "rounded-[1.5rem]",
+                    rounded: "rounded-[2rem]",
                     border: "border-solid",
                     headerSize: "text-2xl",
                     expertiseStyle: "slow-rotate",
@@ -467,7 +467,7 @@ END:VCARD`
             case "samimi":
                 return {
                     font: "font-sans",
-                    rounded: "rounded-[3.5rem]",
+                    rounded: "rounded-[4rem]",
                     border: "border-none",
                     headerSize: "text-3xl",
                     expertiseStyle: "floating",
@@ -478,7 +478,7 @@ END:VCARD`
             case "yaratıcı":
                 return {
                     font: "font-mono",
-                    rounded: "rounded-[2rem] rotate-[-1deg]",
+                    rounded: "rounded-[2.2rem] rotate-[-1deg]",
                     border: "border-dashed border-2",
                     headerSize: "text-3xl italic",
                     expertiseStyle: "scattered",
@@ -488,7 +488,7 @@ END:VCARD`
             case "lüks":
                 return {
                     font: "font-serif",
-                    rounded: "rounded-[2.5rem]",
+                    rounded: "rounded-[3rem]",
                     border: "border-double border-2",
                     headerSize: "text-2xl uppercase tracking-[0.4em] italic",
                     expertiseStyle: "slow-rotate",
@@ -3880,7 +3880,17 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animation-play-state: paused;
                                         }
                                     `}</style>
-                                        <div className={cn("w-[348px] mx-auto border backdrop-blur-md py-4 px-6 mt-4 relative z-20 overflow-visible", theme.card, theme.border, toneStyle.rounded)}>
+                                        <motion.div 
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            className={cn("w-[348px] mx-auto border backdrop-blur-3xl py-7 px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
+                                            style={{ 
+                                                backgroundColor: `${theme.accent}0c`,
+                                                borderColor: `${theme.accent}30`,
+                                                boxShadow: `0 30px 70px -15px ${theme.accent}35, inset 0 0 30px ${theme.accent}08`
+                                            }}
+                                        >
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
@@ -3993,7 +4003,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     ))}
                                                 </div>
                                             )}
-                                        </div>
+                                        </motion.div>
                                     </div>
                                 )}
 
@@ -4848,7 +4858,11 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     whileHover={{ y: -5 }}
-                                    className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 group cursor-pointer"
+                                    className={cn("bg-white overflow-hidden shadow-xl border transition-all duration-500 group cursor-pointer", toneStyle.rounded)}
+                                    style={{ 
+                                        borderColor: `${theme.accent}15`,
+                                        boxShadow: `0 20px 40px -15px ${theme.accent}25`
+                                    }}
                                     onClick={() => {
                                         trackEvent("product_grid", project.name);
                                         if (project.link) {
@@ -5416,7 +5430,12 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
                                     whileHover={{ y: -5 }}
-                                    className={cn("rounded-[3rem] border overflow-hidden group cursor-pointer backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] transition-all", theme.card, theme.border)}
+                                    className={cn("overflow-hidden group cursor-pointer backdrop-blur-3xl transition-all duration-500", theme.card, theme.border, toneStyle.rounded)}
+                                    style={{ 
+                                        backgroundColor: `${theme.accent}0a`,
+                                        borderColor: `${theme.accent}25`,
+                                        boxShadow: `0 40px 100px -20px ${theme.accent}30`
+                                    }}
                                     onClick={() => {
                                         trackEvent("product_click", project.name);
                                         if (project.link) {
@@ -7336,7 +7355,14 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
     };
 
     return (
-        <div className={cn("w-full p-6 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+        <div 
+            className={cn("w-full p-8 flex flex-col gap-6 border shadow-2xl relative overflow-hidden transition-all duration-500 hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)]", theme.card, theme.border, toneStyle.rounded)}
+            style={{ 
+                backgroundColor: `${theme.accent}0a`,
+                borderColor: `${theme.accent}20`,
+                boxShadow: `0 30px 60px -15px ${theme.accent}20` 
+            }}
+        >
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -7370,7 +7396,7 @@ function PortfolioWidget({ images, githubUrl, dribbbleUrl, behanceUrl, theme, to
                 ))}
             </div>
 
-            <div className="relative aspect-square w-full rounded-2xl overflow-hidden group">
+            <div className={cn("relative aspect-square w-full overflow-hidden group shadow-2xl border", toneStyle.rounded)} style={{ borderColor: `${theme.accent}20` }}>
                 <AnimatePresence mode="wait">
                     <motion.img
                         key={activeIdx}
@@ -7408,7 +7434,14 @@ function TechStackWidget({ technologies, theme, toneStyle, t }: any) {
     const techList = technologies.split(',').map((t: string) => t.trim()).filter(Boolean);
 
     return (
-        <div className={cn("w-full p-8 flex flex-col gap-6 border shadow-xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}>
+        <div 
+            className={cn("w-full p-10 flex flex-col gap-8 border shadow-2xl relative overflow-hidden transition-all duration-500", theme.card, theme.border, toneStyle.rounded)}
+            style={{ 
+                backgroundColor: `${theme.accent}0a`,
+                borderColor: `${theme.accent}25`,
+                boxShadow: `0 30px 70px -15px ${theme.accent}25`
+            }}
+        >
             <div className="absolute top-0 left-0 w-full h-1 opacity-20" style={{ background: theme.accent }} />
             <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${theme.accent}15`, color: theme.accent }}>
@@ -7424,8 +7457,8 @@ function TechStackWidget({ technologies, theme, toneStyle, t }: any) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className={cn("px-4 py-2 text-[10px] font-black uppercase tracking-widest border transition-all hover:scale-105", theme.card, theme.border)}
-                        style={{ borderColor: `${theme.accent}20` }}
+                        className={cn("px-5 py-2.5 text-[10px] font-black uppercase tracking-widest border transition-all hover:scale-105 shadow-sm", theme.card, theme.border, toneStyle.rounded)}
+                        style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}10` }}
                     >
                         <span style={{ color: theme.accent }}>{tech}</span>
                     </motion.div>
