@@ -5364,20 +5364,20 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
         <button
             onClick={onClick}
             className={cn(
-                "w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all text-sm group",
+                "w-full flex items-center gap-4 px-6 py-4 rounded-3xl font-black transition-all text-[10px] uppercase tracking-[0.2em] group relative",
                 active
                     ? "bg-primary text-white shadow-xl shadow-primary/20"
-                    : "text-slate-400 hover:bg-slate-100 hover:text-slate-900"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
             )}
         >
-            <div className={cn("transition-transform group-hover:scale-110", active && "scale-110")}>
+            <div className={cn("transition-all duration-500", active ? "scale-110" : "group-hover:scale-110 group-hover:text-primary")}>
                 {icon}
             </div>
             <span className="truncate">{label}</span>
             {active && (
                 <motion.div
-                    layoutId="active-nav-dot"
-                    className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_8px_#fff]"
+                    layoutId="active-nav-indicator"
+                    className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_#fff]"
                 />
             )}
         </button>
@@ -5422,43 +5422,52 @@ function StatCard({ icon, label, value, trend }: { icon: React.ReactNode, label:
 
 function BottomNav({ activeTab, setActiveTab, t }: any) {
     const navItems = [
-        { id: "overview", icon: <Activity className="w-6 h-6" />, label: t('overview') || "Özet" },
-        { id: "network", icon: <Compass className="w-6 h-6" />, label: "Hub" },
-        { id: "edit", icon: <User className="w-6 h-6" />, label: t('editPage') || "Düzenle" },
-        { id: "businesscard", icon: <IdCard className="w-6 h-6" />, label: t('digitalCard') || "Kart" },
+        { id: "overview", icon: <Activity className="w-5 h-5" />, label: t('overview') || "Özet" },
+        { id: "network", icon: <Compass className="w-5 h-5" />, label: "Hub" },
+        { id: "edit", icon: <User className="w-5 h-5" />, label: t('editPage') || "Düzenle" },
+        { id: "businesscard", icon: <IdCard className="w-5 h-5" />, label: t('digitalCard') || "Kart" },
+        { id: "settings", icon: <Settings className="w-5 h-5" />, label: t('settings') || "Ayarlar" },
     ]
 
     return (
-        <div className="lg:hidden fixed bottom-6 left-6 right-6 z-[100]">
-            <nav className="bg-slate-950/90 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-                {navItems.map((item) => (
-                    <button
-                        key={item.id}
-                        onClick={() => setActiveTab(item.id)}
-                        className={cn(
-                            "flex-1 flex flex-col items-center gap-1.5 py-4 rounded-[2rem] transition-all",
-                            activeTab === item.id 
-                                ? "bg-white/10 text-white" 
-                                : "text-slate-500 active:scale-95"
-                        )}
-                    >
-                        <motion.div 
-                            animate={activeTab === item.id ? { scale: 1.1, y: -2 } : { scale: 1, y: 0 }}
-                            className={cn("transition-colors", activeTab === item.id ? "text-primary" : "text-inherit")}
-                        >
-                            {item.icon}
-                        </motion.div>
-                        <span className={cn(
-                            "text-[8px] font-black uppercase tracking-[0.15em] transition-opacity",
-                            activeTab === item.id ? "opacity-100" : "opacity-40"
-                        )}>
-                            {item.label}
-                        </span>
-                    </button>
-                ))}
+        <div className="lg:hidden fixed bottom-6 left-0 right-0 z-[100] px-4 pointer-events-none">
+            <nav className="bg-slate-950/80 backdrop-blur-3xl border border-white/5 rounded-full p-1.5 flex items-center justify-between shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] max-w-sm mx-auto pointer-events-auto">
+                <AnimatePresence mode="wait">
+                    {navItems.map((item) => {
+                        const isActive = activeTab === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => setActiveTab(item.id)}
+                                className={cn(
+                                    "relative flex-1 flex flex-col items-center gap-1.5 py-3 rounded-full transition-all duration-300",
+                                    isActive ? "text-white" : "text-slate-500 active:scale-90"
+                                )}
+                            >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="active-pill"
+                                        className="absolute inset-0 bg-white/10 rounded-full z-0"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <div className={cn(
+                                    "relative z-10 transition-transform duration-500",
+                                    isActive ? "scale-110 -translate-y-0.5 text-primary" : "scale-100"
+                                )}>
+                                    {item.icon}
+                                </div>
+                                <span className={cn(
+                                    "relative z-10 text-[7px] font-black uppercase tracking-[0.2em] transition-all duration-300",
+                                    isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 h-0 overflow-hidden"
+                                )}>
+                                    {item.label}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </AnimatePresence>
             </nav>
-
-
         </div>
     );
 }
