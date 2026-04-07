@@ -107,17 +107,43 @@ interface Profile {
     businessCardOrientation?: string;
 }
 
-const getHeroIcon = (platform: string = "", size: number = 20) => {
+const XIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="currentColor" 
+        className={className}
+        aria-hidden="true"
+    >
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+)
+
+const getHeroIcon = (platform: string = "", size: number = 20, url: string = "") => {
     const p = platform.toLowerCase().trim();
+    const u = (url || "").toLowerCase().trim();
+    
+    // Auto-detect from URL if platform is not clear or is an generic link
+    if (p === 'website' || p === 'globe' || !p) {
+        if (u.includes('twitter.com') || u.includes('x.com')) return <XIcon size={size} />;
+        if (u.includes('instagram.com')) return <Instagram size={size} />;
+        if (u.includes('linkedin.com')) return <Linkedin size={size} />;
+        if (u.includes('youtube.com') || u.includes('youtu.be')) return <Youtube size={size} />;
+        if (u.includes('github.com')) return <Github size={size} />;
+        if (u.includes('facebook.com')) return <Facebook size={size} />;
+        if (u.includes('mailto:')) return <Mail size={size} />;
+    }
+
     switch (p) {
         case 'instagram': return <Instagram size={size} />;
         case 'whatsapp': return <MessageCircle size={size} />;
-        case 'twitter': case 'x': return <Twitter size={size} />;
+        case 'twitter': case 'x': return <XIcon size={size} />;
         case 'linkedin': return <Linkedin size={size} />;
         case 'youtube': return <Youtube size={size} />;
         case 'github': return <Github size={size} />;
         case 'website': return <Globe size={size} />;
-        case 'email': return <Mail size={size} />;
+        case 'email': case 'mail': return <Mail size={size} />;
         case 'phone': return <Phone size={size} />;
         case 'facebook': return <Facebook size={size} />;
         case 'dribbble': return <Dribbble size={size} />;
@@ -128,6 +154,7 @@ const getHeroIcon = (platform: string = "", size: number = 20) => {
         default: return <Globe size={size} />;
     }
 }
+
 
 // ─── HELPERS ─────────────────────────────────────────────────────
 
@@ -2528,7 +2555,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         .filter((l: any) => l.isHero && l.url)
         .map((l: any) => ({
             label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
-            icon: getHeroIcon(l.platform),
+            icon: getHeroIcon(l.platform, 20, l.url),
             href: formatUrl(l.url),
             onClick: () => trackEvent("hero_social", l.platform),
             active: true
@@ -4300,7 +4327,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                         <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
                                             {platform === 'instagram' && <Instagram size={24} />}
                                             {platform === 'linkedin' && <Linkedin size={24} />}
-                                            {platform === 'twitter' && <Twitter size={24} />}
+                                            {platform === 'twitter' && <XIcon size={24} />}
                                             {platform === 'github' && <Github size={24} />}
                                             {platform === 'youtube' && <Youtube size={24} />}
                                             {platform === 'whatsapp' && <MessageCircle size={24} />}
@@ -5031,7 +5058,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         >
                             {link.platform === 'instagram' && <Instagram size={22} />}
                             {link.platform === 'facebook' && <Facebook size={22} />}
-                            {link.platform === 'twitter' && <Twitter size={22} />}
+                            {link.platform === 'twitter' && <XIcon size={22} />}
                             {link.platform === 'linkedin' && <Linkedin size={22} />}
                             {link.platform === 'github' && <Github size={22} />}
                             {link.platform === 'youtube' && <Youtube size={22} />}
@@ -5733,7 +5760,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     style={{ borderColor: `${theme.accent}60`, color: `${theme.accent}90` }}
                                 >
                                     <div className="transition-all duration-300 group-hover:scale-110" style={{ color: theme.accent }}>
-                                        {getHeroIcon(link.platform, 22)}
+                                        {getHeroIcon(link.platform, 22, link.url)}
                                     </div>
                                 </motion.a>
                             ))}

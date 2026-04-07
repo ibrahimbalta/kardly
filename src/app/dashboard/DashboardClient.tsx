@@ -109,6 +109,19 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { z } from "zod"
 
 
+const XIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="currentColor" 
+        className={className}
+        aria-hidden="true"
+    >
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+)
+
 const profileSchema = z.object({
     username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-zA-Z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
     displayName: z.string().optional().or(z.literal("")).nullable(),
@@ -2702,8 +2715,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="grid grid-cols-1 gap-6">
                                     {[
                                         { id: "instagram", icon: <Instagram />, color: "text-pink-500", label: "Instagram" },
-                                        { id: "whatsapp", icon: <Phone />, color: "text-emerald-500", label: "WhatsApp" },
-                                        { id: "twitter", icon: <Twitter />, color: "text-sky-500", label: "Twitter" },
+                                        { id: "whatsapp", icon: <MessageCircle />, color: "text-emerald-500", label: "WhatsApp" },
+                                        { id: "twitter", icon: <XIcon />, color: "text-slate-900", label: "Twitter (X)" },
                                         { id: "linkedin", icon: <Linkedin />, color: "text-blue-700", label: "LinkedIn" },
                                         { id: "youtube", icon: <Youtube />, color: "text-red-500", label: "YouTube" },
                                         { id: "github", icon: <Github />, color: "text-slate-800", label: "GitHub" },
