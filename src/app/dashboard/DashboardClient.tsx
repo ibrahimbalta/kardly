@@ -5060,11 +5060,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         {/* Ambient Glow */}
                                                         <div className={cn("absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] opacity-10 group-hover:opacity-20 transition-all duration-500", tpl.accent)} />
 
-                                                        <div className="p-5 sm:p-7 relative z-10 flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
-                                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-5 sm:mb-6">
+                                                        <div className="p-4 sm:p-5 relative z-10 flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
+                                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 mb-4 sm:mb-5">
                                                                 <div className="relative shrink-0">
                                                                     <div className={cn(
-                                                                        "w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 shadow-lg bg-slate-50 group-hover:rotate-3 transition-transform duration-500",
+                                                                        "w-14 h-14 sm:w-16 h-16 rounded-[1.25rem] sm:rounded-[1.5rem] overflow-hidden border-2 shadow-lg bg-slate-50 group-hover:rotate-3 transition-transform duration-500",
                                                                         isLight ? "border-white" : "border-white/20"
                                                                     )}>
                                                                         {user.image ? (
@@ -5079,18 +5079,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 </div>
                                                                 
                                                                 <div className="flex-1 min-w-0 pt-0.5">
-                                                                    <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-1 sm:gap-4 mb-1">
-                                                                        <h3 className={cn("text-sm sm:text-base font-black whitespace-normal line-clamp-2 tracking-tight max-w-full leading-tight", tpl.text)}>
+                                                                    <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-1 sm:gap-3 mb-1">
+                                                                        <h3 className={cn("text-[12px] sm:text-[14px] font-black whitespace-normal line-clamp-2 tracking-tight max-w-full leading-none mb-1", tpl.text)}>
                                                                             {user.profile?.displayName || user.name}
                                                                         </h3>
-                                                                        <div className="flex items-center gap-0.5 text-amber-500">
-                                                                            <Star size={10} fill="currentColor" />
-                                                                            <span className="text-[10px] font-bold">{user.profile?.avgRating || "5.0"}</span>
+                                                                        <div className="flex items-center gap-1 text-amber-500 bg-amber-50/50 px-1.5 py-0.5 rounded-lg border border-amber-100/20">
+                                                                            <Star size={12} fill="currentColor" />
+                                                                            <span className="text-[10px] font-black">{user.profile?.avgRating || "5.0"}</span>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="flex items-center justify-center sm:justify-start gap-2">
+                                                                    <div className="flex items-center justify-center sm:justify-start gap-1.5">
                                                                         <div className={cn("w-1 h-1 rounded-full hidden sm:block", tpl.accent)} />
-                                                                        <p className={cn("text-[9px] sm:text-[10px] font-black uppercase tracking-wider max-w-full opacity-60 leading-tight", tpl.text)}>
+                                                                        <p className={cn("text-[8px] sm:text-[9px] font-black uppercase tracking-wider max-w-full opacity-60 leading-tight", tpl.text)}>
                                                                             {user.profile?.occupation || t('user')}
                                                                         </p>
                                                                     </div>
@@ -5098,9 +5098,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             </div>
 
                                                             {user.profile?.slogan && (
-                                                                <div className="hidden sm:block mb-6 relative">
+                                                                <div className="hidden sm:block mb-4 relative">
                                                                     <div className={cn("absolute left-0 top-0 bottom-0 w-0.5 rounded-full transition-colors", isLight ? "bg-slate-100 group-hover:bg-primary/20" : "bg-white/10 group-hover:bg-white/30")} />
-                                                                    <p className={cn("text-[11px] font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity", tpl.text)}>
+                                                                    <p className={cn("text-[9px] sm:text-[10px] font-medium line-clamp-2 pl-3 italic leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity", tpl.text)}>
                                                                         "{user.profile.slogan}"
                                                                     </p>
                                                                 </div>
