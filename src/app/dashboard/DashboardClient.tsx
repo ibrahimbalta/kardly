@@ -3293,25 +3293,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     </div>
                 ) : activeTab === "appointments" ? (
                     <div className="flex-1 flex flex-col p-4 sm:p-0 space-y-6 sm:space-y-10 pb-24 sm:pb-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                            <div className="relative">
-                                <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden sm:block" />
-                                <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2 italic">
-                                    {t('appointmentRequests')}
-                                </h2>
-                                <p className="text-[11px] sm:text-sm text-slate-500 font-bold uppercase tracking-widest opacity-60">
-                                    Bize ulaşan tüm randevu ve görüşme taleplerini buradan yönetin.
-                                </p>
-                            </div>
-                            
-                            <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-end gap-2">
                                 <button className="px-5 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm hover:bg-primary hover:text-white transition-all">
                                     {t('all')}
                                 </button>
                                 <button className="px-5 py-2.5 bg-white text-slate-400 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm hover:border-primary/20 hover:text-primary transition-all">
                                     {t('pending')}
                                 </button>
-                            </div>
                         </div>
 
                         {/* Mobile View: Premium Appointment Cards */}
