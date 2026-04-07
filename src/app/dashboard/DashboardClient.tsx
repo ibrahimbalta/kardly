@@ -97,6 +97,7 @@ import {
     Send,
     Search
 } from "lucide-react"
+import { TEMPLATES } from "@/components/BusinessCardGenerator"
 
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -5014,7 +5015,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {networkUsers
                                             .filter(u => {
                                                 const searchLower = networkSearch.toLowerCase()
@@ -5029,87 +5030,116 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                 return matchesSearch && matchesCategory && matchesOnline
                                             })
-                                            .map((user: any) => (
-                                                <motion.div 
-                                                    key={user.id} 
-                                                    layout
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    whileHover={{ y: -8, scale: 1.01 }}
-                                                    className="group relative bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] hover:border-primary/20 transition-all duration-500 cursor-pointer flex flex-col shadow-sm"
-                                                    onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
-                                                >
-                                                    {/* Top Accent Bar */}
-                                                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-indigo-500 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                                    
-                                                    {/* Ambient Glow */}
-                                                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
+                                            .map((user: any) => {
+                                                const userTplId = user.profile?.businessCardTemplateId || "minimal_white";
+                                                const tpl = TEMPLATES.find(t => t.id === userTplId) || TEMPLATES[0];
+                                                const isLight = tpl.hex === '#ffffff' || tpl.bg.includes('white') || tpl.bg.includes('slate-50');
 
-                                                    <div className="p-4 sm:p-7 relative z-10 flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
-                                                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 mb-3 sm:mb-6">
-                                                            <div className="relative shrink-0">
-                                                                <div className="w-14 h-14 sm:w-16 h-16 rounded-2xl sm:rounded-[1.5rem] overflow-hidden border-2 border-white shadow-md bg-slate-50 group-hover:rotate-3 transition-transform duration-500">
-                                                                    {user.image ? (
-                                                                        <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
-                                                                    ) : (
-                                                                        <div className="w-full h-full flex items-center justify-center text-slate-200">
-                                                                            <User size={28} />
-                                                                        </div>
-                                                                    )}
+                                                return (
+                                                    <motion.div 
+                                                        key={user.id} 
+                                                        layout
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        whileHover={{ y: -8, scale: 1.01 }}
+                                                        className={cn(
+                                                            "group relative rounded-[2.5rem] border overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col shadow-xl",
+                                                            tpl.bg,
+                                                            isLight ? "border-slate-100 shadow-slate-200/50" : "border-white/10 shadow-black/20",
+                                                            tpl.text
+                                                        )}
+                                                        style={{
+                                                            background: tpl.colors ? `linear-gradient(135deg, ${tpl.colors[0]}, ${tpl.colors[1] || tpl.colors[0]})` : undefined,
+                                                            backgroundColor: tpl.colors ? undefined : (tpl.hex || undefined)
+                                                        }}
+                                                        onClick={() => window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank')}
+                                                    >
+                                                        {/* Top Accent Bar */}
+                                                        <div className={cn("absolute top-0 left-0 right-0 h-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500", tpl.accent)} />
+                                                        
+                                                        {/* Ambient Glow */}
+                                                        <div className={cn("absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] opacity-10 group-hover:opacity-20 transition-all duration-500", tpl.accent)} />
+
+                                                        <div className="p-5 sm:p-7 relative z-10 flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
+                                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-5 sm:mb-6">
+                                                                <div className="relative shrink-0">
+                                                                    <div className={cn(
+                                                                        "w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 shadow-lg bg-slate-50 group-hover:rotate-3 transition-transform duration-500",
+                                                                        isLight ? "border-white" : "border-white/20"
+                                                                    )}>
+                                                                        {user.image ? (
+                                                                            <img src={user.image} className="w-full h-full object-cover" alt={user.name} />
+                                                                        ) : (
+                                                                            <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                                                <User size={28} />
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-sm animate-pulse" />
                                                                 </div>
-                                                                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm animate-pulse" />
-                                                            </div>
-                                                            
-                                                            <div className="flex-1 min-w-0 pt-0.5">
-                                                                <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-1 sm:gap-2 mb-1 sm:mb-0.5">
-                                                                    <h3 className="text-[13px] sm:text-base font-black text-slate-900 group-hover:text-primary transition-colors truncate tracking-tight max-w-full">
-                                                                        {user.profile?.displayName || user.name}
-                                                                    </h3>
-                                                                    <div className="flex items-center gap-0.5 text-amber-500">
-                                                                        <Star size={10} fill="currentColor" />
-                                                                        <span className="text-[10px] font-bold">{user.profile?.avgRating || "5.0"}</span>
+                                                                
+                                                                <div className="flex-1 min-w-0 pt-0.5">
+                                                                    <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-1 sm:gap-4 mb-1">
+                                                                        <h3 className={cn("text-sm sm:text-base font-black truncate tracking-tight max-w-full", tpl.text)}>
+                                                                            {user.profile?.displayName || user.name}
+                                                                        </h3>
+                                                                        <div className="flex items-center gap-0.5 text-amber-500">
+                                                                            <Star size={10} fill="currentColor" />
+                                                                            <span className="text-[10px] font-bold">{user.profile?.avgRating || "5.0"}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="flex items-center justify-center sm:justify-start gap-2">
+                                                                        <div className={cn("w-1 h-1 rounded-full hidden sm:block", tpl.accent)} />
+                                                                        <p className={cn("text-[9px] sm:text-[10px] font-black uppercase tracking-widest truncate max-w-full opacity-60", tpl.text)}>
+                                                                            {user.profile?.occupation || t('user')}
+                                                                        </p>
                                                                     </div>
                                                                 </div>
-                                                                <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
-                                                                    <div className="w-1 h-1 rounded-full bg-primary hidden sm:block" />
-                                                                    <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest truncate max-w-full">
-                                                                        {user.profile?.occupation || t('user')}
+                                                            </div>
+
+                                                            {user.profile?.slogan && (
+                                                                <div className="hidden sm:block mb-6 relative">
+                                                                    <div className={cn("absolute left-0 top-0 bottom-0 w-0.5 rounded-full transition-colors", isLight ? "bg-slate-100 group-hover:bg-primary/20" : "bg-white/10 group-hover:bg-white/30")} />
+                                                                    <p className={cn("text-[11px] font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity", tpl.text)}>
+                                                                        "{user.profile.slogan}"
                                                                     </p>
                                                                 </div>
-                                                            </div>
-                                                        </div>
+                                                            )}
 
-                                                        {user.profile?.slogan && (
-                                                            <div className="hidden sm:block mb-6 relative">
-                                                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-slate-100 rounded-full group-hover:bg-primary/20 transition-colors" />
-                                                                <p className="text-[11px] text-slate-500 font-medium line-clamp-2 pl-4 italic leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
-                                                                    "{user.profile.slogan}"
-                                                                </p>
-                                                            </div>
-                                                        )}
-
-                                                        <div className="mt-auto w-full pt-4 sm:pt-5 flex flex-col sm:flex-row items-center justify-between border-t border-slate-50/50 gap-3 sm:gap-0">
-                                                            <div className="hidden sm:flex items-center gap-2.5">
-                                                                <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                                                                    <Globe size={11} className="text-slate-400 group-hover:text-primary" />
+                                                            <div className={cn(
+                                                                "mt-auto w-full pt-4 sm:pt-5 flex flex-wrap items-center justify-between border-t gap-3",
+                                                                isLight ? "border-slate-50/50" : "border-white/5"
+                                                            )}>
+                                                                <div className="hidden sm:flex items-center gap-2.5 min-w-0">
+                                                                    <div className={cn(
+                                                                        "w-6 h-6 rounded-lg flex items-center justify-center transition-colors",
+                                                                        isLight ? "bg-slate-50 group-hover:bg-primary/10" : "bg-white/5 group-hover:bg-white/10"
+                                                                    )}>
+                                                                        <Globe size={11} className={cn("transition-colors", isLight ? "text-slate-400 group-hover:text-primary" : "text-white/40 group-hover:text-white")} />
+                                                                    </div>
+                                                                    <span className={cn("text-[9px] sm:text-[10px] font-black group-hover:opacity-100 uppercase tracking-wider truncate max-w-[90px] transition-all opacity-50", tpl.text)}>
+                                                                        {user.profile?.username || user.name}.kardly.site
+                                                                    </span>
                                                                 </div>
-                                                                <span className="text-[9px] sm:text-[10px] font-black text-slate-500 group-hover:text-slate-900 uppercase tracking-wider truncate max-w-[100px] transition-colors">
-                                                                    {user.profile?.username || user.name}.kardly.site
-                                                                </span>
+                                                                <button 
+                                                                    className={cn(
+                                                                        "flex-1 sm:flex-none h-9 sm:h-10 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
+                                                                        isLight 
+                                                                            ? "bg-slate-100/50 sm:bg-slate-50 hover:bg-primary hover:text-white text-slate-600" 
+                                                                            : "bg-white/10 hover:bg-white hover:text-slate-900 text-white"
+                                                                    )}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank');
+                                                                    }}
+                                                                >
+                                                                    {t('visitProfile')}
+                                                                </button>
                                                             </div>
-                                                            <button 
-                                                                className="w-full sm:w-auto h-9 sm:h-10 px-3 sm:px-4 bg-slate-100/50 sm:bg-slate-50 hover:bg-primary hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    window.open(`https://${user.profile?.username || user.name}.kardly.site`, '_blank');
-                                                                }}
-                                                            >
-                                                                {t('visitProfile')}
-                                                            </button>
                                                         </div>
-                                                    </div>
-                                                </motion.div>
-                                            ))}
+                                                    </motion.div>
+                                                );
+                                            })}
                                     </div>
                                 )}
                             </div>
