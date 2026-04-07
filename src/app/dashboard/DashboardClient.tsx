@@ -5080,7 +5080,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                 
                                                                 <div className="flex-1 min-w-0 pt-0.5">
                                                                     <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-1 sm:gap-4 mb-1">
-                                                                        <h3 className={cn("text-sm sm:text-base font-black truncate tracking-tight max-w-full", tpl.text)}>
+                                                                        <h3 className={cn("text-sm sm:text-base font-black whitespace-normal line-clamp-2 tracking-tight max-w-full leading-tight", tpl.text)}>
                                                                             {user.profile?.displayName || user.name}
                                                                         </h3>
                                                                         <div className="flex items-center gap-0.5 text-amber-500">
@@ -5090,7 +5090,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     </div>
                                                                     <div className="flex items-center justify-center sm:justify-start gap-2">
                                                                         <div className={cn("w-1 h-1 rounded-full hidden sm:block", tpl.accent)} />
-                                                                        <p className={cn("text-[9px] sm:text-[10px] font-black uppercase tracking-widest truncate max-w-full opacity-60", tpl.text)}>
+                                                                        <p className={cn("text-[9px] sm:text-[10px] font-black uppercase tracking-wider max-w-full opacity-60 leading-tight", tpl.text)}>
                                                                             {user.profile?.occupation || t('user')}
                                                                         </p>
                                                                     </div>
