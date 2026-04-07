@@ -144,15 +144,16 @@ const getHeroIcon = (platform: string = "", size: number = 20, url: string = "")
     const u = (url || "").toLowerCase().trim();
     
     // Auto-detect from URL if platform is not clear or is an generic link
-    if (p === 'website' || p === 'globe' || !p) {
+    if (p === 'website' || p === 'globe' || !p || p === 'custom') {
+        const u = (url || "").toLowerCase().trim();
         if (u.includes('twitter.com') || u.includes('x.com')) return <XIcon size={size} />;
         if (u.includes('instagram.com')) return <Instagram size={size} />;
         if (u.includes('linkedin.com')) return <Linkedin size={size} />;
         if (u.includes('youtube.com') || u.includes('youtu.be')) return <Youtube size={size} />;
         if (u.includes('github.com')) return <Github size={size} />;
         if (u.includes('facebook.com')) return <Facebook size={size} />;
-        // Enhanced email detection: mailto: or contains @ and doesn't look like a website
-        if (u.includes('mailto:') || (u.includes('@') && !u.startsWith('http') && !u.includes('/'))) return <MailWithBadge size={size} />;
+        // Enhanced email detection: mailto:, email: or contains @ and doesn't look like a website
+        if (u.includes('mailto:') || u.includes('email:') || (u.includes('@') && !u.startsWith('http') && !u.includes('/'))) return <MailWithBadge size={size} />;
     }
 
     switch (p) {
@@ -4345,15 +4346,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     const platform = l.platform.toLowerCase()
                                     return (
                                         <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
-                                            {platform === 'instagram' && <Instagram size={24} />}
-                                            {platform === 'linkedin' && <Linkedin size={24} />}
-                                            {platform === 'twitter' && <XIcon size={24} />}
-                                            {platform === 'github' && <Github size={24} />}
-                                            {platform === 'youtube' && <Youtube size={24} />}
-                                            {platform === 'whatsapp' && <MessageCircle size={24} />}
-                                            {platform === 'mail' && <MailWithBadge size={24} />}
-                                            {platform === 'medium' && <FileText size={24} />}
-                                            {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'medium'].includes(platform)) && <Globe size={24} />}
+                                            {getHeroIcon(l.platform, 24, l.url)}
                                         </a>
                                     )
                                 })}
@@ -5076,15 +5069,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                             style={{ color: `${theme.accent}cc`, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
                             className="hover:text-slate-900 transition-colors"
                         >
-                            {link.platform === 'instagram' && <Instagram size={22} />}
-                            {link.platform === 'facebook' && <Facebook size={22} />}
-                            {link.platform === 'twitter' && <XIcon size={22} />}
-                            {link.platform === 'linkedin' && <Linkedin size={22} />}
-                            {link.platform === 'github' && <Github size={22} />}
-                            {link.platform === 'youtube' && <Youtube size={22} />}
-                            {link.platform === 'website' && <Globe size={22} />}
-                            {link.platform === 'whatsapp' && <MessageCircle size={22} />}
-                            {!['instagram', 'facebook', 'twitter', 'linkedin', 'github', 'youtube', 'website', 'whatsapp'].includes(link.platform) && <Globe size={22} />}
+                            {getHeroIcon(link.platform, 22, link.url)}
                         </motion.a>
                     ))}
                     {profile.cvUrl && (
