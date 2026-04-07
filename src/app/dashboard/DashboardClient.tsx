@@ -122,6 +122,25 @@ const XIcon = ({ size = 20, className = "" }: { size?: number, className?: strin
     </svg>
 )
 
+const MailWithBadge = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <div className={cn("relative inline-flex items-center justify-center", className)} style={{ width: size, height: size }}>
+        <Mail size={size} />
+        <div 
+            className="absolute bg-red-500 rounded-full flex items-center justify-center border border-white shadow-sm"
+            style={{ 
+                width: `${Math.max(10, size * 0.55)}px`, 
+                height: `${Math.max(10, size * 0.55)}px`,
+                top: `-${size * 0.15}px`,
+                right: `-${size * 0.2}px`,
+                fontSize: `${Math.max(7, size * 0.35)}px`,
+                lineHeight: 1
+            }}
+        >
+            <span className="text-white font-bold leading-none">1</span>
+        </div>
+    </div>
+)
+
 const profileSchema = z.object({
     username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalıdır").regex(/^[a-zA-Z0-9_-]+$/, "Kullanıcı adı sadece harf, rakam, alt tire ve tire içerebilir"),
     displayName: z.string().optional().or(z.literal("")).nullable(),
@@ -2721,7 +2740,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         { id: "youtube", icon: <Youtube />, color: "text-red-500", label: "YouTube" },
                                         { id: "github", icon: <Github />, color: "text-slate-800", label: "GitHub" },
                                         { id: "website", icon: <Globe />, color: "text-indigo-500", label: "Website" },
-                                        { id: "email", icon: <Mail />, color: "text-rose-500", label: "Email" },
+                                        { id: "email", icon: <MailWithBadge />, color: "text-rose-500", label: "Email" },
                                     ].map((social) => (
                                         <div key={social.id} className="flex flex-col md:flex-row md:items-center gap-6 p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100/50 hover:border-primary/20 transition-all group">
                                             <div className="flex items-center gap-5 flex-1 min-w-0">

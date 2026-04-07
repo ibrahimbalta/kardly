@@ -120,6 +120,25 @@ const XIcon = ({ size = 20, className = "" }: { size?: number, className?: strin
     </svg>
 )
 
+const MailWithBadge = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <div className={cn("relative inline-flex items-center justify-center", className)} style={{ width: size, height: size }}>
+        <Mail size={size} />
+        <div 
+            className="absolute bg-red-500 rounded-full flex items-center justify-center border border-white shadow-sm"
+            style={{ 
+                width: `${Math.max(10, size * 0.55)}px`, 
+                height: `${Math.max(10, size * 0.55)}px`,
+                top: `-${size * 0.15}px`,
+                right: `-${size * 0.2}px`,
+                fontSize: `${Math.max(7, size * 0.35)}px`,
+                lineHeight: 1
+            }}
+        >
+            <span className="text-white font-bold leading-none">1</span>
+        </div>
+    </div>
+)
+
 const getHeroIcon = (platform: string = "", size: number = 20, url: string = "") => {
     const p = platform.toLowerCase().trim();
     const u = (url || "").toLowerCase().trim();
@@ -132,7 +151,8 @@ const getHeroIcon = (platform: string = "", size: number = 20, url: string = "")
         if (u.includes('youtube.com') || u.includes('youtu.be')) return <Youtube size={size} />;
         if (u.includes('github.com')) return <Github size={size} />;
         if (u.includes('facebook.com')) return <Facebook size={size} />;
-        if (u.includes('mailto:')) return <Mail size={size} />;
+        // Enhanced email detection: mailto: or contains @ and doesn't look like a website
+        if (u.includes('mailto:') || (u.includes('@') && !u.startsWith('http') && !u.includes('/'))) return <MailWithBadge size={size} />;
     }
 
     switch (p) {
@@ -143,7 +163,7 @@ const getHeroIcon = (platform: string = "", size: number = 20, url: string = "")
         case 'youtube': return <Youtube size={size} />;
         case 'github': return <Github size={size} />;
         case 'website': return <Globe size={size} />;
-        case 'email': case 'mail': return <Mail size={size} />;
+        case 'email': case 'mail': return <MailWithBadge size={size} />;
         case 'phone': return <Phone size={size} />;
         case 'facebook': return <Facebook size={size} />;
         case 'dribbble': return <Dribbble size={size} />;
@@ -2586,7 +2606,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             },
             active: true
         },
-        { label: t.emailBtn || "E-Mail", icon: <Mail size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
+        { label: t.emailBtn || "E-Mail", icon: <MailWithBadge size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
         {
             label: t.bookAppointment, icon: <Calendar size={20} />, onClick: () => {
                 trackEvent("appointment")
@@ -4331,7 +4351,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             {platform === 'github' && <Github size={24} />}
                                             {platform === 'youtube' && <Youtube size={24} />}
                                             {platform === 'whatsapp' && <MessageCircle size={24} />}
-                                            {platform === 'mail' && <Mail size={24} />}
+                                            {platform === 'mail' && <MailWithBadge size={24} />}
                                             {platform === 'medium' && <FileText size={24} />}
                                             {(!['instagram', 'linkedin', 'twitter', 'github', 'youtube', 'whatsapp', 'mail', 'medium'].includes(platform)) && <Globe size={24} />}
                                         </a>
@@ -4711,7 +4731,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         },
         {
             label: t.emailBtn || "E-MAIL",
-            icon: <Mail size={18} />,
+            icon: <MailWithBadge size={18} />,
             href: `mailto:${profile.user.email}`,
             onClick: () => trackEvent("email"),
             active: !!profile.user.email
@@ -5361,7 +5381,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
-        { label: t.emailBtn || "E-MAIL", icon: <Mail size={20} />, href: `mailto:${profile?.user?.email || ""}`, active: !!profile?.user?.email },
+        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={20} />, href: `mailto:${profile?.user?.email || ""}`, active: !!profile?.user?.email },
         { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: t.locationsBtn || "KONUM", icon: <MapPin size={20} />, onClick: () => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }), active: !!profile.blocks?.find((b: any) => b.type === 'map') }
     ].filter(a => a.active);
