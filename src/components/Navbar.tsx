@@ -32,7 +32,14 @@ export function Navbar() {
                 <div className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-widest text-slate-500">
                     <Link href="#features" className="hover:text-rose-500 transition-colors uppercase">{t('features')}</Link>
                     <Link href="#templates" className="hover:text-rose-500 transition-colors uppercase">{t('templates')}</Link>
-                    <Link href="/dashboard?tab=network" className="hover:text-rose-500 transition-colors uppercase">{t('businessHub')}</Link>
+                    <Link 
+                        href="/dashboard?tab=network" 
+                        className="relative group flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-full font-black text-[10px] tracking-[0.2em] shadow-xl shadow-slate-200/50 hover:bg-rose-500 hover:shadow-rose-200 transition-all hover:scale-105 active:scale-95 group overflow-hidden"
+                    >
+                        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-white/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                        <span className="relative z-10">{t('businessHub')}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500 group-hover:bg-white animate-pulse" />
+                    </Link>
                     <Link href="#about" className="hover:text-rose-500 transition-colors uppercase">{t('about')}</Link>
                 </div>
 
@@ -67,7 +74,19 @@ export function Navbar() {
                     >
                         <Link href="#features" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('features')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <Link href="#templates" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('templates')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
-                        <Link href="/dashboard?tab=network" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('businessHub')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
+                        <Link 
+                            href="/dashboard?tab=network" 
+                            onClick={() => setIsOpen(false)} 
+                            className="bg-slate-900 text-white p-6 rounded-3xl text-xl font-black flex items-center justify-between group shadow-xl shadow-slate-200"
+                        >
+                            <span className="flex items-center gap-3">
+                                {t('businessHub')}
+                                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                            </span>
+                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-active:scale-90 transition-transform">
+                                <ArrowRight className="w-5 h-5 text-white" />
+                            </div>
+                        </Link>
                         <Link href="#about" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('about')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <hr className="border-slate-100 my-2" />
                         <div className="grid grid-cols-2 gap-4">
