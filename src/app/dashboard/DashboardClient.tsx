@@ -95,7 +95,8 @@ import {
     Heart,
     CreditCard,
     Send,
-    Search
+    Search,
+    Maximize2
 } from "lucide-react"
 import { TEMPLATES } from "@/components/BusinessCardGenerator"
 
@@ -196,6 +197,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento, reviews
+    const [isHubFullscreen, setIsHubFullscreen] = useState(false)
+
+    // Handle tab selection from query params
+    useEffect(() => {
+        const tab = searchParams.get("tab")
+        if (tab && ["overview", "network", "edit", "products", "services", "templates", "appointments", "statistics", "businesscard", "leads", "ai", "widgets", "reviews", "settings"].includes(tab)) {
+            setActiveTab(tab)
+        }
+    }, [searchParams])
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [profileData, setProfileData] = useState({
         ...profile,
@@ -1083,7 +1093,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Mobile Header Toggle */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-50 flex items-center justify-between px-6">
+            <div className={cn(
+                "lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 z-50 flex items-center justify-between px-6 transition-all duration-500",
+                isHubFullscreen && "opacity-0 -translate-y-full pointer-events-none"
+            )}>
                 <Link href="/" className="flex items-center gap-2.5">
                     <div className="w-9 h-9 bg-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-rose-200/50">
                         <Layout className="text-white w-5 h-5" />
@@ -1103,7 +1116,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
             {/* Sidebar */}
             <aside className={cn(
                 "fixed inset-y-0 left-0 z-[60] w-72 border-r border-slate-200 bg-white p-6 flex flex-col transition-transform duration-300 overflow-y-auto no-scrollbar lg:relative lg:translate-x-0 lg:z-10",
-                isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full"
+                isSidebarOpen ? "translate-x-0 shadow-2xl shadow-slate-200/50" : "-translate-x-full",
+                isHubFullscreen && "lg:-translate-x-full lg:hidden"
             )}>
                 <div className="flex items-center justify-between lg:justify-start gap-3 mb-4">
                     <Link href="/" className="flex items-center gap-3.5 group">
@@ -1281,7 +1295,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
             )}
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-10 lg:p-12 overflow-auto pt-24 lg:pt-14 relative z-10 pb-32 lg:pb-12">
+            <main className={cn(
+                "flex-1 p-6 md:p-10 lg:p-12 overflow-auto pt-24 lg:pt-14 relative z-10 pb-32 lg:pb-12 transition-all duration-500",
+                isHubFullscreen && "fixed inset-0 z-[100] bg-white p-6 md:p-12 pt-12 lg:pt-12 pb-12"
+            )}>
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
@@ -4880,6 +4897,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4">
+                                    <button 
+                                        onClick={() => setIsHubFullscreen(!isHubFullscreen)}
+                                        className={cn(
+                                            "h-14 w-14 rounded-2xl flex items-center justify-center transition-all border-2",
+                                            isHubFullscreen 
+                                                ? "bg-rose-50 text-rose-500 border-rose-100 shadow-inner" 
+                                                : "bg-white text-slate-400 border-slate-100 hover:border-primary/20 hover:text-primary shadow-sm"
+                                        )}
+                                        title={isHubFullscreen ? "Çık" : "Tam Ekran"}
+                                    >
+                                        <Maximize2 size={20} className={cn("transition-transform", isHubFullscreen && "rotate-180")} />
+                                    </button>
                                     <button 
                                         onClick={() => setIsHubAiOpen(true)}
                                         className="h-14 px-8 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl hover:bg-primary transition-all hover:scale-[1.02] active:scale-95 group"

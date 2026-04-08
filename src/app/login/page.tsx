@@ -31,11 +31,13 @@ function LoginLogic() {
         setIsLoading(true)
         setLoginError("")
 
+        const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+
         const result = await signIn("credentials", {
             email,
             password,
             redirect: false,
-            callbackUrl: "/dashboard"
+            callbackUrl
         })
 
         if (result?.error) {
@@ -206,7 +208,7 @@ function LoginLogic() {
 
                     <div className="grid gap-4">
                         <button
-                            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                            onClick={() => signIn("google", { callbackUrl: searchParams.get("callbackUrl") || "/dashboard" })}
                             className="w-full flex items-center justify-center gap-4 bg-slate-50 border border-slate-200 text-slate-700 py-5 rounded-2xl font-bold hover:bg-slate-100 hover:border-slate-300 transition-all group"
                         >
                             <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">

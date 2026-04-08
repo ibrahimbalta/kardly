@@ -32,6 +32,7 @@ export function Navbar() {
                 <div className="hidden md:flex items-center gap-10 text-xs font-black uppercase tracking-widest text-slate-500">
                     <Link href="#features" className="hover:text-rose-500 transition-colors uppercase">{t('features')}</Link>
                     <Link href="#templates" className="hover:text-rose-500 transition-colors uppercase">{t('templates')}</Link>
+                    <Link href="/dashboard?tab=network" className="hover:text-rose-500 transition-colors uppercase">{t('businessHub')}</Link>
                     <Link href="#about" className="hover:text-rose-500 transition-colors uppercase">{t('about')}</Link>
                 </div>
 
@@ -66,6 +67,7 @@ export function Navbar() {
                     >
                         <Link href="#features" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('features')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <Link href="#templates" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('templates')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
+                        <Link href="/dashboard?tab=network" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('businessHub')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <Link href="#about" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('about')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
                         <hr className="border-slate-100 my-2" />
                         <div className="grid grid-cols-2 gap-4">

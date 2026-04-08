@@ -7,12 +7,18 @@ import DashboardClient from "./DashboardClient"
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
     try {
         const session = await getServerSession(authOptions)
 
         if (!session || !session.user) {
-            redirect("/login")
+            const params = new URLSearchParams()
+            Object.entries(searchParams).forEach(([key, value]) => {
+                if (value) params.set(key, String(value))
+            })
+            const queryString = params.toString()
+            const callbackUrl = `/dashboard${queryString ? `?${queryString}` : ""}`
+            redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`)
         }
 
         const user = await prisma.user.findUnique({
