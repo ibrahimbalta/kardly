@@ -1,9 +1,71 @@
+import { Metadata, Viewport } from 'next'
 import { notFound } from "next/navigation"
 import prisma from "@/lib/prisma"
 import { Globe } from "lucide-react"
 import ProfileClient from "./ProfileClient"
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+    const { username } = await params
+    
+    const profile = await prisma.profile.findUnique({
+        where: { username },
+        include: { 
+            user: true
+        }
+    })
+
+    if (!profile) return { title: 'Profil Bulunamadı | Kardly' }
+
+    const name = profile.user?.name || username
+    const occupation = profile.occupation || ''
+    const title = `${name}${occupation ? ` | ${occupation}` : ''} - Kardly`
+    const description = profile.slogan || (profile.bio ? profile.bio.slice(0, 160) : `${name} kişisinin dijital iş kartı. Kardly ile profesyonel ağınızı genişletin.`)
+    const image = profile.user?.image || '/og-placeholder.png' // Default OG image
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [{ url: image }],
+            type: 'profile',
+            username: username,
+            siteName: 'Kardly',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [image],
+            creator: '@kardlyapp',
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+        alternates: {
+            canonical: `https://kardly.app/${username}`,
+        }
+    }
+}
+
+export async function generateViewport({ params }: any): Promise<Viewport> {
+    const { username } = await params
+    const profile = await prisma.profile.findUnique({
+        where: { username },
+        select: { themeColor: true }
+    })
+    
+    return {
+        themeColor: profile?.themeColor || '#6366f1',
+        width: 'device-width',
+        initialScale: 1,
+        maximumScale: 1,
+    }
+}
 
 export default async function ProfilePage({ params }: any) {
     const { username } = await params

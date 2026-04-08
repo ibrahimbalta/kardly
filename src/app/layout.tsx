@@ -5,11 +5,13 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -107,6 +109,13 @@ export default async function RootLayout({
   return (
     <html lang="tr">
       <head>
+        {/* DNS Prefetch & Preconnect for External Resources */}
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://ui-avatars.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
         {/* PWA Meta Tags */}
         <link rel="icon" href="/icons/favicon.png" sizes="32x32" type="image/png" />
         <link rel="icon" href="/icons/icon-192x192.png" sizes="192x192" type="image/png" />
