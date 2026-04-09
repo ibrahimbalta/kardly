@@ -101,7 +101,7 @@ export default function RegisterPage() {
                                     type="email"
                                     placeholder={t('loginEmailPlaceholder')}
                                     required
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-500"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                                     placeholder={t('loginPasswordPlaceholder')}
                                     required
                                     minLength={6}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-14 pr-6 py-5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-all text-sm font-bold text-slate-900 placeholder:text-slate-500"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
