@@ -8,8 +8,7 @@ import { X, Download, Smartphone, Wifi, WifiOff, Bell, Zap, Shield, ChevronRight
 const isMobileDevice = () => {
     if (typeof window === "undefined") return false
     const ua = navigator.userAgent || navigator.vendor || (window as any).opera || ""
-    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua) ||
-        window.innerWidth < 768
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua)
 }
 
 // ─── Service Worker Registration ─────────────────────────────────
