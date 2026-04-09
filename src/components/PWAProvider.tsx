@@ -305,19 +305,6 @@ export function PWAInstallPrompt() {
                                 </button>
                             </div>
 
-                            {/* Trust Indicator */}
-                            <div className="flex items-center justify-center gap-2 mt-4 pt-3 border-t border-white/[0.04]">
-                                <div className="flex -space-x-1.5">
-                                    {[...Array(4)].map((_, i) => (
-                                        <div key={i} className="w-5 h-5 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-[7px] font-bold text-white/40">
-                                            {["K", "A", "R", "D"][i]}
-                                        </div>
-                                    ))}
-                                </div>
-                                <span className="text-[9px] text-white/25 font-medium tracking-wide">
-                                    10,000+ kullanıcı tarafından yüklendi
-                                </span>
-                            </div>
                         </div>
                     )}
                 </div>
