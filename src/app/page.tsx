@@ -20,7 +20,7 @@ export default function Home() {
       <Navbar />
       
       {/* Client tarafındaki tüm state ve lazy load yönetimini bu bileşen üstlenir */}
-      <HomeClientContainer t={null /* t artık içeride context'ten alınacak */} />
+      <HomeClientContainer />
     </main>
   )
 }
