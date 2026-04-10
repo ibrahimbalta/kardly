@@ -100,7 +100,7 @@ export function HomeClientContainer({}: HomeClientContainerProps) {
       <AboutSection t={t} />
 
       {/* Templates Section Wrapper */}
-      <section id="templates" className="py-20 md:py-28 px-6 relative z-10">
+      <section className="py-20 md:py-28 px-6 relative z-10">
         <div className="max-w-6xl mx-auto relative border-b border-slate-100 pb-12 mb-12">
            <div className="max-w-xl">
               <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tighter leading-none mb-4 italic">{t('templateTitle')}</h2>
