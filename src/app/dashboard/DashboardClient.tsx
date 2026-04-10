@@ -2366,53 +2366,44 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <p className="text-sm text-slate-500 font-medium">{t('yourDigitalIdentity')}</p>
                             </div>
 
-                            {/* Linktree Smart Import Banner */}
-                            <motion.div 
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 rounded-[2.5rem] p-8 border border-white/10 shadow-xl shadow-indigo-100/50"
-                            >
-                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-                                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl" />
-                                
-                                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center justify-between">
-                                    <div className="flex-1 text-center md:text-left">
-                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 mb-4 animate-pulse">
-                                            <Sparkles size={12} className="text-indigo-200" />
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">YENİ ÖZELLİK</span>
-                                        </div>
-                                        <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Profilini Linktree'den Aktar!</h3>
-                                        <p className="text-indigo-100/70 text-sm font-medium leading-relaxed max-w-md">Saniyeler içinde mevcut Linktree bilgilerini çekelim; AI ile linklerini kategorize edip markanı Kardly'ye taşıyalım.</p>
+                            {/* Linktree Smart Import */}
+                            <div className="bg-white p-5 rounded-[2rem] border border-slate-200 shadow-sm">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-9 h-9 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
+                                        <Sparkles size={16} />
                                     </div>
-                                    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                                        <div className="relative group">
-                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-300">
-                                                <LinkIcon size={18} />
-                                            </div>
-                                            <input 
-                                                type="text" 
-                                                value={linktreeUrl}
-                                                onChange={(e) => setLinktreeUrl(e.target.value)}
-                                                placeholder="linktr.ee/kullaniciadi"
-                                                className="w-full sm:w-64 h-14 bg-white/10 border border-white/20 rounded-2xl pl-12 pr-6 text-sm font-bold text-white placeholder:text-indigo-300/60 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all backdrop-blur-md"
-                                            />
-                                        </div>
-                                        <button 
-                                            onClick={handleImportLinktree}
-                                            disabled={isImporting}
-                                            className="h-14 px-8 bg-white text-indigo-600 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-black/10 hover:bg-slate-50 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0"
-                                        >
-                                            {isImporting ? (
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-4 h-4 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
-                                                    Çekiliyor...
-                                                </div>
-                                            ) : "Sihri Başlat ✨"}
-                                        </button>
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-xs font-black text-slate-900 tracking-tight">Linktree'den Aktar</h3>
+                                        <p className="text-[10px] text-slate-400 font-medium truncate">Mevcut profilini AI ile saniyede taşı</p>
                                     </div>
                                 </div>
-                            </motion.div>
+                                <div className="flex gap-2">
+                                    <div className="relative flex-1">
+                                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300">
+                                            <LinkIcon size={14} />
+                                        </div>
+                                        <input 
+                                            type="text" 
+                                            value={linktreeUrl}
+                                            onChange={(e) => setLinktreeUrl(e.target.value)}
+                                            placeholder="linktr.ee/kullaniciadi"
+                                            className="w-full h-11 bg-slate-50 border border-slate-100 rounded-xl pl-10 pr-4 text-xs font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
+                                        />
+                                    </div>
+                                    <button 
+                                        onClick={handleImportLinktree}
+                                        disabled={isImporting}
+                                        className="h-11 px-5 bg-primary text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 shadow-sm shadow-primary/20"
+                                    >
+                                        {isImporting ? (
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                <span>Aktarılıyor</span>
+                                            </div>
+                                        ) : "Aktar ✨"}
+                                    </button>
+                                </div>
+                            </div>
 
                             {/* Section 1: Profile Basics */}
                             <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-6">
