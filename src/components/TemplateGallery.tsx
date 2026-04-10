@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/context/LanguageContext'
-import { ExternalLink, CheckCircle2 } from 'lucide-react'
+import { ExternalLink, CheckCircle2, Palette, ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 const categories = [
