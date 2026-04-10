@@ -342,41 +342,57 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const applyImportData = () => {
         if (!importData) return
         
-        // Update profile basic info
+        // Known social media platforms that have dedicated fields in Kardly
+        const knownPlatforms = ['instagram', 'twitter', 'linkedin', 'youtube', 'facebook', 'whatsapp', 'github', 'behance', 'dribbble']
+        
+        // Separate: social media vs custom links
+        const socialMediaLinks: { platform: string; url: string }[] = []
+        const customOnlyLinks: { title: string; url: string; isAction: boolean }[] = []
+        
+        for (const link of (importData.links || [])) {
+            if (knownPlatforms.includes(link.platform)) {
+                socialMediaLinks.push({ platform: link.platform, url: link.url })
+            } else {
+                customOnlyLinks.push({ title: link.title, url: link.url, isAction: false })
+            }
+        }
+
+        // Build new socialLinks array from existing data
+        const updatedSocialLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        
+        // 1) Place each social media link into its dedicated platform slot
+        for (const social of socialMediaLinks) {
+            const existingIdx = updatedSocialLinks.findIndex((l: any) => l.platform === social.platform)
+            if (existingIdx > -1) {
+                updatedSocialLinks[existingIdx] = { ...updatedSocialLinks[existingIdx], url: social.url }
+            } else {
+                updatedSocialLinks.push({ platform: social.platform, url: social.url, isHero: false })
+            }
+        }
+        
+        // 2) Place non-social links into customLinks
+        if (customOnlyLinks.length > 0) {
+            setCustomLinks(customOnlyLinks)
+            const customIdx = updatedSocialLinks.findIndex((l: any) => l.platform === 'customLinks')
+            if (customIdx > -1) {
+                updatedSocialLinks[customIdx] = { platform: 'customLinks', links: customOnlyLinks }
+            } else {
+                updatedSocialLinks.push({ platform: 'customLinks', links: customOnlyLinks })
+            }
+        }
+        
+        // Update profile with everything
         setProfileData((prev: any) => ({
             ...prev,
             name: importData.displayName || prev.name,
             bio: importData.bio || prev.bio,
-            image: importData.image || prev.image
-        }))
-
-        // Update custom links
-        const newLinks = (importData.links || []).map((l: any) => ({
-            title: l.title,
-            url: l.url,
-            isAction: false
-        }))
-        
-        if (newLinks.length > 0) {
-            setCustomLinks(newLinks)
-        }
-        
-        // Update socialLinks for specific platforms found
-        const updatedSocialLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
-        const importedCustomLinks = { platform: 'customLinks', links: newLinks }
-        const customIdx = updatedSocialLinks.findIndex((l: any) => l.platform === 'customLinks')
-        
-        if (customIdx > -1) updatedSocialLinks[customIdx] = importedCustomLinks
-        else updatedSocialLinks.push(importedCustomLinks)
-        
-        setProfileData((prev: any) => ({
-            ...prev,
+            image: importData.image || prev.image,
             socialLinks: updatedSocialLinks
         }))
 
         setShowImportModal(false)
         setLinktreeUrl("")
-        setShowToast("Bilgiler başarıyla yüklendi! Lütfen kontrol edip kaydedin. ✨")
+        setShowToast(`Bilgiler aktarıldı! ${socialMediaLinks.length} sosyal medya + ${customOnlyLinks.length} özel link eklendi. ✨`)
         setTimeout(() => setShowToast(null), 4000)
     }
 

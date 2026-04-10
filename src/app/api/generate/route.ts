@@ -35,17 +35,26 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: "Bu kullanıcı adı zaten alınmış." }, { status: 400 })
             }
 
-            // Map imported links if available
+            // Map imported links if available - smart routing
             let socialLinks: any[] = []
             if (importedData?.links) {
-                socialLinks = [{
-                    platform: 'customLinks',
-                    links: importedData.links.map((l: any) => ({
-                        title: l.title,
-                        url: l.url,
-                        platform: l.platform || 'customLink'
-                    }))
-                }]
+                const knownPlatforms = ['instagram', 'twitter', 'linkedin', 'youtube', 'facebook', 'whatsapp', 'github', 'behance', 'dribbble']
+                
+                // Social media links go to dedicated platform slots
+                for (const link of importedData.links) {
+                    if (knownPlatforms.includes(link.platform)) {
+                        socialLinks.push({ platform: link.platform, url: link.url, isHero: false })
+                    }
+                }
+                
+                // Non-social links go to customLinks
+                const customLinks = importedData.links
+                    .filter((l: any) => !knownPlatforms.includes(l.platform))
+                    .map((l: any) => ({ title: l.title, url: l.url, isAction: false }))
+                
+                if (customLinks.length > 0) {
+                    socialLinks.push({ platform: 'customLinks', links: customLinks })
+                }
             }
 
             // Update user image and name if imported
