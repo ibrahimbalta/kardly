@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         // but in production, we should enforce it.
 
         const body = await req.json()
-        const { occupation, targetAudience, tone, username: customUsername, hasAcceptedTerms } = body
+        const { occupation, targetAudience, tone, username: customUsername, hasAcceptedTerms, importedData } = body
 
         if (!occupation || !targetAudience || !tone) {
             return NextResponse.json({ error: "Eksik bilgi" }, { status: 400 })
@@ -35,34 +35,60 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: "Bu kullanıcı adı zaten alınmış." }, { status: 400 })
             }
 
+            // Map imported links if available
+            let socialLinks: any[] = []
+            if (importedData?.links) {
+                socialLinks = [{
+                    platform: 'customLinks',
+                    links: importedData.links.map((l: any) => ({
+                        title: l.title,
+                        url: l.url,
+                        platform: l.platform || 'customLink'
+                    }))
+                }]
+            }
+
+            // Update user image and name if imported
+            if (importedData?.image || importedData?.displayName) {
+                await prisma.user.update({
+                    where: { id: session.user.id },
+                    data: {
+                        ...(importedData.image && { image: importedData.image }),
+                        ...(importedData.displayName && { name: importedData.displayName })
+                    }
+                })
+            }
+ 
             await prisma.profile.upsert({
                 where: { userId: session.user.id },
                 update: {
                     occupation,
-                    targetAudience,
+                    targetAudience: importedData ? "Linktree Import" : targetAudience,
                     tone,
                     slogan: aiResult.slogan,
-                    bio: aiResult.bio,
+                    bio: importedData?.bio || aiResult.bio,
                     services: aiResult.services,
                     themeColor: aiResult.themeColor,
                     templateId: aiResult.templateId || "neon_blue",
                     username: finalUsername,
                     slug: finalUsername,
-                    hasAcceptedTerms: !!hasAcceptedTerms
+                    hasAcceptedTerms: !!hasAcceptedTerms,
+                    socialLinks: socialLinks.length > 0 ? socialLinks : undefined
                 },
                 create: {
                     userId: session.user.id,
                     username: finalUsername,
                     slug: finalUsername,
                     occupation,
-                    targetAudience,
+                    targetAudience: importedData ? "Linktree Import" : targetAudience,
                     tone,
                     slogan: aiResult.slogan,
-                    bio: aiResult.bio,
+                    bio: importedData?.bio || aiResult.bio,
                     services: aiResult.services,
                     themeColor: aiResult.themeColor,
                     templateId: aiResult.templateId || "neon_blue",
-                    hasAcceptedTerms: !!hasAcceptedTerms
+                    hasAcceptedTerms: !!hasAcceptedTerms,
+                    socialLinks: socialLinks.length > 0 ? socialLinks : undefined
                 }
             })
         }

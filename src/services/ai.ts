@@ -209,3 +209,56 @@ export async function generateBio(data: {
         }
     }
 }
+
+export async function categorizeLinks(links: { title: string; url: string }[]) {
+    const prompt = `
+    Sen bir sosyal medya ve link uzmanısın. Aşağıdaki link listesini incele ve her birini şu kategorilerden birine ata: 
+    "instagram", "twitter", "linkedin", "youtube", "facebook", "whatsapp", "github", "behance", "dribbble", "website", "customLink".
+
+    LINK LİSTESİ:
+    ${JSON.stringify(links)}
+
+    KURALLAR:
+    1. Her link için sadece belirtilen kategorilerden birini seç.
+    2. Eğer net değilse "website" veya "customLink" kullan.
+    3. Yanıtı SADECE şu formatta bir JSON objesi içinde bir dizi olarak döndür: {"links": [{"title": "...", "url": "...", "platform": "..."}]}
+    `
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" },
+                temperature: 0.3
+            })
+        });
+
+        const result = await response.json();
+        const content = result.choices?.[0]?.message?.content;
+        const parsed = JSON.parse(content);
+        return parsed.links || parsed || [];
+    } catch (error) {
+        console.error("Groq Link Categorization Error:", error)
+        // Fallback: Basit domain kontrolü
+        return links.map(link => {
+            const url = link.url.toLowerCase();
+            let platform = "customLink";
+            if (url.includes("instagram.com")) platform = "instagram";
+            else if (url.includes("twitter.com") || url.includes("x.com")) platform = "twitter";
+            else if (url.includes("linkedin.com")) platform = "linkedin";
+            else if (url.includes("youtube.com")) platform = "youtube";
+            else if (url.includes("facebook.com")) platform = "facebook";
+            else if (url.includes("wa.me") || url.includes("whatsapp.com")) platform = "whatsapp";
+            else if (url.includes("github.com")) platform = "github";
+            else if (url.includes("behance.net")) platform = "behance";
+            else if (url.includes("dribbble.com")) platform = "dribbble";
+            return { ...link, platform };
+        });
+    }
+}

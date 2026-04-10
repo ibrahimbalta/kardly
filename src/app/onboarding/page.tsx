@@ -57,6 +57,10 @@ export default function OnboardingPage() {
         username: "",
         hasAcceptedTerms: false,
     })
+    const [linktreeUrl, setLinktreeUrl] = useState("")
+    const [isImporting, setIsImporting] = useState(false)
+    const [importData, setImportData] = useState<any>(null)
+    const [showImportModal, setShowImportModal] = useState(false)
 
     const handleNext = () => {
         if (currentStep < steps.length - 1) {
@@ -76,13 +80,64 @@ export default function OnboardingPage() {
         }
     }, [currentStep])
 
+    const handleImportLinktree = async () => {
+        if (!linktreeUrl || !linktreeUrl.includes("linktr.ee")) {
+            alert("Lütfen geçerli bir Linktree URL'si girin.")
+            return
+        }
+        setIsImporting(true)
+        try {
+            const res = await fetch("/api/import/linktree", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: linktreeUrl })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setImportData(data)
+                setShowImportModal(true)
+            } else {
+                alert(data.error || "İçe aktarma hatası.")
+            }
+        } catch (err) {
+            console.error(err)
+            alert("Bağlantı hatası.")
+        } finally {
+            setIsImporting(false)
+        }
+    }
+
+    const applyImportData = () => {
+        if (!importData) return
+        
+        setFormData(prev => ({
+            ...prev,
+            occupation: importData.displayName || prev.occupation,
+            targetAudience: "Linktree'den Aktarıldı",
+        }))
+
+        // We can't easily auto-save other things yet as they go to DB, 
+        // but we can store bio and image in localStorage or state if needed.
+        // For now, let's just pre-fill the occupation and continue.
+        
+        // Save imported data to session storage to be picked up after generation or during next steps
+        sessionStorage.setItem("importedProfileData", JSON.stringify(importData))
+
+        setShowImportModal(false)
+        setLinktreeUrl("")
+        handleNext() // Go to username step
+    }
+
     const generateSite = async () => {
         setIsGenerating(true)
         try {
+            const importedDataStr = sessionStorage.getItem("importedProfileData")
+            const importedData = importedDataStr ? JSON.parse(importedDataStr) : null
+
             const res = await fetch("/api/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, importedData }),
             })
             const data = await res.json()
             if (data.error) throw new Error(data.error)
@@ -161,6 +216,35 @@ export default function OnboardingPage() {
                                                 value={formData.targetAudience}
                                                 onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
                                             />
+                                        </div>
+
+                                        <div className="relative pt-4 overflow-hidden">
+                                            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
+                                            <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#1a1c20] px-3 text-foreground/30 font-black tracking-widest italic text-[9px]">YA DA SİHRİ KULLAN</span></div>
+                                        </div>
+
+                                        <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <Sparkles className="w-4 h-4 text-primary" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-primary/80">Linktree Akıllı Aktarım</span>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    value={linktreeUrl}
+                                                    onChange={(e) => setLinktreeUrl(e.target.value)}
+                                                    placeholder="linktr.ee/kullaniciadi"
+                                                    className="flex-1 glass bg-white/5 border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary/30"
+                                                />
+                                                <button 
+                                                    onClick={handleImportLinktree}
+                                                    disabled={isImporting}
+                                                    className="bg-primary text-white px-4 py-3 rounded-xl font-bold text-xs whitespace-nowrap hover:opacity-90 transition-all disabled:opacity-50"
+                                                >
+                                                    {isImporting ? "..." : "Aktar ✨"}
+                                                </button>
+                                            </div>
+                                            <p className="text-[10px] text-foreground/40 italic">Linktree bilgilerini AI ile analiz edip seni tanıyabiliriz.</p>
                                         </div>
                                     </div>
                                 )}
@@ -388,6 +472,52 @@ export default function OnboardingPage() {
                             </div>
                         )}
                     </motion.div>
+                </AnimatePresence>
+
+                {/* Linktree Import Modal (Simplified for Onboarding) */}
+                <AnimatePresence>
+                    {showImportModal && importData && (
+                        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 sm:p-4">
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setShowImportModal(false)} />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className="glass bg-[#1a1c20] w-full max-w-md rounded-[2.5rem] p-8 border border-white/10 shadow-2xl relative z-10"
+                            >
+                                <div className="text-center mb-8">
+                                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                                        <Sparkles size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-black mb-2 italic">Bilgilerini Bulduk!</h3>
+                                    <p className="text-xs text-foreground/50">Profilini şu bilgilerle kurmaya hazır mısın?</p>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    <div className="flex items-center gap-4 p-4 glass bg-white/5 rounded-2xl border border-white/5">
+                                        {importData.image && (
+                                            <img src={importData.image} className="w-12 h-12 rounded-xl object-cover" alt="Preview" />
+                                        )}
+                                        <div className="text-left">
+                                            <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-0.5">İsim</p>
+                                            <h4 className="font-bold text-sm truncate">{importData.displayName}</h4>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-4 glass bg-white/5 rounded-2xl border border-white/5 text-left">
+                                        <div className="flex-1">
+                                            <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-0.5">Bulunan Linkler</p>
+                                            <p className="text-[11px] text-foreground/60">{importData.links?.length || 0} adet link otomatik aktarılacak.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <button onClick={() => setShowImportModal(false)} className="py-4 glass bg-white/5 hover:bg-white/10 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">İptal</button>
+                                    <button onClick={applyImportData} className="py-4 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Başlat 🚀</button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
                 </AnimatePresence>
             </div>
         </div>

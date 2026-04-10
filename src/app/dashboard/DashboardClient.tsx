@@ -198,6 +198,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showToast, setShowToast] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento, reviews
     const [isHubFullscreen, setIsHubFullscreen] = useState(false)
+    const [linktreeUrl, setLinktreeUrl] = useState("")
+    const [isImporting, setIsImporting] = useState(false)
+    const [showImportModal, setShowImportModal] = useState(false)
+    const [importData, setImportData] = useState<any>(null)
 
     // Handle tab selection from query params
     useEffect(() => {
@@ -304,6 +308,77 @@ export default function DashboardClient({ session, profile, subscription, appoin
             }));
         }
     }, [activeWidget, widgetStyle, extraWidgetConfig, activeTab]);
+
+    const handleImportLinktree = async () => {
+        if (!linktreeUrl || !linktreeUrl.includes("linktr.ee")) {
+            setShowToast("Lütfen geçerli bir Linktree URL'si girin.")
+            setTimeout(() => setShowToast(null), 3000)
+            return
+        }
+        setIsImporting(true)
+        try {
+            const res = await fetch("/api/import/linktree", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: linktreeUrl })
+            })
+            const data = await res.json()
+            if (res.ok) {
+                setImportData(data)
+                setShowImportModal(true)
+            } else {
+                setShowToast(data.error || "İçe aktarma hatası.")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+            setShowToast("Bağlantı hatası.")
+            setTimeout(() => setShowToast(null), 3000)
+        } finally {
+            setIsImporting(false)
+        }
+    }
+
+    const applyImportData = () => {
+        if (!importData) return
+        
+        // Update profile basic info
+        setProfileData((prev: any) => ({
+            ...prev,
+            name: importData.displayName || prev.name,
+            bio: importData.bio || prev.bio,
+            image: importData.image || prev.image
+        }))
+
+        // Update custom links
+        const newLinks = (importData.links || []).map((l: any) => ({
+            title: l.title,
+            url: l.url,
+            isAction: false
+        }))
+        
+        if (newLinks.length > 0) {
+            setCustomLinks(newLinks)
+        }
+        
+        // Update socialLinks for specific platforms found
+        const updatedSocialLinks = Array.isArray(profileData.socialLinks) ? [...profileData.socialLinks] : []
+        const importedCustomLinks = { platform: 'customLinks', links: newLinks }
+        const customIdx = updatedSocialLinks.findIndex((l: any) => l.platform === 'customLinks')
+        
+        if (customIdx > -1) updatedSocialLinks[customIdx] = importedCustomLinks
+        else updatedSocialLinks.push(importedCustomLinks)
+        
+        setProfileData((prev: any) => ({
+            ...prev,
+            socialLinks: updatedSocialLinks
+        }))
+
+        setShowImportModal(false)
+        setLinktreeUrl("")
+        setShowToast("Bilgiler başarıyla yüklendi! Lütfen kontrol edip kaydedin. ✨")
+        setTimeout(() => setShowToast(null), 4000)
+    }
 
     const handleGenerateBio = async () => {
         if (!profileData.occupation) {
@@ -2290,6 +2365,54 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <h2 className="text-2xl font-black text-slate-900 mb-1">{t('editProfileInfo')}</h2>
                                 <p className="text-sm text-slate-500 font-medium">{t('yourDigitalIdentity')}</p>
                             </div>
+
+                            {/* Linktree Smart Import Banner */}
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 rounded-[2.5rem] p-8 border border-white/10 shadow-xl shadow-indigo-100/50"
+                            >
+                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+                                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl" />
+                                
+                                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center justify-between">
+                                    <div className="flex-1 text-center md:text-left">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 mb-4 animate-pulse">
+                                            <Sparkles size={12} className="text-indigo-200" />
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">YENİ ÖZELLİK</span>
+                                        </div>
+                                        <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Profilini Linktree'den Aktar!</h3>
+                                        <p className="text-indigo-100/70 text-sm font-medium leading-relaxed max-w-md">Saniyeler içinde mevcut Linktree bilgilerini çekelim; AI ile linklerini kategorize edip markanı Kardly'ye taşıyalım.</p>
+                                    </div>
+                                    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                                        <div className="relative group">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-300">
+                                                <LinkIcon size={18} />
+                                            </div>
+                                            <input 
+                                                type="text" 
+                                                value={linktreeUrl}
+                                                onChange={(e) => setLinktreeUrl(e.target.value)}
+                                                placeholder="linktr.ee/kullaniciadi"
+                                                className="w-full sm:w-64 h-14 bg-white/10 border border-white/20 rounded-2xl pl-12 pr-6 text-sm font-bold text-white placeholder:text-indigo-300/60 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all backdrop-blur-md"
+                                            />
+                                        </div>
+                                        <button 
+                                            onClick={handleImportLinktree}
+                                            disabled={isImporting}
+                                            className="h-14 px-8 bg-white text-indigo-600 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-black/10 hover:bg-slate-50 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0"
+                                        >
+                                            {isImporting ? (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-4 h-4 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+                                                    Çekiliyor...
+                                                </div>
+                                            ) : "Sihri Başlat ✨"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
 
                             {/* Section 1: Profile Basics */}
                             <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-6">
@@ -5262,6 +5385,88 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                 {/* Modals outside of conditional tabs */}
                 <AnimatePresence>
+                    {showImportModal && importData && (
+                        <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center sm:p-4">
+                            <div className="absolute inset-0 bg-indigo-900/40 backdrop-blur-sm" onClick={() => setShowImportModal(false)} />
+                            <motion.div
+                                initial={{ opacity: 0, y: "100%" }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: "100%" }}
+                                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                className="bg-white w-full sm:max-w-lg rounded-t-[3.5rem] sm:rounded-[3rem] p-8 sm:p-10 relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar"
+                            >
+                                <div className="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-8 sm:hidden" />
+                                <button onClick={() => setShowImportModal(false)} className="absolute top-8 right-10 text-slate-300 hover:text-slate-600 transition-colors">
+                                    <X className="w-6 h-6" />
+                                </button>
+                                
+                                <div className="text-center mb-10">
+                                    <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-indigo-100 shadow-xl">
+                                        <Sparkles size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-black text-slate-900 mb-2">Profilin Hazır! ✨</h3>
+                                    <p className="text-sm text-slate-500 font-medium">Linktree'den şu bilgileri çektik ve Kardly formatına uyarladık.</p>
+                                </div>
+
+                                <div className="space-y-6 mb-10">
+                                    <div className="flex items-center gap-5 p-5 bg-slate-50 rounded-3xl border border-slate-100">
+                                        <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white shadow-sm shrink-0 bg-slate-200">
+                                            {importData.image ? (
+                                                <img src={importData.image} className="w-full h-full object-cover" alt="Preview" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                                    <User size={24} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">Görünür İsim</p>
+                                            <h4 className="font-bold text-slate-900 line-clamp-1">{importData.displayName}</h4>
+                                        </div>
+                                    </div>
+
+                                    {importData.bio && (
+                                        <div className="p-5 bg-slate-50 rounded-3xl border border-slate-100 text-left">
+                                            <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2">Biyografi</p>
+                                            <p className="text-xs text-slate-600 font-medium leading-relaxed">{importData.bio}</p>
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-3">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2">Bulunan Linkler ({importData.links?.length || 0})</p>
+                                        <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-2 no-scrollbar">
+                                            {importData.links?.map((link: any, idx: number) => (
+                                                <div key={idx} className="flex items-center gap-3 p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                                                    <div className="w-8 h-8 bg-indigo-50 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+                                                        <LinkIcon size={14} />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-xs font-bold text-slate-900 truncate">{link.title}</p>
+                                                        <p className="text-[10px] text-slate-400 font-medium truncate uppercase tracking-tighter">{link.platform}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <button 
+                                        onClick={() => setShowImportModal(false)}
+                                        className="h-14 bg-slate-50 text-slate-600 rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all border border-slate-100"
+                                    >
+                                        Vazgeç
+                                    </button>
+                                    <button 
+                                        onClick={applyImportData}
+                                        className="h-14 bg-indigo-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-95 transition-all"
+                                    >
+                                        Hemen Aktar 🚀
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
                     {showProductModal && (
                         <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center sm:p-4">
                             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowProductModal(false)} />
