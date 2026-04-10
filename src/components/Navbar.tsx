@@ -57,41 +57,59 @@ export function Navbar() {
                 {/* Mobile Menu Toggle */}
                 <div className="md:hidden flex items-center gap-1 sm:gap-4 ml-2">
                     <LanguageSwitcher />
-                    <button className="p-2 text-slate-800 hover:text-rose-500 transition-colors shrink-0" onClick={() => setIsOpen(!isOpen)}>
-                        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    <button 
+                        className="p-1.5 sm:p-2 text-slate-800 hover:text-rose-500 transition-colors shrink-0 bg-slate-50 rounded-xl" 
+                        onClick={() => setIsOpen(!isOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
                 </div>
             </div>
 
             {/* Mobile Menu */}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                        initial={{ opacity: 0, y: -10, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                        className="md:hidden absolute top-28 left-6 right-6 glass rounded-[2.5rem] p-8 flex flex-col gap-6 shadow-2xl z-50 border-slate-100 bg-white"
+                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="md:hidden absolute top-[calc(100%+1rem)] left-4 right-4 glass rounded-3xl p-6 flex flex-col gap-5 shadow-2xl shadow-rose-200/20 z-50 border-slate-100 bg-white/95 backdrop-blur-xl"
                     >
-                        <Link href="#features" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('features')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
-                        <Link href="#templates" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('templates')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
+                        <Link href="#features" onClick={() => setIsOpen(false)} className="text-lg font-bold flex items-center justify-between text-slate-800 px-2">
+                            {t('features')} 
+                            <ArrowRight className="w-4 h-4 text-rose-500 opacity-70" />
+                        </Link>
+                        <Link href="#templates" onClick={() => setIsOpen(false)} className="text-lg font-bold flex items-center justify-between text-slate-800 px-2">
+                            {t('templates')} 
+                            <ArrowRight className="w-4 h-4 text-rose-500 opacity-70" />
+                        </Link>
+                        
                         <Link 
                             href="/dashboard?tab=network" 
                             onClick={() => setIsOpen(false)} 
-                            className="bg-slate-900 text-white p-6 rounded-3xl text-xl font-black flex items-center justify-between group shadow-xl shadow-slate-200"
+                            className="bg-slate-950 text-white p-4 px-5 rounded-2xl text-lg font-bold flex items-center justify-between group shadow-xl shadow-slate-200/50"
                         >
                             <span className="flex items-center gap-3">
                                 {t('businessHub')}
-                                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                             </span>
-                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-active:scale-90 transition-transform">
-                                <ArrowRight className="w-5 h-5 text-white" />
+                            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center group-active:scale-90 transition-transform">
+                                <ArrowRight className="w-4 h-4 text-white" />
                             </div>
                         </Link>
-                        <Link href="#about" onClick={() => setIsOpen(false)} className="text-xl font-black flex items-center justify-between text-slate-900">{t('about')} <ArrowRight className="w-5 h-5 text-rose-500" /></Link>
-                        <hr className="border-slate-100 my-2" />
-                        <div className="grid grid-cols-2 gap-4">
-                            <Link href="/login" className="flex items-center justify-center py-4 rounded-2xl font-black border border-slate-100 text-slate-500">{t('login')}</Link>
-                            <Link href="/register" className="flex items-center justify-center py-4 bg-rose-500 text-white rounded-2xl font-black shadow-lg shadow-rose-200">{t('getStarted')}</Link>
+                        
+                        <Link href="#about" onClick={() => setIsOpen(false)} className="text-lg font-bold flex items-center justify-between text-slate-800 px-2">
+                            {t('about')} 
+                            <ArrowRight className="w-4 h-4 text-rose-500 opacity-70" />
+                        </Link>
+                        
+                        <div className="h-px bg-slate-100 my-1 mx-2" />
+                        
+                        <div className="grid grid-cols-2 gap-3 pb-1">
+                            <Link href="/login" className="flex items-center justify-center py-3.5 rounded-xl font-bold border border-slate-100 text-slate-500 text-sm">{t('login')}</Link>
+                            <Link href="/register" className="flex items-center justify-center py-3.5 bg-rose-500 text-white rounded-xl font-bold shadow-lg shadow-rose-200 text-sm">{t('getStarted')}</Link>
                         </div>
                     </motion.div>
                 )}
