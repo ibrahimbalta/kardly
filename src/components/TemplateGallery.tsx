@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from '@/context/LanguageContext'
 import { ExternalLink, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
 
 const categories = [
     { id: 'all', key: 'categoryAll' },
@@ -125,10 +126,13 @@ export function TemplateGallery() {
                                     
                                     {/* Overlay */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                                        <button className="bg-white text-indigo-600 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                        <Link 
+                                            href="/register"
+                                            className="bg-white text-indigo-600 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 w-full"
+                                        >
                                             {t('viewTemplate')}
                                             <ExternalLink size={18} />
-                                        </button>
+                                        </Link>
                                     </div>
 
                                     {/* Floating Badge */}
