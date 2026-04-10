@@ -59,7 +59,7 @@ export function TemplateGallery() {
         : templates.filter(temp => temp.category === activeTab)
 
     return (
-        <section className="py-24 bg-white relative overflow-hidden" id="templates">
+        <section className="py-24 bg-white relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
@@ -67,7 +67,7 @@ export function TemplateGallery() {
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
-                <div className="text-center max-w-3xl mx-auto mb-16">
+                <div className="text-center max-w-3xl mx-auto mb-16 scroll-mt-32" id="templates">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
