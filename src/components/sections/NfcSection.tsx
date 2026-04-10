@@ -55,46 +55,83 @@ export function NfcSection({ t }: NfcSectionProps) {
             </div>
           </div>
           
-          <div className="flex-1 relative">
+          <div className="flex-1 relative flex justify-center items-center">
+              {/* Tap Point Rings */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">
+                  {[...Array(3)].map((_, i) => (
+                      <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          whileInView={{ 
+                              opacity: [0, 0.4, 0],
+                              scale: [0.5, 2.5],
+                          }}
+                          transition={{ 
+                              duration: 3,
+                              repeat: Infinity,
+                              delay: i * 1,
+                              ease: "easeOut"
+                          }}
+                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-orange-500/30"
+                      />
+                  ))}
+              </div>
+
+              {/* NFC Card */}
               <motion.div
-                initial={{ opacity: 0, rotate: -5, scale: 0.9 }}
-                whileInView={{ opacity: 1, rotate: 2, scale: 1 }}
-                className="relative z-10 w-full max-w-[440px] aspect-[1.58/1] bg-gradient-to-br from-slate-900 to-black rounded-[2rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] p-10 flex flex-col justify-between overflow-hidden border border-white/10"
+                initial={{ opacity: 0, rotateX: 20, rotateY: -20, rotate: -5 }}
+                whileInView={{ opacity: 1, rotateX: 25, rotateY: -15, rotate: -3 }}
+                viewport={{ once: true }}
+                className="relative z-10 w-full max-w-[420px] aspect-[1.58/1] bg-gradient-to-br from-slate-950 via-slate-900 to-black rounded-[2rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] p-10 flex flex-col justify-between overflow-hidden border border-white/5"
               >
-                {/* NFC Logo Mock */}
-                <div className="absolute top-10 right-10 opacity-20">
-                   <div className="w-12 h-12 border-2 border-white rounded-full flex items-center justify-center">
-                      <div className="w-6 h-6 border border-white rounded-full" />
-                   </div>
+                {/* Chip Detail */}
+                <div className="w-12 h-10 bg-gradient-to-br from-amber-200 to-amber-500 rounded-lg relative overflow-hidden mb-4 opacity-80">
+                    <div className="absolute inset-x-2 top-0 h-px bg-white/40" />
+                    <div className="absolute inset-x-2 bottom-0 h-px bg-black/20" />
+                    <div className="absolute inset-y-2 left-0 w-px bg-white/40" />
+                    <div className="absolute inset-y-2 right-0 w-px bg-black/20" />
                 </div>
                 
-                {/* Ambient light on card */}
-                <div className="absolute -top-24 -left-24 w-64 h-64 bg-orange-500/20 blur-[80px] rounded-full" />
-                
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-white/10 rounded-2xl backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6">
-                     <Layout size={32} className="text-white" />
-                  </div>
+                  <div className="text-4xl font-black text-white/5 tracking-[0.2em] absolute top-0 right-0 pointer-events-none">NFC</div>
                   <div className="text-2xl font-black text-white tracking-widest uppercase italic">KARDLY</div>
                 </div>
                 
                 <div className="relative z-10 flex justify-between items-end">
                   <div>
-                    <div className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">{t('nfcCardType')}</div>
-                    <div className="text-lg font-black text-white uppercase tracking-wider">{t('nfcUserMock')}</div>
+                    <div className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em] mb-1">Elite Member</div>
+                    <div className="text-base font-black text-white uppercase tracking-wider">{t('nfcUserMock')}</div>
                   </div>
-                  <div className="bg-white p-3 rounded-xl shadow-lg">
-                     <QrCode size={40} className="text-slate-900" />
+                  <div className="bg-white p-2.5 rounded-xl shadow-2xl scale-90">
+                     <QrCode size={36} className="text-slate-950" />
                   </div>
                 </div>
+
+                <div className="absolute -top-24 -left-24 w-64 h-64 bg-orange-500/10 blur-[100px] rounded-full" />
               </motion.div>
               
-              {/* Secondary card for depth */}
+              {/* Tapping Phone Mockup */}
               <motion.div
-                initial={{ opacity: 0, x: -40, y: 40 }}
-                whileInView={{ opacity: 0.4, x: -60, y: 20 }}
-                className="absolute top-0 left-0 -z-10 w-full max-w-[440px] aspect-[1.58/1] bg-orange-500 rounded-[2rem] blur-[2px]"
-              />
+                initial={{ opacity: 0, x: 100, y: -50, rotate: -20 }}
+                whileInView={{ 
+                    opacity: 1, 
+                    x: 60, 
+                    y: -100, 
+                    rotate: -25,
+                    transition: { 
+                        type: "spring", 
+                        damping: 20, 
+                        stiffness: 100, 
+                        delay: 0.5 
+                    }
+                }}
+                className="absolute top-0 right-0 z-20 w-48 h-96 bg-slate-950 rounded-[2.5rem] border-[6px] border-slate-900 shadow-2xl hidden md:block"
+              >
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-slate-900 rounded-full" />
+                  <div className="w-full h-full bg-slate-900/50 rounded-[2.2rem] flex items-center justify-center">
+                      <Zap className="text-orange-500 animate-pulse" size={32} />
+                  </div>
+              </motion.div>
           </div>
         </div>
       </div>

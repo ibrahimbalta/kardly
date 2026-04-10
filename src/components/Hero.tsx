@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
 import { ArrowRight, Play, Globe, Users, BarChart3, ShieldCheck, Phone, Mail, MapPin, Briefcase, Star, Calendar, ExternalLink, Instagram, Linkedin, Sparkles, TrendingUp, Check } from "lucide-react"
 import { useTranslation } from "@/context/LanguageContext"
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -25,6 +25,25 @@ export function Hero({ onHowItWorksClick }: HeroProps) {
         target: containerRef,
         offset: ["start start", "end start"]
     })
+
+    // Mouse Parallax Logic
+    const mouseX = useMotionValue(0)
+    const mouseY = useMotionValue(0)
+
+    const springConfig = { damping: 25, stiffness: 150 }
+    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), springConfig)
+    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), springConfig)
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            const { clientX, clientY } = e
+            const { innerWidth, innerHeight } = window
+            mouseX.set((clientX / innerWidth) - 0.5)
+            mouseY.set((clientY / innerHeight) - 0.5)
+        }
+        window.addEventListener("mousemove", handleMouseMove)
+        return () => window.removeEventListener("mousemove", handleMouseMove)
+    }, [mouseX, mouseY])
 
     const y1 = useTransform(scrollYProgress, [0, 1], [0, -50])
     const y2 = useTransform(scrollYProgress, [0, 1], [0, 50])
@@ -199,7 +218,7 @@ export function Hero({ onHowItWorksClick }: HeroProps) {
                             
                             {/* ─── ULTIMATE PHONE MOCKUP ─── */}
                             <motion.div 
-                                whileHover={{ rotateY: -10, rotateX: 5, scale: 1.02 }}
+                                style={{ rotateX, rotateY }}
                                 className="relative w-[340px] md:w-[380px] aspect-[9/18.5] p-3 bg-slate-950 rounded-[4.5rem] shadow-[0_60px_120px_rgba(15,23,42,0.3)] border-[10px] border-slate-900/50 backdrop-blur-2xl transition-all duration-700"
                             >
                                 {/* Apple-style Dynamic Notch */}

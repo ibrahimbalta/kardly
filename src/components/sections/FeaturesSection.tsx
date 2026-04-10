@@ -57,68 +57,94 @@ export function FeaturesSection({ t }: FeaturesSectionProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 lg:gap-6">
           {[
-            { icon: <Briefcase size={22} />, title: t('f1Title'), color: 'rose', delay: 0 },
-            { icon: <CheckCircle2 size={22} />, title: t('f2Title'), color: 'amber', delay: 0.1 },
-            { icon: <FileText size={22} />, title: t('f3Title'), color: 'blue', delay: 0.2 },
-            { icon: <CreditCard size={22} />, title: t('f4Title'), color: 'emerald', delay: 0.3 },
-            { icon: <Calendar size={22} />, title: t('f5Title'), color: 'indigo', delay: 0.4 },
-            { icon: <BarChart3 size={22} />, title: t('f6Title'), color: 'purple', delay: 0.5 },
-            { icon: <Palette size={22} />, title: t('f7Title'), color: 'pink', delay: 0.6 },
-            { icon: <QrCode size={22} />, title: t('f8Title'), color: 'sky', delay: 0.7 },
-            { icon: <Shield size={22} />, title: t('f9Title'), color: 'teal', delay: 0.8 },
+            { 
+              icon: <Palette size={24} />, 
+              title: t('f7Title'), 
+              desc: 'Görsel kimliğinizi yansıtan premium temalar.',
+              color: 'pink', 
+              className: 'md:col-span-2 md:row-span-1 bg-gradient-to-br from-pink-500/10 to-rose-500/10'
+            },
+            { 
+              icon: <BarChart3 size={24} />, 
+              title: t('f6Title'), 
+              desc: 'Gerçek zamanlı etkileşim verileri.',
+              color: 'purple', 
+              className: 'md:col-span-2 md:row-span-2 bg-gradient-to-br from-purple-500/10 to-indigo-500/10'
+            },
+            { 
+              icon: <Calendar size={24} />, 
+              title: t('f5Title'), 
+              desc: 'Randevu ve takvim entegrasyonu.',
+              color: 'indigo', 
+              className: 'md:col-span-2 md:row-span-1 bg-gradient-to-br from-indigo-500/10 to-blue-500/10'
+            },
+            { 
+              icon: <QrCode size={20} />, 
+              title: t('f8Title'), 
+              color: 'sky', 
+              className: 'md:col-span-1 md:row-span-1 bg-gradient-to-br from-sky-500/10 to-teal-500/10'
+            },
+            { 
+              icon: <Shield size={20} />, 
+              title: t('f9Title'), 
+              color: 'teal', 
+              className: 'md:col-span-1 md:row-span-1 bg-gradient-to-br from-teal-500/10 to-emerald-500/10'
+            },
           ].map((f, i) => {
             const themeMap = {
-              rose: { bg: 'from-rose-500/10 to-rose-500/5', icon: 'bg-rose-500', glow: 'shadow-rose-500/20', text: 'text-rose-950', shape: 'bg-rose-500/5' },
-              amber: { bg: 'from-amber-500/10 to-amber-500/5', icon: 'bg-amber-500', glow: 'shadow-amber-500/20', text: 'text-amber-950', shape: 'bg-amber-500/5' },
-              blue: { bg: 'from-blue-500/10 to-blue-500/5', icon: 'bg-blue-500', glow: 'shadow-blue-500/20', text: 'text-blue-950', shape: 'bg-blue-500/5' },
-              emerald: { bg: 'from-emerald-500/10 to-emerald-500/5', icon: 'bg-emerald-500', glow: 'shadow-emerald-500/20', text: 'text-emerald-950', shape: 'bg-emerald-500/5' },
-              indigo: { bg: 'from-indigo-500/10 to-indigo-500/5', icon: 'bg-indigo-500', glow: 'shadow-indigo-500/20', text: 'text-indigo-950', shape: 'bg-indigo-500/5' },
-              purple: { bg: 'from-purple-500/10 to-purple-500/5', icon: 'bg-purple-500', glow: 'shadow-purple-500/20', text: 'text-purple-950', shape: 'bg-purple-500/5' },
-              pink: { bg: 'from-pink-500/10 to-pink-500/5', icon: 'bg-pink-500', glow: 'shadow-pink-500/20', text: 'text-pink-950', shape: 'bg-pink-500/5' },
-              sky: { bg: 'from-sky-500/10 to-sky-500/5', icon: 'bg-sky-500', glow: 'shadow-sky-500/20', text: 'text-sky-950', shape: 'bg-sky-500/5' },
-              teal: { bg: 'from-teal-500/10 to-teal-500/5', icon: 'bg-teal-500', glow: 'shadow-teal-500/20', text: 'text-teal-950', shape: 'bg-teal-500/5' }
+              pink: { icon: 'bg-pink-500', text: 'text-pink-950' },
+              purple: { icon: 'bg-purple-500', text: 'text-purple-950' },
+              indigo: { icon: 'bg-indigo-500', text: 'text-indigo-950' },
+              sky: { icon: 'bg-sky-500', text: 'text-sky-950' },
+              teal: { icon: 'bg-teal-500', text: 'text-teal-950' }
             };
             
-            const theme = themeMap[f.color as keyof typeof themeMap] || { bg: 'bg-slate-50', icon: 'bg-slate-500', glow: 'shadow-slate-500/20', text: 'text-slate-950', shape: 'bg-slate-500/5' };
+            const theme = themeMap[f.color as keyof typeof themeMap] || { icon: 'bg-slate-500', text: 'text-slate-950' };
 
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: f.delay, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: i * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
-                  "group relative min-h-[140px] p-8 rounded-[40px] overflow-hidden transition-all duration-700",
-                  i % 3 === 1 ? "lg:translate-y-12" : "",
-                  i % 3 === 2 ? "lg:translate-y-24" : ""
+                  "group relative overflow-hidden rounded-[2.5rem] border border-white/40 p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]",
+                  f.className
                 )}
               >
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br backdrop-blur-2xl border border-white/40 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.02]",
-                  theme.bg
-                )} />
-                
-                <div className="relative z-10 flex flex-col items-start gap-5">
+                <div className="relative z-10 h-full flex flex-col">
                   <div className={cn(
-                    "w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transition-all duration-700 group-hover:rotate-[15deg] group-hover:scale-110",
-                    theme.icon, theme.glow
+                    "w-12 h-12 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500",
+                    theme.icon
                   )}>
                     {f.icon}
                   </div>
                   
-                  <div className="space-y-1.5">
-                    <h3 className={cn("text-lg font-black tracking-tighter leading-none italic", theme.text)}>
+                  <div>
+                    <h3 className={cn("text-xl md:text-2xl font-black tracking-tight leading-tight mb-2 italic", theme.text)}>
                       {f.title}
                     </h3>
-                    <div className="flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-                       <div className={cn("h-1 w-8 rounded-full", theme.icon)} />
-                       <ArrowRight size={12} className={theme.text} />
-                    </div>
+                    {'desc' in f && (
+                      <p className="text-slate-500/80 text-sm font-medium leading-relaxed max-w-[200px]">
+                        {f.desc}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="mt-auto pt-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-500">
+                    <span className={cn("text-[10px] font-black uppercase tracking-widest", theme.text)}>Detaylı İncele</span>
+                    <ArrowRight size={14} className={theme.text} />
                   </div>
                 </div>
+                
+                {/* Decorative Shape */}
+                <div className={cn(
+                  "absolute -bottom-6 -right-6 w-32 h-32 rounded-full blur-3xl opacity-20 transition-all duration-700 group-hover:scale-150",
+                  theme.icon
+                )} />
               </motion.div>
             );
           })}
