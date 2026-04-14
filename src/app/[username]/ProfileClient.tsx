@@ -580,6 +580,10 @@ END:VCARD`
             return <TourismTravelTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
+        if (templateId.startsWith('masters_')) {
+            return <MastersCraftTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
+        }
+
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
@@ -8014,6 +8018,767 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                 </div>
             )}
         </AnimatePresence>
+    );
+}
+
+
+function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
+    const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+
+    useEffect(() => {
+        if (reviews?.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentReviewIndex((prev) => (prev + 1) % reviews.length);
+            }, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [reviews?.length]);
+
+    const craftConfigs: Record<string, any> = {
+        masters_plumber: {
+            bg: "bg-gradient-to-b from-[#0c1e35] via-[#0a1628] to-[#060d17]",
+            card: "bg-[#0d1f3c]/80 backdrop-blur-2xl",
+            headerBg: "from-[#0369a1] to-[#0284c7]",
+            accent: "#38bdf8",
+            accentDark: "#0369a1",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/20",
+            icon: "💧",
+            craftIcon: <Droplets size={28} />,
+            craftName: lang === 'tr' ? "Su Tesisatçısı" : "Plumber",
+            ctaLabel: lang === 'tr' ? "ACİL SERVİS" : "EMERGENCY SERVICE",
+            ctaIcon: <Phone size={20} />,
+            quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
+            patternType: "water",
+            tagline: lang === 'tr' ? "Güvenilir Tesisat Çözümleri" : "Reliable Plumbing Solutions",
+            badges: lang === 'tr' ? ["7/24 Acil", "Garantili İş", "Ücretsiz Keşif"] : ["24/7 Emergency", "Guaranteed", "Free Inspection"],
+        },
+        masters_electrician: {
+            bg: "bg-gradient-to-b from-[#1a1005] via-[#0f0a05] to-[#050300]",
+            card: "bg-[#1a1005]/80 backdrop-blur-2xl",
+            headerBg: "from-[#b45309] to-[#d97706]",
+            accent: "#f59e0b",
+            accentDark: "#92400e",
+            text: "text-white",
+            subtext: "text-amber-200/60",
+            border: "border-amber-500/20",
+            icon: "⚡",
+            craftIcon: <Zap size={28} />,
+            craftName: lang === 'tr' ? "Elektrik Ustası" : "Electrician",
+            ctaLabel: lang === 'tr' ? "ACİL ELEKTRİK" : "EMERGENCY POWER",
+            ctaIcon: <Zap size={20} />,
+            quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
+            patternType: "circuit",
+            tagline: lang === 'tr' ? "Güvenli Elektrik Tesisat Çözümleri" : "Safe Electrical Solutions",
+            badges: lang === 'tr' ? ["Lisanslı Usta", "7/24 Arıza", "Sertifikalı"] : ["Licensed", "24/7 Repair", "Certified"],
+        },
+        masters_painter: {
+            bg: "bg-gradient-to-b from-[#1a0520] via-[#0f0315] to-[#050108]",
+            card: "bg-[#1a0520]/60 backdrop-blur-2xl",
+            headerBg: "from-[#be185d] to-[#ec4899]",
+            accent: "#ec4899",
+            accentDark: "#9d174d",
+            text: "text-white",
+            subtext: "text-pink-200/60",
+            border: "border-pink-500/20",
+            icon: "🎨",
+            craftIcon: <Palette size={28} />,
+            craftName: lang === 'tr' ? "Boya & Badana Ustası" : "Painter",
+            ctaLabel: lang === 'tr' ? "RENK DANIŞMANLIĞI" : "COLOR CONSULTING",
+            ctaIcon: <Palette size={20} />,
+            quoteLabel: lang === 'tr' ? "ÜCRETSİZ KEŞİF" : "FREE ESTIMATE",
+            patternType: "splash",
+            tagline: lang === 'tr' ? "Yaratıcı Boya & Dekorasyon" : "Creative Paint & Decoration",
+            badges: lang === 'tr' ? ["İtalyan Boya", "Özel Efekt", "Dış Cephe"] : ["Premium Paint", "Special Effects", "Exterior"],
+        },
+        masters_carpenter: {
+            bg: "bg-gradient-to-b from-[#1c1208] via-[#140f0a] to-[#0a0704]",
+            card: "bg-[#1c1208]/80 backdrop-blur-2xl",
+            headerBg: "from-[#92400e] to-[#b45309]",
+            accent: "#d97706",
+            accentDark: "#78350f",
+            text: "text-white",
+            subtext: "text-orange-200/60",
+            border: "border-orange-500/20",
+            icon: "🪵",
+            craftIcon: <Briefcase size={28} />,
+            craftName: lang === 'tr' ? "Mobilya & Marangoz" : "Carpenter",
+            ctaLabel: lang === 'tr' ? "ÖZEL SİPARİŞ" : "CUSTOM ORDER",
+            ctaIcon: <Briefcase size={20} />,
+            quoteLabel: lang === 'tr' ? "FİYAT TEKLİFİ" : "GET A QUOTE",
+            patternType: "wood",
+            tagline: lang === 'tr' ? "El İşçiliği & Ahşap Sanatı" : "Handcrafted Woodwork",
+            badges: lang === 'tr' ? ["Masif Ahşap", "Özel Tasarım", "Montaj Dahil"] : ["Solid Wood", "Custom Design", "Installation"],
+        },
+        masters_auto: {
+            bg: "bg-gradient-to-b from-[#0f0505] via-[#0a0a0b] to-[#050505]",
+            card: "bg-zinc-900/60 backdrop-blur-2xl",
+            headerBg: "from-[#991b1b] to-[#dc2626]",
+            accent: "#ef4444",
+            accentDark: "#7f1d1d",
+            text: "text-white",
+            subtext: "text-zinc-400",
+            border: "border-red-500/20",
+            icon: "🔧",
+            craftIcon: <Settings size={28} />,
+            craftName: lang === 'tr' ? "Oto Servis & Bakım" : "Auto Service",
+            ctaLabel: lang === 'tr' ? "RANDEVU AL" : "BOOK SERVICE",
+            ctaIcon: <Calendar size={20} />,
+            quoteLabel: lang === 'tr' ? "ARAÇ KONTROL" : "CAR CHECK",
+            patternType: "gear",
+            tagline: lang === 'tr' ? "Profesyonel Araç Bakım & Onarım" : "Professional Auto Care",
+            badges: lang === 'tr' ? ["Orijinal Parça", "Garantili", "Ücretsiz Check-up"] : ["OEM Parts", "Warranty", "Free Check-up"],
+        },
+        masters_renovation: {
+            bg: "bg-gradient-to-b from-[#0a0a05] via-[#050505] to-[#020202]",
+            card: "bg-[#111]/80 backdrop-blur-2xl",
+            headerBg: "from-[#a16207] to-[#ca8a04]",
+            accent: "#eab308",
+            accentDark: "#854d0e",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-yellow-500/20",
+            icon: "👷",
+            craftIcon: <Shield size={28} />,
+            craftName: lang === 'tr' ? "İnşaat & Tadilat" : "Construction",
+            ctaLabel: lang === 'tr' ? "ÜCRETSİZ KEŞİF" : "FREE SURVEY",
+            ctaIcon: <MapPin size={20} />,
+            quoteLabel: lang === 'tr' ? "PROJE TEKLİFİ" : "PROJECT QUOTE",
+            patternType: "blueprint",
+            tagline: lang === 'tr' ? "Anahtar Teslim Tadilat" : "Turnkey Renovation",
+            badges: lang === 'tr' ? ["Anahtar Teslim", "Proje Yönetimi", "Sözleşmeli"] : ["Turnkey", "Managed", "Contract"],
+        }
+    };
+
+    const craft = craftConfigs[colorScheme] || craftConfigs.masters_plumber;
+    const theme = {
+        ...craft,
+        isLight: false,
+        accent: getContrastingAccent(profile.themeColor || craft.accent, false)
+    };
+    const socialLinks = profile.socialLinks || [];
+
+    const formatUrl = (url?: string) => {
+        if (!url) return "";
+        const trimmed = url.trim();
+        if (!trimmed) return "";
+        if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('tel:') || trimmed.startsWith('mailto:')) return trimmed;
+        return `https://${trimmed}`;
+    };
+
+    const phoneNumber = socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone;
+    const whatsappNumber = (socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || phoneNumber || "").replace(/\D/g, '');
+
+    // Craft-specific background patterns
+    const CraftBackground = () => {
+        switch (craft.patternType) {
+            case "water":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-b from-blue-950/30 to-transparent" />
+                        {[...Array(8)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ y: -30, opacity: 0 }}
+                                animate={{ y: [0, 800], opacity: [0, 0.3, 0] }}
+                                transition={{ duration: 5 + Math.random() * 5, repeat: Infinity, delay: Math.random() * 8, ease: "linear" }}
+                                className="absolute"
+                                style={{ left: `${5 + Math.random() * 90}%`, color: `${craft.accent}40` }}
+                            >
+                                <Droplets size={16 + Math.random() * 20} />
+                            </motion.div>
+                        ))}
+                        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-500/10 to-transparent" />
+                    </div>
+                );
+            case "circuit":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${craft.accent}60 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}60 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
+                        {[...Array(6)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{ opacity: [0, 0.6, 0], scale: [0.5, 1.3, 0.5] }}
+                                transition={{ duration: 0.15, repeat: Infinity, repeatDelay: 3 + Math.random() * 6 }}
+                                className="absolute"
+                                style={{ top: `${Math.random() * 90}%`, left: `${Math.random() * 90}%`, color: craft.accent }}
+                            >
+                                <Zap size={40 + Math.random() * 30} />
+                            </motion.div>
+                        ))}
+                    </div>
+                );
+            case "splash":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }} transition={{ duration: 8, repeat: Infinity }} className="absolute -top-20 -left-20 w-96 h-96 rounded-full blur-[120px] bg-pink-500" />
+                        <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.06, 0.12, 0.06] }} transition={{ duration: 10, repeat: Infinity, delay: 2 }} className="absolute top-1/2 -right-20 w-80 h-80 rounded-full blur-[100px] bg-cyan-400" />
+                        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }} transition={{ duration: 12, repeat: Infinity, delay: 4 }} className="absolute -bottom-20 left-1/4 w-96 h-96 rounded-full blur-[120px] bg-yellow-400" />
+                        <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.08, 0.04] }} transition={{ duration: 9, repeat: Infinity, delay: 1 }} className="absolute top-1/4 left-1/3 w-60 h-60 rounded-full blur-[80px] bg-purple-500" />
+                    </div>
+                );
+            case "wood":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'repeating-linear-gradient(90deg, #d97706 0px, transparent 1px, transparent 8px, #d97706 9px), repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #d9770610 30px, #d9770610 31px)', backgroundSize: '9px 31px' }} />
+                        <div className="absolute bottom-0 inset-x-0 h-60 bg-gradient-to-t from-orange-950/20 to-transparent" />
+                    </div>
+                );
+            case "gear":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-32 -right-32 opacity-[0.06]" style={{ color: craft.accent }}>
+                            <Settings size={280} />
+                        </motion.div>
+                        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 -left-24 opacity-[0.04]" style={{ color: craft.accent }}>
+                            <Settings size={180} />
+                        </motion.div>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -bottom-20 right-10 opacity-[0.03]" style={{ color: craft.accent }}>
+                            <Settings size={120} />
+                        </motion.div>
+                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(circle, ${craft.accent}30 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+                    </div>
+                );
+            case "blueprint":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `linear-gradient(${craft.accent}50 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}50 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${craft.accent}30 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}30 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-yellow-500/5 to-transparent" />
+                    </div>
+                );
+            default: return null;
+        }
+    };
+
+    return (
+        <div className={cn("min-h-screen relative overflow-x-hidden pb-32", craft.bg, toneStyle.font)}>
+            <CraftBackground />
+
+            {/* === CRAFT HEADER === */}
+            <div className="relative z-10">
+                {/* Diagonal Header Banner */}
+                <div className={cn("relative h-56 overflow-hidden")} style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}>
+                    {/* Diagonal stripe pattern */}
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
+                    
+                    {/* Large craft icon watermark */}
+                    <div className="absolute top-4 right-4 opacity-20 text-white">
+                        <span className="text-[100px] leading-none">{craft.icon}</span>
+                    </div>
+
+                    {/* Hazard/Industry stripe at bottom */}
+                    <div className="absolute bottom-0 inset-x-0 h-3" style={{ backgroundImage: `repeating-linear-gradient(45deg, ${craft.accent}, ${craft.accent} 10px, transparent 10px, transparent 20px)`, opacity: 0.6 }} />
+
+                    {/* Top navigation */}
+                    <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-center">
+                        <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-xl bg-black/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
+                            <QrCode size={18} />
+                        </button>
+                        <div className="flex gap-2">
+                            <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-xl bg-black/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
+                                <UserPlus size={18} />
+                            </button>
+                            <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-10 h-10 rounded-xl bg-black/20 backdrop-blur-md flex items-center justify-center text-white font-black text-[10px] border border-white/20">
+                                {lang.toUpperCase()}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Craft badge centered */}
+                    <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="px-5 py-2 rounded-full bg-black/40 backdrop-blur-xl border border-white/20 flex items-center gap-2 text-white"
+                        >
+                            <span className="text-lg">{craft.icon}</span>
+                            <span className="font-black text-[10px] uppercase tracking-[0.2em]">{craft.craftName}</span>
+                        </motion.div>
+                    </div>
+                </div>
+
+                {/* Profile Card - overlapping header */}
+                <main className="max-w-md mx-auto px-4 -mt-16 relative z-20">
+                    <motion.div
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className={cn("rounded-3xl border p-6 relative overflow-hidden", craft.card, craft.border)}
+                        style={{ boxShadow: `0 25px 60px -15px ${craft.accent}30` }}
+                    >
+                        {/* Subtle accent line at top of card */}
+                        <div className="absolute top-0 inset-x-0 h-1 rounded-t-3xl" style={{ background: `linear-gradient(to right, ${craft.accent}, ${craft.accentDark})` }} />
+
+                        {/* Avatar + Name */}
+                        <div className="flex flex-col items-center text-center pt-2">
+                            <div className="relative mb-4">
+                                <div className="w-24 h-24 rounded-2xl border-2 overflow-hidden shadow-2xl" style={{ borderColor: `${craft.accent}60` }}>
+                                    <img
+                                        src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
+                                        className="w-full h-full object-cover"
+                                        alt={profile.user?.name}
+                                    />
+                                </div>
+                                {/* Online / verified badge */}
+                                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: craft.accent }}>
+                                    {craft.craftIcon ? <Check size={14} /> : <Zap size={14} />}
+                                </div>
+                            </div>
+
+                            <h1 className={cn("text-xl font-black uppercase tracking-tight", craft.text)}>
+                                {profile.user?.name || "Usta"}
+                            </h1>
+                            <p className={cn("text-[11px] font-bold uppercase tracking-[0.2em] mt-1", craft.subtext)}>
+                                {profile.occupation || craft.craftName}
+                            </p>
+
+                            {/* Craft Tagline */}
+                            <div className="mt-3 px-4 py-1.5 rounded-full border flex items-center gap-2" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}10` }}>
+                                <div style={{ color: craft.accent }}>{craft.craftIcon}</div>
+                                <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: craft.accent }}>{craft.tagline}</span>
+                            </div>
+                        </div>
+
+                        {/* Badges row */}
+                        <div className="flex justify-center gap-2 mt-5 flex-wrap">
+                            {craft.badges.map((badge: string, i: number) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.3 + i * 0.1 }}
+                                    className="px-3 py-1.5 rounded-xl border text-[8px] font-black uppercase tracking-wider flex items-center gap-1.5"
+                                    style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}08`, color: craft.accent }}
+                                >
+                                    <Check size={10} />
+                                    {badge}
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* === PRIMARY CTA BUTTONS === */}
+                    <div className="mt-5 space-y-3">
+                        {/* Emergency / Primary CTA */}
+                        {phoneNumber && (
+                            <motion.a
+                                href={`tel:${phoneNumber}`}
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.4 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => trackEvent("phone")}
+                                className="w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest text-white relative overflow-hidden shadow-2xl"
+                                style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, boxShadow: `0 10px 30px -10px ${craft.accent}80` }}
+                            >
+                                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                    {craft.ctaIcon}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] opacity-60 tracking-[0.3em]">7/24</span>
+                                    <span>{craft.ctaLabel}</span>
+                                </div>
+                                <div className="ml-auto flex items-center gap-1 text-white/60">
+                                    <Phone size={16} className="animate-pulse" />
+                                </div>
+                                {/* Shine sweep */}
+                                <motion.div
+                                    animate={{ x: ['-100%', '200%'] }}
+                                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
+                                    className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
+                                />
+                            </motion.a>
+                        )}
+
+                        {/* WhatsApp */}
+                        {whatsappNumber && (
+                            <motion.a
+                                href={`https://wa.me/${whatsappNumber}`}
+                                target="_blank"
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.5 }}
+                                whileHover={{ scale: 1.02 }}
+                                onClick={() => trackEvent("whatsapp")}
+                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}10` }}
+                            >
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}40`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                                    <MessageCircle size={22} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">WHATSAPP</span>
+                                    <span className="text-sm">{craft.quoteLabel}</span>
+                                </div>
+                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
+                            </motion.a>
+                        )}
+
+                        {/* Contact Form */}
+                        <motion.button
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.6 }}
+                            whileHover={{ scale: 1.02 }}
+                            onClick={() => { trackEvent("contact_form"); setIsLeadModalOpen(true); }}
+                            className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
+                            style={{ backgroundColor: `${craft.accent}08` }}
+                        >
+                            <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, color: craft.accent }}>
+                                <MessageSquare size={20} />
+                            </div>
+                            <span>{t.contactMeTitle}</span>
+                            <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
+                        </motion.button>
+
+                        {/* Email */}
+                        {profile.user?.email && (
+                            <motion.a
+                                href={`mailto:${profile.user.email}`}
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.65 }}
+                                onClick={() => trackEvent("email")}
+                                className={cn("w-full py-3 px-5 rounded-2xl flex items-center gap-4 font-black text-[11px] uppercase tracking-widest border transition-all", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}05` }}
+                            >
+                                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ color: craft.accent }}>
+                                    <Mail size={18} />
+                                </div>
+                                <span>{t.emailBtn || "E-MAIL"}</span>
+                            </motion.a>
+                        )}
+
+                        {/* Location */}
+                        {socialLinks.find((l: any) => l.platform === 'location')?.url && (
+                            <motion.a
+                                href={formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url)}
+                                target="_blank"
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.7 }}
+                                onClick={() => trackEvent("location")}
+                                className={cn("w-full py-3 px-5 rounded-2xl flex items-center gap-4 font-black text-[11px] uppercase tracking-widest border transition-all", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}05` }}
+                            >
+                                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ color: craft.accent }}>
+                                    <MapPin size={18} />
+                                </div>
+                                <span>{t.locationsBtn || "KONUM"}</span>
+                            </motion.a>
+                        )}
+                    </div>
+
+                    {/* === SERVICES SECTION - Work Order Style === */}
+                    {profile.services?.length > 0 && (
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            className={cn("mt-8 rounded-3xl border p-6 relative overflow-hidden", craft.card, craft.border)}
+                        >
+                            {/* Section Header */}
+                            <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent }}>
+                                    <Briefcase size={16} />
+                                </div>
+                                <div>
+                                    <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>{t.services}</h3>
+                                    <p className={cn("text-[9px] uppercase tracking-wider", craft.subtext)}>{lang === 'tr' ? 'Hizmet Alanlarımız' : 'Our Service Areas'}</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                {(profile.services || []).map((service: any, i: number) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ x: -10, opacity: 0 }}
+                                        whileInView={{ x: 0, opacity: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: i * 0.1 }}
+                                        className="flex items-start gap-3 p-3 rounded-xl border transition-all hover:border-opacity-50"
+                                        style={{ borderColor: `${craft.accent}15`, backgroundColor: `${craft.accent}05` }}
+                                    >
+                                        <div className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                                            <Check size={14} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className={cn("text-[11px] font-black uppercase tracking-wider", craft.text)}>{translateText(service.title)}</h4>
+                                            <p className={cn("text-[10px] mt-0.5 leading-relaxed", craft.subtext)}>{translateText(service.description)}</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* === BIO === */}
+                    {profile.bio && (
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            className={cn("mt-6 rounded-3xl border p-6", craft.card, craft.border)}
+                        >
+                            <p className={cn("text-xs leading-relaxed text-center", craft.subtext)} style={{ color: profile.bioColor || undefined, fontSize: profile.bioFontSize || "12px" }}>
+                                {profile.bio}
+                            </p>
+                            {profile.slogan && (
+                                <p className={cn("text-center font-bold mt-3 italic text-sm")} style={{ color: profile.sloganColor || craft.accent }}>
+                                    "{translateText(profile.slogan)}"
+                                </p>
+                            )}
+                        </motion.div>
+                    )}
+
+                    {/* === PORTFOLIO / PROJECTS === */}
+                    {profile.products?.filter((p: any) => p.image)?.length > 0 && (
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            className={cn("mt-6 rounded-3xl border p-6", craft.card, craft.border)}
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent }}>
+                                    <Eye size={16} />
+                                </div>
+                                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>
+                                    {lang === 'tr' ? 'İşlerimiz' : 'Our Work'}
+                                </h3>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                                {profile.products.filter((p: any) => p.image).map((project: any, i: number) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: i * 0.05 }}
+                                        className="aspect-square rounded-xl overflow-hidden relative group cursor-pointer border"
+                                        style={{ borderColor: `${craft.accent}20` }}
+                                        onClick={() => {
+                                            trackEvent("product_grid", project.name);
+                                            if (project.link) window.open(formatUrl(project.link), "_blank");
+                                            else setSelectedProject(project);
+                                        }}
+                                    >
+                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-all flex items-end p-2">
+                                            <p className="text-[8px] font-black text-white uppercase tracking-tight line-clamp-2">{project.name}</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* === REVIEWS === */}
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        className={cn("mt-6 rounded-3xl border p-6", craft.card, craft.border)}
+                    >
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent }}>
+                                    <Star size={16} />
+                                </div>
+                                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>{t.reviews}</h3>
+                            </div>
+                            <button
+                                onClick={() => setIsReviewModalOpen(true)}
+                                className="px-3 py-1.5 rounded-xl border text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5"
+                                style={{ borderColor: `${craft.accent}30`, color: craft.accent }}
+                            >
+                                <Plus size={10} /> {t.writeReview}
+                            </button>
+                        </div>
+
+                        {reviews.length > 0 ? (
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentReviewIndex}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="p-4 rounded-2xl border"
+                                    style={{ borderColor: `${craft.accent}15`, backgroundColor: `${craft.accent}05` }}
+                                >
+                                    <div className="flex gap-3">
+                                        <div className="w-10 h-10 rounded-xl overflow-hidden border flex-shrink-0" style={{ borderColor: `${craft.accent}30` }}>
+                                            <img
+                                                src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                className="w-full h-full object-cover"
+                                                alt={reviews[currentReviewIndex].name}
+                                            />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between">
+                                                <h4 className={cn("text-[11px] font-black", craft.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                <div className="flex gap-0.5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <p className={cn("text-[10px] mt-1 italic leading-relaxed line-clamp-3", craft.subtext)}>
+                                                &ldquo;{translateText(reviews[currentReviewIndex].content)}&rdquo;
+                                            </p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+                        ) : (
+                            <div className={cn("p-6 rounded-2xl border text-center", craft.subtext)} style={{ borderColor: `${craft.accent}10` }}>
+                                <MessageSquare size={24} className="mx-auto mb-2 opacity-20" />
+                                <p className="text-[10px]">{t.noReviewsYet}</p>
+                            </div>
+                        )}
+                        {reviews.length > 1 && (
+                            <div className="flex justify-center gap-1.5 mt-3">
+                                {reviews.map((_: any, i: number) => (
+                                    <button key={i} onClick={() => setCurrentReviewIndex(i)} className="h-1.5 rounded-full transition-all" style={{ width: i === currentReviewIndex ? '20px' : '6px', background: i === currentReviewIndex ? craft.accent : 'rgba(255,255,255,0.1)' }} />
+                                ))}
+                            </div>
+                        )}
+                    </motion.div>
+
+                    {/* === SOCIAL LINKS === */}
+                    <div className="flex justify-center flex-wrap gap-4 mt-6">
+                        {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => (
+                            <a key={i} href={formatUrl(l.url)} target="_blank" className="opacity-50 hover:opacity-100 transition-all hover:scale-110" style={{ color: craft.accent }}>
+                                {getHeroIcon(l.platform, 22, l.url)}
+                            </a>
+                        ))}
+                    </div>
+
+                    {/* === BOTTOM ACTIONS === */}
+                    <div className="mt-8 flex gap-3">
+                        <button
+                            onClick={handleShare}
+                            className={cn("flex-1 py-4 rounded-2xl border flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest transition-all", craft.text, craft.border)}
+                            style={{ backgroundColor: `${craft.accent}08` }}
+                        >
+                            <Share2 size={14} style={{ color: craft.accent }} /> {t.shareLabel}
+                        </button>
+                        <button
+                            onClick={handleCVView}
+                            className="flex-[1.5] py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest text-white shadow-xl"
+                            style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, boxShadow: `0 8px 20px -8px ${craft.accent}80` }}
+                        >
+                            <FileText size={14} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
+                        </button>
+                        {aiConfig?.isEnabled && (
+                            <button
+                                onClick={() => setIsAIChatOpen(true)}
+                                className="w-14 py-4 rounded-2xl flex items-center justify-center text-white shadow-xl"
+                                style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
+                            >
+                                <Bot size={20} />
+                            </button>
+                        )}
+                    </div>
+                </main>
+            </div>
+
+            {/* === MODALS === */}
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={async (newReview: any) => {
+                    try {
+                        const res = await fetch("/api/review/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...newReview, profileId: profile.id }) });
+                        if (res.ok) { setReviewStatus(t.reviewSuccessMsg); setTimeout(() => setReviewStatus(null), 5000); }
+                    } catch (err) { console.error(err); }
+                }}
+                theme={theme} t={t} toneStyle={toneStyle}
+            />
+            <LeadModal
+                isOpen={isLeadModalOpen}
+                onClose={() => setIsLeadModalOpen(false)}
+                onSubmit={async (leadData: any) => {
+                    try {
+                        const res = await fetch("/api/leads/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...leadData, profileId: profile.id }) });
+                        if (res.ok) { setLeadStatus(t.leadSuccessMsg); setTimeout(() => setLeadStatus(null), 5000); handleAddToContacts(); }
+                    } catch (err) { console.error(err); }
+                }}
+                theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""}
+            />
+            <CVPreviewModal isOpen={isCVModalOpen} onClose={() => setIsCVModalOpen(false)} url={cvViewUrl} theme={theme} t={t} toneStyle={toneStyle} />
+            <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
+
+            {/* Status toasts */}
+            <AnimatePresence>
+                {reviewStatus && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                        <CheckCircle2 size={14} /> {reviewStatus}
+                    </motion.div>
+                )}
+                {leadStatus && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                        <CheckCircle2 size={14} /> {leadStatus}
+                    </motion.div>
+                )}
+                {copied && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                        <CheckCircle2 size={14} /> {t.copiedLabel}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* QR Modal */}
+            <AnimatePresence>
+                {isQrOpen && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setIsQrOpen(false)}>
+                        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4" onClick={(e) => e.stopPropagation()}>
+                            <div className="text-center">
+                                <h3 className="font-black text-lg text-black mb-4">{t.qrCode}</h3>
+                                {qrDataUrl && <img src={qrDataUrl} alt="QR Code" className="w-48 h-48 mx-auto" />}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Wallet Modal */}
+            <AnimatePresence>
+                {isWalletModalOpen && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setIsWalletModalOpen(false)}>
+                        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4" onClick={(e) => e.stopPropagation()}>
+                            <div className="text-center space-y-4">
+                                <h3 className="font-black text-lg text-black">{t.addToContacts}</h3>
+                                <button onClick={handleAddToContacts} className="w-full py-3 rounded-xl font-bold text-white" style={{ backgroundColor: craft.accent }}>{t.downloadVCard}</button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Project Detail Modal */}
+            <AnimatePresence>
+                {selectedProject && (
+                    <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setSelectedProject(null)}>
+                        <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="bg-[#0a0a0f] rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border border-white/10" onClick={(e) => e.stopPropagation()}>
+                            <div className="p-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="font-black text-white text-sm uppercase tracking-wider">{translateText(selectedProject.name)}</h3>
+                                    <button onClick={() => setSelectedProject(null)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/60"><X size={16} /></button>
+                                </div>
+                                {selectedProject.image && <img src={selectedProject.image} alt={selectedProject.name} className="w-full rounded-2xl mb-4" />}
+                                <p className="text-white/60 text-sm leading-relaxed">{translateText(selectedProject.description) || t.noProjectDesc}</p>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            <SocialProof t={t} theme={theme} />
+        </div>
     );
 }
 
