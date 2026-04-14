@@ -8152,10 +8152,14 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
     };
 
     const craft = craftConfigs[colorScheme] || craftConfigs.masters_plumber;
+
     const theme = {
         ...craft,
         isLight: false,
-        accent: getContrastingAccent(profile.themeColor || craft.accent, false)
+        accent: getContrastingAccent(profile.themeColor || craft.accent, false),
+        body: craft.bg,
+        btn: "bg-white/10 border-white/10 hover:bg-white/20",
+        btnText: "text-white"
     };
     const socialLinks = profile.socialLinks || [];
 
@@ -8452,6 +8456,25 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             </motion.a>
                         )}
 
+                        {/* Appointment Button */}
+                        {profile.showAppointmentBtn && (
+                            <motion.button
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.7 }}
+                                whileHover={{ scale: 1.02 }}
+                                onClick={() => { trackEvent("appointment_click"); setIsAppointmentOpen(true); }}
+                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}12` }}
+                            >
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}40`, color: craft.accent }}>
+                                    <Calendar size={20} />
+                                </div>
+                                <span>{t.appointmentBtn || "RANDEVU AL"}</span>
+                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
+                            </motion.button>
+                        )}
+
                         {/* Location */}
                         {socialLinks.find((l: any) => l.platform === 'location')?.url && (
                             <motion.a
@@ -8698,6 +8721,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 }}
                 theme={theme} t={t} toneStyle={toneStyle}
             />
+            <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <LeadModal
                 isOpen={isLeadModalOpen}
                 onClose={() => setIsLeadModalOpen(false)}
@@ -8731,124 +8755,21 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 )}
             </AnimatePresence>
 
-            {/* QR Modal */}
-            <AnimatePresence>
-                {isQrOpen && (
-                    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setIsQrOpen(false)}>
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Close button */}
-                            <button onClick={() => setIsQrOpen(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all">
-                                <X size={16} />
-                            </button>
+            {/* Digital Business Card Modal (Shared) */}
+            <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
 
-                            <div className="text-center">
-                                {/* Craft icon */}
-                                <div className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 shadow-lg" style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}>
-                                    <span className="text-2xl text-white">{craft.icon}</span>
-                                </div>
-
-                                <h3 className="font-black text-lg text-gray-900 mb-1">{t.qrCode || "QR Kod"}</h3>
-                                <p className="text-xs text-gray-400 mb-5">{profile.user?.name} • {craft.craftName}</p>
-
-                                {/* QR Code */}
-                                {qrDataUrl && (
-                                    <div className="p-4 bg-white rounded-2xl border-2 border-gray-100 inline-block mb-5 shadow-inner">
-                                        <img src={qrDataUrl} alt="QR Code" className="w-52 h-52 mx-auto" />
-                                    </div>
-                                )}
-
-                                {/* Action buttons */}
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={() => { handleShare(); setIsQrOpen(false); }}
-                                        className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
-                                        style={{ backgroundColor: `${craft.accent}15`, color: craft.accent }}
-                                    >
-                                        <Share2 size={16} /> {t.shareLabel || "Paylaş"}
-                                    </button>
-                                    <button
-                                        onClick={() => { handleAddToContacts(); setIsQrOpen(false); }}
-                                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all"
-                                        style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
-                                    >
-                                        <Download size={16} /> {t.downloadVCard || "İndir"}
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
-
-            {/* Wallet / Add to Contacts Modal */}
+            {/* Wallet / Add to Contacts Modal (Shared) */}
             <AnimatePresence>
                 {isWalletModalOpen && (
-                    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setIsWalletModalOpen(false)}>
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Close button */}
-                            <button onClick={() => setIsWalletModalOpen(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all">
-                                <X size={16} />
-                            </button>
-
-                            <div className="text-center">
-                                {/* Avatar */}
-                                <div className="relative mx-auto mb-4 w-20 h-20">
-                                    <div className="w-20 h-20 rounded-2xl border-2 overflow-hidden shadow-lg" style={{ borderColor: `${craft.accent}40` }}>
-                                        <img
-                                            src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
-                                            className="w-full h-full object-cover"
-                                            alt={profile.user?.name}
-                                        />
-                                    </div>
-                                    <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-white shadow-md" style={{ backgroundColor: craft.accent }}>
-                                        <UserPlus size={14} />
-                                    </div>
-                                </div>
-
-                                <h3 className="font-black text-lg text-gray-900 mb-0.5">{profile.user?.name}</h3>
-                                <p className="text-xs text-gray-400 mb-1">{profile.occupation || craft.craftName}</p>
-
-                                {/* Craft badge */}
-                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider mb-5" style={{ backgroundColor: `${craft.accent}15`, color: craft.accent }}>
-                                    <span>{craft.icon}</span> {craft.craftName}
-                                </div>
-
-                                {/* Buttons */}
-                                <div className="space-y-3">
-                                    <button
-                                        onClick={() => { handleAddToContacts(); setIsWalletModalOpen(false); }}
-                                        className="w-full py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all hover:brightness-110"
-                                        style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
-                                    >
-                                        <Download size={18} /> {t.downloadVCard || "Rehbere Kaydet"}
-                                    </button>
-                                    <button
-                                        onClick={() => { handleShare(); setIsWalletModalOpen(false); }}
-                                        className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all border"
-                                        style={{ borderColor: `${craft.accent}30`, color: craft.accent }}
-                                    >
-                                        <Share2 size={16} /> {t.shareLabel || "Profili Paylaş"}
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
+                    <WalletModal
+                        isOpen={isWalletModalOpen}
+                        onClose={() => setIsWalletModalOpen(false)}
+                        profile={profile}
+                        t={t}
+                        handleAddToContacts={handleAddToContacts}
+                        theme={theme}
+                        toneStyle={toneStyle}
+                    />
                 )}
             </AnimatePresence>
 
