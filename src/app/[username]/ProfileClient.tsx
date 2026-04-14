@@ -8734,25 +8734,118 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             {/* QR Modal */}
             <AnimatePresence>
                 {isQrOpen && (
-                    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setIsQrOpen(false)}>
-                        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setIsQrOpen(false)}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close button */}
+                            <button onClick={() => setIsQrOpen(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all">
+                                <X size={16} />
+                            </button>
+
                             <div className="text-center">
-                                <h3 className="font-black text-lg text-black mb-4">{t.qrCode}</h3>
-                                {qrDataUrl && <img src={qrDataUrl} alt="QR Code" className="w-48 h-48 mx-auto" />}
+                                {/* Craft icon */}
+                                <div className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 shadow-lg" style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}>
+                                    <span className="text-2xl text-white">{craft.icon}</span>
+                                </div>
+
+                                <h3 className="font-black text-lg text-gray-900 mb-1">{t.qrCode || "QR Kod"}</h3>
+                                <p className="text-xs text-gray-400 mb-5">{profile.user?.name} • {craft.craftName}</p>
+
+                                {/* QR Code */}
+                                {qrDataUrl && (
+                                    <div className="p-4 bg-white rounded-2xl border-2 border-gray-100 inline-block mb-5 shadow-inner">
+                                        <img src={qrDataUrl} alt="QR Code" className="w-52 h-52 mx-auto" />
+                                    </div>
+                                )}
+
+                                {/* Action buttons */}
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => { handleShare(); setIsQrOpen(false); }}
+                                        className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                                        style={{ backgroundColor: `${craft.accent}15`, color: craft.accent }}
+                                    >
+                                        <Share2 size={16} /> {t.shareLabel || "Paylaş"}
+                                    </button>
+                                    <button
+                                        onClick={() => { handleAddToContacts(); setIsQrOpen(false); }}
+                                        className="flex-1 py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all"
+                                        style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
+                                    >
+                                        <Download size={16} /> {t.downloadVCard || "İndir"}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
 
-            {/* Wallet Modal */}
+            {/* Wallet / Add to Contacts Modal */}
             <AnimatePresence>
                 {isWalletModalOpen && (
-                    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setIsWalletModalOpen(false)}>
-                        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4" onClick={(e) => e.stopPropagation()}>
-                            <div className="text-center space-y-4">
-                                <h3 className="font-black text-lg text-black">{t.addToContacts}</h3>
-                                <button onClick={handleAddToContacts} className="w-full py-3 rounded-xl font-bold text-white" style={{ backgroundColor: craft.accent }}>{t.downloadVCard}</button>
+                    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setIsWalletModalOpen(false)}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close button */}
+                            <button onClick={() => setIsWalletModalOpen(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all">
+                                <X size={16} />
+                            </button>
+
+                            <div className="text-center">
+                                {/* Avatar */}
+                                <div className="relative mx-auto mb-4 w-20 h-20">
+                                    <div className="w-20 h-20 rounded-2xl border-2 overflow-hidden shadow-lg" style={{ borderColor: `${craft.accent}40` }}>
+                                        <img
+                                            src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
+                                            className="w-full h-full object-cover"
+                                            alt={profile.user?.name}
+                                        />
+                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-white shadow-md" style={{ backgroundColor: craft.accent }}>
+                                        <UserPlus size={14} />
+                                    </div>
+                                </div>
+
+                                <h3 className="font-black text-lg text-gray-900 mb-0.5">{profile.user?.name}</h3>
+                                <p className="text-xs text-gray-400 mb-1">{profile.occupation || craft.craftName}</p>
+
+                                {/* Craft badge */}
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider mb-5" style={{ backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                                    <span>{craft.icon}</span> {craft.craftName}
+                                </div>
+
+                                {/* Buttons */}
+                                <div className="space-y-3">
+                                    <button
+                                        onClick={() => { handleAddToContacts(); setIsWalletModalOpen(false); }}
+                                        className="w-full py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg transition-all hover:brightness-110"
+                                        style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
+                                    >
+                                        <Download size={18} /> {t.downloadVCard || "Rehbere Kaydet"}
+                                    </button>
+                                    <button
+                                        onClick={() => { handleShare(); setIsWalletModalOpen(false); }}
+                                        className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all border"
+                                        style={{ borderColor: `${craft.accent}30`, color: craft.accent }}
+                                    >
+                                        <Share2 size={16} /> {t.shareLabel || "Profili Paylaş"}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     </div>
@@ -8762,15 +8855,47 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             {/* Project Detail Modal */}
             <AnimatePresence>
                 {selectedProject && (
-                    <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md" onClick={() => setSelectedProject(null)}>
-                        <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }} className="bg-[#0a0a0f] rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border border-white/10" onClick={(e) => e.stopPropagation()}>
-                            <div className="p-6">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h3 className="font-black text-white text-sm uppercase tracking-wider">{translateText(selectedProject.name)}</h3>
-                                    <button onClick={() => setSelectedProject(null)} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/60"><X size={16} /></button>
+                    <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={() => setSelectedProject(null)}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-xl" />
+                        <motion.div
+                            initial={{ y: 100, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 100, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl"
+                            style={{ backgroundColor: craft.bg.includes('#') ? craft.bg.match(/#[0-9a-fA-F]+/)?.[0] || '#0a0a0f' : '#0a0a0f', borderColor: `${craft.accent}20` }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close button */}
+                            <button onClick={() => setSelectedProject(null)} className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/60 hover:text-white transition-all border border-white/10">
+                                <X size={16} />
+                            </button>
+
+                            {/* Image */}
+                            {selectedProject.image && (
+                                <div className="aspect-video w-full overflow-hidden relative rounded-t-3xl sm:rounded-t-3xl">
+                                    <img src={selectedProject.image} alt={selectedProject.name} className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                 </div>
-                                {selectedProject.image && <img src={selectedProject.image} alt={selectedProject.name} className="w-full rounded-2xl mb-4" />}
+                            )}
+
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-1.5 h-6 rounded-full" style={{ backgroundColor: craft.accent }} />
+                                    <h3 className="text-lg font-black text-white uppercase tracking-tight">{translateText(selectedProject.name)}</h3>
+                                </div>
                                 <p className="text-white/60 text-sm leading-relaxed">{translateText(selectedProject.description) || t.noProjectDesc}</p>
+
+                                {selectedProject.link && (
+                                    <a
+                                        href={formatUrl(selectedProject.link)}
+                                        target="_blank"
+                                        className="mt-5 w-full py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 shadow-lg"
+                                        style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
+                                    >
+                                        <Globe size={16} /> {lang === 'tr' ? 'Projeyi Görüntüle' : 'View Project'}
+                                    </a>
+                                )}
                             </div>
                         </motion.div>
                     </div>
