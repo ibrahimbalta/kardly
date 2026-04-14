@@ -58,6 +58,7 @@ import {
     ChevronRight,
     Image,
     Dribbble,
+    Droplets
     Monitor,
     Rss,
     RefreshCw,
@@ -1430,6 +1431,85 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-[#a855f7]",
             special: "neon_purple"
         },
+        // Masters & Services Themes
+        masters_plumber: {
+            bg: "bg-[#0c1e35]",
+            card: "bg-blue-900/20",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/30",
+            glow: "shadow-[0_0_30px_rgba(56,189,248,0.4)]",
+            accent: "#38bdf8",
+            btn: "bg-blue-900/40 border-blue-500/30",
+            btnText: "text-white",
+            icon: "text-[#38bdf8]",
+            special: "master_plumber"
+        },
+        masters_electrician: {
+            bg: "bg-[#0f0a05]",
+            card: "bg-amber-900/10",
+            text: "text-white",
+            subtext: "text-amber-200/60",
+            border: "border-amber-500/30",
+            glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]",
+            accent: "#f59e0b",
+            btn: "bg-amber-900/30 border-amber-500/30",
+            btnText: "text-white",
+            icon: "text-[#f59e0b]",
+            special: "master_electrician"
+        },
+        masters_painter: {
+            bg: "bg-[#0a0510]",
+            card: "bg-purple-900/10",
+            text: "text-white",
+            subtext: "text-purple-200/60",
+            border: "border-pink-500/30",
+            glow: "shadow-[0_0_30px_rgba(236,72,153,0.4)]",
+            accent: "#ec4899",
+            btn: "bg-pink-900/20 border-pink-500/30",
+            btnText: "text-white",
+            icon: "text-[#ec4899]",
+            special: "master_painter"
+        },
+        masters_carpenter: {
+            bg: "bg-[#140f0a]",
+            card: "bg-orange-900/10",
+            text: "text-white",
+            subtext: "text-orange-200/60",
+            border: "border-orange-500/30",
+            glow: "shadow-[0_0_30px_rgba(217,119,6,0.4)]",
+            accent: "#d97706",
+            btn: "bg-orange-950/40 border-orange-500/30",
+            btnText: "text-white",
+            icon: "text-[#d97706]",
+            special: "master_carpenter"
+        },
+        masters_auto: {
+            bg: "bg-[#0a0a0b]",
+            card: "bg-zinc-900/30",
+            text: "text-white",
+            subtext: "text-zinc-400",
+            border: "border-red-500/30",
+            glow: "shadow-[0_0_30px_rgba(239,68,68,0.4)]",
+            accent: "#ef4444",
+            btn: "bg-red-950/20 border-red-500/30",
+            btnText: "text-white",
+            icon: "text-[#ef4444]",
+            special: "master_auto"
+        },
+        masters_renovation: {
+            bg: "bg-[#050505]",
+            card: "bg-yellow-950/10",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-yellow-500/30",
+            glow: "shadow-[0_0_30px_rgba(234,179,8,0.4)]",
+            accent: "#eab308",
+            btn: "bg-yellow-950/20 border-yellow-500/30",
+            btnText: "text-white",
+            icon: "text-[#eab308]",
+            special: "master_renovation"
+        },
         // Artistic & Patterned Themes
         pattern_ottoman: {
             bg: "bg-[#0c1421]",
@@ -2525,6 +2605,92 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
 
+    const CraftDecorations = () => {
+        switch (theme.special) {
+            case "master_plumber":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
+                        {[...Array(6)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 800, opacity: [0, 1, 0] }}
+                                transition={{ duration: 4 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5 }}
+                                className="absolute text-blue-400/30"
+                                style={{ left: `${Math.random() * 100}%` }}
+                            >
+                                <Droplets size={24 + Math.random() * 24} />
+                            </motion.div>
+                        ))}
+                    </div>
+                );
+            case "master_electrician":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{ 
+                                    opacity: [0, 0.5, 0],
+                                    scale: [0.8, 1.2, 0.8],
+                                    rotate: [0, 15, -15, 0]
+                                }}
+                                transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 2 + Math.random() * 5 }}
+                                className="absolute text-yellow-400/40"
+                                style={{ 
+                                    top: `${Math.random() * 80}%`, 
+                                    left: `${Math.random() * 80}%` 
+                                }}
+                            >
+                                <Zap size={48} />
+                            </motion.div>
+                        ))}
+                    </div>
+                );
+            case "master_painter":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-10 blur-3xl overflow-hidden">
+                        <div className="absolute top-0 -left-20 w-80 h-80 bg-pink-500 rounded-full" />
+                        <div className="absolute top-1/2 -right-20 w-64 h-64 bg-cyan-500 rounded-full" />
+                        <div className="absolute -bottom-20 left-1/4 w-96 h-96 bg-yellow-500 rounded-full" />
+                    </div>
+                );
+            case "master_carpenter":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden" 
+                         style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0px, #000 2px, transparent 2px, transparent 40px)' }} 
+                    />
+                );
+            case "master_auto":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden">
+                        <motion.div 
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="absolute -top-20 -right-20 text-zinc-600"
+                        >
+                            <Settings size={200} />
+                        </motion.div>
+                        <motion.div 
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute top-40 -left-20 text-zinc-600"
+                        >
+                            <Settings size={120} />
+                        </motion.div>
+                    </div>
+                );
+            case "master_renovation":
+                return (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05] overflow-hidden">
+                        <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(yellow 1px, transparent 1px), linear-gradient(90deg, yellow 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     const socialLinks = profile.socialLinks || []
 
     const mouseX = useSpring(useMotionValue(0), { stiffness: 100, damping: 30 });
@@ -2673,6 +2839,81 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 z-0">
                         <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 80%)` }} />
                         <div className="absolute top-0 left-0 w-full h-full" style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}11 0%, transparent 40%), radial-gradient(circle at 80% 70%, ${theme.accent}11 0%, transparent 40%)` }} />
+                    </div>
+                )}
+                {/* Masters & Services Background Decorations */}
+                {theme.special === "master_plumber" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
+                        {[...Array(6)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 800, opacity: [0, 1, 0] }}
+                                transition={{ duration: 4 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5 }}
+                                className="absolute"
+                                style={{ left: `${Math.random() * 100}%`, color: theme.accent }}
+                            >
+                                <Droplets size={24 + Math.random() * 24} />
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+                {theme.special === "master_electrician" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                animate={{ 
+                                    opacity: [0, 0.5, 0],
+                                    scale: [0.8, 1.2, 0.8],
+                                    rotate: [0, 15, -15, 0]
+                                }}
+                                transition={{ duration: 0.2, repeat: Infinity, repeatDelay: 2 + Math.random() * 5 }}
+                                className="absolute"
+                                style={{ 
+                                    top: `${Math.random() * 80}%`, 
+                                    left: `${Math.random() * 80}%`,
+                                    color: theme.accent
+                                }}
+                            >
+                                <Zap size={48} />
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+                {theme.special === "master_painter" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-10 blur-[80px] overflow-hidden">
+                        <div className="absolute top-0 -left-20 w-80 h-80 bg-pink-500 rounded-full" />
+                        <div className="absolute top-1/2 -right-20 w-64 h-64 bg-cyan-500 rounded-full" />
+                        <div className="absolute -bottom-20 left-1/4 w-96 h-96 bg-yellow-500 rounded-full" />
+                    </div>
+                )}
+                {theme.special === "master_carpenter" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden" 
+                         style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24 0px, #fbbf24 2px, transparent 2px, transparent 40px)' }} 
+                    />
+                )}
+                {theme.special === "master_auto" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden">
+                        <motion.div 
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="absolute -top-20 -right-20 text-zinc-600"
+                        >
+                            <Settings size={200} />
+                        </motion.div>
+                        <motion.div 
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute top-40 -left-20 text-zinc-600"
+                        >
+                            <Settings size={120} />
+                        </motion.div>
+                    </div>
+                )}
+                {theme.special === "master_renovation" && (
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.05] overflow-hidden">
+                        <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(yellow 1px, transparent 1px), linear-gradient(90deg, yellow 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
                     </div>
                 )}
                 {theme.special === "nature_dawn" && (
