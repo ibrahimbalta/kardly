@@ -8442,7 +8442,9 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         {/* Email */}
                         {profile.user?.email && (
                             <motion.a
-                                href={`mailto:${profile.user?.email}`}
+                                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.65 }}
