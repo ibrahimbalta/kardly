@@ -508,6 +508,7 @@ export const translations: any = {
         catTech: "Yüksek Teknoloji",
         catMeta: "Metaverse",
         cat3D: "3D Sürükleyici",
+        catMasters: "Ustalar & Hizmet",
 
         // Steps
         howItWorks: "Nasıl Çalışır?",
@@ -1372,6 +1373,7 @@ export const translations: any = {
         catTech: "High Tech",
         catMeta: "Metaverse",
         cat3D: "3D Immersive",
+        catMasters: "Masters & Services",
 
         // Steps
         howItWorks: "How It Works",

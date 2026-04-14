@@ -112,7 +112,9 @@ export async function generateProfileData(data: {
     2. "bio": 2-3 cümlelik hakkımda metni.
     3. "services": En az 3 adet hizmet. Dizi formatında: [{title, description}]. Hizmet isimleri ve açıklamaları da "${data.tone}" tonuna uygun olmalı.
     4. "themeColor": Tonun ruhuna ve sektöre uygun BİR adet HEX renk kodu.
-    5. "templateId": "${guide.designGuide}" içindeki önerilen şablona uygun bir ID seç. (Sadece neon_black, neon_blue, neon_orange, neon_purple, neon_cyan, neon_amber, neon_rose vb. gibi mevcut templateid değerlerinden birini döndür)
+    5. "templateId": "${guide.designGuide}" içindeki önerilen şablona uygun bir ID seç.
+       - Temel şablonlar: neon_black, neon_blue, neon_orange, neon_purple, neon_cyan, neon_amber, neon_rose vb.
+       - EĞER meslek fiziksel bir ustalık veya hizmet alanı ise (örneğin: tesisatçı, elektrikçi, boyacı, marangoz, oto tamir vb.) şu özel şablonlardan BİRİNİ seç: masters_plumber, masters_electrician, masters_painter, masters_carpenter, masters_auto, masters_renovation.
     6. "recommendations": Tasarım için kısa bir öneri (bu ton için).
 
     🚨 KESİNLİKLE her ton için FARKLI slogan, bio, hizmet açıklaması, renk ve ŞABLON üret. Her ton birbirinden belirgin şekilde ayırt edilebilir olmalı.

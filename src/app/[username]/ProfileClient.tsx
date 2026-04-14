@@ -492,7 +492,10 @@ END:VCARD`
             royal_emerald: "#10b981", tech_core: "#38bdf8", tech_atom: "#6366f1",
             meta_portal: "#f472b6", meta_pixel: "#38bdf8",
             tour_resort: "#009688", tour_adventure: "#ff6d00", tour_yacht: "#1976d2",
-            tour_guide: "#6d4c41", tour_agency: "#3f51b5", tour_winter: "#1e88e5"
+            tour_guide: "#6d4c41", tour_agency: "#3f51b5", tour_winter: "#1e88e5",
+            masters_plumber: "#0ea5e9", masters_electrician: "#facc15",
+            masters_painter: "#ec4899", masters_carpenter: "#92400e",
+            masters_auto: "#dc2626", masters_renovation: "#4b5563"
         };
         const schemeKey = (profile.templateId || "neon_black").replace("neon_", "");
         return colorMap[schemeKey] || colorMap[profile.templateId || ""] || "#0ea5e9";
