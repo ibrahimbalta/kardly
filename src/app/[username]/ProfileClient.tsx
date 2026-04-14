@@ -8441,18 +8441,24 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         {/* Email */}
                         {profile.user?.email && (
                             <motion.a
-                                href={`mailto:${profile.user.email}`}
+                                href={`mailto:${profile.user?.email}`}
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.65 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={() => trackEvent("email")}
-                                className={cn("w-full py-3 px-5 rounded-2xl flex items-center gap-4 font-black text-[11px] uppercase tracking-widest border transition-all", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}05` }}
+                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}10` }}
                             >
-                                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ color: craft.accent }}>
-                                    <Mail size={18} />
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}05`, color: craft.accent }}>
+                                    <Mail size={22} />
                                 </div>
-                                <span>{t.emailBtn || "E-MAIL"}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">EMAIL</span>
+                                    <span className="text-sm">{t.emailBtn || "E-MAIL"}</span>
+                                </div>
+                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
                             </motion.a>
                         )}
 
@@ -8470,7 +8476,10 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}40`, color: craft.accent }}>
                                     <Calendar size={20} />
                                 </div>
-                                <span>{t.appointmentBtn || "RANDEVU AL"}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">REZEVASYON</span>
+                                    <span className="text-sm">{t.appointmentBtn || "RANDEVU AL"}</span>
+                                </div>
                                 <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
                             </motion.button>
                         )}
@@ -8482,15 +8491,21 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 target="_blank"
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.7 }}
+                                transition={{ delay: 0.75 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={() => trackEvent("location")}
-                                className={cn("w-full py-3 px-5 rounded-2xl flex items-center gap-4 font-black text-[11px] uppercase tracking-widest border transition-all", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}05` }}
+                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
+                                style={{ backgroundColor: `${craft.accent}10` }}
                             >
-                                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ color: craft.accent }}>
-                                    <MapPin size={18} />
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}05`, color: craft.accent }}>
+                                    <MapPin size={22} />
                                 </div>
-                                <span>{t.locationsBtn || "KONUM"}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">KONUM</span>
+                                    <span className="text-sm">{t.locationsBtn || "ADRES"}</span>
+                                </div>
+                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
                             </motion.a>
                         )}
                     </div>
