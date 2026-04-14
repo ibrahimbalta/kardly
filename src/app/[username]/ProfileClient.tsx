@@ -58,7 +58,7 @@ import {
     ChevronRight,
     Image,
     Dribbble,
-    Droplets
+    Droplets,
     Monitor,
     Rss,
     RefreshCw,
