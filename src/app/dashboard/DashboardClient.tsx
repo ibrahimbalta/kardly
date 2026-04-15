@@ -5734,7 +5734,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: "100%" }}
                                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                                className="bg-white w-full sm:max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-8 sm:p-10 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border border-slate-100 overflow-hidden pb-24 sm:pb-10"
+                                className="bg-white w-full sm:max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-8 sm:p-10 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border border-slate-100 max-h-[92vh] overflow-y-auto no-scrollbar pb-24 sm:pb-10"
                             >
                                 <div className="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-8 sm:hidden" />
                                 {/* Decorative elements */}
@@ -5807,7 +5807,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
                                         <button
                                             onClick={() => {
                                                 window.open(`tel:${selectedLead.phone}`, '_blank')
@@ -5832,6 +5832,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             <Trash2 size={20} /> {t('delete')}
                                         </button>
                                     </div>
+                                    <button
+                                        onClick={() => setSelectedLead(null)}
+                                        className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all sm:hidden"
+                                    >
+                                        {t('close') || 'Kapat'}
+                                    </button>
                                 </div>
                             </motion.div>
                         </div>
