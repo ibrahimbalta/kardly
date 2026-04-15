@@ -3231,9 +3231,31 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </div>
                                                 )}
                                                 {tid === "pro_software" && (
-                                                    <div className="absolute inset-0 opacity-[0.05] font-mono text-[8px] p-10 overflow-hidden leading-tight text-emerald-500 pointer-events-none">
-                                                        {"const dev = true;\nif(dev) {\n  console.log('Kardly');\n}\n".repeat(20)}
-                                                    </div>
+                                                    <>
+                                                        {/* Grid overlay */}
+                                                        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `linear-gradient(#10b98115 1px, transparent 1px), linear-gradient(90deg, #10b98115 1px, transparent 1px)`, backgroundSize: '25px 25px' }} />
+                                                        {/* Code rain columns */}
+                                                        <div className="absolute inset-0 overflow-hidden pointer-events-none font-mono text-[7px] leading-[1.3] opacity-[0.06] text-emerald-400" style={{ textShadow: '0 0 6px #10b98140' }}>
+                                                            {Array(6).fill(0).map((_, i) => (
+                                                                <div key={i} className="absolute top-0" style={{ left: `${i * 18}%` }}>
+                                                                    {`const x=0;\nlet arr=[];\nfor(;;){\n  run();\n}\n`.repeat(10)}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        {/* Corner terminal tag */}
+                                                        <div className="absolute top-4 left-4 font-mono text-[7px] text-emerald-500/30 pointer-events-none">
+                                                            <div>┌── init() ──</div>
+                                                            <div>│ <span style={{ color: '#10b981', opacity: 0.6 }}>online</span></div>
+                                                            <div>└────────────</div>
+                                                        </div>
+                                                        {/* Scan line */}
+                                                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                                                            <div className="absolute left-0 right-0 h-[1px] opacity-[0.08] animate-pulse" style={{ background: 'linear-gradient(90deg, transparent, #10b981, transparent)', top: '40%' }} />
+                                                        </div>
+                                                        {/* Glow orbs */}
+                                                        <div className="absolute top-0 left-0 w-40 h-40 blur-[60px] rounded-full opacity-[0.06] pointer-events-none" style={{ background: '#10b981' }} />
+                                                        <div className="absolute bottom-0 right-0 w-32 h-32 blur-[50px] rounded-full opacity-[0.04] pointer-events-none" style={{ background: '#10b981' }} />
+                                                    </>
                                                 )}
                                                 {tid === "pro_gamer" && (
                                                     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-48 h-1 bg-black/50 rounded-full overflow-hidden border border-[#00ff9f]/20 pointer-events-none">

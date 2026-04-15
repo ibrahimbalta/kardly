@@ -1647,16 +1647,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             special: "artistic"
         },
         pro_software: {
-            bg: "bg-[#0a0a0b]",
-            card: "bg-zinc-900/80",
-            text: "text-emerald-400",
-            subtext: "text-zinc-500",
-            border: "border-emerald-500/20",
-            glow: "shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+            bg: "bg-[#050508]",
+            card: "bg-[#0d1117]/90",
+            text: "text-emerald-300",
+            subtext: "text-emerald-500/40",
+            border: "border-emerald-500/25",
+            glow: "shadow-[0_0_60px_rgba(16,185,129,0.25),0_0_120px_rgba(16,185,129,0.08)]",
             accent: "#10b981",
-            btn: "bg-zinc-950 border-emerald-900/30",
-            btnText: "text-emerald-400",
-            icon: "text-emerald-500",
+            btn: "bg-[#0d1117]/80 border-emerald-500/30",
+            btnText: "text-emerald-300",
+            icon: "text-emerald-400",
             special: "software"
         },
         pro_doctor: {
@@ -3309,9 +3309,80 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     </div>
                 )}
                 {theme.special === "software" && (
-                    <div className="absolute inset-0 opacity-[0.05] pointer-events-none font-mono text-[10px] p-10 overflow-hidden leading-relaxed" style={{ color: `${theme.accent}80` }}>
-                        {`function init() {\n  const system = "Kardly";\n  console.log("Welcome " + user);\n}\n`.repeat(100)}
-                    </div>
+                    <>
+                        {/* Animated Matrix Code Rain Background */}
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                            <style>{`
+                                @keyframes sw-code-rain {
+                                    0% { transform: translateY(-100%); opacity: 0; }
+                                    10% { opacity: 1; }
+                                    90% { opacity: 0.6; }
+                                    100% { transform: translateY(100vh); opacity: 0; }
+                                }
+                                @keyframes sw-glow-pulse {
+                                    0%, 100% { opacity: 0.03; }
+                                    50% { opacity: 0.08; }
+                                }
+                                @keyframes sw-scan-line {
+                                    0% { transform: translateY(-100%); }
+                                    100% { transform: translateY(100vh); }
+                                }
+                                @keyframes sw-flicker {
+                                    0%, 95%, 100% { opacity: 1; }
+                                    96% { opacity: 0.8; }
+                                    97% { opacity: 1; }
+                                    98% { opacity: 0.6; }
+                                }
+                                .sw-code-column {
+                                    animation: sw-code-rain var(--duration) linear infinite;
+                                    animation-delay: var(--delay);
+                                }
+                            `}</style>
+                            {/* Code rain columns */}
+                            {Array(15).fill(0).map((_, i) => (
+                                <div key={`rain-${i}`} className="absolute top-0 font-mono text-[9px] leading-[1.4] whitespace-pre sw-code-column" style={{
+                                    left: `${(i * 7) + Math.random() * 3}%`,
+                                    color: `${theme.accent}30`,
+                                    '--duration': `${15 + Math.random() * 20}s`,
+                                    '--delay': `${-Math.random() * 15}s`,
+                                    textShadow: `0 0 8px ${theme.accent}20`
+                                } as React.CSSProperties}>
+                                    {`const x = 0;
+let data = [];
+for(i=0;i<n;i++){
+  arr.push(i);
+}
+return result;
+if(true) {
+  run();
+}
+`.repeat(8)}
+                                </div>
+                            ))}
+                        </div>
+                        {/* Horizontal scan line */}
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ animation: 'sw-flicker 8s ease-in-out infinite' }}>
+                            <div className="absolute left-0 right-0 h-[2px] opacity-[0.06]" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)`, animation: 'sw-scan-line 6s linear infinite' }} />
+                        </div>
+                        {/* Grid overlay */}
+                        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: `linear-gradient(${theme.accent}15 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}15 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+                        {/* Corner terminal decorations */}
+                        <div className="absolute top-6 left-6 font-mono text-[9px] pointer-events-none" style={{ color: `${theme.accent}40` }}>
+                            <div>┌─── system.init() ───</div>
+                            <div>│ status: <span style={{ color: theme.accent }}>online</span></div>
+                            <div>│ build: <span className="opacity-50">v3.2.1</span></div>
+                            <div>└────────────────────</div>
+                        </div>
+                        <div className="absolute bottom-6 right-6 font-mono text-[9px] text-right pointer-events-none" style={{ color: `${theme.accent}30` }}>
+                            <div>───── EOF ─────┐</div>
+                            <div>process.exit(0) │</div>
+                            <div>────────────────┘</div>
+                        </div>
+                        {/* Large glowing accents */}
+                        <div className="absolute top-0 left-0 w-[600px] h-[600px] blur-[200px] rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${theme.accent}12, transparent 70%)`, animation: 'sw-glow-pulse 6s ease-in-out infinite' }} />
+                        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] blur-[180px] rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${theme.accent}0a, transparent 70%)`, animation: 'sw-glow-pulse 8s ease-in-out infinite 2s' }} />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] blur-[150px] rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, #06b6d408, transparent 70%)`, animation: 'sw-glow-pulse 10s ease-in-out infinite 4s' }} />
+                    </>
                 )}
                 {theme.special === "doctor" && (
                     <div className="absolute inset-0 opacity-[0.05] pointer-events-none flex items-center justify-center">
@@ -3885,8 +3956,13 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 backgroundPosition: 'center'
                             } : {})
                         }}
-                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out overflow-hidden", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                     >
+                        {/* CRT Scanline Overlay for Software Theme */}
+                        {theme.special === 'software' && (
+                            <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-[100]" style={{ backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))', backgroundSize: '100% 4px, 3px 100%' }} />
+                        )}
+
                         {/* Floating Buttons: QA (Top Left) & Share (Top Right) */}
                         <div className="absolute top-6 left-6 z-30">
                             <motion.button
@@ -4003,9 +4079,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                                     {/* Profession Overlays */}
                                     {theme.special === 'software' && (
-                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <div className="absolute top-0 left-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">DIV</div>
-                                            <div className="absolute bottom-0 right-0 p-1 text-[8px] font-mono text-emerald-500 bg-black/50">/DIV</div>
+                                        <div className="absolute inset-0 pointer-events-none">
+                                            {/* Glowing border pulse */}
+                                            <div className="absolute inset-0 rounded-xl" style={{ boxShadow: `inset 0 0 20px ${theme.accent}15, 0 0 15px ${theme.accent}10` }} />
+                                            {/* Terminal tags */}
+                                            <div className="absolute -top-1 -left-1 px-1.5 py-0.5 text-[7px] font-mono rounded-sm" style={{ background: `${theme.accent}20`, color: theme.accent, border: `1px solid ${theme.accent}30` }}>&lt;dev&gt;</div>
+                                            <div className="absolute -bottom-1 -right-1 px-1.5 py-0.5 text-[7px] font-mono rounded-sm" style={{ background: `${theme.accent}20`, color: theme.accent, border: `1px solid ${theme.accent}30` }}>&lt;/dev&gt;</div>
+                                            {/* Scanning line */}
+                                            <div className="absolute inset-x-0 top-0 h-full overflow-hidden rounded-xl">
+                                                <div className="w-full h-[1px] animate-pulse" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}40, transparent)`, animation: 'sw-scan-line 3s linear infinite' }} />
+                                            </div>
                                         </div>
                                     )}
                                     {theme.special === 'photographer' && (
@@ -4200,7 +4283,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                             <div>
                                 <div className="flex items-center justify-center gap-3">
-                                    {theme.special === 'software' && <Code size={20} className="text-emerald-500 opacity-50" />}
+                                    {theme.special === 'software' && <><Code size={20} className="text-emerald-400 animate-pulse" /><span className="text-[8px] font-mono px-1.5 py-0.5 rounded" style={{ background: `${theme.accent}15`, color: `${theme.accent}80`, border: `1px solid ${theme.accent}20` }}>DEV</span></>}
                                     {theme.special === 'doctor' && <Shield size={20} className="text-sky-500 opacity-50" />}
                                     {theme.special === 'chef' && <Zap size={20} className="text-orange-500 opacity-50" />}
                                     {theme.special === 'artistic' && <Palette size={20} className="text-pink-500 opacity-50" />}
@@ -4214,7 +4297,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                     <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
                                     <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
                                         {translateText(profile.occupation) || "PROFESSIONAL"}
-                                        {theme.special === 'software' && <span className="animate-pulse">_</span>}
+                                        {theme.special === 'software' && <span className="inline-flex items-center ml-1"><span className="w-[6px] h-[14px] inline-block animate-pulse" style={{ background: theme.accent, boxShadow: `0 0 8px ${theme.accent}60` }} /></span>}
                                     </p>
                                     <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
 
@@ -4256,11 +4339,21 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             viewport={{ once: true }}
                                             className={cn("w-[348px] mx-auto border backdrop-blur-3xl py-7 px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
                                             style={{ 
-                                                backgroundColor: `${theme.accent}0c`,
-                                                borderColor: `${theme.accent}30`,
-                                                boxShadow: `0 30px 70px -15px ${theme.accent}35, inset 0 0 30px ${theme.accent}08`
+                                                backgroundColor: theme.special === 'software' ? '#0d1117' : `${theme.accent}0c`,
+                                                borderColor: theme.special === 'software' ? `${theme.accent}30` : `${theme.accent}30`,
+                                                boxShadow: theme.special === 'software' ? `0 40px 80px -20px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}15` : `0 30px 70px -15px ${theme.accent}35, inset 0 0 30px ${theme.accent}08`
                                             }}
                                         >
+                                            {/* Terminal Header Decoration */}
+                                            {theme.special === 'software' && (
+                                                <div className="absolute top-0 left-0 right-0 h-6 bg-[#161b22] border-b border-emerald-500/20 rounded-t-xl flex items-center px-3 gap-1.5 pointer-events-none">
+                                                    <div className="w-2 h-2 rounded-full bg-[#ff5f56]" />
+                                                    <div className="w-2 h-2 rounded-full bg-[#ffbd2e]" />
+                                                    <div className="w-2 h-2 rounded-full bg-[#27c93f]" />
+                                                    <div className="ml-2 font-mono text-[7px] opacity-40 uppercase tracking-widest text-emerald-500">~/projects - bash</div>
+                                                </div>
+                                            )}
+
                                             <div className="flex items-center justify-between mb-4">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
@@ -4444,6 +4537,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: i * 0.1 }}
                                             whileHover={{ scale: 1.02, x: 5 }}
+                                            className="relative group/btn"
                                         >
                                             {action.href ? (
                                                 <a
@@ -4452,18 +4546,44 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     onClick={() => {
                                                         if (action.onClick) action.onClick()
                                                     }}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded)}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden", theme.btn, theme.border, toneStyle.rounded)}
+                                                    style={theme.special === 'software' ? {
+                                                        backdropFilter: 'blur(16px)',
+                                                        background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}03)`,
+                                                        borderColor: `${theme.accent}25`,
+                                                        boxShadow: `0 0 0 1px ${theme.accent}08, 0 4px 20px ${theme.accent}06`
+                                                    } : undefined}
                                                 >
-                                                    <div style={{ color: theme.accent }}>{action.icon}</div>
-                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                                    {theme.special === 'software' && (
+                                                        <>
+                                                            <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(135deg, ${theme.accent}12, transparent)`, boxShadow: `inset 0 0 30px ${theme.accent}08` }} />
+                                                            <div className="absolute top-0 left-0 right-0 h-[1px] opacity-0 group-hover/btn:opacity-40 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)` }} />
+                                                            <span className="absolute left-2 text-[7px] font-mono opacity-0 group-hover/btn:opacity-30 transition-all" style={{ color: theme.accent }}>{'>'}_</span>
+                                                        </>
+                                                    )}
+                                                    <div style={{ color: theme.accent }} className="relative z-10">{action.icon}</div>
+                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest relative z-10", theme.btnText, theme.special === 'software' && "font-mono")}>{action.label}</span>
                                                 </a>
                                             ) : (
                                                 <button
                                                     onClick={action.onClick}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer", theme.btn, theme.border, toneStyle.rounded)}
+                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden", theme.btn, theme.border, toneStyle.rounded)}
+                                                    style={theme.special === 'software' ? {
+                                                        backdropFilter: 'blur(16px)',
+                                                        background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}03)`,
+                                                        borderColor: `${theme.accent}25`,
+                                                        boxShadow: `0 0 0 1px ${theme.accent}08, 0 4px 20px ${theme.accent}06`
+                                                    } : undefined}
                                                 >
-                                                    <div style={{ color: theme.accent }}>{action.icon}</div>
-                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest", theme.btnText)}>{action.label}</span>
+                                                    {theme.special === 'software' && (
+                                                        <>
+                                                            <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(135deg, ${theme.accent}12, transparent)`, boxShadow: `inset 0 0 30px ${theme.accent}08` }} />
+                                                            <div className="absolute top-0 left-0 right-0 h-[1px] opacity-0 group-hover/btn:opacity-40 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)` }} />
+                                                            <span className="absolute left-2 text-[7px] font-mono opacity-0 group-hover/btn:opacity-30 transition-all" style={{ color: theme.accent }}>{'>'}_</span>
+                                                        </>
+                                                    )}
+                                                    <div style={{ color: theme.accent }} className="relative z-10">{action.icon}</div>
+                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest relative z-10", theme.btnText, theme.special === 'software' && "font-mono")}>{action.label}</span>
                                                 </button>
                                             )}
                                         </motion.div>
@@ -4474,14 +4594,23 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                             {/* Bio */}
                             {
                                 profile.bio && (
-                                    <p className={cn("text-center font-medium leading-relaxed px-4", !profile.bioColor && theme.subtext)}
-                                       style={{ 
-                                           color: profile.bioColor || undefined,
-                                           fontSize: profile.bioFontSize || "12px",
-                                           fontFamily: profile.bioFontFamily || "inherit"
-                                       }}>
-                                        {profile.bio}
-                                    </p>
+                                    <div className="relative pt-4">
+                                        {theme.special === 'software' && (
+                                            <div className="mb-2 flex items-center gap-2 opacity-50 px-4">
+                                                <div className="h-[1px] flex-1 bg-emerald-500/30" />
+                                                <span className="font-mono text-[8px] text-emerald-500">cat README.md</span>
+                                                <div className="h-[1px] w-4 bg-emerald-500/30" />
+                                            </div>
+                                        )}
+                                        <p className={cn("text-center font-medium leading-relaxed px-4", !profile.bioColor && theme.subtext, theme.special === 'software' && "font-mono text-emerald-400/80 text-left")}
+                                           style={{ 
+                                               color: profile.bioColor || undefined,
+                                               fontSize: profile.bioFontSize || "12px",
+                                               fontFamily: profile.bioFontFamily || "inherit"
+                                           }}>
+                                            {theme.special === 'software' ? `> ${profile.bio}` : profile.bio}
+                                        </p>
+                                    </div>
                                 )
                             }
 
@@ -4491,8 +4620,11 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                 <div className="flex items-center justify-between mb-6 px-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-1.5 h-6 rounded-full" style={{ background: theme.accent }} />
-                                        <h3 className={cn("text-[11px] font-black uppercase tracking-[0.25em] opacity-50", theme.text)}>{t.reviews}</h3>
+                                        <h3 className={cn("text-[11px] font-black uppercase tracking-[0.25em] opacity-50", theme.text)}>
+                                            {theme.special === 'software' ? '/* feedback.log */' : t.reviews}
+                                        </h3>
                                     </div>
+
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
@@ -4515,8 +4647,15 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                 exit={{ opacity: 0, y: -20, scale: 0.95 }}
                                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                                 className={cn("absolute inset-0 p-6 border flex flex-col backdrop-blur-2xl shadow-2xl relative overflow-hidden", theme.card, theme.border, toneStyle.rounded)}
-                                                style={{ boxShadow: `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 20px ${theme.accent}10` }}
+                                                style={{ 
+                                                    boxShadow: theme.special === 'software' ? `0 20px 50px -12px rgba(0,0,0,0.5), inset 0 0 40px ${theme.accent}05` : `0 20px 50px -12px rgba(0,0,0,0.5), 0 0 20px ${theme.accent}10`,
+                                                    backgroundColor: theme.special === 'software' ? '#0d1117' : undefined
+                                                }}
                                             >
+                                                {/* Review Terminal Header */}
+                                                {theme.special === 'software' && (
+                                                    <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-500/20" />
+                                                )}
                                                 {/* Decorative Quote Icon */}
                                                 <div className="absolute top-4 right-6 opacity-5 pointer-events-none">
                                                     <Quote size={64} style={{ color: theme.accent }} />
@@ -4542,8 +4681,12 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex justify-between items-start mb-1">
                                                             <div className="overflow-hidden">
-                                                                <h4 className={cn("text-sm font-black truncate", theme.text)}>{reviews[currentReviewIndex].name}</h4>
-                                                                <p className={cn("text-[10px] opacity-40 font-bold truncate tracking-tight uppercase", theme.text)}>{translateText(reviews[currentReviewIndex].title)}</p>
+                                                                <h4 className={cn("text-sm font-black truncate", theme.text, theme.special === 'software' && "font-mono text-emerald-300")}>
+                                                                    {theme.special === 'software' ? `// @${reviews[currentReviewIndex].name.toLowerCase().replace(/\s+/g, '_')}` : reviews[currentReviewIndex].name}
+                                                                </h4>
+                                                                <p className={cn("text-[10px] opacity-40 font-bold truncate tracking-tight uppercase", theme.text, theme.special === 'software' && "font-mono")}>
+                                                                    {theme.special === 'software' ? `[${translateText(reviews[currentReviewIndex].title) || 'TESTIMONIAL'}]` : translateText(reviews[currentReviewIndex].title)}
+                                                                </p>
                                                             </div>
                                                             <div className="flex gap-0.5 bg-black/20 px-2 py-1 rounded-lg backdrop-blur-md">
                                                                 {[...Array(5)].map((_, i) => (
@@ -4552,8 +4695,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                                                             </div>
                                                         </div>
                                                         <div className="relative mt-3">
-                                                            <p className={cn("text-xs leading-relaxed italic opacity-90 line-clamp-3", theme.text)}>
-                                                                &ldquo;{translateText(reviews[currentReviewIndex].content)}&rdquo;
+                                                            <p className={cn("text-xs leading-relaxed italic opacity-90 line-clamp-3", theme.special === 'software' ? "font-mono text-emerald-400/70" : theme.text)}>
+                                                                {theme.special === 'software' ? '/*' : '“'}{translateText(reviews[currentReviewIndex].content)}{theme.special === 'software' ? ' */' : '”'}
                                                             </p>
                                                         </div>
                                                     </div>
