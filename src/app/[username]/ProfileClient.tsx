@@ -1635,7 +1635,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         },
         pro_software: {
             bg: profile.themeColor ? `dynamic-bg` : "bg-[#02040a]",
-            card: "bg-[#0d1117]/90",
+            card: profile.themeColor ? 'dynamic-card' : "bg-[#0d1117]/90",
             text: "text-emerald-300",
             subtext: "text-emerald-500/40",
             border: "border-emerald-500/25",
@@ -2620,6 +2620,20 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             return `rgba(${Math.round(r * 0.04)}, ${Math.round(g * 0.04)}, ${Math.round(b * 0.08)}, 1)`;
         } catch (e) {
             return '#02040a';
+        }
+    };
+
+    // Helper for card background specifically
+    const getDynamicCardBg = (hex: string) => {
+        if (!hex) return 'rgba(13, 17, 23, 0.9)';
+        try {
+            const h = hex.replace('#', '');
+            const r = parseInt(h.substring(0, 2), 16);
+            const g = parseInt(h.substring(2, 4), 16);
+            const b = parseInt(h.substring(4, 6), 16);
+            return `rgba(${Math.round(r * 0.08)}, ${Math.round(g * 0.08)}, ${Math.round(b * 0.12)}, 0.9)`;
+        } catch (e) {
+            return 'rgba(13, 17, 23, 0.9)';
         }
     };
 
@@ -3966,13 +3980,14 @@ if(true) {
                         style={{
                             rotateX,
                             rotateY,
+                            ...(theme.card === 'dynamic-card' ? { backgroundColor: getDynamicCardBg(theme.accent) } : {}),
                             ...(profile.profileBgImage ? {
                                 backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${profile.profileBgImage})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             } : {})
                         }}
-                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out overflow-hidden", profile.profileBgImage ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out overflow-hidden", (profile.profileBgImage || theme.card === 'dynamic-card') ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                     >
                         {/* CRT Scanline Overlay for Software Theme */}
                         {theme.special === 'software' && (

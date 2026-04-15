@@ -3233,9 +3233,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 {tid === "pro_software" && (
                                                     <>
                                                         {/* Grid overlay */}
-                                                        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `linear-gradient(#10b98115 1px, transparent 1px), linear-gradient(90deg, #10b98115 1px, transparent 1px)`, backgroundSize: '25px 25px' }} />
+                                                        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `linear-gradient(${accent}15 1px, transparent 1px), linear-gradient(90deg, ${accent}15 1px, transparent 1px)`, backgroundSize: '25px 25px' }} />
                                                         {/* Code rain columns */}
-                                                        <div className="absolute inset-0 overflow-hidden pointer-events-none font-mono text-[7px] leading-[1.3] opacity-[0.06] text-emerald-400" style={{ textShadow: '0 0 6px #10b98140' }}>
+                                                        <div className="absolute inset-0 overflow-hidden pointer-events-none font-mono text-[7px] leading-[1.3] opacity-[0.06]" style={{ color: accent, textShadow: `0 0 6px ${accent}40` }}>
                                                             {Array(6).fill(0).map((_, i) => (
                                                                 <div key={i} className="absolute top-0" style={{ left: `${i * 18}%` }}>
                                                                     {`const x=0;\nlet arr=[];\nfor(;;){\n  run();\n}\n`.repeat(10)}
@@ -3243,14 +3243,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             ))}
                                                         </div>
                                                         {/* Corner terminal tag */}
-                                                        <div className="absolute top-4 left-4 font-mono text-[7px] text-emerald-500/30 pointer-events-none">
+                                                        <div className="absolute top-4 left-4 font-mono text-[7px] pointer-events-none" style={{ color: `${accent}40` }}>
                                                             <div>┌── init() ──</div>
-                                                            <div>│ <span style={{ color: '#10b981', opacity: 0.6 }}>online</span></div>
+                                                            <div>│ <span style={{ color: accent, opacity: 0.6 }}>online</span></div>
                                                             <div>└────────────</div>
                                                         </div>
                                                         {/* Scan line */}
                                                         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                                                            <div className="absolute left-0 right-0 h-[1px] opacity-[0.08] animate-pulse" style={{ background: 'linear-gradient(90deg, transparent, #10b981, transparent)', top: '40%' }} />
+                                                            <div className="absolute left-0 right-0 h-[1px] opacity-[0.08] animate-pulse" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)`, top: '40%' }} />
                                                         </div>
                                                         {/* Glow orbs */}
                                                         <div className="absolute top-0 left-0 w-40 h-40 blur-[60px] rounded-full opacity-[0.08] pointer-events-none" style={{ background: accent }} />
@@ -3292,44 +3292,55 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 </div>
 
                                                 {/* Content Scaled */}
-                                                <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10">
-                                                    <div className={cn("w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500 shadow-2xl shadow-black/50", mTone.rounded)} style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
-                                                        {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
-                                                            <iframe
-                                                                className="w-full h-full object-cover scale-[1.8] pointer-events-none"
-                                                                src={getYoutubeEmbedUrl(profileData.youtubeVideoUrl)}
-                                                                allow="autoplay"
-                                                                frameBorder="0"
-                                                            />
-                                                        ) : (profileData?.image || session?.user?.image) ? (
-                                                            <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
-                                                        ) : (
-                                                            <UserCircle className="w-12 h-12 opacity-50" style={{ color: accent }} />
-                                                        )}
-                                                    </div>
-                                                    <div className="text-center mb-6">
-                                                        <h4 className={`font-black text-xl mb-1 truncate ${bg === '#f8f9fa' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || t('user')}</h4>
-                                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || t('noTitleSpec')}</p>
-                                                    </div>
-                                                    <div className="text-center mb-8 px-4">
-                                                        <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#f8f9fa' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || t('mottoWillBeHere')}"</p>
-                                                    </div>
+                                                <div className="flex-1 flex flex-col justify-center animate-fade-in group-hover:scale-[1.02] transition-transform duration-700 relative z-10 p-4">
+                                                    <div className={cn("flex-1 p-6 flex flex-col justify-center transition-all duration-300", tid === "pro_software" ? "backdrop-blur-xl border border-white/5 shadow-2xl" : "", mTone.rounded)} 
+                                                         style={tid === "pro_software" ? { 
+                                                             backgroundColor: (() => {
+                                                                 const h = accent.replace('#', '');
+                                                                 const r = parseInt(h.substring(0, 2), 16);
+                                                                 const g = parseInt(h.substring(2, 4), 16);
+                                                                 const b = parseInt(h.substring(4, 6), 16);
+                                                                 return `rgba(${Math.round(r * 0.08)}, ${Math.round(g * 0.08)}, ${Math.round(b * 0.12)}, 0.8)`;
+                                                             })()
+                                                         } : {}}>
+                                                        <div className={cn("w-24 h-24 mx-auto mb-6 flex items-center justify-center overflow-hidden border-2 transition-all duration-500 shadow-2xl shadow-black/50", mTone.rounded)} style={{ borderColor: `${accent}40`, backgroundColor: `${accent}10`, boxShadow: tid.startsWith("neon_") ? `0 0 20px ${accent}20` : 'none' }}>
+                                                            {profileData.showVideoAsProfile && profileData.youtubeVideoUrl ? (
+                                                                <iframe
+                                                                    className="w-full h-full object-cover scale-[1.8] pointer-events-none"
+                                                                    src={getYoutubeEmbedUrl(profileData.youtubeVideoUrl)}
+                                                                    allow="autoplay"
+                                                                    frameBorder="0"
+                                                                />
+                                                            ) : (profileData?.image || session?.user?.image) ? (
+                                                                <img src={profileData?.image || session?.user?.image} className="w-full h-full object-cover shadow-2xl" alt="Profile" />
+                                                            ) : (
+                                                                <UserCircle className="w-12 h-12 opacity-50" style={{ color: accent }} />
+                                                            )}
+                                                        </div>
+                                                        <div className="text-center mb-6">
+                                                            <h4 className={`font-black text-xl mb-1 truncate ${bg === '#f8f9fa' ? 'text-slate-900' : 'text-white'}`}>{profileData?.name || session?.user?.name || t('user')}</h4>
+                                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500" style={{ color: accent }}>{profileData?.occupation || t('noTitleSpec')}</p>
+                                                        </div>
+                                                        <div className="text-center mb-8 px-4">
+                                                            <p className={`text-[11px] italic leading-relaxed line-clamp-2 ${bg === '#f8f9fa' ? 'text-slate-500' : 'text-white/60'}`}>"{profileData?.slogan || t('mottoWillBeHere')}"</p>
+                                                        </div>
 
-                                                    {/* Mockup Social Icons */}
-                                                    <div className="flex justify-center flex-wrap gap-2.5 mb-10">
-                                                        {[1, 2, 3, 4].map((i) => (
-                                                            <div key={i} className={cn("w-10 h-10 border flex items-center justify-center shadow-lg backdrop-blur-sm transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10')}>
-                                                                <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                                        {/* Mockup Social Icons */}
+                                                        <div className="flex justify-center flex-wrap gap-2.5 mb-10">
+                                                            {[1, 2, 3, 4].map((i) => (
+                                                                <div key={i} className={cn("w-10 h-10 border flex items-center justify-center shadow-lg backdrop-blur-sm transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-white border-slate-200' : 'bg-white/5 border-white/10')}>
+                                                                    <div style={{ color: accent }} className="opacity-80"><Zap size={16} /></div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
 
-                                                    <div className="space-y-3">
-                                                        {[1, 2].map((i) => (
-                                                            <div key={i} className={cn("h-12 border flex items-center px-4 transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10')}>
-                                                                <div className={`w-24 h-1.5 rounded-full ${bg === '#f8f9fa' ? 'bg-slate-200' : 'bg-white/10'}`} />
-                                                            </div>
-                                                        ))}
+                                                        <div className="space-y-3">
+                                                            {[1, 2].map((i) => (
+                                                                <div key={i} className={cn("h-12 border flex items-center px-4 transition-all", mTone.rounded, bg === '#f8f9fa' ? 'bg-slate-50 border-slate-100' : 'bg-white/5 border-white/10')}>
+                                                                    <div className={`w-24 h-1.5 rounded-full ${bg === '#f8f9fa' ? 'bg-slate-200' : 'bg-white/10'}`} />
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                 </div>
 
