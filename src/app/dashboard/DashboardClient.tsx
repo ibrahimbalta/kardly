@@ -5548,7 +5548,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: "100%" }}
                                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                                className="bg-[#f8fafc] w-full sm:max-w-md rounded-t-[3rem] sm:rounded-[2.5rem] p-8 sm:p-6 relative z-10 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto no-scrollbar pb-20 sm:pb-6"
+                                className="bg-[#f8fafc] w-full sm:max-w-md rounded-t-[3rem] sm:rounded-[2.5rem] p-8 sm:p-6 relative z-10 shadow-2xl max-h-[92vh] overflow-y-auto no-scrollbar pb-24 sm:pb-6"
                             >
                                 <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden" />
                                 <button onClick={() => setShowProductModal(false)} className="absolute top-5 right-5 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors z-20">
@@ -5665,6 +5665,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     >
                                         {isProductSaving ? t('savingProject') : t('saveProject')}
                                     </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowProductModal(false)}
+                                        className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all sm:hidden"
+                                    >
+                                        {t('close') || 'Kapat'}
+                                    </button>
                                 </form>
                             </motion.div>
                         </div>
@@ -5678,7 +5685,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: "100%" }}
                                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                                className="bg-white border border-slate-200 w-full sm:max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-10 relative z-10 shadow-2xl overflow-hidden pb-20 sm:pb-10"
+                                className="bg-white border border-slate-200 w-full sm:max-w-lg rounded-t-[3rem] sm:rounded-[3rem] p-10 relative z-10 shadow-2xl max-h-[92vh] overflow-y-auto no-scrollbar pb-24 sm:pb-10"
                             >
                                 <div className="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-8 sm:hidden" />
                                 <div className="absolute top-0 left-0 w-full h-2 bg-primary" />
@@ -5720,6 +5727,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         className="w-full bg-primary text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
                                     >
                                         {editingServiceIndex !== null ? t('update') : t('addExpertise')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowServiceModal(false)}
+                                        className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all sm:hidden"
+                                    >
+                                        {t('close') || 'Kapat'}
                                     </button>
                                 </div>
                             </motion.div>
