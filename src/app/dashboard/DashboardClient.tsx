@@ -5551,8 +5551,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 className="bg-[#f8fafc] w-full sm:max-w-md rounded-t-[3rem] sm:rounded-[2.5rem] p-8 sm:p-6 relative z-10 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto no-scrollbar pb-20 sm:pb-6"
                             >
                                 <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden" />
-                                <button onClick={() => setShowProductModal(false)} className="absolute top-6 right-8 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-700 transition-colors">
-                                    <X className="w-5 h-5" />
+                                <button onClick={() => setShowProductModal(false)} className="absolute top-5 right-5 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors z-20">
+                                    <X className="w-6 h-6" />
                                 </button>
 
                                 <div className="mb-6">
@@ -5683,7 +5683,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-8 sm:hidden" />
                                 <div className="absolute top-0 left-0 w-full h-2 bg-primary" />
 
-                                <button onClick={() => setShowServiceModal(false)} className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-colors">
+                                <button onClick={() => setShowServiceModal(false)} className="absolute top-5 right-5 sm:top-6 sm:right-8 w-10 h-10 flex items-center justify-center text-slate-300 hover:text-slate-900 transition-colors z-20">
                                     <X className="w-6 h-6" />
                                 </button>
 
@@ -5742,7 +5742,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
                                 <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl" />
 
-                                <button onClick={() => setSelectedLead(null)} className="absolute top-8 right-8 w-11 h-11 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-300 hover:text-slate-600 hover:bg-white transition-all z-20">
+                                <button onClick={() => setSelectedLead(null)} className="absolute top-5 right-5 sm:top-8 sm:right-8 w-11 h-11 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-300 hover:text-slate-600 hover:bg-white transition-all z-20">
                                     <X className="w-6 h-6" />
                                 </button>
 
