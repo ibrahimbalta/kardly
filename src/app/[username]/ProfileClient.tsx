@@ -8420,8 +8420,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <Phone size={20} />,
             quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
             patternType: "mesh",
-            tagline: lang === 'tr' ? "Güvenilir Hizmet & Modern Tasarım" : "Reliable Service & Modern Design",
-            badges: lang === 'tr' ? ["7/24 Destek", "Profesyonel Hizmet", "Ücretsiz Danışmanlık"] : ["24/7 Support", "Professional", "Free Consulting"],
+            tagline: "",
+            badges: [],
         },
         uni_emerald: {
             bg: "bg-gradient-to-b from-[#06140e] via-[#040d09] to-[#020604]",
@@ -8439,8 +8439,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <MessageCircle size={20} />,
             quoteLabel: lang === 'tr' ? "RANDEVU AL" : "BOOK NOW",
             patternType: "dots",
-            tagline: lang === 'tr' ? "Sürdürülebilir Başarı & Büyüme" : "Sustainable Success & Growth",
-            badges: lang === 'tr' ? ["Yenilikçi", "Global Vizyon", "Sertifikalı"] : ["Innovative", "Global Vision", "Certified"],
+            tagline: "",
+            badges: [],
         },
         uni_purple: {
             bg: "bg-gradient-to-b from-[#1a0520] via-[#0f0315] to-[#050108]",
@@ -8458,8 +8458,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <Star size={20} />,
             quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
             patternType: "mesh",
-            tagline: lang === 'tr' ? "Üst Düzey Kalite & Zarafet" : "High-End Quality & Elegance",
-            badges: lang === 'tr' ? ["VİP Hizmet", "Özel Tasarım", "Lüks Segment"] : ["VIP Service", "Custom Design", "Luxury Segment"],
+            tagline: "",
+            badges: [],
         },
         uni_amber: {
             bg: "bg-gradient-to-b from-[#1a1005] via-[#0f0a05] to-[#050300]",
@@ -8477,8 +8477,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <Activity size={20} />,
             quoteLabel: lang === 'tr' ? "HEMEN BAŞLA" : "START NOW",
             patternType: "circuit",
-            tagline: lang === 'tr' ? "Yaratıcı & Dinamik Çözümler" : "Creative & Dynamic Solutions",
-            badges: lang === 'tr' ? ["Hızlı Teslimat", "Modern Yaklaşım", "7/24 Canlı"] : ["Fast Delivery", "Modern Approach", "24/7 Live"],
+            tagline: "",
+            badges: [],
         },
         uni_slate: {
             bg: "bg-gradient-to-b from-[#0f172a] via-[#020617] to-[#000000]",
@@ -8496,8 +8496,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <Globe size={20} />,
             quoteLabel: lang === 'tr' ? "İLETİŞİM" : "CONTACT",
             patternType: "dots",
-            tagline: lang === 'tr' ? "Sadelik Şıklıktır" : "Simplicity is Elegance",
-            badges: lang === 'tr' ? ["Minimalist", "Odaklı", "Profesyonel"] : ["Minimalist", "Focused", "Professional"],
+            tagline: "",
+            badges: [],
         },
         uni_midnight: {
             bg: "bg-gradient-to-b from-[#000000] via-[#050505] to-[#080808]",
@@ -8515,8 +8515,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             ctaIcon: <UserCheck size={20} />,
             quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
             patternType: "mesh",
-            tagline: lang === 'tr' ? "Lüks & Prestijin Buluşması" : "Where Luxury Meets Prestige",
-            badges: lang === 'tr' ? ["Elite Üyelik", "Gizli Projeler", "24 Ay Garanti"] : ["Elite Status", "Private Projects", "24 Month Warranty"],
+            tagline: "",
+            badges: [],
         }
     };
 
@@ -8734,10 +8734,12 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             </p>
 
                             {/* Craft Tagline */}
-                            <div className="mt-3 px-4 py-1.5 rounded-full border flex items-center gap-2" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}10` }}>
-                                <div style={{ color: craft.accent }}>{craft.craftIcon}</div>
-                                <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: craft.accent }}>{craft.tagline}</span>
-                            </div>
+                            {craft.tagline && (
+                                <div className="mt-3 px-4 py-1.5 rounded-full border flex items-center gap-2" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}10` }}>
+                                    <div style={{ color: craft.accent }}>{craft.craftIcon}</div>
+                                    <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: craft.accent }}>{craft.tagline}</span>
+                                </div>
+                            )}
                         </div>
 
                         {/* Badges row */}
