@@ -4219,8 +4219,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                                 <button
                                     onClick={handleSave}
-                                    className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+                                    disabled={isSaving}
+                                    className="w-full py-4 bg-primary text-white border border-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
                                 >
+                                    {isSaving ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <CheckCircle2 size={14} />}
                                     {t('saveSettings')}
                                 </button>
                             </div>
