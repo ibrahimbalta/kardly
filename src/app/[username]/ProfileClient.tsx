@@ -1633,6 +1633,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             icon: "text-amber-400",
             special: "realestate"
         },
+        pro_software: {
+            bg: profile.themeColor ? `dynamic-bg` : "bg-[#02040a]",
+            card: "bg-[#0d1117]/90",
+            text: "text-emerald-300",
+            subtext: "text-emerald-500/40",
+            border: "border-emerald-500/25",
+            glow: "shadow-[0_0_60px_rgba(16,185,129,0.25),0_0_120px_rgba(16,185,129,0.08)]",
+            accent: profile.themeColor || "#10b981",
+            btn: "bg-[#0d1117]/80 border-emerald-500/30",
+            btnText: "text-emerald-300",
+            icon: "text-emerald-400",
+            special: "software"
+        },
         pro_artistic: {
             bg: "bg-[#050505]",
             card: "bg-[#111]/80",
@@ -1645,19 +1658,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-pink-400",
             icon: "text-pink-500",
             special: "artistic"
-        },
-        pro_software: {
-            bg: "bg-[#050508]",
-            card: "bg-[#0d1117]/90",
-            text: "text-emerald-300",
-            subtext: "text-emerald-500/40",
-            border: "border-emerald-500/25",
-            glow: "shadow-[0_0_60px_rgba(16,185,129,0.25),0_0_120px_rgba(16,185,129,0.08)]",
-            accent: "#10b981",
-            btn: "bg-[#0d1117]/80 border-emerald-500/30",
-            btnText: "text-emerald-300",
-            icon: "text-emerald-400",
-            special: "software"
         },
         pro_doctor: {
             bg: "bg-[#f8fafc]",
@@ -2610,6 +2610,19 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
 
+    const getDynamicBg = (hex: string) => {
+        if (!hex) return '#02040a';
+        try {
+            const h = hex.replace('#', '');
+            const r = parseInt(h.substring(0, 2), 16);
+            const g = parseInt(h.substring(2, 4), 16);
+            const b = parseInt(h.substring(4, 6), 16);
+            return `rgba(${Math.round(r * 0.04)}, ${Math.round(g * 0.04)}, ${Math.round(b * 0.08)}, 1)`;
+        } catch (e) {
+            return '#02040a';
+        }
+    };
+
     const CraftDecorations = () => {
         switch (theme.special) {
             case "master_plumber":
@@ -2800,7 +2813,10 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     ].filter(a => a.active)
 
     return (
-        <div className={cn("min-h-screen flex items-center justify-center p-4 relative overflow-hidden", theme.bg, toneStyle.font)}>
+        <div 
+            className={cn("min-h-screen flex items-center justify-center p-4 relative overflow-hidden", theme.bg !== 'dynamic-bg' ? theme.bg : "", toneStyle.font)}
+            style={theme.bg === 'dynamic-bg' ? { backgroundColor: getDynamicBg(theme.accent) } : {}}
+        >
             {/* Background elements */}
             <div className="absolute inset-0 z-0">
                 {/* Subtle brightness overlay — makes the outer area lighter so the card pops */}

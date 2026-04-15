@@ -3154,7 +3154,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         else if (tid === "pro_architect") { accent = "#0ea5e9"; bg = "#1e293b"; patternSvg = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L 0 60 M 0 0 L 60 0' stroke='%230ea5e9' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pro_realestate") { accent = "#fbbf24"; bg = "#020617"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 V 40 L 50 20 L 80 40' stroke='%23fbbf24' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pro_artistic") { accent = "#f472b6"; bg = "#050505"; patternSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' stroke='%23f472b6' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
-                                        else if (tid === "pro_software") { accent = "#10b981"; bg = "#0a0a0b"; patternSvg = `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='2' x='0' y='0' fill='%2310b981' fill-opacity='0.05'/%3E%3C/svg%3E")`; }
+                                        else if (tid === "pro_software") { accent = profileData.themeColor || "#10b981"; bg = "#02040a" }
                                         else if (tid === "pro_doctor") { accent = "#0ea5e9"; bg = "#f8fafc"; patternSvg = `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 50h10l10 20 10-40 10 20h10' stroke='%230ea5e9' fill='none' stroke-opacity='0.1'/%3E%3C/svg%3E")`; }
                                         else if (tid === "pro_chef") { accent = "#f97316"; bg = "#1c1917"; }
                                         else if (tid === "pro_barber") { accent = "#fff"; bg = "#0c0c0c"; }
@@ -3253,8 +3253,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             <div className="absolute left-0 right-0 h-[1px] opacity-[0.08] animate-pulse" style={{ background: 'linear-gradient(90deg, transparent, #10b981, transparent)', top: '40%' }} />
                                                         </div>
                                                         {/* Glow orbs */}
-                                                        <div className="absolute top-0 left-0 w-40 h-40 blur-[60px] rounded-full opacity-[0.06] pointer-events-none" style={{ background: '#10b981' }} />
-                                                        <div className="absolute bottom-0 right-0 w-32 h-32 blur-[50px] rounded-full opacity-[0.04] pointer-events-none" style={{ background: '#10b981' }} />
+                                                        <div className="absolute top-0 left-0 w-40 h-40 blur-[60px] rounded-full opacity-[0.08] pointer-events-none" style={{ background: accent }} />
+                                                        <div className="absolute bottom-0 right-0 w-32 h-32 blur-[50px] rounded-full opacity-[0.06] pointer-events-none" style={{ background: accent }} />
                                                     </>
                                                 )}
                                                 {tid === "pro_gamer" && (
@@ -4129,8 +4129,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </h3>
                                 <div>
                                     <label className="block text-sm font-medium mb-4 opacity-60">{t('themeColorLabel')}</label>
-                                    <div className="grid grid-cols-5 gap-3">
-                                        {["#6366f1", "#f43f5e", "#10b981", "#fbbf24", "#a855f7", "#0ea5e9", "#06b6d4", "#f97316", "#84cc16", "#dc2626", "#d946ef", "#1e3a8a", "#064e3b", "#475569", "#78350f", "#18181b"].map(color => (
+                                    <div className="grid grid-cols-8 gap-2">
+                                        {[
+                                            // Primary / Indigo / Blue
+                                            "#6366f1", "#4f46e5", "#3730a3", "#1e3a8a", "#0ea5e9", "#0284c7", "#0369a1", "#075985",
+                                            // Emerald / Green / Teal
+                                            "#10b981", "#059669", "#047857", "#064e3b", "#22c55e", "#16a34a", "#15803d", "#14532d",
+                                            // Cyan / Sky / Turquoise
+                                            "#06b6d4", "#0891b2", "#0e7490", "#164e63", "#2dd4bf", "#0d9488", "#0f766e", "#134e4a",
+                                            // Rose / Red / Pink
+                                            "#f43f5e", "#e11d48", "#be123c", "#9f1239", "#dc2626", "#b91c1c", "#991b1b", "#7f1d1d",
+                                            "#ec4899", "#db2777", "#be185d", "#9d174d", "#d946ef", "#c026d3", "#a21caf", "#86198f",
+                                            // Amber / Orange / Yellow
+                                            "#f59e0b", "#d97706", "#b45309", "#92400e", "#f97316", "#ea580c", "#c2410c", "#9a3412",
+                                            "#fbbf24", "#f59e0b", "#d97706", "#b45309",
+                                            // Violet / Purple
+                                            "#8b5cf6", "#7c3aed", "#6d28d9", "#5b21b6", "#a855f7", "#9333ea", "#7e22ce", "#6b21a8",
+                                            // Slate / Zinc / Neutral
+                                            "#475569", "#334155", "#1e293b", "#0f172a", "#18181b", "#09090b", "#27272a", "#3f3f46"
+                                        ].map(color => (
                                             <button
                                                 key={color}
                                                 onClick={() => setProfileData({ ...profileData, themeColor: color })}
