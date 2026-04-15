@@ -71,7 +71,9 @@ import {
     Facebook,
     Award,
     ExternalLink,
-    Clock
+    Clock,
+    Crown,
+    UserCheck
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
