@@ -581,7 +581,7 @@ END:VCARD`
             return <TourismTravelTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
-        if (templateId.startsWith('masters_')) {
+        if (templateId.startsWith('masters_') || templateId.startsWith('uni_')) {
             return <MastersCraftTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
@@ -1514,6 +1514,84 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             btnText: "text-white",
             icon: "text-[#eab308]",
             special: "master_renovation"
+        },
+        uni_blue: {
+            bg: "bg-[#0c1e35]",
+            card: "bg-[#0d1f3c]/40",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/30",
+            glow: "shadow-[0_0_30px_rgba(56,189,248,0.4)]",
+            accent: "#38bdf8",
+            btn: "bg-[#0d1f3c]/60 border-blue-500/30",
+            btnText: "text-white",
+            icon: "text-[#38bdf8]",
+            special: "universal"
+        },
+        uni_emerald: {
+            bg: "bg-[#06140e]",
+            card: "bg-emerald-900/10",
+            text: "text-white",
+            subtext: "text-emerald-200/60",
+            border: "border-emerald-500/30",
+            glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]",
+            accent: "#10b981",
+            btn: "bg-emerald-950/20 border-emerald-500/30",
+            btnText: "text-white",
+            icon: "text-[#10b981]",
+            special: "universal"
+        },
+        uni_purple: {
+            bg: "bg-[#0a0510]",
+            card: "bg-purple-900/10",
+            text: "text-white",
+            subtext: "text-purple-200/60",
+            border: "border-purple-500/30",
+            glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]",
+            accent: "#a855f7",
+            btn: "bg-purple-950/20 border-purple-500/30",
+            btnText: "text-white",
+            icon: "text-[#a855f7]",
+            special: "universal"
+        },
+        uni_amber: {
+            bg: "bg-[#0f0a05]",
+            card: "bg-amber-900/10",
+            text: "text-white",
+            subtext: "text-amber-200/60",
+            border: "border-amber-500/30",
+            glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]",
+            accent: "#f59e0b",
+            btn: "bg-amber-950/20 border-amber-500/30",
+            btnText: "text-white",
+            icon: "text-[#f59e0b]",
+            special: "universal"
+        },
+        uni_slate: {
+            bg: "bg-[#0a0a0b]",
+            card: "bg-zinc-900/10",
+            text: "text-white",
+            subtext: "text-zinc-400",
+            border: "border-white/20",
+            glow: "shadow-[0_0_30px_rgba(255,255,255,0.1)]",
+            accent: "#ffffff",
+            btn: "bg-zinc-800/40 border-white/20",
+            btnText: "text-white",
+            icon: "text-white",
+            special: "universal"
+        },
+        uni_midnight: {
+            bg: "bg-[#050505]",
+            card: "bg-black/60",
+            text: "text-amber-200",
+            subtext: "text-amber-500/40",
+            border: "border-amber-500/30",
+            glow: "shadow-[0_0_30px_rgba(245,158,11,0.2)]",
+            accent: "#d4af37",
+            btn: "bg-black/80 border-amber-500/30",
+            btnText: "text-amber-200",
+            icon: "text-[#d4af37]",
+            special: "universal"
         },
         // Artistic & Patterned Themes
         pattern_ottoman: {
@@ -8323,6 +8401,120 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             patternType: "blueprint",
             tagline: lang === 'tr' ? "Anahtar Teslim Tadilat" : "Turnkey Renovation",
             badges: lang === 'tr' ? ["Anahtar Teslim", "Proje Yönetimi", "Sözleşmeli"] : ["Turnkey", "Managed", "Contract"],
+        },
+        uni_blue: {
+            bg: "bg-gradient-to-b from-[#0c1e35] via-[#0a1628] to-[#060d17]",
+            card: "bg-[#0d1f3c]/80 backdrop-blur-2xl",
+            headerBg: "from-[#1e40af] to-[#3b82f6]",
+            accent: "#60a5fa",
+            accentDark: "#1e3a8a",
+            text: "text-white",
+            subtext: "text-blue-200/60",
+            border: "border-blue-500/20",
+            icon: "💎",
+            craftIcon: <Briefcase size={28} />,
+            craftName: lang === 'tr' ? "Profesyonel Profil" : "Professional Profile",
+            ctaLabel: lang === 'tr' ? "İLETİŞİME GEÇ" : "GET IN TOUCH",
+            ctaIcon: <Phone size={20} />,
+            quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
+            patternType: "mesh",
+            tagline: lang === 'tr' ? "Güvenilir Hizmet & Modern Tasarım" : "Reliable Service & Modern Design",
+            badges: lang === 'tr' ? ["7/24 Destek", "Profesyonel Hizmet", "Ücretsiz Danışmanlık"] : ["24/7 Support", "Professional", "Free Consulting"],
+        },
+        uni_emerald: {
+            bg: "bg-gradient-to-b from-[#06140e] via-[#040d09] to-[#020604]",
+            card: "bg-[#06140e]/80 backdrop-blur-2xl",
+            headerBg: "from-[#065f46] to-[#10b981]",
+            accent: "#34d399",
+            accentDark: "#064e3b",
+            text: "text-white",
+            subtext: "text-emerald-200/60",
+            border: "border-emerald-500/20",
+            icon: "🌿",
+            craftIcon: <Sparkles size={28} />,
+            craftName: lang === 'tr' ? "Business Pro" : "Business Pro",
+            ctaLabel: lang === 'tr' ? "BİZE ULAŞIN" : "CONTACT US",
+            ctaIcon: <MessageCircle size={20} />,
+            quoteLabel: lang === 'tr' ? "RANDEVU AL" : "BOOK NOW",
+            patternType: "dots",
+            tagline: lang === 'tr' ? "Sürdürülebilir Başarı & Büyüme" : "Sustainable Success & Growth",
+            badges: lang === 'tr' ? ["Yenilikçi", "Global Vizyon", "Sertifikalı"] : ["Innovative", "Global Vision", "Certified"],
+        },
+        uni_purple: {
+            bg: "bg-gradient-to-b from-[#1a0520] via-[#0f0315] to-[#050108]",
+            card: "bg-[#1a0520]/80 backdrop-blur-2xl",
+            headerBg: "from-[#6b21a8] to-[#a855f7]",
+            accent: "#c084fc",
+            accentDark: "#4c1d95",
+            text: "text-white",
+            subtext: "text-purple-200/60",
+            border: "border-purple-500/20",
+            icon: "✨",
+            craftIcon: <Award size={28} />,
+            craftName: lang === 'tr' ? "Premium Elite" : "Premium Elite",
+            ctaLabel: lang === 'tr' ? "PRESTİJ ÇÖZÜMLER" : "PRESTIGE SOLUTIONS",
+            ctaIcon: <Star size={20} />,
+            quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
+            patternType: "mesh",
+            tagline: lang === 'tr' ? "Üst Düzey Kalite & Zarafet" : "High-End Quality & Elegance",
+            badges: lang === 'tr' ? ["VİP Hizmet", "Özel Tasarım", "Lüks Segment"] : ["VIP Service", "Custom Design", "Luxury Segment"],
+        },
+        uni_amber: {
+            bg: "bg-gradient-to-b from-[#1a1005] via-[#0f0a05] to-[#050300]",
+            card: "bg-[#1a1005]/80 backdrop-blur-2xl",
+            headerBg: "from-[#92400e] to-[#f59e0b]",
+            accent: "#fbbf24",
+            accentDark: "#78350f",
+            text: "text-white",
+            subtext: "text-amber-200/60",
+            border: "border-amber-500/20",
+            icon: "🌅",
+            craftIcon: <Zap size={28} />,
+            craftName: lang === 'tr' ? "Dynamic Edge" : "Dynamic Edge",
+            ctaLabel: lang === 'tr' ? "ENERJİNİ YÜKSELT" : "BOOST ENERGY",
+            ctaIcon: <Activity size={20} />,
+            quoteLabel: lang === 'tr' ? "HEMEN BAŞLA" : "START NOW",
+            patternType: "circuit",
+            tagline: lang === 'tr' ? "Yaratıcı & Dinamik Çözümler" : "Creative & Dynamic Solutions",
+            badges: lang === 'tr' ? ["Hızlı Teslimat", "Modern Yaklaşım", "7/24 Canlı"] : ["Fast Delivery", "Modern Approach", "24/7 Live"],
+        },
+        uni_slate: {
+            bg: "bg-gradient-to-b from-[#0f172a] via-[#020617] to-[#000000]",
+            card: "bg-slate-900/60 backdrop-blur-2xl",
+            headerBg: "from-[#334155] to-[#64748b]",
+            accent: "#cbd5e1",
+            accentDark: "#0f172a",
+            text: "text-white",
+            subtext: "text-slate-400",
+            border: "border-slate-700/50",
+            icon: "🌑",
+            craftIcon: <Shield size={28} />,
+            craftName: lang === 'tr' ? "Pure Minimal" : "Pure Minimal",
+            ctaLabel: lang === 'tr' ? "KEŞFET" : "EXPLORE",
+            ctaIcon: <Globe size={20} />,
+            quoteLabel: lang === 'tr' ? "İLETİŞİM" : "CONTACT",
+            patternType: "dots",
+            tagline: lang === 'tr' ? "Sadelik Şıklıktır" : "Simplicity is Elegance",
+            badges: lang === 'tr' ? ["Minimalist", "Odaklı", "Profesyonel"] : ["Minimalist", "Focused", "Professional"],
+        },
+        uni_midnight: {
+            bg: "bg-gradient-to-b from-[#000000] via-[#050505] to-[#080808]",
+            card: "bg-zinc-900/80 backdrop-blur-2xl",
+            headerBg: "from-[#111] to-[#333]",
+            accent: "#d4af37",
+            accentDark: "#000000",
+            text: "text-amber-100",
+            subtext: "text-amber-500/30",
+            border: "border-amber-500/20",
+            icon: "🌌",
+            craftIcon: <Crown size={28} />,
+            craftName: lang === 'tr' ? "Midnight Gold" : "Midnight Gold",
+            ctaLabel: lang === 'tr' ? "AYRICALIKLI HİZMET" : "EXCLUSIVE SERVICE",
+            ctaIcon: <UserCheck size={20} />,
+            quoteLabel: lang === 'tr' ? "TEKLİF AL" : "GET A QUOTE",
+            patternType: "mesh",
+            tagline: lang === 'tr' ? "Lüks & Prestijin Buluşması" : "Where Luxury Meets Prestige",
+            badges: lang === 'tr' ? ["Elite Üyelik", "Gizli Projeler", "24 Ay Garanti"] : ["Elite Status", "Private Projects", "24 Month Warranty"],
         }
     };
 
@@ -8425,6 +8617,32 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `linear-gradient(${craft.accent}50 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}50 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
                         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${craft.accent}30 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}30 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
                         <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-yellow-500/5 to-transparent" />
+                    </div>
+                );
+            case "mesh":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.4]" style={{ 
+                            background: `radial-gradient(circle at 20% 20%, ${craft.accent}15 0%, transparent 40%), radial-gradient(circle at 80% 80%, ${craft.accent}15 0%, transparent 40%)` 
+                        }} />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ 
+                            backgroundImage: `linear-gradient(${craft.accent} 1px, transparent 1px), linear-gradient(90deg, ${craft.accent} 1px, transparent 1px)`,
+                            backgroundSize: '40px 40px' 
+                        }} />
+                    </div>
+                );
+            case "dots":
+                return (
+                    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.05]" style={{ 
+                            backgroundImage: `radial-gradient(${craft.accent} 1px, transparent 1px)`,
+                            backgroundSize: '24px 24px' 
+                        }} />
+                        <motion.div 
+                            animate={{ opacity: [0.02, 0.05, 0.02] }} 
+                            transition={{ duration: 5, repeat: Infinity }} 
+                            className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" 
+                        />
                     </div>
                 );
             default: return null;

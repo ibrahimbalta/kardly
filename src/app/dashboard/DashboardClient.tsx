@@ -195,6 +195,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "meta", name: t('catMeta'), icon: <Globe size={14} /> },
         { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> },
         { id: "masters", name: t('catMasters'), icon: <Hammer size={14} /> },
+        { id: "universal", name: "Profesyonel & Global", icon: <Globe size={14} /> },
         { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> },
         { id: "athletic", name: "Sporcu / Pro", icon: <Activity size={14} /> },
         { id: "tourism", name: "Turizm & Seyahat", icon: <Map size={14} /> }
@@ -797,7 +798,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "masters_painter", category: "masters", name: "🎨 Boya & Badana", description: "Yaratıcı renk paletleri, temiz işçilik vurgusu ve ferah tasarım.", isNew: true },
         { id: "masters_carpenter", category: "masters", name: "🔨 Mobilya & Marangoz", description: "Ahşap dokulu esintiler, zanaatkar ruhu ve kaliteli detaylar.", isNew: true },
         { id: "masters_auto", category: "masters", name: "🚗 Oto Servis & Bakım", description: "Endüstriyel gri-kırmızı uyumu, hız ve güven odaklı servis tasarımı.", isNew: true },
-        { id: "masters_renovation", category: "masters", name: "👷 İnşaat & Tadilat", description: "Kapsamlı hizmet listesi, profesyonel ekip vurgusu ve sağlam hatlar.", isNew: true }
+        { id: "masters_renovation", category: "masters", name: "👷 İnşaat & Tadilat", description: "Kapsamlı hizmet listesi, profesyonel ekip vurgusu ve sağlam hatlar.", isNew: true },
+        
+        // Profesyonel & Global
+        { id: "uni_blue", category: "universal", name: "💎 Corporate Modern", description: "Güven veren mavi tonlar ve premium kurumsal hatlar.", isNew: true },
+        { id: "uni_emerald", category: "universal", name: "🌿 Business Pro", description: "Zengin yeşil detaylar ve ferah profesyonel tasarım.", isNew: true },
+        { id: "uni_purple", category: "universal", name: "✨ Premium Elite", description: "Asil mor geçişler ve üst düzey bir prestij vurgusu.", isNew: true },
+        { id: "uni_amber", category: "universal", name: "🌅 Dynamic Edge", description: "Enerjik kehribar tonları ve modern keskin hatlar.", isNew: true },
+        { id: "uni_slate", category: "universal", name: "🌑 Pure Minimal", description: "Sofistike gri tonları ve pürüzsüz minimalist estetik.", isNew: true },
+        { id: "uni_midnight", category: "universal", name: "🌌 Midnight Gold", description: "Gece siyahı ve altın ışıltılı lüks kompozisyon.", isNew: true }
     ]
 
     // Working Hours Management
