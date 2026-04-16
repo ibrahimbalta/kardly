@@ -163,7 +163,8 @@ const profileSchema = z.object({
     paymentLink: z.string().optional().or(z.literal("")).nullable(),
     youtubeVideoUrl: z.string().optional().or(z.literal("")).nullable(),
     image: z.string().optional().or(z.literal("")).nullable(),
-    profileBgImage: z.string().optional().or(z.literal("")).nullable()
+    profileBgImage: z.string().optional().or(z.literal("")).nullable(),
+    buttonLayout: z.string().optional().or(z.literal("")).nullable()
 })
 
 
@@ -952,7 +953,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     qrColorLight: overrides?.qrColorLight ?? profileData.qrColorLight,
                     hasAcceptedTerms: isTermsAccepted,
                     showInHub: overrides?.showInHub ?? profileData.showInHub,
-                    timezone: profileData.timezone
+                    timezone: profileData.timezone,
+                    buttonLayout: overrides?.buttonLayout ?? profileData.buttonLayout
                 })
             })
 
