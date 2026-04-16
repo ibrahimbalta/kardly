@@ -2918,7 +2918,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             },
             active: true
         },
-        { label: t.emailBtn || "E-Mail", icon: <MailWithBadge size={20} />, href: `mailto:${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
+        { label: t.emailBtn || "E-Mail", icon: <MailWithBadge size={20} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
         {
             label: t.bookAppointment, icon: <Calendar size={20} />, onClick: () => {
                 trackEvent("appointment")
@@ -5279,7 +5279,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         {
             label: t.emailBtn || "E-MAIL",
             icon: <MailWithBadge size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            href: `mailto:${profile.user?.email || ""}`,
+            href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`,
             onClick: () => trackEvent("email"),
             active: !!profile.user?.email
         },
@@ -5944,7 +5944,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
-        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={20} />, href: `mailto:${profile?.user?.email || ""}`, active: !!profile?.user?.email },
+        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={20} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile?.user?.email || ""}`, active: !!profile?.user?.email },
         ...otherSocialActions,
         ...customButtons,
         { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
