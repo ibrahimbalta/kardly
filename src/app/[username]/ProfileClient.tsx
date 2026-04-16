@@ -8319,7 +8319,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
 
                         {/* Footer (Mobile Only Shortcut) */}
                         <div className="px-8 py-5 sm:hidden border-t bg-black/20 backdrop-blur-xl border-white/5 flex items-center justify-center">
-                             <a
+                            <a
                                 href={url}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -8329,8 +8329,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
                                     color: (profile.buttonColor || theme.accent) === 'transparent' ? 'currentColor' : (isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000') 
                                 }}
                             >
-                                <ExternalLink size={16} />
-                                <span>{t.openFullDocument || "TAM EKRAN GÖRÜNTÜLE"}</span>
+                                {t.download || "İndir"}
                             </a>
                         </div>
                     </motion.div>
@@ -8339,6 +8338,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
         </AnimatePresence>
     );
 }
+
 
 
 function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
@@ -9207,8 +9207,6 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         )}
                     </motion.div>
 
-
-
                     {/* === BOTTOM ACTIONS === */}
                     <div className="mt-8 flex gap-3">
                         <button
@@ -9277,11 +9275,6 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         <CheckCircle2 size={14} /> {leadStatus}
                     </motion.div>
                 )}
-                {copied && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-                        <CheckCircle2 size={14} /> {t.copiedLabel}
-                    </motion.div>
-                )}
             </AnimatePresence>
 
             {/* Digital Business Card Modal (Shared) */}
@@ -9312,8 +9305,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 100, opacity: 0 }}
                             transition={{ type: "spring", damping: 30, stiffness: 350 }}
-                            className="relative rounded-t-[2.5rem] sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl pb-10 sm:pb-0"
-                            style={{ backgroundColor: craft.bg.includes('#') ? craft.bg.match(/#[0-9a-fA-F]+/)?.[0] || '#0a0a0f' : '#0a0a0f', borderColor: `${theme.accent}20` }}
+                            className={cn("relative rounded-t-[2.5rem] sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl pb-10 sm:pb-0", theme.card, theme.border)}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close button */}
@@ -9359,9 +9351,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 
 
 
-function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, formatUrl }: any) {
-    if (!profile.showSocialIconsBar) return null;
-
+function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, formatUrl, theme }: any) {
     const barLinks = (socialLinks || [])
         .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
@@ -9371,6 +9361,7 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
         }));
 
     const customBarLinks = (socialLinks.find((l: any) => l.platform === 'customLinks')?.links || [])
+        .filter((l: any) => l.url)
         .map((l: any) => ({
             platform: 'custom',
             title: l.title,
@@ -9381,11 +9372,16 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
     const allIcons = [...barLinks, ...customBarLinks];
     if (allIcons.length === 0) return null;
 
+    const isLight = theme?.isLight;
+
     return (
         <motion.div 
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-wrap justify-center gap-3 py-2 px-4 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 mt-2"
+            className={cn(
+                "flex flex-wrap justify-center gap-3 py-2 px-4 rounded-2xl backdrop-blur-md border mt-2",
+                isLight ? "bg-black/5 border-black/10" : "bg-white/5 border-white/10"
+            )}
         >
             {allIcons.map((icon, i) => (
                 <motion.a
@@ -9395,7 +9391,10 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
                     whileHover={{ scale: 1.2, y: -2 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => trackEvent("social_icon_bar", icon.platform)}
-                    className="text-white/60 hover:text-white transition-colors p-1"
+                    className={cn(
+                        "transition-colors p-1",
+                        isLight ? "text-black/60 hover:text-black" : "text-white/60 hover:text-white"
+                    )}
                     title={icon.platform !== 'custom' ? icon.platform : (icon as any).title}
                 >
                     {icon.icon}
@@ -9404,3 +9403,4 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
         </motion.div>
     );
 }
+
