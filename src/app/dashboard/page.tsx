@@ -7,13 +7,14 @@ import DashboardClient from "./DashboardClient"
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function DashboardPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
     try {
+        const resolvedSearchParams = await searchParams;
         const session = await getServerSession(authOptions)
 
         if (!session || !session.user) {
             const params = new URLSearchParams()
-            Object.entries(searchParams).forEach(([key, value]) => {
+            Object.entries(resolvedSearchParams).forEach(([key, value]) => {
                 if (value) params.set(key, String(value))
             })
             const queryString = params.toString()
@@ -147,12 +148,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900 mb-2">Sistem Hatası</h1>
                     <p className="text-slate-600 mb-8">Dashboard yüklenirken bir sorun oluştu. Lütfen sayfayı yenilemeyi deneyin.</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg hover:shadow-indigo-200"
+                    <a
+                        href="/dashboard"
+                        className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-lg hover:shadow-indigo-200 text-center"
                     >
                         Sayfayı Yenile
-                    </button>
+                    </a>
                     <p className="mt-4 text-xs text-slate-400 font-mono">Hata: {error instanceof Error ? error.message : "Unknown error"}</p>
                 </div>
             </div>
