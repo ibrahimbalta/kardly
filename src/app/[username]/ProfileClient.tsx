@@ -9247,6 +9247,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 
             {/* Status toasts */}
             <AnimatePresence>
+                {reviewStatus && (
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                         <CheckCircle2 size={14} /> {reviewStatus}
                     </motion.div>
