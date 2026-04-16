@@ -2873,15 +2873,23 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
 
 
-    const heroSocialActions = (socialLinks || [])
-        .filter((l: any) => l.isHero && l.url)
+    const platformButtons = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
             label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
             icon: getHeroIcon(l.platform, 20, l.url),
             href: formatUrl(l.url),
-            onClick: () => trackEvent("hero_social", l.platform),
+            onClick: () => trackEvent("social_button", l.platform),
             active: true
         }))
+
+    const customButtons = customLinks.map((l: any) => ({
+        label: l.title,
+        icon: <Globe size={20} />,
+        href: formatUrl(l.url),
+        onClick: () => trackEvent("custom_button", l.title),
+        active: true
+    }))
 
     const actions = [
         {
@@ -2898,7 +2906,6 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             onClick: () => trackEvent("whatsapp"),
             active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone)
         },
-        ...heroSocialActions,
         {
             label: t.contactMeTitle,
             icon: <MessageSquare size={20} />,
@@ -2915,13 +2922,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 setIsAppointmentOpen(true)
             }, active: !!profile.showAppointmentBtn
         },
-        ...customLinks.filter((l: any) => l.isAction).map((l: any) => ({
-            label: l.title,
-            icon: <Globe size={20} />,
-            href: l.url,
-            onClick: () => trackEvent("custom_action", l.title),
-            active: true
-        })),
+        ...platformButtons,
+        ...customButtons,
         { label: t.website, icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: t.locationsBtn, icon: <MapPin size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url },
     ].filter(a => a.active)
@@ -4614,51 +4616,7 @@ if(true) {
                                 )}
                             </div>
 
-                            {(() => {
-                                const links = customLinks.filter((l: any) => !l.isAction);
-                                if (links.length === 0) return null;
-                                return (
-                                    <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
-                                        {links.map((link: any, i: number) => (
-                                            <motion.a
-                                                key={i}
-                                                href={formatUrl(link.url)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                initial={{ opacity: 0, scale: 0 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.3 + i * 0.1 }}
-                                                whileHover={{ scale: 1.2, y: -3 }}
-                                                className="relative group/link"
-                                                onClick={() => trackEvent("custom_link", link.title)}
-                                            >
-                                                <div
-                                                    className={cn("w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all", theme.border)}
-                                                    style={{
-                                                        backgroundColor: `${theme.accent}15`,
-                                                        borderColor: `${theme.accent}40`,
-                                                        color: theme.accent,
-                                                        filter: theme.isLight ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' : 'none'
-                                                    }}
-                                                >
-                                                    <Globe size={18} />
-                                                </div>
-                                                <div
-                                                    className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/link:opacity-100 transition-all duration-300 whitespace-nowrap px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider pointer-events-none scale-75 group-hover/link:scale-100 z-50"
-                                                    style={{
-                                                        backgroundColor: theme.accent,
-                                                        color: '#000',
-                                                        boxShadow: `0 0 15px ${theme.accent}40`
-                                                    }}
-                                                >
-                                                    {link.title}
-                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45" style={{ backgroundColor: theme.accent }} />
-                                                </div>
-                                            </motion.a>
-                                        ))}
-                                    </div>
-                                );
-                            })()}
+
                             <div className={cn(
                                 profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
                                 profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
@@ -4884,16 +4842,7 @@ if(true) {
 
 
 
-                            <div className="flex justify-center flex-wrap gap-6 pt-2">
-                                {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => {
-                                    const platform = l.platform.toLowerCase()
-                                    return (
-                                        <a key={i} href={formatUrl(l.url)} target="_blank" className={cn("transition-all hover:scale-125 opacity-60 hover:opacity-100")} style={{ color: theme.accent }}>
-                                            {getHeroIcon(l.platform, 24, l.url)}
-                                        </a>
-                                    )
-                                })}
-                            </div>
+
 
                             {
                                 profile.paymentLink && (
@@ -5261,6 +5210,27 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         }
     ].filter(a => a.active);
 
+    const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
+    const customLinks = customLinksEntry?.links || [];
+
+    const otherSocialActions = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .map((l: any) => ({
+            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            icon: getHeroIcon(l.platform, 18, l.url),
+            href: formatUrl(l.url),
+            onClick: () => trackEvent("social_button", l.platform),
+            active: true
+        }))
+
+    const customButtons = customLinks.map((l: any) => ({
+        label: l.title,
+        icon: <Globe size={18} />,
+        href: formatUrl(l.url),
+        onClick: () => trackEvent("custom_button", l.title),
+        active: true
+    }))
+
     const otherActions = [
         {
             label: t.contactMeTitle || "İLETİŞİME GEÇ",
@@ -5278,6 +5248,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             onClick: () => trackEvent("email"),
             active: !!profile.user.email
         },
+        ...otherSocialActions,
+        ...customButtons,
         {
             label: t.website || "WEB SİTE",
             icon: <Globe size={18} />,
@@ -5621,26 +5593,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 )}
 
                 {/* Horizontal Social Row */}
-                <div className="w-full mt-12 flex flex-wrap justify-center gap-6">
-                    {socialLinks.filter((l: any) => l.url && !l.isHero && l.platform !== 'phone').map((link: any, i: number) => (
-                        <motion.a
-                            key={i}
-                            whileHover={{ scale: 1.2, y: -5 }}
-                            whileTap={{ scale: 0.9 }}
-                            href={formatUrl(link.url)}
-                            target="_blank"
-                            style={{ color: `${theme.accent}cc`, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
-                            className="hover:text-slate-900 transition-colors"
-                        >
-                            {getHeroIcon(link.platform, 22, link.url)}
-                        </motion.a>
-                    ))}
-                    {profile.cvUrl && (
-                        <motion.a whileHover={{ scale: 1.2, y: -5 }} href={profile.cvUrl} target="_blank" style={{ color: `${theme.accent}cc` }} className="hover:text-slate-900">
-                            <FileText size={22} />
-                        </motion.a>
-                    )}
-                </div>
+
 
                 {/* Main CTA Button */}
                 {profile.showAppointmentBtn && (
@@ -5935,12 +5888,35 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         return `https://${url}`;
     };
 
+    const customLinksEntry = socialLinks.find((l: any) => l.platform === 'customLinks');
+    const customLinks = customLinksEntry?.links || [];
+
+    const otherSocialActions = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .map((l: any) => ({
+            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            icon: getHeroIcon(l.platform, 20, l.url),
+            href: formatUrl(l.url),
+            onClick: () => trackEvent("social_button", l.platform),
+            active: true
+        }))
+
+    const customButtons = customLinks.map((l: any) => ({
+        label: l.title,
+        icon: <Globe size={20} />,
+        href: formatUrl(l.url),
+        onClick: () => trackEvent("custom_button", l.title),
+        active: true
+    }))
+
     const actionButtons = [
         { label: t.phoneCallsBtn || "ARA", icon: <Phone size={20} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: "WHATSAPP", icon: <MessageCircle size={20} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={20} />, onClick: () => setIsLeadModalOpen(true), active: true },
         { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={20} />, href: `mailto:${profile?.user?.email || ""}`, active: !!profile?.user?.email },
-        { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: socialLinks.find((l: any) => l.platform === 'website')?.url, active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        ...otherSocialActions,
+        ...customButtons,
+        { label: t.website || "WEB SİTE", icon: <Globe size={20} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
         { label: t.locationsBtn || "KONUM", icon: <MapPin size={20} />, onClick: () => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' }), active: !!profile.blocks?.find((b: any) => b.type === 'map') }
     ].filter(a => a.active);
 
@@ -6344,28 +6320,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 )}
 
                 {/* Social Networks Grid (Accent Outlined Style) */}
-                {socialLinks.length > 0 && (
-                    <section className="py-16 border-t border-white/5">
-                        <div className="flex flex-wrap justify-center gap-5">
-                            {socialLinks.filter((l: any) => l.url && l.platform !== 'phone' && l.platform !== 'whatsapp').map((link: any, i: number) => (
-                                <motion.a 
-                                    key={i} 
-                                    href={formatUrl(link.url)} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    whileHover={{ scale: 1.15, y: -4 }} 
-                                    whileTap={{ scale: 0.95 }}
-                                    className="w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)] group"
-                                    style={{ borderColor: `${theme.accent}60`, color: `${theme.accent}90` }}
-                                >
-                                    <div className="transition-all duration-300 group-hover:scale-110" style={{ color: theme.accent }}>
-                                        {getHeroIcon(link.platform, 22, link.url)}
-                                    </div>
-                                </motion.a>
-                            ))}
-                        </div>
-                    </section>
-                )}
+
             </main>
 
             {/* Premium Floating High-Performance Action Bar */}
