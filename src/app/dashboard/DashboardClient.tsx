@@ -108,6 +108,7 @@ import {
     Square,
     CircleDot
 } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { TEMPLATES } from "@/components/BusinessCardGenerator"
 
 import Link from "next/link"
@@ -6281,6 +6282,3 @@ function ActionStatCard({ icon, label, count, color }: { icon: React.ReactNode, 
     );
 }
 
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(" ");
-}
