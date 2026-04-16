@@ -7433,6 +7433,9 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                         placeholder={t.askSomething}
                         className={cn("bg-transparent border-none focus:ring-0 text-[11px] sm:text-[12px] p-2.5 flex-1 placeholder:opacity-20 font-medium", theme.text)}
                     />
+                    <button
+                        onClick={handleSend}
+                        disabled={!input.trim() || isLoading}
                         className={cn("w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:grayscale disabled:opacity-20 shadow-lg")}
                         style={{ 
                             backgroundColor: profile.buttonColor || theme.accent, 
