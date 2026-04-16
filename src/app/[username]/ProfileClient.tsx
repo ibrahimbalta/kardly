@@ -110,6 +110,17 @@ interface Profile {
     businessCardOrientation?: string;
 }
 
+const hexToRgb = (hex: string) => {
+    hex = hex.replace("#", "")
+    if (hex.length === 3) {
+        hex = hex.split("").map(c => c + c).join("")
+    }
+    const r = parseInt(hex.substring(0, 2), 16)
+    const g = parseInt(hex.substring(2, 4), 16)
+    const b = parseInt(hex.substring(4, 6), 16)
+    return `${r}, ${g}, ${b}`
+}
+
 const XIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
     <svg 
         width={size} 
@@ -596,7 +607,7 @@ END:VCARD`
             className="min-h-screen relative bg-[#030712] overflow-x-hidden"
             style={{ 
                 '--profile-accent': activeAccent,
-                '--profile-accent-rgb': activeAccent === '#ffffff' ? '255,255,255' : '14, 165, 233'
+                '--profile-accent-rgb': hexToRgb(activeAccent)
             } as any}
         >
             <MeshBackground activeAccent={activeAccent} />
@@ -2688,6 +2699,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
+
+    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
+    if (profile.themeColor) {
+        theme.glow = `shadow-[0_0_20px_rgba(${hexToRgb(theme.accent)},0.5)]`;
+        theme.icon = `text-[${theme.accent}]`;
+        if (theme.btn && theme.btn.includes('border-')) {
+             // Opsiyonel: Buton border rengini de dinamik yapabiliriz ama tailwind sınıflarıyla zor.
+             // Şimdilik glow ve icon en belirgin olanlar.
+        }
+    }
 
     const getDynamicBg = (hex: string) => {
         if (!hex) return '#02040a';
@@ -5206,6 +5227,12 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
+
+    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
+    if (profile.themeColor) {
+        theme.headerStyle = { background: `linear-gradient(to right, ${theme.accent}, ${theme.accent}dd)` };
+        theme.glow = `shadow-[0_0_20px_rgba(${hexToRgb(theme.accent)},0.3)]`;
+    }
     const socialLinks = profile.socialLinks || [];
 
     const formatUrl = (url?: string) => {
@@ -5285,7 +5312,10 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             </div>
 
             {/* Header Curve */}
-            <div className={cn("relative h-64 sm:h-80 w-full overflow-hidden", theme.header)}>
+            <div 
+                className={cn("relative h-64 sm:h-80 w-full overflow-hidden", !profile.themeColor && theme.header)}
+                style={theme.headerStyle}
+            >
                 <div className="absolute inset-0 bg-black/10" />
                 <svg className="absolute bottom-[-1px] w-full h-24 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
                     <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
@@ -5789,6 +5819,11 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
+
+    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
+    if (profile.themeColor) {
+        theme.card = theme.card.replace(/rgba\(.*?\)/g, `rgba(${hexToRgb(theme.accent)}, 0.1)`);
+    }
     const socialLinks = profile.socialLinks || [];
     const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject };
 
@@ -5887,6 +5922,11 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
+
+    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
+    if (profile.themeColor) {
+        theme.glow = `shadow-[0_0_40px_rgba(${hexToRgb(theme.accent)},0.2)]`;
+    }
     const socialLinks = profile.socialLinks || [];
 
     const formatUrl = (url?: string) => {
@@ -8578,6 +8618,13 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
         btn: "bg-white/10 border-white/10 hover:bg-white/20",
         btnText: "text-white"
     };
+
+    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
+    if (profile.themeColor) {
+        theme.headerBg = theme.accent;
+        theme.accentDark = theme.accent;
+        theme.glow = `shadow-[0_0_50px_rgba(${hexToRgb(theme.accent)},0.3)]`;
+    }
     const socialLinks = profile.socialLinks || [];
 
     const formatUrl = (url?: string) => {
@@ -8661,25 +8708,25 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 animate={{ y: [0, 800], opacity: [0, 0.3, 0] }}
                                 transition={{ duration: 5 + Math.random() * 5, repeat: Infinity, delay: Math.random() * 8, ease: "linear" }}
                                 className="absolute"
-                                style={{ left: `${5 + Math.random() * 90}%`, color: `${craft.accent}40` }}
+                                style={{ left: `${5 + Math.random() * 90}%`, color: `${theme.accent}40` }}
                             >
                                 <Droplets size={16 + Math.random() * 20} />
                             </motion.div>
                         ))}
-                        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-500/10 to-transparent" />
+                        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t" style={{ backgroundImage: `linear-gradient(to top, ${theme.accent}20, transparent)` }} />
                     </div>
                 );
             case "circuit":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${craft.accent}60 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}60 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${theme.accent}60 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}60 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
                         {[...Array(6)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 animate={{ opacity: [0, 0.6, 0], scale: [0.5, 1.3, 0.5] }}
                                 transition={{ duration: 0.15, repeat: Infinity, repeatDelay: 3 + Math.random() * 6 }}
                                 className="absolute"
-                                style={{ top: `${Math.random() * 90}%`, left: `${Math.random() * 90}%`, color: craft.accent }}
+                                style={{ top: `${Math.random() * 90}%`, left: `${Math.random() * 90}%`, color: theme.accent }}
                             >
                                 <Zap size={40 + Math.random() * 30} />
                             </motion.div>
@@ -8698,41 +8745,41 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             case "wood":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'repeating-linear-gradient(90deg, #d97706 0px, transparent 1px, transparent 8px, #d97706 9px), repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #d9770610 30px, #d9770610 31px)', backgroundSize: '9px 31px' }} />
-                        <div className="absolute bottom-0 inset-x-0 h-60 bg-gradient-to-t from-orange-950/20 to-transparent" />
+                        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `repeating-linear-gradient(90deg, ${theme.accent} 0px, transparent 1px, transparent 8px, ${theme.accent} 9px), repeating-linear-gradient(0deg, transparent 0px, transparent 30px, ${theme.accent}10 30px, ${theme.accent}10 31px)`, backgroundSize: '9px 31px' }} />
+                        <div className="absolute bottom-0 inset-x-0 h-60 bg-gradient-to-t" style={{ backgroundImage: `linear-gradient(to top, ${theme.accent}20, transparent)` }} />
                     </div>
                 );
             case "gear":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-32 -right-32 opacity-[0.06]" style={{ color: craft.accent }}>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-32 -right-32 opacity-[0.06]" style={{ color: theme.accent }}>
                             <Settings size={280} />
                         </motion.div>
-                        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 -left-24 opacity-[0.04]" style={{ color: craft.accent }}>
+                        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 -left-24 opacity-[0.04]" style={{ color: theme.accent }}>
                             <Settings size={180} />
                         </motion.div>
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -bottom-20 right-10 opacity-[0.03]" style={{ color: craft.accent }}>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -bottom-20 right-10 opacity-[0.03]" style={{ color: theme.accent }}>
                             <Settings size={120} />
                         </motion.div>
-                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(circle, ${craft.accent}30 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(circle, ${theme.accent}30 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
                     </div>
                 );
             case "blueprint":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `linear-gradient(${craft.accent}50 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}50 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
-                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${craft.accent}30 1px, transparent 1px), linear-gradient(90deg, ${craft.accent}30 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
-                        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-yellow-500/5 to-transparent" />
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `linear-gradient(${theme.accent}50 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}50 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
+                        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(${theme.accent}30 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}30 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-transparent to-transparent" style={{ backgroundImage: `linear-gradient(to bottom, ${theme.accent}08, transparent)` }} />
                     </div>
                 );
             case "mesh":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.4]" style={{ 
-                            background: `radial-gradient(circle at 20% 20%, ${craft.accent}15 0%, transparent 40%), radial-gradient(circle at 80% 80%, ${craft.accent}15 0%, transparent 40%)` 
+                            background: `radial-gradient(circle at 20% 20%, ${theme.accent}15 0%, transparent 40%), radial-gradient(circle at 80% 80%, ${theme.accent}15 0%, transparent 40%)` 
                         }} />
                         <div className="absolute inset-0 opacity-[0.03]" style={{ 
-                            backgroundImage: `linear-gradient(${craft.accent} 1px, transparent 1px), linear-gradient(90deg, ${craft.accent} 1px, transparent 1px)`,
+                            backgroundImage: `linear-gradient(${theme.accent} 1px, transparent 1px), linear-gradient(90deg, ${theme.accent} 1px, transparent 1px)`,
                             backgroundSize: '40px 40px' 
                         }} />
                     </div>
@@ -8741,7 +8788,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.05]" style={{ 
-                            backgroundImage: `radial-gradient(${craft.accent} 1px, transparent 1px)`,
+                            backgroundImage: `radial-gradient(${theme.accent} 1px, transparent 1px)`,
                             backgroundSize: '24px 24px' 
                         }} />
                         <motion.div 
@@ -8762,7 +8809,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             {/* === CRAFT HEADER === */}
             <div className="relative z-10">
                 {/* Diagonal Header Banner */}
-                <div className={cn("relative h-56 overflow-hidden")} style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}>
+                <div className={cn("relative h-56 overflow-hidden")} style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})` }}>
                     {/* Diagonal stripe pattern */}
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)' }} />
                     
@@ -8772,7 +8819,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                     </div>
 
                     {/* Hazard/Industry stripe at bottom */}
-                    <div className="absolute bottom-0 inset-x-0 h-3" style={{ backgroundImage: `repeating-linear-gradient(45deg, ${craft.accent}, ${craft.accent} 10px, transparent 10px, transparent 20px)`, opacity: 0.6 }} />
+                    <div className="absolute bottom-0 inset-x-0 h-3" style={{ backgroundImage: `repeating-linear-gradient(45deg, ${theme.accent}, ${theme.accent} 10px, transparent 10px, transparent 20px)`, opacity: 0.6 }} />
 
                     {/* Top navigation */}
                     <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-center">
@@ -8808,16 +8855,16 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         initial={{ y: 30, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className={cn("rounded-3xl border p-6 relative overflow-hidden", craft.card, craft.border)}
-                        style={{ boxShadow: `0 25px 60px -15px ${craft.accent}30` }}
+                        className={cn("rounded-3xl border p-6 relative overflow-hidden", theme.card, theme.border)}
+                        style={{ boxShadow: `0 25px 60px -15px ${theme.accent}30` }}
                     >
                         {/* Subtle accent line at top of card */}
-                        <div className="absolute top-0 inset-x-0 h-1 rounded-t-3xl" style={{ background: `linear-gradient(to right, ${craft.accent}, ${craft.accentDark})` }} />
+                        <div className="absolute top-0 inset-x-0 h-1 rounded-t-3xl" style={{ background: `linear-gradient(to right, ${theme.accent}, ${theme.accentDark})` }} />
 
                         {/* Avatar + Name */}
                         <div className="flex flex-col items-center text-center pt-2">
                             <div className="relative mb-4">
-                                <div className="w-24 h-24 rounded-2xl border-2 overflow-hidden shadow-2xl" style={{ borderColor: `${craft.accent}60` }}>
+                                <div className="w-24 h-24 rounded-2xl border-2 overflow-hidden shadow-2xl" style={{ borderColor: `${theme.accent}60` }}>
                                     <img
                                         src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
                                         className="w-full h-full object-cover"
@@ -8827,23 +8874,23 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                     />
                                 </div>
                                 {/* Online / verified badge */}
-                                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: craft.accent }}>
+                                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: theme.accent }}>
                                     {craft.craftIcon ? <Check size={14} /> : <Zap size={14} />}
                                 </div>
                             </div>
 
-                            <h1 className={cn("text-xl font-black uppercase tracking-tight", craft.text)}>
+                            <h1 className={cn("text-xl font-black uppercase tracking-tight", theme.text)}>
                                 {profile.user?.name || "Usta"}
                             </h1>
-                            <p className={cn("text-[11px] font-bold uppercase tracking-[0.2em] mt-1", craft.subtext)}>
+                            <p className={cn("text-[11px] font-bold uppercase tracking-[0.2em] mt-1", theme.subtext)}>
                                 {profile.occupation || craft.craftName}
                             </p>
 
                             {/* Craft Tagline */}
                             {craft.tagline && (
-                                <div className="mt-3 px-4 py-1.5 rounded-full border flex items-center gap-2" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}10` }}>
-                                    <div style={{ color: craft.accent }}>{craft.craftIcon}</div>
-                                    <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: craft.accent }}>{craft.tagline}</span>
+                                <div className="mt-3 px-4 py-1.5 rounded-full border flex items-center gap-2" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}10` }}>
+                                    <div style={{ color: theme.accent }}>{craft.craftIcon}</div>
+                                    <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: theme.accent }}>{craft.tagline}</span>
                                 </div>
                             )}
                         </div>
@@ -8857,7 +8904,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 0.3 + i * 0.1 }}
                                     className="px-3 py-1.5 rounded-xl border text-[8px] font-black uppercase tracking-wider flex items-center gap-1.5"
-                                    style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}08`, color: craft.accent }}
+                                    style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}08`, color: theme.accent }}
                                 >
                                     <Check size={10} />
                                     {badge}
@@ -8891,20 +8938,20 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         className={cn(
                                             "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
                                             profile.buttonLayout === 'stack' ? "py-4 px-5 rounded-2xl" : "py-4 px-3 rounded-2xl flex-col text-center",
-                                            action.isPrimary ? "text-white shadow-2xl" : cn("border", craft.text, craft.border)
+                                            action.isPrimary ? "text-white shadow-2xl" : cn("border", theme.text, theme.border)
                                         )}
                                         style={action.isPrimary ? { 
-                                            background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, 
-                                            boxShadow: profile.buttonLayout === 'stack' ? `0 10px 30px -10px ${craft.accent}80` : `0 5px 15px -5px ${craft.accent}50`
+                                            background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, 
+                                            boxShadow: profile.buttonLayout === 'stack' ? `0 10px 30px -10px ${theme.accent}80` : `0 5px 15px -5px ${theme.accent}50`
                                         } : {
-                                            backgroundColor: action.isWhatsApp ? `${craft.accent}10` : action.id === 'email' ? `${craft.accent}10` : action.id === 'appointment' ? `${craft.accent}12` : action.id === 'location' ? `${craft.accent}10` : `${craft.accent}08`
+                                            backgroundColor: action.isWhatsApp ? `${theme.accent}10` : action.id === 'email' ? `${theme.accent}10` : action.id === 'appointment' ? `${theme.accent}12` : action.id === 'location' ? `${theme.accent}10` : `${theme.accent}08`
                                         }}
                                     >
                                         <div className={cn(
                                             "flex items-center justify-center backdrop-blur-sm",
                                             profile.buttonLayout === 'stack' ? "w-12 h-12 rounded-xl" : "w-10 h-10 rounded-lg",
                                             action.isPrimary ? "bg-white/20" : "border",
-                                        )} style={!action.isPrimary ? { borderColor: `${craft.accent}40`, backgroundColor: `${craft.accent}15`, color: craft.accent } : {}}>
+                                        )} style={!action.isPrimary ? { borderColor: `${theme.accent}40`, backgroundColor: `${theme.accent}15`, color: theme.accent } : {}}>
                                             {action.icon}
                                         </div>
                                         <div className="flex flex-col">
@@ -8917,7 +8964,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                                     <Phone size={16} className="animate-pulse" />
                                                 </div>
                                             ) : (
-                                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
+                                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: theme.accent }} />
                                             )
                                         )}
                                         {action.isPrimary && (
@@ -8934,21 +8981,21 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         className={cn(
                                             "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
                                             profile.buttonLayout === 'stack' ? "py-4 px-5 rounded-2xl" : "py-4 px-3 rounded-2xl flex-col text-center",
-                                            cn("border", craft.text, craft.border)
+                                            cn("border", theme.text, theme.border)
                                         )}
-                                        style={{ backgroundColor: action.id === 'appointment' ? `${craft.accent}12` : `${craft.accent}08` }}
+                                        style={{ backgroundColor: action.id === 'appointment' ? `${theme.accent}12` : `${theme.accent}08` }}
                                     >
                                         <div className={cn(
                                             "flex items-center justify-center border",
                                             profile.buttonLayout === 'stack' ? "w-12 h-12 rounded-xl" : "w-10 h-10 rounded-lg",
-                                        )} style={{ borderColor: `${craft.accent}30`, color: craft.accent }}>
+                                        )} style={{ borderColor: `${theme.accent}30`, color: theme.accent }}>
                                             {action.icon}
                                         </div>
                                         <div className="flex flex-col">
                                              {action.subLabel && <span className={cn("opacity-40 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
                                              <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]")}>{action.label}</span>
                                         </div>
-                                        {profile.buttonLayout === 'stack' && <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />}
+                                        {profile.buttonLayout === 'stack' && <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: theme.accent }} />}
                                     </button>
                                 )}
                             </motion.div>
@@ -9064,19 +9111,19 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
                         viewport={{ once: true }}
-                        className={cn("mt-6 rounded-3xl border p-6", craft.card, craft.border)}
+                        className={cn("mt-6 rounded-3xl border p-6", theme.card, theme.border)}
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent }}>
+                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
                                     <Star size={16} />
                                 </div>
-                                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>{t.reviews}</h3>
+                                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", theme.text)}>{t.reviews}</h3>
                             </div>
                             <button
                                 onClick={() => setIsReviewModalOpen(true)}
                                 className="px-3 py-1.5 rounded-xl border text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5"
-                                style={{ borderColor: `${craft.accent}30`, color: craft.accent }}
+                                style={{ borderColor: `${theme.accent}30`, color: theme.accent }}
                             >
                                 <Plus size={10} /> {t.writeReview}
                             </button>
@@ -9090,10 +9137,10 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     className="p-4 rounded-2xl border"
-                                    style={{ borderColor: `${craft.accent}15`, backgroundColor: `${craft.accent}05` }}
+                                    style={{ borderColor: `${theme.accent}15`, backgroundColor: `${theme.accent}05` }}
                                 >
                                     <div className="flex gap-3">
-                                        <div className="w-10 h-10 rounded-xl overflow-hidden border flex-shrink-0" style={{ borderColor: `${craft.accent}30` }}>
+                                        <div className="w-10 h-10 rounded-xl overflow-hidden border flex-shrink-0" style={{ borderColor: `${theme.accent}30` }}>
                                             <img
                                                 src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
                                                 className="w-full h-full object-cover"
@@ -9104,14 +9151,14 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between">
-                                                <h4 className={cn("text-[11px] font-black", craft.text)}>{reviews[currentReviewIndex].name}</h4>
+                                                <h4 className={cn("text-[11px] font-black", theme.text)}>{reviews[currentReviewIndex].name}</h4>
                                                 <div className="flex gap-0.5">
                                                     {[...Array(5)].map((_, i) => (
                                                         <Star key={i} size={10} className={i < reviews[currentReviewIndex].rating ? "fill-current text-amber-400" : "text-white/10"} />
                                                     ))}
                                                 </div>
                                             </div>
-                                            <p className={cn("text-[10px] mt-1 italic leading-relaxed line-clamp-3", craft.subtext)}>
+                                            <p className={cn("text-[10px] mt-1 italic leading-relaxed line-clamp-3", theme.subtext)}>
                                                 &ldquo;{translateText(reviews[currentReviewIndex].content)}&rdquo;
                                             </p>
                                         </div>
@@ -9119,7 +9166,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 </motion.div>
                             </AnimatePresence>
                         ) : (
-                            <div className={cn("p-6 rounded-2xl border text-center", craft.subtext)} style={{ borderColor: `${craft.accent}10` }}>
+                            <div className={cn("p-6 rounded-2xl border text-center", theme.subtext)} style={{ borderColor: `${theme.accent}10` }}>
                                 <MessageSquare size={24} className="mx-auto mb-2 opacity-20" />
                                 <p className="text-[10px]">{t.noReviewsYet}</p>
                             </div>
@@ -9127,7 +9174,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         {reviews.length > 1 && (
                             <div className="flex justify-center gap-1.5 mt-3">
                                 {reviews.map((_: any, i: number) => (
-                                    <button key={i} onClick={() => setCurrentReviewIndex(i)} className="h-1.5 rounded-full transition-all" style={{ width: i === currentReviewIndex ? '20px' : '6px', background: i === currentReviewIndex ? craft.accent : 'rgba(255,255,255,0.1)' }} />
+                                    <button key={i} onClick={() => setCurrentReviewIndex(i)} className="h-1.5 rounded-full transition-all" style={{ width: i === currentReviewIndex ? '20px' : '6px', background: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)' }} />
                                 ))}
                             </div>
                         )}
@@ -9136,7 +9183,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                     {/* === SOCIAL LINKS === */}
                     <div className="flex justify-center flex-wrap gap-4 mt-6">
                         {socialLinks.filter((l: any) => l.platform !== 'customLinks' && !['phone', 'location'].includes(l.platform.toLowerCase())).slice(0, 10).map((l: any, i: number) => (
-                            <a key={i} href={formatUrl(l.url)} target="_blank" className="opacity-50 hover:opacity-100 transition-all hover:scale-110" style={{ color: craft.accent }}>
+                            <a key={i} href={formatUrl(l.url)} target="_blank" className="opacity-50 hover:opacity-100 transition-all hover:scale-110" style={{ color: theme.accent }}>
                                 {getHeroIcon(l.platform, 22, l.url)}
                             </a>
                         ))}
@@ -9146,15 +9193,15 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                     <div className="mt-8 flex gap-3">
                         <button
                             onClick={handleShare}
-                            className={cn("flex-1 py-4 rounded-2xl border flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest transition-all", craft.text, craft.border)}
-                            style={{ backgroundColor: `${craft.accent}08` }}
+                            className={cn("flex-1 py-4 rounded-2xl border flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest transition-all", theme.text, theme.border)}
+                            style={{ backgroundColor: `${theme.accent}08` }}
                         >
-                            <Share2 size={14} style={{ color: craft.accent }} /> {t.shareLabel}
+                            <Share2 size={14} style={{ color: theme.accent }} /> {t.shareLabel}
                         </button>
                         <button
                             onClick={handleCVView}
                             className="flex-[1.5] py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest text-white shadow-xl"
-                            style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, boxShadow: `0 8px 20px -8px ${craft.accent}80` }}
+                            style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, boxShadow: `0 8px 20px -8px ${theme.accent}80` }}
                         >
                             <FileText size={14} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
                         </button>
@@ -9162,7 +9209,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             <button
                                 onClick={() => setIsAIChatOpen(true)}
                                 className="w-14 py-4 rounded-2xl flex items-center justify-center text-white shadow-xl"
-                                style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})` }}
+                                style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})` }}
                             >
                                 <Bot size={20} />
                             </button>
@@ -9200,18 +9247,17 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 
             {/* Status toasts */}
             <AnimatePresence>
-                {reviewStatus && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                         <CheckCircle2 size={14} /> {reviewStatus}
                     </motion.div>
                 )}
                 {leadStatus && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                         <CheckCircle2 size={14} /> {leadStatus}
                     </motion.div>
                 )}
                 {copied && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                         <CheckCircle2 size={14} /> {t.copiedLabel}
                     </motion.div>
                 )}
@@ -9246,7 +9292,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             exit={{ y: 100, opacity: 0 }}
                             transition={{ type: "spring", damping: 30, stiffness: 350 }}
                             className="relative rounded-t-[2.5rem] sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl pb-10 sm:pb-0"
-                            style={{ backgroundColor: craft.bg.includes('#') ? craft.bg.match(/#[0-9a-fA-F]+/)?.[0] || '#0a0a0f' : '#0a0a0f', borderColor: `${craft.accent}20` }}
+                            style={{ backgroundColor: craft.bg.includes('#') ? craft.bg.match(/#[0-9a-fA-F]+/)?.[0] || '#0a0a0f' : '#0a0a0f', borderColor: `${theme.accent}20` }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close button */}
