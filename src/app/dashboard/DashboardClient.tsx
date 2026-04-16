@@ -104,7 +104,9 @@ import {
     Wrench,
     Droplets,
     Paintbrush,
-    HardHat
+    HardHat,
+    Square,
+    CircleDot
 } from "lucide-react"
 import { TEMPLATES } from "@/components/BusinessCardGenerator"
 
