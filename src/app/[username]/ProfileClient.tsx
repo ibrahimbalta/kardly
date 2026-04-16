@@ -2874,9 +2874,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
 
     const platformButtons = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
-            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            label: l.platform ? l.platform.charAt(0).toUpperCase() + l.platform.slice(1) : "Link",
             icon: getHeroIcon(l.platform, 20, l.url),
             href: formatUrl(l.url),
             onClick: () => trackEvent("social_button", l.platform),
@@ -2915,7 +2915,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             },
             active: true
         },
-        { label: t.emailBtn || "E-Mail", icon: <MailWithBadge size={20} />, href: `mailto:${profile.user.email}`, onClick: () => trackEvent("email"), active: !!profile.user.email },
+        { label: t.emailBtn || "E-Mail", icon: <MailWithBadge size={20} />, href: `mailto:${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
         {
             label: t.bookAppointment, icon: <Calendar size={20} />, onClick: () => {
                 trackEvent("appointment")
@@ -5213,9 +5213,9 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     const customLinks = customLinksEntry?.links || [];
 
     const otherSocialActions = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
-            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            label: l.platform ? l.platform.charAt(0).toUpperCase() + l.platform.slice(1) : "Link",
             icon: getHeroIcon(l.platform, 18, l.url),
             href: formatUrl(l.url),
             onClick: () => trackEvent("social_button", l.platform),
@@ -5259,9 +5259,9 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         {
             label: t.emailBtn || "E-MAIL",
             icon: <MailWithBadge size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            href: `mailto:${profile.user.email}`,
+            href: `mailto:${profile.user?.email || ""}`,
             onClick: () => trackEvent("email"),
-            active: !!profile.user.email
+            active: !!profile.user?.email
         },
         ...otherSocialActions,
         ...customButtons,
