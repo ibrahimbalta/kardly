@@ -343,15 +343,16 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                     />
 
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.98, y: 10 }}
+                        transition={{ type: "spring", damping: 30, stiffness: 400 }}
                         className={cn(
-                            "relative w-full max-w-[340px] rounded-[2rem] border p-6 overflow-hidden backdrop-blur-3xl shadow-2xl transition-all",
+                            "relative w-full max-w-[340px] rounded-[2rem] border p-5 overflow-hidden backdrop-blur-2xl shadow-2xl transition-all",
                             modalTheme.card,
                             modalTheme.border,
                             toneStyle?.font

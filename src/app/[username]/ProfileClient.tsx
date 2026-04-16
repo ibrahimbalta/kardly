@@ -527,7 +527,7 @@ END:VCARD`
                     expertiseStyle: "floating",
                     shadow: "shadow-2xl shadow-primary/20",
                     glow: "animate-pulse-slow",
-                    glass: "backdrop-blur-3xl bg-white/10"
+                    glass: "backdrop-blur-2xl bg-white/10"
                 };
             case "yaratıcı":
                 return {
@@ -2588,7 +2588,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
         },
         "3d_quantum": {
             bg: "bg-[#020205]",
-            card: "bg-white/[0.01] backdrop-blur-3xl",
+            card: "bg-white/[0.01] backdrop-blur-2xl",
             text: "text-white",
             subtext: "text-indigo-300/40",
             border: "border-indigo-500/20",
@@ -4066,7 +4066,7 @@ if(true) {
                                 backgroundPosition: 'center'
                             } : {})
                         }}
-                        className={cn("border p-8 space-y-8 backdrop-blur-3xl shadow-2xl relative transition-all duration-300 ease-out overflow-hidden", (profile.profileBgImage || theme.card === 'dynamic-card') ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
+                        className={cn("border p-8 space-y-8 backdrop-blur-2xl shadow-2xl relative transition-all duration-300 ease-out overflow-hidden", (profile.profileBgImage || theme.card === 'dynamic-card') ? "bg-transparent" : theme.card, theme.border, toneStyle.rounded, toneStyle.border)}
                     >
                         {/* CRT Scanline Overlay for Software Theme */}
                         {theme.special === 'software' && (
@@ -4447,7 +4447,7 @@ if(true) {
                                             initial={{ opacity: 0, y: 20 }}
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true }}
-                                            className={cn("w-[348px] mx-auto border backdrop-blur-3xl py-7 px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
+                                            className={cn("w-[348px] mx-auto border backdrop-blur-2xl py-7 px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
                                             style={{ 
                                                 backgroundColor: theme.special === 'software' ? '#0d1117' : `${theme.accent}0c`,
                                                 borderColor: theme.special === 'software' ? `${theme.accent}30` : `${theme.accent}30`,
@@ -4511,7 +4511,7 @@ if(true) {
                                                                 <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")} />
 
                                                                 <div
-                                                                    className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-3xl bg-black/80")}
+                                                                    className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-2xl bg-black/80")}
                                                                     style={{
                                                                         borderColor: `${theme.accent}60`,
                                                                         boxShadow: `0 20px 50px -10px ${theme.accent}40`
@@ -5046,7 +5046,7 @@ if(true) {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
+                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
                     >
                         <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                             <CheckCircle2 size={14} />
@@ -5059,7 +5059,7 @@ if(true) {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
+                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
                     >
                         <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                             <CheckCircle2 size={14} />
@@ -5072,7 +5072,7 @@ if(true) {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
+                        className={cn("fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-3 border transition-all", theme.card, theme.border)}
                     >
                         <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
                             <CheckCircle2 size={14} />
@@ -5707,7 +5707,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
         },
         tour_yacht: {
             bg: "bg-[#0a1628]",
-            card: "bg-white/5 backdrop-blur-3xl border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.4)]",
+            card: "bg-white/5 backdrop-blur-2xl border-white/10 shadow-[0_20px_80px_rgba(0,0,0,0.4)]",
             text: "text-white",
             subtext: "text-blue-300/60",
             accent: "#1976d2",
@@ -5887,7 +5887,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             </div>
 
             {/* Navigation Header (Requested layout) */}
-            <header className="sticky top-0 left-0 right-0 z-[100] px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-3xl border-b border-white/5">
+            <header className="sticky top-0 left-0 right-0 z-[100] px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-2xl border-b border-white/5">
                 <div className="flex gap-2">
                     <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/10 transition-all shadow-lg active:scale-95">
                         <QrCode size={18} />
@@ -5978,7 +5978,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 <h3 className="text-[12px] font-black uppercase tracking-[0.3em] text-white/40 italic drop-shadow-lg">{block.title || block.type}</h3>
                                 <div className="flex-1 h-[1px] bg-white/10" />
                             </div>
-                            <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className={cn("rounded-[3.5rem] border p-10 transition-all hover:bg-white/[0.04] relative overflow-hidden backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]", theme.card, theme.border)}>
+                            <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className={cn("rounded-[3.5rem] border p-10 transition-all hover:bg-white/[0.04] relative overflow-hidden backdrop-blur-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]", theme.card, theme.border)}>
                                 {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
                                 {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
                                 {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
@@ -6005,7 +6005,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.08 }}
-                                    className={cn("p-6 rounded-[2.5rem] border backdrop-blur-3xl relative overflow-hidden group hover:bg-white/[0.06] transition-all shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]", theme.card, theme.border)}
+                                    className={cn("p-6 rounded-[2.5rem] border backdrop-blur-2xl relative overflow-hidden group hover:bg-white/[0.06] transition-all shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]", theme.card, theme.border)}
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
                                     <div className="flex items-start gap-5 relative z-10">
@@ -6040,7 +6040,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
                                     whileHover={{ y: -5 }}
-                                    className={cn("overflow-hidden group cursor-pointer backdrop-blur-3xl transition-all duration-500", theme.card, theme.border, toneStyle.rounded)}
+                                    className={cn("overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500", theme.card, theme.border, toneStyle.rounded)}
                                     style={{ 
                                         backgroundColor: `${theme.accent}0a`,
                                         borderColor: `${theme.accent}25`,
@@ -6147,7 +6147,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         >
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
                             <div className="flex items-center gap-5 relative z-10">
-                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center backdrop-blur-3xl border transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"
+                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center backdrop-blur-2xl border transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-inner"
                                      style={{ backgroundColor: `${theme.accent}25`, borderColor: `${theme.accent}50`, color: theme.accent }}>
                                     {profile.paymentType === 'consulting' ? <Briefcase size={22} fill={`${theme.accent}33`} /> :
                                      profile.paymentType === 'support' ? <Heart size={22} fill={`${theme.accent}33`} /> :
@@ -6210,7 +6210,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
-                                className={cn("p-12 rounded-[4rem] border flex flex-col gap-8 relative overflow-hidden backdrop-blur-3xl shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]", theme.card, theme.border)}
+                                className={cn("p-12 rounded-[4rem] border flex flex-col gap-8 relative overflow-hidden backdrop-blur-2xl shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]", theme.card, theme.border)}
                             >
                                 <div className="absolute top-10 right-14 opacity-10 pointer-events-none">
                                     <Quote size={100} style={{ color: theme.accent }} />
@@ -6278,7 +6278,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
             {/* Premium Floating High-Performance Action Bar */}
             <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[420px] px-6 z-[150]">
-                <div className="bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[3.5rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,1)] flex items-center justify-between gap-3 border-t-white/20">
+                <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-[3.5rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,1)] flex items-center justify-between gap-3 border-t-white/20">
                     <button 
                         onClick={handleShare} 
                         className="w-[60px] h-[60px] rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_rgba(255,255,255,0.1)] group relative"
@@ -6388,31 +6388,28 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                transition={{ type: "spring", damping: 30, stiffness: 350 }}
                 className={cn(
-                    "relative w-full sm:max-w-[400px] p-6 sm:p-8 backdrop-blur-3xl no-scrollbar overflow-y-auto max-h-[90vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-16 sm:pb-10",
+                    "relative w-full sm:max-w-[400px] p-5 sm:p-8 backdrop-blur-2xl no-scrollbar overflow-y-auto max-h-[85vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-20 sm:pb-10",
                     theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
                     boxShadow: `0 30px 60px -12px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}20`
                 }}
             >
-                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-6 sm:hidden shrink-0" />
                 
                 <button 
                     onClick={onClose} 
-                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
+                    className={cn("absolute top-5 right-5 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
                 >
                     <X size={18} />
                 </button>
                 
-                {/* Decorative Flair */}
-                <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-[0.05] rounded-full" style={{ backgroundColor: theme.accent }} />
-
                 <div className="relative z-10 w-full">
-                    <div className="flex justify-between items-start mb-8">
+                    <div className="flex justify-between items-start mb-6">
                         <div className="space-y-1 text-left">
-                            <h3 className={cn("text-xl font-black uppercase tracking-tight", theme.text)}>{t.leaveComment}</h3>
+                            <h3 className={cn("text-xl font-black uppercase tracking-tight leading-tight", theme.text)}>{t.leaveComment}</h3>
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-[2px]" style={{ background: theme.accent }} />
                                 <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
@@ -6420,10 +6417,10 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                         </div>
                     </div>
 
-                    <div className="space-y-5">
+                    <div className="space-y-4">
                         {/* Rating Section */}
-                        <div className={cn("flex flex-col items-center gap-3 py-5 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
-                            <span className={cn("text-[9px] font-black uppercase tracking-[0.25em] opacity-40 mb-1", theme.text)}>{t.rateLabel}</span>
+                        <div className={cn("flex flex-col items-center gap-2 py-4 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
+                            <span className={cn("text-[8px] font-black uppercase tracking-[0.25em] opacity-30", theme.text)}>{t.rateLabel}</span>
                             <div className="flex gap-2">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <motion.button
@@ -6434,9 +6431,9 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                                         className="transition-all"
                                     >
                                         <Star
-                                            size={26}
+                                            size={24}
                                             className={cn(
-                                                "transition-all duration-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.2)]",
+                                                "transition-all duration-500 drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]",
                                                 star <= formData.rating ? "fill-current" : "text-white/5"
                                             )}
                                             style={star <= formData.rating ? { color: '#fbbf24' } : {}}
@@ -6447,16 +6444,16 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                         </div>
 
                         {/* Gender Pill Toggle */}
-                        <div className={cn("flex p-1.5 rounded-2xl border bg-black/10 backdrop-blur-xl", theme.border)}>
+                        <div className={cn("flex p-1 rounded-2xl border bg-black/10 backdrop-blur-xl", theme.border)}>
                             {[
-                                { id: 'male', icon: <User size={16} />, label: t.male },
-                                { id: 'female', icon: <UserCircle size={16} />, label: t.female }
+                                { id: 'male', icon: <User size={14} />, label: t.male },
+                                { id: 'female', icon: <UserCircle size={14} />, label: t.female }
                             ].map((g) => (
                                 <button
                                     key={g.id}
                                     onClick={() => setFormData({ ...formData, gender: g.id })}
                                     className={cn(
-                                        "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl transition-all duration-500 text-[10px] font-black uppercase tracking-widest",
+                                        "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl transition-all duration-500 text-[9px] font-black uppercase tracking-widest",
                                         formData.gender === g.id ? "bg-white/10 shadow-lg" : "opacity-30 hover:opacity-100"
                                     )}
                                     style={formData.gender === g.id ? { color: theme.accent } : { color: 'currentColor' }}
@@ -6468,37 +6465,37 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                         </div>
 
                         {/* Form Inputs */}
-                        <div className="space-y-4">
-                            <div className="space-y-1.5 text-left">
-                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourName}</label>
+                        <div className="space-y-3">
+                            <div className="space-y-1 text-left">
+                                <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourName}</label>
                                 <input
                                     type="text"
                                     placeholder={t.yourName}
-                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-sm font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    className={cn("w-full px-4 py-3.5 rounded-2xl focus:outline-none transition-all text-sm font-bold border backdrop-blur-xl", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
                             </div>
 
-                            <div className="space-y-1.5 text-left">
-                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourTitle}</label>
+                            <div className="space-y-1 text-left">
+                                <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourTitle}</label>
                                 <input
                                     type="text"
                                     placeholder={t.yourTitle}
-                                    className={cn("w-full px-5 py-4 rounded-2xl focus:outline-none transition-all text-sm font-bold border backdrop-blur-xl", theme.border, theme.text)}
+                                    className={cn("w-full px-4 py-3.5 rounded-2xl focus:outline-none transition-all text-sm font-bold border backdrop-blur-xl", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 />
                             </div>
 
-                            <div className="space-y-1.5 text-left">
-                                <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourMessage}</label>
+                            <div className="space-y-1 text-left">
+                                <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourMessage}</label>
                                 <textarea
-                                    rows={3}
+                                    rows={2}
                                     placeholder={t.yourMessage}
-                                    className={cn("w-full px-5 py-4 rounded-[1.5rem] focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
+                                    className={cn("w-full px-4 py-3.5 rounded-[1.2rem] focus:outline-none transition-all text-sm font-medium resize-none border backdrop-blur-xl leading-relaxed", theme.border, theme.text)}
                                     style={{ backgroundColor: `rgba(255,255,255,0.03)`, borderColor: `rgba(255,255,255,0.06)` }}
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -6511,7 +6508,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
+                            className={cn("w-full py-4.5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group py-4", toneStyle?.font)}
                             style={{
                                 backgroundColor: theme.accent,
                                 color: '#000',
@@ -6701,7 +6698,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
     const modalBg = theme.bg || theme.body || "bg-[#030308]/95";
 
     return (
-        <div className={cn("fixed inset-0 z-[1000] flex flex-col backdrop-blur-3xl overflow-hidden transition-all duration-700", modalBg)}>
+        <div className={cn("fixed inset-0 z-[1000] flex flex-col backdrop-blur-2xl overflow-hidden transition-all duration-700", modalBg)}>
             {/* Ambient Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-[10%] left-[20%] w-[35%] h-[35%] blur-[150px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
@@ -6785,7 +6782,7 @@ function QrModal({ isOpen, onClose, theme, profile, t }: any) {
                 transition={{ delay: 0.3 }}
                 className="relative z-[1001] p-8 pb-14 shrink-0 flex items-center justify-center"
             >
-                <div className={cn("backdrop-blur-3xl rounded-[2.5rem] p-2.5 flex items-center gap-3 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.6)] border", theme.card, theme.border)}>
+                <div className={cn("backdrop-blur-2xl rounded-[2.5rem] p-2.5 flex items-center gap-3 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.6)] border", theme.card, theme.border)}>
                     <button
                         onClick={handleDownloadCard}
                         disabled={isDownloading}
@@ -6846,7 +6843,7 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     exit={{ opacity: 0, x: -30, scale: 0.95 }}
                     className={cn(
-                        "fixed bottom-6 left-6 z-[180] backdrop-blur-3xl border px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-[240px] transition-all",
+                        "fixed bottom-6 left-6 z-[180] backdrop-blur-2xl border px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-[240px] transition-all",
                         theme.card,
                         theme.border
                     )}
@@ -7038,20 +7035,20 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                transition={{ type: "spring", damping: 30, stiffness: 350 }}
                 className={cn(
-                    "relative w-full sm:max-w-[400px] p-6 sm:p-8 no-scrollbar overflow-y-auto max-h-[90vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", 
+                    "relative w-full sm:max-w-[400px] p-5 sm:p-8 no-scrollbar overflow-y-auto max-h-[85vh] border backdrop-blur-2xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-20 sm:pb-10 transition-all", 
                     theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}25`
                 }}
             >
-                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-6 sm:hidden shrink-0" />
                 
                 <button 
                     onClick={onClose} 
-                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
+                    className={cn("absolute top-5 right-5 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", textColor)}
                 >
                     <X size={18} />
                 </button>
@@ -7059,19 +7056,19 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                 {/* Visual Flair */}
                 <div className="absolute -top-16 -right-16 w-32 h-32 blur-[60px] opacity-[0.08] rounded-full" style={{ backgroundColor: theme.accent }} />
 
-                <div className="flex flex-col items-center text-center space-y-6 relative z-10 w-full">
+                <div className="flex flex-col items-center text-center space-y-4 relative z-10 w-full">
                     <div
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden group border"
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden group border"
                         style={{ 
                             backgroundColor: `${theme.accent}10`,
                             borderColor: `${theme.accent}20`
                         }}
                     >
                         <div className="absolute inset-0 blur-xl opacity-20" style={{ background: theme.accent }} />
-                        <Smartphone size={24} style={{ color: theme.accent }} className="relative z-10" />
+                        <Smartphone size={22} style={{ color: theme.accent }} className="relative z-10" />
                     </div>
 
-                    <div className="space-y-1.5">
+                    <div className="space-y-1">
                         <h3 className={cn("text-xl font-black px-2 leading-tight uppercase tracking-tight", toneStyle?.font, textColor)}>
                             {t.addToWallet || "CÜZDANA EKLE"}
                         </h3>
@@ -7080,23 +7077,23 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                         </p>
                     </div>
 
-                    <div className="w-full space-y-2.5">
+                    <div className="w-full space-y-2">
                         {[
                             {
-                                icon: <UserPlus size={18} style={{ color: theme.accent }} />,
+                                icon: <UserPlus size={16} style={{ color: theme.accent }} />,
                                 label: t.vcfLabel || "Rehbere Kaydet (VCF)",
                                 action: handleAddToContacts,
                                 iconBgStyle: { backgroundColor: `${theme.accent}10` }
                             },
                             {
-                                icon: <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={18} /></div>,
+                                icon: <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-black shadow-sm"><Smartphone size={16} /></div>,
                                 label: "Apple Wallet",
                                 action: handleAddToContacts,
                                 badge: "POPÜLER",
                                 iconBgStyle: { backgroundColor: "transparent" }
                             },
                             {
-                                icon: <Globe size={18} style={{ color: theme.accent }} />,
+                                icon: <Globe size={16} style={{ color: theme.accent }} />,
                                 label: "Google Wallet",
                                 action: handleAddToContacts,
                                 iconBgStyle: { backgroundColor: `${theme.accent}10` }
@@ -7106,19 +7103,19 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
                                 key={idx}
                                 onClick={() => { btn.action(); onClose(); }}
                                 className={cn(
-                                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden border",
+                                    "w-full flex items-center justify-between p-3.5 rounded-2xl transition-all group active:scale-[0.98] relative overflow-hidden border",
                                     isLight ? "bg-slate-50/50 border-slate-100 hover:bg-slate-100" : "bg-white/[0.03] border-white/5 hover:bg-white/[0.08]"
                                 )}
                             >
-                                <div className="flex items-center gap-4 z-10">
+                                <div className="flex items-center gap-3.5 z-10">
                                     <div 
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center transition-all border"
+                                        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all border"
                                         style={{ ...btn.iconBgStyle, borderColor: 'rgba(255,255,255,0.02)' }}
                                     >
                                         {btn.icon}
                                     </div>
                                     <span 
-                                        className={cn("text-[13px] font-bold tracking-tight transition-colors", textColor)}
+                                        className={cn("text-[12px] font-bold tracking-tight transition-colors", textColor)}
                                     >
                                         {btn.label}
                                     </span>
@@ -7169,46 +7166,46 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
 
     const content = (
         <div className="relative z-10 w-full text-left">
-            <div className="flex justify-between items-start mb-8 sm:mb-10">
-                <div className="flex flex-col items-center text-center w-full gap-2">
-                    <h3 className={cn("text-2xl font-black uppercase tracking-tight leading-tight mb-1", theme.text, toneStyle?.font)}>
+            <div className="flex justify-between items-start mb-6 sm:mb-8">
+                <div className="flex flex-col items-center text-center w-full gap-1.5">
+                    <h3 className={cn("text-xl sm:text-2xl font-black uppercase tracking-tight leading-tight mb-1", theme.text, toneStyle?.font)}>
                         {t.contactMeTitle}
                     </h3>
-                    <p className={cn("text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 px-6", theme.text)}>
+                    <p className={cn("text-[9px] font-bold uppercase tracking-[0.25em] opacity-40 px-6", theme.text)}>
                         {t.contactMeSub}
                     </p>
                 </div>
             </div>
 
-            <div className="space-y-4">
-                <div className="space-y-1.5 text-left">
-                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.fullNameLabel}</label>
+            <div className="space-y-3.5">
+                <div className="space-y-1 text-left">
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.fullNameLabel}</label>
                     <input
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className={cn("w-full border px-5 py-4 text-sm focus:outline-none transition-all font-bold rounded-2xl", theme.btn, theme.border, theme.text)}
+                        className={cn("w-full border px-4 py-3.5 text-sm focus:outline-none transition-all font-bold rounded-2xl", theme.btn, theme.border, theme.text)}
                         placeholder="..."
                     />
                 </div>
 
-                <div className="space-y-1.5 text-left">
-                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
+                <div className="space-y-1 text-left">
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.phoneNumberLabel}</label>
                     <input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={cn("w-full border px-5 py-4 text-sm focus:outline-none transition-all font-bold rounded-2xl", theme.btn, theme.border, theme.text)}
+                        className={cn("w-full border px-4 py-3.5 text-sm focus:outline-none transition-all font-bold rounded-2xl", theme.btn, theme.border, theme.text)}
                         placeholder="+90 ..."
                     />
                 </div>
 
-                <div className="space-y-1.5 text-left">
-                    <label className={cn("text-[9px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.messageLabel}</label>
+                <div className="space-y-1 text-left">
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.messageLabel}</label>
                     <textarea
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className={cn("w-full border px-5 py-4 text-sm focus:outline-none transition-all font-medium min-h-[120px] resize-none rounded-[1.5rem] leading-relaxed", theme.btn, theme.border, theme.text)}
+                        className={cn("w-full border px-4 py-3.5 text-sm focus:outline-none transition-all font-medium min-h-[100px] resize-none rounded-[1.2rem] leading-relaxed", theme.btn, theme.border, theme.text)}
                         placeholder={t.helpMessagePlaceholder}
                     />
                 </div>
@@ -7216,7 +7213,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 <button
                     onClick={handleSubmit}
                     disabled={!formData.name || !formData.phone}
-                    className={cn("w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-xl text-white mt-4 flex items-center justify-center gap-3")}
+                    className={cn("w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.3em] relative overflow-hidden group active:scale-[0.98] transition-all disabled:opacity-40 shadow-xl text-white mt-2 flex items-center justify-center gap-3")}
                     style={{ background: theme.accent, boxShadow: `0 15px 35px ${theme.accent}40`, color: '#000' }}
                 >
                     <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500" />
@@ -7225,8 +7222,8 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 </button>
 
                 {/* Legal Safeguard (KVKK/GDPR Shield) */}
-                <div className="mt-6 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] text-center">
-                    <p className={cn("text-[9px] leading-relaxed opacity-40 font-medium", theme.text)}>
+                <div className="mt-4 p-3 rounded-2xl bg-white/[0.03] border border-white/[0.05] text-center">
+                    <p className={cn("text-[8px] leading-relaxed opacity-30 font-medium", theme.text)}>
                         {lang === 'tr' ? (
                             <>Bu form aracılığıyla iletilen veriler KVKK kapsamında bizzat <strong>{profileName}</strong> tarafından işlenmektedir. Kardly.site sadece teknik altyapı hizmeti vermektedir.</>
                         ) : (
@@ -7240,7 +7237,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
 
     if (isEmbed) {
         return (
-            <div className={cn("relative w-full p-8 overflow-hidden border backdrop-blur-3xl rounded-[2rem] shadow-xl", theme.card, theme.border)}>
+            <div className={cn("relative w-full p-8 overflow-hidden border backdrop-blur-2xl rounded-[2rem] shadow-xl", theme.card, theme.border)}>
                 {content}
             </div>
         )
@@ -7259,17 +7256,17 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className={cn("relative w-full sm:max-w-[400px] p-6 sm:p-8 no-scrollbar overflow-y-auto max-h-[90vh] border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-16 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
+                transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                className={cn("relative w-full sm:max-w-[400px] p-5 sm:p-8 no-scrollbar overflow-y-auto max-h-[85vh] border backdrop-blur-2xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-20 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}30`
                 }}
             >
-                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-8 sm:hidden shrink-0" />
+                <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-6 sm:hidden shrink-0" />
                 
                 <button 
                     onClick={onClose} 
-                    className={cn("absolute top-6 right-6 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
+                    className={cn("absolute top-5 right-5 z-[100] flex w-10 h-10 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all opacity-40 hover:opacity-100", theme.text)}
                 >
                     <X size={18} />
                 </button>
@@ -7339,17 +7336,17 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
     const content = (
         <div className={cn("flex flex-col h-full w-full relative z-10", isEmbed ? "" : "")}>
             {/* Header */}
-            <div className={cn("p-6 pb-4 flex items-center justify-between border-b relative z-10", theme.border)}>
-                <div className="flex items-center gap-4">
-                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
-                        <Bot size={22} className="relative z-10" />
+            <div className={cn("p-5 sm:p-6 pb-3 flex items-center justify-between border-b relative z-10", theme.border)}>
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+                        <Bot size={20} className="relative z-10" />
                         <div className="absolute inset-0 animate-pulse opacity-20" style={{ background: theme.accent }} />
                     </div>
                     <div className="text-left">
-                        <h3 className={cn("text-[13px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
+                        <h3 className={cn("text-[12px] font-black uppercase tracking-tight", theme.text, toneStyle?.font)}>{aiConfig?.assistantName || "Kardly AI"}</h3>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className={cn("text-[8px] font-black uppercase tracking-widest opacity-40", theme.text)}>{t.onlineStatus || "AKTİF"}</span>
+                            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className={cn("text-[7px] font-black uppercase tracking-widest opacity-40", theme.text)}>{t.onlineStatus || "AKTİF"}</span>
                         </div>
                     </div>
                 </div>
@@ -7361,18 +7358,18 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative z-10">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 no-scrollbar relative z-10">
                 {messages.map((m: any, i: number) => (
                     <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 400 }}
                         className={cn(
-                            "max-w-[85%] p-4 text-[12px] font-medium leading-relaxed shadow-sm",
+                            "max-w-[85%] p-3.5 sm:p-4 text-[11px] sm:text-[12px] font-medium leading-relaxed shadow-sm",
                             m.role === "user"
                                 ? cn("ml-auto border", theme.btn, theme.border, theme.text, "rounded-2xl rounded-tr-none text-right bubble-user")
-                                : cn("border backdrop-blur-3xl", theme.border, theme.text, "rounded-2xl rounded-tl-none text-left bubble-ai")
+                                : cn("border backdrop-blur-2xl", theme.border, theme.text, "rounded-2xl rounded-tl-none text-left bubble-ai")
                         )}
                         style={m.role === "assistant" && !m.isError ? { 
                             borderColor: `${theme.accent}20`, 
@@ -7383,7 +7380,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                     </motion.div>
                 ))}
                 {isLoading && (
-                    <div className={cn("flex gap-1.5 p-4 border rounded-2xl w-16 items-center justify-center shadow-inner", theme.btn, theme.border)}>
+                    <div className={cn("flex gap-1 p-3 border rounded-2xl w-14 items-center justify-center shadow-inner mt-2", theme.btn, theme.border)}>
                         <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.3s]" />
                         <span className="w-1 h-1 bg-current rounded-full animate-bounce [animation-delay:-0.15s]" />
                         <span className="w-1 h-1 bg-current rounded-full animate-bounce" />
@@ -7392,9 +7389,9 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
             </div>
 
             {/* Input Area */}
-            <div className="p-6 pt-2 relative z-10">
+            <div className="p-4 sm:p-6 pt-2 relative z-10">
                 <div 
-                    className={cn("relative flex items-center border transition-all pl-2 pr-2 py-1 gap-2 rounded-[1.5rem] bg-white/[0.03] backdrop-blur-xl", theme.border)}
+                    className={cn("relative flex items-center border transition-all pl-2 pr-2 py-0.5 gap-2 rounded-[1.2rem] bg-white/[0.03] backdrop-blur-xl", theme.border)}
                     style={{ borderColor: `${theme.accent}20` }}
                 >
                     <input
@@ -7403,18 +7400,18 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
                         placeholder={t.askSomething}
-                        className={cn("bg-transparent border-none focus:ring-0 text-[12px] p-3 flex-1 placeholder:opacity-20 font-medium", theme.text)}
+                        className={cn("bg-transparent border-none focus:ring-0 text-[11px] sm:text-[12px] p-2.5 flex-1 placeholder:opacity-20 font-medium", theme.text)}
                     />
                     <button
                         onClick={handleSend}
                         disabled={!input.trim() || isLoading}
-                        className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:grayscale disabled:opacity-20 shadow-lg")}
+                        className={cn("w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:grayscale disabled:opacity-20 shadow-lg")}
                         style={{ background: theme.accent, color: '#000' }}
                     >
-                        <Send size={18} />
+                        <Send size={16} />
                     </button>
                 </div>
-                <p className={cn("text-[7px] font-black uppercase tracking-widest opacity-20 text-center mt-4", theme.text)}>
+                <p className={cn("text-[7px] font-black uppercase tracking-widest opacity-20 text-center mt-3", theme.text)}>
                     Kardly AI can make mistakes. Check important info.
                 </p>
             </div>
@@ -7423,7 +7420,7 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
 
     if (isEmbed) {
         return (
-            <div className={cn("relative w-full h-full overflow-hidden border backdrop-blur-3xl rounded-[2.5rem] shadow-xl", theme.card, theme.border)}>
+            <div className={cn("relative w-full h-full overflow-hidden border backdrop-blur-2xl rounded-[2.5rem] shadow-xl", theme.card, theme.border)}>
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 pointer-events-none" />
                 {content}
             </div>
@@ -7443,9 +7440,9 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                transition={{ type: "spring", damping: 30, stiffness: 350 }}
                 className={cn(
-                    "relative w-full sm:max-w-[400px] h-[80vh] sm:h-[580px] overflow-hidden no-scrollbar border backdrop-blur-3xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col transition-all", 
+                    "relative w-full sm:max-w-[400px] h-[80vh] sm:h-[580px] overflow-hidden no-scrollbar border backdrop-blur-2xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl flex flex-col transition-all", 
                     theme.card, 
                     theme.border, 
                     toneStyle?.font
@@ -7637,7 +7634,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t, isMini = false 
                                 exit={{ opacity: 0, y: 50, scale: 0.95 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 className={cn(
-                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
+                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-2xl",
                                     theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]"
                                 )}
                             >
@@ -7738,7 +7735,7 @@ function ExternalWidget({ block, theme, toneStyle, className, t, isMini = false 
                                 exit={{ opacity: 0, y: 50, scale: 0.95 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 className={cn(
-                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-3xl",
+                                    "relative w-full max-w-[400px] h-fit max-h-[85vh] overflow-hidden shadow-2xl border backdrop-blur-2xl",
                                     theme.card, theme.border, toneStyle?.rounded || "rounded-[2rem]"
                                 )}
                             >
@@ -8183,25 +8180,25 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                         initial={{ y: "100%", opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: "100%", opacity: 0 }}
-                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                        transition={{ type: "spring", damping: 30, stiffness: 350 }}
                         className={cn(
-                            "relative w-full sm:max-w-5xl h-[95vh] sm:h-[90vh] flex flex-col shadow-2xl border overflow-hidden rounded-t-[3rem] sm:rounded-[3rem] pb-24 sm:pb-0",
+                            "relative w-full sm:max-w-5xl h-[95vh] sm:h-[90vh] flex flex-col shadow-2xl border overflow-hidden rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-20 sm:pb-0",
                             theme.card, theme.border, toneStyle.font
                         )}
                     >
                         <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto my-5 sm:hidden shrink-0" />
 
                         {/* Header */}
-                        <div className="flex items-center justify-between px-8 py-4 sm:p-6 border-b border-white/5 shrink-0">
-                            <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between px-6 py-4 sm:p-6 border-b border-white/5 shrink-0">
+                            <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style={{ background: `${theme.accent}15`, color: theme.accent }}>
                                     <FileText size={20} />
                                 </div>
                                 <div className="text-left">
-                                    <h3 className={cn("text-xs font-black uppercase tracking-widest", theme.text)}>
+                                    <h3 className={cn("text-[11px] font-black uppercase tracking-widest", theme.text)}>
                                         {t.cvPreviewTitle || "BELGE ÖNİZLEME"}
                                     </h3>
-                                    <p className="text-[8px] font-bold uppercase tracking-widest opacity-30">KARDLY SECURE VIEW</p>
+                                    <p className="text-[7px] font-bold uppercase tracking-widest opacity-30">KARDLY SECURE VIEW</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -9156,17 +9153,17 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             {/* Status toasts */}
             <AnimatePresence>
                 {reviewStatus && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
                         <CheckCircle2 size={14} /> {reviewStatus}
                     </motion.div>
                 )}
                 {leadStatus && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
                         <CheckCircle2 size={14} /> {leadStatus}
                     </motion.div>
                 )}
                 {copied && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-3xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
                         <CheckCircle2 size={14} /> {t.copiedLabel}
                     </motion.div>
                 )}
@@ -9199,8 +9196,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             initial={{ y: 100, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 100, opacity: 0 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl"
+                            transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                            className="relative rounded-t-[2.5rem] sm:rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto border shadow-2xl pb-10 sm:pb-0"
                             style={{ backgroundColor: craft.bg.includes('#') ? craft.bg.match(/#[0-9a-fA-F]+/)?.[0] || '#0a0a0f' : '#0a0a0f', borderColor: `${craft.accent}20` }}
                             onClick={(e) => e.stopPropagation()}
                         >
