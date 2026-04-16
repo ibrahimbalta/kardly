@@ -77,8 +77,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         const vCardClicks = analytics.filter((a: any) => a.type === 'click_vcard').length
 
         // Channel Performance (Referrer) Stats
-        const instagramCount = analytics.filter((a: any) => a.type === 'view' && a.referrer?.toLowerCase().includes('instagram')).length
-        const whatsappCount = analytics.filter((a: any) => a.type === 'view' && (a.referrer?.toLowerCase().includes('whatsapp') || a.referrer?.toLowerCase().includes('wa.me'))).length
+        const instagramCount = analytics.filter((a: any) => a.type === 'view' && a.referrer?.toLowerCase()?.includes('instagram')).length
+        const whatsappCount = analytics.filter((a: any) => a.type === 'view' && (a.referrer?.toLowerCase()?.includes('whatsapp') || a.referrer?.toLowerCase()?.includes('wa.me'))).length
         const directCount = analytics.filter((a: any) => a.type === 'view' && (!a.referrer || a.referrer === '')).length
         const otherCount = totalViews - (instagramCount + whatsappCount + directCount)
 
