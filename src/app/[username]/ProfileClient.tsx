@@ -6000,7 +6000,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 )} 
                                 style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}
                             >
-                                 {React.cloneElement(btn.icon as React.ReactElement, { size: profile.buttonLayout === "stack" ? 20 : 16 })}
+                                 {cloneElement(btn.icon as any, { size: profile.buttonLayout === "stack" ? 20 : 16 })}
                              </div>
                              <span className={cn(
                                  "font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors truncate",
