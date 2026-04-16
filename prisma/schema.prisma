@@ -106,6 +106,7 @@ model Profile {
   qrColorLight       String? @default("#ffffff")
   hasAcceptedTerms Boolean     @default(false)
   showInHub      Boolean     @default(true)
+  showSocialIconsBar Boolean   @default(true)
   buttonLayout   String?     @default("stack") // stack, grid, balanced
   buttonColor    String?
   buttonShape    String?     @default("rounded") // square, rounded, pill

@@ -2916,6 +2916,28 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                 </div>
 
+                                {/* Social Icons Bar Toggle */}
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-blue-50/50 rounded-[2.5rem] border border-blue-100/50">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
+                                            <Layout size={20} />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">{t('showSocialIconsBarLabel') || "Profil Altında Sosyal İkonları Göster"}</h4>
+                                            <p className="text-[10px] font-medium text-slate-500">{t('showSocialIconsBarSub') || "Profil resmi ve slogan altında küçük sosyal medya ikonlarını etkinleştirin."}</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => setProfileData({ ...profileData, showSocialIconsBar: !profileData.showSocialIconsBar })}
+                                        className={cn(
+                                            "h-12 px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                            profileData.showSocialIconsBar ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-white text-slate-400 border border-slate-200"
+                                        )}
+                                    >
+                                        {profileData.showSocialIconsBar ? t('active') : t('passive')}
+                                    </button>
+                                </div>
+
                                 <div className="grid grid-cols-1 gap-6">
                                     {[
                                         { id: "instagram", icon: <Instagram />, color: "text-pink-500", label: "Instagram" },

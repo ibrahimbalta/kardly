@@ -2874,10 +2874,8 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
     const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
     const customLinks = customLinksEntry?.links || [];
 
-
-
     const platformButtons = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .filter((l: any) => l.url && l.platform && l.isHero && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
             label: l.platform ? l.platform.charAt(0).toUpperCase() + l.platform.slice(1) : "Link",
             icon: getHeroIcon(l.platform, 20, l.url),
@@ -2886,7 +2884,9 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
             active: true
         }))
 
-    const customButtons = customLinks.map((l: any) => ({
+    const customButtons = customLinks
+        .filter((l: any) => l.isAction)
+        .map((l: any) => ({
         label: l.title,
         icon: <Globe size={20} />,
         href: formatUrl(l.url),
@@ -4429,6 +4429,15 @@ if(true) {
                                     {theme.special === 'barber' && <Star size={20} className="text-white opacity-50" />}
                                 </div>
 
+                                <SocialIconsBar 
+                                    profile={profile} 
+                                    socialLinks={socialLinks} 
+                                    t={t} 
+                                    trackEvent={trackEvent} 
+                                    getHeroIcon={getHeroIcon} 
+                                    formatUrl={formatUrl}
+                                />
+
                                 <div className="flex items-center justify-center gap-2 mt-2 relative">
                                     <div className="h-[1px] w-4 rounded-full opacity-30" style={{ background: theme.accent }} />
                                     <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80" style={{ color: theme.accent }}>
@@ -5221,7 +5230,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     const customLinks = customLinksEntry?.links || [];
 
     const otherSocialActions = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .filter((l: any) => l.url && l.platform && l.isHero && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
             label: l.platform ? l.platform.charAt(0).toUpperCase() + l.platform.slice(1) : "Link",
             icon: getHeroIcon(l.platform, 18, l.url),
@@ -5230,7 +5239,9 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             active: true
         }))
 
-    const customButtons = customLinks.map((l: any) => ({
+    const customButtons = customLinks
+        .filter((l: any) => l.isAction)
+        .map((l: any) => ({
         label: l.title,
         icon: <Globe size={18} />,
         href: formatUrl(l.url),
@@ -5403,6 +5414,14 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     "{translateText(profile.slogan)} 🚀"
                                 </p>
                             )}
+                            <SocialIconsBar 
+                                profile={profile} 
+                                socialLinks={socialLinks} 
+                                t={t} 
+                                trackEvent={trackEvent} 
+                                getHeroIcon={getHeroIcon} 
+                                formatUrl={formatUrl}
+                            />
                         </div>
                     </div>
                 </MotionWrapper>
@@ -5900,7 +5919,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
     const customLinks = customLinksEntry?.links || [];
 
     const otherSocialActions = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .filter((l: any) => l.url && l.isHero && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
         .map((l: any) => ({
             label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
             icon: getHeroIcon(l.platform, 20, l.url),
@@ -5909,7 +5928,9 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
             active: true
         }))
 
-    const customButtons = customLinks.map((l: any) => ({
+    const customButtons = customLinks
+        .filter((l: any) => l.isAction)
+        .map((l: any) => ({
         label: l.title,
         icon: <Globe size={20} />,
         href: formatUrl(l.url),
@@ -5984,6 +6005,14 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">
                                 {translateText(profile.occupation)}
                             </p>
+                            <SocialIconsBar 
+                                profile={profile} 
+                                socialLinks={socialLinks} 
+                                t={t} 
+                                trackEvent={trackEvent} 
+                                getHeroIcon={getHeroIcon} 
+                                formatUrl={formatUrl}
+                            />
                             {profile.slogan && (
                                 <p className="text-[13px] font-medium text-white/60 italic leading-relaxed max-w-[280px] mx-auto">
                                     “{translateText(profile.slogan)}”
@@ -8874,6 +8903,15 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                     <span className="text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: theme.accent }}>{craft.tagline}</span>
                                 </div>
                             )}
+
+                            <SocialIconsBar 
+                                profile={profile} 
+                                socialLinks={socialLinks} 
+                                t={t} 
+                                trackEvent={trackEvent} 
+                                getHeroIcon={getHeroIcon} 
+                                formatUrl={formatUrl}
+                            />
                         </div>
 
                         {/* Badges row */}

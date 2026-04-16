@@ -242,6 +242,8 @@ export const translations: any = {
         youtubeHint: "YouTube video adresini buraya yapıştırın.",
         showAsCatalog: "Katalog Olarak Göster",
         catalogHint: "CV butonu yerine 'Katalog Görüntüle' etiketini kullanın.",
+        showSocialIconsBarLabel: "Profil Altında Sosyal İkonları Göster",
+        showSocialIconsBarSub: "Profil resmi ve slogan altında küçük sosyal medya ikonlarını etkinleştirin.",
         cvHint: "CV dosya linki veya dosyayı yükleyin",
         catalogFileHint: "Katalog dosya linki veya dosyayı yükleyin",
         cvLabel: "CV Dosyası / Katalog",
