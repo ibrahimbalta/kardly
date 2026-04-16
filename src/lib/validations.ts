@@ -42,6 +42,7 @@ export const ProfileUpdateSchema = z.object({
     qrColorLight: z.string().optional().nullable(),
     hasAcceptedTerms: z.boolean().optional(),
     showInHub: z.boolean().optional(),
+    buttonLayout: z.string().optional().nullable(),
     timezone: z.string().optional().nullable(),
 }).passthrough();
 

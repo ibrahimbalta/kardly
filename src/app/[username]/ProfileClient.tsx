@@ -4638,7 +4638,11 @@ if(true) {
                                     </div>
                                 );
                             })()}
-                            <div className="space-y-3">
+                            <div className={cn(
+                                profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
+                                profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
+                                "space-y-3"
+                            )}>
                                 {
                                     actions.map((action, i) => (
                                         <motion.div
@@ -4646,7 +4650,7 @@ if(true) {
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: i * 0.1 }}
-                                            whileHover={{ scale: 1.02, x: 5 }}
+                                            whileHover={{ scale: 1.02, x: profile.buttonLayout === 'stack' ? 5 : 0 }}
                                             className="relative group/btn"
                                         >
                                             {action.href ? (
@@ -4656,7 +4660,11 @@ if(true) {
                                                     onClick={() => {
                                                         if (action.onClick) action.onClick()
                                                     }}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden", theme.btn, theme.border, toneStyle.rounded)}
+                                                    className={cn(
+                                                        "w-full px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden",
+                                                        profile.buttonLayout === 'stack' ? "py-4" : "py-3 flex-col text-center",
+                                                        theme.btn, theme.border, toneStyle.rounded
+                                                    )}
                                                     style={theme.special === 'software' ? {
                                                         backdropFilter: 'blur(16px)',
                                                         background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}03)`,
@@ -4671,13 +4679,21 @@ if(true) {
                                                             <span className="absolute left-2 text-[7px] font-mono opacity-0 group-hover/btn:opacity-30 transition-all" style={{ color: theme.accent }}>{'>'}_</span>
                                                         </>
                                                     )}
-                                                    <div style={{ color: theme.accent }} className="relative z-10">{action.icon}</div>
-                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest relative z-10", theme.btnText, theme.special === 'software' && "font-mono")}>{action.label}</span>
+                                                    <div style={{ color: theme.accent }} className={cn("relative z-10", profile.buttonLayout !== 'stack' && "scale-110")}>{action.icon}</div>
+                                                    <span className={cn(
+                                                        "flex-1 font-black text-sm uppercase tracking-widest relative z-10",
+                                                        profile.buttonLayout === 'stack' ? "text-center" : "text-[10px]",
+                                                        theme.btnText, theme.special === 'software' && "font-mono"
+                                                    )}>{action.label}</span>
                                                 </a>
                                             ) : (
                                                 <button
                                                     onClick={action.onClick}
-                                                    className={cn("w-full py-4 px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden", theme.btn, theme.border, toneStyle.rounded)}
+                                                    className={cn(
+                                                        "w-full px-6 border flex items-center gap-4 transition-all shadow-lg cursor-pointer relative overflow-hidden",
+                                                        profile.buttonLayout === 'stack' ? "py-4" : "py-3 flex-col text-center",
+                                                        theme.btn, theme.border, toneStyle.rounded
+                                                    )}
                                                     style={theme.special === 'software' ? {
                                                         backdropFilter: 'blur(16px)',
                                                         background: `linear-gradient(135deg, ${theme.accent}08, ${theme.accent}03)`,
@@ -4692,8 +4708,12 @@ if(true) {
                                                             <span className="absolute left-2 text-[7px] font-mono opacity-0 group-hover/btn:opacity-30 transition-all" style={{ color: theme.accent }}>{'>'}_</span>
                                                         </>
                                                     )}
-                                                    <div style={{ color: theme.accent }} className="relative z-10">{action.icon}</div>
-                                                    <span className={cn("flex-1 text-center font-black text-sm uppercase tracking-widest relative z-10", theme.btnText, theme.special === 'software' && "font-mono")}>{action.label}</span>
+                                                    <div style={{ color: theme.accent }} className={cn("relative z-10", profile.buttonLayout !== 'stack' && "scale-110")}>{action.icon}</div>
+                                                    <span className={cn(
+                                                        "flex-1 font-black text-sm uppercase tracking-widest relative z-10",
+                                                        profile.buttonLayout === 'stack' ? "text-center" : "text-[10px]",
+                                                        theme.btnText, theme.special === 'software' && "font-mono"
+                                                    )}>{action.label}</span>
                                                 </button>
                                             )}
                                         </motion.div>
@@ -5389,22 +5409,33 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 </div>
 
                 {/* Vertical Action Stack */}
-                 <div className="w-full mt-4 space-y-3">
+                 <div className={cn(
+                     "w-full mt-4",
+                     profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
+                     profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
+                     "space-y-3"
+                 )}>
                      {otherActions.map((action, i) => (
                          <motion.button
                              key={i}
-                             whileHover={{ scale: 1.02, x: 5 }}
+                             whileHover={{ scale: 1.02, x: profile.buttonLayout === 'stack' ? 5 : 0 }}
                              whileTap={{ scale: 0.98 }}
                              onClick={() => {
                                  if (action.onClick) action.onClick();
                                  if (action.href) window.location.href = action.href;
                              }}
-                             className="w-full flex items-center justify-center gap-4 py-5 rounded-[1.8rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                             className={cn(
+                                 "w-full flex items-center justify-center gap-4 bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-all group",
+                                 profile.buttonLayout === 'stack' ? "py-5 rounded-[1.8rem]" : "py-4 rounded-2xl flex-col text-center"
+                             )}
                          >
-                             <span style={{ color: theme.accent }} className="group-hover:scale-125 transition-transform">
+                             <span style={{ color: theme.accent }} className={cn("group-hover:scale-125 transition-transform", profile.buttonLayout !== 'stack' && "scale-110")}>
                                  {action.icon}
                              </span>
-                             <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">{action.label}</span>
+                             <span className={cn(
+                                 "font-black uppercase tracking-[0.2em] text-slate-700",
+                                 profile.buttonLayout === 'stack' ? "text-xs" : "text-[10px]"
+                             )}>{action.label}</span>
                          </motion.button>
                      ))}
                  </div>
@@ -5938,8 +5969,13 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 </MotionWrapper>
 
-                {/* Vertical Interactive Buttons (Main Actions) */}
-                 <div className="space-y-4">
+                {/* Grid/List Interactive Buttons (Main Actions) */}
+                 <div className={cn(
+                     "w-full",
+                     profile.buttonLayout === "grid" ? "grid grid-cols-2 gap-3" : 
+                     profile.buttonLayout === "balanced" ? "flex flex-wrap justify-center gap-3" : 
+                     "space-y-4"
+                 )}>
                      {actionButtons.map((btn, i) => (
                          <motion.a
                              key={i}
@@ -5949,13 +5985,29 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                              whileInView={{ opacity: 1, y: 0 }}
                              viewport={{ once: true }}
                              transition={{ delay: i * 0.05 }}
-                             className={cn("w-full py-5.5 rounded-[2.5rem] border flex items-center gap-6 px-10 transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", theme.card, theme.border)}
+                             className={cn(
+                                 "rounded-[2.5rem] border flex items-center transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", 
+                                 profile.buttonLayout === "stack" ? "w-full py-5.5 px-10 gap-6" : "w-full py-4 px-6 gap-3", 
+                                 theme.card, 
+                                 theme.border
+                             )}
                          >
                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
-                             <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner" style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}>
-                                 {btn.icon}
+                             <div 
+                                className={cn(
+                                    "rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner shrink-0",
+                                    profile.buttonLayout === "stack" ? "w-12 h-12" : "w-9 h-9"
+                                )} 
+                                style={{ color: theme.accent, backgroundColor: `${theme.accent}15` }}
+                            >
+                                 {React.cloneElement(btn.icon as React.ReactElement, { size: profile.buttonLayout === "stack" ? 20 : 16 })}
                              </div>
-                             <span className="text-[12px] font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors">{btn.label}</span>
+                             <span className={cn(
+                                 "font-black uppercase tracking-[0.25em] text-white/80 group-hover:text-white transition-colors truncate",
+                                 profile.buttonLayout === "stack" ? "text-[12px]" : "text-[10px]"
+                             )}>
+                                {btn.label}
+                             </span>
                          </motion.a>
                      ))}
                  </div>
@@ -8539,6 +8591,62 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
     const phoneNumber = socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone;
     const whatsappNumber = (socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || phoneNumber || "").replace(/\D/g, '');
 
+    const actions = [
+        { 
+            id: 'phone',
+            label: craft.ctaLabel, 
+            subLabel: "7/24",
+            icon: craft.ctaIcon, 
+            href: `tel:${phoneNumber}`, 
+            onClick: () => trackEvent("phone"),
+            active: !!phoneNumber,
+            isPrimary: true
+        },
+        { 
+            id: 'whatsapp',
+            label: craft.quoteLabel, 
+            subLabel: "WHATSAPP",
+            icon: <MessageCircle size={22} />, 
+            href: `https://wa.me/${whatsappNumber}`, 
+            onClick: () => trackEvent("whatsapp"),
+            active: !!whatsappNumber,
+            isWhatsApp: true
+        },
+        { 
+            id: 'contact',
+            label: t.contactMeTitle, 
+            icon: <MessageSquare size={20} />, 
+            onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); },
+            active: true
+        },
+        { 
+            id: 'email',
+            label: t.emailBtn || "E-MAIL", 
+            subLabel: "EMAIL",
+            icon: <Mail size={22} />, 
+            href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`,
+            onClick: () => trackEvent("email"),
+            active: !!profile.user?.email
+        },
+        { 
+            id: 'appointment',
+            label: t.appointmentBtn || "RANDEVU AL", 
+            subLabel: "REZEVASYON",
+            icon: <Calendar size={20} />, 
+            onClick: () => { trackEvent("appointment_click"); setIsAppointmentOpen(true); },
+            active: !!profile.showAppointmentBtn
+        },
+        { 
+            id: 'location',
+            label: t.locationsBtn || "ADRES", 
+            subLabel: "KONUM",
+            icon: <MapPin size={22} />, 
+            href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url),
+            onClick: () => trackEvent("location"),
+            active: !!socialLinks.find((l: any) => l.platform === 'location')?.url
+        }
+    ].filter(a => a.active);
+
     // Craft-specific background patterns
     const CraftBackground = () => {
         switch (craft.patternType) {
@@ -8758,153 +8866,93 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         </div>
                     </motion.div>
 
-                    {/* === PRIMARY CTA BUTTONS === */}
-                    <div className="mt-5 space-y-3">
-                        {/* Emergency / Primary CTA */}
-                        {phoneNumber && (
-                            <motion.a
-                                href={`tel:${phoneNumber}`}
+                    {/* === ACTION BUTTONS === */}
+                    <div className={cn(
+                        "mt-5",
+                        profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
+                        profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
+                        "space-y-3"
+                    )}>
+                        {actions.map((action, i) => (
+                            <motion.div
+                                key={action.id}
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.4 }}
+                                transition={{ delay: 0.4 + (i * 0.05) }}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                onClick={() => trackEvent("phone")}
-                                className="w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest text-white relative overflow-hidden shadow-2xl"
-                                style={{ background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, boxShadow: `0 10px 30px -10px ${craft.accent}80` }}
+                                className="w-full"
                             >
-                                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                                    {craft.ctaIcon}
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] opacity-60 tracking-[0.3em]">7/24</span>
-                                    <span>{craft.ctaLabel}</span>
-                                </div>
-                                <div className="ml-auto flex items-center gap-1 text-white/60">
-                                    <Phone size={16} className="animate-pulse" />
-                                </div>
-                                {/* Shine sweep */}
-                                <motion.div
-                                    animate={{ x: ['-100%', '200%'] }}
-                                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
-                                    className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
-                                />
-                            </motion.a>
-                        )}
-
-                        {/* WhatsApp */}
-                        {whatsappNumber && (
-                            <motion.a
-                                href={`https://wa.me/${whatsappNumber}`}
-                                target="_blank"
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.5 }}
-                                whileHover={{ scale: 1.02 }}
-                                onClick={() => trackEvent("whatsapp")}
-                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}10` }}
-                            >
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}40`, backgroundColor: `${craft.accent}15`, color: craft.accent }}>
-                                    <MessageCircle size={22} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">WHATSAPP</span>
-                                    <span className="text-sm">{craft.quoteLabel}</span>
-                                </div>
-                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
-                            </motion.a>
-                        )}
-
-                        {/* Contact Form */}
-                        <motion.button
-                            initial={{ x: -20, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            whileHover={{ scale: 1.02 }}
-                            onClick={() => { trackEvent("contact_form"); setIsLeadModalOpen(true); }}
-                            className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
-                            style={{ backgroundColor: `${craft.accent}08` }}
-                        >
-                            <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, color: craft.accent }}>
-                                <MessageSquare size={20} />
-                            </div>
-                            <span>{t.contactMeTitle}</span>
-                            <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
-                        </motion.button>
-
-                        {/* Email */}
-                        {profile.user?.email && (
-                            <motion.a
-                                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.65 }}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => trackEvent("email")}
-                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}10` }}
-                            >
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}05`, color: craft.accent }}>
-                                    <Mail size={22} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">EMAIL</span>
-                                    <span className="text-sm">{t.emailBtn || "E-MAIL"}</span>
-                                </div>
-                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
-                            </motion.a>
-                        )}
-
-                        {/* Appointment Button */}
-                        {profile.showAppointmentBtn && (
-                            <motion.button
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.7 }}
-                                whileHover={{ scale: 1.02 }}
-                                onClick={() => { trackEvent("appointment_click"); setIsAppointmentOpen(true); }}
-                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}12` }}
-                            >
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}40`, color: craft.accent }}>
-                                    <Calendar size={20} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">REZEVASYON</span>
-                                    <span className="text-sm">{t.appointmentBtn || "RANDEVU AL"}</span>
-                                </div>
-                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
-                            </motion.button>
-                        )}
-
-                        {/* Location */}
-                        {socialLinks.find((l: any) => l.platform === 'location')?.url && (
-                            <motion.a
-                                href={formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url)}
-                                target="_blank"
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.75 }}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => trackEvent("location")}
-                                className={cn("w-full py-4 px-5 rounded-2xl flex items-center gap-4 font-black text-sm uppercase tracking-widest border transition-all cursor-pointer", craft.text, craft.border)}
-                                style={{ backgroundColor: `${craft.accent}10` }}
-                            >
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center border" style={{ borderColor: `${craft.accent}30`, backgroundColor: `${craft.accent}05`, color: craft.accent }}>
-                                    <MapPin size={22} />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-[7px] opacity-40 tracking-[0.3em]">KONUM</span>
-                                    <span className="text-sm">{t.locationsBtn || "ADRES"}</span>
-                                </div>
-                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
-                            </motion.a>
-                        )}
+                                {action.href ? (
+                                    <a
+                                        href={action.href}
+                                        target={action.id !== 'phone' ? "_blank" : undefined}
+                                        onClick={action.onClick}
+                                        className={cn(
+                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
+                                            profile.buttonLayout === 'stack' ? "py-4 px-5 rounded-2xl" : "py-4 px-3 rounded-2xl flex-col text-center",
+                                            action.isPrimary ? "text-white shadow-2xl" : cn("border", craft.text, craft.border)
+                                        )}
+                                        style={action.isPrimary ? { 
+                                            background: `linear-gradient(135deg, ${craft.accentDark}, ${craft.accent})`, 
+                                            boxShadow: profile.buttonLayout === 'stack' ? `0 10px 30px -10px ${craft.accent}80` : `0 5px 15px -5px ${craft.accent}50`
+                                        } : {
+                                            backgroundColor: action.isWhatsApp ? `${craft.accent}10` : action.id === 'email' ? `${craft.accent}10` : action.id === 'appointment' ? `${craft.accent}12` : action.id === 'location' ? `${craft.accent}10` : `${craft.accent}08`
+                                        }}
+                                    >
+                                        <div className={cn(
+                                            "flex items-center justify-center backdrop-blur-sm",
+                                            profile.buttonLayout === 'stack' ? "w-12 h-12 rounded-xl" : "w-10 h-10 rounded-lg",
+                                            action.isPrimary ? "bg-white/20" : "border",
+                                        )} style={!action.isPrimary ? { borderColor: `${craft.accent}40`, backgroundColor: `${craft.accent}15`, color: craft.accent } : {}}>
+                                            {action.icon}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            {action.subLabel && <span className={cn("opacity-60 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
+                                            <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]")}>{action.label}</span>
+                                        </div>
+                                        {profile.buttonLayout === 'stack' && (
+                                            action.isPrimary ? (
+                                                <div className="ml-auto flex items-center gap-1 text-white/60">
+                                                    <Phone size={16} className="animate-pulse" />
+                                                </div>
+                                            ) : (
+                                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />
+                                            )
+                                        )}
+                                        {action.isPrimary && (
+                                            <motion.div
+                                                animate={{ x: ['-100%', '200%'] }}
+                                                transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
+                                                className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
+                                            />
+                                        )}
+                                    </a>
+                                ) : (
+                                    <button
+                                        onClick={action.onClick}
+                                        className={cn(
+                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
+                                            profile.buttonLayout === 'stack' ? "py-4 px-5 rounded-2xl" : "py-4 px-3 rounded-2xl flex-col text-center",
+                                            cn("border", craft.text, craft.border)
+                                        )}
+                                        style={{ backgroundColor: action.id === 'appointment' ? `${craft.accent}12` : `${craft.accent}08` }}
+                                    >
+                                        <div className={cn(
+                                            "flex items-center justify-center border",
+                                            profile.buttonLayout === 'stack' ? "w-12 h-12 rounded-xl" : "w-10 h-10 rounded-lg",
+                                        )} style={{ borderColor: `${craft.accent}30`, color: craft.accent }}>
+                                            {action.icon}
+                                        </div>
+                                        <div className="flex flex-col">
+                                             {action.subLabel && <span className={cn("opacity-40 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
+                                             <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]")}>{action.label}</span>
+                                        </div>
+                                        {profile.buttonLayout === 'stack' && <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: craft.accent }} />}
+                                    </button>
+                                )}
+                            </motion.div>
+                        ))}
                     </div>
 
                     {/* === SERVICES SECTION - Work Order Style === */}

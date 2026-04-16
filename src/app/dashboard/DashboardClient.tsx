@@ -4,6 +4,9 @@ import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 import {
     Layout,
+    LayoutList,
+    LayoutGrid,
+    LayoutTemplate,
     Settings,
     BarChart3,
     Calendar,
@@ -243,7 +246,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         businessCardTemplateId: profile?.businessCardTemplateId || "minimal_white",
         businessCardOrientation: profile?.businessCardOrientation || "landscape",
         hasAcceptedTerms: profile?.hasAcceptedTerms || false,
-        showInHub: profile?.showInHub ?? true
+        showInHub: profile?.showInHub ?? true,
+        buttonLayout: profile?.buttonLayout || "stack"
     })
 
     const [isTermsAccepted, setIsTermsAccepted] = useState(profile?.hasAcceptedTerms || false)
@@ -4225,6 +4229,32 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         ))}
                                     </div>
                                     <p className="text-[9px] text-foreground/40 mt-2 italic px-1">{t('animationSettingsSub')}</p>
+                                </div>
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">Buton Yerleşimi</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { id: "stack", name: "LİSTE", icon: <LayoutList size={14} /> },
+                                            { id: "grid", name: "IZGARA", icon: <LayoutGrid size={14} /> },
+                                            { id: "balanced", name: "DENGELİ", icon: <LayoutTemplate size={14} /> }
+                                        ].map(layout => (
+                                            <button
+                                                key={layout.id}
+                                                type="button"
+                                                onClick={() => setProfileData({ ...profileData, buttonLayout: layout.id })}
+                                                className={cn(
+                                                    "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all text-[9px] font-black uppercase tracking-wider min-h-[70px]",
+                                                    profileData.buttonLayout === layout.id ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-white/5 border-white/10 hover:border-white/20 text-foreground/60"
+                                                )}
+                                            >
+                                                <div className={cn("transition-transform", profileData.buttonLayout === layout.id ? "scale-110" : "opacity-40")}>
+                                                    {layout.icon}
+                                                </div>
+                                                {layout.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <p className="text-[9px] text-foreground/40 mt-2 italic px-1">Butonların profil sayfasında nasıl dizileceğini seçin.</p>
                                 </div>
                                 <button
                                     onClick={handleSave}
