@@ -457,22 +457,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = useMemo(() => ({ 
-        profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, 
-        handleShare, handleCVView, handleAddToContacts, reviews, 
-        setIsReviewModalOpen, isReviewModalOpen, trackEvent, 
-        setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, 
-        setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, 
-        setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, 
-        isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, 
-        aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, 
-        cvViewUrl, selectedProject, setSelectedProject 
-    }), [
-        profile, t, lang, isAppointmentOpen, reviews, isReviewModalOpen, 
-        reviewStatus, isWalletModalOpen, qrDataUrl, isQrOpen, copied, 
-        isLeadModalOpen, leadStatus, isAIChatOpen, chatMessages, 
-        aiConfig, isEmbedMode, isCVModalOpen, cvViewUrl, selectedProject
-    ]);
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }
 
     // Get active accent color for review modal
     const getActiveAccent = (scheme?: any): string => {
@@ -691,7 +676,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[60px]"
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[120px]"
                 style={{ backgroundColor: `${activeAccent}33` }}
             />
             <motion.div
@@ -705,7 +690,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[60px]"
+                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[140px]"
                 style={{ backgroundColor: `${activeAccent}22` }}
             />
             <motion.div
@@ -719,7 +704,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[60px]"
+                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[110px]"
                 style={{ backgroundColor: `${activeAccent}11` }}
             />
         </div>
@@ -6941,8 +6926,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
         } else if (type === 'finance') {
             // Real-time scrolling charts
             let ticker = 0
-            const maxPoints = w < 768 ? 50 : 100
-            const data: number[] = Array.from({ length: maxPoints }, () => Math.random() * 200 + 100)
+            const data: number[] = Array.from({ length: 100 }, () => Math.random() * 200 + 100)
 
             const draw = () => {
                 ctx.clearRect(0, 0, w, h)
@@ -6951,7 +6935,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
                 ctx.beginPath()
 
                 ticker++
-                if (ticker % (w < 768 ? 15 : 10) === 0) {
+                if (ticker % 10 === 0) {
                     data.shift()
                     const last = data[data.length - 1]
                     data.push(Math.max(50, Math.min(h - 50, last + (Math.random() - 0.5) * 40)))
@@ -6984,8 +6968,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
             }
             draw()
         } else if (type === 'starfield') {
-            const starCount = w < 768 ? 80 : 200
-            particles = Array.from({ length: starCount }, () => ({
+            particles = Array.from({ length: 200 }, () => ({
                 x: Math.random() * w,
                 y: Math.random() * h,
                 size: Math.random() * 2,
@@ -7006,8 +6989,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
             }
             draw()
         } else if (type === 'bubbles') {
-            const bubbleCount = w < 768 ? 20 : 50
-            particles = Array.from({ length: bubbleCount }, () => ({
+            particles = Array.from({ length: 50 }, () => ({
                 x: Math.random() * w,
                 y: Math.random() * h,
                 size: Math.random() * 10 + 5,
