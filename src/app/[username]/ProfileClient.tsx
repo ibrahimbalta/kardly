@@ -676,7 +676,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[120px]"
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[40px]"
                 style={{ backgroundColor: `${activeAccent}33` }}
             />
             <motion.div
@@ -690,7 +690,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[140px]"
+                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[40px]"
                 style={{ backgroundColor: `${activeAccent}22` }}
             />
             <motion.div
@@ -704,7 +704,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[110px]"
+                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[40px]"
                 style={{ backgroundColor: `${activeAccent}11` }}
             />
         </div>
@@ -7015,7 +7015,7 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
         return () => cancelAnimationFrame(animationFrameId)
     }, [type, color])
 
-    return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20" />
+    return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20 hidden md:block" />
 }
 
 function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, toneStyle }: any) {
@@ -8717,6 +8717,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
                                         className="w-full h-full object-cover"
                                         alt={profile.user?.name}
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                                 {/* Online / verified badge */}
@@ -9002,7 +9004,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                             else setSelectedProject(project);
                                         }}
                                     >
-                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-all flex items-end p-2">
                                             <p className="text-[8px] font-black text-white uppercase tracking-tight line-clamp-2">{project.name}</p>
                                         </div>
@@ -9051,6 +9053,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                                 src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
                                                 className="w-full h-full object-cover"
                                                 alt={reviews[currentReviewIndex].name}
+                                                loading="lazy"
+                                                decoding="async"
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -9208,7 +9212,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             {/* Image */}
                             {selectedProject.image && (
                                 <div className="aspect-video w-full overflow-hidden relative rounded-t-3xl sm:rounded-t-3xl">
-                                    <img src={selectedProject.image} alt={selectedProject.name} className="w-full h-full object-cover" />
+                                    <img src={selectedProject.image} alt={selectedProject.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                 </div>
                             )}
