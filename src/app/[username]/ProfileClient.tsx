@@ -4473,7 +4473,7 @@ if(true) {
                                             initial={{ opacity: 0, y: 20 }}
                                             whileInView={{ opacity: 1, y: 0 }}
                                             viewport={{ once: true }}
-                                            className={cn("w-[348px] mx-auto border backdrop-blur-2xl py-7 px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
+                                            className={cn("w-full max-w-[348px] mx-auto border backdrop-blur-2xl py-7 px-4 sm:px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
                                             style={{ 
                                                 backgroundColor: theme.special === 'software' ? '#0d1117' : `${theme.accent}0c`,
                                                 borderColor: theme.special === 'software' ? `${theme.accent}30` : `${theme.accent}30`,
@@ -6387,7 +6387,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 }
 
 
-function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
+function ReviewModal({ isOpen, onClose, onSubmit, theme, profile, t, toneStyle }: any) {
     const [formData, setFormData] = useState({
         name: "",
         title: "",
@@ -6541,9 +6541,9 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                             disabled={!formData.name || !formData.content}
                             className={cn("w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
                             style={{
-                                backgroundColor: profile.buttonColor || theme.accent,
-                                color: isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000',
-                                boxShadow: `0 15px 35px ${(profile.buttonColor || theme.accent)}40`
+                                backgroundColor: (profile?.buttonColor || theme.accent),
+                                color: isDarkColor(profile?.buttonColor || theme.accent) ? '#fff' : '#000',
+                                boxShadow: `0 15px 35px ${(profile?.buttonColor || theme.accent)}40`
                             }}
                         >
                             <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
