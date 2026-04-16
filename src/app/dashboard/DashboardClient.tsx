@@ -164,7 +164,9 @@ const profileSchema = z.object({
     youtubeVideoUrl: z.string().optional().or(z.literal("")).nullable(),
     image: z.string().optional().or(z.literal("")).nullable(),
     profileBgImage: z.string().optional().or(z.literal("")).nullable(),
-    buttonLayout: z.string().optional().or(z.literal("")).nullable()
+    buttonLayout: z.string().optional().or(z.literal("")).nullable(),
+    buttonColor: z.string().optional().or(z.literal("")).nullable(),
+    buttonShape: z.string().optional().or(z.literal("")).nullable()
 })
 
 
@@ -248,7 +250,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         businessCardOrientation: profile?.businessCardOrientation || "landscape",
         hasAcceptedTerms: profile?.hasAcceptedTerms || false,
         showInHub: profile?.showInHub ?? true,
-        buttonLayout: profile?.buttonLayout || "stack"
+        buttonLayout: profile?.buttonLayout || "stack",
+        buttonColor: profile?.buttonColor || "",
+        buttonShape: profile?.buttonShape || "rounded"
     })
 
     const [isTermsAccepted, setIsTermsAccepted] = useState(profile?.hasAcceptedTerms || false)
@@ -4258,6 +4262,81 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
                                     <p className="text-[9px] text-foreground/40 mt-2 italic px-1">Butonların profil sayfasında nasıl dizileceğini seçin.</p>
                                 </div>
+
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">Buton Şekli</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { id: "square", name: "KARE", icon: <Square size={14} /> },
+                                            { id: "rounded", name: "OVAL", icon: <Circle size={14} /> },
+                                            { id: "pill", name: "TAM OVAL", icon: <CircleDot size={14} /> }
+                                        ].map(shape => (
+                                            <button
+                                                key={shape.id}
+                                                type="button"
+                                                onClick={() => setProfileData({ ...profileData, buttonShape: shape.id })}
+                                                className={cn(
+                                                    "flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all text-[9px] font-black uppercase tracking-wider min-h-[70px]",
+                                                    profileData.buttonShape === shape.id ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-white/5 border-white/10 hover:border-white/20 text-foreground/60"
+                                                )}
+                                            >
+                                                <div className={cn("transition-transform", profileData.buttonShape === shape.id ? "scale-110" : "opacity-40")}>
+                                                    {shape.icon}
+                                                </div>
+                                                {shape.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <p className="text-[9px] text-foreground/40 mt-2 italic px-1">Butonların köşe keskinliğini belirleyin.</p>
+                                </div>
+
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-medium mb-4 opacity-60">Özel Buton Rengi</label>
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-8 gap-2">
+                                            {[
+                                                "#6366f1", "#4f46e5", "#0ea5e9", "#10b981", "#f43f5e", "#ec4899", "#f59e0b", "#8b5cf6",
+                                                "#1e293b", "#0f172a", "#334155", "#475569", "#dc2626", "#b91c1c", "#16a34a", "#059669"
+                                            ].map(color => (
+                                                <button
+                                                    key={color}
+                                                    type="button"
+                                                    onClick={() => setProfileData({ ...profileData, buttonColor: color })}
+                                                    className={cn(
+                                                        "w-full aspect-square rounded-lg border-2 transition-all hover:scale-110",
+                                                        profileData.buttonColor === color ? "border-white scale-110 shadow-lg" : "border-transparent opacity-60"
+                                                    )}
+                                                    style={{ backgroundColor: color }}
+                                                />
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="color"
+                                                value={profileData.buttonColor || "#6366f1"}
+                                                onChange={(e) => setProfileData({ ...profileData, buttonColor: e.target.value })}
+                                                className="w-10 h-10 rounded-xl bg-transparent border-none cursor-pointer overflow-hidden p-0"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={profileData.buttonColor || ""}
+                                                onChange={(e) => setProfileData({ ...profileData, buttonColor: e.target.value })}
+                                                placeholder="#HEX"
+                                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-bold text-white uppercase"
+                                            />
+                                            {profileData.buttonColor && (
+                                                <button 
+                                                    onClick={() => setProfileData({ ...profileData, buttonColor: "" })}
+                                                    className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <p className="text-[9px] text-foreground/40 mt-2 italic px-1">Özel bir renk seçmezseniz tema rengi kullanılır.</p>
+                                </div>
+
                                 <button
                                     onClick={handleSave}
                                     disabled={isSaving}

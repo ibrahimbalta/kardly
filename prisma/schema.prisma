@@ -107,6 +107,8 @@ model Profile {
   hasAcceptedTerms Boolean     @default(false)
   showInHub      Boolean     @default(true)
   buttonLayout   String?     @default("stack") // stack, grid, balanced
+  buttonColor    String?
+  buttonShape    String?     @default("rounded") // square, rounded, pill
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   timezone       String?     @default("Europe/Istanbul")

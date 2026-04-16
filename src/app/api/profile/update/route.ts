@@ -17,7 +17,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 })
         }
 
-        const { username, slogan, bio, phone, socialLinks, themeColor, bioColor, bioFontFamily, bioFontSize, sloganColor, sloganFontFamily, sloganFontSize, templateId, tone, services, workingHours, occupation, displayName, image, cvUrl, showAppointmentBtn, youtubeVideoUrl, showVideoAsProfile, isCatalog, paymentLink, paymentType, animationStyle, profileBgImage, businessCardTemplateId, businessCardOrientation, qrColorDark, qrColorLight, hasAcceptedTerms, showInHub, timezone, buttonLayout } = body
+        const { username, slogan, bio, phone, socialLinks, themeColor, bioColor, bioFontFamily, bioFontSize, sloganColor, sloganFontFamily, sloganFontSize, templateId, tone, services, workingHours, occupation, displayName, image, cvUrl, showAppointmentBtn, youtubeVideoUrl, showVideoAsProfile, isCatalog, paymentLink, paymentType, animationStyle, profileBgImage, businessCardTemplateId, businessCardOrientation, qrColorDark, qrColorLight, hasAcceptedTerms, showInHub, timezone, buttonLayout, buttonColor, buttonShape } = body
 
         // Update User name & image if provided
         if (displayName || image) {
@@ -66,6 +66,8 @@ export async function POST(req: Request) {
                 hasAcceptedTerms,
                 showInHub,
                 buttonLayout,
+                buttonColor,
+                buttonShape,
                 timezone
             }
         })

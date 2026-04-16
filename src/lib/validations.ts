@@ -43,6 +43,8 @@ export const ProfileUpdateSchema = z.object({
     hasAcceptedTerms: z.boolean().optional(),
     showInHub: z.boolean().optional(),
     buttonLayout: z.string().optional().nullable(),
+    buttonColor: z.string().optional().nullable(),
+    buttonShape: z.string().optional().nullable(),
     timezone: z.string().optional().nullable(),
 }).passthrough();
 
