@@ -9358,3 +9358,49 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 }
 
 
+
+function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, formatUrl }: any) {
+    if (!profile.showSocialIconsBar) return null;
+
+    const barLinks = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .map((l: any) => ({
+            platform: l.platform,
+            url: formatUrl(l.url),
+            icon: getHeroIcon(l.platform, 18, l.url)
+        }));
+
+    const customBarLinks = (socialLinks.find((l: any) => l.platform === 'customLinks')?.links || [])
+        .map((l: any) => ({
+            platform: 'custom',
+            title: l.title,
+            url: formatUrl(l.url),
+            icon: <Globe size={18} />
+        }));
+
+    const allIcons = [...barLinks, ...customBarLinks];
+    if (allIcons.length === 0) return null;
+
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-wrap justify-center gap-3 py-2 px-4 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 mt-2"
+        >
+            {allIcons.map((icon, i) => (
+                <motion.a
+                    key={i}
+                    href={icon.url}
+                    target="_blank"
+                    whileHover={{ scale: 1.2, y: -2 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => trackEvent("social_icon_bar", icon.platform)}
+                    className="text-white/60 hover:text-white transition-colors p-1"
+                    title={icon.platform !== 'custom' ? icon.platform : (icon as any).title}
+                >
+                    {icon.icon}
+                </motion.a>
+            ))}
+        </motion.div>
+    );
+}
