@@ -5106,6 +5106,7 @@ if(true) {
                 theme={theme} 
                 t={t} 
                 toneStyle={toneStyle} 
+                profile={profile}
             />
             <AIChatAssistant
                 isOpen={isAIChatOpen}
@@ -6379,6 +6380,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 theme={theme} 
                 t={t} 
                 toneStyle={toneStyle} 
+                profile={profile}
             />
             <SocialProof t={t} theme={theme} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
@@ -8191,7 +8193,7 @@ function BlogWidget({ rssUrl, theme, toneStyle, t, lang }: any) {
     );
 }
 
-function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
+function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: any) {
     if (!url) return null;
 
     const embedUrl = url.startsWith('data:') 
@@ -9222,7 +9224,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 }}
                 theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""}
             />
-            <CVPreviewModal isOpen={isCVModalOpen} onClose={() => setIsCVModalOpen(false)} url={cvViewUrl} theme={theme} t={t} toneStyle={toneStyle} />
+            <CVPreviewModal isOpen={isCVModalOpen} onClose={() => setIsCVModalOpen(false)} url={cvViewUrl} theme={theme} t={t} toneStyle={toneStyle} profile={profile} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
 
             {/* Status toasts */}
