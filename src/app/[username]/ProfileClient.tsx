@@ -108,6 +108,9 @@ interface Profile {
     paymentType?: string;
     businessCardTemplateId?: string;
     businessCardOrientation?: string;
+    buttonLayout?: string;
+    buttonColor?: string;
+    buttonShape?: string;
 }
 
 const hexToRgb = (hex: string) => {
@@ -4207,7 +4210,7 @@ if(true) {
                                             frameBorder="0"
                                         />
                                     ) : (
-                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className={cn("w-full h-full object-cover")} />
+                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className={cn("w-full h-full object-cover")} loading="lazy" decoding="async" />
                                     )}
 
                                     {/* Profession Overlays */}
@@ -4531,7 +4534,7 @@ if(true) {
                                                                 }}
                                                                 className={cn("w-14 h-14 border border-white/20 overflow-visible shadow-lg flex-shrink-0 bg-white/10 backdrop-blur-sm p-1 group/prj transition-all hover:scale-110 cursor-pointer block relative", toneStyle.rounded)}
                                                             >
-                                                                <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")} />
+                                                                <img src={project.image} alt={project.name} className={cn("w-full h-full object-cover", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-xl")} loading="lazy" decoding="async" />
 
                                                                 <div
                                                                     className={cn("absolute bottom-[calc(100%+15px)] left-1/2 -translate-x-1/2 opacity-0 group-hover/prj:opacity-100 transition-all duration-300 w-56 border p-4 rounded-2xl text-left pointer-events-none shadow-2xl scale-50 group-hover/prj:scale-100 z-[110] backdrop-blur-2xl bg-black/80")}
@@ -4581,11 +4584,13 @@ if(true) {
                                                                 }
                                                             }}
                                                         >
-                                                            <img
-                                                                src={project.image}
-                                                                alt={project.name}
-                                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125 group-hover:rotate-3"
-                                                            />
+                                                                <img
+                                                                    src={project.image}
+                                                                    alt={project.name}
+                                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125 group-hover:rotate-3"
+                                                                    loading="lazy"
+                                                                    decoding="async"
+                                                                />
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end p-2 text-center pb-3">
                                                                 <p className="text-[7px] font-black text-white uppercase tracking-tighter leading-tight line-clamp-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
                                                                     {project.name}
@@ -4791,10 +4796,12 @@ if(true) {
                                                 <div className="flex gap-5 relative z-10">
                                                     <div className="relative">
                                                         <div className={cn("w-14 h-14 border-2 p-1 overflow-hidden flex items-center justify-center relative z-10 bg-black/20", toneStyle.rounded === "rounded-none" ? "rounded-none" : "rounded-2xl")} style={{ borderColor: `${theme.accent}30` }}>
-                                                            <img
-                                                                src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
-                                                                className="w-full h-full object-cover rounded-xl"
-                                                                onError={(e: any) => {
+                                                                <img
+                                                                    src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                                    className="w-full h-full object-cover rounded-xl"
+                                                                    loading="lazy"
+                                                                    decoding="async"
+                                                                    onError={(e: any) => {
                                                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`;
                                                                 }}
                                                                 alt={reviews[currentReviewIndex].name}
@@ -5371,7 +5378,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 animate={{ scale: 1, opacity: 1 }}
                                 className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
                             >
-                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} />
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} loading="lazy" decoding="async" />
                             </motion.div>
                         </div>
 
@@ -5526,7 +5533,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     }}
                                 >
                                     <div className="aspect-video relative overflow-hidden">
-                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                         <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
                                             <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
@@ -5570,7 +5577,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1 shadow-sm">
-                                            <img src={reviews[0]?.image} className="w-full h-full object-cover rounded-xl" />
+                                            <img src={reviews[0]?.image} className="w-full h-full object-cover rounded-xl" loading="lazy" decoding="async" />
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="text-[11px] font-black text-slate-900">{reviews[0]?.name}</h4>
@@ -5965,7 +5972,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden", theme.isLight ? "rounded-full" : "rounded-2xl")}
                                 style={{ borderColor: theme.accent, boxShadow: `0 0 40px ${theme.accent}33` }}
                             >
-                                <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover" alt="" />
+                                <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
                             </motion.div>
                         </div>
 
@@ -6137,7 +6144,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 >
                                     {project.image && (
                                         <div className="aspect-video relative overflow-hidden">
-                                            <img src={project.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter contrast-[1.1] brightness-[0.9]" alt={project.name} />
+                                            <img src={project.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter contrast-[1.1] brightness-[0.9]" alt={project.name} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                                             <div className="absolute bottom-5 left-6 right-6 flex items-end justify-between">
                                                 {project.price > 0 && (
@@ -6262,7 +6269,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 <div className="flex gap-7 relative z-10">
                                     <div className="relative">
                                         <div className="w-20 h-20 rounded-[1.8rem] overflow-hidden border-2 p-1.5 shadow-2xl" style={{ borderColor: `${theme.accent}40` }}>
-                                            <img src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" />
+                                            <img src={reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${reviews[currentReviewIndex].name}`} className="w-full h-full object-cover rounded-[1.4rem]" alt="" loading="lazy" decoding="async" />
             </div>
                                         <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 rounded-full border-[3px] border-zinc-950 flex items-center justify-center text-white shadow-xl">
                                             <Check size={14} strokeWidth={4} />
@@ -6314,8 +6321,9 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         onClick={handleCVView}
                         className={cn("flex-1 h-[60px] rounded-full flex items-center justify-center gap-4 text-white text-[12px] font-black uppercase tracking-[0.3em] relative overflow-hidden group transition-all active:translate-y-[4px] active:shadow-none")}
                         style={{ 
-                            backgroundColor: theme.accent,
-                            boxShadow: `0 4px 0 0 ${theme.accent}66`
+                            backgroundColor: profile.buttonColor || theme.accent,
+                            color: isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000',
+                            boxShadow: `0 4px 0 0 ${(profile.buttonColor || theme.accent)}66`
                         }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
@@ -6334,7 +6342,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <button 
                             onClick={() => setIsAIChatOpen(true)} 
                             className="w-[60px] h-[60px] rounded-full bg-white border-[4px] flex items-center justify-center text-black hover:brightness-110 transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#cbd5e1] relative group" 
-                            style={{ borderColor: theme.accent }}
+                            style={{ borderColor: profile.buttonColor || theme.accent }}
                         >
                             <Bot size={26} className="group-hover:animate-bounce" />
                             <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full border-[3px] border-black animate-ping opacity-75" />
@@ -6413,7 +6421,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 30, stiffness: 350 }}
                 className={cn(
-                    "relative w-full sm:max-w-[400px] p-5 sm:p-8 backdrop-blur-2xl no-scrollbar overflow-y-auto max-h-[85vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-20 sm:pb-10",
+                    "relative w-full sm:max-w-[400px] p-4 sm:p-8 backdrop-blur-2xl no-scrollbar overflow-y-auto max-h-[90vh] border shadow-2xl transition-all rounded-t-[2.5rem] sm:rounded-[2.5rem] pb-24 sm:pb-10",
                     theme.card, theme.border, toneStyle?.font
                 )}
                 style={{
@@ -6430,11 +6438,11 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                 </button>
                 
                 <div className="relative z-10 w-full">
-                    <div className="flex justify-between items-start mb-6">
+                    <div className="flex justify-between items-start mb-4">
                         <div className="space-y-1 text-left">
-                            <h3 className={cn("text-xl font-black uppercase tracking-tight leading-tight", theme.text)}>{t.leaveComment}</h3>
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-[2px]" style={{ background: theme.accent }} />
+                            <h3 className={cn("text-lg font-black uppercase tracking-tight leading-tight", theme.text)}>{t.leaveComment}</h3>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-4 h-[1.5px]" style={{ background: theme.accent }} />
                                 <p className={cn("text-[8px] font-black uppercase tracking-[0.2em] opacity-40", theme.text)}>{t.leaveCommentSub}</p>
                             </div>
                         </div>
@@ -6442,7 +6450,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
 
                     <div className="space-y-4">
                         {/* Rating Section */}
-                        <div className={cn("flex flex-col items-center gap-2 py-4 rounded-3xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
+                        <div className={cn("flex flex-col items-center gap-1.5 py-3 rounded-2xl border bg-black/20 backdrop-blur-xl shrink-0 shadow-inner", theme.border)} style={{ borderColor: `${theme.accent}10` }}>
                             <span className={cn("text-[8px] font-black uppercase tracking-[0.25em] opacity-30", theme.text)}>{t.rateLabel}</span>
                             <div className="flex gap-2">
                                 {[1, 2, 3, 4, 5].map((star) => (
@@ -6531,11 +6539,11 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, t, toneStyle }: any) {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSubmit}
                             disabled={!formData.name || !formData.content}
-                            className={cn("w-full py-4.5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group py-4", toneStyle?.font)}
+                            className={cn("w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all disabled:opacity-20 flex items-center justify-center gap-3 relative overflow-hidden group", toneStyle?.font)}
                             style={{
-                                backgroundColor: theme.accent,
-                                color: '#000',
-                                boxShadow: `0 15px 35px ${theme.accent}40`
+                                backgroundColor: profile.buttonColor || theme.accent,
+                                color: isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000',
+                                boxShadow: `0 15px 35px ${(profile.buttonColor || theme.accent)}40`
                             }}
                         >
                             <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
@@ -7170,7 +7178,7 @@ function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, 
     )
 }
 
-function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmbed = false, profileName }: any) {
+function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmbed = false, profile, profileName }: any) {
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -7189,9 +7197,9 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
 
     const content = (
         <div className="relative z-10 w-full text-left">
-            <div className="flex justify-between items-start mb-6 sm:mb-8">
-                <div className="flex flex-col items-center text-center w-full gap-1.5">
-                    <h3 className={cn("text-xl sm:text-2xl font-black uppercase tracking-tight leading-tight mb-1", theme.text, toneStyle?.font)}>
+            <div className="flex justify-between items-start mb-4 sm:mb-6">
+                <div className="flex flex-col items-center text-center w-full gap-1">
+                    <h3 className={cn("text-lg sm:text-2xl font-black uppercase tracking-tight leading-tight mb-1", theme.text, toneStyle?.font)}>
                         {t.contactMeTitle}
                     </h3>
                     <p className={cn("text-[9px] font-bold uppercase tracking-[0.25em] opacity-40 px-6", theme.text)}>
@@ -7224,7 +7232,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 </div>
 
                 <div className="space-y-1 text-left">
-                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.messageLabel}</label>
+                    <label className={cn("text-[8px] font-black uppercase tracking-widest ml-3 opacity-40", theme.text)}>{t.yourMessage}</label>
                     <textarea
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -7280,7 +7288,7 @@ function LeadModal({ isOpen, onClose, onSubmit, theme, t, lang, toneStyle, isEmb
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "100%", opacity: 0 }}
                 transition={{ type: "spring", damping: 30, stiffness: 350 }}
-                className={cn("relative w-full sm:max-w-[400px] p-5 sm:p-8 no-scrollbar overflow-y-auto max-h-[85vh] border backdrop-blur-2xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-20 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
+                className={cn("relative w-full sm:max-w-[400px] p-5 sm:p-8 no-scrollbar overflow-y-auto max-h-[90vh] border backdrop-blur-2xl rounded-t-[2.5rem] sm:rounded-[2.5rem] shadow-2xl pb-24 sm:pb-10 transition-all", theme.card, theme.border, toneStyle?.font)}
                 style={{
                     boxShadow: `0 30px 60px -12px ${theme.accent}30`
                 }}
@@ -7425,11 +7433,11 @@ function AIChatAssistant({ isOpen, onClose, profile, t, theme, toneStyle, messag
                         placeholder={t.askSomething}
                         className={cn("bg-transparent border-none focus:ring-0 text-[11px] sm:text-[12px] p-2.5 flex-1 placeholder:opacity-20 font-medium", theme.text)}
                     />
-                    <button
-                        onClick={handleSend}
-                        disabled={!input.trim() || isLoading}
                         className={cn("w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 disabled:grayscale disabled:opacity-20 shadow-lg")}
-                        style={{ background: theme.accent, color: '#000' }}
+                        style={{ 
+                            backgroundColor: profile.buttonColor || theme.accent, 
+                            color: isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000' 
+                        }}
                     >
                         <Send size={16} />
                     </button>
@@ -8282,7 +8290,10 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle }: any) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-4 px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-[0.25em] shadow-2xl active:scale-95 transition-all w-full justify-center"
-                                style={{ backgroundColor: theme.accent, color: '#000' }}
+                                style={{ 
+                                    backgroundColor: profile.buttonColor || theme.accent, 
+                                    color: (profile.buttonColor || theme.accent) === 'transparent' ? 'currentColor' : (isDarkColor(profile.buttonColor || theme.accent) ? '#fff' : '#000') 
+                                }}
                             >
                                 <ExternalLink size={16} />
                                 <span>{t.openFullDocument || "TAM EKRAN GÖRÜNTÜLE"}</span>

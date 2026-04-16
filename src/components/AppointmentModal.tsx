@@ -3,6 +3,26 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Calendar, X, Clock, User, Mail, Phone, CheckCircle2 } from "lucide-react"
+ 
+const isDarkColor = (color: string) => {
+    if (!color || color === 'transparent' || color.startsWith('var')) return false;
+    let r, g, b;
+    if (color.startsWith('#')) {
+        const hex = color.replace('#', '');
+        const fullHex = hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex;
+        r = parseInt(fullHex.substring(0, 2), 16);
+        g = parseInt(fullHex.substring(2, 4), 16);
+        b = parseInt(fullHex.substring(4, 6), 16);
+    } else if (color.startsWith('rgb')) {
+        const match = color.match(/\d+/g);
+        if (match) [r, g, b] = match.map(Number);
+    }
+    if (r !== undefined && g !== undefined && b !== undefined) {
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance < 0.5;
+    }
+    return false;
+};
 
 export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle, isEmbed = false }: any) {
     const [step, setStep] = useState(1)
@@ -185,9 +205,9 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                                                     : isBooked ? "opacity-20 cursor-not-allowed bg-slate-900" : "bg-white/5 opacity-50 hover:opacity-100"
                                             )}
                                             style={formData.time === t_val ? {
-                                                backgroundColor: modalTheme.accent,
-                                                borderColor: modalTheme.accent,
-                                                color: '#000'
+                                                backgroundColor: profile.buttonColor || modalTheme.accent,
+                                                borderColor: profile.buttonColor || modalTheme.accent,
+                                                color: (profile.buttonColor || modalTheme.accent) === 'transparent' ? 'currentColor' : (isDarkColor(profile.buttonColor || modalTheme.accent) ? '#fff' : '#000')
                                             } : {
                                                 borderColor: isBooked ? 'transparent' : `${modalTheme.accent}15`,
                                                 color: modalTheme.text.includes('white') ? 'rgba(255,255,255,0.8)' : modalTheme.accent
@@ -211,9 +231,9 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                         onClick={() => setStep(2)}
                         className="w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] shadow-lg transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95"
                         style={{
-                            backgroundColor: modalTheme.accent,
-                            color: '#000',
-                            boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
+                            backgroundColor: profile.buttonColor || modalTheme.accent,
+                            color: isDarkColor(profile.buttonColor || modalTheme.accent) ? '#fff' : '#000',
+                            boxShadow: `0 10px 25px -5px ${(profile.buttonColor || modalTheme.accent)}40`
                         }}
                     >
                         {labels.next}
@@ -284,9 +304,9 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                             disabled={isSubmitting}
                             className="flex-[1.5] py-4 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg transition-all disabled:opacity-30 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
                             style={{
-                                backgroundColor: modalTheme.accent,
-                                color: '#000',
-                                boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
+                                backgroundColor: profile.buttonColor || modalTheme.accent,
+                                color: isDarkColor(profile.buttonColor || modalTheme.accent) ? '#fff' : '#000',
+                                boxShadow: `0 10px 25px -5px ${(profile.buttonColor || modalTheme.accent)}40`
                             }}
                         >
                             {isSubmitting ? <div className="w-3.5 h-3.5 border-2 border-black/20 border-t-black rounded-full animate-spin" /> : labels.confirmBooking}
@@ -317,9 +337,9 @@ export function AppointmentModal({ profile, isOpen, onClose, t, theme, toneStyle
                             onClick={onClose}
                             className="w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all hover:brightness-110 active:scale-95 shadow-lg"
                             style={{
-                                backgroundColor: modalTheme.accent,
-                                color: '#000',
-                                boxShadow: `0 10px 25px -5px ${modalTheme.accent}40`
+                                backgroundColor: profile.buttonColor || modalTheme.accent,
+                                color: isDarkColor(profile.buttonColor || modalTheme.accent) ? '#fff' : '#000',
+                                boxShadow: `0 10px 25px -5px ${(profile.buttonColor || modalTheme.accent)}40`
                             }}
                         >
                             {labels.close}

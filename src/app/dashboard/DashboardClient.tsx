@@ -961,7 +961,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     hasAcceptedTerms: isTermsAccepted,
                     showInHub: overrides?.showInHub ?? profileData.showInHub,
                     timezone: profileData.timezone,
-                    buttonLayout: overrides?.buttonLayout ?? profileData.buttonLayout
+                    buttonLayout: overrides?.buttonLayout ?? profileData.buttonLayout,
+                    buttonColor: overrides?.buttonColor ?? profileData.buttonColor,
+                    buttonShape: overrides?.buttonShape ?? profileData.buttonShape
                 })
             })
 
