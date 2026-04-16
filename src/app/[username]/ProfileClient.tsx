@@ -4436,6 +4436,7 @@ if(true) {
                                     trackEvent={trackEvent} 
                                     getHeroIcon={getHeroIcon} 
                                     formatUrl={formatUrl}
+                                    theme={theme}
                                 />
 
                                 <div className="flex items-center justify-center gap-2 mt-2 relative">
@@ -5421,6 +5422,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 trackEvent={trackEvent} 
                                 getHeroIcon={getHeroIcon} 
                                 formatUrl={formatUrl}
+                                theme={theme}
                             />
                         </div>
                     </div>
@@ -6012,6 +6014,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 trackEvent={trackEvent} 
                                 getHeroIcon={getHeroIcon} 
                                 formatUrl={formatUrl}
+                                theme={theme}
                             />
                             {profile.slogan && (
                                 <p className="text-[13px] font-medium text-white/60 italic leading-relaxed max-w-[280px] mx-auto">
@@ -8911,6 +8914,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 trackEvent={trackEvent} 
                                 getHeroIcon={getHeroIcon} 
                                 formatUrl={formatUrl}
+                                theme={theme}
                             />
                         </div>
 
