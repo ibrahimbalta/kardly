@@ -8557,6 +8557,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
         theme.glow = `shadow-[0_0_50px_rgba(${hexToRgb(theme.accent)},0.3)]`;
     }
     const socialLinks = profile.socialLinks || [];
+    const phoneNumber = socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone;
+    const whatsappNumber = (socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || phoneNumber || "").replace(/\D/g, '');
 
     const formatUrl = (url?: string) => {
         if (!url) return "";
