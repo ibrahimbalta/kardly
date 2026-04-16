@@ -5209,6 +5209,27 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         return `https://${trimmed}`;
     };
 
+    const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
+    const customLinks = customLinksEntry?.links || [];
+
+    const otherSocialActions = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
+        .map((l: any) => ({
+            label: l.platform.charAt(0).toUpperCase() + l.platform.slice(1),
+            icon: getHeroIcon(l.platform, 18, l.url),
+            href: formatUrl(l.url),
+            onClick: () => trackEvent("social_button", l.platform),
+            active: true
+        }))
+
+    const customButtons = customLinks.map((l: any) => ({
+        label: l.title,
+        icon: <Globe size={18} />,
+        href: formatUrl(l.url),
+        onClick: () => trackEvent("custom_button", l.title),
+        active: true
+    }))
+
     const actionButtons = [
         {
             label: t.phoneCallsBtn || "ARA",
