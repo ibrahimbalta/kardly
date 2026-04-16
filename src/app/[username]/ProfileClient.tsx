@@ -6037,11 +6037,9 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                              key={i}
                              href={btn.href}
                              onClick={(e) => {
-                                 if (btn.onClick) {
-                                     e.preventDefault();
-                                     btn.onClick();
-                                 }
-                             }}
+                                  if (btn.onClick) btn.onClick();
+                                  if (!btn.href) e.preventDefault();
+                              }}
                              initial={{ opacity: 0, y: 10 }}
                              whileInView={{ opacity: 1, y: 0 }}
                              viewport={{ once: true }}
