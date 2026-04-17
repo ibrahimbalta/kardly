@@ -212,7 +212,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
-    const [activeTab, setActiveTab] = useState("overview") // overview, profile, products, services, appointments, templates, bento, reviews
+    const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, templates, appointments, statistics, settings, leads, reviews, ai, widgets
+    const [articleList, setArticleList] = useState<any[]>([])
+    const [isArticlesLoading, setIsArticlesLoading] = useState(false)
+    const [showArticleModal, setShowArticleModal] = useState(false)
+    const [editingArticle, setEditingArticle] = useState<any>(null)
+    const [isArticleSaving, setIsArticleSaving] = useState(false)
+    const [newArticle, setNewArticle] = useState({
+        title: "",
+        content: "",
+        excerpt: "",
+        coverImage: "",
+        isActive: true
+    })
     const [isHubFullscreen, setIsHubFullscreen] = useState(false)
     const [linktreeUrl, setLinktreeUrl] = useState("")
     const [isImporting, setIsImporting] = useState(false)
@@ -222,7 +234,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     // Handle tab selection from query params
     useEffect(() => {
         const tab = searchParams.get("tab")
-        if (tab && ["overview", "network", "edit", "products", "services", "templates", "appointments", "statistics", "businesscard", "leads", "ai", "widgets", "reviews", "settings"].includes(tab)) {
+        if (tab && ["overview", "network", "edit", "products", "articles", "services", "templates", "appointments", "statistics", "businesscard", "leads", "ai", "widgets", "reviews", "settings"].includes(tab)) {
             setActiveTab(tab)
         }
     }, [searchParams])
@@ -560,6 +572,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         if (activeTab === "leads") {
             fetchLeads()
         }
+        if (activeTab === "articles") {
+            fetchArticles()
+        }
     }, [activeTab])
 
     const fetchLeads = async () => {
@@ -582,6 +597,67 @@ export default function DashboardClient({ session, profile, subscription, appoin
             if (res.ok) {
                 setLeads(leads.filter(l => l.id !== id))
                 setShowToast("Talep silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const fetchArticles = async () => {
+        setIsArticlesLoading(true)
+        try {
+            const res = await fetch("/api/articles")
+            const data = await res.json()
+            if (Array.isArray(data)) setArticleList(data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setIsArticlesLoading(false)
+        }
+    }
+
+    const handleSaveArticle = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsArticleSaving(true)
+        try {
+            const endpoint = editingArticle ? `/api/articles?id=${editingArticle.id}` : "/api/articles"
+            const method = editingArticle ? "PUT" : "POST"
+            const res = await fetch(endpoint, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newArticle)
+            })
+            if (res.ok) {
+                const data = await res.json()
+                if (editingArticle) {
+                    setArticleList(articleList.map(a => a.id === editingArticle.id ? data : a))
+                    setShowToast("Makale güncellendi! ✨")
+                } else {
+                    setArticleList([data, ...articleList])
+                    setShowToast("Makale yayınlandı! 📝")
+                }
+                setShowArticleModal(false)
+                setEditingArticle(null)
+                setNewArticle({ title: "", content: "", excerpt: "", coverImage: "", isActive: true })
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
+            setShowToast("İşlem başarısız oldu.")
+            setTimeout(() => setShowToast(null), 3000)
+        } finally {
+            setIsArticleSaving(false)
+        }
+    }
+
+    const handleDeleteArticle = async (id: string) => {
+        if (!confirm("Bu makaleyi silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch(`/api/articles?id=${id}`, { method: "DELETE" })
+            if (res.ok) {
+                setArticleList(articleList.filter(a => a.id !== id))
+                setShowToast("Makale silindi! 🗑️")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
@@ -1305,6 +1381,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "products"}
                         onClick={() => {
                             setActiveTab("products")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
+                        icon={<FileText className="w-5 h-5" />}
+                        label="Makale & Blog"
+                        active={activeTab === "articles"}
+                        onClick={() => {
+                            setActiveTab("articles")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -2194,6 +2279,109 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
 
+                ) : activeTab === "articles" ? (
+                    <div className="space-y-10">
+                        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Makale & Blog</h2>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide">Profilinizde yayınlanacak makalelerinizi yönetin.</p>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setEditingArticle(null)
+                                    setNewArticle({ title: "", content: "", excerpt: "", coverImage: "", isActive: true })
+                                    setShowArticleModal(true)
+                                }}
+                                className="flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                            >
+                                <Plus size={18} /> YENİ MAKALE YAZ
+                            </button>
+                        </header>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {isArticlesLoading ? (
+                                Array(3)
+                                    .fill(0)
+                                    .map((_, i) => (
+                                        <div key={i} className="bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-sm animate-pulse space-y-4">
+                                            <div className="aspect-video bg-slate-100 rounded-[2rem]" />
+                                            <div className="h-6 bg-slate-100 rounded-full w-3/4 mx-2" />
+                                            <div className="h-4 bg-slate-100 rounded-full w-1/2 mx-2" />
+                                        </div>
+                                    ))
+                            ) : articleList.length > 0 ? (
+                                articleList.map((article) => (
+                                    <article key={article.id} className="group bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col h-full">
+                                        <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-slate-50 mb-6">
+                                            {article.coverImage ? (
+                                                <img src={article.coverImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={article.title} />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                                    <FileText size={48} />
+                                                </div>
+                                            )}
+                                            <div className="absolute top-4 right-4 h-8 px-3 bg-white/90 backdrop-blur-md rounded-full flex items-center gap-1.5 shadow-sm">
+                                                <div className={cn("w-2 h-2 rounded-full", article.isActive ? "bg-emerald-500 animate-pulse" : "bg-slate-300")} />
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">{article.isActive ? "YAYINDA" : "TASLAK"}</span>
+                                            </div>
+                                        </div>
+                                        <div className="px-2 flex-1 flex flex-col">
+                                            <h3 className="text-lg font-black text-slate-900 tracking-tight leading-7 mb-2 line-clamp-2">{article.title}</h3>
+                                            <p className="text-sm text-slate-500 font-medium line-clamp-2 mb-6 flex-1">{article.excerpt || "Kısa özet eklenmedi..."}</p>
+                                            
+                                            <div className="flex items-center justify-between pt-6 border-t border-slate-50 mt-auto">
+                                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                    {new Date(article.createdAt).toLocaleDateString()}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingArticle(article)
+                                                            setNewArticle({
+                                                                title: article.title,
+                                                                content: article.content,
+                                                                excerpt: article.excerpt || "",
+                                                                coverImage: article.coverImage || "",
+                                                                isActive: article.isActive
+                                                            })
+                                                            setShowArticleModal(true)
+                                                        }}
+                                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-primary hover:text-white transition-all border border-slate-100 shadow-sm"
+                                                    >
+                                                        <Edit2 size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteArticle(article.id)}
+                                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all border border-rose-100 shadow-sm"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))
+                            ) : (
+                                <div className="col-span-full py-24 text-center bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-slate-200 mx-auto mb-6 shadow-sm">
+                                        <FileText size={40} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight">Henüz Makale Yok</h3>
+                                    <p className="text-sm text-slate-500 font-medium mb-8">Düşüncelerinizi paylaşmaya hemen başlayın!</p>
+                                    <button
+                                        onClick={() => {
+                                            setEditingArticle(null)
+                                            setNewArticle({ title: "", content: "", excerpt: "", coverImage: "", isActive: true })
+                                            setShowArticleModal(true)
+                                        }}
+                                        className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20"
+                                    >
+                                        <Plus size={18} /> İLK MAKALE YAZ
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 ) : activeTab === "overview" ? (
                     <div className="space-y-10">
                         {/* Mandatory Terms Banner */}
@@ -6142,6 +6330,177 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </motion.div>
                     </>
+                )}
+            </AnimatePresence>
+            {/* Article Modal */}
+            <AnimatePresence>
+                {showArticleModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowArticleModal(false)}
+                            className="absolute inset-0 bg-slate-900/40 backdrop-blur-xl"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-4xl bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[90vh]"
+                        >
+                            <header className="p-8 pb-4 flex items-center justify-between">
+                                <div>
+                                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1 block">YAZAR PANELİ</span>
+                                    <h2 className="text-2xl font-black text-slate-900 tracking-tighter uppercase">{editingArticle ? "Makaleyi Düzenle" : "Yeni Makale Yaz"}</h2>
+                                </div>
+                                <button
+                                    onClick={() => setShowArticleModal(false)}
+                                    className="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition-all border border-slate-100"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </header>
+
+                            <div className="flex-1 overflow-y-auto p-8 pt-0 space-y-8 custom-scrollbar">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Makale Başlığı</label>
+                                            <input
+                                                type="text"
+                                                value={newArticle.title}
+                                                onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
+                                                placeholder="İlgi çekici bir başlık..."
+                                                className="w-full h-16 bg-slate-50 border border-slate-100 rounded-[1.5rem] px-6 text-sm font-bold text-slate-900 focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all outline-none"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kısa Özet (Excerpt)</label>
+                                            <textarea
+                                                value={newArticle.excerpt}
+                                                onChange={(e) => setNewArticle({ ...newArticle, excerpt: e.target.value })}
+                                                placeholder="Makale hakkında kısa bir bilgi..."
+                                                className="w-full h-32 bg-slate-50 border border-slate-100 rounded-[1.5rem] p-6 text-sm font-medium text-slate-600 focus:ring-4 focus:ring-primary/5 focus:bg-white focus:border-primary/20 transition-all outline-none resize-none"
+                                            />
+                                        </div>
+
+                                        <div className="flex items-center gap-6 p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
+                                            <div className="flex-1">
+                                                <h4 className="text-xs font-black text-slate-900 uppercase tracking-tight mb-1">Yayın Durumu</h4>
+                                                <p className="text-[10px] font-medium text-slate-400">Makale profilde görünsün mü?</p>
+                                            </div>
+                                            <button
+                                                onClick={() => setNewArticle({ ...newArticle, isActive: !newArticle.isActive })}
+                                                className={cn(
+                                                    "h-12 px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                                    newArticle.isActive ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200" : "bg-white text-slate-400 border border-slate-200"
+                                                )}
+                                            >
+                                                {newArticle.isActive ? "YAYINDA" : "TASLAK"}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kapak Resmi</label>
+                                            <div className="relative group aspect-video rounded-[2rem] overflow-hidden bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-4 transition-all hover:border-primary/40">
+                                                {newArticle.coverImage ? (
+                                                    <>
+                                                        <img src={newArticle.coverImage} className="w-full h-full object-cover" alt="Kapak" />
+                                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const input = document.getElementById('article-cover-input');
+                                                                    if (input) input.click();
+                                                                }}
+                                                                className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-900 shadow-xl"
+                                                            >
+                                                                <Upload size={20} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setNewArticle({ ...newArticle, coverImage: "" })}
+                                                                className="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white shadow-xl"
+                                                            >
+                                                                <Trash2 size={20} />
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-slate-300 shadow-sm">
+                                                            <ImageIcon size={32} />
+                                                        </div>
+                                                        <button
+                                                            onClick={() => {
+                                                                const input = document.getElementById('article-cover-input');
+                                                                if (input) input.click();
+                                                            }}
+                                                            className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm"
+                                                        >
+                                                            RESİM YÜKLE
+                                                        </button>
+                                                    </>
+                                                )}
+                                                <input
+                                                    id="article-cover-input"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0]
+                                                        if (file) {
+                                                            const reader = new FileReader()
+                                                            reader.onloadend = () => {
+                                                                setNewArticle({ ...newArticle, coverImage: reader.result as string })
+                                                            }
+                                                            reader.readAsDataURL(file)
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">İçerik</label>
+                                    <div className="bg-slate-50 rounded-[2rem] border border-slate-100 overflow-hidden min-h-[400px] flex flex-col">
+                                        <textarea
+                                            value={newArticle.content}
+                                            onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
+                                            placeholder="Makalenizi buraya yazın..."
+                                            className="w-full flex-1 bg-white p-8 text-base font-medium text-slate-700 leading-relaxed outline-none min-h-[500px]"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <footer className="p-8 pt-4 border-t border-slate-50 bg-slate-50/50 flex flex-col sm:flex-row gap-4">
+                                <button
+                                    onClick={() => setShowArticleModal(false)}
+                                    className="flex-1 h-16 bg-white border border-slate-200 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all"
+                                >
+                                    İPTAL ET
+                                </button>
+                                <button
+                                    onClick={(e) => handleSaveArticle(e)}
+                                    disabled={!newArticle.title || !newArticle.content || isArticleSaving}
+                                    className="flex-[2] h-16 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                                >
+                                    {isArticleSaving ? (
+                                        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 size={20} /> {editingArticle ? "MAKALEYİ GÜNCELLE" : "MAKALEYİ YAYINLA"}
+                                        </>
+                                    )}
+                                </button>
+                            </footer>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </>
