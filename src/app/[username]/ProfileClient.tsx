@@ -289,8 +289,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
     const [isEmbedMode, setIsEmbedMode] = useState(false)
     const [selectedProject, setSelectedProject] = useState<any>(null)
-    const [v1, setv1] = useState<any>(null)
-    const [v2, s2] = useState(false)
+    const [currentArticle, setCurrentArticle] = useState<any>(null)
+    const [isArticleOpen, setIsArticleOpen] = useState(false)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -474,7 +474,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setv1, v2, s2 }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }
 
     // Get active accent color for review modal
     const getActiveAccent = (scheme?: any): string => {
@@ -678,9 +678,9 @@ END:VCARD`
 
             {/* Article Reader Modal - must be inside ProfileClient's return */}
             <ArticleReaderModal 
-                isOpen={v2} 
-                onClose={() => s2(false)} 
-                article={v1} 
+                isOpen={isArticleOpen} 
+                onClose={() => setIsArticleOpen(false)} 
+                article={currentArticle} 
                 theme={{ accent: activeAccent, card: 'bg-[#0a0a0f]', border: 'border-white/10', isLight: false }}
                 t={t} 
                 lang={lang} 
@@ -846,7 +846,7 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setv1, v2, s2 }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -5146,7 +5146,7 @@ if(true) {
     )
 }
 
-function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setv1, v2, s2 }: any) {
+function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
 
@@ -5668,8 +5668,8 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     articles={profile.articles} 
                     t={t} 
                     theme={theme} 
-                    setv1={setv1} 
-                    s2={s2} 
+                    setCurrentArticle={setCurrentArticle} 
+                    setIsArticleOpen={setIsArticleOpen} 
                     trackEvent={trackEvent} 
                 />
 
@@ -5866,7 +5866,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     );
 }
 
-function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setv1, v2, s2 }: any) {
+function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -6230,8 +6230,8 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     articles={profile.articles} 
                     t={t} 
                     theme={theme} 
-                    setv1={setv1} 
-                    s2={s2} 
+                    setCurrentArticle={setCurrentArticle} 
+                    setIsArticleOpen={setIsArticleOpen} 
                     trackEvent={trackEvent} 
                 />
 
@@ -6376,8 +6376,8 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     articles={profile.articles} 
                     t={t} 
                     theme={theme} 
-                    setv1={setv1} 
-                    s2={s2} 
+                    setCurrentArticle={setCurrentArticle} 
+                    setIsArticleOpen={setIsArticleOpen} 
                     trackEvent={trackEvent} 
                 />
 
@@ -8245,7 +8245,7 @@ function BlogWidget({ rssUrl, theme, toneStyle, t, lang }: any) {
                     {posts.map((post, i) => (
                         <a key={i} href={post.link} target="_blank" rel="noopener noreferrer" className={cn("group flex flex-col p-4 rounded-2xl border transition-all hover:scale-[1.02]", theme.bg, theme.border)}>
                             <div className="flex gap-4 items-center">
-                                {post.thumbnail && !post.thumbnail.includes('medium.com/v2/') && (
+                                {post.thumbnail && !post.thumbnail.includes('medium.com/isArticleOpen/') && (
                                     <div className="w-12 h-12 shrink-0 rounded-xl overflow-hidden bg-slate-100 hidden sm:block">
                                         <img src={post.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
@@ -8389,7 +8389,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
 
 
 
-function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setv1, v2, s2 }: any) {
+function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -9288,8 +9288,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                     articles={profile.articles} 
                     t={t} 
                     theme={theme} 
-                    setv1={setv1} 
-                    s2={s2} 
+                    setCurrentArticle={setCurrentArticle} 
+                    setIsArticleOpen={setIsArticleOpen} 
                     trackEvent={trackEvent} 
                 />
 
@@ -9464,7 +9464,7 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
     );
 }
 
-function ArticlesSection({ articles, t, theme, setv1, s2, trackEvent }: any) {
+function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOpen, trackEvent }: any) {
     if (!articles || articles.length === 0) return null;
 
     return (
@@ -9491,8 +9491,8 @@ function ArticlesSection({ articles, t, theme, setv1, s2, trackEvent }: any) {
                         }}
                         onClick={() => {
                             trackEvent("article_click", article.title);
-                            setv1(article);
-                            s2(true);
+                            setCurrentArticle(article);
+                            setIsArticleOpen(true);
                         }}
                     >
                         {article.coverImage && (
