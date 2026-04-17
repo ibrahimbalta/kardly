@@ -675,6 +675,16 @@ END:VCARD`
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* Article Reader Modal - must be inside ProfileClient's return */}
+            <ArticleReaderModal 
+                isOpen={v2} 
+                onClose={() => s2(false)} 
+                article={v1} 
+                theme={{ accent: activeAccent, card: 'bg-[#0a0a0f]', border: 'border-white/10', isLight: false }}
+                t={t} 
+                lang={lang} 
+            />
         </div>
     )
 }
@@ -6447,14 +6457,6 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 t={t} 
                 toneStyle={toneStyle} 
                 profile={profile}
-            />
-            <ArticleReaderModal 
-                isOpen={v2} 
-                onClose={() => s2(false)} 
-                article={v1} 
-                theme={theme} 
-                t={t} 
-                lang={lang} 
             />
             <SocialProof t={t} theme={theme} />
 
