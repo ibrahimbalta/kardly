@@ -90,6 +90,10 @@ export default async function ProfilePage({ params }: any) {
             reviews: {
                 where: { isActive: true },
                 orderBy: { createdAt: "desc" }
+            },
+            articles: {
+                where: { isActive: true },
+                orderBy: { createdAt: "desc" }
             }
         }
     })

@@ -111,6 +111,7 @@ interface Profile {
     buttonLayout?: string;
     buttonColor?: string;
     buttonShape?: string;
+    articles?: { id: string; title: string; slug: string; excerpt: string; content: string; coverImage: string; createdAt: string; isActive: boolean }[];
 }
 
 const hexToRgb = (hex: string) => {
@@ -288,6 +289,8 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [chatMessages, setChatMessages] = useState<{ role: string, content: string }[]>([])
     const [isEmbedMode, setIsEmbedMode] = useState(false)
     const [selectedProject, setSelectedProject] = useState<any>(null)
+    const [selectedArticle, setSelectedArticle] = useState<any>(null)
+    const [isArticleReviewOpen, setIsArticleReviewOpen] = useState(false)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -471,7 +474,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setSelectedArticle, setIsArticleReviewOpen }
 
     // Get active accent color for review modal
     const getActiveAccent = (scheme?: any): string => {
@@ -833,7 +836,7 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setSelectedArticle, setIsArticleReviewOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -5133,7 +5136,7 @@ if(true) {
     )
 }
 
-function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
+function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setSelectedArticle, setIsArticleReviewOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
 
@@ -5649,6 +5652,17 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <span className="text-sm font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
                     </Link>
                 </div>
+
+                {/* Articles Module */}
+                <ArticlesSection 
+                    articles={profile.articles} 
+                    t={t} 
+                    theme={theme} 
+                    setSelectedArticle={setSelectedArticle} 
+                    setIsArticleReviewOpen={setIsArticleReviewOpen} 
+                    trackEvent={trackEvent} 
+                />
+
             </main>
 
             {/* Sticky Bottom Footer Bar */}
@@ -5842,7 +5856,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     );
 }
 
-function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
+function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setSelectedArticle, setIsArticleReviewOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -6200,6 +6214,17 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </section>
                 )}
+                
+                {/* Articles Module */}
+                <ArticlesSection 
+                    articles={profile.articles} 
+                    t={t} 
+                    theme={theme} 
+                    setSelectedArticle={setSelectedArticle} 
+                    setIsArticleReviewOpen={setIsArticleReviewOpen} 
+                    trackEvent={trackEvent} 
+                />
+
 
 
 
@@ -6335,6 +6360,17 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
                 {/* Social Networks Grid (Accent Outlined Style) */}
 
+
+                {/* Articles Module */}
+                <ArticlesSection 
+                    articles={profile.articles} 
+                    t={t} 
+                    theme={theme} 
+                    setSelectedArticle={setSelectedArticle} 
+                    setIsArticleReviewOpen={setIsArticleReviewOpen} 
+                    trackEvent={trackEvent} 
+                />
+
             </main>
 
             {/* Premium Floating High-Performance Action Bar */}
@@ -6412,7 +6448,16 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 toneStyle={toneStyle} 
                 profile={profile}
             />
+            <ArticleReaderModal 
+                isOpen={isArticleReviewOpen} 
+                onClose={() => setIsArticleReviewOpen(false)} 
+                article={selectedArticle} 
+                theme={theme} 
+                t={t} 
+                lang={lang} 
+            />
             <SocialProof t={t} theme={theme} />
+
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
     );
@@ -8342,7 +8387,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
 
 
 
-function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject }: any) {
+function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setSelectedArticle, setIsArticleReviewOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -9235,6 +9280,17 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             </button>
                         )}
                     </div>
+
+                {/* Articles Module */}
+                <ArticlesSection 
+                    articles={profile.articles} 
+                    t={t} 
+                    theme={theme} 
+                    setSelectedArticle={setSelectedArticle} 
+                    setIsArticleReviewOpen={setIsArticleReviewOpen} 
+                    trackEvent={trackEvent} 
+                />
+
                 </main>
             </div>
 
@@ -9405,4 +9461,150 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
         </motion.div>
     );
 }
+
+function ArticlesSection({ articles, t, theme, setSelectedArticle, setIsArticleReviewOpen, trackEvent }: any) {
+    if (!articles || articles.length === 0) return null;
+
+    return (
+        <section className="space-y-6 pt-10">
+            <div className="flex items-center gap-4 px-2">
+                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                <h3 className={cn("text-[12px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t.articlesTitle || "YAZILARIM"}</h3>
+                <div className={cn("flex-1 h-[1px]", theme?.isLight ? "bg-slate-200" : "bg-white/10")} />
+            </div>
+            <div className="grid grid-cols-1 gap-6">
+                {(articles || []).filter((a: any) => a.isActive).map((article: any, i: number) => (
+                    <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        whileHover={{ y: -5 }}
+                        className={cn("overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border", theme.card, theme.border)}
+                        style={{ 
+                            backgroundColor: `${theme.accent}0a`,
+                            borderColor: `${theme.accent}25`,
+                            boxShadow: `0 40px 100px -20px ${theme.accent}30`
+                        }}
+                        onClick={() => {
+                            trackEvent("article_click", article.title);
+                            setSelectedArticle(article);
+                            setIsArticleReviewOpen(true);
+                        }}
+                    >
+                        {article.coverImage && (
+                            <div className="aspect-video relative overflow-hidden">
+                                <img src={article.coverImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={article.title} loading="lazy" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            </div>
+                        )}
+                        <div className="p-8">
+                            <div className="flex items-center gap-3 mb-3">
+                                <span className={cn("text-[10px] font-black uppercase tracking-widest", theme?.isLight ? "text-slate-400" : "text-white/40")}>
+                                    {new Date(article.createdAt).toLocaleDateString()}
+                                </span>
+                                <div className={cn("w-1 h-1 rounded-full", theme?.isLight ? "bg-slate-200" : "bg-white/20")} />
+                                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: theme.accent }}>MAKALE</span>
+                            </div>
+                            <h4 className={cn("text-lg font-black mb-2 tracking-tight leading-tight group-hover:text-primary transition-colors", theme?.isLight ? "text-slate-900" : "text-white")}>{article.title}</h4>
+                            {article.excerpt && (
+                                <p className={cn("text-[13px] font-medium leading-relaxed line-clamp-2", theme?.isLight ? "text-slate-500" : "text-white/60")}>{article.excerpt}</p>
+                            )}
+                            <div className="mt-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest" style={{ color: theme.accent }}>
+                                DEVAMINI OKU <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
+    if (!isOpen || !article) return null;
+
+    return (
+        <AnimatePresence>
+            <div className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={onClose}>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={cn("absolute inset-0 backdrop-blur-2xl", theme?.isLight ? "bg-black/20" : "bg-black/95")} />
+                <motion.div
+                    initial={{ y: "100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: "100%", opacity: 0 }}
+                    transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                    className={cn(
+                        "relative w-full sm:max-w-3xl border rounded-t-[3rem] sm:rounded-[3rem] overflow-hidden shadow-2xl z-10 mx-auto max-h-screen sm:max-h-[85vh] flex flex-col transition-colors duration-500",
+                        theme?.isLight ? "bg-white border-black/5" : "bg-[#0a0a0f] border-white/10"
+                    )}
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ boxShadow: `0 30px 100px -20px ${theme.accent}40` }}
+                >
+                    <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto my-5 sm:hidden shrink-0" />
+                    
+                    <header className="flex items-center justify-between px-8 py-5 border-b border-white/5 shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
+                                <FileText size={16} />
+                            </div>
+                            <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", theme?.isLight ? "text-slate-400" : "text-white/40")}>{t.articleReading || "MAKALE OKUNUYOR"}</span>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className={cn("w-10 h-10 rounded-full border flex items-center justify-center transition-all hover:rotate-90 duration-300 shadow-sm", theme?.isLight ? "bg-black/5 border-black/10 text-slate-600" : "bg-white/5 border-white/10 text-white/60 hover:text-white")}
+                        >
+                            <X size={18} />
+                        </button>
+                    </header>
+
+                    <div className="flex-1 overflow-y-auto p-8 sm:p-12 no-scrollbar">
+                        {article.coverImage && (
+                            <img src={article.coverImage} alt={article.title} className="w-full aspect-video object-cover rounded-[2rem] mb-10 shadow-2xl border border-white/5" />
+                        )}
+
+                        <div className="max-w-2xl mx-auto space-y-8">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <span className={cn("px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest")} style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
+                                        BLOG
+                                    </span>
+                                    <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">
+                                        {new Date(article.createdAt).toLocaleDateString()}
+                                    </span>
+                                </div>
+                                <h2 className={cn("text-3xl sm:text-4xl font-black tracking-tighter leading-tight italic", theme?.isLight ? "text-slate-900" : "text-white")}>
+                                    {article.title}
+                                </h2>
+                            </div>
+
+                            <div className="h-1 w-20 rounded-full" style={{ backgroundColor: theme.accent }} />
+
+                            <div 
+                                className={cn(
+                                    "prose max-w-none antialiased font-medium text-[15px] sm:text-[16px] transition-colors duration-500",
+                                    theme?.isLight ? "prose-slate prose-p:text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose-invert prose-p:text-white/70 prose-headings:text-white prose-strong:text-white",
+                                    "prose-img:rounded-[2rem] prose-a:text-primary prose-a:no-underline hover:prose-a:underline font-sans"
+                                )}
+                                dangerouslySetInnerHTML={{ __html: article.content }}
+                            />
+                        </div>
+                        
+                        <div className="h-20" /> {/* Extra space for scroll */}
+                    </div>
+
+                    <footer className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-xl shrink-0">
+                        <button 
+                            onClick={onClose}
+                            className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white/60 font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white/10 transition-all active:scale-95"
+                        >
+                            {t.closeReader || "OKUMAYI BİTİR"}
+                        </button>
+                    </footer>
+                </motion.div>
+            </div>
+        </AnimatePresence>
+    );
+}
+
 
