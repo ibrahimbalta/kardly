@@ -9547,7 +9547,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                     <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md whitespace-nowrap", theme?.isLight ? "text-slate-900/60" : "text-white/60")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 </div>
                 
-                {/* Navigation Buttons (Top Right) - Visible on all devices */}
+                {/* Navigation Buttons (Top Right) - Standardized UI */}
                 <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                     <button 
                         onClick={() => scroll('left')}
@@ -9570,12 +9570,12 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 </div>
             </div>
             
-            <div className="relative group/nav">
-                {/* Floating Navigation Arrows - Optimized for visibility */}
+            <div className="relative group/nav overflow-visible">
+                {/* Floating Navigation Arrows - Adjusted for better visibility and to prevent clipping */}
                 <button 
                     onClick={() => scroll('left')} 
                     className={cn(
-                        "absolute -left-1 sm:left-2 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-[300] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
                         "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
                         theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
@@ -9586,7 +9586,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <button 
                     onClick={() => scroll('right')} 
                     className={cn(
-                        "absolute -right-1 sm:right-2 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-[300] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
                         "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
                         theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
@@ -9607,7 +9607,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                             transition={{ duration: 0.4 }}
                             whileHover={{ y: -8 }}
                             className={cn(
-                                "flex-shrink-0 w-44 overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border snap-start",
+                                "flex-shrink-0 w-72 overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border snap-start",
                                 theme?.isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.03] border-white/10"
                             )}
                             style={{ 
@@ -9619,7 +9619,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                                 if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
                             }}
                         >
-                            <div className="aspect-square relative overflow-hidden">
+                            <div className="aspect-video relative overflow-hidden">
                                 {article.coverImage ? (
                                     <img 
                                         src={article.coverImage} 
@@ -9633,10 +9633,14 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                                     </div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                                <div className="absolute bottom-4 left-4 right-4">
-                                    <h4 className="text-[10px] font-black text-white leading-tight line-clamp-2 uppercase tracking-wide drop-shadow-md">
+                                <div className="absolute bottom-6 left-6 right-6">
+                                    <h4 className="text-xs font-black text-white leading-tight line-clamp-2 uppercase tracking-wide drop-shadow-md">
                                         {article.title}
                                     </h4>
+                                    <div className="flex items-center gap-2 mt-2 opacity-60">
+                                        <div className="w-4 h-[1px] bg-white" />
+                                        <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">{lang === 'tr' ? 'OKU' : 'READ'}</span>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
