@@ -9540,11 +9540,11 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     };
 
     return (
-        <section className="space-y-6 pt-10 px-4 group relative overflow-visible">
-            <div className="flex items-center justify-between px-2">
-                <div className="flex items-center gap-4">
+        <section className="space-y-6 pt-10 px-4 group relative overflow-visible w-full">
+            <div className="flex items-center justify-between px-2 w-full">
+                <div className="flex items-center gap-3">
                     <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
-                    <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t?.articlesTitle || "YAZILARIM"}</h3>
+                    <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md whitespace-nowrap", theme?.isLight ? "text-slate-900/60" : "text-white/60")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 </div>
                 
                 {/* Navigation Desktop Buttons (Top Right) */}
@@ -9570,14 +9570,14 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 </div>
             </div>
             
-            <div className="relative">
-                {/* Floating Navigation Arrows - Center Sides (Inside Bounds) */}
+            <div className="relative group/nav">
+                {/* Floating Navigation Arrows - Optimized for visibility */}
                 <button 
                     onClick={() => scroll('left')} 
                     className={cn(
-                        "absolute left-2 top-1/2 -translate-y-1/2 z-[150] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all active:scale-95 shadow-2xl",
-                        "sm:opacity-0 sm:group-hover:opacity-100 opacity-100", 
-                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600" : "bg-black/80 border-white/20 text-white"
+                        "absolute -left-1 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
+                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
                 >
                     <ChevronLeft size={20} />
@@ -9586,9 +9586,9 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <button 
                     onClick={() => scroll('right')} 
                     className={cn(
-                        "absolute right-2 top-1/2 -translate-y-1/2 z-[150] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all active:scale-95 shadow-2xl",
-                        "sm:opacity-0 sm:group-hover:opacity-100 opacity-100", 
-                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600" : "bg-black/80 border-white/20 text-white"
+                        "absolute -right-1 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
+                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
                 >
                     <ChevronRight size={20} />
