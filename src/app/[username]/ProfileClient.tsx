@@ -9540,14 +9540,14 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     };
 
     return (
-        <section className="space-y-6 pt-10 px-4 group/slider relative">
+        <section className="space-y-6 pt-10 px-4 group relative">
             <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-4">
                     <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
                     <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 </div>
                 
-                {/* Navigation Desktop Buttons */}
+                {/* Navigation Desktop Buttons (Top Right) */}
                 <div className="hidden sm:flex items-center gap-2">
                     <button 
                         onClick={() => scroll('left')}
@@ -9571,30 +9571,36 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
             </div>
             
             <div className="relative">
-                {/* Scroll Buttons - Absolute Positioned */}
+                {/* Floating Navigation Arrows - Center Sides */}
+                {/* Left Arrow */}
                 <button 
                     onClick={() => scroll('left')} 
                     className={cn(
-                        "absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all active:scale-95 shadow-xl sm:opacity-0 group-hover/slider:opacity-100",
-                        theme?.isLight ? "bg-white/90 border-slate-200 text-slate-600 shadow-black/5" : "bg-black/60 border-white/10 text-white shadow-black/40"
+                        "absolute left-0 top-1/2 -translate-y-1/2 z-[100] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all active:scale-95 shadow-2xl",
+                        "sm:opacity-0 sm:group-hover:opacity-100 opacity-100", // Mobile: always visible, Desktop: hover only
+                        theme?.isLight ? "bg-white/90 border-slate-200 text-slate-600" : "bg-black/60 border-white/20 text-white"
                     )}
+                    style={{ marginLeft: '-10px' }}
                 >
                     <ChevronLeft size={20} />
                 </button>
                 
+                {/* Right Arrow */}
                 <button 
                     onClick={() => scroll('right')} 
                     className={cn(
-                        "absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-xl transition-all active:scale-95 shadow-xl sm:opacity-0 group-hover/slider:opacity-100",
-                        theme?.isLight ? "bg-white/90 border-slate-200 text-slate-600 shadow-black/5" : "bg-black/60 border-white/10 text-white shadow-black/40"
+                        "absolute right-0 top-1/2 -translate-y-1/2 z-[100] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all active:scale-95 shadow-2xl",
+                        "sm:opacity-0 sm:group-hover:opacity-100 opacity-100", // Mobile: always visible, Desktop: hover only
+                        theme?.isLight ? "bg-white/90 border-slate-200 text-slate-600" : "bg-black/60 border-white/20 text-white"
                     )}
+                    style={{ marginRight: '-10px' }}
                 >
                     <ChevronRight size={20} />
                 </button>
 
                 <div 
                     ref={scrollRef}
-                    className="flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 no-scrollbar snap-x snap-mandatory scroll-smooth"
+                    className="flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 no-scrollbar snap-x snap-mandatory scroll-smooth relative"
                 >
                     {displayArticles.map((article: any, i: number) => (
                         <motion.div
