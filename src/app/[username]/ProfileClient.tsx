@@ -9033,7 +9033,6 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             ))}
                         </div>
                     </motion.div>
-                    </div>
 
                     {/* === SERVICES SECTION - Work Order Style === */}
                     {profile.services?.length > 0 && (
