@@ -9526,126 +9526,79 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
 
 function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOpen, trackEvent, toneStyle, lang }: any) {
     const displayArticles = Array.isArray(articles) ? articles : [];
-    const scrollRef = useRef<HTMLDivElement>(null);
     
     if (displayArticles.length === 0) return null;
 
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollRef.current) {
-            const { scrollLeft, clientWidth } = scrollRef.current;
-            const scrollAmount = clientWidth * 0.8;
-            const scrollTo = direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
-            scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-        }
-    };
-
     return (
         <section className="space-y-6 pt-10 px-4 group relative overflow-visible w-full">
-            <div className="flex items-center justify-between px-2 w-full">
-                <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
-                    <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md whitespace-nowrap", theme?.isLight ? "text-slate-900/60" : "text-white/60")}>{t?.articlesTitle || "YAZILARIM"}</h3>
-                </div>
-                
-                {/* Navigation Buttons (Top Right) - Standardized UI */}
-                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                    <button 
-                        onClick={() => scroll('left')}
-                        className={cn(
-                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90 shadow-sm",
-                            theme?.isLight ? "bg-white border-slate-200 text-slate-400 hover:text-slate-900" : "bg-black/40 border-white/10 text-white/40 hover:text-white"
-                        )}
-                    >
-                        <ChevronLeft size={16} />
-                    </button>
-                    <button 
-                        onClick={() => scroll('right')}
-                        className={cn(
-                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90 shadow-sm",
-                            theme?.isLight ? "bg-white border-slate-200 text-slate-400 hover:text-slate-900" : "bg-black/40 border-white/10 text-white/40 hover:text-white"
-                        )}
-                    >
-                        <ChevronRight size={16} />
-                    </button>
-                </div>
+            <div className="flex items-center gap-3 px-2">
+                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
+                <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md whitespace-nowrap", theme?.isLight ? "text-slate-900/60" : "text-white/60")}>{t?.articlesTitle || "YAZILARIM"}</h3>
             </div>
             
-            <div className="relative group/nav overflow-visible">
-                {/* Floating Navigation Arrows - Adjusted for better visibility and to prevent clipping */}
-                <button 
-                    onClick={() => scroll('left')} 
-                    className={cn(
-                        "absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-[300] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
-                        "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
-                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
-                    )}
-                >
-                    <ChevronLeft size={20} />
-                </button>
-                
-                <button 
-                    onClick={() => scroll('right')} 
-                    className={cn(
-                        "absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-[300] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
-                        "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
-                        theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
-                    )}
-                >
-                    <ChevronRight size={20} />
-                </button>
-
-                <div 
-                    ref={scrollRef}
-                    className="flex overflow-x-auto gap-4 pb-6 px-1 no-scrollbar snap-x snap-mandatory scroll-smooth relative"
-                >
-                    {displayArticles.map((article: any, i: number) => (
-                        <motion.div
-                            key={article.id || i}
-                            initial={{ opacity: 0.5, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4 }}
-                            whileHover={{ y: -8 }}
-                            className={cn(
-                                "flex-shrink-0 w-72 overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border snap-start",
-                                theme?.isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.03] border-white/10"
-                            )}
-                            style={{ 
-                                boxShadow: `0 20px 40px -10px ${theme?.accent || '#6366f1'}15`
-                            }}
-                            onClick={() => {
-                                trackEvent("article_click", article.title);
-                                if (typeof setCurrentArticle === 'function') setCurrentArticle(article);
-                                if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
-                            }}
-                        >
-                            <div className="aspect-video relative overflow-hidden">
-                                {article.coverImage ? (
-                                    <img 
-                                        src={article.coverImage} 
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                                        alt={article.title} 
-                                        loading="lazy" 
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-white/5 opacity-40">
-                                        <FileText size={32} className="text-white/20" />
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                                <div className="absolute bottom-6 left-6 right-6">
-                                    <h4 className="text-xs font-black text-white leading-tight line-clamp-2 uppercase tracking-wide drop-shadow-md">
-                                        {article.title}
-                                    </h4>
-                                    <div className="flex items-center gap-2 mt-2 opacity-60">
-                                        <div className="w-4 h-[1px] bg-white" />
-                                        <span className="text-[8px] font-black text-white uppercase tracking-[0.2em]">{lang === 'tr' ? 'OKU' : 'READ'}</span>
-                                    </div>
+            <div className="grid grid-cols-1 gap-3 relative z-10">
+                {displayArticles.map((article: any, i: number) => (
+                    <motion.div
+                        key={article.id || i}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.05 }}
+                        whileHover={{ x: 5 }}
+                        className={cn(
+                            "flex items-center gap-4 p-4 rounded-3xl border transition-all duration-300 group cursor-pointer",
+                            theme?.isLight 
+                                ? "bg-white/50 border-slate-100 hover:bg-white hover:border-slate-200 hover:shadow-xl" 
+                                : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                        )}
+                        onClick={() => {
+                            trackEvent("article_click", article.title);
+                            if (typeof setCurrentArticle === 'function') setCurrentArticle(article);
+                            if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
+                        }}
+                    >
+                        {/* Compact Article Icon/Thumbnail */}
+                        <div className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 relative group-hover:scale-105 transition-transform duration-500 shadow-lg">
+                            {article.coverImage ? (
+                                <img 
+                                    src={article.coverImage} 
+                                    className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all" 
+                                    alt="" 
+                                    loading="lazy" 
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: `${theme?.accent || '#6366f1'}15` }}>
+                                    <FileText size={20} style={{ color: theme?.accent || '#6366f1' }} className="opacity-60" />
                                 </div>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                        </div>
+
+                        {/* Article Info */}
+                        <div className="flex-1 min-w-0">
+                            <h4 className={cn(
+                                "text-[13px] font-black tracking-wide leading-tight group-hover:translate-x-1 transition-transform truncate",
+                                theme?.isLight ? "text-slate-900" : "text-white"
+                            )}>
+                                {article.title}
+                            </h4>
+                            <div className="flex items-center gap-2 mt-1 opacity-40">
+                                <div className="w-4 h-[1px] bg-current" style={{ color: theme?.accent || '#6366f1' }} />
+                                <span className={cn("text-[9px] font-black uppercase tracking-[0.2em]", theme?.isLight ? "text-slate-500" : "text-white/60")}>
+                                    {lang === 'tr' ? 'MAKALE' : 'ARTICLE'}
+                                </span>
                             </div>
-                        </motion.div>
-                    ))}
-                </div>
+                        </div>
+
+                        {/* Decoration Arrow */}
+                        <div className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 scale-75 group-hover:scale-100",
+                            theme?.isLight ? "bg-slate-100 text-slate-600" : "bg-white/5 text-white/40"
+                        )}>
+                            <ChevronRight size={14} strokeWidth={3} />
+                        </div>
+                    </motion.div>
+                ))}
             </div>
         </section>
     );
