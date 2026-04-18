@@ -4632,14 +4632,7 @@ if(true) {
                                 )}
 
                                 {/* Articles Module */}
-                                <ArticlesSection 
-                                    articles={profile?.articles || []} 
-                                    t={t} 
-                                    theme={theme} 
-                                    setCurrentArticle={setCurrentArticle} 
-                                    setIsArticleOpen={setIsArticleOpen} 
-                                    trackEvent={trackEvent} 
-                                />
+                                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
                                 {profile.slogan && (
                                     <p className={cn("font-bold mt-4 opacity-70 italic", !profile.sloganColor && theme.text)}
@@ -5673,14 +5666,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 </div>
 
                 {/* Articles Module */}
-                <ArticlesSection 
-                    articles={profile?.articles || []} 
-                    t={t} 
-                    theme={theme} 
-                    setCurrentArticle={setCurrentArticle} 
-                    setIsArticleOpen={setIsArticleOpen} 
-                    trackEvent={trackEvent} 
-                />
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
             </main>
 
@@ -6235,14 +6221,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 )}
                 
                 {/* Articles Module */}
-                <ArticlesSection 
-                    articles={profile?.articles || []} 
-                    t={t} 
-                    theme={theme} 
-                    setCurrentArticle={setCurrentArticle} 
-                    setIsArticleOpen={setIsArticleOpen} 
-                    trackEvent={trackEvent} 
-                />
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
 
 
@@ -9284,14 +9263,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                     </div>
 
                 {/* Articles Module */}
-                <ArticlesSection 
-                    articles={profile?.articles || []} 
-                    t={t} 
-                    theme={theme} 
-                    setCurrentArticle={setCurrentArticle} 
-                    setIsArticleOpen={setIsArticleOpen} 
-                    trackEvent={trackEvent} 
-                />
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
                 </main>
             </div>
@@ -9464,60 +9436,66 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
     );
 }
 
-function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOpen, trackEvent }: any) {
+function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOpen, trackEvent, toneStyle, lang }: any) {
     const displayArticles = Array.isArray(articles) ? articles : [];
     
     if (displayArticles.length === 0) return null;
 
+    const isCompact = true; // Making it compact by default based on user feedback
+
     return (
-        <section className="space-y-6 pt-10">
+        <section className="space-y-6 pt-10 px-4">
             <div className="flex items-center gap-4 px-2">
                 <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
-                <h3 className={cn("text-[12px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t?.articlesTitle || "YAZILARIM"}</h3>
+                <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 <div className={cn("flex-1 h-[1px]", theme?.isLight ? "bg-slate-200" : "bg-white/10")} />
             </div>
-            <div className="grid grid-cols-1 gap-6">
+            
+            <div className="flex flex-wrap gap-4 justify-center">
                 {displayArticles.map((article: any, i: number) => (
                     <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        key={article.id || i}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
-                        whileHover={{ y: -5 }}
-                        className={cn("overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border", theme.card, theme.border)}
-                        style={{ 
-                            backgroundColor: `${theme.accent}0a`,
-                            borderColor: `${theme.accent}25`,
-                            boxShadow: `0 40px 100px -20px ${theme.accent}30`
-                        }}
-                        onClick={() => {
+                        transition={{ delay: i * 0.05 }}
+                        whileHover={{ scale: 1.1, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={cn(
+                            "group cursor-pointer relative transition-all duration-300",
+                            "w-16 h-16 sm:w-20 sm:h-20"
+                        )}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("Article clicked:", article.title);
                             trackEvent("article_click", article.title);
-                            setCurrentArticle(article);
-                            setIsArticleOpen(true);
+                            if (typeof setCurrentArticle === 'function') setCurrentArticle(article);
+                            if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
                         }}
                     >
-                        {article.coverImage && (
-                            <div className="aspect-video relative overflow-hidden">
-                                <img src={article.coverImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={article.title} loading="lazy" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                            </div>
-                        )}
-                        <div className="p-8">
-                            <div className="flex items-center gap-3 mb-3">
-                                <span className={cn("text-[10px] font-black uppercase tracking-widest", theme?.isLight ? "text-slate-400" : "text-white/40")}>
-                                    {new Date(article.createdAt).toLocaleDateString()}
-                                </span>
-                                <div className={cn("w-1 h-1 rounded-full", theme?.isLight ? "bg-slate-200" : "bg-white/20")} />
-                                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: theme.accent }}>MAKALE</span>
-                            </div>
-                            <h4 className={cn("text-lg font-black mb-2 tracking-tight leading-tight group-hover:text-primary transition-colors", theme?.isLight ? "text-slate-900" : "text-white")}>{article.title}</h4>
-                            {article.excerpt && (
-                                <p className={cn("text-[13px] font-medium leading-relaxed line-clamp-2", theme?.isLight ? "text-slate-500" : "text-white/60")}>{article.excerpt}</p>
+                        <div className={cn(
+                            "w-full h-full overflow-hidden border-2 transition-all p-1 bg-white/5 backdrop-blur-md shadow-xl",
+                            toneStyle?.rounded === "rounded-none" ? "rounded-none" : "rounded-full",
+                            "group-hover:shadow-[0_0_20px_rgba(var(--profile-accent-rgb),0.4)]"
+                        )} style={{ borderColor: `${theme.accent}40` }}>
+                            {article.coverImage ? (
+                                <img 
+                                    src={article.coverImage} 
+                                    className={cn("w-full h-full object-cover", toneStyle?.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} 
+                                    alt={article.title} 
+                                    loading="lazy" 
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-white/5 opacity-40">
+                                    <FileText size={20} />
+                                </div>
                             )}
-                            <div className="mt-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest" style={{ color: theme.accent }}>
-                                DEVAMINI OKU <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                            </div>
+                        </div>
+
+                        {/* Tooltip on hover */}
+                        <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[9px] font-black text-white uppercase tracking-widest shadow-2xl scale-90 group-hover:scale-100 transition-transform">
+                            {article.title}
                         </div>
                     </motion.div>
                 ))}
