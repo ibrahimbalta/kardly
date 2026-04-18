@@ -6516,6 +6516,8 @@ function RichTextEditor({ value, onChange, placeholder }: { value: string, onCha
         if (editorRef.current && editorRef.current.innerHTML !== value) {
             editorRef.current.innerHTML = value || '';
         }
+        // Set default paragraph separator to p
+        document.execCommand('defaultParagraphSeparator', false, 'p');
     }, []);
 
     const execCommand = (command: string, value: string | undefined = undefined) => {
@@ -6531,10 +6533,26 @@ function RichTextEditor({ value, onChange, placeholder }: { value: string, onCha
         }
     };
 
+    const handlePaste = (e: React.ClipboardEvent) => {
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        
+        // Convert plain text newlines into paragraphs to preserve formatting
+        const formattedText = text
+            .split(/\n\n+/)
+            .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+            .join('');
+        
+        document.execCommand('insertHTML', false, formattedText);
+        if (editorRef.current) {
+            onChange(editorRef.current.innerHTML);
+        }
+    };
+
     const isLight = false; // Toolbar is always dark themed in this context
 
     return (
-        <div className="flex flex-col h-full min-h-[500px] bg-white">
+        <div className="flex flex-col h-full min-h-[500px] bg-white relative">
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-1 p-3 border-b border-slate-100 bg-slate-50/50 sticky top-0 z-10">
                 <EditorButton icon={<Plus size={16} />} onClick={() => execCommand('formatBlock', '<h1>')} title="Başlık 1" />
@@ -6559,20 +6577,17 @@ function RichTextEditor({ value, onChange, placeholder }: { value: string, onCha
                 ref={editorRef}
                 contentEditable
                 onInput={handleInput}
-                className="flex-1 p-8 outline-none prose max-w-none text-slate-700 font-medium min-h-[400px]"
+                onPaste={handlePaste}
+                className="flex-1 p-8 pt-10 outline-none prose max-w-none text-slate-700 font-medium min-h-[400px] leading-relaxed"
                 onKeyDown={(e) => {
                     if (e.key === 'Tab') {
                         e.preventDefault();
                         document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
                     }
                 }}
-                onPaste={(e) => {
-                    // Default behavior for pasting keeps formatting if contentEditable is true
-                    // and document.execCommand('defaultParagraphSeparator', false, 'p') is usually set
-                }}
             />
-            {(!value || value === '<p></p>' || value === '<br>') && (
-                <div className="absolute top-[80px] left-8 pointer-events-none text-slate-300 italic text-sm">
+            {(!value || value === '<p></p>' || value === '<br>' || value === '') && (
+                <div className="absolute top-[85px] left-8 pointer-events-none text-slate-300 italic text-sm">
                     {placeholder}
                 </div>
             )}

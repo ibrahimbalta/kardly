@@ -72,7 +72,8 @@ import {
     ExternalLink,
     Clock,
     Crown,
-    UserCheck
+    UserCheck,
+    Home
 } from "lucide-react"
 import BusinessCardGenerator, { TEMPLATES } from "@/components/BusinessCardGenerator"
 import { AppointmentModal } from "@/components/AppointmentModal"
@@ -8669,54 +8670,116 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
         active: true
     }));
 
-    const actions = [
-        { 
-            id: 'phone',
-            label: craft.ctaLabel, 
-            subLabel: "7/24",
-            icon: craft.ctaIcon, 
-            href: `tel:${phoneNumber}`, 
-            onClick: () => trackEvent("phone"),
-            active: !!phoneNumber,
-            isPrimary: true
-        },
-        { 
-            id: 'whatsapp',
-            label: craft.quoteLabel, 
-            subLabel: "WHATSAPP",
-            icon: <MessageCircle size={22} />, 
-            href: `https://wa.me/${whatsappNumber}`, 
-            onClick: () => trackEvent("whatsapp"),
-            active: !!whatsappNumber,
-            isWhatsApp: true
-        },
-        { 
-            id: 'contact',
-            label: t.contactMeTitle, 
-            icon: <MessageSquare size={20} />, 
-            onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); },
-            active: true
-        },
-        { 
-            id: 'appointment',
-            label: t.appointmentBtn || "RANDEVU AL", 
-            subLabel: "REZEVASYON",
-            icon: <Calendar size={20} />, 
-            onClick: () => { trackEvent("appointment_click"); setIsAppointmentOpen(true); },
-            active: !!profile.showAppointmentBtn
-        },
-        { 
-            id: 'email',
-            label: t.emailBtn || "E-MAIL", 
-            subLabel: "EMAIL",
-            icon: <Mail size={22} />, 
-            href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`,
-            onClick: () => trackEvent("email"),
-            active: !!profile.user?.email
-        },
-        ...platformButtons,
-        ...customButtons,
-        { 
+    const isProfessionalGlobal = colorScheme?.startsWith('uni_');
+    const heroButtonIds = ['phone', 'whatsapp', 'contact', 'appointment', 'email'];
+    const filteredActions = isProfessionalGlobal 
+        ? [
+            { 
+                id: 'phone',
+                label: craft.ctaLabel, 
+                subLabel: "7/24",
+                icon: craft.ctaIcon, 
+                href: `tel:${phoneNumber}`, 
+                onClick: () => trackEvent("phone"),
+                active: !!phoneNumber,
+                isPrimary: true
+            },
+            { 
+                id: 'whatsapp',
+                label: craft.quoteLabel, 
+                subLabel: "WHATSAPP",
+                icon: <MessageCircle size={22} />, 
+                href: `https://wa.me/${whatsappNumber}`, 
+                onClick: () => trackEvent("whatsapp"),
+                active: !!whatsappNumber,
+                isWhatsApp: true
+            },
+            { 
+                id: 'contact',
+                label: t.contactMeTitle, 
+                icon: <MessageSquare size={20} />, 
+                onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); },
+                active: true
+            },
+            { 
+                id: 'appointment',
+                label: t.appointmentBtn || "RANDEVU AL", 
+                subLabel: "REZEVASYON",
+                icon: <Calendar size={20} />, 
+                onClick: () => { trackEvent("appointment_click"); setIsAppointmentOpen(true); },
+                active: !!profile.showAppointmentBtn
+            },
+            { 
+                id: 'email',
+                label: t.emailBtn || "E-MAIL", 
+                subLabel: "EMAIL",
+                icon: <Mail size={22} />, 
+                href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`,
+                onClick: () => trackEvent("email"),
+                active: !!profile.user?.email
+            }
+          ]
+        : [
+            { 
+                id: 'phone',
+                label: craft.ctaLabel, 
+                subLabel: "7/24",
+                icon: craft.ctaIcon, 
+                href: `tel:${phoneNumber}`, 
+                onClick: () => trackEvent("phone"),
+                active: !!phoneNumber,
+                isPrimary: true
+            },
+            { 
+                id: 'whatsapp',
+                label: craft.quoteLabel, 
+                subLabel: "WHATSAPP",
+                icon: <MessageCircle size={22} />, 
+                href: `https://wa.me/${whatsappNumber}`, 
+                onClick: () => trackEvent("whatsapp"),
+                active: !!whatsappNumber,
+                isWhatsApp: true
+            },
+            { 
+                id: 'contact',
+                label: t.contactMeTitle, 
+                icon: <MessageSquare size={20} />, 
+                onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); },
+                active: true
+            },
+            { 
+                id: 'appointment',
+                label: t.appointmentBtn || "RANDEVU AL", 
+                subLabel: "REZEVASYON",
+                icon: <Calendar size={20} />, 
+                onClick: () => { trackEvent("appointment_click"); setIsAppointmentOpen(true); },
+                active: !!profile.showAppointmentBtn
+            },
+            { 
+                id: 'email',
+                label: t.emailBtn || "E-MAIL", 
+                subLabel: "EMAIL",
+                icon: <Mail size={22} />, 
+                href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email}`,
+                onClick: () => trackEvent("email"),
+                active: !!profile.user?.email
+            },
+            ...platformButtons,
+            ...customButtons,
+            { 
+                id: 'location',
+                label: t.locationsBtn || "ADRES", 
+                subLabel: "KONUM",
+                icon: <MapPin size={22} />, 
+                href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url),
+                onClick: () => trackEvent("location"),
+                active: !!socialLinks.find((l: any) => l.platform === 'location')?.url
+            }
+        ];
+
+    // If it's Professional Global, collect "Other Links" into a Home Button
+    if (isProfessionalGlobal) {
+        const others = [...platformButtons, ...customButtons, { 
             id: 'location',
             label: t.locationsBtn || "ADRES", 
             subLabel: "KONUM",
@@ -8724,8 +8787,23 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url),
             onClick: () => trackEvent("location"),
             active: !!socialLinks.find((l: any) => l.platform === 'location')?.url
+        }].filter(a => a.active);
+
+        if (others.length > 0) {
+            // Add a "Home" button linked to the first available other link
+            filteredActions.push({
+                id: 'home',
+                label: lang === 'tr' ? "ANASAYFA" : "HOME",
+                subLabel: "WEB SITE",
+                icon: <Home size={22} />,
+                href: others[0].href,
+                onClick: () => trackEvent("home_page_click"),
+                active: true
+            });
         }
-    ].filter(a => a.active);
+    }
+
+    const actions = filteredActions.filter(a => a.active);
 
     const buttonRadiusClass = profile.buttonShape === 'square' ? 'rounded-none' : profile.buttonShape === 'pill' ? 'rounded-full' : 'rounded-2xl';
     const iconRadiusClass = profile.buttonShape === 'square' ? 'rounded-none' : profile.buttonShape === 'pill' ? 'rounded-2xl' : 'rounded-xl';
@@ -9441,8 +9519,6 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     
     if (displayArticles.length === 0) return null;
 
-    const isCompact = true; // Making it compact by default based on user feedback
-
     return (
         <section className="space-y-6 pt-10 px-4">
             <div className="flex items-center gap-4 px-2">
@@ -9451,51 +9527,54 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <div className={cn("flex-1 h-[1px]", theme?.isLight ? "bg-slate-200" : "bg-white/10")} />
             </div>
             
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="grid grid-cols-1 gap-6">
                 {displayArticles.map((article: any, i: number) => (
                     <motion.div
                         key={article.id || i}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.05 }}
-                        whileHover={{ scale: 1.1, y: -5 }}
-                        whileTap={{ scale: 0.95 }}
+                        transition={{ delay: i * 0.1 }}
+                        whileHover={{ y: -5 }}
                         className={cn(
-                            "group cursor-pointer relative transition-all duration-300",
-                            "w-16 h-16 sm:w-20 sm:h-20"
+                            "overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border",
+                            theme?.isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.03] border-white/10"
                         )}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
+                        style={{ 
+                            boxShadow: `0 40px 100px -20px ${theme?.accent || '#6366f1'}20`
+                        }}
+                        onClick={() => {
                             console.log("Article clicked:", article.title);
                             trackEvent("article_click", article.title);
                             if (typeof setCurrentArticle === 'function') setCurrentArticle(article);
                             if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
                         }}
                     >
-                        <div className={cn(
-                            "w-full h-full overflow-hidden border-2 transition-all p-1 bg-white/5 backdrop-blur-md shadow-xl",
-                            toneStyle?.rounded === "rounded-none" ? "rounded-none" : "rounded-full",
-                            "group-hover:shadow-[0_0_20px_rgba(var(--profile-accent-rgb),0.4)]"
-                        )} style={{ borderColor: `${theme.accent}40` }}>
+                        <div className="aspect-video relative overflow-hidden">
                             {article.coverImage ? (
                                 <img 
                                     src={article.coverImage} 
-                                    className={cn("w-full h-full object-cover", toneStyle?.rounded === "rounded-none" ? "rounded-none" : "rounded-full")} 
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter contrast-[1.1] brightness-[0.9]" 
                                     alt={article.title} 
                                     loading="lazy" 
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-white/5 opacity-40">
-                                    <FileText size={20} />
+                                    <FileText size={40} className="text-white/20" />
                                 </div>
                             )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            <div className="absolute bottom-5 left-6 right-6 flex items-end justify-between">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-2xl translate-y-16 group-hover:translate-y-0 transition-all duration-500" style={{ backgroundColor: theme?.accent || '#6366f1' }}>
+                                    <ArrowRight size={16} className="text-white" />
+                                </div>
+                            </div>
                         </div>
-
-                        {/* Tooltip on hover */}
-                        <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[9px] font-black text-white uppercase tracking-widest shadow-2xl scale-90 group-hover:scale-100 transition-transform">
-                            {article.title}
+                        <div className="p-8">
+                            <h4 className={cn("text-sm font-black mb-2 tracking-wide", theme?.isLight ? "text-slate-900" : "text-white")}>{article.title}</h4>
+                            <p className={cn("text-[12px] font-medium leading-relaxed line-clamp-2", theme?.isLight ? "text-slate-500" : "text-white/60")}>
+                                {article.content?.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                            </p>
                         </div>
                     </motion.div>
                 ))}
@@ -9565,10 +9644,10 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                             <div 
                                 className={cn(
                                     "prose max-w-none antialiased font-medium text-[15px] sm:text-[16px] transition-colors duration-500",
-                                    theme?.isLight ? "prose-slate prose-p:text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose-invert prose-p:text-slate-200 prose-headings:text-white prose-strong:text-white",
+                                    theme?.isLight ? "prose-slate prose-p:text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose-invert prose-p:text-white/90 prose-headings:text-white prose-strong:text-white",
                                     "prose-img:rounded-[2rem] prose-a:text-primary prose-a:no-underline hover:prose-a:underline font-sans"
                                 )}
-                                style={{ color: theme?.isLight ? undefined : 'rgba(255,255,255,0.9)' }}
+                                style={{ color: theme?.isLight ? undefined : '#fff' }}
                                 dangerouslySetInnerHTML={{ __html: article.content }}
                             />
                         </div>
