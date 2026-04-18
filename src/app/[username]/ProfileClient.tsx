@@ -9547,13 +9547,13 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                     <h3 className={cn("text-[11px] font-black uppercase tracking-[0.3em] italic drop-shadow-md whitespace-nowrap", theme?.isLight ? "text-slate-900/60" : "text-white/60")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 </div>
                 
-                {/* Navigation Desktop Buttons (Top Right) */}
-                <div className="hidden sm:flex items-center gap-2">
+                {/* Navigation Buttons (Top Right) - Visible on all devices */}
+                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                     <button 
                         onClick={() => scroll('left')}
                         className={cn(
-                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
-                            theme?.isLight ? "bg-white border-black/5 text-slate-400 hover:text-slate-900 shadow-sm" : "bg-white/5 border-white/10 text-white/40 hover:text-white"
+                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90 shadow-sm",
+                            theme?.isLight ? "bg-white border-slate-200 text-slate-400 hover:text-slate-900" : "bg-black/40 border-white/10 text-white/40 hover:text-white"
                         )}
                     >
                         <ChevronLeft size={16} />
@@ -9561,8 +9561,8 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                     <button 
                         onClick={() => scroll('right')}
                         className={cn(
-                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90",
-                            theme?.isLight ? "bg-white border-black/5 text-slate-400 hover:text-slate-900 shadow-sm" : "bg-white/5 border-white/10 text-white/40 hover:text-white"
+                            "w-8 h-8 rounded-full border flex items-center justify-center transition-all active:scale-90 shadow-sm",
+                            theme?.isLight ? "bg-white border-slate-200 text-slate-400 hover:text-slate-900" : "bg-black/40 border-white/10 text-white/40 hover:text-white"
                         )}
                     >
                         <ChevronRight size={16} />
@@ -9575,7 +9575,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <button 
                     onClick={() => scroll('left')} 
                     className={cn(
-                        "absolute -left-1 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "absolute -left-1 sm:left-2 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
                         "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
                         theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
@@ -9586,7 +9586,7 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <button 
                     onClick={() => scroll('right')} 
                     className={cn(
-                        "absolute -right-1 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
+                        "absolute -right-1 sm:right-2 top-1/2 -translate-y-1/2 z-[200] w-10 h-10 rounded-full border flex items-center justify-center backdrop-blur-3xl transition-all shadow-2xl hover:scale-110 active:scale-95",
                         "opacity-100 md:opacity-0 md:group-hover/nav:opacity-100 flex", 
                         theme?.isLight ? "bg-white/95 border-slate-200 text-slate-600 shadow-slate-300" : "bg-black/90 border-white/20 text-white shadow-black"
                     )}
