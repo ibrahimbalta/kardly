@@ -6468,12 +6468,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">İçerik</label>
                                     <div className="bg-slate-50 rounded-[2rem] border border-slate-100 overflow-hidden min-h-[400px] flex flex-col">
-                                        <textarea
+                                    <div className="bg-slate-50 rounded-[2rem] border border-slate-100 overflow-hidden min-h-[500px] flex flex-col">
+                                        <RichTextEditor 
                                             value={newArticle.content}
-                                            onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
+                                            onChange={(html) => setNewArticle({ ...newArticle, content: html })}
                                             placeholder="Makalenizi buraya yazın..."
-                                            className="w-full flex-1 bg-white p-8 text-base font-medium text-slate-700 leading-relaxed outline-none min-h-[500px]"
                                         />
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -6504,6 +6505,91 @@ export default function DashboardClient({ session, profile, subscription, appoin
                 )}
             </AnimatePresence>
         </>
+    );
+}
+
+function RichTextEditor({ value, onChange, placeholder }: { value: string, onChange: (val: string) => void, placeholder?: string }) {
+    const editorRef = React.useRef<HTMLDivElement>(null);
+
+    // Initial content set (only once or when modal opens)
+    useEffect(() => {
+        if (editorRef.current && editorRef.current.innerHTML !== value) {
+            editorRef.current.innerHTML = value || '';
+        }
+    }, []);
+
+    const execCommand = (command: string, value: string | undefined = undefined) => {
+        document.execCommand(command, false, value);
+        if (editorRef.current) {
+            onChange(editorRef.current.innerHTML);
+        }
+    };
+
+    const handleInput = () => {
+        if (editorRef.current) {
+            onChange(editorRef.current.innerHTML);
+        }
+    };
+
+    const isLight = false; // Toolbar is always dark themed in this context
+
+    return (
+        <div className="flex flex-col h-full min-h-[500px] bg-white">
+            {/* Toolbar */}
+            <div className="flex flex-wrap items-center gap-1 p-3 border-b border-slate-100 bg-slate-50/50 sticky top-0 z-10">
+                <EditorButton icon={<Plus size={16} />} onClick={() => execCommand('formatBlock', '<h1>')} title="Başlık 1" />
+                <EditorButton icon={<Layout size={16} />} onClick={() => execCommand('formatBlock', '<h2>')} title="Başlık 2" />
+                <div className="w-px h-6 bg-slate-200 mx-1" />
+                <EditorButton icon={<CheckCircle2 size={16} />} onClick={() => execCommand('bold')} title="Kalın" />
+                <EditorButton icon={<Sparkles size={16} />} onClick={() => execCommand('italic')} title="İtalik" />
+                <EditorButton icon={<LinkIcon size={16} />} onClick={() => {
+                    const url = prompt('Bağlantı URL\'sini girin:');
+                    if (url) execCommand('createLink', url);
+                }} title="Link Ekle" />
+                <div className="w-px h-6 bg-slate-200 mx-1" />
+                <EditorButton icon={<List size={16} />} onClick={() => execCommand('insertUnorderedList')} title="Madde İşaretli Liste" />
+                <EditorButton icon={<LayoutList size={16} />} onClick={() => execCommand('insertOrderedList')} title="Numaralı Liste" />
+                <div className="w-px h-6 bg-slate-200 mx-1" />
+                <EditorButton icon={<Quote size={16} />} onClick={() => execCommand('formatBlock', '<blockquote>')} title="Alıntı" />
+                <EditorButton icon={<History size={16} />} onClick={() => execCommand('removeFormat')} title="Biçimlendirmeyi Temizle" />
+            </div>
+
+            {/* Editable Area */}
+            <div 
+                ref={editorRef}
+                contentEditable
+                onInput={handleInput}
+                className="flex-1 p-8 outline-none prose max-w-none text-slate-700 font-medium min-h-[400px]"
+                onKeyDown={(e) => {
+                    if (e.key === 'Tab') {
+                        e.preventDefault();
+                        document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
+                    }
+                }}
+                onPaste={(e) => {
+                    // Default behavior for pasting keeps formatting if contentEditable is true
+                    // and document.execCommand('defaultParagraphSeparator', false, 'p') is usually set
+                }}
+            />
+            {(!value || value === '<p></p>' || value === '<br>') && (
+                <div className="absolute top-[80px] left-8 pointer-events-none text-slate-300 italic text-sm">
+                    {placeholder}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function EditorButton({ icon, onClick, title }: any) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            title={title}
+            className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white hover:shadow-md transition-all text-slate-500 hover:text-primary active:scale-90"
+        >
+            {icon}
+        </button>
     );
 }
 
