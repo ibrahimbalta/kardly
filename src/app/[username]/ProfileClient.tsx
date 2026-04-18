@@ -8798,7 +8798,8 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 icon: <Home size={22} />,
                 href: others[0].href,
                 onClick: () => trackEvent("home_page_click"),
-                active: true
+                active: true,
+                isPrimary: true // Professional & Global templates usually have a strong primary action
             });
         }
     }
@@ -9063,7 +9064,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         className={cn(
                                             "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
                                             profile.buttonLayout === 'stack' ? cn("py-4 px-5", buttonRadiusClass) : cn("py-4 px-3 flex-col text-center", buttonRadiusClass),
-                                            action.isPrimary ? "text-white shadow-2xl" : cn("border", theme.text, theme.border)
+                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "text-white shadow-2xl" : "text-slate-900 shadow-2xl") : cn("border", theme.text, theme.border)
                                         )}
                                         style={action.isPrimary ? { 
                                             background: profile.buttonColor ? profile.buttonColor : `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, 
@@ -9076,7 +9077,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         <div className={cn(
                                             "flex items-center justify-center backdrop-blur-sm",
                                             profile.buttonLayout === 'stack' ? cn("w-12 h-12", iconRadiusClass) : cn("w-10 h-10", iconRadiusClass),
-                                            action.isPrimary ? "bg-white/20" : "border",
+                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "bg-white/20" : "bg-black/10") : "border",
                                         )} style={!action.isPrimary ? { 
                                             borderColor: profile.buttonColor ? `${profile.buttonColor}40` : `${theme.accent}40`, 
                                             backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : `${theme.accent}15`, 
@@ -9090,7 +9091,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                         </div>
                                         {profile.buttonLayout === 'stack' && (
                                             action.isPrimary ? (
-                                                <div className="ml-auto flex items-center gap-1 text-white/60">
+                                                <div className={cn("ml-auto flex items-center gap-1", isDarkColor(profile.buttonColor || theme.accent) ? "text-white/60" : "text-slate-900/60")}>
                                                     <Phone size={16} className="animate-pulse" />
                                                 </div>
                                             ) : (
@@ -9324,15 +9325,24 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                         </button>
                         <button
                             onClick={handleCVView}
-                            className="flex-[1.5] py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest text-white shadow-xl"
-                            style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, boxShadow: `0 8px 20px -8px ${theme.accent}80` }}
+                            className={cn(
+                                "flex-[1.5] py-4 rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-xl transition-all",
+                                isDarkColor(theme.accent) ? "text-white" : "text-slate-900"
+                            )}
+                            style={{ 
+                                background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, 
+                                boxShadow: `0 8px 20px -8px ${theme.accent}80` 
+                            }}
                         >
                             <FileText size={14} /> {profile.isCatalog ? t.viewCatalog : t.viewCV}
                         </button>
                         {aiConfig?.isEnabled && (
                             <button
                                 onClick={() => setIsAIChatOpen(true)}
-                                className="w-14 py-4 rounded-2xl flex items-center justify-center text-white shadow-xl"
+                                className={cn(
+                                    "w-14 py-4 rounded-2xl flex items-center justify-center shadow-xl transition-all",
+                                    isDarkColor(theme.accent) ? "text-white" : "text-slate-900"
+                                )}
                                 style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})` }}
                             >
                                 <Bot size={20} />
