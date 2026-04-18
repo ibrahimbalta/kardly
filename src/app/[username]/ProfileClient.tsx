@@ -4476,6 +4476,37 @@ if(true) {
                                     </div>
                                 )}
 
+                                {/* Bio & Slogan Section */}
+                                {profile.bio && (
+                                    <div className="relative pt-4">
+                                        {theme.special === 'software' && (
+                                            <div className="mb-2 flex items-center gap-2 opacity-50 px-4">
+                                                <div className="h-[1px] flex-1 bg-emerald-500/30" />
+                                                <span className="font-mono text-[8px] text-emerald-500">cat README.md</span>
+                                                <div className="h-[1px] w-4 bg-emerald-500/30" />
+                                            </div>
+                                        )}
+                                        <p className={cn("text-center font-medium leading-relaxed px-4", !profile.bioColor && theme.subtext, theme.special === 'software' && "font-mono text-emerald-400/80 text-left")}
+                                           style={{ 
+                                               color: profile.bioColor || undefined,
+                                               fontSize: profile.bioFontSize || "12px",
+                                               fontFamily: profile.bioFontFamily || "inherit"
+                                           }}>
+                                            {theme.special === 'software' ? `> ${profile.bio}` : profile.bio}
+                                        </p>
+                                    </div>
+                                )}
+                                {profile.slogan && (
+                                    <p className={cn("font-bold mt-4 opacity-70 text-center italic", !profile.sloganColor && theme.text)}
+                                       style={{ 
+                                           color: profile.sloganColor || undefined,
+                                           fontSize: profile.sloganFontSize || "14px",
+                                           fontFamily: profile.sloganFontFamily || "inherit"
+                                       }}>
+                                        “{translateText(profile.slogan)}”
+                                    </p>
+                                )}
+
                                 {/* Project Marquee Section */}
                                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
                                     <div className="mt-6 space-y-4 group/marquee">
@@ -4632,22 +4663,6 @@ if(true) {
                                     </div>
                                 )}
 
-                                {/* Articles Module */}
-                                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
-
-                                {profile.slogan && (
-                                    <p className={cn("font-bold mt-4 opacity-70 italic", !profile.sloganColor && theme.text)}
-                                       style={{ 
-                                           color: profile.sloganColor || undefined,
-                                           fontSize: profile.sloganFontSize || "14px",
-                                           fontFamily: profile.sloganFontFamily || "inherit"
-                                       }}>
-                                        “{translateText(profile.slogan)}”
-                                    </p>
-                                )}
-                            </div>
-
-
                             <div className={cn(
                                 profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
                                 profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
@@ -4749,28 +4764,12 @@ if(true) {
                                 }
                             </div>
 
-                            {/* Bio */}
-                            {
-                                profile.bio && (
-                                    <div className="relative pt-4">
-                                        {theme.special === 'software' && (
-                                            <div className="mb-2 flex items-center gap-2 opacity-50 px-4">
-                                                <div className="h-[1px] flex-1 bg-emerald-500/30" />
-                                                <span className="font-mono text-[8px] text-emerald-500">cat README.md</span>
-                                                <div className="h-[1px] w-4 bg-emerald-500/30" />
-                                            </div>
-                                        )}
-                                        <p className={cn("text-center font-medium leading-relaxed px-4", !profile.bioColor && theme.subtext, theme.special === 'software' && "font-mono text-emerald-400/80 text-left")}
-                                           style={{ 
-                                               color: profile.bioColor || undefined,
-                                               fontSize: profile.bioFontSize || "12px",
-                                               fontFamily: profile.bioFontFamily || "inherit"
-                                           }}>
-                                            {theme.special === 'software' ? `> ${profile.bio}` : profile.bio}
-                                        </p>
-                                    </div>
-                                )
-                            }
+                            {/* Articles Module */}
+                            <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
+
+
+                        </div>
+
 
 
                             {/* Testimonials */}
@@ -5444,49 +5443,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 </MotionWrapper>
 
-
-                {/* Unified Action Grid */}
-                <div className={cn(
-                    "w-full mt-10",
-                    profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-4" : 
-                    profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-4 [&>*:last-child:nth-child(odd)]:col-span-2" : 
-                    "space-y-4"
-                )}>
-                    {actionButtons.map((action, i) => (
-                        <motion.button
-                            key={i}
-                            whileHover={{ scale: 1.05, y: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => {
-                                if (action.onClick) action.onClick();
-                                if (action.href) window.location.href = action.href;
-                            }}
-                            style={{ 
-                                backgroundColor: action.color || (profile.buttonColor ? profile.buttonColor : theme.accent),
-                                color: (action.color || profile.buttonColor) ? (isDarkColor(action.color || profile.buttonColor) ? '#fff' : '#000') : '#fff'
-                            }}
-                            className={cn(
-                                "flex items-center transition-all shadow-xl",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "py-6 px-10 rounded-[2rem] gap-6" : "py-7 flex-col text-center justify-center gap-3 rounded-[2rem]",
-                                profile.buttonShape === 'pill' ? "rounded-full" : 
-                                profile.buttonShape === 'rounded' ? "rounded-2xl" : 
-                                profile.buttonShape === 'square' ? "rounded-none" : ""
-                            )}
-                        >
-                            <span className={cn(
-                                "p-3 bg-white/10 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "" : "scale-110"
-                            )}>
-                                {action.icon}
-                            </span>
-                            <span className={cn(
-                                "font-black uppercase tracking-widest",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "text-xs flex-1 text-center" : "text-[10px]"
-                            )}>{action.label}</span>
-                        </motion.button>
-                    ))}
-                </div>
-
                  {/* Widget Dock - Elite Style */}
                  {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
                      <div className="w-full mt-6 p-4 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex flex-wrap justify-center gap-3">
@@ -5637,9 +5593,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
-                {/* Horizontal Social Row */}
-
-
                 {/* Main CTA Button */}
                 {profile.showAppointmentBtn && (
                     <motion.button
@@ -5656,6 +5609,51 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </motion.button>
                 )}
 
+                {/* Unified Action Grid */}
+                <div className={cn(
+                    "w-full mt-16",
+                    profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-4" : 
+                    profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-4 [&>*:last-child:nth-child(odd)]:col-span-2" : 
+                    "space-y-4"
+                )}>
+                    {actionButtons.map((action, i) => (
+                        <motion.button
+                            key={i}
+                            whileHover={{ scale: 1.05, y: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                                if (action.onClick) action.onClick();
+                                if (action.href) window.location.href = action.href;
+                            }}
+                            style={{ 
+                                backgroundColor: action.color || (profile.buttonColor ? profile.buttonColor : theme.accent),
+                                color: (action.color || profile.buttonColor) ? (isDarkColor(action.color || profile.buttonColor) ? '#fff' : '#000') : '#fff'
+                            }}
+                            className={cn(
+                                "flex items-center transition-all shadow-xl",
+                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "py-6 px-10 rounded-[2rem] gap-6" : "py-7 flex-col text-center justify-center gap-3 rounded-[2rem]",
+                                profile.buttonShape === 'pill' ? "rounded-full" : 
+                                profile.buttonShape === 'rounded' ? "rounded-2xl" : 
+                                profile.buttonShape === 'square' ? "rounded-none" : ""
+                            )}
+                        >
+                            <span className={cn(
+                                "p-3 bg-white/10 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform",
+                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "" : "scale-110"
+                            )}>
+                                {action.icon}
+                            </span>
+                            <span className={cn(
+                                "font-black uppercase tracking-widest",
+                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "text-xs flex-1 text-center" : "text-[10px]"
+                            )}>{action.label}</span>
+                        </motion.button>
+                    ))}
+                </div>
+
+                {/* Articles Module */}
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
+
                 {/* Footer Logo */}
                 <div className="py-16 opacity-30 hover:opacity-100 transition-opacity">
                     <Link href="/" className="flex items-center gap-2">
@@ -5665,9 +5663,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         <span className="text-sm font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
                     </Link>
                 </div>
-
-                {/* Articles Module */}
-                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
             </main>
 
@@ -5827,7 +5822,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
         theme.card = theme.card.replace(/rgba\(.*?\)/g, `rgba(${hexToRgb(theme.accent)}, 0.1)`);
     }
     const socialLinks = profile.socialLinks || [];
-    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject };
+    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen };
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden", theme.bg, toneStyle.font)}>
@@ -6045,57 +6040,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 </MotionWrapper>
 
-                {/* Grid/List Interactive Buttons (Main Actions) */}
-                 <div className={cn(
-                     "w-full",
-                     profile.buttonLayout === "grid" ? "grid grid-cols-2 gap-4" : 
-                     profile.buttonLayout === "balanced" ? "flex flex-wrap justify-center gap-4" : 
-                     "space-y-4"
-                 )}>
-                     {actionButtons.map((btn, i) => (
-                         <motion.a
-                             key={i}
-                             href={btn.href}
-                             onClick={(e) => {
-                                  if (btn.onClick) btn.onClick();
-                                  if (!btn.href) e.preventDefault();
-                              }}
-                             initial={{ opacity: 0, y: 10 }}
-                             whileInView={{ opacity: 1, y: 0 }}
-                             viewport={{ once: true }}
-                             transition={{ delay: i * 0.05 }}
-                             className={cn(
-                                 "border flex items-center transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", 
-                                 (profile.buttonLayout === "stack" || !profile.buttonLayout) ? "w-full py-5.5 px-10 gap-6" : "w-full py-4 px-6 gap-3 flex-col text-center justify-center", 
-                                 theme.card, 
-                                 theme.border,
-                                 profile.buttonShape === 'pill' ? "rounded-full" : 
-                                 profile.buttonShape === 'rounded' ? "rounded-[2.5rem]" : 
-                                 profile.buttonShape === 'square' ? "rounded-none" : "rounded-[2.5rem]"
-                             )}
-                             style={{
-                                 backgroundColor: profile.buttonColor ? `${profile.buttonColor}20` : undefined,
-                                 borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined,
-                             }}
-                         >
-                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
-                             <div 
-                                 className={cn(
-                                     "rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner shrink-0",
-                                     (profile.buttonLayout === "stack" || !profile.buttonLayout) ? "w-12 h-12" : "w-10 h-10"
-                                 )} 
-                                 style={{ color: profile.buttonColor || theme.accent, backgroundColor: `${profile.buttonColor || theme.accent}15` }}
-                             >
-                                  {cloneElement(btn.icon as any, { size: (profile.buttonLayout === "stack" || !profile.buttonLayout) ? 22 : 18 })}
-                             </div>
-                             <span className={cn(
-                                 profile.buttonLayout === "stack" ? "text-[12px]" : "text-[10px]"
-                             )}>
-                                {btn.label}
-                             </span>
-                         </motion.a>
-                     ))}
-                 </div>
+
 
                  {/* Widget Dock - Athletic Pro Style */}
                  {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
@@ -6220,9 +6165,6 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </section>
                 )}
-                
-                {/* Articles Module */}
-                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
 
 
@@ -6344,6 +6286,8 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </section>
                 )}
 
+
+
                 {/* Map Display */}
                 {profile.blocks?.find((b: any) => b.type === 'map') && (
                     <div id="map-section" className="space-y-6 pb-12">
@@ -6357,9 +6301,60 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 )}
 
-                {/* Social Networks Grid (Accent Outlined Style) */}
 
+                {/* Grid/List Interactive Buttons (Main Actions) */}
+                 <div className={cn(
+                     "w-full mt-10",
+                     profile.buttonLayout === "grid" ? "grid grid-cols-2 gap-4" : 
+                     profile.buttonLayout === "balanced" ? "flex flex-wrap justify-center gap-4" : 
+                     "space-y-4"
+                 )}>
+                     {actionButtons.map((btn, i) => (
+                         <motion.a
+                             key={i}
+                             href={btn.href}
+                             onClick={(e) => {
+                                  if (btn.onClick) btn.onClick();
+                                  if (!btn.href) e.preventDefault();
+                              }}
+                             initial={{ opacity: 0, y: 10 }}
+                             whileInView={{ opacity: 1, y: 0 }}
+                             viewport={{ once: true }}
+                             transition={{ delay: i * 0.05 }}
+                             className={cn(
+                                 "border flex items-center transition-all hover:bg-white/[0.08] active:scale-[0.98] group relative overflow-hidden shadow-2xl shadow-black/40", 
+                                 (profile.buttonLayout === "stack" || !profile.buttonLayout) ? "w-full py-5.5 px-10 gap-6" : "w-full py-4 px-6 gap-3 flex-col text-center justify-center", 
+                                 theme.card, 
+                                 theme.border,
+                                 profile.buttonShape === 'pill' ? "rounded-full" : 
+                                 profile.buttonShape === 'rounded' ? "rounded-[2.5rem]" : 
+                                 profile.buttonShape === 'square' ? "rounded-none" : "rounded-[2.5rem]"
+                             )}
+                             style={{
+                                 backgroundColor: profile.buttonColor ? `${profile.buttonColor}20` : undefined,
+                                 borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined,
+                             }}
+                         >
+                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full duration-1000" />
+                             <div 
+                                 className={cn(
+                                     "rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-12 shadow-inner shrink-0",
+                                     (profile.buttonLayout === "stack" || !profile.buttonLayout) ? "w-12 h-12" : "w-10 h-10"
+                                 )} 
+                                 style={{ color: profile.buttonColor || theme.accent, backgroundColor: `${profile.buttonColor || theme.accent}15` }}
+                             >
+                                  {cloneElement(btn.icon as any, { size: (profile.buttonLayout === "stack" || !profile.buttonLayout) ? 22 : 18 })}
+                             </div>
+                             <span className={cn(
+                                 profile.buttonLayout === "stack" ? "text-[12px]" : "text-[10px]"
+                             )}>
+                                {btn.label}
+                             </span>
+                         </motion.a>
+                     ))}
+                 </div>
 
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
             </main>
 
@@ -9038,102 +9033,6 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             ))}
                         </div>
                     </motion.div>
-
-                    {/* === ACTION BUTTONS === */}
-                    <div className={cn(
-                        "mt-5",
-                        profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
-                        profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
-                        "space-y-3"
-                    )}>
-                        {actions.map((action, i) => (
-                            <motion.div
-                                key={action.id}
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ delay: 0.4 + (i * 0.05) }}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full"
-                            >
-                                {action.href ? (
-                                    <a
-                                        href={action.href}
-                                        target={action.id !== 'phone' ? "_blank" : undefined}
-                                        onClick={action.onClick}
-                                        className={cn(
-                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
-                                            profile.buttonLayout === 'stack' ? cn("py-4 px-5", buttonRadiusClass) : cn("py-4 px-3 flex-col text-center", buttonRadiusClass),
-                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "text-white shadow-2xl" : "text-slate-900 shadow-2xl") : cn("border", theme.text, theme.border)
-                                        )}
-                                        style={action.isPrimary ? { 
-                                            background: profile.buttonColor ? profile.buttonColor : `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, 
-                                            boxShadow: profile.buttonLayout === 'stack' ? `0 10px 30px -10px ${profile.buttonColor || theme.accent}80` : `0 5px 15px -5px ${profile.buttonColor || theme.accent}50`
-                                        } : {
-                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : (action.isWhatsApp ? `${theme.accent}10` : action.id === 'email' ? `${theme.accent}10` : action.id === 'appointment' ? `${theme.accent}12` : action.id === 'location' ? `${theme.accent}10` : `${theme.accent}08`),
-                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined
-                                        }}
-                                    >
-                                        <div className={cn(
-                                            "flex items-center justify-center backdrop-blur-sm",
-                                            profile.buttonLayout === 'stack' ? cn("w-12 h-12", iconRadiusClass) : cn("w-10 h-10", iconRadiusClass),
-                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "bg-white/20" : "bg-black/10") : "border",
-                                        )} style={!action.isPrimary ? { 
-                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : `${theme.accent}40`, 
-                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : `${theme.accent}15`, 
-                                            color: profile.buttonColor || theme.accent 
-                                        } : {}}>
-                                            {action.icon}
-                                        </div>
-                                        <div className="flex flex-col">
-                                            {action.subLabel && <span className={cn("opacity-60 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
-                                            <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]")}>{action.label}</span>
-                                        </div>
-                                        {profile.buttonLayout === 'stack' && (
-                                            action.isPrimary ? (
-                                                <div className={cn("ml-auto flex items-center gap-1", isDarkColor(profile.buttonColor || theme.accent) ? "text-white/60" : "text-slate-900/60")}>
-                                                    <Phone size={16} className="animate-pulse" />
-                                                </div>
-                                            ) : (
-                                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: theme.accent }} />
-                                            )
-                                        )}
-                                        {action.isPrimary && (
-                                            <motion.div
-                                                animate={{ x: ['-100%', '200%'] }}
-                                                transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
-                                                className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
-                                            />
-                                        )}
-                                    </a>
-                                ) : (
-                                    <button
-                                        onClick={action.onClick}
-                                        className={cn(
-                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
-                                            profile.buttonLayout === 'stack' ? cn("py-4 px-5", buttonRadiusClass) : cn("py-4 px-3 flex-col text-center", buttonRadiusClass),
-                                            cn("border", theme.text, theme.border)
-                                        )}
-                                        style={{ 
-                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : (action.id === 'appointment' ? `${theme.accent}12` : `${theme.accent}08`),
-                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined
-                                        }}
-                                    >
-                                        <div className={cn(
-                                            "flex items-center justify-center border",
-                                            profile.buttonLayout === 'stack' ? cn("w-12 h-12", iconRadiusClass) : cn("w-10 h-10", iconRadiusClass),
-                                        )} style={{ borderColor: profile.buttonColor ? `${profile.buttonColor}30` : `${theme.accent}30`, color: profile.buttonColor || theme.accent }}>
-                                            {action.icon}
-                                        </div>
-                                        <div className="flex flex-col">
-                                             {action.subLabel && <span className={cn("opacity-40 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
-                                             <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]", profile.buttonColor ? "" : theme.text)} style={profile.buttonColor ? { color: profile.buttonColor } : {}}>{action.label}</span>
-                                        </div>
-                                        {profile.buttonLayout === 'stack' && <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: profile.buttonColor || theme.accent }} />}
-                                    </button>
-                                )}
-                            </motion.div>
-                        ))}
                     </div>
 
                     {/* === SERVICES SECTION - Work Order Style === */}
@@ -9348,6 +9247,103 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 <Bot size={20} />
                             </button>
                         )}
+                    </div>
+
+                    {/* === ACTION BUTTONS === */}
+                    <div className={cn(
+                        "mt-5",
+                        profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-3" : 
+                        profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-3 [&>*:last-child:nth-child(odd)]:col-span-2" : 
+                        "space-y-3"
+                    )}>
+                        {actions.map((action, i) => (
+                            <motion.div
+                                key={action.id}
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.4 + (i * 0.05) }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full"
+                            >
+                                {action.href ? (
+                                    <a
+                                        href={action.href}
+                                        target={action.id !== 'phone' ? "_blank" : undefined}
+                                        onClick={action.onClick}
+                                        className={cn(
+                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
+                                            profile.buttonLayout === 'stack' ? cn("py-4 px-5", buttonRadiusClass) : cn("py-4 px-3 flex-col text-center", buttonRadiusClass),
+                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "text-white shadow-2xl" : "text-slate-900 shadow-2xl") : cn("border", theme.text, theme.border)
+                                        )}
+                                        style={action.isPrimary ? { 
+                                            background: profile.buttonColor ? profile.buttonColor : `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, 
+                                            boxShadow: profile.buttonLayout === 'stack' ? `0 10px 30px -10px ${profile.buttonColor || theme.accent}80` : `0 5px 15px -5px ${profile.buttonColor || theme.accent}50`
+                                        } : {
+                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : (action.isWhatsApp ? `${theme.accent}10` : action.id === 'email' ? `${theme.accent}10` : action.id === 'appointment' ? `${theme.accent}12` : action.id === 'location' ? `${theme.accent}10` : `${theme.accent}08`),
+                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined
+                                        }}
+                                    >
+                                        <div className={cn(
+                                            "flex items-center justify-center backdrop-blur-sm",
+                                            profile.buttonLayout === 'stack' ? cn("w-12 h-12", iconRadiusClass) : cn("w-10 h-10", iconRadiusClass),
+                                            action.isPrimary ? (isDarkColor(profile.buttonColor || theme.accent) ? "bg-white/20" : "bg-black/10") : "border",
+                                        )} style={!action.isPrimary ? { 
+                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : `${theme.accent}40`, 
+                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : `${theme.accent}15`, 
+                                            color: profile.buttonColor || theme.accent 
+                                        } : {}}>
+                                            {action.icon}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            {action.subLabel && <span className={cn("opacity-60 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
+                                            <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]")}>{action.label}</span>
+                                        </div>
+                                        {profile.buttonLayout === 'stack' && (
+                                            action.isPrimary ? (
+                                                <div className={cn("ml-auto flex items-center gap-1", isDarkColor(profile.buttonColor || theme.accent) ? "text-white/60" : "text-slate-900/60")}>
+                                                    <Phone size={16} className="animate-pulse" />
+                                                </div>
+                                            ) : (
+                                                <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: theme.accent }} />
+                                            )
+                                        )}
+                                        {action.isPrimary && (
+                                            <motion.div
+                                                animate={{ x: ['-100%', '200%'] }}
+                                                transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
+                                                className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
+                                            />
+                                        )}
+                                    </a>
+                                ) : (
+                                    <button
+                                        onClick={action.onClick}
+                                        className={cn(
+                                            "w-full flex items-center gap-4 font-black transition-all relative overflow-hidden",
+                                            profile.buttonLayout === 'stack' ? cn("py-4 px-5", buttonRadiusClass) : cn("py-4 px-3 flex-col text-center", buttonRadiusClass),
+                                            cn("border", theme.text, theme.border)
+                                        )}
+                                        style={{ 
+                                            backgroundColor: profile.buttonColor ? `${profile.buttonColor}15` : (action.id === 'appointment' ? `${theme.accent}12` : `${theme.accent}08`),
+                                            borderColor: profile.buttonColor ? `${profile.buttonColor}40` : undefined
+                                        }}
+                                    >
+                                        <div className={cn(
+                                            "flex items-center justify-center border",
+                                            profile.buttonLayout === 'stack' ? cn("w-12 h-12", iconRadiusClass) : cn("w-10 h-10", iconRadiusClass),
+                                        )} style={{ borderColor: profile.buttonColor ? `${profile.buttonColor}30` : `${theme.accent}30`, color: profile.buttonColor || theme.accent }}>
+                                            {action.icon}
+                                        </div>
+                                        <div className="flex flex-col">
+                                             {action.subLabel && <span className={cn("opacity-40 tracking-[0.3em]", profile.buttonLayout === 'stack' ? "text-[7px]" : "text-[6px]")}>{action.subLabel}</span>}
+                                             <span className={cn("uppercase tracking-widest", profile.buttonLayout === 'stack' ? "text-sm" : "text-[10px]", profile.buttonColor ? "" : theme.text)} style={profile.buttonColor ? { color: profile.buttonColor } : {}}>{action.label}</span>
+                                        </div>
+                                        {profile.buttonLayout === 'stack' && <ArrowRight size={18} className="ml-auto opacity-40" style={{ color: profile.buttonColor || theme.accent }} />}
+                                    </button>
+                                )}
+                            </motion.div>
+                        ))}
                     </div>
 
                 {/* Articles Module */}
