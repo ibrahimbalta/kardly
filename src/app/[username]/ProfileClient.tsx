@@ -9565,9 +9565,10 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                             <div 
                                 className={cn(
                                     "prose max-w-none antialiased font-medium text-[15px] sm:text-[16px] transition-colors duration-500",
-                                    theme?.isLight ? "prose-slate prose-p:text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose-invert prose-p:text-white/70 prose-headings:text-white prose-strong:text-white",
+                                    theme?.isLight ? "prose-slate prose-p:text-slate-600 prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose-invert prose-p:text-slate-200 prose-headings:text-white prose-strong:text-white",
                                     "prose-img:rounded-[2rem] prose-a:text-primary prose-a:no-underline hover:prose-a:underline font-sans"
                                 )}
+                                style={{ color: theme?.isLight ? undefined : 'rgba(255,255,255,0.9)' }}
                                 dangerouslySetInnerHTML={{ __html: article.content }}
                             />
                         </div>
