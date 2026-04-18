@@ -5665,7 +5665,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
                 {/* Articles Module */}
                 <ArticlesSection 
-                    articles={profile.articles} 
+                    articles={profile?.articles || []} 
                     t={t} 
                     theme={theme} 
                     setCurrentArticle={setCurrentArticle} 
@@ -6227,7 +6227,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 
                 {/* Articles Module */}
                 <ArticlesSection 
-                    articles={profile.articles} 
+                    articles={profile?.articles || []} 
                     t={t} 
                     theme={theme} 
                     setCurrentArticle={setCurrentArticle} 
@@ -6373,7 +6373,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
                 {/* Articles Module */}
                 <ArticlesSection 
-                    articles={profile.articles} 
+                    articles={profile?.articles || []} 
                     t={t} 
                     theme={theme} 
                     setCurrentArticle={setCurrentArticle} 
@@ -9285,7 +9285,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 
                 {/* Articles Module */}
                 <ArticlesSection 
-                    articles={profile.articles} 
+                    articles={profile?.articles || []} 
                     t={t} 
                     theme={theme} 
                     setCurrentArticle={setCurrentArticle} 
@@ -9465,17 +9465,19 @@ function SocialIconsBar({ profile, socialLinks, t, trackEvent, getHeroIcon, form
 }
 
 function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOpen, trackEvent }: any) {
-    if (!articles || articles.length === 0) return null;
+    const displayArticles = Array.isArray(articles) ? articles : [];
+    
+    if (displayArticles.length === 0) return null;
 
     return (
         <section className="space-y-6 pt-10">
             <div className="flex items-center gap-4 px-2">
-                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
-                <h3 className={cn("text-[12px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t.articlesTitle || "YAZILARIM"}</h3>
+                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme?.accent || '#6366f1' }} />
+                <h3 className={cn("text-[12px] font-black uppercase tracking-[0.3em] italic drop-shadow-md", theme?.isLight ? "text-slate-900/40" : "text-white/40")}>{t?.articlesTitle || "YAZILARIM"}</h3>
                 <div className={cn("flex-1 h-[1px]", theme?.isLight ? "bg-slate-200" : "bg-white/10")} />
             </div>
             <div className="grid grid-cols-1 gap-6">
-                {(articles || []).filter((a: any) => a.isActive).map((article: any, i: number) => (
+                {displayArticles.map((article: any, i: number) => (
                     <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 15 }}
