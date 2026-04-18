@@ -4631,6 +4631,15 @@ if(true) {
                                     </div>
                                 )}
 
+                                {/* Articles Module */}
+                                <ArticlesSection 
+                                    articles={profile?.articles || []} 
+                                    t={t} 
+                                    theme={theme} 
+                                    setCurrentArticle={setCurrentArticle} 
+                                    setIsArticleOpen={setIsArticleOpen} 
+                                    trackEvent={trackEvent} 
+                                />
 
                                 {profile.slogan && (
                                     <p className={cn("font-bold mt-4 opacity-70 italic", !profile.sloganColor && theme.text)}
@@ -6371,15 +6380,6 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 {/* Social Networks Grid (Accent Outlined Style) */}
 
 
-                {/* Articles Module */}
-                <ArticlesSection 
-                    articles={profile?.articles || []} 
-                    t={t} 
-                    theme={theme} 
-                    setCurrentArticle={setCurrentArticle} 
-                    setIsArticleOpen={setIsArticleOpen} 
-                    trackEvent={trackEvent} 
-                />
 
             </main>
 
