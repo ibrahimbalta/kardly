@@ -9537,54 +9537,47 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
                 <div className={cn("flex-1 h-[1px]", theme?.isLight ? "bg-slate-200" : "bg-white/10")} />
             </div>
             
-            <div className="grid grid-cols-1 gap-6">
+            <div className="flex overflow-x-auto gap-4 pb-6 -mx-4 px-4 no-scrollbar snap-x snap-mandatory">
                 {displayArticles.map((article: any, i: number) => (
                     <motion.div
                         key={article.id || i}
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
+                        transition={{ delay: i * 0.05 }}
                         whileHover={{ y: -5 }}
                         className={cn(
-                            "overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border",
+                            "flex-shrink-0 w-44 overflow-hidden group cursor-pointer backdrop-blur-2xl transition-all duration-500 rounded-[2.5rem] border snap-start",
                             theme?.isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.03] border-white/10"
                         )}
                         style={{ 
-                            boxShadow: `0 40px 100px -20px ${theme?.accent || '#6366f1'}20`
+                            boxShadow: `0 20px 40px -10px ${theme?.accent || '#6366f1'}15`
                         }}
                         onClick={() => {
-                            console.log("Article clicked:", article.title);
                             trackEvent("article_click", article.title);
                             if (typeof setCurrentArticle === 'function') setCurrentArticle(article);
                             if (typeof setIsArticleOpen === 'function') setIsArticleOpen(true);
                         }}
                     >
-                        <div className="aspect-video relative overflow-hidden">
+                        <div className="aspect-square relative overflow-hidden">
                             {article.coverImage ? (
                                 <img 
                                     src={article.coverImage} 
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter contrast-[1.1] brightness-[0.9]" 
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                     alt={article.title} 
                                     loading="lazy" 
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-white/5 opacity-40">
-                                    <FileText size={40} className="text-white/20" />
+                                    <FileText size={32} className="text-white/20" />
                                 </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                            <div className="absolute bottom-5 left-6 right-6 flex items-end justify-between">
-                                <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-2xl translate-y-16 group-hover:translate-y-0 transition-all duration-500" style={{ backgroundColor: theme?.accent || '#6366f1' }}>
-                                    <ArrowRight size={16} className="text-white" />
-                                </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                            <div className="absolute bottom-4 left-4 right-4">
+                                <h4 className="text-[10px] font-black text-white leading-tight line-clamp-2 uppercase tracking-wide drop-shadow-md">
+                                    {article.title}
+                                </h4>
                             </div>
-                        </div>
-                        <div className="p-8">
-                            <h4 className={cn("text-sm font-black mb-2 tracking-wide", theme?.isLight ? "text-slate-900" : "text-white")}>{article.title}</h4>
-                            <p className={cn("text-[12px] font-medium leading-relaxed line-clamp-2", theme?.isLight ? "text-slate-500" : "text-white/60")}>
-                                {article.content?.replace(/<[^>]*>/g, '').slice(0, 100)}...
-                            </p>
                         </div>
                     </motion.div>
                 ))}
