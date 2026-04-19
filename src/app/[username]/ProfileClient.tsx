@@ -1,4 +1,4 @@
-// Vercel Deployment Trigger: 2026-04-14
+// Vercel Deployment Trigger: 2026-04-19-Fix-Avatar-URLs-2
 "use client"
 
 import React, { useState, useEffect, useRef, useMemo, ReactElement, cloneElement } from "react"
@@ -197,6 +197,16 @@ const getHeroIcon = (platform: string = "", size: number = 20, url: string = "")
 
 
 // ─── HELPERS ─────────────────────────────────────────────────────
+const sanitizeColor = (color: string) => {
+    if (!color || color === 'transparent') return 'fff';
+    // If it's a color-mix or other CSS function, extract hex
+    if (color.includes('(')) {
+        const hexMatch = color.match(/#[a-fA-F0-9]{6}|#[a-fA-F0-9]{3}/);
+        if (hexMatch) return hexMatch[0].replace('#', '');
+        return 'fff';
+    }
+    return color.replace('#', '');
+};
 
 const isDarkColor = (color: string) => {
     if (!color || color === 'transparent' || color.startsWith('var')) return false;
@@ -4224,7 +4234,7 @@ if(true) {
                                             frameBorder="0"
                                         />
                                     ) : (
-                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className={cn("w-full h-full object-cover")} loading="lazy" decoding="async" />
+                                        <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`} className={cn("w-full h-full object-cover")} loading="lazy" decoding="async" />
                                     )}
 
                                     {/* Profession Overlays */}
@@ -4272,7 +4282,7 @@ if(true) {
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
                                                 ) : (
-                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a2e&color=fff&bold=true&size=128`} className="w-full h-full object-cover" />
                                                 )}
                                             </div>
                                         </>
@@ -4285,7 +4295,7 @@ if(true) {
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
                                                 ) : (
-                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a2e&color=fff&bold=true&size=128`} className="w-full h-full object-cover" />
                                                 )}
                                             </div>
                                         </>
@@ -4298,7 +4308,7 @@ if(true) {
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
                                                 ) : (
-                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a2e&color=fff&bold=true&size=128`} className="w-full h-full object-cover" />
                                                 )}
                                             </div>
                                         </>
@@ -4311,7 +4321,7 @@ if(true) {
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
                                                     <iframe className="w-full h-full object-cover scale-[1.8] pointer-events-none" src={getYoutubeEmbedUrl(profile.youtubeVideoUrl)} allow="autoplay; encrypted-media" frameBorder="0" />
                                                 ) : (
-                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${profile.user.name}`} className="w-full h-full object-cover" />
+                                                    <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a2e&color=fff&bold=true&size=128`} className="w-full h-full object-cover" />
                                                 )}
                                             </div>
                                         </>
@@ -6011,7 +6021,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 className={cn("w-32 h-32 p-1 border-2 relative z-10 overflow-hidden", theme.isLight ? "rounded-full" : "rounded-2xl")}
                                 style={{ borderColor: theme.accent, boxShadow: `0 0 40px ${theme.accent}33` }}
                             >
-                                <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${profile?.user?.name || "User"}`} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+                                <img src={profile?.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
                             </motion.div>
                         </div>
 
@@ -6454,7 +6464,7 @@ function ReviewModal({ isOpen, onClose, onSubmit, theme, profile, t, toneStyle }
 
     const handleSubmit = () => {
         if (!formData.name || !formData.content) return
-        const image = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=1a1a2e&color=${theme.accent.replace('#', '')}&bold=true&size=128`
+        const image = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=1a1a2e&color=${sanitizeColor(theme.accent)}&bold=true&size=128`
         onSubmit({ ...formData, image, id: Date.now() })
         setFormData({ name: "", title: "", content: "", rating: 5, gender: "male" })
         onClose()
@@ -8977,7 +8987,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             <div className="relative mb-4">
                                 <div className="w-24 h-24 rounded-2xl border-2 overflow-hidden shadow-2xl" style={{ borderColor: `${theme.accent}60` }}>
                                     <img
-                                        src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=fff&bold=true&size=256`}
+                                        src={profile.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user?.name || 'U')}&background=1a1a2e&color=${sanitizeColor(theme.accent)}&bold=true&size=256`}
                                         className="w-full h-full object-cover"
                                         alt={profile.user?.name}
                                         loading="lazy"
@@ -9174,7 +9184,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                     <div className="flex gap-3">
                                         <div className="w-10 h-10 rounded-xl overflow-hidden border flex-shrink-0" style={{ borderColor: `${theme.accent}30` }}>
                                             <img
-                                                src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : (reviews[currentReviewIndex].image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128`)}
+                                                src={reviews[currentReviewIndex].image?.includes('avatar.iran.liara.run') || !reviews[currentReviewIndex].image ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a2e&color=e94560&bold=true&size=128` : reviews[currentReviewIndex].image}
                                                 className="w-full h-full object-cover"
                                                 alt={reviews[currentReviewIndex].name}
                                                 loading="lazy"
