@@ -9429,16 +9429,6 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     );
 }
 
-const isDarkColor = (color: string) => {
-    if (!color) return true;
-    const hex = color.replace('#', '');
-    if (hex.length < 6) return true;
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    const gray = (r * 0.299 + g * 0.587 + b * 0.114);
-    return gray < 160;
-};
 
 function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
     const [scrollPercentage, setScrollPercentage] = useState(0);
