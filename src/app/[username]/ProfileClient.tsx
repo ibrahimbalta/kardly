@@ -5299,6 +5299,17 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </div>
                 </div>
 
+                {/* 7. Action Buttons (Moved here under header) */}
+                <div className="w-full mb-14 space-y-3.5">
+                    {actionButtons.map((action, i) => (
+                        <motion.button key={i} whileHover={{ x: 4, scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[72px] rounded-3xl border border-white/5 bg-white/[0.03] flex items-center px-8 relative group transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10">
+                            <span className="shrink-0 flex items-center text-white/40 group-hover:text-white transition-colors duration-300">{action.icon}</span>
+                            <span className="flex-1 text-center font-black uppercase tracking-[0.3em] text-[11px] text-white/60 group-hover:text-white transition-colors duration-300" style={{ color: i % 2 === 1 ? theme.accent : undefined }}>{action.label}</span>
+                            <ChevronRight size={14} className="shrink-0 text-white/10 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                        </motion.button>
+                    ))}
+                </div>
+
                 {/* 5. Bio Block */}
                 {profile.bio && (
                     <div className="w-full mb-12">
@@ -5337,17 +5348,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </div>
                 )}
-
-                {/* 7. Action Buttons */}
-                <div className="w-full mb-14 space-y-3.5">
-                    {actionButtons.map((action, i) => (
-                        <motion.button key={i} whileHover={{ x: 4, scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[72px] rounded-3xl border border-white/5 bg-white/[0.03] flex items-center px-8 relative group transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10">
-                            <span className="shrink-0 flex items-center text-white/40 group-hover:text-white transition-colors duration-300">{action.icon}</span>
-                            <span className="flex-1 text-center font-black uppercase tracking-[0.3em] text-[11px] text-white/60 group-hover:text-white transition-colors duration-300" style={{ color: i % 2 === 1 ? theme.accent : undefined }}>{action.label}</span>
-                            <ChevronRight size={14} className="shrink-0 text-white/10 group-hover:text-white transition-all transform group-hover:translate-x-1" />
-                        </motion.button>
-                    ))}
-                </div>
 
                 {/* 8. Articles */}
                 <div className="w-full">
