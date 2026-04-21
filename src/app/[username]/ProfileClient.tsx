@@ -9429,13 +9429,45 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     );
 }
 
+const isDarkColor = (color: string) => {
+    if (!color) return true;
+    const hex = color.replace('#', '');
+    if (hex.length < 6) return true;
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const gray = (r * 0.299 + g * 0.587 + b * 0.114);
+    return gray < 160;
+};
+
 function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
+    const [scrollPercentage, setScrollPercentage] = useState(0);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (scrollContainerRef.current) {
+                const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+                const scrollPercent = (scrollTop / (scrollHeight - clientHeight)) * 100;
+                setScrollPercentage(scrollPercent);
+            }
+        };
+
+        const container = scrollContainerRef.current;
+        if (container) {
+            container.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (container) {
+                container.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [isOpen]);
+
     if (!isOpen || !article) return null;
 
-    // Generate dynamic background based on theme accent
     const accentColor = theme?.accent || '#6366f1';
-    const isLight = theme?.isLight;
-
+    
     return (
         <AnimatePresence>
             <div className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={onClose}>
@@ -9443,117 +9475,168 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                     initial={{ opacity: 0 }} 
                     animate={{ opacity: 1 }} 
                     exit={{ opacity: 0 }} 
-                    className="absolute inset-0 backdrop-blur-2xl"
-                    style={{ 
-                        backgroundColor: isLight 
-                            ? `${accentColor}08` 
-                            : `${accentColor}15`,
-                        backgroundImage: isLight
-                            ? `radial-gradient(ellipse at top, ${accentColor}12 0%, rgba(0,0,0,0.15) 70%)`
-                            : `radial-gradient(ellipse at top, ${accentColor}25 0%, rgba(0,0,0,0.92) 70%)`
-                    }}
+                    className="absolute inset-0 bg-black/60 backdrop-blur-md"
                 />
                 <motion.div
                     initial={{ y: "100%", opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: "100%", opacity: 0 }}
-                    transition={{ type: "spring", damping: 30, stiffness: 350 }}
-                    className={cn(
-                        "relative w-full sm:max-w-3xl border rounded-t-[3rem] sm:rounded-[3rem] overflow-hidden shadow-2xl z-10 mx-auto max-h-screen sm:max-h-[85vh] flex flex-col transition-colors duration-500",
-                        isLight ? "border-black/5" : "border-white/10"
-                    )}
+                    transition={{ type: "spring", damping: 35, stiffness: 300 }}
+                    className="relative w-full sm:max-w-4xl border border-white/20 rounded-t-[2.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] z-10 mx-auto max-h-[95vh] sm:max-h-[90vh] flex flex-col bg-[#fafafa] selection:bg-black/10"
                     onClick={(e) => e.stopPropagation()}
-                    style={{ 
-                        boxShadow: `0 30px 100px -20px ${accentColor}40`,
-                        backgroundColor: isLight ? '#ffffff' : `color-mix(in srgb, ${accentColor} 5%, #0a0a0f)`
-                    }}
                 >
-                    <div className="w-12 h-1.5 rounded-full mx-auto my-5 sm:hidden shrink-0" style={{ backgroundColor: `${accentColor}30` }} />
+                    {/* Reading Progress Bar */}
+                    <div className="absolute top-0 left-0 w-full h-1 z-20 bg-black/5">
+                        <motion.div 
+                            className="h-full" 
+                            style={{ backgroundColor: accentColor, width: `${scrollPercentage}%` }} 
+                        />
+                    </div>
+
+                    <div className="w-12 h-1.5 bg-black/10 rounded-full mx-auto my-4 sm:hidden shrink-0" />
                     
-                    <header className="flex items-center justify-between px-8 py-5 shrink-0" style={{ borderBottom: `1px solid ${isLight ? accentColor + '15' : accentColor + '15'}` }}>
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${accentColor}20`, color: accentColor }}>
-                                <FileText size={16} />
+                    <header className="flex items-center justify-between px-6 sm:px-10 py-5 shrink-0 border-b border-black/5 bg-white/50 backdrop-blur-md">
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: `${accentColor}15`, color: accentColor }}>
+                                <FileText size={20} />
                             </div>
-                            <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", isLight ? "text-slate-400" : "text-white/40")}>{t.articleReading || "MAKALE OKUNUYOR"}</span>
+                            <div className="flex flex-col">
+                                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-black/40 leading-none mb-1">{t.articleReading || "MAKALE OKUNUYOR"}</span>
+                                <span className="text-[11px] font-bold text-black/80 truncate max-w-[150px] sm:max-w-xs">{article.title}</span>
+                            </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className={cn("w-10 h-10 rounded-full border flex items-center justify-center transition-all hover:rotate-90 duration-300 shadow-sm", isLight ? "bg-black/5 border-black/10 text-slate-600" : "bg-white/5 border-white/10 text-white/60 hover:text-white")}
+                            className="w-10 h-10 rounded-full bg-black/5 border border-black/5 flex items-center justify-center text-black/60 hover:text-black hover:bg-black/10 transition-all active:scale-90"
                         >
-                            <X size={18} />
+                            <X size={20} />
                         </button>
                     </header>
 
-                    <div className="flex-1 overflow-y-auto p-8 sm:p-12 no-scrollbar">
-                        {article.coverImage && (
-                            <img src={article.coverImage} alt={article.title} className="w-full aspect-video object-cover rounded-[2rem] mb-10 shadow-2xl" style={{ border: `1px solid ${accentColor}15` }} />
-                        )}
+                    <div 
+                        ref={scrollContainerRef}
+                        className="flex-1 overflow-y-auto px-6 sm:px-16 py-10 sm:py-16 no-scrollbar scroll-smooth"
+                    >
+                        <div className="max-w-3xl mx-auto">
+                            {article.coverImage && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mb-12 relative group"
+                                >
+                                    <div className="absolute inset-0 bg-black/20 blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-1000" />
+                                    <img 
+                                        src={article.coverImage} 
+                                        alt={article.title} 
+                                        className="w-full aspect-[21/9] object-cover rounded-[2rem] shadow-xl relative z-10" 
+                                    />
+                                </motion.div>
+                            )}
 
-                        <div className="max-w-2xl mx-auto space-y-8">
-                            <div className="space-y-4">
+                            <div className="space-y-6 mb-12">
                                 <div className="flex items-center gap-3">
-                                    <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest" style={{ backgroundColor: `${accentColor}20`, color: accentColor }}>
-                                        BLOG
+                                    <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-widest bg-black/5 text-black/50 border border-black/5">
+                                        {article.category || "İÇERİK"}
                                     </span>
-                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", isLight ? "text-slate-300" : "text-white/20")}>
-                                        {new Date(article.createdAt).toLocaleDateString()}
+                                    <span className="w-1.5 h-1.5 rounded-full bg-black/10" />
+                                    <span className="text-[11px] font-medium text-black/40">
+                                        {new Date(article.createdAt).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                                     </span>
                                 </div>
-                                <h2 className={cn("text-3xl sm:text-4xl font-black tracking-tighter leading-tight italic", isLight ? "text-slate-900" : "text-white")}>
+                                <h2 className="text-4xl sm:text-5xl font-black text-[#1a202c] tracking-tight leading-[1.1]">
                                     {article.title}
                                 </h2>
+                                <div className="w-16 h-1 rounded-full" style={{ backgroundColor: accentColor }} />
                             </div>
 
-                            <div className="h-1 w-20 rounded-full" style={{ backgroundColor: accentColor }} />
-
                             <style dangerouslySetInnerHTML={{ __html: `
-                                .article-content { line-height: 1.9; letter-spacing: 0.01em; }
-                                .article-content p { margin-bottom: 1.25em; }
-                                .article-content h1 { font-size: 1.75em; font-weight: 900; margin-top: 2em; margin-bottom: 0.75em; letter-spacing: -0.02em; }
-                                .article-content h2 { font-size: 1.5em; font-weight: 800; margin-top: 1.75em; margin-bottom: 0.6em; letter-spacing: -0.02em; }
-                                .article-content h3 { font-size: 1.25em; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; }
-                                .article-content h4 { font-size: 1.1em; font-weight: 700; margin-top: 1.25em; margin-bottom: 0.4em; }
-                                .article-content ul, .article-content ol { margin: 1em 0; padding-left: 1.5em; }
-                                .article-content li { margin-bottom: 0.5em; line-height: 1.7; }
-                                .article-content ul li { list-style-type: disc; }
-                                .article-content ol li { list-style-type: decimal; }
-                                .article-content blockquote { border-left: 3px solid ${accentColor}; padding: 0.75em 1.25em; margin: 1.5em 0; font-style: italic; opacity: 0.85; border-radius: 0 0.5rem 0.5rem 0; }
-                                .article-content blockquote.light-mode { background: ${accentColor}08; }
-                                .article-content blockquote.dark-mode { background: ${accentColor}10; }
-                                .article-content strong { font-weight: 700; }
-                                .article-content a { color: ${accentColor}; text-decoration: underline; text-underline-offset: 3px; }
-                                .article-content img { border-radius: 1.5rem; margin: 1.5em 0; max-width: 100%; }
-                                .article-content pre { background: rgba(0,0,0,0.15); padding: 1em; border-radius: 0.75rem; overflow-x: auto; margin: 1.5em 0; font-size: 0.9em; }
-                                .article-content code { background: rgba(0,0,0,0.1); padding: 0.15em 0.4em; border-radius: 0.25em; font-size: 0.9em; }
-                                .article-content hr { border: none; height: 1px; margin: 2em 0; opacity: 0.15; }
-                                .article-content.is-light hr { background: #000; }
-                                .article-content.is-dark hr { background: #fff; }
-                                .article-content.is-light h1, .article-content.is-light h2, .article-content.is-light h3, .article-content.is-light h4 { color: #0f172a; }
-                                .article-content.is-dark h1, .article-content.is-dark h2, .article-content.is-dark h3, .article-content.is-dark h4 { color: #fff; }
+                                .zen-content { 
+                                    font-family: 'Georgia', 'Times New Roman', serif;
+                                    color: #2d3748;
+                                    font-size: 1.15rem;
+                                    line-height: 2;
+                                    letter-spacing: -0.003em;
+                                }
+                                .zen-content p { margin-bottom: 2em; }
+                                .zen-content h1, .zen-content h2, .zen-content h3, .zen-content h4 { 
+                                    font-family: 'Inter', system-ui, sans-serif;
+                                    color: #1a202c;
+                                    font-weight: 900;
+                                    line-height: 1.2;
+                                    margin-top: 2.5em;
+                                    margin-bottom: 1em;
+                                    letter-spacing: -0.04em;
+                                }
+                                .zen-content h1 { font-size: 2.5rem; color: ${accentColor}; }
+                                .zen-content h2 { font-size: 1.85rem; border-bottom: 2px solid ${accentColor}15; padding-bottom: 0.3em; }
+                                .zen-content h3 { font-size: 1.45rem; }
+                                .zen-content ul, .zen-content ol { margin: 2em 0; padding-left: 1.5em; }
+                                .zen-content li { margin-bottom: 0.75em; padding-left: 0.5em; }
+                                .zen-content li::marker { color: ${accentColor}; font-weight: bold; }
+                                .zen-content blockquote { 
+                                    border-left: 4px solid ${accentColor}; 
+                                    padding: 2em 2.5em; 
+                                    margin: 3.5em 0; 
+                                    background: white;
+                                    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+                                    border-radius: 0 2rem 2rem 0;
+                                    font-style: italic;
+                                    font-size: 1.3rem;
+                                    color: #4a5568;
+                                    line-height: 1.6;
+                                }
+                                .zen-content strong { color: #111; font-weight: 800; }
+                                .zen-content a { 
+                                    color: ${accentColor}; 
+                                    text-decoration: none; 
+                                    font-weight: 600;
+                                    border-bottom: 2px solid ${accentColor}30;
+                                }
+                                .zen-content a:hover { border-bottom-color: ${accentColor}; background: ${accentColor}08; }
+                                .zen-content img { border-radius: 2.5rem; margin: 3.5em 0; box-shadow: 0 30px 60px rgba(0,0,0,0.12); width: 100%; border: 1px solid rgba(0,0,0,0.05); }
+                                .zen-content code { 
+                                    background: ${accentColor}08; 
+                                    padding: 0.2em 0.5em; 
+                                    border-radius: 0.5em; 
+                                    font-family: ui-monospace, monospace; 
+                                    font-size: 0.85em; 
+                                    color: ${accentColor};
+                                    font-weight: 600;
+                                }
+                                .zen-content hr { border: none; height: 1px; background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent); margin: 5em 0; }
+                                
+                                @media (max-width: 640px) {
+                                    .zen-content { font-size: 1.08rem; line-height: 1.8; }
+                                    .zen-content h1 { font-size: 1.85rem; }
+                                    .zen-content h2 { font-size: 1.55rem; }
+                                    .zen-content blockquote { padding: 1.5em; margin: 2em 0; font-size: 1.15rem; }
+                                }
                             ` }} />
 
                             <div 
-                                className={cn(
-                                    "article-content antialiased font-medium text-[15px] sm:text-[16px] transition-colors duration-500",
-                                    isLight ? "is-light text-slate-600" : "is-dark text-white/80"
-                                )}
+                                className="zen-content antialiased"
                                 dangerouslySetInnerHTML={{ __html: article.content }}
                             />
+
+                            <div className="mt-20 pt-10 border-t border-black/5 flex flex-col items-center justify-center text-center space-y-6">
+                                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-black/5 text-black/20">
+                                    <FileText size={24} />
+                                </div>
+                                <p className="text-[13px] font-medium text-black/30 max-w-xs leading-relaxed">
+                                    {t.articleEndingMessage || "Bu makalenin sonuna geldiniz. Okuduğunuz için teşekkürler."}
+                                </p>
+                            </div>
                         </div>
-                        
-                        <div className="h-20" /> {/* Extra space for scroll */}
                     </div>
 
-                    <footer className="p-6 backdrop-blur-xl shrink-0" style={{ borderTop: `1px solid ${accentColor}15`, backgroundColor: isLight ? `${accentColor}05` : `${accentColor}08` }}>
+                    <footer className="px-6 sm:px-10 py-6 bg-white border-t border-black/5 shrink-0 z-30">
                         <button 
                             onClick={onClose}
-                            className={cn(
-                                "w-full py-4 border rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] transition-all active:scale-95",
-                                isLight 
-                                    ? "bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200" 
-                                    : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                            )}
+                            className="w-full py-4.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.4em] transition-all active:scale-[0.98] shadow-sm hover:shadow-md"
+                            style={{ 
+                                backgroundColor: accentColor, 
+                                color: isDarkColor(accentColor) ? '#fff' : '#000' 
+                            }}
                         >
                             {t.closeReader || "OKUMAYI BİTİR"}
                         </button>
