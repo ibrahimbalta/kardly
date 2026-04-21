@@ -5320,100 +5320,56 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             onClick: () => trackEvent("email"),
             active: !!profile.user?.email
         },
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, onClick: () => trackEvent("phone"), active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: t.waMessagesBtn || "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={16} />, onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); }, active: true },
+        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={16} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
         ...otherSocialActions,
         ...customButtons,
-        {
-            label: t.website || "WEB SİTE",
-            icon: <Globe size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url),
-            onClick: () => trackEvent("website"),
-            active: !!socialLinks.find((l: any) => l.platform === 'website')?.url
-        },
-        {
-            label: t.locationsBtn || "KONUM",
-            icon: <MapPin size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url),
-            onClick: () => trackEvent("location"),
-            active: !!socialLinks.find((l: any) => l.platform === 'location')?.url
-        },
+        { label: t.website || "WEB SİTE", icon: <Globe size={16} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: t.locationsBtn || "KONUM", icon: <MapPin size={16} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url }
     ].filter(a => a.active).filter((v, i, a) => a.findIndex(t => (t.label === v.label || (t.href && v.href && t.href === v.href))) === i);
 
     return (
         <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
-            {/* Top Navigation Icons */}
-            <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center">
-                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg">
-                    <QrCode size={18} />
+            <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            <div className="absolute top-5 left-5 right-5 z-20 flex justify-between items-center">
+                <button onClick={() => setIsQrOpen(true)} className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg hover:bg-white/30 transition-all">
+                    <QrCode size={16} />
                 </button>
-                <div className="flex gap-3">
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center text-white/80">
-                        <UserPlus size={18} />
+                <div className="flex gap-2">
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white/80 border border-white/10 hover:bg-white/25 transition-all">
+                        <UserPlus size={16} />
                     </button>
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-10 h-10 rounded-full bg-black/10 backdrop-blur-md flex items-center justify-center text-white/80 font-black text-[10px]">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white/80 font-black text-[9px] border border-white/10 hover:bg-white/25 transition-all">
                         {lang.toUpperCase()}
                     </button>
                 </div>
             </div>
-
-            {/* Header Curve */}
-            <div 
-                className={cn("relative h-64 sm:h-80 w-full overflow-hidden", !profile.themeColor && theme.header)}
-                style={theme.headerStyle}
-            >
-                <div className="absolute inset-0 bg-black/10" />
-                <svg className="absolute bottom-[-1px] w-full h-24 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
-                    <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            <div className={cn("relative h-56 sm:h-64 w-full overflow-hidden", !profile.themeColor && theme.header)} style={theme.headerStyle}>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10" />
+                <div className="absolute top-10 right-10 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
+                <div className="absolute bottom-10 left-10 w-24 h-24 rounded-full bg-white/5 blur-xl" />
+                <svg className="absolute bottom-[-1px] w-full h-20 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
+                    <path d="M0,224L60,213.3C120,203,240,181,360,186.7C480,192,600,224,720,229.3C840,235,960,213,1080,197.3C1200,181,1320,171,1380,165.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
                 </svg>
             </div>
-
-            {/* Main Content */}
-            <main className="max-w-md mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center w-full">
+            <main className="max-w-[420px] mx-auto px-5 -mt-28 relative z-10 flex flex-col items-center w-full">
                 <MotionWrapper style="3d-manual">
                     <div className="flex flex-col items-center w-full">
-                        {/* Avatar with Glow and Floating Expertise Icons */}
                         <div className="relative">
                             {toneStyle.expertiseStyle !== 'minimal' && (
-                                <motion.div
-                                    className="absolute inset-0 z-20 pointer-events-none"
-                                    animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }}
-                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                                >
+                                <motion.div className="absolute inset-0 z-20 pointer-events-none" animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }} transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}>
                                     {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
                                         const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                        const radius = 100; // Increased radius for Elite avatar size
+                                        const radius = 90;
                                         const x = Math.cos(angle) * radius;
                                         const y = Math.sin(angle) * radius;
-
                                         return (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ opacity: 0, scale: 0 }}
-                                                animate={toneStyle.expertiseStyle === 'floating' ? {
-                                                    opacity: 1, scale: 1,
-                                                    y: [0, -10, 0],
-                                                    transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } }
-                                                } : { opacity: 1, scale: 1 }}
-                                                transition={{ delay: 0.5 + i * 0.1 }}
-                                                className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon"
-                                                style={{
-                                                    left: `calc(50% + ${x}px)`,
-                                                    top: `calc(50% + ${y}px)`,
-                                                    transform: 'translate(-50%, -50%)'
-                                                }}
-                                            >
-                                                <motion.div
-                                                    animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }}
-                                                    transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}
-                                                    className={cn("w-10 h-10 glass border border-slate-200/50 flex items-center justify-center shadow-lg transition-all hover:scale-125 hover:border-slate-300 hover:bg-white/90 relative rounded-full")}
-                                                    style={{
-                                                        color: theme.accent,
-                                                        backgroundColor: 'rgba(255,255,255,0.7)',
-                                                        backdropFilter: 'blur(10px)'
-                                                    }}
-                                                >
+                                            <motion.div key={i} initial={{ opacity: 0, scale: 0 }} animate={toneStyle.expertiseStyle === 'floating' ? { opacity: 1, scale: 1, y: [0, -8, 0], transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } } } : { opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon" style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)`, transform: 'translate(-50%, -50%)' }}>
+                                                <motion.div animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }} transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }} className="w-9 h-9 border border-slate-200/60 flex items-center justify-center shadow-md transition-all hover:scale-125 hover:shadow-lg relative rounded-full bg-white/90 backdrop-blur-md" style={{ color: theme.accent }}>
                                                     {getIcon(service.title)}
-
-                                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white/95 backdrop-blur-xl px-3 py-1.5 rounded-xl text-[10px] font-black text-slate-800 pointer-events-none border border-slate-100 shadow-xl scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-widest">
+                                                    <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white px-2.5 py-1 rounded-lg text-[9px] font-black text-slate-700 pointer-events-none border border-slate-100 shadow-lg scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-wider">
                                                         {translateText(service.title)}
                                                     </div>
                                                 </motion.div>
@@ -5422,341 +5378,170 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                     })}
                                 </motion.div>
                             )}
-
-                            <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className={cn("w-40 h-40 rounded-full bg-white p-2 shadow-2xl relative z-10", theme.glow)}
-                            >
-                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=0d0d0e&color=fff&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} loading="lazy" decoding="async" />
+                            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10">
+                                <div className="w-[132px] h-[132px] rounded-full p-[3px]" style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}80, ${theme.accent}40)` }}>
+                                    <div className="w-full h-full rounded-full bg-white p-[3px]">
+                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=f1f5f9&color=334155&bold=true&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} loading="lazy" decoding="async" />
+                                    </div>
+                                </div>
+                                <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-400 rounded-full border-[3px] border-white z-20 shadow-sm" />
                             </motion.div>
                         </div>
-
-                        {/* Profile Information */}
-                        <div className="text-center mt-6 space-y-1">
-                            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
-                                <Sparkles size={18} style={{ color: theme.accent }} /> {profile.user.name}
-                            </h1>
-                            <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
-                                <span className="w-6 h-[1px] bg-slate-200"></span>
-                                {translateText(profile.occupation)}
-                                <span className="w-6 h-[1px] bg-slate-200"></span>
-                            </p>
-                            {profile.slogan && (
-                                <p className="font-medium mt-3 max-w-[280px] mx-auto italic leading-relaxed px-4"
-                                   style={{ 
-                                       color: profile.sloganColor || "rgb(100, 116, 139)",
-                                       fontSize: profile.sloganFontSize || "11px",
-                                       fontFamily: profile.sloganFontFamily || "inherit"
-                                   }}>
-                                    "{translateText(profile.slogan)} 🚀"
-                                </p>
-                            )}
-                            <SocialIconsBar 
-                                profile={profile} 
-                                socialLinks={socialLinks} 
-                                t={t} 
-                                trackEvent={trackEvent} 
-                                getHeroIcon={getHeroIcon} 
-                                formatUrl={formatUrl}
-                                theme={theme}
-                            />
+                        <div className="text-center mt-5 space-y-2 w-full">
+                            <h1 className="text-2xl font-black text-slate-900 tracking-tight">{profile.user.name}</h1>
+                            <div className="flex items-center justify-center gap-2">
+                                <div className="h-[1px] w-8 rounded-full" style={{ backgroundColor: `${theme.accent}40` }} />
+                                <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
+                                <div className="h-[1px] w-8 rounded-full" style={{ backgroundColor: `${theme.accent}40` }} />
+                            </div>
+                            <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={theme} />
                         </div>
                     </div>
                 </MotionWrapper>
-
-                 {/* Widget Dock - Elite Style */}
-                 {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
-                     <div className="w-full mt-6 p-4 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex flex-wrap justify-center gap-3">
-                         {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
-                             <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[60px] h-[60px] flex-shrink-0" isMini={true} />
-                         ))}
-                     </div>
-                 )}
-
-                {/* Bio Section */}
-                {profile.bio && (
-                    <div className="w-full mt-12 px-4 text-center">
-                        <p className="leading-relaxed font-medium opacity-80 whitespace-pre-wrap"
-                           style={{ 
-                               color: profile.bioColor || "rgb(100, 116, 139)",
-                               fontSize: profile.bioFontSize || "12px",
-                               fontFamily: profile.bioFontFamily || "inherit"
-                           }}>
-                            {profile.bio}
-                        </p>
+                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
+                    <div className="w-full mt-5 p-3 bg-slate-50/80 border border-slate-100 rounded-2xl flex flex-wrap justify-center gap-2.5">
+                        {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
+                            <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[60px] h-[60px] flex-shrink-0" isMini={true} />
+                        ))}
                     </div>
                 )}
-
-                {/* Expertise Areas (Services) */}
-                {profile.services && profile.services.length > 0 && (
-                    <div className="w-full mt-12 space-y-6">
-                        <div className="flex items-center gap-2 px-2">
-                            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
+                {profile.bio && (
+                    <div className="w-full mt-6">
+                        <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-100 rounded-2xl p-5 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full rounded-r-full" style={{ backgroundColor: `${theme.accent}30` }} />
+                            <p className="leading-relaxed font-medium text-center whitespace-pre-wrap pl-3" style={{ color: profile.bioColor || "rgb(100, 116, 139)", fontSize: profile.bioFontSize || "12px", fontFamily: profile.bioFontFamily || "inherit" }}>{profile.bio}</p>
                         </div>
-                        <div className="grid grid-cols-1 gap-4">
+                        {profile.slogan && (
+                            <p className="font-semibold mt-3 text-center italic leading-relaxed" style={{ color: profile.sloganColor || `${theme.accent}90`, fontSize: profile.sloganFontSize || "11px", fontFamily: profile.sloganFontFamily || "inherit" }}>"{translateText(profile.slogan)}"</p>
+                        )}
+                    </div>
+                )}
+                {profile.services && profile.services.length > 0 && (
+                    <div className="w-full mt-8 space-y-3">
+                        <div className="flex items-center gap-2.5 px-1">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Award size={12} /></div>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2.5">
                             {profile.services.map((service: any, i: number) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 flex items-start gap-4 group hover:bg-white hover:shadow-xl transition-all"
-                                >
-                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                        <Award size={18} style={{ color: theme.accent }} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="text-xs font-black text-slate-900 mb-1">{service.title}</h4>
-                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{service.description}</p>
-                                    </div>
+                                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-3.5 rounded-xl border border-slate-100 group hover:shadow-md hover:border-slate-200 transition-all duration-300">
+                                    <div className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5" style={{ backgroundColor: `${theme.accent}10`, color: theme.accent }}>{getIcon(service.title)}</div>
+                                    <h4 className="text-[10px] font-black text-slate-800 mb-0.5 line-clamp-1">{service.title}</h4>
+                                    {service.description && <p className="text-[9px] text-slate-400 font-medium leading-relaxed line-clamp-2">{service.description}</p>}
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 )}
-
-                {/* Projects Section */}
                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                    <div className="w-full mt-24 space-y-8">
-                        <div className="flex items-center justify-between px-2">
-                             <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.accent }} />
+                    <div className="w-full mt-8 space-y-3">
+                        <div className="flex items-center justify-between px-1">
+                             <div className="flex items-center gap-2.5">
+                                <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Eye size={12} /></div>
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.myProjects || "PROJELER"}</h3>
                             </div>
+                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{profile.products.filter((p: any) => p.image).length} {lang === 'tr' ? 'proje' : 'items'}</span>
                         </div>
-
-                        <div className="grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-2 gap-2.5">
                             {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    whileHover={{ y: -5 }}
-                                    className={cn("bg-white overflow-hidden shadow-xl border transition-all duration-500 group cursor-pointer", toneStyle.rounded)}
-                                    style={{ 
-                                        borderColor: `${theme.accent}15`,
-                                        boxShadow: `0 20px 40px -15px ${theme.accent}25`
-                                    }}
-                                    onClick={() => {
-                                        trackEvent("product_grid", project.name);
-                                        if (project.link) {
-                                            window.open(formatUrl(project.link), "_blank");
-                                        } else {
-                                            setSelectedProject(project);
-                                        }
-                                    }}
-                                >
-                                    <div className="aspect-video relative overflow-hidden">
+                                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -3 }} className="bg-white overflow-hidden border border-slate-100 rounded-xl transition-all duration-300 group cursor-pointer hover:shadow-lg hover:border-slate-200" onClick={() => { trackEvent("product_grid", project.name); if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
+                                    <div className="aspect-[4/3] relative overflow-hidden">
                                         <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                        <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
-                                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-                                                <span className="text-[10px] font-black text-white">{project.price > 0 ? `${project.price} ₺` : "PROJE"}</span>
-                                            </div>
-                                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transform translate-y-20 group-hover:translate-y-0 transition-all duration-300">
-                                                <ExternalLink size={16} className="text-slate-900" />
-                                            </div>
-                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        <div className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0 shadow-sm"><ExternalLink size={10} className="text-slate-600" /></div>
                                     </div>
-                                    <div className="p-6">
-                                        <h4 className="text-sm font-black text-slate-900 mb-2">{project.name}</h4>
-                                        <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2">{project.description}</p>
+                                    <div className="px-3 py-2.5">
+                                        <h4 className="text-[10px] font-black text-slate-800 line-clamp-1">{project.name}</h4>
+                                        {project.description && <p className="text-[8px] text-slate-400 font-medium mt-0.5 line-clamp-1">{project.description}</p>}
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 )}
-
-                {/* Reviews Section */}
-                {reviews.length > 0 && (
-                    <div className="w-full mt-12 space-y-6">
-                        <div className="flex items-center justify-between px-2">
-                            <div className="flex items-center gap-2">
-                                <span className="w-1 h-4 rounded-full" style={{ backgroundColor: theme.accent }} />
-                                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t.reviewsTitle}</h3>
-                            </div>
-                            <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 text-[8px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all">
-                                <Plus size={10} /> {t.writeReview}
-                            </button>
-                        </div>
-                        <div className="bg-slate-50/50 p-6 rounded-[2.5rem] border border-slate-100 relative group overflow-hidden">
-                            <Quote className="absolute top-10 right-6 opacity-[0.03] text-slate-900 group-hover:scale-110 transition-transform" size={80} />
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={reviews[0]?.name || 'review'}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="space-y-4 relative z-10"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center p-1 shadow-sm">
-                                            <img src={reviews[0]?.image} className="w-full h-full object-cover rounded-xl" loading="lazy" decoding="async" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="text-[11px] font-black text-slate-900">{reviews[0]?.name}</h4>
-                                            <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{reviews[0]?.title || "Müşteri"}</p>
-                                        </div>
-                                        <div className="flex gap-0.5 text-amber-400">
-                                            {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < (reviews[0]?.rating || 5) ? "currentColor" : "none"} />)}
-                                        </div>
-                                    </div>
-                                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed italic">"{reviews[0]?.content}"</p>
-                                    {reviews[0]?.isVerified && (
-                                        <div className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.2em] text-emerald-500 pt-2">
-                                            <CheckCircle2 size={12} /> DOĞRULANMIŞ GÖRÜŞ
-                                        </div>
-                                    )}
-                                </motion.div>
-                            </AnimatePresence>
-                        </div>
-                    </div>
-                )}
-
-                {/* Main CTA Button */}
-                {profile.showAppointmentBtn && (
-                    <motion.button
-                        whileHover={{ scale: 1.02, y: -4 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setIsAppointmentOpen(true)}
-                        className="w-full mt-12 py-6 rounded-[2.5rem] bg-slate-900 text-white font-black uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-4 group"
-                    >
-                        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Briefcase size={20} />
-                        </div>
-                        <span className="flex-1 text-center pr-10">{t.bookAppointment || "DANIŞMANLIK AL"}</span>
-                        <Zap size={18} className="text-amber-400 animate-pulse" />
-                    </motion.button>
-                )}
-
-                {/* Unified Action Grid */}
-                <div className={cn(
-                    "w-full mt-16",
-                    profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-4" : 
-                    profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-4 [&>*:last-child:nth-child(odd)]:col-span-2" : 
-                    "space-y-4"
-                )}>
+                <div className={cn("w-full mt-8", profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-2.5" : profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-2.5 [&>*:last-child:nth-child(odd)]:col-span-2" : "space-y-2.5")}>
                     {actionButtons.map((action, i) => (
-                        <motion.button
-                            key={i}
-                            whileHover={{ scale: 1.05, y: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => {
-                                if (action.onClick) action.onClick();
-                                if (action.href) window.location.href = action.href;
-                            }}
-                            style={{ 
-                                backgroundColor: action.color || (profile.buttonColor ? profile.buttonColor : theme.accent),
-                                color: (action.color || profile.buttonColor) ? (isDarkColor(action.color || profile.buttonColor) ? '#fff' : '#000') : '#fff'
-                            }}
-                            className={cn(
-                                "flex items-center transition-all shadow-xl",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "py-6 px-10 rounded-[2rem] gap-6" : "py-7 flex-col text-center justify-center gap-3 rounded-[2rem]",
-                                profile.buttonShape === 'pill' ? "rounded-full" : 
-                                profile.buttonShape === 'rounded' ? "rounded-2xl" : 
-                                profile.buttonShape === 'square' ? "rounded-none" : ""
-                            )}
-                        >
-                            <span className={cn(
-                                "p-3 bg-white/10 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "" : "scale-110"
-                            )}>
-                                {action.icon}
-                            </span>
-                            <span className={cn(
-                                "font-black uppercase tracking-widest",
-                                (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "text-xs flex-1 text-center" : "text-[10px]"
-                            )}>{action.label}</span>
+                        <motion.button key={i} whileHover={{ scale: 1.01, y: -1 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className={cn("flex items-center transition-all duration-200 bg-white border border-slate-100 hover:border-slate-200 hover:shadow-md", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "py-3 px-4 rounded-xl gap-3.5" : "py-3.5 flex-col text-center justify-center gap-2 rounded-xl", profile.buttonShape === 'pill' ? "rounded-full" : profile.buttonShape === 'rounded' ? "rounded-2xl" : profile.buttonShape === 'square' ? "rounded-none" : "")} style={profile.buttonColor ? { backgroundColor: profile.buttonColor, borderColor: profile.buttonColor, color: isDarkColor(profile.buttonColor) ? '#fff' : '#000' } : undefined}>
+                            <span className={cn("flex items-center justify-center rounded-lg shrink-0", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "w-8 h-8" : "w-7 h-7")} style={profile.buttonColor ? { backgroundColor: isDarkColor(profile.buttonColor) ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)', color: isDarkColor(profile.buttonColor) ? '#fff' : '#000' } : { backgroundColor: `${theme.accent}10`, color: theme.accent }}>{action.icon}</span>
+                            <span className={cn("font-bold uppercase tracking-wider", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "text-[11px] flex-1 text-left" : "text-[9px]", !profile.buttonColor && "text-slate-700")}>{action.label}</span>
+                            {(profile.buttonLayout === 'stack' || !profile.buttonLayout) && !profile.buttonColor && <ChevronRight size={14} className="text-slate-300 shrink-0" />}
                         </motion.button>
                     ))}
                 </div>
-
-                {/* Articles Module */}
-                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
-
-                {/* Footer Logo */}
-                <div className="py-16 opacity-30 hover:opacity-100 transition-opacity">
-                    <Link href="/" className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center shadow-lg">
-                            <Layout className="text-white w-3 h-3" />
+                <div className="w-full mt-8 space-y-3">
+                    <div className="flex items-center justify-between px-1">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Star size={12} /></div>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.reviewsTitle || t.reviews}</h3>
                         </div>
-                        <span className="text-sm font-black tracking-tighter">Kardly<span className="text-rose-500">.site</span></span>
+                        <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-100 text-[8px] font-black uppercase tracking-wider text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all"><Plus size={10} /> {t.writeReview}</button>
+                    </div>
+                    {reviews.length > 0 ? (
+                        <div className="bg-white border border-slate-100 p-4 rounded-xl relative overflow-hidden">
+                            <Quote className="absolute top-3 right-3 opacity-[0.03] text-slate-900" size={50} />
+                            <AnimatePresence mode="wait">
+                                <motion.div key={currentReviewIndex} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -15 }} transition={{ duration: 0.25 }} className="space-y-2.5 relative z-10">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100 shrink-0">
+                                            <img src={reviews[currentReviewIndex]?.image?.includes('avatar.iran.liara.run') || !reviews[currentReviewIndex]?.image ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=f1f5f9&color=334155&bold=true&size=128` : reviews[currentReviewIndex].image} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e: any) => { e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=f1f5f9&color=334155&bold=true&size=128`; }} alt={reviews[currentReviewIndex].name} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="text-[10px] font-black text-slate-800 truncate">{reviews[currentReviewIndex]?.name}</h4>
+                                            <p className="text-[8px] text-slate-400 font-medium uppercase tracking-wider truncate">{translateText(reviews[currentReviewIndex]?.title) || (lang === 'tr' ? 'Müşteri' : 'Client')}</p>
+                                        </div>
+                                        <div className="flex gap-0.5 shrink-0">{[...Array(5)].map((_, j) => <Star key={j} size={9} className={j < (reviews[currentReviewIndex]?.rating || 5) ? "fill-current text-amber-400" : "text-slate-200"} />)}</div>
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic pl-1">"{translateText(reviews[currentReviewIndex]?.content)}"</p>
+                                </motion.div>
+                            </AnimatePresence>
+                            {reviews.length > 1 && (
+                                <div className="flex justify-center gap-1 mt-3">
+                                    {reviews.map((_: any, i: number) => (
+                                        <button key={i} onClick={() => setCurrentReviewIndex(i)} className="transition-all outline-none" style={{ width: i === currentReviewIndex ? '14px' : '4px', height: '4px', borderRadius: '99px', backgroundColor: i === currentReviewIndex ? theme.accent : '#e2e8f0' }} />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="bg-slate-50 border border-slate-100 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+                            <MessageSquare size={20} className="text-slate-200" />
+                            <p className="text-[9px] text-slate-400 font-medium italic">{t.noReviewsYet || (lang === 'tr' ? 'Henüz yorum yok' : 'No reviews yet')}</p>
+                        </div>
+                    )}
+                </div>
+                {profile.showAppointmentBtn && (
+                    <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setIsAppointmentOpen(true)} className="w-full mt-6 py-3.5 rounded-xl text-white font-black uppercase tracking-[0.15em] text-[11px] flex items-center justify-center gap-2.5 group" style={{ backgroundColor: theme.accent, boxShadow: `0 8px 24px -4px ${theme.accent}40` }}>
+                        <Briefcase size={14} />
+                        <span>{t.bookAppointment || "DANIŞMANLIK AL"}</span>
+                    </motion.button>
+                )}
+                <div className="w-full mt-6">
+                    <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
+                </div>
+                <div className="py-14 opacity-20 hover:opacity-60 transition-opacity">
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: theme.accent }}><Layout className="text-white w-3 h-3" /></div>
+                        <span className="text-xs font-black tracking-tighter text-slate-400">Kardly<span style={{ color: theme.accent }}>.site</span></span>
                     </Link>
                 </div>
-
             </main>
-
-            {/* Sticky Bottom Footer Bar */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[360px] px-6 z-[100]">
-                <div className="bg-white/90 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-2.5">
-                    <button
-                        onClick={handleShare}
-                        className="flex-1 h-[60px] flex items-center justify-center gap-2 rounded-[2rem] bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:bg-slate-100 transition-all border border-slate-100 active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#e2e8f0]"
-                    >
-                        <Share2 size={14} /> {t.shareLabel || "PAYLAŞ"}
-                    </button>
-                    <button
-                        onClick={handleCVView}
-                        className={cn("flex-[1.5] h-[60px] flex items-center justify-center gap-2 rounded-[2rem] bg-slate-900 text-[10px] font-black uppercase tracking-widest text-white hover:bg-black transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a]")}
-                    >
-                        <FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "KATALOG GÖRÜNTÜLE") : (t.viewCV || "CV GÖRÜNTÜLE")}
-                    </button>
+            <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-4 z-[100]">
+                <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/50 rounded-2xl p-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.08)] flex items-center gap-1.5">
+                    <button onClick={handleShare} className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-xl bg-slate-50 text-[9px] font-black uppercase tracking-wider text-slate-500 hover:bg-slate-100 transition-all"><Share2 size={12} /> {t.shareLabel || "PAYLAŞ"}</button>
+                    <button onClick={handleCVView} className="flex-[1.6] h-11 flex items-center justify-center gap-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider text-white transition-all" style={{ backgroundColor: theme.accent }}><FileText size={13} /> {profile?.isCatalog ? (t.viewCatalog || "KATALOG") : (t.viewCV || "CV GÖRÜNTÜLE")}</button>
                     {aiConfig?.isEnabled && (
-                        <button
-                            onClick={() => setIsAIChatOpen(true)}
-                            className="w-[60px] h-[60px] rounded-full bg-slate-900 text-white flex items-center justify-center transition-all active:translate-y-[4px] active:shadow-none shadow-[0_4px_0_0_#0f172a] hover:brightness-110"
-                            title={aiConfig?.assistantName || "AI Assistant"}
-                        >
-                            <Bot size={20} />
-                        </button>
+                        <button onClick={() => setIsAIChatOpen(true)} className="w-11 h-11 rounded-xl flex items-center justify-center transition-all text-white" style={{ backgroundColor: theme.accent }} title={aiConfig?.assistantName || "AI Assistant"}><Bot size={16} /></button>
                     )}
                 </div>
             </div>
-
-            {/* Components & Modals */}
             <AnimatePresence>
-                {isWalletModalOpen && (
-                    <WalletModal
-                        isOpen={isWalletModalOpen}
-                        onClose={() => setIsWalletModalOpen(false)}
-                        profile={profile}
-                        t={t}
-                        handleAddToContacts={handleAddToContacts}
-                        theme={theme}
-                        toneStyle={toneStyle}
-                    />
-                )}
+                {isWalletModalOpen && <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />}
             </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
-            <LeadModal 
-                isOpen={isLeadModalOpen} 
-                onClose={() => setIsLeadModalOpen(false)} 
-                onSubmit={(data: any) => {
-                    console.log("Lead submitted:", data);
-                    setIsLeadModalOpen(false);
-                    if (setLeadStatus) setLeadStatus({ type: 'success', message: 'Mesajınız iletildi!' });
-                }}
-                theme={theme} 
-                t={t} 
-                lang={lang}
-                toneStyle={toneStyle}
-                profileName={profile?.user?.name || ""}
-            />
+            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} onSubmit={(data: any) => { setIsLeadModalOpen(false); if (setLeadStatus) setLeadStatus({ type: 'success', message: 'Mesajınız iletildi!' }); }} theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""} />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
-            <AIChatAssistant 
-                isOpen={isAIChatOpen} 
-                onClose={() => setIsAIChatOpen(false)} 
-                profile={profile} 
-                t={t} 
-                theme={theme} 
-                toneStyle={toneStyle} 
-                messages={chatMessages} 
-                setMessages={setChatMessages} 
-                aiConfig={aiConfig} 
-            />
+            <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
     );
 }
