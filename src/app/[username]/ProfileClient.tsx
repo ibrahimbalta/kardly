@@ -5239,59 +5239,39 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
     const themes: Record<string, any> = {
         elite_pink: {
-            header: "bg-[#0a0a0b]",
+            header: "bg-gradient-to-br from-[#ff2d55] to-[#ff9f0a]",
             body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
             accent: "#ff2d55",
-            glow: "shadow-[0_0_30px_rgba(255,45,85,0.2)]",
-            matrix: "#ff2d5533"
+            matrix: "#ff2d5522",
+            isWave: true
         },
         elite_blue: {
-            header: "bg-[#0a0a0b]",
-            body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
+            header: "bg-gradient-to-br from-[#00e5ff] to-[#007aff]",
+            body: "bg-[#0a0a0c]",
             accent: "#00e5ff",
-            glow: "shadow-[0_0_30px_rgba(0,229,255,0.2)]",
-            matrix: "#00e5ff33"
+            matrix: "#00e5ff22",
+            isWave: true
         },
         elite_purple: {
-            header: "bg-[#0a0a0b]",
+            header: "bg-gradient-to-br from-[#bf5af2] to-[#5e5ce6]",
             body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
             accent: "#bf5af2",
-            glow: "shadow-[0_0_30px_rgba(191,90,242,0.2)]",
-            matrix: "#bf5af233"
+            matrix: "#bf5af222",
+            isWave: true
         },
         elite_emerald: {
-            header: "bg-[#0a0a0b]",
-            body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
+            header: "bg-gradient-to-br from-[#32d74b] to-[#00d2ff]",
+            body: "bg-[#0a0a0c]",
             accent: "#32d74b",
-            glow: "shadow-[0_0_30px_rgba(50,215,75,0.2)]",
-            matrix: "#32d74b33"
+            matrix: "#32d74b22",
+            isWave: true
         },
         elite_sunset: {
-            header: "bg-[#0a0a0b]",
+            header: "bg-gradient-to-br from-[#ff9f0a] to-[#ff3b30]",
             body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
             accent: "#ff9f0a",
-            glow: "shadow-[0_0_30px_rgba(255,159,10,0.2)]",
-            matrix: "#ff9f0a33"
+            matrix: "#ff9f0a22",
+            isWave: true
         }
     };
 
@@ -5361,25 +5341,32 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
     return (
         <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
-            <MatrixBackground color={theme.accent} opacity={0.08} />
+            <MatrixBackground color={theme.accent} opacity={0.06} />
             <div className="absolute top-5 left-5 right-5 z-20 flex justify-between items-center">
-                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-all shadow-lg active:scale-95">
+                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg active:scale-95">
                     <QrCode size={18} />
                 </button>
                 <div className="flex gap-2">
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-all shadow-lg active:scale-95">
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg active:scale-95">
                         <UserPlus size={18} />
                     </button>
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 font-black text-[10px] uppercase tracking-widest hover:text-white transition-all">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all">
                         {lang.toUpperCase()}
                     </button>
                 </div>
             </div>
-            <div className={cn("relative h-48 sm:h-56 w-full overflow-hidden", theme.header)}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0d0d0f]" />
-                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-scanline pointer-events-none" />
+            <div className={cn("relative h-64 w-full overflow-hidden", theme.header)}>
+                {theme.isWave && (
+                    <>
+                        <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                        <svg className="absolute bottom-[-1px] w-full h-24 text-[#0d0d0f] fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
+                            <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,122.7C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                        </svg>
+                    </>
+                )}
+                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/20 shadow-[0_0_15px_rgba(255,255,255,0.3)] animate-scanline pointer-events-none" />
             </div>
-            <main className="max-w-[420px] mx-auto px-5 -mt-24 relative z-10 flex flex-col items-center w-full">
+            <main className="max-w-[420px] mx-auto px-5 -mt-32 relative z-10 flex flex-col items-center w-full">
                 <MotionWrapper style="3d-manual">
                     <div className="flex flex-col items-center w-full">
                         <div className="relative group">
@@ -5534,7 +5521,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-6 z-[100]">
                 <div className="bg-black/80 backdrop-blur-3xl border border-white/10 rounded-2xl p-2 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex items-center gap-2">
                     <button onClick={handleShare} className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-white/5 text-[10px] font-black uppercase text-white/60 hover:bg-white/10 transition-all"><Share2 size={14} /> SHARE</button>
-                    <button onClick={handleCVView} className="flex-[1.8] h-12 flex items-center justify-center gap-2 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-[0_0_25px_rgba(255,255,255,0.1)] active:scale-95" style={{ backgroundColor: theme.accent }}><FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "DN_CATALOG") : (t.viewCV || "DN_ACCESS.DTA")}</button>
+                    <button onClick={handleCVView} className="flex-[1.8] h-12 flex items-center justify-center gap-2 rounded-xl text-[10px] font-black uppercase transition-all shadow-[0_0_25px_rgba(255,255,255,0.1)] active:scale-95" style={{ backgroundColor: theme.accent, color: isDarkColor(theme.accent) ? '#fff' : '#000' }}><FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "DN_CATALOG") : (t.viewCV || "DN_ACCESS.DTA")}</button>
                     {aiConfig?.isEnabled && (
                         <button onClick={() => setIsAIChatOpen(true)} className="w-12 h-12 rounded-xl flex items-center justify-center transition-all text-white/60 hover:text-white bg-white/5 border border-white/10 active:scale-95"><Bot size={20} /></button>
                     )}
