@@ -5413,6 +5413,15 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </div>
                 </MotionWrapper>
+                <div className="w-full mt-10 space-y-3.5">
+                    {actionButtons.map((action, i) => (
+                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
+                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
+                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
+                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                        </motion.button>
+                    ))}
+                </div>
                 {profile.bio && (
                     <div className="w-full mt-8">
                         <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5 relative font-mono overflow-hidden">
@@ -5452,15 +5461,6 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </div>
                 )}
-                <div className="w-full mt-10 space-y-3.5">
-                    {actionButtons.map((action, i) => (
-                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
-                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
-                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
-                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
-                        </motion.button>
-                    ))}
-                </div>
                 {profile.services && profile.services.length > 0 && (
                     <div className="w-full mt-14 space-y-5">
                         <div className="flex items-center gap-3 px-1">
