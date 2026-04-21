@@ -5220,93 +5220,17 @@ const MatrixBackground = ({ color = "#00ff00", opacity = 0.1 }: { color?: string
 
 function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
-    const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
-
-    const getIcon = (title: string = "") => {
-        const t = (title || "").toLowerCase();
-        if (t.includes('satış') || t.includes('sales') || t.includes('pazar') || t.includes('mağaza') || t.includes('market')) return <ShoppingBag size={14} />;
-        if (t.includes('strateji') || t.includes('strategy') || t.includes('plan') || t.includes('yönetim')) return <Target size={14} />;
-        if (t.includes('inovasyon') || t.includes('innovation') || t.includes('süreç') || t.includes('process') || t.includes('teknoloji')) return <Zap size={14} />;
-        if (t.includes('müşteri') || t.includes('customer') || t.includes('crm') || t.includes('destek')) return <Users size={14} />;
-        if (t.includes('yazılım') || t.includes('code') || t.includes('software') || t.includes('geliştirme') || t.includes('bilişim')) return <Code size={14} />;
-        if (t.includes('tasarım') || t.includes('design') || t.includes('grafik') || t.includes('sanat')) return <Palette size={14} />;
-        if (t.includes('hukuk') || t.includes('law') || t.includes('legal') || t.includes('adalet')) return <Shield size={14} />;
-        if (t.includes('finans') || t.includes('money') || t.includes('bank') || t.includes('yatırım')) return <Briefcase size={14} />;
-        if (t.includes('eğitim') || t.includes('ders') || t.includes('okul') || t.includes('akadem')) return <Trophy size={14} />;
-        if (t.includes('sağlık') || t.includes('tıp') || t.includes('doctor') || t.includes('doktor')) return <Activity size={14} />;
-        return <Zap size={14} />;
-    };
 
     const themes: Record<string, any> = {
-        elite_pink: {
-            header: "bg-gradient-to-br from-[#ff2d55] to-[#ff9f0a]",
-            body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
-            accent: "#ff2d55",
-            matrix: "#ff2d5522",
-            isWave: true
-        },
-        elite_blue: {
-            header: "bg-gradient-to-br from-[#00e5ff] to-[#007aff]",
-            body: "bg-[#0a0a0c]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
-            accent: "#00e5ff",
-            matrix: "#00e5ff22",
-            isWave: true
-        },
-        elite_purple: {
-            header: "bg-gradient-to-br from-[#bf5af2] to-[#5e5ce6]",
-            body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
-            accent: "#bf5af2",
-            matrix: "#bf5af222",
-            isWave: true
-        },
-        elite_emerald: {
-            header: "bg-gradient-to-br from-[#32d74b] to-[#00d2ff]",
-            body: "bg-[#0a0a0c]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
-            accent: "#32d74b",
-            matrix: "#32d74b22",
-            isWave: true
-        },
-        elite_sunset: {
-            header: "bg-gradient-to-br from-[#ff9f0a] to-[#ff3b30]",
-            body: "bg-[#0d0d0f]",
-            btn: "bg-white/5",
-            btnText: "text-white",
-            card: "bg-white/[0.03]",
-            text: "text-slate-100",
-            accent: "#ff9f0a",
-            matrix: "#ff9f0a22",
-            isWave: true
-        }
+        elite_pink: { accent: "#ff2d55", glow: "rgba(255,45,85,0.3)", bg: "bg-[#0a0a0c]" },
+        elite_blue: { accent: "#00e5ff", glow: "rgba(0,229,255,0.3)", bg: "bg-[#09090b]" },
+        elite_purple: { accent: "#bf5af2", glow: "rgba(191,90,242,0.3)", bg: "bg-[#0a0a0c]" },
+        elite_emerald: { accent: "#32d74b", glow: "rgba(50,215,75,0.3)", bg: "bg-[#09090b]" },
+        elite_sunset: { accent: "#ff9f0a", glow: "rgba(255,159,10,0.3)", bg: "bg-[#0a0a0c]" },
+        elite_minimal: { accent: "#ffffff", glow: "rgba(255,255,255,0.15)", bg: "bg-[#000000]" }
     };
 
-    const baseTheme = themes[colorScheme] || themes.elite_blue;
-    const isLightBg = false;
-    const theme = { 
-        ...baseTheme, 
-        isLight: isLightBg,
-        accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
-    };
-
-    if (profile.themeColor) {
-        theme.glow = `shadow-[0_0_30px_rgba(${hexToRgb(theme.accent)},0.2)]`;
-        theme.matrix = `${theme.accent}33`;
-    }
+    const theme = themes[colorScheme] || themes.elite_blue;
     const socialLinks = profile.socialLinks || [];
     const formatUrl = (url?: string) => {
         if (!url) return "";
@@ -5315,252 +5239,223 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
         return `https://${trimmed}`;
     };
 
-    const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
-    const customLinks = customLinksEntry?.links || [];
-
-    const otherSocialActions = (socialLinks || [])
-        .filter((l: any) => l.url && l.platform && l.isHero && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location'].includes(l.platform.toLowerCase()))
-        .map((l: any) => ({
-            label: l.platform ? l.platform.charAt(0).toUpperCase() + l.platform.slice(1) : "Link",
-            icon: getHeroIcon(l.platform, 18, l.url),
-            href: formatUrl(l.url),
-            onClick: () => trackEvent("social_button", l.platform),
-            active: true
-        }))
-
-    const customButtons = customLinks
-        .filter((l: any) => l.isAction)
-        .map((l: any) => ({
-            label: l.title,
-            icon: <Globe size={18} />,
-            href: formatUrl(l.url),
-            onClick: () => trackEvent("custom_button", l.title),
-            active: true
-        }))
-
     const actionButtons = [
-        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, onClick: () => trackEvent("phone"), active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
-        { label: t.waMessagesBtn || "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
-        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={18} />, onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); }, active: true },
-        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={18} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
-        ...otherSocialActions,
-        ...customButtons,
-        { label: t.website || "WEB SİTE", icon: <Globe size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: t.locationsBtn || "KONUM", icon: <MapPin size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url }
-    ].filter(a => a.active).filter((v, i, a) => a.findIndex(t => (t.label === v.label || (t.href && v.href && t.href === v.href))) === i);
-
-    useEffect(() => {
-        if (reviews?.length > 1) {
-            const interval = setInterval(() => {
-                setCurrentReviewIndex((prev: number) => (prev + 1) % reviews.length);
-            }, 5000);
-            return () => clearInterval(interval);
-        }
-    }, [reviews?.length]);
-
+        { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
+        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={18} />, onClick: () => setIsLeadModalOpen(true), active: true },
+        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={18} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, active: !!profile.user?.email },
+        { label: t.website || "WEB SİTE", icon: <Globe size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: t.locationsBtn || "KONUM", icon: <MapPin size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url }
+    ].filter(a => a.active);
 
     return (
-        <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
-            <MatrixBackground color={theme.accent} opacity={0.06} />
-            <div className="absolute top-5 left-5 right-5 z-20 flex justify-between items-center">
-                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg active:scale-95">
+        <div className={cn("min-h-screen pb-40 relative overflow-x-hidden selection:bg-white/10", theme.bg, toneStyle.font)}>
+            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at 50% 20%, ${theme.accent}33 0%, transparent 50%)` }} />
+            
+            <header className="sticky top-0 z-[100] px-6 py-6 flex justify-between items-center backdrop-blur-xl border-b border-white/5">
+                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all">
                     <QrCode size={18} />
                 </button>
-                <div className="flex gap-2">
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg active:scale-95">
-                        <UserPlus size={18} />
-                    </button>
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all">
+                <div className="flex gap-3">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-white/40">
                         {lang.toUpperCase()}
                     </button>
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all">
+                        <UserPlus size={18} />
+                    </button>
                 </div>
-            </div>
-            <div className={cn("relative h-64 w-full overflow-hidden", theme.header)}>
-                {theme.isWave && (
-                    <>
-                        <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
-                        <svg className="absolute bottom-[-1px] w-full h-24 text-[#0d0d0f] fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
-                            <path d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,122.7C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                        </svg>
-                    </>
-                )}
-                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/20 shadow-[0_0_15px_rgba(255,255,255,0.3)] animate-scanline pointer-events-none" />
-            </div>
-            <main className="max-w-[420px] mx-auto px-5 -mt-32 relative z-10 flex flex-col items-center w-full">
-                <MotionWrapper style="3d-manual">
-                    <div className="flex flex-col items-center w-full">
-                        <div className="relative group">
-                            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10">
-                                <div className="w-[128px] h-[128px] rounded-2xl p-[1px] relative" style={{ background: `linear-gradient(135deg, ${theme.accent}, transparent)` }}>
-                                    <div className="w-full h-full rounded-2xl bg-[#0d0d0f] p-1.5 overflow-hidden">
-                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a1e&color=fff&bold=true&size=128`} className="w-full h-full object-cover rounded-xl transition-all duration-700 group-hover:scale-110" alt={profile.user.name} />
-                                    </div>
-                                </div>
-                                <div className="absolute -top-1.5 -left-1.5 w-5 h-5 border-t-2 border-l-2" style={{ borderColor: theme.accent }} />
-                                <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2" style={{ borderColor: theme.accent }} />
-                            </motion.div>
-                        </div>
-                        <div className="text-center mt-6 space-y-4 w-full">
-                            <h1 className="text-2xl font-black text-white tracking-widest uppercase italic leading-none">{profile.user.name}</h1>
-                            
-                            <div className="pt-2 flex justify-center">
-                                <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={theme} />
-                            </div>
+            </header>
 
-                            <div className="flex items-center justify-center gap-3 pt-2">
-                                <div className="h-[1px] w-8 opacity-40 shadow-[0_0_8px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 italic">{translateText(profile.occupation)}</p>
-                                <div className="h-[1px] w-8 opacity-40 shadow-[0_0_8px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+            <main className="max-w-[440px] mx-auto px-6 pt-10 relative z-10 flex flex-col w-full">
+                {/* 1. Profile Image */}
+                <div className="flex flex-col items-center mb-10">
+                    <div className="relative group">
+                        <div className="w-[120px] h-[120px] rounded-[2.5rem] p-[3px] transition-all duration-700 hover:rotate-3" style={{ background: `linear-gradient(135deg, ${theme.accent}, transparent)` }}>
+                            <div className="w-full h-full rounded-[2.4rem] bg-black overflow-hidden relative">
+                                <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a1e&color=fff&size=128`} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="" />
+                                <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]" />
                             </div>
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white flex items-center justify-center border-4 border-black text-black shadow-lg">
+                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.accent }} />
                         </div>
                     </div>
-                </MotionWrapper>
 
+                    <div className="mt-8 text-center space-y-5 w-full">
+                        {/* 2. Name */}
+                        <h1 className="text-3xl font-black text-white italic tracking-tight uppercase">{profile.user.name}</h1>
+                        
+                        {/* 3. Social Icons Bar */}
+                        <div className="flex justify-center">
+                            <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={{ ...theme, isLight: false }} />
+                        </div>
+
+                        {/* 4. Occupation (Lowered with lines) */}
+                        <div className="flex items-center justify-center gap-4 pt-2">
+                             <div className="h-[1px] w-10 opacity-30" style={{ backgroundColor: theme.accent }} />
+                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{translateText(profile.occupation)}</p>
+                             <div className="h-[1px] w-10 opacity-30" style={{ backgroundColor: theme.accent }} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* 5. Bio Block */}
                 {profile.bio && (
-                    <div className="w-full mt-10">
-                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 relative font-mono overflow-hidden group">
-                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                            <p className="text-[12px] text-white/50 leading-relaxed text-center whitespace-pre-wrap italic">
-                                <span style={{ color: theme.accent }} className="mr-1.5 opacity-60">{"$"}</span>{profile.bio}
+                    <div className="w-full mb-12">
+                        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 relative font-mono group hover:bg-white/[0.04] transition-all">
+                            <div className="absolute top-4 left-4 text-[10px] opacity-20 text-white font-black">{">"} BIO_LOG</div>
+                            <p className="text-[13px] text-white/60 leading-relaxed text-center whitespace-pre-wrap italic mt-4 pt-1">
+                                {profile.bio}
                             </p>
                             {profile.slogan && (
-                                <p className="text-[10px] font-black mt-4 text-center uppercase tracking-[0.3em] opacity-80" style={{ color: theme.accent }}>
-                                    {">"} {translateText(profile.slogan)}
+                                <p className="text-[11px] font-black mt-6 text-center uppercase tracking-[0.2em]" style={{ color: theme.accent }}>
+                                    "{translateText(profile.slogan)}"
                                 </p>
                             )}
                         </div>
                     </div>
                 )}
-                
+
+                {/* 6. Portfolio / Projects */}
                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                    <div className="w-full mt-12 space-y-6">
-                        <div className="flex items-center justify-between px-1">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2.5 h-2.5 rounded-sm rotate-45 shadow-[0_0_10px_rgba(255,255,255,0.1)]" style={{ backgroundColor: theme.accent }} />
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{t.myProjects || "PORTFOLIO GÖRÜNÜMÜ"}</h3>
-                            </div>
-                            <div className="font-mono text-[9px] text-white/10 uppercase tracking-tighter">PRJ_IDX // 0{profile.products.filter((p: any) => p.image).length}</div>
+                    <div className="w-full mb-14 space-y-6">
+                        <div className="flex items-center gap-3 px-1">
+                            <div className="w-2 h-2 rounded-full shadow-lg" style={{ backgroundColor: theme.accent, boxShadow: `0 0 10px ${theme.accent}` }} />
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/40 italic">{t.myProjects || "PORTFOLIO GÖRÜNÜMÜ"}</h3>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
-                                <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }} className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10" onClick={() => { if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
-                                    <img src={project.image} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100" loading="lazy" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
-                                        <h4 className="text-[10px] font-black text-white/90 uppercase tracking-wide truncate">{project.name}</h4>
-                                    </div>
-                                    <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
-                                        <div className="px-2 py-1 bg-white/10 backdrop-blur-md rounded border border-white/20 text-[8px] font-black text-white uppercase tracking-widest">VIEW_DATA</div>
-                                    </div>
-                                </motion.div>
-                            ))}
+                        <div className="bg-black/40 border border-white/5 p-2 rounded-[2.5rem] backdrop-blur-xl">
+                            <div className="grid grid-cols-2 gap-2">
+                                {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
+                                    <motion.div key={i} whileHover={{ scale: 0.98 }} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="group relative aspect-square rounded-[2rem] overflow-hidden cursor-pointer" onClick={() => { if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
+                                        <img src={project.image} className="w-full h-full object-cover grayscale-[0.2] transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" loading="lazy" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                                            <h4 className="text-[10px] font-black text-white/90 uppercase tracking-wide truncate">{project.name}</h4>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
 
-                <div className="w-full mt-10 space-y-3.5">
+                {/* 7. Action Buttons */}
+                <div className="w-full mb-14 space-y-3.5">
                     {actionButtons.map((action, i) => (
-                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
-                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
-                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
-                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                        <motion.button key={i} whileHover={{ x: 4, scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[72px] rounded-3xl border border-white/5 bg-white/[0.03] flex items-center px-8 relative group transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10">
+                            <span className="shrink-0 flex items-center text-white/40 group-hover:text-white transition-colors duration-300">{action.icon}</span>
+                            <span className="flex-1 text-center font-black uppercase tracking-[0.3em] text-[11px] text-white/60 group-hover:text-white transition-colors duration-300" style={{ color: i % 2 === 1 ? theme.accent : undefined }}>{action.label}</span>
+                            <ChevronRight size={14} className="shrink-0 text-white/10 group-hover:text-white transition-all transform group-hover:translate-x-1" />
                         </motion.button>
                     ))}
                 </div>
-                {profile.services && profile.services.length > 0 && (
-                    <div className="w-full mt-14 space-y-5">
-                        <div className="flex items-center gap-3 px-1">
-                            <div className="w-6 h-[1px] opacity-20" style={{ backgroundColor: theme.accent }} />
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">{t.servicesTitle || "SPECIALIZED_AREAS"}</h3>
-                        </div>
-                        <div className="grid grid-cols-1 gap-3">
-                            {profile.services.map((service: any, i: number) => (
-                                <div key={i} className="flex items-center gap-5 bg-white/[0.02] border border-white/5 rounded-2xl p-5 hover:bg-white/[0.04] hover:translate-x-1 transition-all duration-300 cursor-default group">
-                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: `${theme.accent}10`, color: theme.accent, border: `1px solid ${theme.accent}20` }}>{getIcon(service.title)}</div>
-                                    <div className="flex-1 min-w-0">
-                                        <h4 className="text-[11px] font-black text-white/80 uppercase tracking-widest">{service.title}</h4>
-                                        {service.description && <p className="text-[10px] text-white/30 font-medium italic mt-1 leading-relaxed line-clamp-1">{service.description}</p>}
-                                    </div>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-white/5 group-hover:bg-white/20 transition-colors" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                <div className="w-full mt-14 space-y-5">
-                    <div className="flex items-center justify-between px-1">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 italic">{"// SYSTEM_FEEDBACK.LOG"}</h3>
-                        <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 text-[9px] font-black uppercase text-white/40 hover:bg-white/5 hover:text-white transition-all shadow-sm"><Plus size={12} /> ADD_FEEDBACK</button>
-                    </div>
-                    {reviews.length > 0 ? (
-                        <div className="bg-black/60 border border-white/5 p-6 rounded-2xl relative overflow-hidden backdrop-blur-xl">
-                            <AnimatePresence mode="wait">
-                                <motion.div key={currentReviewIndex} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -15 }} transition={{ duration: 0.3 }} className="space-y-4 relative z-10">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-11 h-11 rounded-2xl border border-white/10 overflow-hidden bg-white/5 shrink-0 p-0.5">
-                                            <img src={reviews[currentReviewIndex]?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a1e&color=fff&size=64`} className="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" />
-                                        </div>
-                                        <div className="flex-1 space-y-1">
-                                            <div className="flex items-center justify-between">
-                                                <h4 className="text-[11px] font-black text-white/90 uppercase tracking-wider">{reviews[currentReviewIndex]?.name}</h4>
-                                                <div className="flex gap-0.5" style={{ color: theme.accent }}>
-                                                    {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < (reviews[currentReviewIndex]?.rating || 5) ? "currentColor" : "none"} className="opacity-70" />)}
-                                                </div>
-                                            </div>
-                                            <p className="text-[9px] text-white/20 font-black uppercase tracking-widest italic">{translateText(reviews[currentReviewIndex]?.title) || "EXTERNAL_CLIENT"}</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-[12px] text-white/50 font-medium italic leading-relaxed border-l-2 pl-4" style={{ borderColor: `${theme.accent}30` }}>"{translateText(reviews[currentReviewIndex]?.content)}"</p>
-                                </motion.div>
-                            </AnimatePresence>
-                            {reviews.length > 1 && (
-                                <div className="flex justify-center gap-1.5 mt-5">
-                                    {reviews.map((_: any, i: number) => (
-                                        <button key={i} onClick={() => setCurrentReviewIndex(i)} className="h-1 rounded-full transition-all duration-300" style={{ width: i === currentReviewIndex ? '20px' : '6px', backgroundColor: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)' }} />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="bg-white/[0.02] border border-white/5 p-10 rounded-2xl text-center border-dashed">
-                            <p className="text-[10px] text-white/10 italic tracking-[0.2em] uppercase">STATUS_IDLE: NO_DATA_AVAILABLE</p>
-                        </div>
-                    )}
-                </div>
-                {profile.showAppointmentBtn && (
-                    <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setIsAppointmentOpen(true)} className="w-full mt-10 h-14 rounded-2xl text-white font-black uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 relative overflow-hidden group" style={{ backgroundColor: theme.accent }}>
-                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 opacity-30" />
-                        <Briefcase size={16} className="group-hover:animate-pulse" />
-                        <span>{t.bookAppointment || "INITIALIZE_DIRECT_REQUEST"}</span>
-                    </motion.button>
-                )}
-                <div className="w-full mt-10">
+
+                {/* 8. Articles */}
+                <div className="w-full">
                     <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
                 </div>
-                <div className="py-24 opacity-10 hover:opacity-100 transition-all duration-1000 flex justify-center scale-90">
+
+                {/* Reviews Section */}
+                {reviews.length > 0 && (
+                    <div className="w-full mt-14 space-y-6">
+                         <div className="flex items-center gap-3 px-1">
+                            <div className="w-1.5 h-6 rounded-full" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30 italic">{"// FEEDBACK.LOG"}</h3>
+                         </div>
+                         <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden">
+                             <AnimatePresence mode="wait">
+                                 <motion.div key={currentReviewIndex} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
+                                     <p className="text-[14px] text-white/60 italic leading-relaxed">"{translateText(reviews[currentReviewIndex]?.content)}"</p>
+                                     <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                                         <img src={reviews[currentReviewIndex]?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}`} className="w-10 h-10 rounded-full grayscale" />
+                                         <div>
+                                             <h4 className="text-[11px] font-black text-white uppercase tracking-wider">{reviews[currentReviewIndex]?.name}</h4>
+                                             <div className="flex gap-0.5 mt-1" style={{ color: theme.accent }}>
+                                                {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < (reviews[currentReviewIndex]?.rating || 5) ? "currentColor" : "none"} className="opacity-70" />)}
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </motion.div>
+                             </AnimatePresence>
+                         </div>
+                    </div>
+                )}
+                
+                {/* 10. Call to action at bottom */}
+                {profile.showAppointmentBtn && (
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setIsAppointmentOpen(true)} className="w-full mt-16 h-16 rounded-[2rem] text-white font-black uppercase tracking-[0.4em] text-[12px] flex items-center justify-center gap-3 relative overflow-hidden group transition-all" style={{ backgroundColor: theme.accent, boxShadow: `0 20px 40px ${theme.accent}33` }}>
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 opacity-30" />
+                        <Coffee size={20} />
+                        <span>{t.bookAppointment || "BAĞLANTI KUR"}</span>
+                    </motion.button>
+                )}
+
+                <footer className="py-24 flex justify-center opacity-20 hover:opacity-100 transition-all duration-1000 grayscale hover:grayscale-0">
                     <Link href="/" className="flex items-center gap-3">
-                        <div className="w-5 h-5 bg-white/20 rounded flex items-center justify-center rotate-45 border border-white/10"><Layout className="text-white w-2.5 h-2.5 -rotate-45" /></div>
-                        <span className="text-[11px] font-black tracking-[0.5em] text-white/40 uppercase">Kardly<span className="text-white/10">.site_v2</span></span>
+                        <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center rotate-45 border border-white/10"><Layout className="text-white w-2.5 h-2.5 -rotate-45" /></div>
+                        <span className="text-[11px] font-black tracking-[0.6em] text-white uppercase">Kardly<span className="text-white/20">.site_v2</span></span>
                     </Link>
-                </div>
+                </footer>
             </main>
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-6 z-[100]">
-                <div className="bg-black/80 backdrop-blur-3xl border border-white/10 rounded-2xl p-2 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex items-center gap-2">
-                    <button onClick={handleShare} className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-white/5 text-[10px] font-black uppercase text-white/60 hover:bg-white/10 transition-all"><Share2 size={14} /> SHARE</button>
-                    <button onClick={handleCVView} className="flex-[1.8] h-12 flex items-center justify-center gap-2 rounded-xl text-[10px] font-black uppercase transition-all shadow-[0_0_25px_rgba(255,255,255,0.1)] active:scale-95" style={{ backgroundColor: theme.accent, color: isDarkColor(theme.accent) ? '#fff' : '#000' }}><FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "DN_CATALOG") : (t.viewCV || "DN_ACCESS.DTA")}</button>
-                    {aiConfig?.isEnabled && (
-                        <button onClick={() => setIsAIChatOpen(true)} className="w-12 h-12 rounded-xl flex items-center justify-center transition-all text-white/60 hover:text-white bg-white/5 border border-white/10 active:scale-95"><Bot size={20} /></button>
-                    )}
-                </div>
-            </div>
-            <AnimatePresence>
-                {isWalletModalOpen && <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />}
-            </AnimatePresence>
+            
+            <ProjectDetailModal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} project={selectedProject} theme={theme} t={t} lang={lang} translateText={translateText} formatUrl={formatUrl} />
+            <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
             <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} onSubmit={() => setIsLeadModalOpen(false)} theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""} />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
         </div>
+    );
+}
+
+function ProjectDetailModal({ isOpen, onClose, project, theme, t, lang, translateText, formatUrl }: any) {
+    if (!project) return null;
+    return (
+        <AnimatePresence>
+            <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={onClose}>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/90 backdrop-blur-2xl" />
+                <motion.div
+                    initial={{ y: "100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: "100%", opacity: 0 }}
+                    transition={{ type: "spring", damping: 30, stiffness: 350 }}
+                    className="relative rounded-t-[3rem] sm:rounded-[3rem] max-w-lg w-full max-h-[90vh] overflow-hidden border border-white/10 bg-[#0a0a0c] shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <button onClick={onClose} className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/60 hover:text-white border border-white/10">
+                        <X size={20} />
+                    </button>
+
+                    <div className="overflow-y-auto max-h-[90vh]">
+                        {project.image && (
+                            <div className="aspect-[16/10] w-full relative">
+                                <img src={project.image} alt="" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent" />
+                            </div>
+                        )}
+
+                        <div className="p-8 sm:p-10 -mt-10 relative z-10">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-2 h-8 rounded-full" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-2xl font-black text-white uppercase tracking-tight italic">{translateText(project.name)}</h3>
+                            </div>
+                            <p className="text-white/50 text-base leading-relaxed font-medium">{translateText(project.description) || t.noProjectDesc}</p>
+
+                            {project.link && (
+                                <a
+                                    href={formatUrl(project.link)}
+                                    target="_blank"
+                                    className="mt-10 w-full py-5 rounded-3xl font-black text-sm text-white flex items-center justify-center gap-3 shadow-xl transition-transform active:scale-95"
+                                    style={{ backgroundColor: theme.accent, boxShadow: `0 15px 30px ${theme.accent}33` }}
+                                >
+                                    <Globe size={18} /> {lang === 'tr' ? 'PROJEYİ İNCELE' : 'VIEW PROJECT'}
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        </AnimatePresence>
     );
 }
 
