@@ -5170,6 +5170,54 @@ if(true) {
     )
 }
 
+const MatrixBackground = ({ color = "#00ff00", opacity = 0.1 }: { color?: string, opacity?: number }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        const characters = '0123456789ABCDEF'.split('');
+        const fontSize = 14;
+        const columns = width / fontSize;
+        const drops: number[] = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = color;
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        };
+        const interval = setInterval(draw, 50);
+        const handleResize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [color]);
+    return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" style={{ opacity }} />;
+};
+
 function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid')
@@ -5191,72 +5239,75 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
     const themes: Record<string, any> = {
         elite_pink: {
-            header: "bg-gradient-to-r from-[#ec4899] to-[#fb923c]",
-            body: "bg-white",
-            btn: "bg-slate-900",
+            header: "bg-[#0a0a0b]",
+            body: "bg-[#0d0d0f]",
+            btn: "bg-white/5",
             btnText: "text-white",
-            card: "bg-slate-50",
-            text: "text-slate-900",
-            accent: "#ec4899",
-            glow: "shadow-[0_0_20px_rgba(236,72,153,0.3)]"
+            card: "bg-white/[0.03]",
+            text: "text-slate-100",
+            accent: "#ff2d55",
+            glow: "shadow-[0_0_30px_rgba(255,45,85,0.2)]",
+            matrix: "#ff2d5533"
         },
         elite_blue: {
-            header: "bg-gradient-to-r from-[#06b6d4] to-[#3b82f6]",
-            body: "bg-white",
-            btn: "bg-slate-900",
+            header: "bg-[#0a0a0b]",
+            body: "bg-[#0d0d0f]",
+            btn: "bg-white/5",
             btnText: "text-white",
-            card: "bg-slate-50",
-            text: "text-slate-900",
-            accent: "#3b82f6",
-            glow: "shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+            card: "bg-white/[0.03]",
+            text: "text-slate-100",
+            accent: "#00e5ff",
+            glow: "shadow-[0_0_30px_rgba(0,229,255,0.2)]",
+            matrix: "#00e5ff33"
         },
         elite_purple: {
-            header: "bg-gradient-to-r from-[#8b5cf6] to-[#d946ef]",
-            body: "bg-white",
-            btn: "bg-slate-900",
+            header: "bg-[#0a0a0b]",
+            body: "bg-[#0d0d0f]",
+            btn: "bg-white/5",
             btnText: "text-white",
-            card: "bg-slate-50",
-            text: "text-slate-900",
-            accent: "#a855f7",
-            glow: "shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+            card: "bg-white/[0.03]",
+            text: "text-slate-100",
+            accent: "#bf5af2",
+            glow: "shadow-[0_0_30px_rgba(191,90,242,0.2)]",
+            matrix: "#bf5af233"
         },
         elite_emerald: {
-            header: "bg-gradient-to-r from-[#10b981] to-[#3b82f6]",
-            body: "bg-white",
-            btn: "bg-slate-900",
+            header: "bg-[#0a0a0b]",
+            body: "bg-[#0d0d0f]",
+            btn: "bg-white/5",
             btnText: "text-white",
-            card: "bg-slate-50",
-            text: "text-slate-900",
-            accent: "#10b981",
-            glow: "shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+            card: "bg-white/[0.03]",
+            text: "text-slate-100",
+            accent: "#32d74b",
+            glow: "shadow-[0_0_30px_rgba(50,215,75,0.2)]",
+            matrix: "#32d74b33"
         },
         elite_sunset: {
-            header: "bg-gradient-to-r from-[#f59e0b] to-[#ef4444]",
-            body: "bg-white",
-            btn: "bg-slate-900",
+            header: "bg-[#0a0a0b]",
+            body: "bg-[#0d0d0f]",
+            btn: "bg-white/5",
             btnText: "text-white",
-            card: "bg-slate-50",
-            text: "text-slate-900",
-            accent: "#f59e0b",
-            glow: "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+            card: "bg-white/[0.03]",
+            text: "text-slate-100",
+            accent: "#ff9f0a",
+            glow: "shadow-[0_0_30px_rgba(255,159,10,0.2)]",
+            matrix: "#ff9f0a33"
         }
     };
 
-    const baseTheme = themes[colorScheme] || themes.elite_pink;
-    const isLightBg = true; // Elite themes are always light in this template
+    const baseTheme = themes[colorScheme] || themes.elite_blue;
+    const isLightBg = false;
     const theme = { 
         ...baseTheme, 
         isLight: isLightBg,
         accent: getContrastingAccent(profile.themeColor || baseTheme.accent, isLightBg)
     };
 
-    // Dinamik renk düzeltmeleri (Eğer kullanıcı renk seçmişse)
     if (profile.themeColor) {
-        theme.headerStyle = { background: `linear-gradient(to right, ${theme.accent}, ${theme.accent}dd)` };
-        theme.glow = `shadow-[0_0_20px_rgba(${hexToRgb(theme.accent)},0.3)]`;
+        theme.glow = `shadow-[0_0_30px_rgba(${hexToRgb(theme.accent)},0.2)]`;
+        theme.matrix = `${theme.accent}33`;
     }
     const socialLinks = profile.socialLinks || [];
-
     const formatUrl = (url?: string) => {
         if (!url) return "";
         const trimmed = url.trim();
@@ -5280,257 +5331,212 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     const customButtons = customLinks
         .filter((l: any) => l.isAction)
         .map((l: any) => ({
-        label: l.title,
-        icon: <Globe size={18} />,
-        href: formatUrl(l.url),
-        onClick: () => trackEvent("custom_button", l.title),
-        active: true
-    }))
+            label: l.title,
+            icon: <Globe size={18} />,
+            href: formatUrl(l.url),
+            onClick: () => trackEvent("custom_button", l.title),
+            active: true
+        }))
 
     const actionButtons = [
-        {
-            label: t.phoneCallsBtn || "ARA",
-            icon: <Phone size={profile.buttonLayout === 'stack' ? 24 : 18} />,
-            href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`,
-            onClick: () => trackEvent("phone"),
-            active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone),
-            color: profile.buttonColor || "rgb(15, 23, 42)"
-        },
-        {
-            label: t.waMessagesBtn || "WHATSAPP",
-            icon: <MessageCircle size={profile.buttonLayout === 'stack' ? 24 : 18} />,
-            href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`,
-            onClick: () => trackEvent("whatsapp"),
-            active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone),
-            color: profile.buttonColor || theme.accent
-        },
-        {
-            label: t.contactMeTitle || "İLETİŞİME GEÇ",
-            icon: <MessageSquare size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            onClick: () => {
-                trackEvent("contact_form");
-                setIsLeadModalOpen(true);
-            },
-            active: true
-        },
-        {
-            label: t.emailBtn || "E-MAIL",
-            icon: <MailWithBadge size={profile.buttonLayout === 'stack' ? 18 : 16} />,
-            href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`,
-            onClick: () => trackEvent("email"),
-            active: !!profile.user?.email
-        },
         { label: t.phoneCallsBtn || "ARA", icon: <Phone size={18} />, href: `tel:${socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone}`, onClick: () => trackEvent("phone"), active: !!(socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
         { label: t.waMessagesBtn || "WHATSAPP", icon: <MessageCircle size={18} />, href: `https://wa.me/${(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone || "").replace(/\D/g, '')}`, onClick: () => trackEvent("whatsapp"), active: !!(socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone) },
-        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={16} />, onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); }, active: true },
-        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={16} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
+        { label: t.contactMeTitle || "İLETİŞİME GEÇ", icon: <MessageSquare size={18} />, onClick: () => { trackEvent("contact_form"); setIsLeadModalOpen(true); }, active: true },
+        { label: t.emailBtn || "E-MAIL", icon: <MailWithBadge size={18} />, href: `https://mail.google.com/mail/?view=cm&fs=1&to=${profile.user?.email || ""}`, onClick: () => trackEvent("email"), active: !!profile.user?.email },
         ...otherSocialActions,
         ...customButtons,
-        { label: t.website || "WEB SİTE", icon: <Globe size={16} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
-        { label: t.locationsBtn || "KONUM", icon: <MapPin size={16} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url }
+        { label: t.website || "WEB SİTE", icon: <Globe size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'website')?.url), onClick: () => trackEvent("website"), active: !!socialLinks.find((l: any) => l.platform === 'website')?.url },
+        { label: t.locationsBtn || "KONUM", icon: <MapPin size={18} />, href: formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url), onClick: () => trackEvent("location"), active: !!socialLinks.find((l: any) => l.platform === 'location')?.url }
     ].filter(a => a.active).filter((v, i, a) => a.findIndex(t => (t.label === v.label || (t.href && v.href && t.href === v.href))) === i);
+
+    useEffect(() => {
+        if (reviews?.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentReviewIndex((prev: number) => (prev + 1) % reviews.length);
+            }, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [reviews?.length]);
+
 
     return (
         <div className={cn("min-h-screen pb-40 relative overflow-x-hidden", theme.body, toneStyle.font)}>
-            <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            <MatrixBackground color={theme.accent} opacity={0.08} />
             <div className="absolute top-5 left-5 right-5 z-20 flex justify-between items-center">
-                <button onClick={() => setIsQrOpen(true)} className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-lg hover:bg-white/30 transition-all">
-                    <QrCode size={16} />
+                <button onClick={() => setIsQrOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-all shadow-lg active:scale-95">
+                    <QrCode size={18} />
                 </button>
                 <div className="flex gap-2">
-                    <button onClick={() => setIsWalletModalOpen(true)} className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white/80 border border-white/10 hover:bg-white/25 transition-all">
-                        <UserPlus size={16} />
+                    <button onClick={() => setIsWalletModalOpen(true)} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 transition-all shadow-lg active:scale-95">
+                        <UserPlus size={18} />
                     </button>
-                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white/80 font-black text-[9px] border border-white/10 hover:bg-white/25 transition-all">
+                    <button onClick={() => setLang(lang === 'tr' ? 'en' : 'tr')} className="px-3 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 font-black text-[10px] uppercase tracking-widest hover:text-white transition-all">
                         {lang.toUpperCase()}
                     </button>
                 </div>
             </div>
-            <div className={cn("relative h-56 sm:h-64 w-full overflow-hidden", !profile.themeColor && theme.header)} style={theme.headerStyle}>
-                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10" />
-                <div className="absolute top-10 right-10 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
-                <div className="absolute bottom-10 left-10 w-24 h-24 rounded-full bg-white/5 blur-xl" />
-                <svg className="absolute bottom-[-1px] w-full h-20 text-white fill-current" preserveAspectRatio="none" viewBox="0 0 1440 320">
-                    <path d="M0,224L60,213.3C120,203,240,181,360,186.7C480,192,600,224,720,229.3C840,235,960,213,1080,197.3C1200,181,1320,171,1380,165.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-                </svg>
+            <div className={cn("relative h-48 sm:h-56 w-full overflow-hidden", theme.header)}>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0d0d0f]" />
+                <div className="absolute inset-x-0 top-0 h-[1px] bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-scanline pointer-events-none" />
             </div>
-            <main className="max-w-[420px] mx-auto px-5 -mt-28 relative z-10 flex flex-col items-center w-full">
+            <main className="max-w-[420px] mx-auto px-5 -mt-24 relative z-10 flex flex-col items-center w-full">
                 <MotionWrapper style="3d-manual">
                     <div className="flex flex-col items-center w-full">
-                        <div className="relative">
-                            {toneStyle.expertiseStyle !== 'minimal' && (
-                                <motion.div className="absolute inset-0 z-20 pointer-events-none" animate={toneStyle.expertiseStyle === 'slow-rotate' ? { rotate: 360 } : toneStyle.expertiseStyle === 'scattered' ? { rotate: [0, 10, -10, 0] } : { rotate: 360 }} transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }}>
-                                    {(profile.services || []).slice(0, 6).map((service: any, i: number, arr: any[]) => {
-                                        const angle = (i * (360 / arr.length) - 90) * (Math.PI / 180);
-                                        const radius = 90;
-                                        const x = Math.cos(angle) * radius;
-                                        const y = Math.sin(angle) * radius;
-                                        return (
-                                            <motion.div key={i} initial={{ opacity: 0, scale: 0 }} animate={toneStyle.expertiseStyle === 'floating' ? { opacity: 1, scale: 1, y: [0, -8, 0], transition: { delay: 0.5 + i * 0.1, y: { duration: 3 + i, repeat: Infinity } } } : { opacity: 1, scale: 1 }} transition={{ delay: 0.5 + i * 0.1 }} className="absolute flex flex-col items-center gap-1 pointer-events-auto group/icon" style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)`, transform: 'translate(-50%, -50%)' }}>
-                                                <motion.div animate={{ rotate: toneStyle.expertiseStyle === 'slow-rotate' ? -360 : toneStyle.expertiseStyle === 'scattered' ? [-0, -10, 10, 0] : -360 }} transition={toneStyle.expertiseStyle === 'slow-rotate' ? { duration: 120, repeat: Infinity, ease: "linear" } : toneStyle.expertiseStyle === 'scattered' ? { duration: 10, repeat: Infinity } : { duration: 60, repeat: Infinity, ease: "linear" }} className="w-9 h-9 border border-slate-200/60 flex items-center justify-center shadow-md transition-all hover:scale-125 hover:shadow-lg relative rounded-full bg-white/90 backdrop-blur-md" style={{ color: theme.accent }}>
-                                                    {getIcon(service.title)}
-                                                    <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 opacity-0 group-hover/icon:opacity-100 transition-all duration-300 whitespace-nowrap bg-white px-2.5 py-1 rounded-lg text-[9px] font-black text-slate-700 pointer-events-none border border-slate-100 shadow-lg scale-50 group-hover/icon:scale-100 z-50 uppercase tracking-wider">
-                                                        {translateText(service.title)}
-                                                    </div>
-                                                </motion.div>
-                                            </motion.div>
-                                        );
-                                    })}
-                                </motion.div>
-                            )}
+                        <div className="relative group">
                             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10">
-                                <div className="w-[132px] h-[132px] rounded-full p-[3px]" style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accent}80, ${theme.accent}40)` }}>
-                                    <div className="w-full h-full rounded-full bg-white p-[3px]">
-                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=f1f5f9&color=334155&bold=true&size=128`} className="w-full h-full object-cover rounded-full" alt={profile.user.name} loading="lazy" decoding="async" />
+                                <div className="w-[128px] h-[128px] rounded-2xl p-[1px] relative" style={{ background: `linear-gradient(135deg, ${theme.accent}, transparent)` }}>
+                                    <div className="w-full h-full rounded-2xl bg-[#0d0d0f] p-1.5 overflow-hidden">
+                                        <img src={profile.user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.user.name)}&background=1a1a1e&color=fff&bold=true&size=128`} className="w-full h-full object-cover rounded-xl transition-all duration-700 group-hover:scale-110" alt={profile.user.name} />
                                     </div>
                                 </div>
-                                <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-400 rounded-full border-[3px] border-white z-20 shadow-sm" />
+                                <div className="absolute -top-1.5 -left-1.5 w-5 h-5 border-t-2 border-l-2" style={{ borderColor: theme.accent }} />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2" style={{ borderColor: theme.accent }} />
                             </motion.div>
                         </div>
-                        <div className="text-center mt-5 space-y-2 w-full">
-                            <h1 className="text-2xl font-black text-slate-900 tracking-tight">{profile.user.name}</h1>
-                            <div className="flex items-center justify-center gap-2">
-                                <div className="h-[1px] w-8 rounded-full" style={{ backgroundColor: `${theme.accent}40` }} />
-                                <p className="text-[10px] font-bold uppercase tracking-[0.25em]" style={{ color: theme.accent }}>{translateText(profile.occupation)}</p>
-                                <div className="h-[1px] w-8 rounded-full" style={{ backgroundColor: `${theme.accent}40` }} />
+                        <div className="text-center mt-6 space-y-2 w-full">
+                            <h1 className="text-2xl font-black text-white tracking-widest uppercase italic leading-none">{profile.user.name}</h1>
+                            <div className="flex items-center justify-center gap-3">
+                                <div className="h-[1px] w-6 opacity-30" style={{ backgroundColor: theme.accent }} />
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{translateText(profile.occupation)}</p>
+                                <div className="h-[1px] w-6 opacity-30" style={{ backgroundColor: theme.accent }} />
                             </div>
-                            <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={theme} />
+                            <div className="pt-2">
+                                <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={theme} />
+                            </div>
                         </div>
                     </div>
                 </MotionWrapper>
-                {!isEmbedMode && profile.blocks?.filter((b: any) => b.type === 'external_widget').length > 0 && (
-                    <div className="w-full mt-5 p-3 bg-slate-50/80 border border-slate-100 rounded-2xl flex flex-wrap justify-center gap-2.5">
-                        {profile.blocks?.filter((b: any) => b.type === 'external_widget').map((block: any) => (
-                            <ExternalWidget key={block.id} block={block} theme={theme} toneStyle={toneStyle} t={t} className="w-[60px] h-[60px] flex-shrink-0" isMini={true} />
-                        ))}
-                    </div>
-                )}
                 {profile.bio && (
-                    <div className="w-full mt-6">
-                        <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-100 rounded-2xl p-5 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full rounded-r-full" style={{ backgroundColor: `${theme.accent}30` }} />
-                            <p className="leading-relaxed font-medium text-center whitespace-pre-wrap pl-3" style={{ color: profile.bioColor || "rgb(100, 116, 139)", fontSize: profile.bioFontSize || "12px", fontFamily: profile.bioFontFamily || "inherit" }}>{profile.bio}</p>
-                        </div>
-                        {profile.slogan && (
-                            <p className="font-semibold mt-3 text-center italic leading-relaxed" style={{ color: profile.sloganColor || `${theme.accent}90`, fontSize: profile.sloganFontSize || "11px", fontFamily: profile.sloganFontFamily || "inherit" }}>"{translateText(profile.slogan)}"</p>
-                        )}
-                    </div>
-                )}
-                {profile.services && profile.services.length > 0 && (
-                    <div className="w-full mt-8 space-y-3">
-                        <div className="flex items-center gap-2.5 px-1">
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Award size={12} /></div>
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2.5">
-                            {profile.services.map((service: any, i: number) => (
-                                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="bg-white p-3.5 rounded-xl border border-slate-100 group hover:shadow-md hover:border-slate-200 transition-all duration-300">
-                                    <div className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5" style={{ backgroundColor: `${theme.accent}10`, color: theme.accent }}>{getIcon(service.title)}</div>
-                                    <h4 className="text-[10px] font-black text-slate-800 mb-0.5 line-clamp-1">{service.title}</h4>
-                                    {service.description && <p className="text-[9px] text-slate-400 font-medium leading-relaxed line-clamp-2">{service.description}</p>}
-                                </motion.div>
-                            ))}
+                    <div className="w-full mt-8">
+                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5 relative font-mono overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                            <p className="text-[11px] text-white/50 leading-relaxed text-center whitespace-pre-wrap italic">
+                                <span style={{ color: theme.accent }} className="mr-1.5">{"$"}</span>{profile.bio}
+                            </p>
+                            {profile.slogan && (
+                                <p className="text-[10px] font-black mt-3 text-center uppercase tracking-widest opacity-80" style={{ color: theme.accent }}>
+                                    {">"} {translateText(profile.slogan)}
+                                </p>
+                            )}
                         </div>
                     </div>
                 )}
                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                    <div className="w-full mt-8 space-y-3">
+                    <div className="w-full mt-10 space-y-5">
                         <div className="flex items-center justify-between px-1">
-                             <div className="flex items-center gap-2.5">
-                                <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Eye size={12} /></div>
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.myProjects || "PROJELER"}</h3>
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-sm rotate-45" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/60">{t.myProjects || "PORTFOLIO"}</h3>
                             </div>
-                            <span className="text-[8px] font-bold text-slate-300 uppercase tracking-widest">{profile.products.filter((p: any) => p.image).length} {lang === 'tr' ? 'proje' : 'items'}</span>
+                            <div className="font-mono text-[9px] text-white/20 uppercase tracking-tighter">PROJECT_INDEX // 0{profile.products.filter((p: any) => p.image).length}</div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2.5">
+                        <div className="grid grid-cols-2 gap-3.5">
                             {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
-                                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -3 }} className="bg-white overflow-hidden border border-slate-100 rounded-xl transition-all duration-300 group cursor-pointer hover:shadow-lg hover:border-slate-200" onClick={() => { trackEvent("product_grid", project.name); if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
-                                    <div className="aspect-[4/3] relative overflow-hidden">
-                                        <img src={project.image} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <div className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0 shadow-sm"><ExternalLink size={10} className="text-slate-600" /></div>
+                                <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }} className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10" onClick={() => { if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
+                                    <img src={project.image} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100" loading="lazy" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-4">
+                                        <h4 className="text-[10px] font-black text-white/90 uppercase tracking-wide truncate">{project.name}</h4>
                                     </div>
-                                    <div className="px-3 py-2.5">
-                                        <h4 className="text-[10px] font-black text-slate-800 line-clamp-1">{project.name}</h4>
-                                        {project.description && <p className="text-[8px] text-slate-400 font-medium mt-0.5 line-clamp-1">{project.description}</p>}
+                                    <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0">
+                                        <div className="px-2 py-1 bg-white/10 backdrop-blur-md rounded border border-white/20 text-[8px] font-black text-white uppercase tracking-widest">VIEW_DATA</div>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 )}
-                <div className={cn("w-full mt-8", profile.buttonLayout === 'grid' ? "grid grid-cols-2 gap-2.5" : profile.buttonLayout === 'balanced' ? "grid grid-cols-2 gap-2.5 [&>*:last-child:nth-child(odd)]:col-span-2" : "space-y-2.5")}>
+                <div className="w-full mt-10 space-y-3.5">
                     {actionButtons.map((action, i) => (
-                        <motion.button key={i} whileHover={{ scale: 1.01, y: -1 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className={cn("flex items-center transition-all duration-200 bg-white border border-slate-100 hover:border-slate-200 hover:shadow-md", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "py-3 px-4 rounded-xl gap-3.5" : "py-3.5 flex-col text-center justify-center gap-2 rounded-xl", profile.buttonShape === 'pill' ? "rounded-full" : profile.buttonShape === 'rounded' ? "rounded-2xl" : profile.buttonShape === 'square' ? "rounded-none" : "")} style={profile.buttonColor ? { backgroundColor: profile.buttonColor, borderColor: profile.buttonColor, color: isDarkColor(profile.buttonColor) ? '#fff' : '#000' } : undefined}>
-                            <span className={cn("flex items-center justify-center rounded-lg shrink-0", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "w-8 h-8" : "w-7 h-7")} style={profile.buttonColor ? { backgroundColor: isDarkColor(profile.buttonColor) ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)', color: isDarkColor(profile.buttonColor) ? '#fff' : '#000' } : { backgroundColor: `${theme.accent}10`, color: theme.accent }}>{action.icon}</span>
-                            <span className={cn("font-bold uppercase tracking-wider", (profile.buttonLayout === 'stack' || !profile.buttonLayout) ? "text-[11px] flex-1 text-left" : "text-[9px]", !profile.buttonColor && "text-slate-700")}>{action.label}</span>
-                            {(profile.buttonLayout === 'stack' || !profile.buttonLayout) && !profile.buttonColor && <ChevronRight size={14} className="text-slate-300 shrink-0" />}
+                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
+                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
+                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
+                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
                         </motion.button>
                     ))}
                 </div>
-                <div className="w-full mt-8 space-y-3">
-                    <div className="flex items-center justify-between px-1">
-                        <div className="flex items-center gap-2.5">
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}12`, color: theme.accent }}><Star size={12} /></div>
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{t.reviewsTitle || t.reviews}</h3>
+                {profile.services && profile.services.length > 0 && (
+                    <div className="w-full mt-14 space-y-5">
+                        <div className="flex items-center gap-3 px-1">
+                            <div className="w-6 h-[1px] opacity-20" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">{t.servicesTitle || "SPECIALIZED_AREAS"}</h3>
                         </div>
-                        <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-100 text-[8px] font-black uppercase tracking-wider text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all"><Plus size={10} /> {t.writeReview}</button>
+                        <div className="grid grid-cols-1 gap-3">
+                            {profile.services.map((service: any, i: number) => (
+                                <div key={i} className="flex items-center gap-5 bg-white/[0.02] border border-white/5 rounded-2xl p-5 hover:bg-white/[0.04] hover:translate-x-1 transition-all duration-300 cursor-default group">
+                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: `${theme.accent}10`, color: theme.accent, border: `1px solid ${theme.accent}20` }}>{getIcon(service.title)}</div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-[11px] font-black text-white/80 uppercase tracking-widest">{service.title}</h4>
+                                        {service.description && <p className="text-[10px] text-white/30 font-medium italic mt-1 leading-relaxed line-clamp-1">{service.description}</p>}
+                                    </div>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-white/5 group-hover:bg-white/20 transition-colors" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                <div className="w-full mt-14 space-y-5">
+                    <div className="flex items-center justify-between px-1">
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 italic">{"// SYSTEM_FEEDBACK.LOG"}</h3>
+                        <button onClick={() => setIsReviewModalOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 text-[9px] font-black uppercase text-white/40 hover:bg-white/5 hover:text-white transition-all shadow-sm"><Plus size={12} /> ADD_FEEDBACK</button>
                     </div>
                     {reviews.length > 0 ? (
-                        <div className="bg-white border border-slate-100 p-4 rounded-xl relative overflow-hidden">
-                            <Quote className="absolute top-3 right-3 opacity-[0.03] text-slate-900" size={50} />
+                        <div className="bg-black/60 border border-white/5 p-6 rounded-2xl relative overflow-hidden backdrop-blur-xl">
                             <AnimatePresence mode="wait">
-                                <motion.div key={currentReviewIndex} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -15 }} transition={{ duration: 0.25 }} className="space-y-2.5 relative z-10">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100 shrink-0">
-                                            <img src={reviews[currentReviewIndex]?.image?.includes('avatar.iran.liara.run') || !reviews[currentReviewIndex]?.image ? `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=f1f5f9&color=334155&bold=true&size=128` : reviews[currentReviewIndex].image} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e: any) => { e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=f1f5f9&color=334155&bold=true&size=128`; }} alt={reviews[currentReviewIndex].name} />
+                                <motion.div key={currentReviewIndex} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -15 }} transition={{ duration: 0.3 }} className="space-y-4 relative z-10">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-11 h-11 rounded-2xl border border-white/10 overflow-hidden bg-white/5 shrink-0 p-0.5">
+                                            <img src={reviews[currentReviewIndex]?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(reviews[currentReviewIndex].name)}&background=1a1a1e&color=fff&size=64`} className="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all" />
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="text-[10px] font-black text-slate-800 truncate">{reviews[currentReviewIndex]?.name}</h4>
-                                            <p className="text-[8px] text-slate-400 font-medium uppercase tracking-wider truncate">{translateText(reviews[currentReviewIndex]?.title) || (lang === 'tr' ? 'Müşteri' : 'Client')}</p>
+                                        <div className="flex-1 space-y-1">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-[11px] font-black text-white/90 uppercase tracking-wider">{reviews[currentReviewIndex]?.name}</h4>
+                                                <div className="flex gap-0.5" style={{ color: theme.accent }}>
+                                                    {[...Array(5)].map((_, j) => <Star key={j} size={10} fill={j < (reviews[currentReviewIndex]?.rating || 5) ? "currentColor" : "none"} className="opacity-70" />)}
+                                                </div>
+                                            </div>
+                                            <p className="text-[9px] text-white/20 font-black uppercase tracking-widest italic">{translateText(reviews[currentReviewIndex]?.title) || "EXTERNAL_CLIENT"}</p>
                                         </div>
-                                        <div className="flex gap-0.5 shrink-0">{[...Array(5)].map((_, j) => <Star key={j} size={9} className={j < (reviews[currentReviewIndex]?.rating || 5) ? "fill-current text-amber-400" : "text-slate-200"} />)}</div>
                                     </div>
-                                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic pl-1">"{translateText(reviews[currentReviewIndex]?.content)}"</p>
+                                    <p className="text-[12px] text-white/50 font-medium italic leading-relaxed border-l-2 pl-4" style={{ borderColor: `${theme.accent}30` }}>"{translateText(reviews[currentReviewIndex]?.content)}"</p>
                                 </motion.div>
                             </AnimatePresence>
                             {reviews.length > 1 && (
-                                <div className="flex justify-center gap-1 mt-3">
+                                <div className="flex justify-center gap-1.5 mt-5">
                                     {reviews.map((_: any, i: number) => (
-                                        <button key={i} onClick={() => setCurrentReviewIndex(i)} className="transition-all outline-none" style={{ width: i === currentReviewIndex ? '14px' : '4px', height: '4px', borderRadius: '99px', backgroundColor: i === currentReviewIndex ? theme.accent : '#e2e8f0' }} />
+                                        <button key={i} onClick={() => setCurrentReviewIndex(i)} className="h-1 rounded-full transition-all duration-300" style={{ width: i === currentReviewIndex ? '20px' : '6px', backgroundColor: i === currentReviewIndex ? theme.accent : 'rgba(255,255,255,0.1)' }} />
                                     ))}
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div className="bg-slate-50 border border-slate-100 p-6 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
-                            <MessageSquare size={20} className="text-slate-200" />
-                            <p className="text-[9px] text-slate-400 font-medium italic">{t.noReviewsYet || (lang === 'tr' ? 'Henüz yorum yok' : 'No reviews yet')}</p>
+                        <div className="bg-white/[0.02] border border-white/5 p-10 rounded-2xl text-center border-dashed">
+                            <p className="text-[10px] text-white/10 italic tracking-[0.2em] uppercase">STATUS_IDLE: NO_DATA_AVAILABLE</p>
                         </div>
                     )}
                 </div>
                 {profile.showAppointmentBtn && (
-                    <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setIsAppointmentOpen(true)} className="w-full mt-6 py-3.5 rounded-xl text-white font-black uppercase tracking-[0.15em] text-[11px] flex items-center justify-center gap-2.5 group" style={{ backgroundColor: theme.accent, boxShadow: `0 8px 24px -4px ${theme.accent}40` }}>
-                        <Briefcase size={14} />
-                        <span>{t.bookAppointment || "DANIŞMANLIK AL"}</span>
+                    <motion.button whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} onClick={() => setIsAppointmentOpen(true)} className="w-full mt-10 h-14 rounded-2xl text-white font-black uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 relative overflow-hidden group" style={{ backgroundColor: theme.accent }}>
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 opacity-30" />
+                        <Briefcase size={16} className="group-hover:animate-pulse" />
+                        <span>{t.bookAppointment || "INITIALIZE_DIRECT_REQUEST"}</span>
                     </motion.button>
                 )}
-                <div className="w-full mt-6">
+                <div className="w-full mt-10">
                     <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
                 </div>
-                <div className="py-14 opacity-20 hover:opacity-60 transition-opacity">
-                    <Link href="/" className="flex items-center gap-2">
-                        <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: theme.accent }}><Layout className="text-white w-3 h-3" /></div>
-                        <span className="text-xs font-black tracking-tighter text-slate-400">Kardly<span style={{ color: theme.accent }}>.site</span></span>
+                <div className="py-24 opacity-10 hover:opacity-100 transition-all duration-1000 flex justify-center scale-90">
+                    <Link href="/" className="flex items-center gap-3">
+                        <div className="w-5 h-5 bg-white/20 rounded flex items-center justify-center rotate-45 border border-white/10"><Layout className="text-white w-2.5 h-2.5 -rotate-45" /></div>
+                        <span className="text-[11px] font-black tracking-[0.5em] text-white/40 uppercase">Kardly<span className="text-white/10">.site_v2</span></span>
                     </Link>
                 </div>
             </main>
-            <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-4 z-[100]">
-                <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/50 rounded-2xl p-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.08)] flex items-center gap-1.5">
-                    <button onClick={handleShare} className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-xl bg-slate-50 text-[9px] font-black uppercase tracking-wider text-slate-500 hover:bg-slate-100 transition-all"><Share2 size={12} /> {t.shareLabel || "PAYLAŞ"}</button>
-                    <button onClick={handleCVView} className="flex-[1.6] h-11 flex items-center justify-center gap-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider text-white transition-all" style={{ backgroundColor: theme.accent }}><FileText size={13} /> {profile?.isCatalog ? (t.viewCatalog || "KATALOG") : (t.viewCV || "CV GÖRÜNTÜLE")}</button>
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[400px] px-6 z-[100]">
+                <div className="bg-black/80 backdrop-blur-3xl border border-white/10 rounded-2xl p-2 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex items-center gap-2">
+                    <button onClick={handleShare} className="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-white/5 text-[10px] font-black uppercase text-white/60 hover:bg-white/10 transition-all"><Share2 size={14} /> SHARE</button>
+                    <button onClick={handleCVView} className="flex-[1.8] h-12 flex items-center justify-center gap-2 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-[0_0_25px_rgba(255,255,255,0.1)] active:scale-95" style={{ backgroundColor: theme.accent }}><FileText size={16} /> {profile?.isCatalog ? (t.viewCatalog || "DN_CATALOG") : (t.viewCV || "DN_ACCESS.DTA")}</button>
                     {aiConfig?.isEnabled && (
-                        <button onClick={() => setIsAIChatOpen(true)} className="w-11 h-11 rounded-xl flex items-center justify-center transition-all text-white" style={{ backgroundColor: theme.accent }} title={aiConfig?.assistantName || "AI Assistant"}><Bot size={16} /></button>
+                        <button onClick={() => setIsAIChatOpen(true)} className="w-12 h-12 rounded-xl flex items-center justify-center transition-all text-white/60 hover:text-white bg-white/5 border border-white/10 active:scale-95"><Bot size={20} /></button>
                     )}
                 </div>
             </div>
@@ -5538,7 +5544,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                 {isWalletModalOpen && <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} profile={profile} t={t} handleAddToContacts={handleAddToContacts} theme={theme} toneStyle={toneStyle} />}
             </AnimatePresence>
             <QrModal isOpen={isQrOpen} onClose={() => setIsQrOpen(false)} theme={theme} profile={profile} t={t} />
-            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} onSubmit={(data: any) => { setIsLeadModalOpen(false); if (setLeadStatus) setLeadStatus({ type: 'success', message: 'Mesajınız iletildi!' }); }} theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""} />
+            <LeadModal isOpen={isLeadModalOpen} onClose={() => setIsLeadModalOpen(false)} onSubmit={() => setIsLeadModalOpen(false)} theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""} />
             <AppointmentModal isOpen={isAppointmentOpen} onClose={() => setIsAppointmentOpen(false)} profile={profile} t={t} lang={lang} />
             <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSubmit={() => { }} theme={theme} t={t} toneStyle={toneStyle} />
             <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
