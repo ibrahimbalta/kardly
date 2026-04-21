@@ -5400,53 +5400,48 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 <div className="absolute -bottom-1.5 -right-1.5 w-5 h-5 border-b-2 border-r-2" style={{ borderColor: theme.accent }} />
                             </motion.div>
                         </div>
-                        <div className="text-center mt-6 space-y-2 w-full">
+                        <div className="text-center mt-6 space-y-4 w-full">
                             <h1 className="text-2xl font-black text-white tracking-widest uppercase italic leading-none">{profile.user.name}</h1>
-                            <div className="flex items-center justify-center gap-3">
-                                <div className="h-[1px] w-6 opacity-30" style={{ backgroundColor: theme.accent }} />
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{translateText(profile.occupation)}</p>
-                                <div className="h-[1px] w-6 opacity-30" style={{ backgroundColor: theme.accent }} />
-                            </div>
-                            <div className="pt-2">
+                            
+                            <div className="pt-2 flex justify-center">
                                 <SocialIconsBar profile={profile} socialLinks={socialLinks} t={t} trackEvent={trackEvent} getHeroIcon={getHeroIcon} formatUrl={formatUrl} theme={theme} />
+                            </div>
+
+                            <div className="flex items-center justify-center gap-3 pt-2">
+                                <div className="h-[1px] w-8 opacity-40 shadow-[0_0_8px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 italic">{translateText(profile.occupation)}</p>
+                                <div className="h-[1px] w-8 opacity-40 shadow-[0_0_8px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
                             </div>
                         </div>
                     </div>
                 </MotionWrapper>
-                <div className="w-full mt-10 space-y-3.5">
-                    {actionButtons.map((action, i) => (
-                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
-                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
-                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
-                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
-                        </motion.button>
-                    ))}
-                </div>
+
                 {profile.bio && (
-                    <div className="w-full mt-8">
-                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5 relative font-mono overflow-hidden">
+                    <div className="w-full mt-10">
+                        <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 relative font-mono overflow-hidden group">
                             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                            <p className="text-[11px] text-white/50 leading-relaxed text-center whitespace-pre-wrap italic">
-                                <span style={{ color: theme.accent }} className="mr-1.5">{"$"}</span>{profile.bio}
+                            <p className="text-[12px] text-white/50 leading-relaxed text-center whitespace-pre-wrap italic">
+                                <span style={{ color: theme.accent }} className="mr-1.5 opacity-60">{"$"}</span>{profile.bio}
                             </p>
                             {profile.slogan && (
-                                <p className="text-[10px] font-black mt-3 text-center uppercase tracking-widest opacity-80" style={{ color: theme.accent }}>
+                                <p className="text-[10px] font-black mt-4 text-center uppercase tracking-[0.3em] opacity-80" style={{ color: theme.accent }}>
                                     {">"} {translateText(profile.slogan)}
                                 </p>
                             )}
                         </div>
                     </div>
                 )}
+                
                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                    <div className="w-full mt-10 space-y-5">
+                    <div className="w-full mt-12 space-y-6">
                         <div className="flex items-center justify-between px-1">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-sm rotate-45" style={{ backgroundColor: theme.accent }} />
-                                <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-white/60">{t.myProjects || "PORTFOLIO"}</h3>
+                            <div className="flex items-center gap-3">
+                                <div className="w-2.5 h-2.5 rounded-sm rotate-45 shadow-[0_0_10px_rgba(255,255,255,0.1)]" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{t.myProjects || "PORTFOLIO GÖRÜNÜMÜ"}</h3>
                             </div>
-                            <div className="font-mono text-[9px] text-white/20 uppercase tracking-tighter">PROJECT_INDEX // 0{profile.products.filter((p: any) => p.image).length}</div>
+                            <div className="font-mono text-[9px] text-white/10 uppercase tracking-tighter">PRJ_IDX // 0{profile.products.filter((p: any) => p.image).length}</div>
                         </div>
-                        <div className="grid grid-cols-2 gap-3.5">
+                        <div className="grid grid-cols-2 gap-4">
                             {(profile.products || []).filter((p: any) => p.image).map((project: any, i: number) => (
                                 <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.1 }} className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10" onClick={() => { if (project.link) window.open(formatUrl(project.link), "_blank"); else setSelectedProject(project); }}>
                                     <img src={project.image} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100" loading="lazy" />
@@ -5461,6 +5456,16 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                         </div>
                     </div>
                 )}
+
+                <div className="w-full mt-10 space-y-3.5">
+                    {actionButtons.map((action, i) => (
+                        <motion.button key={i} whileHover={{ scale: 1.01, x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => { if (action.onClick) action.onClick(); if (action.href) window.location.href = action.href; }} className="w-full h-[68px] rounded-2xl border border-white/10 bg-white/[0.04] flex items-center px-6 relative group transition-all duration-300 hover:bg-white/[0.07] hover:border-white/20">
+                            <span className="shrink-0 flex items-center text-white/60 group-hover:text-white transition-colors duration-300">{action.icon}</span>
+                            <span className="flex-1 text-center font-black uppercase tracking-[0.25em] text-[11px] text-white/80 group-hover:text-white transition-colors duration-300">{action.label}</span>
+                            <ChevronRight size={16} className="shrink-0 text-white/20 group-hover:text-white transition-all transform group-hover:translate-x-1" />
+                        </motion.button>
+                    ))}
+                </div>
                 {profile.services && profile.services.length > 0 && (
                     <div className="w-full mt-14 space-y-5">
                         <div className="flex items-center gap-3 px-1">
