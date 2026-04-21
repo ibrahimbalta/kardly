@@ -4519,7 +4519,7 @@ if(true) {
 
                                 {/* Project Marquee Section */}
                                 {profile.products && profile.products.filter((p: any) => p.image).length > 0 && (
-                                    <div className="mt-6 space-y-4 group/marquee">
+                                    <div className="mt-6 mb-10 space-y-4 group/marquee">
                                         <style>{`
                                         @keyframes marquee-right {
                                             0% { transform: translateX(-50%); }
@@ -4540,9 +4540,14 @@ if(true) {
                                             viewport={{ once: true }}
                                             className={cn("w-full max-w-[348px] mx-auto border backdrop-blur-2xl py-7 px-4 sm:px-8 mt-10 relative z-20 overflow-visible group/gallery transition-all duration-700", theme.card, theme.border, toneStyle.rounded)}
                                             style={{ 
-                                                backgroundColor: theme.special === 'software' ? '#0d1117' : `${theme.accent}0c`,
-                                                borderColor: theme.special === 'software' ? `${theme.accent}30` : `${theme.accent}30`,
-                                                boxShadow: theme.special === 'software' ? `0 40px 80px -20px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}15` : `0 30px 70px -15px ${theme.accent}35, inset 0 0 30px ${theme.accent}08`
+                                                backgroundColor: theme.special === 'software' ? '#0d1117' : `${theme.accent}08`,
+                                                borderColor: theme.special === 'software' ? `${theme.accent}30` : `${theme.accent}25`,
+                                                boxShadow: theme.special === 'software' 
+                                                    ? `0 40px 80px -20px rgba(0,0,0,0.6), 0 0 40px ${theme.accent}15` 
+                                                    : `0 25px 60px -15px ${theme.accent}30, 0 8px 24px -8px rgba(0,0,0,0.4), inset 0 1px 0 ${theme.accent}15, inset 0 0 40px ${theme.accent}06`,
+                                                background: theme.special === 'software' 
+                                                    ? '#0d1117' 
+                                                    : `linear-gradient(145deg, ${theme.accent}0a, ${theme.accent}04, transparent)`
                                             }}
                                         >
                                             {/* Terminal Header Decoration */}
@@ -4555,12 +4560,19 @@ if(true) {
                                                 </div>
                                             )}
 
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                                                    <h3 className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-white")}>
-                                                        {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
-                                                    </h3>
+                                            <div className="flex items-center justify-between mb-5">
+                                                <div className="flex items-center gap-2.5">
+                                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${theme.accent}20`, color: theme.accent }}>
+                                                        <Eye size={12} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className={cn("text-[10px] font-black uppercase tracking-[0.2em] text-white")}>
+                                                            {layoutMode === 'grid' ? t.portfolioView : t.myProjects}
+                                                        </h3>
+                                                        <p className="text-[7px] uppercase tracking-widest opacity-30 text-white mt-0.5">
+                                                            {profile.products?.filter((p: any) => p.image)?.length || 0} {lang === 'tr' ? 'proje' : 'items'}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                                 <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10">
                                                     <button
@@ -9112,15 +9124,25 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             initial={{ y: 20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
                             viewport={{ once: true }}
-                            className={cn("mt-6 rounded-3xl border p-6", craft.card, craft.border)}
+                            className={cn("mt-6 mb-10 rounded-3xl border p-6", craft.card, craft.border)}
+                            style={{
+                                background: `linear-gradient(145deg, ${craft.accent}0a, ${craft.accent}04, transparent)`,
+                                borderColor: `${craft.accent}25`,
+                                boxShadow: `0 25px 60px -15px ${craft.accent}20, 0 8px 24px -8px rgba(0,0,0,0.3), inset 0 1px 0 ${craft.accent}15`
+                            }}
                         >
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent }}>
+                            <div className="flex items-center gap-3 mb-5">
+                                <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${craft.accent}20`, color: craft.accent, boxShadow: `0 4px 12px ${craft.accent}20` }}>
                                     <Eye size={16} />
                                 </div>
-                                <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>
-                                    {lang === 'tr' ? 'İşlerimiz' : 'Our Work'}
-                                </h3>
+                                <div>
+                                    <h3 className={cn("text-xs font-black uppercase tracking-[0.2em]", craft.text)}>
+                                        {lang === 'tr' ? 'İşlerimiz' : 'Our Work'}
+                                    </h3>
+                                    <p className={cn("text-[8px] uppercase tracking-widest opacity-30 mt-0.5", craft.text)}>
+                                        {profile.products?.filter((p: any) => p.image)?.length || 0} {lang === 'tr' ? 'proje' : 'items'}
+                                    </p>
+                                </div>
                             </div>
                             <div className="grid grid-cols-3 gap-2">
                                 {profile.products.filter((p: any) => p.image).map((project: any, i: number) => (
