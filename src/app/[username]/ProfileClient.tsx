@@ -1,4 +1,4 @@
-// Vercel Deployment Trigger: 2026-04-19-Fix-Avatar-URLs-2
+// Vercel Deployment Trigger: 2026-04-21-Restore-24add0e
 "use client"
 
 import React, { useState, useEffect, useRef, useMemo, ReactElement, cloneElement } from "react"
