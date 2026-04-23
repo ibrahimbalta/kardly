@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
         openGraph: {
             title,
             description,
+            url: `https://kardly.site/${username}`,
             images: [{ url: image }],
             type: 'profile',
             username: username,
@@ -40,14 +41,14 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
             title,
             description,
             images: [image],
-            creator: '@kardlyapp',
+            creator: '@kardlysite',
         },
         robots: {
             index: true,
             follow: true,
         },
         alternates: {
-            canonical: `https://kardly.app/${username}`,
+            canonical: `https://kardly.site/${username}`,
         }
     }
 }
