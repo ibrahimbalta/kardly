@@ -19,19 +19,13 @@ import {
     MessageSquare,
     Bell,
     Heart,
-    Bookmark,
-    Home,
-    Compass,
-    PlusCircle,
     ShoppingBag,
     PenTool,
-    Briefcase as BriefcaseIcon,
+    Briefcase,
     Megaphone,
-    MoreHorizontal,
-    Plus,
-    Layout,
-    Globe2,
-    Monitor
+    Monitor,
+    FileText,
+    Layout
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
@@ -148,53 +142,42 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </div>
                 </Link>
 
-                <nav className="space-y-1 mb-10 flex-1">
-                    {[
-                        { id: 'ana-sayfa', label: 'Ana Sayfa', icon: <Home size={18} />, href: '/hub' },
-                        { id: 'kesfet', label: 'Keşfet', icon: <Compass size={18} />, href: '/hub' },
-                        { id: 'projeler', label: 'Projeler', icon: <Layout size={18} />, href: '#' },
-                        { id: 'kisiler', label: 'Kişiler', icon: <Users size={18} />, href: '#' },
-                        { id: 'mesajlar', label: 'Mesajlar', icon: <MessageSquare size={18} />, href: '#' },
-                        { id: 'bildirimler', label: 'Bildirimler', icon: <Bell size={18} />, href: '#' },
-                        { id: 'favoriler', label: 'Favoriler', icon: <Heart size={18} />, href: '#' },
-                        { id: 'kaydedilenler', label: 'Kaydedilenler', icon: <Bookmark size={18} />, href: '#' },
-                    ].map((item) => (
-                        <Link
-                            key={item.id}
-                            href={item.href}
-                            onClick={() => setActiveNav(item.id)}
-                            className={cn(
-                                "w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl text-[14px] font-bold transition-all",
-                                activeNav === item.id 
-                                    ? "bg-rose-50 text-rose-600 shadow-sm" 
-                                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                            )}
-                        >
-                            {item.icon}
-                            {item.label}
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className="mb-8">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-5">Kategoriler</p>
-                    <div className="space-y-1 px-2">
-                        {["Yazılım & Teknoloji", "Tasarım & Kreatif", "Pazarlama & Satış", "Yazı & Çeviri", "Danışmanlık"].map((cat) => (
+                <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-5 opacity-60">Kategoriler</p>
+                    <nav className="space-y-2">
+                        {[
+                            { id: "all", name: "Tümü", icon: <LayoutGrid size={18} />, color: "text-slate-400", bg: "bg-slate-50" },
+                            { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={18} />, color: "text-sky-500", bg: "bg-sky-50" },
+                            { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={18} />, color: "text-rose-500", bg: "bg-rose-50" },
+                            { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={18} />, color: "text-emerald-500", bg: "bg-emerald-50" },
+                            { id: "writing", name: "Yazı & Çeviri", icon: <FileText size={18} />, color: "text-amber-500", bg: "bg-amber-50" },
+                            { id: "consulting", name: "Danışmanlık", icon: <Briefcase size={18} />, color: "text-indigo-500", bg: "bg-indigo-50" },
+                        ].map((cat) => (
                             <button 
-                                key={cat} 
-                                onClick={() => {
-                                    const catId = cat.split(" ")[0].toLowerCase() === "yazılım" ? "software" : (cat.split(" ")[0].toLowerCase() === "tasarım" ? "design" : "all")
-                                    setSelectedCategory(catId)
-                                }}
+                                key={cat.id} 
+                                onClick={() => setSelectedCategory(cat.id === "all" ? "" : cat.id)}
                                 className={cn(
-                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-bold transition-all",
-                                    selectedCategory === cat.split(" ")[0].toLowerCase() ? "text-rose-500 bg-rose-50/50" : "text-slate-500 hover:bg-slate-50"
+                                    "w-full flex items-center gap-4 px-5 py-4 rounded-[1.5rem] text-[14px] font-bold transition-all group",
+                                    (cat.id === "all" && !selectedCategory) || selectedCategory === cat.id
+                                        ? "bg-rose-500 text-white shadow-lg shadow-rose-200"
+                                        : "text-slate-500 hover:bg-white hover:shadow-md border border-transparent hover:border-slate-100"
                                 )}
                             >
-                                {cat}
+                                <div className={cn(
+                                    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors shrink-0",
+                                    (cat.id === "all" && !selectedCategory) || selectedCategory === cat.id
+                                        ? "bg-white/20"
+                                        : cat.bg + " " + cat.color
+                                )}>
+                                    {cat.icon}
+                                </div>
+                                <span className="truncate">{cat.name}</span>
+                                {((cat.id === "all" && !selectedCategory) || selectedCategory === cat.id) && (
+                                    <div className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_8px_white]" />
+                                )}
                             </button>
                         ))}
-                    </div>
+                    </nav>
                 </div>
 
                 <div>
