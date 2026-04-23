@@ -6047,6 +6047,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </form>
                             </motion.div>
                         </div>
+                    )}
 
                     {showServiceModal && (
                         <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center sm:p-6">
