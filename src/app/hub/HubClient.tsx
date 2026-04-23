@@ -455,7 +455,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                             <span className="font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic text-[11px]">{act.profile?.displayName || act.name}</span> <span className="text-slate-500">{actions[i % actions.length]}</span>
                                         </p>
                                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-2">
-                                            <Globe2 size={10} />
+                                            <Globe size={10} />
                                             {i + 2} dakika önce
                                         </p>
                                     </div>
