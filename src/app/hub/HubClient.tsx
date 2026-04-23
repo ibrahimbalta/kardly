@@ -21,7 +21,6 @@ import {
     Heart,
     ShoppingBag,
     PenTool,
-    Briefcase,
     Megaphone,
     Monitor,
     FileText,
