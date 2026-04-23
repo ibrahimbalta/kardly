@@ -26,6 +26,7 @@ import {
     FileText,
     Layout,
     Plus,
+    Bookmark,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
