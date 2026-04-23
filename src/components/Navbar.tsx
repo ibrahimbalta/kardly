@@ -33,7 +33,7 @@ export function Navbar() {
                     <Link href="#features" className="hover:text-rose-500 transition-colors uppercase">{t('features')}</Link>
                     <Link href="#templates" className="hover:text-rose-500 transition-colors uppercase">{t('templates')}</Link>
                     <Link 
-                        href="/dashboard?tab=network" 
+                        href="/hub" 
                         className="relative group flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-full font-black text-[10px] tracking-[0.2em] shadow-xl shadow-slate-200/50 hover:bg-rose-500 hover:shadow-rose-200 transition-all hover:scale-105 active:scale-95 group overflow-hidden"
                     >
                         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-white/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
@@ -87,7 +87,7 @@ export function Navbar() {
                         </Link>
                         
                         <Link 
-                            href="/dashboard?tab=network" 
+                            href="/hub" 
                             onClick={() => setIsOpen(false)} 
                             className="bg-slate-950 text-white p-4 px-5 rounded-2xl text-lg font-bold flex items-center justify-between group shadow-xl shadow-slate-200/50"
                         >
