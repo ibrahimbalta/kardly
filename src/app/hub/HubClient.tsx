@@ -24,7 +24,8 @@ import {
     Megaphone,
     Monitor,
     FileText,
-    Layout
+    Layout,
+    Plus,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
