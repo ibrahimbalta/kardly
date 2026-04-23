@@ -81,7 +81,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             tags: ["Yazılım", "Web Geliştirme", "E-Ticaret"],
             budget: "₺50.000 - ₺80.000",
             time: "3 gün önce",
-            icon: <ShoppingBag className="text-rose-500" />,
+            icon: <ShoppingBag size={28} className="text-rose-500" />,
             iconBg: "bg-rose-100"
         },
         {
@@ -91,7 +91,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             tags: ["Tasarım", "Sosyal Medya", "Branding"],
             budget: "₺8.000 - ₺15.000",
             time: "1 hafta önce",
-            icon: <PenTool className="text-sky-500" />,
+            icon: <PenTool size={28} className="text-sky-500" />,
             iconBg: "bg-sky-100"
         },
         {
@@ -101,7 +101,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             tags: ["Pazarlama", "Google Ads", "Dijital Reklam"],
             budget: "₺10.000 - ₺20.000",
             time: "2 gün önce",
-            icon: <Megaphone className="text-emerald-500" />,
+            icon: <Megaphone size={28} className="text-emerald-500" />,
             iconBg: "bg-emerald-100"
         }
     ]
@@ -296,7 +296,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                 <div key={proj.id} className="bg-white p-8 rounded-3xl border border-slate-100 hover:border-rose-500/20 hover:shadow-2xl hover:shadow-slate-200/50 transition-all group relative">
                                     <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
                                         <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-inner", proj.iconBg)}>
-                                            {React.cloneElement(proj.icon as React.ReactElement, { size: 28 })}
+                                            {proj.icon}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="text-lg font-black text-slate-900 mb-2 group-hover:text-rose-500 transition-colors">{proj.title}</h4>
