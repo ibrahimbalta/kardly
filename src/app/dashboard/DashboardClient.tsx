@@ -102,8 +102,6 @@ import {
     Heart,
     CreditCard,
     Send,
-    Search,
-    Maximize2,
     Hammer,
     Wrench,
     Droplets,
