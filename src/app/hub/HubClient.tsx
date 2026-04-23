@@ -64,7 +64,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     const categories = [
         { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={20} className="text-sky-500" />, bg: "bg-sky-50" },
         { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={20} className="text-purple-500" />, bg: "bg-purple-50" },
-        { id: "consulting", name: "Danışmanlık", icon: <BriefcaseIcon size={20} className="text-amber-500" />, bg: "bg-amber-50" },
+        { id: "consulting", name: "Danışmanlık", icon: <Briefcase size={20} className="text-amber-500" />, bg: "bg-amber-50" },
         { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={20} className="text-rose-500" />, bg: "bg-rose-50" },
     ]
 
