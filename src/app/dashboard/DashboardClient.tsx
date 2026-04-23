@@ -470,6 +470,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isProductSaving, setIsProductSaving] = useState(false)
     const [editingProduct, setEditingProduct] = useState<any>(null)
     const [isProductImageUploading, setIsProductImageUploading] = useState(false)
+    
+    // Hub Ad Management (Hiring/Finding Professionals)
+    const [showHubAdModal, setShowHubAdModal] = useState(false)
+    const [newHubAd, setNewHubAd] = useState({
+        title: "",
+        description: "",
+        budget: "",
+        category: "software",
+        tags: ""
+    })
+    const [isHubAdSaving, setIsHubAdSaving] = useState(false)
     const [statsRange, setStatsRange] = useState("30")
     const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
     const [isProfileImageUploading, setIsProfileImageUploading] = useState(false)
@@ -587,6 +598,31 @@ export default function DashboardClient({ session, profile, subscription, appoin
             console.error(err)
         } finally {
             setIsLeadsLoading(false)
+        }
+    }
+
+    const handlePublishHubAd = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!newHubAd.title || !newHubAd.description) {
+            setShowToast("Lütfen başlık ve açıklama girin.")
+            setTimeout(() => setShowToast(null), 3000)
+            return
+        }
+
+        setIsHubAdSaving(true)
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500))
+            
+            setShowHubAdModal(false)
+            setNewHubAd({ title: "", description: "", budget: "", category: "software", tags: "" })
+            setShowToast("İlanınız başarıyla yayınlandı! 🚀")
+            setTimeout(() => setShowToast(null), 3000)
+        } catch (err) {
+            console.error(err)
+            setShowToast("İlan yayınlanırken bir hata oluştu.")
+            setTimeout(() => setShowToast(null), 3000)
+        } finally {
+            setIsHubAdSaving(false)
         }
     }
 
@@ -5415,7 +5451,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <span>AI ASİSTAN İLE BUL</span>
                                     </button>
                                     <button 
-                                        onClick={() => setShowProductModal(true)}
+                                        onClick={() => setShowHubAdModal(true)}
                                         className="h-14 px-10 bg-white text-slate-900 border-2 border-slate-100 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
                                     >
                                         İLAN VER
@@ -5921,6 +5957,96 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </motion.div>
                         </div>
                     )}
+
+                    {/* New Hub Ad Modal (Hiring) */}
+                    {showHubAdModal && (
+                        <div className="fixed inset-0 z-[160] flex items-end sm:items-center justify-center sm:p-4">
+                            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => setShowHubAdModal(false)} />
+                            <motion.div
+                                initial={{ opacity: 0, y: "100%" }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: "100%" }}
+                                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                className="bg-[#F8F9FB] w-full sm:max-w-xl rounded-t-[4rem] sm:rounded-[3.5rem] p-10 relative z-10 shadow-2xl max-h-[92vh] overflow-y-auto no-scrollbar"
+                            >
+                                <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-10 sm:hidden" />
+                                <button onClick={() => setShowHubAdModal(false)} className="absolute top-10 right-10 text-slate-400 hover:text-slate-900 transition-colors">
+                                    <X className="w-6 h-6" />
+                                </button>
+
+                                <div className="mb-12 text-center">
+                                    <div className="w-20 h-20 bg-rose-500 text-white rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-rose-200 mx-auto mb-6">
+                                        <ShoppingBag size={32} />
+                                    </div>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Yeni İlan Yayınla</h2>
+                                    <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em]">Projeleriniz için profesyonel bulun</p>
+                                </div>
+
+                                <form onSubmit={handlePublishHubAd} className="space-y-8">
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">İLAN BAŞLIĞI</label>
+                                        <input
+                                            type="text"
+                                            value={newHubAd.title}
+                                            onChange={(e) => setNewHubAd({ ...newHubAd, title: e.target.value })}
+                                            className="w-full h-16 px-8 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-rose-500/5 transition-all shadow-sm"
+                                            placeholder="Örn: E-ticaret Sitesi Yazılımı"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">İLAN DETAYLARI</label>
+                                        <textarea
+                                            value={newHubAd.description}
+                                            onChange={(e) => setNewHubAd({ ...newHubAd, description: e.target.value })}
+                                            className="w-full min-h-[160px] px-8 py-6 bg-white border border-slate-100 rounded-[2.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-rose-500/5 transition-all shadow-sm resize-none"
+                                            placeholder="İhtiyacınızı ve beklentilerinizi detaylıca açıklayın..."
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">KATEGORİ</label>
+                                            <select
+                                                value={newHubAd.category}
+                                                onChange={(e) => setNewHubAd({ ...newHubAd, category: e.target.value })}
+                                                className="w-full h-16 px-8 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-rose-500/5 transition-all shadow-sm appearance-none"
+                                            >
+                                                <option value="software">Yazılım & Teknoloji</option>
+                                                <option value="design">Tasarım & Kreatif</option>
+                                                <option value="marketing">Pazarlama & Satış</option>
+                                                <option value="consulting">Danışmanlık</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">TAHMİNİ BÜTÇE</label>
+                                            <input
+                                                type="text"
+                                                value={newHubAd.budget}
+                                                onChange={(e) => setNewHubAd({ ...newHubAd, budget: e.target.value })}
+                                                className="w-full h-16 px-8 bg-white border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-rose-500/5 transition-all shadow-sm"
+                                                placeholder="₺5.000 - ₺10.000"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isHubAdSaving}
+                                        className="w-full h-20 bg-slate-950 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-4 mt-6"
+                                    >
+                                        {isHubAdSaving ? <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" /> : (
+                                            <>
+                                                <Plus size={20} />
+                                                İLAN YAYINLA
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
+                            </motion.div>
+                        </div>
 
                     {showServiceModal && (
                         <div className="fixed inset-0 z-[150] flex items-end sm:items-center justify-center sm:p-6">
