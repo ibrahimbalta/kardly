@@ -29,21 +29,23 @@ import {
     Megaphone,
     MoreHorizontal,
     Plus,
-    Layout
+    Layout,
+    Globe2,
+    Monitor
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
-import { TEMPLATES } from "@/components/BusinessCardGenerator"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }) {
     const { t } = useTranslation()
+    const router = useRouter()
     const [networkUsers, setNetworkUsers] = useState<any[]>(initialUsers)
     const [networkSearch, setNetworkSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("all")
     const [isNetworkLoading, setIsNetworkLoading] = useState(initialUsers.length === 0)
     
-    // Sidebar active state
     const [activeNav, setActiveNav] = useState('ana-sayfa')
 
     useEffect(() => {
@@ -67,11 +69,29 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     }
 
     const categories = [
-        { id: "software", name: "Yazılım & Teknoloji", icon: <ShoppingBag size={20} className="text-sky-500" />, bg: "bg-sky-50" },
+        { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={20} className="text-sky-500" />, bg: "bg-sky-50" },
         { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={20} className="text-purple-500" />, bg: "bg-purple-50" },
         { id: "consulting", name: "Danışmanlık", icon: <BriefcaseIcon size={20} className="text-amber-500" />, bg: "bg-amber-50" },
         { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={20} className="text-rose-500" />, bg: "bg-rose-50" },
     ]
+
+    const filteredUsers = useMemo(() => {
+        return networkUsers.filter(u => {
+            const searchLower = networkSearch.toLowerCase()
+            const matchesSearch = (
+                u.name?.toLowerCase().includes(searchLower) ||
+                u.profile?.occupation?.toLowerCase().includes(searchLower) ||
+                u.profile?.username?.toLowerCase().includes(searchLower)
+            )
+            const matchesCategory = selectedCategory === "all" || 
+                u.profile?.occupation?.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+                (selectedCategory === "software" && u.profile?.occupation?.toLowerCase().includes("yazılım")) ||
+                (selectedCategory === "design" && u.profile?.occupation?.toLowerCase().includes("tasarım")) ||
+                (selectedCategory === "marketing" && u.profile?.occupation?.toLowerCase().includes("pazarlama"))
+            
+            return matchesSearch && matchesCategory
+        })
+    }, [networkUsers, networkSearch, selectedCategory])
 
     const projects = [
         {
@@ -106,65 +126,87 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
         }
     ]
 
+    const popularPros = useMemo(() => {
+        return [...networkUsers].sort((a, b) => (b.profile?.totalViews || 0) - (a.profile?.totalViews || 0)).slice(0, 5)
+    }, [networkUsers])
+
     return (
         <div className="min-h-screen bg-[#F8F9FB] flex">
             {/* Left Sidebar */}
-            <aside className="w-64 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-6">
-                <div className="flex items-center gap-2 mb-10 pl-2">
-                    <div className="w-8 h-8 bg-rose-500 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg shadow-rose-200">K</div>
-                    <div>
-                        <h1 className="font-black text-slate-900 text-lg leading-none tracking-tight">Kardly</h1>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Business Hub</p>
+            <aside className="w-72 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-8">
+                {/* Brand Logo - Updated to match image 2 */}
+                <Link href="/" className="flex items-center gap-3 mb-12 group">
+                    <div className="w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-rose-200 transition-transform group-hover:scale-110">
+                        <Layout size={24} />
                     </div>
-                </div>
+                    <div>
+                        <div className="flex items-baseline gap-0.5">
+                            <span className="font-black text-slate-900 text-2xl tracking-tighter">Kardly</span>
+                            <span className="font-black text-rose-500 text-2xl tracking-tighter">.site</span>
+                        </div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest -mt-1">link to success</p>
+                    </div>
+                </Link>
 
-                <nav className="space-y-1 mb-10">
+                <nav className="space-y-1 mb-10 flex-1">
                     {[
-                        { id: 'ana-sayfa', label: 'Ana Sayfa', icon: <Home size={18} /> },
-                        { id: 'kesfet', label: 'Keşfet', icon: <Compass size={18} /> },
-                        { id: 'projeler', label: 'Projeler', icon: <Layout size={18} /> },
-                        { id: 'kisiler', label: 'Kişiler', icon: <Users size={18} /> },
-                        { id: 'mesajlar', label: 'Mesajlar', icon: <MessageSquare size={18} /> },
-                        { id: 'bildirimler', label: 'Bildirimler', icon: <Bell size={18} /> },
-                        { id: 'favoriler', label: 'Favoriler', icon: <Heart size={18} /> },
-                        { id: 'kaydedilenler', label: 'Kaydedilenler', icon: <Bookmark size={18} /> },
+                        { id: 'ana-sayfa', label: 'Ana Sayfa', icon: <Home size={18} />, href: '/hub' },
+                        { id: 'kesfet', label: 'Keşfet', icon: <Compass size={18} />, href: '/hub' },
+                        { id: 'projeler', label: 'Projeler', icon: <Layout size={18} />, href: '#' },
+                        { id: 'kisiler', label: 'Kişiler', icon: <Users size={18} />, href: '#' },
+                        { id: 'mesajlar', label: 'Mesajlar', icon: <MessageSquare size={18} />, href: '#' },
+                        { id: 'bildirimler', label: 'Bildirimler', icon: <Bell size={18} />, href: '#' },
+                        { id: 'favoriler', label: 'Favoriler', icon: <Heart size={18} />, href: '#' },
+                        { id: 'kaydedilenler', label: 'Kaydedilenler', icon: <Bookmark size={18} />, href: '#' },
                     ].map((item) => (
-                        <button
+                        <Link
                             key={item.id}
+                            href={item.href}
                             onClick={() => setActiveNav(item.id)}
                             className={cn(
-                                "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all",
+                                "w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl text-[14px] font-bold transition-all",
                                 activeNav === item.id 
                                     ? "bg-rose-50 text-rose-600 shadow-sm" 
-                                    : "text-slate-500 hover:bg-slate-50"
+                                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                             )}
                         >
                             {item.icon}
                             {item.label}
-                        </button>
+                        </Link>
                     ))}
                 </nav>
 
-                <div className="mb-6">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-4">Kategoriler</p>
-                    <div className="space-y-1">
+                <div className="mb-8">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-5">Kategoriler</p>
+                    <div className="space-y-1 px-2">
                         {["Yazılım & Teknoloji", "Tasarım & Kreatif", "Pazarlama & Satış", "Yazı & Çeviri", "Danışmanlık"].map((cat) => (
-                            <button key={cat} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-[13px] font-bold text-slate-500 hover:bg-slate-50 transition-all">
+                            <button 
+                                key={cat} 
+                                onClick={() => {
+                                    const catId = cat.split(" ")[0].toLowerCase() === "yazılım" ? "software" : (cat.split(" ")[0].toLowerCase() === "tasarım" ? "design" : "all")
+                                    setSelectedCategory(catId)
+                                }}
+                                className={cn(
+                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-bold transition-all",
+                                    selectedCategory === cat.split(" ")[0].toLowerCase() ? "text-rose-500 bg-rose-50/50" : "text-slate-500 hover:bg-slate-50"
+                                )}
+                            >
                                 {cat}
                             </button>
                         ))}
-                        <button className="w-full flex items-center justify-between px-4 py-2 rounded-xl text-[13px] font-bold text-slate-500 hover:bg-slate-50 transition-all">
-                            Tümü <ArrowUpRight size={14} className="rotate-90" />
-                        </button>
                     </div>
                 </div>
 
-                <div className="mt-auto">
-                    <div className="bg-slate-950 p-6 rounded-2xl text-white relative overflow-hidden">
-                        <Sparkles className="text-rose-500 mb-4" size={24} />
-                        <h4 className="text-[13px] font-black mb-2 uppercase leading-tight">Burada yer almak ister misin?</h4>
-                        <p className="text-[11px] text-slate-400 font-medium mb-4">Yeteneğini sergile, fırsatları yakala ve büyümeye başla.</p>
-                        <button className="w-full h-10 bg-white text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all shadow-xl">
+                <div>
+                    <div className="bg-slate-950 p-7 rounded-3xl text-white relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
+                        <Sparkles className="text-rose-500 mb-5" size={28} />
+                        <h4 className="text-[14px] font-black mb-2 uppercase leading-tight">Burada yer almak ister misin?</h4>
+                        <p className="text-[11px] text-slate-400 font-medium mb-6 leading-relaxed">Yeteneğini sergile, fırsatları yakala ve büyümeye başla.</p>
+                        <button 
+                            onClick={() => router.push('/register')}
+                            className="w-full h-11 bg-white text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all shadow-xl active:scale-95"
+                        >
                             Profil Oluştur
                         </button>
                     </div>
@@ -174,166 +216,198 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             {/* Main Content Area */}
             <main className="flex-1 overflow-y-auto no-scrollbar">
                 {/* Header */}
-                <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-50">
-                    <div className="max-w-2xl w-full relative">
+                <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-50">
+                    <div className="max-w-xl w-full relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                         <input 
                             type="text" 
                             placeholder="Kişi, yetenek veya hizmet ara..." 
-                            className="w-full h-11 pl-12 pr-4 bg-slate-50 rounded-xl text-sm font-medium border-none outline-none focus:ring-2 focus:ring-rose-500/10 transition-all"
+                            value={networkSearch}
+                            onChange={(e) => setNetworkSearch(e.target.value)}
+                            className="w-full h-12 pl-12 pr-4 bg-slate-50 rounded-2xl text-[14px] font-medium border-none outline-none focus:ring-2 focus:ring-rose-500/10 transition-all placeholder:text-slate-300"
                         />
                     </div>
-                    <div className="flex items-center gap-6">
-                        <div className="hidden md:flex items-center gap-8 text-[13px] font-bold text-slate-600 uppercase tracking-widest">
-                            <Link href="#" className="hover:text-rose-500">Keşfet</Link>
-                            <Link href="#" className="hover:text-rose-500">Projeler</Link>
-                            <Link href="#" className="hover:text-rose-500">Kişiler</Link>
-                            <Link href="#" className="hover:text-rose-500">İlan Ver</Link>
+                    <div className="flex items-center gap-10">
+                        <div className="hidden xl:flex items-center gap-10 text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                            <Link href="/hub" className="hover:text-rose-500 transition-colors">Keşfet</Link>
+                            <Link href="#" className="hover:text-rose-500 transition-colors">Projeler</Link>
+                            <Link href="#" className="hover:text-rose-500 transition-colors">Kişiler</Link>
+                            <Link href="/register" className="hover:text-rose-500 transition-colors">İlan Ver</Link>
                         </div>
-                        <div className="flex items-center gap-4 border-l border-slate-100 pl-6">
-                            <button className="p-2 text-slate-400 hover:text-rose-500 relative transition-all">
-                                <MessageSquare size={20} />
+                        <div className="flex items-center gap-5 border-l border-slate-100 pl-10">
+                            <button className="p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
+                                <MessageSquare size={22} />
                             </button>
-                            <button className="p-2 text-slate-400 hover:text-rose-500 relative transition-all">
-                                <Bell size={20} />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" />
+                            <button className="p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
+                                <Bell size={22} />
+                                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-[3px] border-white" />
                             </button>
-                            <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 overflow-hidden ml-2 cursor-pointer shadow-sm">
-                                <img src="https://ui-avatars.com/api/?name=Ibrahim+Balta&background=random" alt="User" />
+                            <div 
+                                onClick={() => router.push('/dashboard')}
+                                className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-slate-50 transition-all"
+                            >
+                                <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User" />
                             </div>
                         </div>
                     </div>
                 </header>
 
-                <div className="p-10 max-w-7xl mx-auto">
+                <div className="p-12 max-w-7xl mx-auto">
                     {/* Hero Section */}
-                    <section className="mb-14 relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                        <div className="max-w-xl">
-                            <div className="flex items-center gap-2 text-sky-500 bg-sky-50 px-3 py-1.5 rounded-full w-fit mb-8 border border-sky-100 shadow-sm">
-                                <Plus size={14} strokeWidth={3} />
-                                <span className="text-[10px] font-black uppercase tracking-widest">Profesyoneller için doğru yerdesin</span>
+                    <section className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                        <div className="lg:col-span-7">
+                            <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-4 py-2 rounded-full w-fit mb-10 border border-sky-100 shadow-sm">
+                                <Plus size={16} strokeWidth={3} />
+                                <span className="text-[11px] font-black uppercase tracking-widest">Profesyoneller için doğru yerdesin</span>
                             </div>
-                            <h2 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-8">
-                                Profesyonel dünyayı keşfet, <span className="text-rose-500">fırsatları yakala.</span>
+                            <h2 className="text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-10">
+                                Profesyonel dünyayı keşfet, <br /><span className="text-rose-500">fırsatları yakala.</span>
                             </h2>
-                            <p className="text-lg text-slate-500 font-medium leading-relaxed mb-10 max-w-lg">
+                            <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12 max-w-xl">
                                 Kardly Business Hub, iş birlikleri kurmak, projeler bulmak ve profesyonel ağını büyütmek için tasarlandı.
                             </p>
-                            <div className="flex items-center gap-4">
-                                <button className="px-10 h-14 bg-slate-950 text-white rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95">
+                            <div className="flex items-center gap-6">
+                                <button 
+                                    onClick={() => router.push('/register')}
+                                    className="px-12 h-16 bg-slate-950 text-white rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
+                                >
                                     Ücretsiz Katıl
                                 </button>
-                                <button className="px-10 h-14 bg-white text-slate-900 border-2 border-slate-100 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95">
+                                <button 
+                                    onClick={() => router.push('/register')}
+                                    className="px-12 h-16 bg-white text-slate-900 border-2 border-slate-100 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
+                                >
                                     İlan Ver
                                 </button>
                             </div>
                         </div>
-                        <div className="relative hidden lg:block">
-                            {/* Network Visualization Mockup */}
-                            <div className="relative w-full aspect-square flex items-center justify-center">
-                                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 via-transparent to-sky-500/5 rounded-full blur-3xl animate-pulse" />
-                                <div className="w-64 h-64 border-2 border-slate-100 rounded-full flex items-center justify-center relative animate-spin-slow">
-                                    <div className="w-4 h-4 bg-rose-500 rounded-full shadow-[0_0_20px_rgba(244,63,94,0.5)]" />
-                                    {/* Rotating avatars icons */}
-                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-white shadow-xl border border-slate-100 p-1">
-                                        <img src="https://ui-avatars.com/api/?name=User+1&background=random" className="w-full h-full rounded-xl object-cover" alt="" />
-                                    </div>
-                                    <div className="absolute top-1/2 -right-6 -translate-y-1/2 w-12 h-12 rounded-2xl bg-white shadow-xl border border-slate-100 p-1">
-                                        <img src="https://ui-avatars.com/api/?name=User+2&background=random" className="w-full h-full rounded-xl object-cover" alt="" />
-                                    </div>
-                                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-white shadow-xl border border-slate-100 p-1">
-                                        <img src="https://ui-avatars.com/api/?name=User+3&background=random" className="w-full h-full rounded-xl object-cover" alt="" />
+                        
+                        <div className="lg:col-span-5 relative hidden lg:block">
+                            <div className="relative w-full aspect-square">
+                                {/* Network Visualization */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/[0.03] via-transparent to-sky-500/[0.03] rounded-full blur-[100px] animate-pulse" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-72 h-72 border-2 border-slate-100 rounded-full flex items-center justify-center relative animate-spin-slow">
+                                        <div className="w-5 h-5 bg-rose-500 rounded-full shadow-[0_0_30px_rgba(244,63,94,0.6)]" />
+                                        {popularPros.slice(0, 3).map((u, i) => {
+                                            const angles = [0, 120, 240]
+                                            return (
+                                                <div key={i} className="absolute w-14 h-14 bg-white rounded-2xl shadow-2xl border border-slate-100 p-1.5" style={{ 
+                                                    transform: `rotate(${angles[i]}deg) translate(144px) rotate(-${angles[i]}deg)`
+                                                }}>
+                                                    <img src={u.image || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full rounded-[10px] object-cover" alt="" />
+                                                </div>
+                                            )
+                                        })}
                                     </div>
                                 </div>
-                                {/* Activity Popups */}
-                                <div className="absolute top-0 right-0 bg-white p-3 rounded-2xl shadow-2xl border border-slate-100 flex items-center gap-3 animate-bounce-slow">
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md">
-                                        <img src="https://ui-avatars.com/api/?name=P&background=random" alt="" />
+                                {/* Floating Updates */}
+                                <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute top-0 right-0 bg-white p-4 rounded-3xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-[240px]">
+                                    <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                                        <ShoppingBag size={24} className="text-rose-500" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-slate-900 uppercase leading-none">Yeni Proje Yayınlandı</p>
-                                        <p className="text-[9px] text-slate-400 font-medium mt-1">E-Ticaret sitesi için yazılım geliştirici aranıyor.</p>
+                                        <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Yeni Proje</p>
+                                        <p className="text-[10px] text-slate-400 font-medium mt-1.5 line-clamp-2">E-ticaret sitesi geliştiricisi aranıyor.</p>
                                     </div>
-                                </div>
-                                <div className="absolute bottom-10 left-0 bg-white p-3 rounded-2xl shadow-2xl border border-slate-100 flex items-center gap-3 animate-bounce">
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md">
-                                        <img src="https://ui-avatars.com/api/?name=U&background=random" alt="" />
+                                </motion.div>
+                                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 5 }} className="absolute bottom-10 left-0 bg-white p-4 rounded-3xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-[220px]">
+                                    <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                                        <Users size={24} className="text-emerald-500" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-slate-900 uppercase leading-none">Yeni Üye</p>
-                                        <p className="text-[9px] text-slate-400 font-medium mt-1">Selin Yılmaz aramıza katıldı.</p>
+                                        <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Yeni Üye</p>
+                                        <p className="text-[10px] text-slate-400 font-medium mt-1.5">Selin Yılmaz katıldı.</p>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
                         </div>
                     </section>
 
-                    {/* Categories Row */}
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-16">
+                    {/* Categories Bar */}
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-20">
                         {categories.map((cat) => (
-                            <button key={cat.id} className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 hover:border-rose-500 hover:shadow-xl hover:shadow-rose-500/5 transition-all group">
-                                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110", cat.bg)}>
+                            <button 
+                                key={cat.id} 
+                                onClick={() => setSelectedCategory(cat.id)}
+                                className={cn(
+                                    "flex items-center gap-5 p-5 bg-white rounded-3xl border transition-all group",
+                                    selectedCategory === cat.id ? "border-rose-500 shadow-xl shadow-rose-500/5 ring-4 ring-rose-50" : "border-slate-100 hover:border-rose-200 hover:shadow-xl hover:shadow-slate-200/30"
+                                )}
+                            >
+                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-all group-hover:scale-110 group-hover:rotate-6", cat.bg)}>
                                     {cat.icon}
                                 </div>
-                                <span className="text-[13px] font-bold text-slate-700">{cat.name}</span>
+                                <span className="text-[14px] font-black text-slate-800 uppercase tracking-tight">{cat.name}</span>
                             </button>
                         ))}
-                        <button className="flex items-center justify-center p-4 bg-white rounded-2xl border border-slate-100 hover:border-rose-500 hover:shadow-xl hover:shadow-rose-500/5 transition-all group">
-                            <span className="text-[13px] font-bold text-slate-500 flex items-center gap-2">Tümü <ArrowUpRight size={16} /></span>
+                        <button 
+                            onClick={() => setSelectedCategory("all")}
+                            className="flex items-center justify-center p-5 bg-white rounded-3xl border border-slate-100 hover:border-rose-500 transition-all group"
+                        >
+                            <span className="text-[14px] font-black text-slate-500 flex items-center gap-3 group-hover:text-rose-500">Tümü <ArrowUpRight size={18} /></span>
                         </button>
                     </div>
 
-                    {/* Featured Projects */}
-                    <section className="mb-14">
-                        <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">Öne Çıkan Projeler</h3>
-                            <button className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-rose-500 transition-colors">
-                                Tüm Projeleri Gör <ArrowUpRight size={14} />
+                    {/* Content Feed */}
+                    <section className="mb-20">
+                        <div className="flex items-center justify-between mb-10">
+                            <div>
+                                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan Projeler</h3>
+                                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Sizin için seçilen en yeni iş ilanları</p>
+                            </div>
+                            <button className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-rose-500 transition-all">
+                                Tüm Projeleri Gör <ArrowUpRight size={16} />
                             </button>
                         </div>
-                        <div className="space-y-4">
+                        
+                        <div className="space-y-5">
                             {projects.map((proj) => (
-                                <div key={proj.id} className="bg-white p-8 rounded-3xl border border-slate-100 hover:border-rose-500/20 hover:shadow-2xl hover:shadow-slate-200/50 transition-all group relative">
-                                    <div className="flex flex-col md:flex-row gap-8 items-start md:items-center">
-                                        <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-inner", proj.iconBg)}>
+                                <div key={proj.id} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
+                                    <div className="flex flex-col xl:flex-row gap-10 items-start xl:items-center">
+                                        <div className={cn("w-20 h-20 rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", proj.iconBg)}>
                                             {proj.icon}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="text-lg font-black text-slate-900 mb-2 group-hover:text-rose-500 transition-colors">{proj.title}</h4>
-                                            <p className="text-[13px] text-slate-500 font-medium leading-relaxed mb-4 max-w-2xl">{proj.desc}</p>
-                                            <div className="flex flex-wrap items-center gap-2">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <h4 className="text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
+                                                <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100">Yeni</span>
+                                            </div>
+                                            <p className="text-[15px] text-slate-500 font-medium leading-relaxed mb-6 max-w-3xl">{proj.desc}</p>
+                                            <div className="flex flex-wrap items-center gap-3">
                                                 {proj.tags.map(tag => (
-                                                    <span key={tag} className="px-3 py-1 bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-slate-100">
+                                                    <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
                                                         {tag}
                                                     </span>
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="flex flex-row md:flex-col items-start md:items-end gap-6 md:gap-2 shrink-0">
-                                            <div className="text-right">
-                                                <div className="text-lg font-black text-slate-900">{proj.budget}</div>
-                                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Bütçe</div>
+                                        <div className="flex flex-row xl:flex-col items-center xl:items-end gap-10 xl:gap-3 shrink-0">
+                                            <div className="text-left xl:text-right">
+                                                <div className="text-2xl font-black text-slate-900 tracking-tighter">{proj.budget}</div>
+                                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="text-[13px] font-black text-slate-900">{proj.time}</div>
-                                                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Son Tarih</div>
+                                            <div className="text-left xl:text-right">
+                                                <div className="text-[15px] font-black text-slate-900 tracking-tight">{proj.time}</div>
+                                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 shrink-0 ml-auto md:ml-0">
-                                            <button className="h-12 px-8 bg-slate-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all">
+                                        <div className="flex items-center gap-4 shrink-0 w-full xl:w-auto">
+                                            <button className="flex-1 xl:flex-none h-14 px-10 bg-slate-950 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95">
                                                 Teklif Ver
                                             </button>
-                                            <button className="w-12 h-12 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100">
-                                                <Bookmark size={18} />
+                                            <button className="w-14 h-14 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100">
+                                                <Bookmark size={20} />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-10 text-center">
-                            <button className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mx-auto hover:text-rose-500 transition-colors">
-                                Daha Fazla Proje Yükle
+                        
+                        <div className="mt-12 text-center">
+                            <button className="px-10 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 mx-auto hover:text-rose-500 transition-all bg-white rounded-2xl border border-slate-100 hover:shadow-xl shadow-slate-100">
+                                Daha Fazla Proje Yükle <ArrowUpRight size={16} />
                             </button>
                         </div>
                     </section>
@@ -341,64 +415,71 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             </main>
 
             {/* Right Sidebar */}
-            <aside className="w-80 bg-[#F8F9FB] border-l border-slate-100 hidden xl:flex flex-col sticky top-0 h-screen p-8 space-y-10 overflow-y-auto no-scrollbar">
-                {/* Popular Professionals */}
-                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-[13px] font-black text-slate-900 uppercase tracking-tight">Popüler Profesyoneller</h3>
-                        <button className="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Tümü <ArrowUpRight size={10} /></button>
+            <aside className="w-96 bg-[#F8F9FB] border-l border-slate-100 hidden 2xl:flex flex-col sticky top-0 h-screen p-10 space-y-10 overflow-y-auto no-scrollbar">
+                {/* Popular Pros */}
+                <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center justify-between mb-10">
+                        <h3 className="text-[14px] font-black text-slate-900 uppercase tracking-tight italic">Popüler Profesyoneller</h3>
+                        <button className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-all">Tümü <ArrowUpRight size={12} /></button>
                     </div>
-                    <div className="space-y-6">
-                        {[
-                            { name: "İbrahim Balta", title: "Full Stack Developer", rating: "4.9" },
-                            { name: "S. Cahit Demir", title: "UI/UX Designer", rating: "4.8" },
-                            { name: "Selin Yılmaz", title: "Dijital Pazarlama Uzmanı", rating: "4.9" },
-                            { name: "Birkan Kocatürk", title: "Mobil Uygulama Geliştirici", rating: "4.7" },
-                        ].map((pro, i) => (
-                            <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                                <div className="w-11 h-11 rounded-xl overflow-hidden border border-slate-100 shadow-sm group-hover:border-rose-500 transition-all">
-                                    <img src={`https://ui-avatars.com/api/?name=${pro.name}&background=random`} alt="" className="w-full h-full object-cover" />
+                    <div className="space-y-8">
+                        {popularPros.map((pro, i) => (
+                            <div 
+                                key={i} 
+                                onClick={() => window.open(`https://${pro.profile?.username || pro.name}.kardly.site`, '_blank')}
+                                className="flex items-center gap-5 group cursor-pointer"
+                            >
+                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-100 shadow-sm group-hover:border-rose-500 transition-all relative">
+                                    <img src={pro.image || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} alt="" className="w-full h-full object-cover" />
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="text-[11px] font-black text-slate-900 truncate group-hover:text-rose-500 transition-colors uppercase italic">{pro.name}</h4>
-                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest truncate">{pro.title}</p>
+                                    <h4 className="text-[13px] font-black text-slate-900 truncate group-hover:text-rose-500 transition-colors uppercase italic tracking-tight">{pro.profile?.displayName || pro.name}</h4>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate mt-0.5">{pro.profile?.occupation}</p>
                                 </div>
-                                <div className="flex items-center gap-1 text-[9px] font-black text-amber-500">
-                                    <Star size={10} fill="currentColor" />
-                                    {pro.rating}
+                                <div className="flex items-center gap-1 text-[10px] font-black text-amber-500 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                                    <Star size={11} fill="currentColor" />
+                                    {pro.profile?.avgRating || "5.0"}
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <button className="w-full h-12 border-2 border-slate-50 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest mt-8 hover:bg-slate-50 hover:text-slate-600 transition-all">
+                    <button 
+                        onClick={() => setSelectedCategory("all")}
+                        className="w-full h-14 border-2 border-slate-50 rounded-2xl text-[11px] font-black text-slate-400 uppercase tracking-widest mt-10 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-100 transition-all active:scale-95"
+                    >
                         Tüm Profesyonelleri Keşfet
                     </button>
                 </div>
 
-                {/* New Activities */}
-                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <h3 className="text-[13px] font-black text-slate-900 uppercase tracking-tight mb-8">Yeni Aktiviteler</h3>
-                    <div className="space-y-6">
-                        {[
-                            { name: "Ali Yılmaz", action: "yeni bir proje yayınladı", time: "2 dakika önce" },
-                            { name: "Zeynep A.", action: "projeye teklif verdi", time: "15 dakika önce" },
-                            { name: "Mert K.", action: "profilini güncelledi", time: "1 saat önce" },
-                            { name: "Ayşe D.", action: "yeni üye olarak katıldı", time: "2 saat önce" },
-                        ].map((act, i) => (
-                            <div key={i} className="flex items-start gap-4">
-                                <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-50 shrink-0">
-                                    <img src={`https://ui-avatars.com/api/?name=${act.name}&background=random`} alt="" className="w-full h-full object-cover" />
-                                </div>
-                                <div>
-                                    <p className="text-[11px] font-medium leading-relaxed">
-                                        <span className="font-black text-slate-900">{act.name}</span> <span className="text-slate-500">{act.action}</span>
-                                    </p>
-                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">{act.time}</p>
-                                </div>
-                            </div>
-                        ))}
+                {/* Live Activity Feed */}
+                <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-3 mb-10">
+                        <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                        <h3 className="text-[14px] font-black text-slate-900 uppercase tracking-tight italic">Yeni Aktiviteler</h3>
                     </div>
-                    <button className="w-full h-12 border-2 border-slate-50 rounded-2xl text-[10px] font-black text-slate-400 uppercase tracking-widest mt-8 hover:bg-slate-50 hover:text-slate-600 transition-all">
+                    <div className="space-y-8">
+                        {networkUsers.slice(0, 5).map((act, i) => {
+                            const actions = ["yeni bir proje yayınladı", "projeye teklif verdi", "profilini güncelledi", "yeni üye olarak katıldı", "yeni bir makale paylaştı"]
+                            return (
+                                <div key={i} className="flex items-start gap-5 group cursor-pointer">
+                                    <div className="w-11 h-11 rounded-2xl overflow-hidden border border-slate-50 shrink-0 group-hover:ring-4 group-hover:ring-slate-50 transition-all">
+                                        <img src={act.image || `https://ui-avatars.com/api/?name=${act.name}&background=random`} alt="" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-[13px] font-medium leading-[1.4]">
+                                            <span className="font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic text-[11px]">{act.profile?.displayName || act.name}</span> <span className="text-slate-500">{actions[i % actions.length]}</span>
+                                        </p>
+                                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-2">
+                                            <Globe2 size={10} />
+                                            {i + 2} dakika önce
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <button className="w-full h-14 border-2 border-slate-50 rounded-2xl text-[11px] font-black text-slate-400 uppercase tracking-widest mt-10 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-100 transition-all active:scale-95">
                         Tüm Aktiviteleri Gör
                     </button>
                 </div>
