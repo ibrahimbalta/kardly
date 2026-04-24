@@ -126,7 +126,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     }, [networkUsers])
 
     return (
-        <div className="min-h-screen bg-[#F8F9FB] flex">
+        <div className="min-h-screen bg-[#F8F9FB] flex flex-col lg:flex-row">
             {/* Left Sidebar */}
             <aside className="w-72 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-8">
                 {/* Brand Logo - Updated to match image 2 */}
@@ -200,35 +200,35 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             {/* Main Content Area */}
             <main className="flex-1 overflow-y-auto no-scrollbar">
                 {/* Header */}
-                <header className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-50">
-                    <div className="max-w-xl w-full relative">
+                <header className="h-16 lg:h-20 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-6 lg:px-10 sticky top-0 z-50 gap-3">
+                    <div className="flex-1 max-w-xl w-full relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                         <input 
                             type="text" 
                             placeholder="Kişi, yetenek veya hizmet ara..." 
                             value={networkSearch}
                             onChange={(e) => setNetworkSearch(e.target.value)}
-                            className="w-full h-12 pl-12 pr-4 bg-slate-50 rounded-2xl text-[14px] font-medium border-none outline-none focus:ring-2 focus:ring-rose-500/10 transition-all placeholder:text-slate-300"
+                            className="w-full h-10 sm:h-12 pl-10 sm:pl-12 pr-4 bg-slate-50 rounded-xl sm:rounded-2xl text-[13px] sm:text-[14px] font-medium border-none outline-none focus:ring-2 focus:ring-rose-500/10 transition-all placeholder:text-slate-300"
                         />
                     </div>
-                    <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-3 sm:gap-10 shrink-0">
                         <div className="hidden xl:flex items-center gap-10 text-[13px] font-black text-slate-500 uppercase tracking-widest">
                             <Link href="/hub" className="hover:text-rose-500 transition-colors">Keşfet</Link>
                             <Link href="#" className="hover:text-rose-500 transition-colors">Projeler</Link>
                             <Link href="#" className="hover:text-rose-500 transition-colors">Kişiler</Link>
                             <Link href="/register" className="hover:text-rose-500 transition-colors">İlan Ver</Link>
                         </div>
-                        <div className="flex items-center gap-5 border-l border-slate-100 pl-10">
-                            <button className="p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
+                        <div className="flex items-center gap-2 sm:gap-5 sm:border-l border-slate-100 sm:pl-10">
+                            <button className="p-2 sm:p-2.5 text-slate-400 hover:text-rose-500 transition-all relative hidden sm:block">
                                 <MessageSquare size={22} />
                             </button>
-                            <button className="p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
-                                <Bell size={22} />
-                                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-[3px] border-white" />
+                            <button className="p-2 sm:p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
+                                <Bell size={20} />
+                                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-rose-500 rounded-full border-2 sm:border-[3px] border-white" />
                             </button>
                             <div 
                                 onClick={() => router.push('/dashboard')}
-                                className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-slate-50 transition-all"
+                                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-slate-50 transition-all"
                             >
                                 <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User" />
                             </div>
@@ -236,30 +236,30 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </div>
                 </header>
 
-                <div className="p-12 max-w-7xl mx-auto">
+                <div className="p-4 sm:p-6 lg:p-12 max-w-7xl mx-auto pb-24 lg:pb-12">
                     {/* Hero Section */}
-                    <section className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    <section className="mb-8 sm:mb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
                         <div className="lg:col-span-7">
-                            <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-4 py-2 rounded-full w-fit mb-10 border border-sky-100 shadow-sm">
-                                <Plus size={16} strokeWidth={3} />
-                                <span className="text-[11px] font-black uppercase tracking-widest">Profesyoneller için doğru yerdesin</span>
+                            <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full w-fit mb-6 sm:mb-10 border border-sky-100 shadow-sm">
+                                <Plus size={14} strokeWidth={3} className="shrink-0" />
+                                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest">Profesyoneller için doğru yerdesin</span>
                             </div>
-                            <h2 className="text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-10">
+                            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-5 sm:mb-10">
                                 Profesyonel dünyayı keşfet, <br /><span className="text-rose-500">fırsatları yakala.</span>
                             </h2>
-                            <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12 max-w-xl">
+                            <p className="text-sm sm:text-base lg:text-xl text-slate-500 font-medium leading-relaxed mb-6 sm:mb-12 max-w-xl">
                                 Kardly Business Hub, iş birlikleri kurmak, projeler bulmak ve profesyonel ağını büyütmek için tasarlandı.
                             </p>
-                            <div className="flex items-center gap-6">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
                                 <button 
                                     onClick={() => router.push('/register')}
-                                    className="px-12 h-16 bg-slate-950 text-white rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
+                                    className="px-8 sm:px-12 h-12 sm:h-16 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
                                 >
                                     Ücretsiz Katıl
                                 </button>
                                 <button 
                                     onClick={() => router.push('/register')}
-                                    className="px-12 h-16 bg-white text-slate-900 border-2 border-slate-100 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
+                                    className="px-8 sm:px-12 h-12 sm:h-16 bg-white text-slate-900 border-2 border-slate-100 rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
                                 >
                                     İlan Ver
                                 </button>
@@ -309,55 +309,55 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </section>
 
                     {/* Categories Bar */}
-                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-20">
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5 mb-10 sm:mb-20">
                         {categories.map((cat) => (
                             <button 
                                 key={cat.id} 
                                 onClick={() => setSelectedCategory(cat.id)}
                                 className={cn(
-                                    "flex items-center gap-5 p-5 bg-white rounded-3xl border transition-all group",
+                                    "flex items-center gap-3 sm:gap-5 p-3 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border transition-all group",
                                     selectedCategory === cat.id ? "border-rose-500 shadow-xl shadow-rose-500/5 ring-4 ring-rose-50" : "border-slate-100 hover:border-rose-200 hover:shadow-xl hover:shadow-slate-200/30"
                                 )}
                             >
-                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-all group-hover:scale-110 group-hover:rotate-6", cat.bg)}>
+                                <div className={cn("w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-all group-hover:scale-110 group-hover:rotate-6", cat.bg)}>
                                     {cat.icon}
                                 </div>
-                                <span className="text-[14px] font-black text-slate-800 uppercase tracking-tight">{cat.name}</span>
+                                <span className="text-[11px] sm:text-[14px] font-black text-slate-800 uppercase tracking-tight">{cat.name}</span>
                             </button>
                         ))}
                         <button 
                             onClick={() => setSelectedCategory("all")}
-                            className="flex items-center justify-center p-5 bg-white rounded-3xl border border-slate-100 hover:border-rose-500 transition-all group"
+                            className="flex items-center justify-center p-3 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 hover:border-rose-500 transition-all group"
                         >
                             <span className="text-[14px] font-black text-slate-500 flex items-center gap-3 group-hover:text-rose-500">Tümü <ArrowUpRight size={18} /></span>
                         </button>
                     </div>
 
                     {/* Content Feed */}
-                    <section className="mb-20">
-                        <div className="flex items-center justify-between mb-10">
+                    <section className="mb-10 sm:mb-20">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-2">
                             <div>
-                                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan Projeler</h3>
-                                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Sizin için seçilen en yeni iş ilanları</p>
+                                <h3 className="text-lg sm:text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan Projeler</h3>
+                                <p className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Sizin için seçilen en yeni iş ilanları</p>
                             </div>
-                            <button className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-rose-500 transition-all">
+                            <button className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-rose-500 transition-all">
                                 Tüm Projeleri Gör <ArrowUpRight size={16} />
                             </button>
                         </div>
                         
                         <div className="space-y-5">
                             {projects.map((proj) => (
-                                <div key={proj.id} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
-                                    <div className="flex flex-col xl:flex-row gap-10 items-start xl:items-center">
-                                        <div className={cn("w-20 h-20 rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", proj.iconBg)}>
+                                <div key={proj.id} className="bg-white p-5 sm:p-10 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
+                                    <div className="flex flex-col xl:flex-row gap-4 sm:gap-10 items-start xl:items-center">
+                                        <div className={cn("w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", proj.iconBg)}>
                                             {proj.icon}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-3 mb-3">
-                                                <h4 className="text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
-                                                <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100">Yeni</span>
+                                                <h4 className="text-base sm:text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
+                                                <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Yeni</span>
                                             </div>
-                                            <p className="text-[15px] text-slate-500 font-medium leading-relaxed mb-6 max-w-3xl">{proj.desc}</p>
+                                            <p className="text-[13px] sm:text-[15px] text-slate-500 font-medium leading-relaxed mb-4 sm:mb-6 max-w-3xl">{proj.desc}</p>
                                             <div className="flex flex-wrap items-center gap-3">
                                                 {proj.tags.map(tag => (
                                                     <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
@@ -366,22 +366,22 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="flex flex-row xl:flex-col items-center xl:items-end gap-10 xl:gap-3 shrink-0">
+                                        <div className="flex flex-row xl:flex-col items-center xl:items-end gap-4 sm:gap-10 xl:gap-3 shrink-0">
                                             <div className="text-left xl:text-right">
-                                                <div className="text-2xl font-black text-slate-900 tracking-tighter">{proj.budget}</div>
-                                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
+                                                <div className="text-base sm:text-2xl font-black text-slate-900 tracking-tighter">{proj.budget}</div>
+                                                <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
                                             </div>
                                             <div className="text-left xl:text-right">
-                                                <div className="text-[15px] font-black text-slate-900 tracking-tight">{proj.time}</div>
-                                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
+                                                <div className="text-[13px] sm:text-[15px] font-black text-slate-900 tracking-tight">{proj.time}</div>
+                                                <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-4 shrink-0 w-full xl:w-auto">
-                                            <button className="flex-1 xl:flex-none h-14 px-10 bg-slate-950 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95">
+                                        <div className="flex items-center gap-3 sm:gap-4 shrink-0 w-full xl:w-auto">
+                                            <button className="flex-1 xl:flex-none h-11 sm:h-14 px-6 sm:px-10 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95">
                                                 Teklif Ver
                                             </button>
-                                            <button className="w-14 h-14 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100">
-                                                <Bookmark size={20} />
+                                            <button className="w-11 h-11 sm:w-14 sm:h-14 bg-slate-50 text-slate-400 rounded-xl sm:rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100 shrink-0">
+                                                <Bookmark size={18} />
                                             </button>
                                         </div>
                                     </div>
@@ -468,6 +468,28 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </button>
                 </div>
             </aside>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 px-2 pb-[env(safe-area-inset-bottom)]">
+                <div className="flex items-center justify-around h-16">
+                    <button onClick={() => setSelectedCategory("")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", !selectedCategory ? "text-rose-500" : "text-slate-400")}>
+                        <LayoutGrid size={20} />
+                        <span className="text-[9px] font-black uppercase tracking-wider">Keşfet</span>
+                    </button>
+                    <button onClick={() => setSelectedCategory("software")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", selectedCategory === "software" ? "text-rose-500" : "text-slate-400")}>
+                        <Monitor size={20} />
+                        <span className="text-[9px] font-black uppercase tracking-wider">Yazılım</span>
+                    </button>
+                    <button onClick={() => setSelectedCategory("design")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", selectedCategory === "design" ? "text-rose-500" : "text-slate-400")}>
+                        <PenTool size={20} />
+                        <span className="text-[9px] font-black uppercase tracking-wider">Tasarım</span>
+                    </button>
+                    <button onClick={() => router.push('/register')} className="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl text-slate-400 transition-all">
+                        <Plus size={20} />
+                        <span className="text-[9px] font-black uppercase tracking-wider">Katıl</span>
+                    </button>
+                </div>
+            </nav>
         </div>
     )
 }

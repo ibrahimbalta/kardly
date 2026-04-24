@@ -481,6 +481,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         tags: ""
     })
     const [isHubAdSaving, setIsHubAdSaving] = useState(false)
+    const [hubAds, setHubAds] = useState<any[]>([])
+    const [isHubAdsLoading, setIsHubAdsLoading] = useState(false)
     const [statsRange, setStatsRange] = useState("30")
     const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
     const [isProfileImageUploading, setIsProfileImageUploading] = useState(false)
@@ -515,6 +517,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     useEffect(() => {
         if (activeTab === "network") {
             fetchNetwork()
+            fetchHubAds()
         }
     }, [activeTab])
 
@@ -601,6 +604,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
         }
     }
 
+    const fetchHubAds = async () => {
+        setIsHubAdsLoading(true)
+        try {
+            const res = await fetch("/api/hub-ads")
+            if (res.ok) {
+                const data = await res.json()
+                if (Array.isArray(data)) setHubAds(data)
+            }
+        } catch (err) {
+            console.error("Hub ads fetch error:", err)
+        } finally {
+            setIsHubAdsLoading(false)
+        }
+    }
+
     const handlePublishHubAd = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!newHubAd.title || !newHubAd.description) {
@@ -611,8 +629,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
         setIsHubAdSaving(true)
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500))
-            
+            const res = await fetch("/api/hub-ads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newHubAd)
+            })
+            if (!res.ok) throw new Error("Failed")
+            const created = await res.json()
+            setHubAds(prev => [created, ...prev])
             setShowHubAdModal(false)
             setNewHubAd({ title: "", description: "", budget: "", category: "software", tags: "" })
             setShowToast("İlanınız başarıyla yayınlandı! 🚀")
@@ -623,6 +647,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
             setTimeout(() => setShowToast(null), 3000)
         } finally {
             setIsHubAdSaving(false)
+        }
+    }
+
+    const handleDeleteHubAd = async (id: string) => {
+        if (!confirm("Bu ilanı silmek istediğinize emin misiniz?")) return
+        try {
+            const res = await fetch(`/api/hub-ads?id=${id}`, { method: "DELETE" })
+            if (res.ok) {
+                setHubAds(prev => prev.filter(a => a.id !== id))
+                setShowToast("İlan silindi!")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error(err)
         }
     }
 
@@ -5422,37 +5460,37 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "network" ? (
-                    <div className="space-y-12 pb-20">
+                    <div className="space-y-6 sm:space-y-12 pb-24 sm:pb-20 px-3 sm:px-0">
                         {/* 1. Premium Hero Section */}
                         <motion.section 
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-center bg-white p-10 lg:p-16 rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden"
+                            className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center bg-white p-5 sm:p-10 lg:p-16 rounded-2xl sm:rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/[0.03] rounded-full blur-[100px] -mr-48 -mt-48" />
                             <div className="lg:col-span-7 relative z-10">
-                                <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-4 py-2 rounded-full w-fit mb-10 border border-sky-100 shadow-sm">
-                                    <Plus size={16} strokeWidth={3} />
-                                    <span className="text-[11px] font-black uppercase tracking-widest">{t('liveCommunity') || 'Profesyoneller için doğru yerdesin'}</span>
+                                <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full w-fit mb-4 sm:mb-10 border border-sky-100 shadow-sm">
+                                    <Plus size={14} strokeWidth={3} className="shrink-0" />
+                                    <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest">{t('liveCommunity') || 'Profesyoneller için doğru yerdesin'}</span>
                                 </div>
-                                <h2 className="text-5xl lg:text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-8">
+                                <h2 className="text-2xl sm:text-4xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-4 sm:mb-8">
                                     {t('hubWelcomeTitle') || 'Profesyonel dünyayı keşfet,'} <br />
                                     <span className="text-rose-500">{t('hubWelcomeSubtitle') || 'fırsatları yakala.'}</span>
                                 </h2>
-                                <p className="text-lg text-slate-500 font-medium leading-relaxed mb-10 max-w-lg">
+                                <p className="text-xs sm:text-sm lg:text-lg text-slate-500 font-medium leading-relaxed mb-5 sm:mb-10 max-w-lg">
                                     {t('hubWelcomeDesc') || 'Kardly Business Hub, iş birlikleri kurmak, projeler bulmak ve profesyonel ağını büyütmek için tasarlandı.'}
                                 </p>
-                                <div className="flex flex-wrap items-center gap-4">
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                                     <button 
                                         onClick={() => setIsHubAiOpen(true)}
-                                        className="h-14 px-10 bg-slate-950 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95 flex items-center gap-3"
+                                        className="h-11 sm:h-14 px-5 sm:px-10 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95 flex items-center justify-center gap-2 sm:gap-3"
                                     >
-                                        <Sparkles size={18} />
+                                        <Sparkles size={16} />
                                         <span>AI ASİSTAN İLE BUL</span>
                                     </button>
                                     <button 
                                         onClick={() => setShowHubAdModal(true)}
-                                        className="h-14 px-10 bg-white text-slate-900 border-2 border-slate-100 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
+                                        className="h-11 sm:h-14 px-5 sm:px-10 bg-white text-slate-900 border-2 border-slate-100 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
                                     >
                                         İLAN VER
                                     </button>
@@ -5500,7 +5538,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </motion.section>
 
                         {/* 2. Categorized Discovery Bar */}
-                        <div className="bg-white/60 backdrop-blur-md p-6 rounded-[3rem] border border-slate-200/50 flex flex-col md:flex-row items-center gap-6 sticky top-4 z-40 shadow-xl">
+                        <div className="bg-white/60 backdrop-blur-md p-3 sm:p-6 rounded-2xl sm:rounded-[3rem] border border-slate-200/50 flex flex-col md:flex-row items-center gap-3 sm:gap-6 sticky top-4 z-40 shadow-xl">
                             <div className="relative flex-1 w-full group">
                                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-rose-500 transition-colors" size={20} />
                                 <input
@@ -5508,11 +5546,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     placeholder={t('searchInHub') || 'Kişi, yetenek veya hizmet ara...'}
                                     value={networkSearch}
                                     onChange={(e) => setNetworkSearch(e.target.value)}
-                                    className="w-full h-14 pl-14 pr-6 bg-white border border-slate-100 rounded-2xl text-[14px] font-bold text-slate-900 focus:ring-4 focus:ring-rose-500/5 focus:border-rose-500/20 transition-all outline-none"
+                                    className="w-full h-10 sm:h-14 pl-10 sm:pl-14 pr-4 sm:pr-6 bg-white border border-slate-100 rounded-xl sm:rounded-2xl text-[13px] sm:text-[14px] font-bold text-slate-900 focus:ring-4 focus:ring-rose-500/5 focus:border-rose-500/20 transition-all outline-none"
                                 />
                             </div>
                             
-                            <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto no-scrollbar py-1">
+                            <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto overflow-x-auto no-scrollbar py-1 -mx-1 px-1">
                                 {[
                                     { id: "all", name: "Tümü", icon: <LayoutGrid size={16} /> },
                                     { id: "software", name: "Yazılım", icon: <Monitor size={16} /> },
@@ -5526,7 +5564,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             setSelectedHubCategory(cat.id === "all" ? "" : cat.name);
                                         }}
                                         className={cn(
-                                            "h-12 px-5 rounded-2xl flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest transition-all whitespace-nowrap border",
+                                            "h-9 sm:h-12 px-3 sm:px-5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2.5 text-[9px] sm:text-[11px] font-black uppercase tracking-wider sm:tracking-widest transition-all whitespace-nowrap border",
                                             (cat.id === "all" && !selectedHubCategory) || selectedHubCategory === cat.name
                                                 ? "bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/20"
                                                 : "bg-white text-slate-500 border-slate-100 hover:border-rose-200"
@@ -5539,9 +5577,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
-                        <div className="flex flex-col xl:flex-row gap-10">
+                        <div className="flex flex-col xl:flex-row gap-6 sm:gap-10">
                             {/* 3. Main Content Feed */}
-                            <div className="flex-1 space-y-10 min-w-0">
+                            <div className="flex-1 space-y-6 sm:space-y-10 min-w-0">
                                 {/* Featured Professionals Grid */}
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between px-2">
@@ -5561,13 +5599,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </div>
 
                                     {isNetworkLoading ? (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                             {[1, 2, 3].map(i => (
                                                 <div key={i} className="h-64 bg-white rounded-[3rem] border border-slate-100 animate-pulse shadow-sm" />
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                             {networkUsers
                                                 .filter(u => {
                                                     const searchLower = networkSearch.toLowerCase()
@@ -5590,7 +5628,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                             key={user.id} 
                                                             whileHover={{ y: -8, scale: 1.01 }}
                                                             className={cn(
-                                                                "group relative rounded-[3rem] border overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col p-6",
+                                                                "group relative rounded-2xl sm:rounded-[3rem] border overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col p-4 sm:p-6",
                                                                 tpl.bg,
                                                                 isLight ? "border-slate-100 shadow-xl shadow-slate-200/50" : "border-white/10 shadow-xl shadow-black/20",
                                                                 tpl.text
@@ -5634,44 +5672,96 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     )}
                                 </div>
 
-                                {/* Projects Section Integration */}
-                                <div className="space-y-6">
-                                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic px-2">Öne Çıkan Projeler</h3>
-                                    <div className="space-y-5">
-                                        {[
-                                            { title: "E-Ticaret Sitesi", budget: "₺50.000", desc: "Sıfırdan e-ticaret altyapısı kurulacak.", tags: ["Yazılım", "Web"], icon: <ShoppingBag size={24} className="text-rose-500" />, bg: "bg-rose-50" },
-                                            { title: "Sosyal Medya Yönetimi", budget: "₺15.000", desc: "Aylık 20 içerik üretimi ve yönetimi.", tags: ["Tasarım", "Pazarlama"], icon: <PenTool size={24} className="text-sky-500" />, bg: "bg-sky-50" },
-                                        ].map((proj, i) => (
-                                            <div key={i} className="bg-white p-8 rounded-[3rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-2xl transition-all group cursor-pointer">
-                                                <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                                                    <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shrink-0", proj.bg)}>
-                                                        {proj.icon}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="text-lg font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
-                                                        <p className="text-[13px] text-slate-500 font-medium line-clamp-1 mb-3">{proj.desc}</p>
-                                                        <div className="flex items-center gap-2">
-                                                            {proj.tags.map(tag => (
-                                                                <span key={tag} className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-slate-100">{tag}</span>
-                                                            ))}
+                                {/* Projects Section - Dynamic Hub Ads */}
+                                <div className="space-y-4 sm:space-y-6">
+                                    <div className="flex items-center justify-between px-2">
+                                        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan İlanlar</h3>
+                                        <button 
+                                            onClick={() => setShowHubAdModal(true)}
+                                            className="px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95 flex items-center gap-2"
+                                        >
+                                            <Plus size={14} />
+                                            İlan Ekle
+                                        </button>
+                                    </div>
+                                    <div className="space-y-4 sm:space-y-5">
+                                        {isHubAdsLoading ? (
+                                            <div className="space-y-4">
+                                                {[1, 2].map(i => (
+                                                    <div key={i} className="h-32 bg-white rounded-2xl sm:rounded-[3rem] border border-slate-100 animate-pulse" />
+                                                ))}
+                                            </div>
+                                        ) : hubAds.length === 0 ? (
+                                            <div className="p-8 sm:p-12 text-center bg-white rounded-2xl sm:rounded-[3rem] border border-slate-100">
+                                                <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-slate-100" />
+                                                <p className="font-black uppercase tracking-[0.2em] text-[10px] text-slate-300 mb-4">Henüz ilan yok</p>
+                                                <button 
+                                                    onClick={() => setShowHubAdModal(true)}
+                                                    className="px-6 py-3 bg-slate-950 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500 transition-all"
+                                                >
+                                                    İlk İlanını Yayınla
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            hubAds.map((ad: any) => {
+                                                const categoryIcons: Record<string, any> = {
+                                                    software: <Monitor size={24} className="text-sky-500" />,
+                                                    design: <PenTool size={24} className="text-purple-500" />,
+                                                    marketing: <Megaphone size={24} className="text-rose-500" />,
+                                                    consulting: <Briefcase size={24} className="text-amber-500" />,
+                                                }
+                                                const categoryBgs: Record<string, string> = {
+                                                    software: "bg-sky-50",
+                                                    design: "bg-purple-50",
+                                                    marketing: "bg-rose-50",
+                                                    consulting: "bg-amber-50",
+                                                }
+                                                return (
+                                                    <div key={ad.id} className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-2xl transition-all group">
+                                                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
+                                                            <div className={cn("w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0", categoryBgs[ad.category] || "bg-slate-50")}>
+                                                                {categoryIcons[ad.category] || <ShoppingBag size={24} className="text-slate-500" />}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center gap-2 mb-1">
+                                                                    <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{ad.title}</h4>
+                                                                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Aktif</span>
+                                                                </div>
+                                                                <p className="text-[12px] sm:text-[13px] text-slate-500 font-medium line-clamp-2 mb-3">{ad.description}</p>
+                                                                <div className="flex flex-wrap items-center gap-2">
+                                                                    {ad.tags && ad.tags.split(',').map((tag: string) => (
+                                                                        <span key={tag.trim()} className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-slate-100">{tag.trim()}</span>
+                                                                    ))}
+                                                                    <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-slate-100">
+                                                                        {new Date(ad.createdAt).toLocaleDateString('tr-TR')}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            {ad.budget && (
+                                                                <div className="text-right shrink-0">
+                                                                    <div className="text-lg sm:text-xl font-black text-slate-900">{ad.budget}</div>
+                                                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Bütçe</div>
+                                                                </div>
+                                                            )}
+                                                            <button 
+                                                                onClick={() => handleDeleteHubAd(ad.id)}
+                                                                className="h-10 sm:h-12 px-4 sm:px-6 bg-rose-50 text-rose-500 border border-rose-100 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all shrink-0"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <div className="text-xl font-black text-slate-900">{proj.budget}</div>
-                                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Bütçe</div>
-                                                    </div>
-                                                    <button className="h-12 px-8 bg-slate-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 transition-all">Teklif Ver</button>
-                                                </div>
-                                            </div>
-                                        ))}
+                                                )
+                                            })
+                                        )}
                                     </div>
                                 </div>
                             </div>
 
                             {/* 4. Insights Sidebar */}
-                            <aside className="w-full xl:w-80 space-y-8">
+                            <aside className="w-full xl:w-80 space-y-4 sm:space-y-8">
                                 {/* Popular Professionals */}
-                                <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm">
+                                <div className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 shadow-sm">
                                     <h4 className="text-[13px] font-black text-slate-900 uppercase tracking-tight italic mb-8">Popüler Profesyoneller</h4>
                                     <div className="space-y-6">
                                         {[...networkUsers].sort((a, b) => (b.profile?.totalViews || 0) - (a.profile?.totalViews || 0)).slice(0, 4).map((u, i) => (
@@ -5693,7 +5783,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 {/* Live Activity */}
-                                <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm">
+                                <div className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 shadow-sm">
                                     <div className="flex items-center gap-2 mb-8">
                                         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                                         <h4 className="text-[13px] font-black text-slate-900 uppercase tracking-tight italic">Yeni Aktiviteler</h4>
@@ -5717,7 +5807,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 {/* Promo Card */}
-                                <div className="bg-slate-950 p-8 rounded-[3rem] text-white relative overflow-hidden group">
+                                <div className="bg-slate-950 p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] text-white relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
                                     <Sparkles className="text-rose-500 mb-6" size={28} />
                                     <h4 className="text-[14px] font-black mb-3 uppercase leading-tight italic">İşini Büyütmek mi İstiyorsun?</h4>

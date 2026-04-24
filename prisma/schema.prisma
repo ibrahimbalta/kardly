@@ -120,7 +120,22 @@ model Profile {
   reviews        Review[]
   leads          Lead[]
   articles       Article[]
+  hubAds         HubAd[]
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model HubAd {
+  id          String   @id @default(cuid())
+  profileId   String
+  title       String
+  description String   @db.Text
+  budget      String?
+  category    String   @default("software")
+  tags        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Article {
