@@ -390,7 +390,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                                 </div>
                                                 <p className="text-[13px] sm:text-[15px] text-slate-500 font-medium leading-relaxed mb-4 sm:mb-6 max-w-3xl line-clamp-2">{proj.description}</p>
                                                 <div className="flex flex-wrap items-center gap-3">
-                                                    {(proj.tags || "İlan, İş Birliği").split(',').map(tag => (
+                                                    {(proj.tags || "İlan, İş Birliği").split(',').map((tag: string) => (
                                                         <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
                                                             {tag.trim()}
                                                         </span>
