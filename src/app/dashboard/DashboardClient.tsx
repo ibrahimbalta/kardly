@@ -697,15 +697,16 @@ export default function DashboardClient({ session, profile, subscription, appoin
         setIsBidSending(true)
         try {
             // İlan sahibine bir lead (talep) olarak gönder
-            const res = await fetch("/api/leads/send", {
+            const res = await fetch("/api/leads/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    targetUserId: selectedAdForBid.profile?.userId,
+                    profileId: selectedAdForBid.profile?.id,
                     name: profileData.displayName || profileData.name || "Bir Profesyonel",
                     email: session?.user?.email,
                     phone: profileData.phone || "",
-                    message: `HUB İLANI TEKLİFİ: "${selectedAdForBid.title}" hakkında teklifim:\n\n${bidMessage}`
+                    subject: `HUB İLANI TEKLİFİ: ${selectedAdForBid.title}`,
+                    message: bidMessage
                 })
             })
 
@@ -5422,7 +5423,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                             )}
                         </div>
-
                         {/* Desktop View: Existing Table with refinements */}
                         <div className="hidden sm:block bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
                             <table className="w-full text-left min-w-[800px]">
@@ -5444,6 +5444,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         >
                                             <td className="px-8 py-6">
                                                 <div className="font-black text-slate-900 group-hover:text-primary transition-colors uppercase italic tracking-tight">{lead.name}</div>
+                                                {lead.subject && (
+                                                    <div className={cn(
+                                                        "text-[9px] font-black uppercase tracking-widest mt-1 px-2 py-0.5 rounded-md inline-block border",
+                                                        lead.subject.includes("HUB İLANI") ? "bg-rose-50 text-rose-500 border-rose-100" : "bg-slate-50 text-slate-400 border-slate-100"
+                                                    )}>
+                                                        {lead.subject}
+                                                    </div>
+                                                )}
                                                 <div className="flex flex-col gap-1 mt-2">
                                                     <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
                                                         <Phone size={13} className="text-primary/50" />
