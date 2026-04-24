@@ -5474,11 +5474,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest">{t('liveCommunity') || 'Profesyoneller için doğru yerdesin'}</span>
                                 </div>
                                 <h2 className="text-2xl sm:text-4xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-4 sm:mb-8">
-                                    {t('hubWelcomeTitle') || 'Profesyonel dünyayı keşfet,'} <br />
-                                    <span className="text-rose-500">{t('hubWelcomeSubtitle') || 'fırsatları yakala.'}</span>
+                                    {t('hubWelcomeTitle')} <br />
+                                    <span className="text-rose-500">{t('hubWelcomeSubtitle')}</span>
                                 </h2>
                                 <p className="text-xs sm:text-sm lg:text-lg text-slate-500 font-medium leading-relaxed mb-5 sm:mb-10 max-w-lg">
-                                    {t('hubWelcomeDesc') || 'Kardly Business Hub, iş birlikleri kurmak, projeler bulmak ve profesyonel ağını büyütmek için tasarlandı.'}
+                                    {t('hubWelcomeDesc')}
                                 </p>
                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                                     <button 
