@@ -607,10 +607,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const fetchHubAds = async () => {
         setIsHubAdsLoading(true)
         try {
-            const res = await fetch("/api/hub-ads")
-            if (res.ok) {
-                const data = await res.json()
-                if (Array.isArray(data)) setHubAds(data)
+            // Tüm ilanları getir (keşfet için)
+            const resAll = await fetch("/api/hub-ads")
+            if (resAll.ok) {
+                const data = await resAll.json()
+                setHubAds(data)
+            }
+
+            // Benim ilanlarımı getir
+            const resMine = await fetch("/api/hub-ads?mine=true")
+            if (resMine.ok) {
+                const data = await resMine.json()
+                setMyHubAds(data)
             }
         } catch (err) {
             console.error("Hub ads fetch error:", err)
@@ -618,6 +626,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
             setIsHubAdsLoading(false)
         }
     }
+
+    // Handle adId from URL
+    useEffect(() => {
+        const adId = searchParams.get("adId")
+        if (adId && hubAds.length > 0) {
+            const ad = hubAds.find(a => a.id === adId)
+            if (ad) {
+                setSelectedAdForBid(ad)
+                setHubAdsTab('all')
+                setActiveTab('network')
+            }
+        }
+    }, [searchParams, hubAds])
 
     const handlePublishHubAd = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -655,12 +676,49 @@ export default function DashboardClient({ session, profile, subscription, appoin
         try {
             const res = await fetch(`/api/hub-ads?id=${id}`, { method: "DELETE" })
             if (res.ok) {
-                setHubAds(prev => prev.filter(a => a.id !== id))
-                setShowToast("İlan silindi!")
+                setMyHubAds(prev => prev.filter(ad => ad.id !== id))
+                setHubAds(prev => prev.filter(ad => ad.id !== id))
+                setShowToast("İlan silindi.")
                 setTimeout(() => setShowToast(null), 3000)
             }
         } catch (err) {
             console.error(err)
+        }
+    }
+
+    const [bidMessage, setBidMessage] = useState("")
+    const [isBidSending, setIsBidSending] = useState(false)
+
+    const handleSendBid = async () => {
+        if (!selectedAdForBid || !bidMessage.trim()) return
+        setIsBidSending(true)
+        try {
+            // İlan sahibine bir lead (talep) olarak gönder
+            const res = await fetch("/api/leads/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    targetUserId: selectedAdForBid.profile?.userId,
+                    name: profileData.displayName || profileData.name || "Bir Profesyonel",
+                    email: session?.user?.email,
+                    phone: profileData.phone || "",
+                    message: `HUB İLANI TEKLİFİ: "${selectedAdForBid.title}" hakkında teklifim:\n\n${bidMessage}`
+                })
+            })
+
+            if (res.ok) {
+                setShowToast("Teklifiniz iletildi! ✨")
+                setSelectedAdForBid(null)
+                setBidMessage("")
+            } else {
+                throw new Error("Failed")
+            }
+        } catch (err) {
+            console.error(err)
+            setShowToast("Teklif gönderilirken hata oluştu.")
+        } finally {
+            setIsBidSending(false)
+            setTimeout(() => setShowToast(null), 3000)
         }
     }
 
@@ -5673,37 +5731,66 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 {/* Projects Section - Dynamic Hub Ads */}
-                                <div className="space-y-4 sm:space-y-6">
-                                    <div className="flex items-center justify-between px-2">
-                                        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan İlanlar</h3>
+                                <div className="space-y-4 sm:space-y-8">
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
+                                        <div>
+                                            <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Business Hub İlanları</h3>
+                                            <div className="flex items-center gap-4 mt-4">
+                                                <button 
+                                                    onClick={() => setHubAdsTab('all')}
+                                                    className={cn(
+                                                        "text-[10px] font-black uppercase tracking-widest pb-1 border-b-2 transition-all",
+                                                        hubAdsTab === 'all' ? "text-rose-500 border-rose-500" : "text-slate-400 border-transparent hover:text-slate-600"
+                                                    )}
+                                                >
+                                                    İlan Havuzu
+                                                </button>
+                                                <button 
+                                                    onClick={() => setHubAdsTab('mine')}
+                                                    className={cn(
+                                                        "text-[10px] font-black uppercase tracking-widest pb-1 border-b-2 transition-all",
+                                                        hubAdsTab === 'mine' ? "text-rose-500 border-rose-500" : "text-slate-400 border-transparent hover:text-slate-600"
+                                                    )}
+                                                >
+                                                    İlanlarım ({myHubAds.length})
+                                                </button>
+                                            </div>
+                                        </div>
                                         <button 
                                             onClick={() => setShowHubAdModal(true)}
-                                            className="px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95 flex items-center gap-2"
+                                            className="px-6 py-3 bg-rose-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-rose-200"
                                         >
-                                            <Plus size={14} />
-                                            İlan Ekle
+                                            <Plus size={16} />
+                                            Yeni İlan Yayınla
                                         </button>
                                     </div>
+
                                     <div className="space-y-4 sm:space-y-5">
                                         {isHubAdsLoading ? (
                                             <div className="space-y-4">
-                                                {[1, 2].map(i => (
-                                                    <div key={i} className="h-32 bg-white rounded-2xl sm:rounded-[3rem] border border-slate-100 animate-pulse" />
+                                                {[1, 2, 3].map(i => (
+                                                    <div key={i} className="h-32 bg-white rounded-[2.5rem] border border-slate-100 animate-pulse" />
                                                 ))}
                                             </div>
-                                        ) : hubAds.length === 0 ? (
-                                            <div className="p-8 sm:p-12 text-center bg-white rounded-2xl sm:rounded-[3rem] border border-slate-100">
-                                                <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-slate-100" />
-                                                <p className="font-black uppercase tracking-[0.2em] text-[10px] text-slate-300 mb-4">Henüz ilan yok</p>
-                                                <button 
-                                                    onClick={() => setShowHubAdModal(true)}
-                                                    className="px-6 py-3 bg-slate-950 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500 transition-all"
-                                                >
-                                                    İlk İlanını Yayınla
-                                                </button>
+                                        ) : (hubAdsTab === 'all' ? hubAds : myHubAds).length === 0 ? (
+                                            <div className="p-12 sm:p-20 text-center bg-white rounded-[3rem] border border-slate-100">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
+                                                    <Briefcase size={36} />
+                                                </div>
+                                                <h4 className="font-black uppercase tracking-[0.2em] text-[12px] text-slate-400 mb-6">
+                                                    {hubAdsTab === 'all' ? 'Henüz aktif ilan bulunmuyor' : 'Henüz bir ilan yayınlamadın'}
+                                                </h4>
+                                                {hubAdsTab === 'mine' && (
+                                                    <button 
+                                                        onClick={() => setShowHubAdModal(true)}
+                                                        className="px-8 py-4 bg-slate-950 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-500 transition-all shadow-xl"
+                                                    >
+                                                        İlk İlanını Yayınla
+                                                    </button>
+                                                )}
                                             </div>
                                         ) : (
-                                            hubAds.map((ad: any) => {
+                                            (hubAdsTab === 'all' ? hubAds : myHubAds).map((ad: any) => {
                                                 const categoryIcons: Record<string, any> = {
                                                     software: <Monitor size={24} className="text-sky-500" />,
                                                     design: <PenTool size={24} className="text-purple-500" />,
@@ -5716,39 +5803,61 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     marketing: "bg-rose-50",
                                                     consulting: "bg-amber-50",
                                                 }
+                                                const isMine = myHubAds.some(m => m.id === ad.id)
+                                                
                                                 return (
-                                                    <div key={ad.id} className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-2xl transition-all group">
-                                                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
-                                                            <div className={cn("w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0", categoryBgs[ad.category] || "bg-slate-50")}>
-                                                                {categoryIcons[ad.category] || <ShoppingBag size={24} className="text-slate-500" />}
+                                                    <div key={ad.id} className={cn(
+                                                        "bg-white p-5 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border transition-all group",
+                                                        searchParams.get("adId") === ad.id ? "border-rose-500 ring-4 ring-rose-50" : "border-slate-100 hover:border-rose-500/20 hover:shadow-2xl"
+                                                    )}>
+                                                        <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 items-start sm:items-center">
+                                                            <div className={cn("w-16 h-16 sm:w-20 sm:h-20 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center shrink-0 shadow-inner", categoryBgs[ad.category] || "bg-slate-50")}>
+                                                                {categoryIcons[ad.category] || <ShoppingBag size={28} className="text-slate-500" />}
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <div className="flex items-center gap-2 mb-1">
-                                                                    <h4 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{ad.title}</h4>
-                                                                    <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Aktif</span>
+                                                                <div className="flex items-center gap-3 mb-2">
+                                                                    <h4 className="text-base sm:text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{ad.title}</h4>
+                                                                    {isMine ? (
+                                                                        <span className="px-3 py-1 bg-rose-50 text-rose-500 text-[8px] font-black uppercase rounded-full border border-rose-100">İlanım</span>
+                                                                    ) : (
+                                                                        <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase rounded-full border border-emerald-100">Aktif</span>
+                                                                    )}
                                                                 </div>
-                                                                <p className="text-[12px] sm:text-[13px] text-slate-500 font-medium line-clamp-2 mb-3">{ad.description}</p>
+                                                                <p className="text-[13px] sm:text-[14px] text-slate-500 font-medium line-clamp-2 mb-4">{ad.description}</p>
                                                                 <div className="flex flex-wrap items-center gap-2">
                                                                     {ad.tags && ad.tags.split(',').map((tag: string) => (
-                                                                        <span key={tag.trim()} className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-slate-100">{tag.trim()}</span>
+                                                                        <span key={tag.trim()} className="px-3 py-1.5 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-xl border border-slate-100">{tag.trim()}</span>
                                                                     ))}
-                                                                    <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-slate-100">
-                                                                        {new Date(ad.createdAt).toLocaleDateString('tr-TR')}
-                                                                    </span>
+                                                                    <div className="flex items-center gap-2 ml-2">
+                                                                        <div className="w-6 h-6 rounded-lg overflow-hidden border border-slate-200">
+                                                                            <img src={ad.profile?.image || `https://ui-avatars.com/api/?name=${ad.profile?.username}&background=random`} className="w-full h-full object-cover" />
+                                                                        </div>
+                                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight italic">@{ad.profile?.username}</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            {ad.budget && (
-                                                                <div className="text-right shrink-0">
-                                                                    <div className="text-lg sm:text-xl font-black text-slate-900">{ad.budget}</div>
-                                                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Bütçe</div>
+                                                            <div className="flex flex-row sm:flex-col items-center sm:items-end gap-6 sm:gap-2 shrink-0 w-full sm:w-auto">
+                                                                <div className="text-left sm:text-right flex-1 sm:flex-none">
+                                                                    <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter">{ad.budget || "Görüşülür"}</div>
+                                                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Bütçe</div>
                                                                 </div>
-                                                            )}
-                                                            <button 
-                                                                onClick={() => handleDeleteHubAd(ad.id)}
-                                                                className="h-10 sm:h-12 px-4 sm:px-6 bg-rose-50 text-rose-500 border border-rose-100 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all shrink-0"
-                                                            >
-                                                                <Trash2 size={16} />
-                                                            </button>
+                                                                {isMine ? (
+                                                                    <button 
+                                                                        onClick={() => handleDeleteHubAd(ad.id)}
+                                                                        className="h-12 w-12 sm:w-auto sm:px-6 bg-rose-50 text-rose-500 border border-rose-100 rounded-2xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                                                    >
+                                                                        <Trash2 size={18} className="sm:mr-2" />
+                                                                        <span className="hidden sm:inline font-black text-[10px] uppercase tracking-widest">Sil</span>
+                                                                    </button>
+                                                                ) : (
+                                                                    <button 
+                                                                        onClick={() => setSelectedAdForBid(ad)}
+                                                                        className="h-12 flex-1 sm:flex-none sm:px-8 bg-slate-950 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 transition-all shadow-xl active:scale-95"
+                                                                    >
+                                                                        Teklif Ver
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )
@@ -6630,6 +6739,74 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </motion.div>
                     </div>
                 )}
+                {/* Hub Bid Modal */}
+                <AnimatePresence>
+                    {selectedAdForBid && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setSelectedAdForBid(null)}
+                                className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
+                            />
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+                            >
+                                <div className="p-8 sm:p-12">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <div>
+                                            <span className="px-3 py-1 bg-rose-50 text-rose-500 text-[9px] font-black uppercase rounded-full border border-rose-100">Teklif Gönder</span>
+                                            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter italic mt-2">{selectedAdForBid.title}</h3>
+                                        </div>
+                                        <button onClick={() => setSelectedAdForBid(null)} className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all">
+                                            <X size={20} />
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                                            <p className="text-[13px] text-slate-500 font-medium leading-relaxed italic">"{selectedAdForBid.description}"</p>
+                                            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-200/50">
+                                                <div className="w-8 h-8 rounded-xl overflow-hidden border border-white shadow-sm">
+                                                    <img src={selectedAdForBid.profile?.image || `https://ui-avatars.com/api/?name=${selectedAdForBid.profile?.username}&background=random`} className="w-full h-full object-cover" />
+                                                </div>
+                                                <span className="text-[11px] font-black text-slate-900 uppercase tracking-tight">@{selectedAdForBid.profile?.username}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Teklif Mesajınız</label>
+                                            <textarea 
+                                                value={bidMessage}
+                                                onChange={(e) => setBidMessage(e.target.value)}
+                                                placeholder="İlan sahibiyle paylaşmak istediğiniz teklif detaylarını buraya yazın..."
+                                                className="w-full h-40 bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 text-[14px] font-medium focus:ring-4 focus:ring-rose-50 focus:border-rose-500 transition-all outline-none resize-none"
+                                            />
+                                        </div>
+
+                                        <button 
+                                            onClick={handleSendBid}
+                                            disabled={isBidSending || !bidMessage.trim()}
+                                            className="w-full h-16 bg-slate-950 text-white rounded-2xl font-black text-[12px] uppercase tracking-widest hover:bg-rose-500 transition-all shadow-xl shadow-slate-950/20 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                                        >
+                                            {isBidSending ? (
+                                                <RefreshCw size={18} className="animate-spin" />
+                                            ) : (
+                                                <Send size={18} />
+                                            )}
+                                            {isBidSending ? "Gönderiliyor..." : "Teklifi İlet"}
+                                        </button>
+                                        <p className="text-center text-[10px] text-slate-400 font-medium">Teklifiniz ilan sahibine iletişim talebi olarak iletilecektir.</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
             </AnimatePresence>
         </>
     );

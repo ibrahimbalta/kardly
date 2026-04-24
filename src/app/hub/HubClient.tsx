@@ -31,12 +31,15 @@ import {
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 
 export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }) {
+    const { data: session, status } = useSession()
     const { t } = useTranslation()
     const router = useRouter()
     const [networkUsers, setNetworkUsers] = useState<any[]>(initialUsers)
+    const [hubAds, setHubAds] = useState<any[]>([])
     const [networkSearch, setNetworkSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("all")
     const [isNetworkLoading, setIsNetworkLoading] = useState(initialUsers.length === 0)
@@ -47,6 +50,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
         if (initialUsers.length === 0) {
             fetchNetwork()
         }
+        fetchAds()
     }, [])
 
     const fetchNetwork = async () => {
@@ -60,6 +64,17 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             console.error(err)
         } finally {
             setIsNetworkLoading(false)
+        }
+    }
+
+    const fetchAds = async () => {
+        try {
+            const res = await fetch("/api/hub-ads")
+            if (!res.ok) throw new Error("Ads error")
+            const data = await res.json()
+            if (Array.isArray(data)) setHubAds(data)
+        } catch (err) {
+            console.error("Fetch ads error:", err)
         }
     }
 
@@ -88,38 +103,41 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
         })
     }, [networkUsers, networkSearch, selectedCategory])
 
-    const projects = [
-        {
-            id: 1,
-            title: "E-Ticaret Sitesi Geliştirme",
-            desc: "Modern, hızlı ve yönetimi kolay bir e-ticaret sitesi geliştirmek istiyoruz.",
-            tags: ["Yazılım", "Web Geliştirme", "E-Ticaret"],
-            budget: "₺50.000 - ₺80.000",
-            time: "3 gün önce",
-            icon: <ShoppingBag size={28} className="text-rose-500" />,
-            iconBg: "bg-rose-100"
-        },
-        {
-            id: 2,
-            title: "Sosyal Medya İçerik Tasarımı",
-            desc: "Markamız için aylık sosyal medya içerik tasarımları hazırlayacak kreatif birini arıyoruz.",
-            tags: ["Tasarım", "Sosyal Medya", "Branding"],
-            budget: "₺8.000 - ₺15.000",
-            time: "1 hafta önce",
-            icon: <PenTool size={28} className="text-sky-500" />,
-            iconBg: "bg-sky-100"
-        },
-        {
-            id: 3,
-            title: "Google Ads Danışmanlığı",
-            desc: "Google Ads kampanyalarımızı optimize edecek, dönüşüm odaklı çalışacak bir uzmana ihtiyaç var.",
-            tags: ["Pazarlama", "Google Ads", "Dijital Reklam"],
-            budget: "₺10.000 - ₺20.000",
-            time: "2 gün önce",
-            icon: <Megaphone size={28} className="text-emerald-500" />,
-            iconBg: "bg-emerald-100"
+    const filteredAds = useMemo(() => {
+        return hubAds.filter(ad => {
+            const searchLower = networkSearch.toLowerCase()
+            const matchesSearch = (
+                ad.title?.toLowerCase().includes(searchLower) ||
+                ad.description?.toLowerCase().includes(searchLower) ||
+                ad.tags?.toLowerCase().includes(searchLower)
+            )
+            const matchesCategory = selectedCategory === "all" || ad.category === selectedCategory
+            return matchesSearch && matchesCategory
+        })
+    }, [hubAds, networkSearch, selectedCategory])
+
+    const getAdIcon = (category: string) => {
+        switch(category) {
+            case 'software': return { icon: <Monitor size={28} className="text-sky-500" />, bg: "bg-sky-100" };
+            case 'design': return { icon: <PenTool size={28} className="text-purple-500" />, bg: "bg-purple-100" };
+            case 'marketing': return { icon: <Megaphone size={28} className="text-rose-500" />, bg: "bg-rose-100" };
+            case 'consulting': return { icon: <Briefcase size={28} className="text-amber-500" />, bg: "bg-amber-100" };
+            default: return { icon: <ShoppingBag size={28} className="text-slate-500" />, bg: "bg-slate-100" };
         }
-    ]
+    }
+
+    const getTimeAgo = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInMs = now.getTime() - date.getTime();
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        
+        if (diffInDays === 0) return "Bugün";
+        if (diffInDays === 1) return "Dün";
+        if (diffInDays < 7) return `${diffInDays} gün önce`;
+        if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} hafta önce`;
+        return `${Math.floor(diffInDays / 30)} ay önce`;
+    }
 
     const popularPros = useMemo(() => {
         return [...networkUsers].sort((a, b) => (b.profile?.totalViews || 0) - (a.profile?.totalViews || 0)).slice(0, 5)
@@ -346,47 +364,72 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                         </div>
                         
                         <div className="space-y-5">
-                            {projects.map((proj) => (
-                                <div key={proj.id} className="bg-white p-5 sm:p-10 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
-                                    <div className="flex flex-col xl:flex-row gap-4 sm:gap-10 items-start xl:items-center">
-                                        <div className={cn("w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", proj.iconBg)}>
-                                            {proj.icon}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <h4 className="text-base sm:text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
-                                                <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Yeni</span>
+                            {filteredAds.length === 0 && !isNetworkLoading && (
+                                <div className="bg-white p-20 rounded-[3rem] border border-slate-100 text-center">
+                                    <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
+                                        <Briefcase size={40} />
+                                    </div>
+                                    <h4 className="text-xl font-black text-slate-900 uppercase italic">Henüz İlan Bulunmuyor</h4>
+                                    <p className="text-slate-400 font-medium mt-2">Bu kategoride henüz bir iş ilanı yayınlanmamış.</p>
+                                </div>
+                            )}
+                            {filteredAds.map((proj) => {
+                                const { icon, bg } = getAdIcon(proj.category)
+                                return (
+                                    <div key={proj.id} className="bg-white p-5 sm:p-10 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
+                                        <div className="flex flex-col xl:flex-row gap-4 sm:gap-10 items-start xl:items-center">
+                                            <div className={cn("w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", bg)}>
+                                                {icon}
                                             </div>
-                                            <p className="text-[13px] sm:text-[15px] text-slate-500 font-medium leading-relaxed mb-4 sm:mb-6 max-w-3xl">{proj.desc}</p>
-                                            <div className="flex flex-wrap items-center gap-3">
-                                                {proj.tags.map(tag => (
-                                                    <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
-                                                        {tag}
-                                                    </span>
-                                                ))}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <h4 className="text-base sm:text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
+                                                    {new Date(proj.createdAt).getTime() > Date.now() - 86400000 * 3 && (
+                                                        <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Yeni</span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[13px] sm:text-[15px] text-slate-500 font-medium leading-relaxed mb-4 sm:mb-6 max-w-3xl line-clamp-2">{proj.description}</p>
+                                                <div className="flex flex-wrap items-center gap-3">
+                                                    {(proj.tags || "İlan, İş Birliği").split(',').map(tag => (
+                                                        <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
+                                                            {tag.trim()}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex flex-row xl:flex-col items-center xl:items-end gap-4 sm:gap-10 xl:gap-3 shrink-0">
-                                            <div className="text-left xl:text-right">
-                                                <div className="text-base sm:text-2xl font-black text-slate-900 tracking-tighter">{proj.budget}</div>
-                                                <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
+                                            <div className="flex flex-row xl:flex-col items-center xl:items-end gap-4 sm:gap-10 xl:gap-3 shrink-0">
+                                                <div className="text-left xl:text-right">
+                                                    <div className="text-base sm:text-2xl font-black text-slate-900 tracking-tighter">
+                                                        {proj.budget ? (proj.budget.includes('₺') || proj.budget.includes('$') ? proj.budget : `₺${proj.budget}`) : "Görüşülür"}
+                                                    </div>
+                                                    <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
+                                                </div>
+                                                <div className="text-left xl:text-right">
+                                                    <div className="text-[13px] sm:text-[15px] font-black text-slate-900 tracking-tight">{getTimeAgo(proj.createdAt)}</div>
+                                                    <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
+                                                </div>
                                             </div>
-                                            <div className="text-left xl:text-right">
-                                                <div className="text-[13px] sm:text-[15px] font-black text-slate-900 tracking-tight">{proj.time}</div>
-                                                <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
+                                            <div className="flex items-center gap-3 sm:gap-4 shrink-0 w-full xl:w-auto">
+                                                <button 
+                                                    onClick={() => {
+                                                        if (status === 'unauthenticated') {
+                                                            router.push(`/login?callbackUrl=/dashboard?tab=network&adId=${proj.id}`)
+                                                        } else {
+                                                            router.push(`/dashboard?tab=network&adId=${proj.id}`)
+                                                        }
+                                                    }}
+                                                    className="flex-1 xl:flex-none h-11 sm:h-14 px-6 sm:px-10 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95"
+                                                >
+                                                    Teklif Ver
+                                                </button>
+                                                <button className="w-11 h-11 sm:w-14 sm:h-14 bg-slate-50 text-slate-400 rounded-xl sm:rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100 shrink-0">
+                                                    <Bookmark size={18} />
+                                                </button>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center gap-3 sm:gap-4 shrink-0 w-full xl:w-auto">
-                                            <button className="flex-1 xl:flex-none h-11 sm:h-14 px-6 sm:px-10 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95">
-                                                Teklif Ver
-                                            </button>
-                                            <button className="w-11 h-11 sm:w-14 sm:h-14 bg-slate-50 text-slate-400 rounded-xl sm:rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100 shrink-0">
-                                                <Bookmark size={18} />
-                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                         
                         <div className="mt-12 text-center">
