@@ -472,17 +472,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [isProductImageUploading, setIsProductImageUploading] = useState(false)
     
     // Hub Ad Management (Hiring/Finding Professionals)
-    const [showHubAdModal, setShowHubAdModal] = useState(false)
-    const [newHubAd, setNewHubAd] = useState({
-        title: "",
-        description: "",
-        budget: "",
-        category: "software",
-        tags: ""
-    })
-    const [isHubAdSaving, setIsHubAdSaving] = useState(false)
     const [hubAds, setHubAds] = useState<any[]>([])
+    const [myHubAds, setMyHubAds] = useState<any[]>([])
     const [isHubAdsLoading, setIsHubAdsLoading] = useState(false)
+    const [showHubAdModal, setShowHubAdModal] = useState(false)
+    const [isHubAdSaving, setIsHubAdSaving] = useState(false)
+    const [newHubAd, setNewHubAd] = useState({ 
+        title: "", 
+        description: "", 
+        budget: "", 
+        category: "software", 
+        tags: "" 
+    })
+    const [hubAdsTab, setHubAdsTab] = useState<'all' | 'mine'>('all')
+    const [selectedAdForBid, setSelectedAdForBid] = useState<any>(null)
     const [statsRange, setStatsRange] = useState("30")
     const [isUploadingPortfolio, setIsUploadingPortfolio] = useState(false)
     const [isProfileImageUploading, setIsProfileImageUploading] = useState(false)
