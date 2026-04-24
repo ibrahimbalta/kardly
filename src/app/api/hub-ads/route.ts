@@ -53,6 +53,7 @@ export async function GET(req: Request) {
                         username: true,
                         occupation: true,
                         userId: true,
+                        id: true
                     }
                 }
             }
@@ -104,6 +105,7 @@ export async function POST(req: Request) {
                         username: true,
                         occupation: true,
                         userId: true,
+                        id: true
                     }
                 }
             }
