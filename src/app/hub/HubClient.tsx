@@ -234,13 +234,31 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                             <Link href="/hub" className="hover:text-rose-500 transition-colors">Keşfet</Link>
                             <Link href="/register" className="hover:text-rose-500 transition-colors">Proje Talebi</Link>
                         </div>
-                        <div className="flex items-center gap-2 sm:gap-5 sm:border-l border-slate-100 sm:pl-10">
-                            <div 
-                                onClick={() => router.push('/dashboard')}
-                                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-slate-50 transition-all"
-                            >
-                                <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User" />
-                            </div>
+                        <div className="flex items-center gap-2 sm:gap-4 sm:border-l border-slate-100 sm:pl-10">
+                            {status === 'loading' ? (
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 animate-pulse" />
+                            ) : status === 'authenticated' ? (
+                                <Link 
+                                    href="/dashboard"
+                                    className="flex items-center gap-3 group"
+                                >
+                                    <span className="hidden sm:block text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-rose-500 transition-colors">Hesabım</span>
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-rose-50 transition-all">
+                                        <img 
+                                            src={session?.user?.image || `https://ui-avatars.com/api/?name=${session?.user?.name || 'User'}&background=random`} 
+                                            alt="User" 
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                </Link>
+                            ) : (
+                                <button 
+                                    onClick={() => router.push('/login')}
+                                    className="px-5 sm:px-8 h-10 sm:h-12 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
+                                >
+                                    Giriş Yap
+                                </button>
+                            )}
                         </div>
                     </div>
                 </header>
