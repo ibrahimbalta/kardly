@@ -232,18 +232,9 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     <div className="flex items-center gap-3 sm:gap-10 shrink-0">
                         <div className="hidden xl:flex items-center gap-10 text-[13px] font-black text-slate-500 uppercase tracking-widest">
                             <Link href="/hub" className="hover:text-rose-500 transition-colors">Keşfet</Link>
-                            <Link href="#" className="hover:text-rose-500 transition-colors">Projeler</Link>
-                            <Link href="#" className="hover:text-rose-500 transition-colors">Kişiler</Link>
-                            <Link href="/register" className="hover:text-rose-500 transition-colors">İlan Ver</Link>
+                            <Link href="/register" className="hover:text-rose-500 transition-colors">Proje Talebi</Link>
                         </div>
                         <div className="flex items-center gap-2 sm:gap-5 sm:border-l border-slate-100 sm:pl-10">
-                            <button className="p-2 sm:p-2.5 text-slate-400 hover:text-rose-500 transition-all relative hidden sm:block">
-                                <MessageSquare size={22} />
-                            </button>
-                            <button className="p-2 sm:p-2.5 text-slate-400 hover:text-rose-500 transition-all relative">
-                                <Bell size={20} />
-                                <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-rose-500 rounded-full border-2 sm:border-[3px] border-white" />
-                            </button>
                             <div 
                                 onClick={() => router.push('/dashboard')}
                                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-slate-50 transition-all"
@@ -279,7 +270,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                     onClick={() => router.push('/register')}
                                     className="px-8 sm:px-12 h-12 sm:h-16 bg-white text-slate-900 border-2 border-slate-100 rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
                                 >
-                                    İlan Ver
+                                    Proje Talebi
                                 </button>
                             </div>
                         </div>
