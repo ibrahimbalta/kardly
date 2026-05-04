@@ -156,7 +156,7 @@ export default function OnboardingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
             {/* Background Orbs */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/5 blur-[100px] rounded-full" />
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
-                        className="glass p-10 rounded-[2.5rem] border-white/5 shadow-2xl"
+                        className="glass p-6 sm:p-10 rounded-[2.5rem] border-white/5 shadow-2xl"
                     >
                         {!generatedData ? (
                             <>
@@ -228,7 +228,7 @@ export default function OnboardingPage() {
                                                 <Sparkles className="w-4 h-4 text-primary" />
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/80">Linktree Akıllı Aktarım</span>
                                             </div>
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <input
                                                     type="text"
                                                     value={linktreeUrl}
@@ -239,7 +239,7 @@ export default function OnboardingPage() {
                                                 <button 
                                                     onClick={handleImportLinktree}
                                                     disabled={isImporting}
-                                                    className="bg-primary text-white px-4 py-3 rounded-xl font-bold text-xs whitespace-nowrap hover:opacity-90 transition-all disabled:opacity-50"
+                                                    className="w-full sm:w-auto bg-primary text-white px-4 py-3 rounded-xl font-bold text-xs whitespace-nowrap hover:opacity-90 transition-all disabled:opacity-50"
                                                 >
                                                     {isImporting ? "..." : "Aktar ✨"}
                                                 </button>
@@ -254,11 +254,11 @@ export default function OnboardingPage() {
                                         <div>
                                             <label className="block text-sm font-medium mb-2">Profil Adresin</label>
                                             <div className="relative">
-                                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-foreground/30 font-bold">kardly.site/</span>
+                                                <span className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-foreground/30 font-bold text-xs sm:text-base">kardly.site/</span>
                                                 <input
                                                     type="text"
                                                     placeholder="adınız"
-                                                    className="w-full glass bg-white/5 border-white/10 rounded-xl pl-[110px] pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-bold text-primary"
+                                                    className="w-full glass bg-white/5 border-white/10 rounded-xl pl-[85px] sm:pl-[110px] pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-bold text-primary text-sm sm:text-base"
                                                     value={formData.username}
                                                     onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '') })}
                                                 />
@@ -269,7 +269,7 @@ export default function OnboardingPage() {
                                 )}
 
                                 {currentStep === 2 && (
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {[
                                             {
                                                 key: "profesyonel",
@@ -333,7 +333,7 @@ export default function OnboardingPage() {
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <span className="text-xl">{t.icon}</span>
                                                         <span
-                                                            className="font-bold text-base"
+                                                            className="font-bold text-sm sm:text-base"
                                                             style={isSelected ? { color: t.color } : {}}
                                                         >
                                                             {t.label}
@@ -483,7 +483,7 @@ export default function OnboardingPage() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                className="glass bg-[#1a1c20] w-full max-w-md rounded-[2.5rem] p-8 border border-white/10 shadow-2xl relative z-10"
+                                className="glass bg-[#1a1c20] w-full max-w-md rounded-[2.5rem] p-6 sm:p-8 border border-white/10 shadow-2xl relative z-10"
                             >
                                 <div className="text-center mb-8">
                                     <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center mx-auto mb-6">
