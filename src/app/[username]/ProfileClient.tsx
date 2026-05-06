@@ -10,6 +10,8 @@ import {
     MessageCircle,
     Phone,
     Share2,
+    Link2,
+    Copy,
     Calendar,
     CheckCircle2,
     Instagram,
@@ -311,6 +313,20 @@ export default function ProfileClient({ profile }: { profile: any }) {
             }
         }
     }, [])
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && profile.articles) {
+            const params = new URLSearchParams(window.location.search)
+            const articleSlug = params.get('article')
+            if (articleSlug) {
+                const article = profile.articles.find((a: any) => a.slug === articleSlug)
+                if (article) {
+                    setCurrentArticle(article)
+                    setIsArticleOpen(true)
+                }
+            }
+        }
+    }, [profile.articles])
 
     const aiConfig = useMemo(() => {
         const block = profile.blocks?.find((b: any) => b.type === 'ai_assistant')
@@ -9327,12 +9343,36 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
             </div>
         </section>
     );
-}
+const BlueskyIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 10.8c-1.32-2.32-4.14-5.28-7.2-5.28C2.52 5.52 0 7.32 0 10.08c0 2.22 1.62 4.02 3.6 4.02.36 0 .72-.06 1.08-.18 2.04-.6 3.96-.6 6.12 1.02.12.06.24.06.36.06s.24 0 .36-.06c2.16-1.62 4.08-1.62 6.12-1.02.36.12.72.18 1.08.18 1.98 0 3.6-1.8 3.6-4.02 0-2.76-2.52-4.56-4.8-4.56-3.06 0-5.88 2.96-7.2 5.28z" />
+    </svg>
+)
 
+const ThreadsIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.48 12c0 2.48-2 4.48-4.48 4.48-1.06 0-2.07-.34-2.88-.94-.46-.36-.83-.84-1.09-1.4-.26-.56-.4-1.17-.4-1.82s.14-1.26.4-1.82c.26-.56.63-1.04 1.09-1.4.81-.6 1.82-.94 2.88-.94 2.48 0 4.48 2 4.48 4.48zm-4.48-2.68c-1.48 0-2.68 1.2-2.68 2.68s1.2 2.68 2.68 2.68 2.68-1.2 2.68-2.68-1.2-2.68-2.68-2.68zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm7.68 10c0 4.24-3.44 7.68-7.68 7.68-2.2 0-4.18-.93-5.59-2.42.06-.01.12-.02.18-.04.6-.06 1.15-.28 1.61-.64.46-.36.83-.84 1.09-1.4.26-.56.4-1.17.4-1.82V9.9c0-.66.14-1.26.4-1.82.26-.56.63-1.04 1.09-1.4.46-.36 1.01-.58 1.61-.64.06-.01.12-.02.18-.03C15.48 6 18.92 9.44 18.92 12.68s-3.44 6.68-7.68 6.68-7.68-3.44-7.68-6.68 3.44-6.68 7.68-6.68 7.68 3.44 7.68 6.68z" />
+    </svg>
+)
 
 function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
     const [scrollPercentage, setScrollPercentage] = useState(0);
+    const [isShareOpen, setIsShareOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const shareMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+                setIsShareOpen(false);
+            }
+        };
+        if (isShareOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isShareOpen]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -9395,12 +9435,74 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                                 <span className="text-[11px] font-bold text-black/80 truncate max-w-[150px] sm:max-w-xs">{article.title}</span>
                             </div>
                         </div>
-                        <button
-                            onClick={onClose}
-                            className="w-10 h-10 rounded-full bg-black/5 border border-black/5 flex items-center justify-center text-black/60 hover:text-black hover:bg-black/10 transition-all active:scale-90"
-                        >
-                            <X size={20} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsShareOpen(!isShareOpen)}
+                                    className="w-10 h-10 rounded-full bg-black/5 border border-black/5 flex items-center justify-center text-black/60 hover:text-black hover:bg-black/10 transition-all active:scale-90"
+                                >
+                                    <Share2 size={18} />
+                                </button>
+                                
+                                <AnimatePresence>
+                                    {isShareOpen && (
+                                        <motion.div
+                                            ref={shareMenuRef}
+                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                            className="absolute top-12 right-0 w-52 bg-white border border-black/5 rounded-[2rem] shadow-2xl overflow-hidden z-[600] py-2"
+                                        >
+                                            <button
+                                                onClick={() => {
+                                                    const shareUrl = `${window.location.origin}${window.location.pathname}?article=${article.slug}`;
+                                                    navigator.clipboard.writeText(shareUrl);
+                                                    setCopied(true);
+                                                    setTimeout(() => setCopied(false), 2000);
+                                                    setIsShareOpen(false);
+                                                }}
+                                                className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-black/5 transition-colors text-left group"
+                                            >
+                                                <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center text-black/40 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                                                    {copied ? <Check size={14} /> : <Link2 size={14} />}
+                                                </div>
+                                                <span className="text-[11px] font-bold text-black/80">{copied ? (t.linkCopied || "Kopyalandı!") : (t.copyLink || "Linki Kopyala")}</span>
+                                            </button>
+                                            
+                                            <div className="h-px bg-black/5 my-1 mx-4" />
+                                            
+                                            {[
+                                                { name: 'Bluesky', icon: <BlueskyIcon size={16} />, url: `https://bsky.app/intent/compose?text=${encodeURIComponent(article.title + ' ' + window.location.origin + window.location.pathname + '?article=' + article.slug)}` },
+                                                { name: 'Facebook', icon: <Facebook size={16} />, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + window.location.pathname + '?article=' + article.slug)}` },
+                                                { name: 'LinkedIn', icon: <Linkedin size={16} />, url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + window.location.pathname + '?article=' + article.slug)}` },
+                                                { name: 'Threads', icon: <ThreadsIcon size={16} />, url: `https://www.threads.net/intent/post?text=${encodeURIComponent(article.title + ' ' + window.location.origin + window.location.pathname + '?article=' + article.slug)}` },
+                                                { name: 'X', icon: <XIcon size={14} />, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.origin + window.location.pathname + '?article=' + article.slug)}&text=${encodeURIComponent(article.title)}` },
+                                            ].map((opt) => (
+                                                <a
+                                                    key={opt.name}
+                                                    href={opt.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-black/5 transition-colors text-left group"
+                                                    onClick={() => setIsShareOpen(false)}
+                                                >
+                                                    <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center text-black/40 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                                                        {opt.icon}
+                                                    </div>
+                                                    <span className="text-[11px] font-bold text-black/80">{opt.name}'de Paylaş</span>
+                                                </a>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                            <button
+                                onClick={onClose}
+                                className="w-10 h-10 rounded-full bg-black/5 border border-black/5 flex items-center justify-center text-black/60 hover:text-black hover:bg-black/10 transition-all active:scale-90"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
                     </header>
 
                     <div 

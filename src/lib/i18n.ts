@@ -208,6 +208,9 @@ export const translations: any = {
         // Profile Sections
         myProjects: "Projelerim",
         noProjectDesc: "Bu proje için açıklama girilmemiş.",
+        copyLink: "Linki Kopyala",
+        linkCopied: "Kopyalandı!",
+        shareArticle: "Makaleyi Paylaş",
 
         // Template Gallery
         templatesTitle: "Profesyonel Şablonlarımızı Keşfedin",
@@ -1113,6 +1116,9 @@ export const translations: any = {
         // Profile Sections
         myProjects: "My Projects",
         noProjectDesc: "No description provided for this project.",
+        copyLink: "Copy Link",
+        linkCopied: "Copied!",
+        shareArticle: "Share Article",
 
         // Template Gallery
         templatesTitle: "Explore Our Professional Templates",
