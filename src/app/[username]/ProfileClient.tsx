@@ -12,6 +12,9 @@ import {
     Share2,
     Link2,
     Copy,
+    MessageSquare,
+    Send,
+    User,
     Calendar,
     CheckCircle2,
     Instagram,
@@ -9361,8 +9364,58 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [copied, setCopied] = useState(false);
+    
+    // Comments states
+    const [comments, setComments] = useState<any[]>([]);
+    const [isLoadingComments, setIsLoadingComments] = useState(false);
+    const [newComment, setNewComment] = useState({ name: '', content: '' });
+    const [isPosting, setIsPosting] = useState(false);
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const shareMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isOpen && article?.id) {
+            fetchComments();
+        }
+    }, [isOpen, article?.id]);
+
+    const fetchComments = async () => {
+        setIsLoadingComments(true);
+        try {
+            const res = await fetch(`/api/articles/${article.id}/comments`);
+            if (res.ok) {
+                const data = await res.json();
+                setComments(data);
+            }
+        } catch (error) {
+            console.error("Fetch comments error:", error);
+        } finally {
+            setIsLoadingComments(false);
+        }
+    };
+
+    const handlePostComment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newComment.name || !newComment.content) return;
+        setIsPosting(true);
+        try {
+            const res = await fetch(`/api/articles/${article.id}/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newComment)
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setComments([data, ...comments]);
+                setNewComment({ name: '', content: '' });
+            }
+        } catch (error) {
+            console.error("Post comment error:", error);
+        } finally {
+            setIsPosting(false);
+        }
+    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -9619,6 +9672,104 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                                 <p className="text-[13px] font-medium text-black/30 max-w-xs leading-relaxed">
                                     {t.articleEndingMessage || "Bu makalenin sonuna geldiniz. Okuduğunuz için teşekkürler."}
                                 </p>
+                            </div>
+
+                            {/* Comments Section */}
+                            <div className="mt-20 pt-20 border-t border-black/5">
+                                <div className="flex items-center gap-4 mb-10">
+                                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-black/40">
+                                        <MessageSquare size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-black text-black/80 tracking-tight">{t.commentsTitle || "Yorumlar"}</h3>
+                                        <p className="text-[11px] font-bold text-black/40 uppercase tracking-widest">{comments.length} {t.commentCountLabel || "YORUM YAPILDI"}</p>
+                                    </div>
+                                </div>
+
+                                {/* Comment Form */}
+                                <form onSubmit={handlePostComment} className="bg-black/5 rounded-[2.5rem] p-6 sm:p-10 mb-16 space-y-6">
+                                    <div className="space-y-4">
+                                        <div className="relative">
+                                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-black/20">
+                                                <User size={18} />
+                                            </div>
+                                            <input 
+                                                type="text" 
+                                                placeholder={t.commentNamePlaceholder || "Adınız Soyadınız"}
+                                                value={newComment.name}
+                                                onChange={(e) => setNewComment({ ...newComment, name: e.target.value })}
+                                                className="w-full bg-white border border-black/5 rounded-2xl py-4 pl-14 pr-6 text-[13px] font-bold text-black/80 placeholder:text-black/20 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all shadow-sm"
+                                                required
+                                            />
+                                        </div>
+                                        <textarea 
+                                            placeholder={t.commentContentPlaceholder || "Düşüncelerinizi paylaşın..."}
+                                            value={newComment.content}
+                                            onChange={(e) => setNewComment({ ...newComment, content: e.target.value })}
+                                            className="w-full bg-white border border-black/5 rounded-[2rem] py-5 px-6 text-[13px] font-medium text-black/80 placeholder:text-black/20 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all shadow-sm min-h-[120px] resize-none"
+                                            required
+                                        />
+                                    </div>
+                                    <button 
+                                        type="submit"
+                                        disabled={isPosting}
+                                        className="w-full sm:w-auto px-10 py-4.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.4em] transition-all active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-center gap-3"
+                                        style={{ 
+                                            backgroundColor: accentColor, 
+                                            color: isDarkColor(accentColor) ? '#fff' : '#000',
+                                            opacity: isPosting ? 0.7 : 1
+                                        }}
+                                    >
+                                        {isPosting ? t.postingComment || "GÖNDERİLİYOR..." : (
+                                            <>
+                                                {t.postCommentBtn || "YORUMU YAYINLA"}
+                                                <Send size={14} />
+                                            </>
+                                        )}
+                                    </button>
+                                </form>
+
+                                {/* Comments List */}
+                                <div className="space-y-8">
+                                    {isLoadingComments ? (
+                                        <div className="py-10 text-center text-black/20 font-bold uppercase tracking-widest text-[10px]">
+                                            {t.loadingComments || "YORUMLAR YÜKLENİYOR..."}
+                                        </div>
+                                    ) : comments.length > 0 ? (
+                                        comments.map((comment: any) => (
+                                            <motion.div 
+                                                key={comment.id}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="group"
+                                            >
+                                                <div className="flex gap-5">
+                                                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center shrink-0 text-black/20">
+                                                        <User size={20} />
+                                                    </div>
+                                                    <div className="flex-1 space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <h4 className="text-[13px] font-black text-black/80">{comment.name}</h4>
+                                                            <span className="text-[10px] font-bold text-black/20 uppercase tracking-widest">
+                                                                {new Date(comment.createdAt).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'short' })}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-[14px] leading-relaxed text-black/60 font-medium">
+                                                            {comment.content}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="h-px bg-black/5 mt-8 w-full group-last:hidden" />
+                                            </motion.div>
+                                        ))
+                                    ) : (
+                                        <div className="py-20 text-center bg-black/5 rounded-[2.5rem] border border-dashed border-black/10">
+                                            <p className="text-[13px] font-bold text-black/20 uppercase tracking-widest">
+                                                {t.noCommentsYet || "HENÜZ YORUM YAPILMAMIŞ"}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

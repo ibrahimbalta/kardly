@@ -211,6 +211,14 @@ export const translations: any = {
         copyLink: "Linki Kopyala",
         linkCopied: "Kopyalandı!",
         shareArticle: "Makaleyi Paylaş",
+        commentsTitle: "Yorumlar",
+        commentCountLabel: "YORUM YAPILDI",
+        commentNamePlaceholder: "Adınız Soyadınız",
+        commentContentPlaceholder: "Düşüncelerinizi paylaşın...",
+        postCommentBtn: "YORUMU YAYINLA",
+        postingComment: "GÖNDERİLİYOR...",
+        loadingComments: "YORUMLAR YÜKLENİYOR...",
+        noCommentsYet: "HENÜZ YORUM YAPILMAMIŞ",
 
         // Template Gallery
         templatesTitle: "Profesyonel Şablonlarımızı Keşfedin",
@@ -1119,6 +1127,14 @@ export const translations: any = {
         copyLink: "Copy Link",
         linkCopied: "Copied!",
         shareArticle: "Share Article",
+        commentsTitle: "Comments",
+        commentCountLabel: "COMMENTS",
+        commentNamePlaceholder: "Your Full Name",
+        commentContentPlaceholder: "Share your thoughts...",
+        postCommentBtn: "POST COMMENT",
+        postingComment: "POSTING...",
+        loadingComments: "LOADING COMMENTS...",
+        noCommentsYet: "NO COMMENTS YET",
 
         // Template Gallery
         templatesTitle: "Explore Our Professional Templates",
