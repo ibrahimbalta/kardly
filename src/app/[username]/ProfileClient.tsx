@@ -9553,9 +9553,17 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang, handleLi
     const [newComment, setNewComment] = useState({ name: '', content: '' });
     const [isPosting, setIsPosting] = useState(false);
     const [liked, setLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(article.likes?.length || 0);
+    const [likeCount, setLikeCount] = useState(0);
+
+    useEffect(() => {
+        if (article) {
+            setLiked(false); // Reset liked state for new article (or fetch from API if available)
+            setLikeCount(article.likes?.length || 0);
+        }
+    }, [article?.id]);
 
     const handleToggleLike = async () => {
+        if (!article?.id) return;
         setLiked(!liked);
         setLikeCount((prev: number) => liked ? prev - 1 : prev + 1);
         if (typeof handleLikeArticle === 'function') {
