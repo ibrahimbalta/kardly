@@ -9487,23 +9487,34 @@ function NetworkingControls({ setIsMessageModalOpen, theme, t }: any) {
             className="flex items-center justify-center mt-4 relative z-20"
         >
             <motion.button
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setIsMessageModalOpen(true)}
-                className="px-6 py-2.5 rounded-full font-bold text-[11px] uppercase tracking-[0.15em] transition-all flex items-center gap-2"
+                className="group relative px-7 py-2.5 rounded-2xl font-bold text-[11px] uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2.5 backdrop-blur-md overflow-hidden"
                 style={{ 
-                    backgroundColor: accentColor,
-                    color: '#fff',
-                    border: `2px solid ${accentColor}`,
-                    boxShadow: `0 8px 24px -4px ${accentColor}50`
+                    backgroundColor: `${accentColor}15`,
+                    color: accentColor,
+                    border: `1.5px solid ${accentColor}40`,
+                    boxShadow: `0 0 0 0 ${accentColor}00`
+                }}
+                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.currentTarget.style.boxShadow = `0 0 20px ${accentColor}30, 0 4px 16px -4px ${accentColor}25`;
+                    e.currentTarget.style.borderColor = accentColor;
+                    e.currentTarget.style.backgroundColor = `${accentColor}25`;
+                }}
+                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    e.currentTarget.style.boxShadow = `0 0 0 0 ${accentColor}00`;
+                    e.currentTarget.style.borderColor = `${accentColor}40`;
+                    e.currentTarget.style.backgroundColor = `${accentColor}15`;
                 }}
             >
-                <Send size={14} />
+                <Send size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
                 <span>{t.sendMessage || 'Mesaj Gönder'}</span>
             </motion.button>
         </motion.div>
     );
 }
+
 
 const BlueskyIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
