@@ -9557,7 +9557,7 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
 
     const handleToggleLike = async () => {
         setLiked(!liked);
-        setLikeCount(prev => liked ? prev - 1 : prev + 1);
+        setLikeCount((prev: number) => liked ? prev - 1 : prev + 1);
         if (typeof handleLikeArticle === 'function') {
             await handleLikeArticle(article.id);
         }
