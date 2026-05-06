@@ -4598,9 +4598,7 @@ if(true) {
                                 </div>
 
                                 <NetworkingControls 
-                                    networkingStatus={networkingStatus}
-                                    handleFollowToggle={handleFollowToggle}
-                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    setIsMessageModalOpen={setIsLeadModalOpen}
                                     theme={theme}
                                     t={t}
                                 />
@@ -5425,9 +5423,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
                         {!isEmbedMode && (
                             <NetworkingControls 
-                                networkingStatus={networkingStatus}
-                                handleFollowToggle={handleFollowToggle}
-                                setIsMessageModalOpen={setIsMessageModalOpen}
+                                setIsMessageModalOpen={setIsLeadModalOpen}
                                 theme={theme}
                                 t={t}
                             />
@@ -5895,9 +5891,7 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
 
                             {!isEmbedMode && (
                                 <NetworkingControls 
-                                    networkingStatus={networkingStatus}
-                                    handleFollowToggle={handleFollowToggle}
-                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    setIsMessageModalOpen={setIsLeadModalOpen}
                                     theme={theme}
                                     t={t}
                                 />
@@ -8883,9 +8877,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
 
                             {!isEmbedMode && (
                                 <NetworkingControls 
-                                    networkingStatus={networkingStatus}
-                                    handleFollowToggle={handleFollowToggle}
-                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    setIsMessageModalOpen={setIsLeadModalOpen}
                                     theme={theme}
                                     t={t}
                                 />
@@ -9485,52 +9477,29 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     );
 }
 
-function NetworkingControls({ networkingStatus, handleFollowToggle, setIsMessageModalOpen, theme, t }: any) {
-    if (networkingStatus.isOwnProfile) return null;
-
+function NetworkingControls({ setIsMessageModalOpen, theme, t }: any) {
     const accentColor = theme?.accent || '#0ea5e9';
 
     return (
         <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center gap-3 mt-4 relative z-20"
+            className="flex items-center justify-center mt-4 relative z-20"
         >
             <motion.button
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={handleFollowToggle}
-                className="px-6 py-2.5 rounded-full font-black text-[11px] uppercase tracking-[0.15em] transition-all flex items-center gap-2"
-                style={networkingStatus.isFollowing ? { 
-                    backgroundColor: 'transparent',
-                    color: accentColor,
-                    border: `2px solid ${accentColor}`,
-                } : { 
+                onClick={() => setIsMessageModalOpen(true)}
+                className="px-6 py-2.5 rounded-full font-bold text-[11px] uppercase tracking-[0.15em] transition-all flex items-center gap-2"
+                style={{ 
                     backgroundColor: accentColor,
                     color: '#fff',
                     border: `2px solid ${accentColor}`,
                     boxShadow: `0 8px 24px -4px ${accentColor}50`
                 }}
             >
-                {networkingStatus.isFollowing ? (
-                    <><UserMinus size={14} /> <span>{t.following || 'Takip Ediliyor'}</span></>
-                ) : (
-                    <><UserPlus size={14} /> <span>{t.follow || 'Takip Et'}</span></>
-                )}
-            </motion.button>
-
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMessageModalOpen(true)}
-                className="w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-lg group"
-                style={{
-                    backgroundColor: 'transparent',
-                    border: `2px solid ${accentColor}40`,
-                    color: accentColor
-                }}
-            >
-                <Send size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <Send size={14} />
+                <span>{t.sendMessage || 'Mesaj Gönder'}</span>
             </motion.button>
         </motion.div>
     );
