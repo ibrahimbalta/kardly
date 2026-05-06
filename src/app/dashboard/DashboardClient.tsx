@@ -525,6 +525,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [conversations, setConversations] = useState<any[]>([])
     const [activeConversation, setActiveConversation] = useState<any>(null)
     const [isConversationsLoading, setIsConversationsLoading] = useState(false)
+    const [chatMessages, setChatMessages] = useState<any[]>([])
+    const [dmInput, setDmInput] = useState("")
+    const [isSendingDM, setIsSendingDM] = useState(false)
 
     useEffect(() => {
         if (activeTab === "network") {
@@ -532,7 +535,65 @@ export default function DashboardClient({ session, profile, subscription, appoin
             fetchHubAds()
             fetchFeedPosts()
         }
+        if (activeTab === "messages") {
+            fetchConversations()
+        }
     }, [activeTab])
+
+    useEffect(() => {
+        if (activeConversation?.otherUser?.id) {
+            fetchChatMessages(activeConversation.otherUser.id)
+        }
+    }, [activeConversation?.otherUser?.id])
+
+    const fetchConversations = async () => {
+        setIsConversationsLoading(true)
+        try {
+            const res = await fetch("/api/network/messages")
+            if (res.ok) {
+                const data = await res.json()
+                if (Array.isArray(data)) setConversations(data)
+            }
+        } catch (err) {
+            console.error("Conversations fetch error:", err)
+        } finally {
+            setIsConversationsLoading(false)
+        }
+    }
+
+    const fetchChatMessages = async (userId: string) => {
+        try {
+            const res = await fetch(`/api/network/messages?userId=${userId}`)
+            if (res.ok) {
+                const data = await res.json()
+                if (Array.isArray(data)) setChatMessages(data)
+            }
+        } catch (err) {
+            console.error("Chat fetch error:", err)
+        }
+    }
+
+    const handleSendDM = async () => {
+        if (!dmInput.trim() || isSendingDM || !activeConversation?.otherUser?.id) return
+        setIsSendingDM(true)
+        try {
+            const res = await fetch("/api/network/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ receiverId: activeConversation.otherUser.id, content: dmInput.trim() })
+            })
+            if (res.ok) {
+                const msg = await res.json()
+                setChatMessages(prev => [...prev, msg])
+                setDmInput("")
+                fetchConversations()
+            }
+        } catch (err) {
+            console.error("Send DM error:", err)
+        } finally {
+            setIsSendingDM(false)
+        }
+    }
 
     const fetchNetwork = async () => {
         setIsNetworkLoading(true)
@@ -5986,19 +6047,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div className="mt-auto flex items-center justify-between">
+                                                            <div className="mt-auto space-y-3">
                                                                 <div className="flex items-center gap-2">
                                                                     <Globe size={11} className="opacity-40" />
-                                                                    <span className="text-[9px] font-bold opacity-40 uppercase tracking-widest truncate max-w-[80px]">
+                                                                    <span className="text-[9px] font-bold opacity-40 uppercase tracking-widest truncate">
                                                                         {user.profile?.username || user.name}
                                                                     </span>
                                                                 </div>
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <button onClick={(e) => { e.stopPropagation(); handleToggleFollow(user.id); }} className={cn("px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border", followingStatuses[user.id] ? "bg-rose-500 text-white border-rose-500" : isLight ? "bg-slate-100 text-slate-600 border-transparent hover:border-rose-200" : "bg-white/10 text-white border-transparent hover:bg-white hover:text-slate-900")}>
+                                                                <div className="flex items-center gap-2">
+                                                                    <button onClick={(e) => { e.stopPropagation(); handleToggleFollow(user.id); }} className={cn("flex-1 h-9 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border text-center", followingStatuses[user.id] ? "bg-rose-500 text-white border-rose-500" : isLight ? "bg-slate-100 text-slate-600 border-transparent hover:border-rose-200" : "bg-white/10 text-white border-transparent hover:bg-white hover:text-slate-900")}>
                                                                         {followingStatuses[user.id] ? "Takipte" : "Takip Et"}
                                                                     </button>
-                                                                    <button onClick={(e) => { e.stopPropagation(); setActiveTab("messages"); setActiveConversation({ otherUser: { id: user.id, name: user.name, image: user.image } }); }} className={cn("p-2 rounded-xl transition-all", isLight ? "bg-slate-100 text-slate-400 hover:text-rose-500" : "bg-white/10 text-white/60 hover:text-white")}>
-                                                                        <MessageSquare size={14} />
+                                                                    <button onClick={(e) => { e.stopPropagation(); setActiveTab("messages"); setActiveConversation({ otherUser: { id: user.id, name: user.name, image: user.image } }); }} className={cn("w-9 h-9 flex items-center justify-center rounded-xl transition-all shrink-0", isLight ? "bg-slate-100 text-slate-400 hover:text-rose-500" : "bg-white/10 text-white/60 hover:text-white")}>
+                                                                        <MessageSquare size={15} />
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -6266,22 +6327,48 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex-1 overflow-y-auto p-8 space-y-6 no-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-60">
-                                        {/* Messages would go here - for now dummy structure */}
-                                        <div className="flex flex-col items-center justify-center h-full text-center opacity-40">
-                                            <Sparkles size={48} className="text-rose-500 mb-4" />
-                                            <p className="text-xs font-black uppercase tracking-widest">Sohbet Başlatıldı</p>
-                                        </div>
+                                    <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4 no-scrollbar">
+                                        {chatMessages.length === 0 ? (
+                                            <div className="flex flex-col items-center justify-center h-full text-center opacity-40">
+                                                <Sparkles size={48} className="text-rose-500 mb-4" />
+                                                <p className="text-xs font-black uppercase tracking-widest">Sohbete başlayın</p>
+                                                <p className="text-[10px] text-slate-400 font-medium mt-2">İlk mesajınızı gönderin!</p>
+                                            </div>
+                                        ) : (
+                                            chatMessages.map((msg: any, idx: number) => {
+                                                const isMine = msg.senderId !== activeConversation.otherUser?.id;
+                                                return (
+                                                    <div key={msg.id || idx} className={cn("flex", isMine ? "justify-end" : "justify-start")}>
+                                                        <div className={cn(
+                                                            "max-w-[75%] px-5 py-3 rounded-3xl text-[13px] font-medium leading-relaxed shadow-sm",
+                                                            isMine ? "bg-slate-900 text-white rounded-br-lg" : "bg-slate-100 text-slate-800 rounded-bl-lg"
+                                                        )}>
+                                                            {msg.content}
+                                                            <div className={cn("text-[9px] mt-1.5 font-bold uppercase tracking-widest", isMine ? "text-slate-400" : "text-slate-400")}>
+                                                                {new Date(msg.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
                                     </div>
-                                    <div className="p-6 border-t border-slate-50">
+                                    <div className="p-4 sm:p-6 border-t border-slate-50">
                                         <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-[2rem] border border-slate-100">
                                             <input 
                                                 type="text" 
+                                                value={dmInput}
+                                                onChange={(e) => setDmInput(e.target.value)}
+                                                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendDM(); } }}
                                                 placeholder="Mesajınızı yazın..." 
                                                 className="flex-1 bg-transparent border-none outline-none px-4 text-[13px] font-medium text-slate-900"
                                             />
-                                            <button className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-rose-500 transition-all shadow-lg active:scale-95">
-                                                <Send size={18} />
+                                            <button 
+                                                onClick={handleSendDM}
+                                                disabled={!dmInput.trim() || isSendingDM}
+                                                className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-rose-500 transition-all shadow-lg active:scale-95 disabled:opacity-30"
+                                            >
+                                                {isSendingDM ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Send size={18} />}
                                             </button>
                                         </div>
                                     </div>
