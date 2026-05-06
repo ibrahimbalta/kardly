@@ -3,10 +3,10 @@ import prisma from "@/lib/prisma"
 
 export async function GET(
     req: Request,
-    { params }: { params: { articleId: string } }
+    { params }: { params: Promise<{ articleId: string }> }
 ) {
     try {
-        const { articleId } = params
+        const { articleId } = await params
         const comments = await prisma.articleComment.findMany({
             where: { articleId, isActive: true },
             orderBy: { createdAt: "desc" }
@@ -20,10 +20,10 @@ export async function GET(
 
 export async function POST(
     req: Request,
-    { params }: { params: { articleId: string } }
+    { params }: { params: Promise<{ articleId: string }> }
 ) {
     try {
-        const { articleId } = params
+        const { articleId } = await params
         const body = await req.json()
         const { name, content } = body
 
