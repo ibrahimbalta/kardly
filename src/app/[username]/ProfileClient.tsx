@@ -5356,6 +5356,7 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
     };
 
     const theme = themes[colorScheme] || themes.elite_blue;
+    if (profile.themeColor) theme.accent = profile.themeColor;
     const socialLinks = profile.socialLinks || [];
     const formatUrl = (url?: string) => {
         if (!url) return "";
@@ -9487,31 +9488,34 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
 function NetworkingControls({ networkingStatus, handleFollowToggle, setIsMessageModalOpen, theme, t }: any) {
     if (networkingStatus.isOwnProfile) return null;
 
+    const accentColor = theme?.accent || '#0ea5e9';
+
     return (
         <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center gap-3 mt-8 relative z-20"
+            className="flex items-center justify-center gap-3 mt-4 relative z-20"
         >
             <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleFollowToggle}
-                className={cn(
-                    "px-8 py-3 rounded-full font-black text-[11px] uppercase tracking-[0.2em] border transition-all flex items-center gap-3 shadow-2xl",
-                    networkingStatus.isFollowing 
-                        ? "bg-white/5 border-white/20 text-white/80 hover:bg-white/10" 
-                        : "border-transparent text-white"
-                )}
-                style={!networkingStatus.isFollowing ? { 
-                    backgroundColor: theme.accent,
-                    boxShadow: `0 10px 30px ${theme.accent}40`
-                } : {}}
+                className="px-6 py-2.5 rounded-full font-black text-[11px] uppercase tracking-[0.15em] transition-all flex items-center gap-2"
+                style={networkingStatus.isFollowing ? { 
+                    backgroundColor: 'transparent',
+                    color: accentColor,
+                    border: `2px solid ${accentColor}`,
+                } : { 
+                    backgroundColor: accentColor,
+                    color: '#fff',
+                    border: `2px solid ${accentColor}`,
+                    boxShadow: `0 8px 24px -4px ${accentColor}50`
+                }}
             >
                 {networkingStatus.isFollowing ? (
-                    <><UserMinus size={16} /> {t.unfollow}</>
+                    <><UserMinus size={14} /> <span>{t.following || 'Takip Ediliyor'}</span></>
                 ) : (
-                    <><UserPlus size={16} /> {t.follow}</>
+                    <><UserPlus size={14} /> <span>{t.follow || 'Takip Et'}</span></>
                 )}
             </motion.button>
 
@@ -9519,12 +9523,14 @@ function NetworkingControls({ networkingStatus, handleFollowToggle, setIsMessage
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMessageModalOpen(true)}
-                className={cn(
-                    "w-12 h-12 rounded-full border flex items-center justify-center transition-all shadow-xl group",
-                    theme.isLight ? "bg-white border-slate-200 text-slate-600 hover:bg-slate-50" : "bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10"
-                )}
+                className="w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-lg group"
+                style={{
+                    backgroundColor: 'transparent',
+                    border: `2px solid ${accentColor}40`,
+                    color: accentColor
+                }}
             >
-                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <Send size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </motion.button>
         </motion.div>
     );
