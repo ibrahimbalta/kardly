@@ -219,6 +219,13 @@ export const translations: any = {
         postingComment: "GÖNDERİLİYOR...",
         loadingComments: "YORUMLAR YÜKLENİYOR...",
         noCommentsYet: "HENÜZ YORUM YAPILMAMIŞ",
+        follow: "Takip Et",
+        following: "Takip Ediliyor",
+        unfollow: "Takibi Bırak",
+        sendMessage: "Mesaj Gönder",
+        messagePlaceholder: "Mesajınızı buraya yazın...",
+        send: "Gönder",
+        messageSent: "Mesajınız başarıyla gönderildi!",
 
         // Template Gallery
         templatesTitle: "Profesyonel Şablonlarımızı Keşfedin",
@@ -1135,6 +1142,13 @@ export const translations: any = {
         postingComment: "POSTING...",
         loadingComments: "LOADING COMMENTS...",
         noCommentsYet: "NO COMMENTS YET",
+        follow: "Follow",
+        following: "Following",
+        unfollow: "Unfollow",
+        sendMessage: "Send Message",
+        messagePlaceholder: "Type your message here...",
+        send: "Send",
+        messageSent: "Message sent successfully!",
 
         // Template Gallery
         templatesTitle: "Explore Our Professional Templates",

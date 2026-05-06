@@ -48,6 +48,14 @@ model User {
   sessions      Session[]
   subscription  Subscription?
   orders        Order[]
+  
+  // Networking relations
+  following     Follow[]       @relation("follower")
+  followers     Follow[]       @relation("following")
+  articleLikes  ArticleLike[]
+  sentMessages     DirectMessage[] @relation("sentMessages")
+  receivedMessages DirectMessage[] @relation("receivedMessages")
+  notifications Notification[]
 }
 
 model VerificationToken {
@@ -121,6 +129,7 @@ model Profile {
   leads          Lead[]
   articles       Article[]
   hubAds         HubAd[]
+  statusUpdates  StatusUpdate[]
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -151,6 +160,7 @@ model Article {
   updatedAt   DateTime @updatedAt
   profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   comments    ArticleComment[]
+  likes       ArticleLike[]
 
   @@unique([profileId, slug])
 }
@@ -349,4 +359,62 @@ model OrderItem {
   qrY           Int?     @default(0)
   
   order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+// Networking Models
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model ArticleLike {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+}
+
+model StatusUpdate {
+  id        String   @id @default(cuid())
+  profileId String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model DirectMessage {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String   @db.Text
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  
+  sender     User     @relation("sentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("receivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // FOLLOW, LIKE_ARTICLE, NEW_MESSAGE, STATUS_MENTION
+  content   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

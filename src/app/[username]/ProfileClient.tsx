@@ -44,6 +44,7 @@ import {
     Settings,
     Shield,
     UserPlus,
+    UserMinus,
     ShoppingBag,
     Activity,
     Volume2,
@@ -305,6 +306,92 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [currentArticle, setCurrentArticle] = useState<any>(null)
     const [isArticleOpen, setIsArticleOpen] = useState(false)
 
+    // Networking States
+    const [networkingStatus, setNetworkingStatus] = useState({ isFollowing: false, isOwnProfile: false });
+    const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+    const [messageContent, setMessageContent] = useState('');
+    const [isSendingMessage, setIsSendingMessage] = useState(false);
+    const [messageStatus, setMessageStatus] = useState<string | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        const checkNetworkingStatus = async () => {
+            try {
+                const res = await fetch(`/api/network/follow?userId=${profile.userId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setNetworkingStatus(data);
+                }
+            } catch (error) {
+                console.error("Networking check error:", error);
+            }
+        };
+        if (mounted && profile.userId) checkNetworkingStatus();
+    }, [profile.userId, mounted]);
+
+    const handleFollowToggle = async () => {
+        try {
+            const res = await fetch('/api/network/follow', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ followingId: profile.userId })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setNetworkingStatus({ ...networkingStatus, isFollowing: data.followed });
+            }
+        } catch (error) {
+            console.error("Follow error:", error);
+        }
+    };
+
+    const handleSendMessage = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!messageContent.trim()) return;
+        setIsSendingMessage(true);
+        setMessageStatus(null);
+        try {
+            const res = await fetch('/api/network/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ receiverId: profile.userId, content: messageContent })
+            });
+            if (res.ok) {
+                setMessageContent('');
+                setMessageStatus('success');
+                setTimeout(() => {
+                    setIsMessageModalOpen(false);
+                    setMessageStatus(null);
+                }, 2000);
+            } else {
+                setMessageStatus('error');
+            }
+        } catch (error) {
+            console.error("Message send error:", error);
+            setMessageStatus('error');
+        } finally {
+            setIsSendingMessage(false);
+        }
+    };
+
+    const handleLikeArticle = async (articleId: string) => {
+        try {
+            const res = await fetch(`/api/articles/${articleId}/like`, {
+                method: 'POST'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                // Update local state if needed, or re-fetch comments if they include likes
+                // For now we'll just handle the visual toggle in the modal if we pass the state
+            }
+        } catch (error) {
+            console.error("Like error:", error);
+        }
+    };
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search)
@@ -501,7 +588,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }
 
     // Get active accent color for review modal
     const getActiveAccent = (scheme?: any): string => {
@@ -711,6 +798,20 @@ END:VCARD`
                 theme={{ accent: activeAccent, card: 'bg-[#0a0a0f]', border: 'border-white/10', isLight: false }}
                 t={t} 
                 lang={lang} 
+                handleLikeArticle={handleLikeArticle}
+            />
+
+            <MessageModal 
+                isOpen={isMessageModalOpen}
+                onClose={() => setIsMessageModalOpen(false)}
+                profile={profile}
+                t={t}
+                theme={{ accent: activeAccent, card: 'bg-[#0a0a0f]', border: 'border-white/10' }}
+                messageContent={messageContent}
+                setMessageContent={setMessageContent}
+                handleSendMessage={handleSendMessage}
+                isSendingMessage={isSendingMessage}
+                messageStatus={messageStatus}
             />
         </div>
     )
@@ -4496,6 +4597,14 @@ if(true) {
                                     )}
                                 </div>
 
+                                <NetworkingControls 
+                                    networkingStatus={networkingStatus}
+                                    handleFollowToggle={handleFollowToggle}
+                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    theme={theme}
+                                    t={t}
+                                />
+
                                 {theme.special === 'finance' && (
                                     <div className="flex items-center justify-center gap-1 mt-1 text-[8px] font-bold text-emerald-500">
                                         <TrendingUp size={10} /> MARKET ACTIVE +4.2%
@@ -5312,6 +5421,16 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 italic">{translateText(profile.occupation)}</p>
                              <div className="h-[1px] w-10 opacity-30" style={{ backgroundColor: theme.accent }} />
                         </div>
+
+                        {!isEmbedMode && (
+                            <NetworkingControls 
+                                networkingStatus={networkingStatus}
+                                handleFollowToggle={handleFollowToggle}
+                                setIsMessageModalOpen={setIsMessageModalOpen}
+                                theme={theme}
+                                t={t}
+                            />
+                        )}
                     </div>
                 </div>
 
@@ -5475,7 +5594,7 @@ function ProjectDetailModal({ isOpen, onClose, project, theme, t, lang, translat
     );
 }
 
-function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
+function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
     const themes: any = {
         tour_resort: {
             bg: "bg-[#e0f7fa]",
@@ -5558,7 +5677,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
         theme.card = theme.card.replace(/rgba\(.*?\)/g, `rgba(${hexToRgb(theme.accent)}, 0.1)`);
     }
     const socialLinks = profile.socialLinks || [];
-    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen };
+    const props = { profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen };
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden", theme.bg, toneStyle.font)}>
@@ -5593,7 +5712,7 @@ function TourismTravelTemplate({ profile, colorScheme, handleShare, handleCVView
     );
 }
 
-function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
+function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -5771,6 +5890,16 @@ function AthleticProTemplate({ profile, colorScheme, handleShare, handleCVView, 
                                 <p className="text-[13px] font-medium text-white/60 italic leading-relaxed max-w-[280px] mx-auto">
                                     “{translateText(profile.slogan)}”
                                 </p>
+                            )}
+
+                            {!isEmbedMode && (
+                                <NetworkingControls 
+                                    networkingStatus={networkingStatus}
+                                    handleFollowToggle={handleFollowToggle}
+                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    theme={theme}
+                                    t={t}
+                                />
                             )}
                         </div>
                     </div>
@@ -8100,7 +8229,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
 
 
 
-function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen }: any) {
+function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -8750,6 +8879,16 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                                 formatUrl={formatUrl}
                                 theme={theme}
                             />
+
+                            {!isEmbedMode && (
+                                <NetworkingControls 
+                                    networkingStatus={networkingStatus}
+                                    handleFollowToggle={handleFollowToggle}
+                                    setIsMessageModalOpen={setIsMessageModalOpen}
+                                    theme={theme}
+                                    t={t}
+                                />
+                            )}
                         </div>
 
                         {/* Badges row */}
@@ -9345,6 +9484,52 @@ function ArticlesSection({ articles, t, theme, setCurrentArticle, setIsArticleOp
     );
 }
 
+function NetworkingControls({ networkingStatus, handleFollowToggle, setIsMessageModalOpen, theme, t }: any) {
+    if (networkingStatus.isOwnProfile) return null;
+
+    return (
+        <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center gap-3 mt-8 relative z-20"
+        >
+            <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleFollowToggle}
+                className={cn(
+                    "px-8 py-3 rounded-full font-black text-[11px] uppercase tracking-[0.2em] border transition-all flex items-center gap-3 shadow-2xl",
+                    networkingStatus.isFollowing 
+                        ? "bg-white/5 border-white/20 text-white/80 hover:bg-white/10" 
+                        : "border-transparent text-white"
+                )}
+                style={!networkingStatus.isFollowing ? { 
+                    backgroundColor: theme.accent,
+                    boxShadow: `0 10px 30px ${theme.accent}40`
+                } : {}}
+            >
+                {networkingStatus.isFollowing ? (
+                    <><UserMinus size={16} /> {t.unfollow}</>
+                ) : (
+                    <><UserPlus size={16} /> {t.follow}</>
+                )}
+            </motion.button>
+
+            <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsMessageModalOpen(true)}
+                className={cn(
+                    "w-12 h-12 rounded-full border flex items-center justify-center transition-all shadow-xl group",
+                    theme.isLight ? "bg-white border-slate-200 text-slate-600 hover:bg-slate-50" : "bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10"
+                )}
+            >
+                <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </motion.button>
+        </motion.div>
+    );
+}
+
 const BlueskyIcon = ({ size = 20, className = "" }: { size?: number, className?: string }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
         <path d="M12 10.8c-1.32-2.32-4.14-5.28-7.2-5.28C2.52 5.52 0 7.32 0 10.08c0 2.22 1.62 4.02 3.6 4.02.36 0 .72-.06 1.08-.18 2.04-.6 3.96-.6 6.12 1.02.12.06.24.06.36.06s.24 0 .36-.06c2.16-1.62 4.08-1.62 6.12-1.02.36.12.72.18 1.08.18 1.98 0 3.6-1.8 3.6-4.02 0-2.76-2.52-4.56-4.8-4.56-3.06 0-5.88 2.96-7.2 5.28z" />
@@ -9367,6 +9552,16 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
     const [isLoadingComments, setIsLoadingComments] = useState(false);
     const [newComment, setNewComment] = useState({ name: '', content: '' });
     const [isPosting, setIsPosting] = useState(false);
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(article.likes?.length || 0);
+
+    const handleToggleLike = async () => {
+        setLiked(!liked);
+        setLikeCount(prev => liked ? prev - 1 : prev + 1);
+        if (typeof handleLikeArticle === 'function') {
+            await handleLikeArticle(article.id);
+        }
+    };
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const shareMenuRef = useRef<HTMLDivElement>(null);
@@ -9488,6 +9683,15 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleToggleLike}
+                                className={cn(
+                                    "w-10 h-10 rounded-full border flex items-center justify-center transition-all active:scale-90",
+                                    liked ? "bg-rose-50 border-rose-100 text-rose-500" : "bg-black/5 border-black/5 text-black/40 hover:text-rose-500"
+                                )}
+                            >
+                                <Heart size={18} fill={liked ? "currentColor" : "none"} />
+                            </button>
                             <div className="relative">
                                 <button
                                     onClick={() => setIsShareOpen(!isShareOpen)}
@@ -9783,6 +9987,76 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
                             {t.closeReader || "OKUMAYI BİTİR"}
                         </button>
                     </footer>
+                </motion.div>
+            </div>
+        </AnimatePresence>
+    );
+}
+
+function MessageModal({ isOpen, onClose, profile, t, theme, messageContent, setMessageContent, handleSendMessage, isSendingMessage, messageStatus }: any) {
+    if (!isOpen) return null;
+    return (
+        <AnimatePresence>
+            <div className="fixed inset-0 z-[600] flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={onClose}>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+                <motion.div
+                    initial={{ y: "100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: "100%", opacity: 0 }}
+                    className="relative w-full sm:max-w-md bg-[#0a0a0f] border border-white/10 rounded-t-[2.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl z-10 mx-auto p-8"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-6 sm:hidden" />
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/5 text-white/40" style={{ color: theme.accent }}>
+                            <Send size={20} />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-black text-white uppercase tracking-tight italic">{t.sendMessage}</h3>
+                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{profile.user?.name}</p>
+                        </div>
+                    </div>
+
+                    {messageStatus === 'success' ? (
+                        <div className="py-10 text-center space-y-4">
+                            <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto text-emerald-500">
+                                <Check size={32} />
+                            </div>
+                            <p className="text-sm font-bold text-white uppercase tracking-widest">{t.messageSent}</p>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSendMessage} className="space-y-6">
+                            <textarea
+                                value={messageContent}
+                                onChange={(e) => setMessageContent(e.target.value)}
+                                placeholder={t.messagePlaceholder}
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-white/5 min-h-[150px] resize-none"
+                                required
+                            />
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={onClose}
+                                    className="flex-1 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest text-white/40 border border-white/5 hover:bg-white/5 transition-all"
+                                >
+                                    {t.cancel || "İptal"}
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isSendingMessage}
+                                    className="flex-[2] py-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-2"
+                                    style={{ backgroundColor: theme.accent, color: isDarkColor(theme.accent) ? '#fff' : '#000' }}
+                                >
+                                    {isSendingMessage ? (t.sending || "GÖNDERİLİYOR...") : (
+                                        <>
+                                            {t.send}
+                                            <Send size={14} />
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    )}
                 </motion.div>
             </div>
         </AnimatePresence>
