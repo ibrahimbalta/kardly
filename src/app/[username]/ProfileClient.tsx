@@ -9427,7 +9427,7 @@ function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
 
                     <div className="w-12 h-1.5 bg-black/10 rounded-full mx-auto my-4 sm:hidden shrink-0" />
                     
-                    <header className="flex items-center justify-between px-6 sm:px-10 py-5 shrink-0 border-b border-black/5 bg-white/50 backdrop-blur-md">
+                    <header className="flex items-center justify-between px-6 sm:px-10 py-5 shrink-0 border-b border-black/5 bg-white/50 backdrop-blur-md z-50">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm" style={{ backgroundColor: `${accentColor}15`, color: accentColor }}>
                                 <FileText size={20} />
