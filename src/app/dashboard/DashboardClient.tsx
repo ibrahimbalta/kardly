@@ -212,7 +212,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
-    const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, templates, appointments, statistics, settings, leads, reviews, ai, widgets
+    const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
     const [isArticlesLoading, setIsArticlesLoading] = useState(false)
     const [showArticleModal, setShowArticleModal] = useState(false)
@@ -516,11 +516,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [hubOnlineOnly, setHubOnlineOnly] = useState(false)
     const [selectedHubCategory, setSelectedHubCategory] = useState("")
     const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
+    const [feedPosts, setFeedPosts] = useState<any[]>([])
+    const [newPostContent, setNewPostContent] = useState("")
+    const [isPostingFeed, setIsPostingFeed] = useState(false)
+    const [isFeedLoading, setIsFeedLoading] = useState(false)
+    const [feedTab, setFeedTab] = useState<'feed' | 'people' | 'ads'>('feed')
+    const [followingStatuses, setFollowingStatuses] = useState<Record<string, boolean>>({})
+    const [conversations, setConversations] = useState<any[]>([])
+    const [activeConversation, setActiveConversation] = useState<any>(null)
+    const [isConversationsLoading, setIsConversationsLoading] = useState(false)
 
     useEffect(() => {
         if (activeTab === "network") {
             fetchNetwork()
             fetchHubAds()
+            fetchFeedPosts()
         }
     }, [activeTab])
 
@@ -531,10 +541,85 @@ export default function DashboardClient({ session, profile, subscription, appoin
             if (!res.ok) throw new Error("Network error")
             const data = await res.json()
             if (Array.isArray(data)) setNetworkUsers(data)
+            
+            // Fetch following status for current user
+            const followRes = await fetch("/api/network/follow")
+            if (followRes.ok) {
+                const followData = await followRes.json()
+                // If we get an object with counts, we might need a separate endpoint for the full list
+                // but for now let's assume we fetch specifically for shown users or have a way to know.
+            }
         } catch (err) {
             console.error(err)
         } finally {
             setIsNetworkLoading(false)
+        }
+    }
+
+    const fetchFeedPosts = async () => {
+        setIsFeedLoading(true)
+        try {
+            const res = await fetch("/api/network/posts")
+            if (res.ok) {
+                const data = await res.json()
+                if (Array.isArray(data)) setFeedPosts(data)
+            }
+        } catch (err) {
+            console.error("Feed fetch error:", err)
+        } finally {
+            setIsFeedLoading(false)
+        }
+    }
+
+    const handleCreatePost = async () => {
+        if (!newPostContent.trim() || isPostingFeed) return
+        setIsPostingFeed(true)
+        try {
+            const res = await fetch("/api/network/posts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: newPostContent.trim() })
+            })
+            if (res.ok) {
+                const post = await res.json()
+                setFeedPosts(prev => [post, ...prev])
+                setNewPostContent("")
+                setShowToast("Gönderi yayınlandı! 🚀")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error("Post create error:", err)
+        } finally {
+            setIsPostingFeed(false)
+        }
+    }
+
+    const handleDeletePost = async (postId: string) => {
+        try {
+            const res = await fetch(`/api/network/posts?id=${postId}`, { method: "DELETE" })
+            if (res.ok) {
+                setFeedPosts(prev => prev.filter(p => p.id !== postId))
+            }
+        } catch (err) {
+            console.error("Post delete error:", err)
+        }
+    }
+
+    const handleToggleFollow = async (targetUserId: string) => {
+        try {
+            const res = await fetch("/api/network/follow", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ targetUserId })
+            })
+            if (res.ok) {
+                const data = await res.json()
+                setFollowingStatuses(prev => ({ ...prev, [targetUserId]: data.following }))
+                setShowToast(data.following ? "Takip edildi! 👤" : "Takipten çıkıldı.")
+                setTimeout(() => setShowToast(null), 3000)
+            }
+        } catch (err) {
+            console.error("Follow toggle error:", err)
         }
     }
 
@@ -1483,6 +1568,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         active={activeTab === "network"}
                         onClick={() => {
                             setActiveTab("network")
+                            setIsSidebarOpen(false)
+                        }}
+                    />
+                    <NavItem
+                        icon={<MessageSquare className="w-5 h-5" />}
+                        label="Mesajlar"
+                        active={activeTab === "messages"}
+                        onClick={() => {
+                            setActiveTab("messages")
                             setIsSidebarOpen(false)
                         }}
                     />
@@ -5646,10 +5740,182 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             </div>
                         </div>
 
+                        {/* Feed Tab Navigation */}
+                        <div className="flex items-center gap-2 px-2">
+                            {[
+                                { id: 'feed' as const, label: 'Akış', icon: <FileText size={16} /> },
+                                { id: 'people' as const, label: 'Kişiler', icon: <Users size={16} /> },
+                                { id: 'ads' as const, label: 'İlanlar', icon: <Briefcase size={16} /> },
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setFeedTab(tab.id)}
+                                    className={cn(
+                                        "px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 transition-all border",
+                                        feedTab === tab.id
+                                            ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
+                                            : "bg-white text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-600"
+                                    )}
+                                >
+                                    {tab.icon}
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
                         <div className="flex flex-col xl:flex-row gap-6 sm:gap-10">
                             {/* 3. Main Content Feed */}
                             <div className="flex-1 space-y-6 sm:space-y-10 min-w-0">
-                                {/* Featured Professionals Grid */}
+
+                                {/* === SOCIAL FEED TAB === */}
+                                {feedTab === 'feed' && (
+                                    <div className="space-y-6">
+                                        {/* Post Composer */}
+                                        <motion.div 
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 shadow-sm"
+                                        >
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white shadow-md bg-slate-50 shrink-0">
+                                                    <img 
+                                                        src={session?.user?.image || `https://ui-avatars.com/api/?name=${session?.user?.name}&background=6366f1&color=fff`} 
+                                                        className="w-full h-full object-cover" 
+                                                        alt="" 
+                                                    />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <textarea
+                                                        value={newPostContent}
+                                                        onChange={(e) => setNewPostContent(e.target.value)}
+                                                        placeholder="Ne düşünüyorsun? Bir güncelleme paylaş..."
+                                                        rows={3}
+                                                        maxLength={1000}
+                                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-rose-500/10 focus:border-rose-500/20 transition-all outline-none resize-none"
+                                                    />
+                                                    <div className="flex items-center justify-between mt-3">
+                                                        <span className={cn(
+                                                            "text-[10px] font-bold tracking-wider",
+                                                            newPostContent.length > 900 ? "text-rose-500" : "text-slate-300"
+                                                        )}>
+                                                            {newPostContent.length}/1000
+                                                        </span>
+                                                        <button
+                                                            onClick={handleCreatePost}
+                                                            disabled={!newPostContent.trim() || isPostingFeed}
+                                                            className="px-6 py-2.5 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-rose-200"
+                                                        >
+                                                            {isPostingFeed ? (
+                                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                            ) : (
+                                                                <><Send size={13} /> Paylaş</>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+
+                                        {/* Feed Posts */}
+                                        {isFeedLoading ? (
+                                            <div className="space-y-4">
+                                                {[1, 2, 3].map(i => (
+                                                    <div key={i} className="h-40 bg-white rounded-[2.5rem] border border-slate-100 animate-pulse" />
+                                                ))}
+                                            </div>
+                                        ) : feedPosts.length === 0 ? (
+                                            <div className="p-16 text-center bg-white rounded-[3rem] border border-slate-100">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
+                                                    <MessageSquare size={36} />
+                                                </div>
+                                                <h4 className="font-black uppercase tracking-[0.2em] text-[12px] text-slate-400 mb-2">Henüz gönderi yok</h4>
+                                                <p className="text-[11px] text-slate-400 font-medium">İlk gönderiyi paylaşarak topluluğu başlat!</p>
+                                            </div>
+                                        ) : (
+                                            feedPosts.map((post: any) => {
+                                                const isMyPost = post.profile?.userId === session?.user?.id || 
+                                                                 (profile && post.profileId === profile.id);
+                                                const timeAgo = (() => {
+                                                    const now = new Date();
+                                                    const created = new Date(post.createdAt);
+                                                    const diffMs = now.getTime() - created.getTime();
+                                                    const diffMin = Math.floor(diffMs / 60000);
+                                                    if (diffMin < 1) return "şimdi";
+                                                    if (diffMin < 60) return `${diffMin}dk`;
+                                                    const diffHr = Math.floor(diffMin / 60);
+                                                    if (diffHr < 24) return `${diffHr}sa`;
+                                                    const diffDay = Math.floor(diffHr / 24);
+                                                    if (diffDay < 7) return `${diffDay}g`;
+                                                    return created.toLocaleDateString('tr-TR');
+                                                })();
+
+                                                return (
+                                                    <motion.div
+                                                        key={post.id}
+                                                        initial={{ opacity: 0, y: 15 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 group"
+                                                    >
+                                                        <div className="flex items-start gap-4">
+                                                            <div 
+                                                                className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white shadow-md bg-slate-50 shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                                                                onClick={() => window.open(`https://${post.profile?.username}.kardly.site`, '_blank')}
+                                                            >
+                                                                <img 
+                                                                    src={post.profile?.user?.image || `https://ui-avatars.com/api/?name=${post.profile?.user?.name || 'U'}&background=random`} 
+                                                                    className="w-full h-full object-cover" 
+                                                                    alt="" 
+                                                                />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center justify-between gap-2 mb-2">
+                                                                    <div className="flex items-center gap-2 min-w-0">
+                                                                        <h4 
+                                                                            className="text-[12px] font-black text-slate-900 uppercase italic tracking-tight truncate cursor-pointer hover:text-rose-500 transition-colors"
+                                                                            onClick={() => window.open(`https://${post.profile?.username}.kardly.site`, '_blank')}
+                                                                        >
+                                                                            {post.profile?.user?.name || 'Kullanıcı'}
+                                                                        </h4>
+                                                                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest shrink-0">
+                                                                            {post.profile?.occupation || ''}
+                                                                        </span>
+                                                                        <span className="text-[9px] text-slate-300 shrink-0">•</span>
+                                                                        <span className="text-[9px] font-bold text-slate-300 shrink-0">{timeAgo}</span>
+                                                                    </div>
+                                                                    {isMyPost && (
+                                                                        <button 
+                                                                            onClick={() => handleDeletePost(post.id)}
+                                                                            className="opacity-0 group-hover:opacity-100 p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+                                                                        >
+                                                                            <Trash2 size={14} />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                                <p className="text-[13px] text-slate-700 font-medium leading-relaxed whitespace-pre-wrap break-words">
+                                                                    {post.content}
+                                                                </p>
+                                                                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-50">
+                                                                    <button className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 hover:text-rose-500 transition-colors uppercase tracking-wider">
+                                                                        <Heart size={14} /> Beğen
+                                                                    </button>
+                                                                    <button 
+                                                                        className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 hover:text-sky-500 transition-colors uppercase tracking-wider"
+                                                                        onClick={() => window.open(`https://${post.profile?.username}.kardly.site`, '_blank')}
+                                                                    >
+                                                                        <ExternalLink size={14} /> Profili Gör
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                );
+                                            })
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* === PEOPLE TAB === */}
+                                {feedTab === 'people' && (
                                 <div className="space-y-6">
                                     <div className="flex items-center justify-between px-2">
                                         <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic">Profesyonel Ağın</h3>
@@ -5727,12 +5993,14 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                         {user.profile?.username || user.name}
                                                                     </span>
                                                                 </div>
-                                                                <button className={cn(
-                                                                    "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all",
-                                                                    isLight ? "bg-slate-100 hover:bg-rose-500 hover:text-white" : "bg-white/10 hover:bg-white hover:text-slate-900"
-                                                                )}>
-                                                                    BAĞLAN
-                                                                </button>
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <button onClick={(e) => { e.stopPropagation(); handleToggleFollow(user.id); }} className={cn("px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border", followingStatuses[user.id] ? "bg-rose-500 text-white border-rose-500" : isLight ? "bg-slate-100 text-slate-600 border-transparent hover:border-rose-200" : "bg-white/10 text-white border-transparent hover:bg-white hover:text-slate-900")}>
+                                                                        {followingStatuses[user.id] ? "Takipte" : "Takip Et"}
+                                                                    </button>
+                                                                    <button onClick={(e) => { e.stopPropagation(); setActiveTab("messages"); setActiveConversation({ otherUser: { id: user.id, name: user.name, image: user.image } }); }} className={cn("p-2 rounded-xl transition-all", isLight ? "bg-slate-100 text-slate-400 hover:text-rose-500" : "bg-white/10 text-white/60 hover:text-white")}>
+                                                                        <MessageSquare size={14} />
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </motion.div>
                                                     );
@@ -5740,8 +6008,10 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         </div>
                                     )}
                                 </div>
+                                )}
 
-                                {/* Projects Section - Dynamic Hub Ads */}
+                                {/* === ADS TAB === */}
+                                {feedTab === 'ads' && (
                                 <div className="space-y-4 sm:space-y-8">
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
                                         <div>
@@ -5876,6 +6146,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         )}
                                     </div>
                                 </div>
+                                )}
                             </div>
 
                             {/* 4. Insights Sidebar */}
@@ -5940,6 +6211,90 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </button>
                                 </div>
                             </aside>
+                        </div>
+                    </div>
+                ) : activeTab === "messages" ? (
+                    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-180px)] min-h-[600px]">
+                        {/* Conversations List */}
+                        <div className="w-full lg:w-80 bg-white rounded-[2.5rem] border border-slate-100 flex flex-col overflow-hidden shadow-sm">
+                            <div className="p-6 border-b border-slate-50">
+                                <h3 className="text-lg font-black text-slate-900 uppercase italic tracking-tighter">Mesajlar</h3>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
+                                {conversations.length === 0 ? (
+                                    <div className="text-center py-10 opacity-40">
+                                        <MessageSquare size={32} className="mx-auto mb-3" />
+                                        <p className="text-[10px] font-black uppercase tracking-widest">Sohbet bulunamadı</p>
+                                    </div>
+                                ) : (
+                                    conversations.map((conv, i) => (
+                                        <div 
+                                            key={i}
+                                            onClick={() => setActiveConversation(conv)}
+                                            className={cn(
+                                                "flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all",
+                                                activeConversation?.otherUser?.id === conv.otherUser?.id ? "bg-slate-900 text-white shadow-xl shadow-slate-900/10" : "hover:bg-slate-50 text-slate-600"
+                                            )}
+                                        >
+                                            <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white shadow-sm shrink-0 bg-slate-100">
+                                                <img src={conv.otherUser?.image || `https://ui-avatars.com/api/?name=${conv.otherUser?.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h5 className="font-black text-[11px] uppercase italic truncate">{conv.otherUser?.name}</h5>
+                                                <p className={cn("text-[9px] font-bold truncate opacity-60 mt-0.5", activeConversation?.otherUser?.id === conv.otherUser?.id ? "text-slate-300" : "text-slate-400")}>
+                                                    {conv.lastMessage?.content || "Mesaj gönderin..."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Chat Window */}
+                        <div className="flex-1 bg-white rounded-[2.5rem] border border-slate-100 flex flex-col overflow-hidden shadow-sm">
+                            {activeConversation ? (
+                                <>
+                                    <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-white shadow-sm bg-white shrink-0">
+                                                <img src={activeConversation.otherUser?.image || `https://ui-avatars.com/api/?name=${activeConversation.otherUser?.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-black text-[12px] uppercase italic text-slate-950 leading-none">{activeConversation.otherUser?.name}</h4>
+                                                <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Çevrimiçi</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto p-8 space-y-6 no-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-60">
+                                        {/* Messages would go here - for now dummy structure */}
+                                        <div className="flex flex-col items-center justify-center h-full text-center opacity-40">
+                                            <Sparkles size={48} className="text-rose-500 mb-4" />
+                                            <p className="text-xs font-black uppercase tracking-widest">Sohbet Başlatıldı</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-6 border-t border-slate-50">
+                                        <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-[2rem] border border-slate-100">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Mesajınızı yazın..." 
+                                                className="flex-1 bg-transparent border-none outline-none px-4 text-[13px] font-medium text-slate-900"
+                                            />
+                                            <button className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-rose-500 transition-all shadow-lg active:scale-95">
+                                                <Send size={18} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
+                                    <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mb-8 text-slate-200">
+                                        <MessageSquare size={48} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-4">Bir Sohbet Seçin</h3>
+                                    <p className="text-sm text-slate-400 font-medium max-w-xs">İş ortaklarınızla iletişime geçmek için soldaki listeden birini seçin veya profillerinden mesaj gönderin.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ) : null
