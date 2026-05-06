@@ -9542,7 +9542,7 @@ const ThreadsIcon = ({ size = 20, className = "" }: { size?: number, className?:
     </svg>
 )
 
-function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang }: any) {
+function ArticleReaderModal({ isOpen, onClose, article, theme, t, lang, handleLikeArticle }: any) {
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [copied, setCopied] = useState(false);
