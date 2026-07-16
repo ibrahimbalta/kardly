@@ -4407,6 +4407,7 @@ if(true) {
                                             <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white" />
                                             <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white" />
                                         </div>
+                                    )}
                                     {theme.special === 'lawyer' && (
                                         <div className="absolute inset-0 border-2 border-amber-500/20 rounded-full scale-90" />
                                     )}
