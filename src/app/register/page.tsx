@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react"
 import { Layout, Mail, ArrowRight, Sparkles, Zap, Star, Users } from "lucide-react"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useTranslation } from "@/context/LanguageContext"
 
@@ -13,6 +13,14 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [pendingUsername, setPendingUsername] = useState("")
+
+    useEffect(() => {
+        const saved = localStorage.getItem("pending_username")
+        if (saved) {
+            setPendingUsername(saved)
+        }
+    }, [])
 
     const handleEmailRegister = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -85,6 +93,15 @@ export default function RegisterPage() {
                         </h1>
                         <p className="text-slate-400 text-sm">{t('registerSubtitle')}</p>
                     </div>
+
+                    {pendingUsername && (
+                        <div className="mb-6 p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-900 text-xs font-bold flex items-center justify-between shadow-sm">
+                            <span className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse shrink-0" />
+                                <span>🎉 <strong>kardly.site/{pendingUsername}</strong> adresiniz sizin için ayrıldı!</span>
+                            </span>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold leading-relaxed">

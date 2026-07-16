@@ -1,138 +1,124 @@
 "use client"
 
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { CreditCard, Zap, Palette, ArrowRight, Layout, QrCode } from "lucide-react"
+import { useTranslation } from "@/context/LanguageContext"
 
 interface NfcSectionProps {
   t: any
 }
 
+const categories = [
+  { word: "girişimciler", color: "text-rose-500" },
+  { word: "tasarımcılar", color: "text-indigo-500" },
+  { word: "avukatlar", color: "text-emerald-500" },
+  { word: "doktorlar", color: "text-amber-500" },
+  { word: "yazılımcılar", color: "text-sky-500" },
+]
+
+const carouselCards = [
+  { name: "Ayşe Karaca", role: "Tasarımcı", initials: "AK", bg: "from-rose-500 to-pink-600", text: "text-white", user: "@aysekaraca", links: ["Portfolyo", "LinkedIn"] },
+  { name: "Burak Şahin", role: "Yazılımcı", initials: "BŞ", bg: "from-indigo-500 to-violet-600", text: "text-white", user: "@burak.dev", links: ["GitHub", "LinkedIn"] },
+  { name: "Ceren Yılmaz", role: "Diyetisyen", initials: "CY", bg: "from-emerald-500 to-teal-600", text: "text-white", user: "@cerenyilmaz", links: ["Randevu", "Hakkımda"] },
+  { name: "Deniz Kaya", role: "Mimar", initials: "DK", bg: "from-amber-500 to-orange-600", text: "text-white", user: "@denizkaya", links: ["Projeler", "İletişim"] },
+  { name: "Ece Demir", role: "Avukat", initials: "ED", bg: "from-sky-500 to-blue-600", text: "text-white", user: "@ecedemir", links: ["Danışmanlık", "Rehber"] },
+]
+
 export function NfcSection({ t }: NfcSectionProps) {
+  const allCards = [...carouselCards, ...carouselCards]
+
   return (
-    <section id="nfc-card" className="py-20 md:py-28 px-6 relative z-10">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#f97316 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          <div className="flex-1 space-y-8 text-left">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-100"
+    <section className="relative py-20 md:py-32 bg-white text-slate-900 overflow-hidden border-b border-slate-100">
+      <style jsx>{`
+        @keyframes rotateWords {
+          0%, 16% { transform: translate3d(0, 0, 0); }
+          20%, 36% { transform: translate3d(0, -100%, 0); }
+          40%, 56% { transform: translate3d(0, -200%, 0); }
+          60%, 76% { transform: translate3d(0, -300%, 0); }
+          80%, 96% { transform: translate3d(0, -400%, 0); }
+          100% { transform: translate3d(0, -500%, 0); }
+        }
+        @keyframes scrollCarousel {
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+      `}</style>
+
+      <div className="mx-auto w-[90vw] max-w-[1504px]">
+        {/* Header */}
+        <div className="flex flex-col items-center text-center gap-4 mb-16">
+          
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-100 shadow-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">10.000+ kullanıcı</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+            Her sektörden binlerce
+          </h2>
+
+          {/* Rotating Words */}
+          <div className="relative overflow-hidden h-[1.3em] text-4xl md:text-5xl font-black italic">
+            <div
+              className="flex flex-col"
+              style={{
+                animation: "rotateWords 12s ease-in-out infinite",
+              }}
             >
-              <CreditCard size={14} className="text-orange-500" />
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-600">{t('nfcSectionBadge')}</span>
-            </motion.div>
-            
-            <h2 className="text-4xl md:text-6xl font-black text-slate-950 tracking-tighter leading-[0.9] italic">
-              {t('nfcSectionTitle')}
-            </h2>
-            
-            <p className="text-slate-600 text-lg font-medium leading-relaxed max-w-xl">
-              {t('nfcSectionDesc')}
-            </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {[
-                { title: t('nfcFeature1Title'), desc: t('nfcFeature1Desc'), icon: <Zap /> },
-                { title: t('nfcFeature2Title'), desc: t('nfcFeature2Desc'), icon: <Palette /> }
-              ].map((item, i) => (
-                <div key={i} className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shadow-sm">
-                    {item.icon}
-                  </div>
-                  <h4 className="text-sm font-black uppercase tracking-tight text-slate-900">{item.title}</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed font-semibold">{item.desc}</p>
-                </div>
+              {[...categories, categories[0]].map((cat, i) => (
+                <span key={i} className={`block h-[1.3em] leading-[1.3em] text-center ${cat.color}`}>
+                  {cat.word}
+                </span>
               ))}
             </div>
-            
-            <div className="pt-4">
-              <Link href="/register" className="inline-flex items-center gap-4 px-10 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-orange-600 transition-all shadow-xl shadow-slate-200 active:scale-95 group">
-                {t('nfcCtaBtn')}
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
           </div>
-          
-          <div className="flex-1 relative flex justify-center items-center">
-              {/* Tap Point Rings */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0">
-                  {[...Array(3)].map((_, i) => (
-                      <motion.div
-                          key={i}
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          whileInView={{ 
-                              opacity: [0, 0.4, 0],
-                              scale: [0.5, 2.5],
-                          }}
-                          transition={{ 
-                              duration: 3,
-                              repeat: Infinity,
-                              delay: i * 1,
-                              ease: "easeOut"
-                          }}
-                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-orange-500/30"
-                      />
+        </div>
+      </div>
+
+      {/* Carousel */}
+      <div className="relative overflow-hidden">
+        {/* Fade edges */}
+        <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 bottom-0 right-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+        <div
+          className="flex items-stretch gap-6 px-6 md:px-12 hover:[animation-play-state:paused]"
+          style={{
+            animation: "scrollCarousel 35s linear infinite",
+            width: "fit-content",
+          }}
+        >
+          {allCards.map((card, i) => (
+            <div
+              key={i}
+              className="shrink-0 w-[240px] md:w-[260px] aspect-[3/4.2] rounded-3xl overflow-hidden shadow-lg"
+            >
+              <div className={`w-full h-full bg-gradient-to-br ${card.bg} p-6 flex flex-col justify-between`}>
+                {/* Top: Avatar + Info */}
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center text-base font-black mb-3">
+                    {card.initials}
+                  </div>
+                  <div className="text-white text-sm font-black">{card.name}</div>
+                  <div className="text-white/70 text-[10px] font-bold mt-0.5">{card.role}</div>
+                </div>
+
+                {/* Links */}
+                <div className="space-y-2">
+                  {card.links.map((link, j) => (
+                    <div key={j} className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/10 text-white text-[10px] font-black rounded-xl py-2.5 px-3 text-center transition-all cursor-pointer">
+                      {link}
+                    </div>
                   ))}
+                </div>
+
+                {/* Bottom Username Badge */}
+                <div className="flex items-center justify-center">
+                  <span className="bg-white/25 backdrop-blur-md border border-white/10 text-white rounded-full px-3.5 py-1 text-[9px] font-bold">
+                    {card.user}
+                  </span>
+                </div>
               </div>
-
-              {/* NFC Card */}
-              <motion.div
-                initial={{ opacity: 0, rotateX: 20, rotateY: -20, rotate: -5 }}
-                whileInView={{ opacity: 1, rotateX: 25, rotateY: -15, rotate: -3 }}
-                viewport={{ once: true }}
-                className="relative z-10 w-full max-w-[420px] aspect-[1.58/1] bg-gradient-to-br from-slate-950 via-slate-900 to-black rounded-[2rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] p-10 flex flex-col justify-between overflow-hidden border border-white/5"
-              >
-                {/* Chip Detail */}
-                <div className="w-12 h-10 bg-gradient-to-br from-amber-200 to-amber-500 rounded-lg relative overflow-hidden mb-4 opacity-80">
-                    <div className="absolute inset-x-2 top-0 h-px bg-white/40" />
-                    <div className="absolute inset-x-2 bottom-0 h-px bg-black/20" />
-                    <div className="absolute inset-y-2 left-0 w-px bg-white/40" />
-                    <div className="absolute inset-y-2 right-0 w-px bg-black/20" />
-                </div>
-                
-                <div className="relative z-10">
-                  <div className="text-4xl font-black text-white/5 tracking-[0.2em] absolute top-0 right-0 pointer-events-none">NFC</div>
-                  <div className="text-2xl font-black text-white tracking-widest uppercase italic">KARDLY</div>
-                </div>
-                
-                <div className="relative z-10 flex justify-between items-end">
-                  <div>
-                    <div className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em] mb-1">Elite Member</div>
-                    <div className="text-base font-black text-white uppercase tracking-wider">{t('nfcUserMock')}</div>
-                  </div>
-                  <div className="bg-white p-2.5 rounded-xl shadow-2xl scale-90">
-                     <QrCode size={36} className="text-slate-950" />
-                  </div>
-                </div>
-
-                <div className="absolute -top-24 -left-24 w-64 h-64 bg-orange-500/10 blur-[100px] rounded-full" />
-              </motion.div>
-              
-              {/* Tapping Phone Mockup */}
-              <motion.div
-                initial={{ opacity: 0, x: 100, y: -50, rotate: -20 }}
-                whileInView={{ 
-                    opacity: 1, 
-                    x: 60, 
-                    y: -100, 
-                    rotate: -25,
-                    transition: { 
-                        type: "spring", 
-                        damping: 20, 
-                        stiffness: 100, 
-                        delay: 0.5 
-                    }
-                }}
-                className="absolute top-0 right-0 z-20 w-48 h-96 bg-slate-950 rounded-[2.5rem] border-[6px] border-slate-900 shadow-2xl hidden md:block"
-              >
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-slate-900 rounded-full" />
-                  <div className="w-full h-full bg-slate-900/50 rounded-[2.2rem] flex items-center justify-center">
-                      <Zap className="text-orange-500 animate-pulse" size={32} />
-                  </div>
-              </motion.div>
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

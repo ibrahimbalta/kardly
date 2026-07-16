@@ -46,6 +46,15 @@ export default function OnboardingPage() {
             router.push("/admin")
         }
     }, [isAdmin, router])
+
+    useEffect(() => {
+        const pending = localStorage.getItem("pending_username")
+        if (pending) {
+            setFormData(prev => ({ ...prev, username: pending }))
+            localStorage.removeItem("pending_username")
+        }
+    }, [])
+
     const [currentStep, setCurrentStep] = useState(0)
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedData, setGeneratedData] = useState<any>(null)

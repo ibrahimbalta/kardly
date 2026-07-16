@@ -1,8 +1,8 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Zap, Play, MousePointer2, Palette, Share2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { BarChart3 } from "lucide-react"
+import Link from "next/link"
+import { useTranslation } from "@/context/LanguageContext"
 
 interface HowItWorksSectionProps {
   t: any
@@ -11,103 +11,101 @@ interface HowItWorksSectionProps {
 
 export function HowItWorksSection({ t, onPlayClick }: HowItWorksSectionProps) {
   return (
-    <section className="py-20 md:py-28 px-6 relative z-10">
-      {/* Decorative mesh background */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4, backgroundImage: 'radial-gradient(at 20% 80%, rgba(244,63,94,0.08) 0%, transparent 50%), radial-gradient(at 80% 20%, rgba(99,102,241,0.06) 0%, transparent 50%)' }} />
+    <section className="relative py-20 md:py-32 bg-gradient-to-br from-emerald-50/40 via-white to-teal-50/50 text-slate-900 overflow-hidden">
       
-      <div className="max-w-6xl mx-auto relative">
-        <div className="text-center mb-24">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-rose-50 to-indigo-50 border border-rose-100/50 mb-6"
-          >
-            <Zap size={13} className="text-rose-500" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent">{t('howItWorks')}</span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-5xl md:text-[7.5rem] font-black tracking-[-0.07em] text-slate-950 mb-8 leading-[0.82] select-none"
-          >
-            {t('buildProfileTitle').split(' ').map((word: string, i: number) => (
-              <span key={i} className={cn("inline-block mr-[0.2em]", i % 2 === 1 ? "italic font-light opacity-50" : "italic")}>{word}</span>
-            ))}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
-          >{t('buildProfileDesc')}</motion.p>
-          
-          <motion.div
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="flex justify-center"
-          >
-              <button
-                  onClick={onPlayClick}
-                  className="group flex items-center gap-6 px-1.5 py-1.5 pr-8 bg-white border border-slate-200/60 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:border-slate-300 transition-all duration-500 active:scale-95"
-              >
-                  <div className="w-14 h-14 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 overflow-hidden relative">
-                       <div className="absolute inset-0 bg-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                       <Play size={24} className="relative z-10 fill-rose-500 group-hover:fill-white group-hover:text-white transition-all duration-500 translate-x-0.5" />
-                  </div>
-                  <span className="text-sm font-black text-slate-900 tracking-tight uppercase italic">{t('nasıl_çalışır_btn') || "Nasıl Çalışır?"}</span>
-              </button>
-          </motion.div>
-        </div>
-
-        {/* Timeline Steps */}
-        <div className="relative">
-          {/* Connector line */}
-          <div className="hidden md:block absolute top-[72px] left-[16.6%] right-[16.6%] h-[2px]">
-            <motion.div
-              initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-full origin-left"
-              style={{ background: 'linear-gradient(90deg, #f43f5e, #8b5cf6, #06b6d4)' }}
-            />
+      <div className="mx-auto w-[90vw] max-w-[1504px] grid items-center gap-10 md:gap-12 lg:gap-16 md:grid-cols-2 md:[&>div:first-child]:order-2">
+        
+        {/* Text Column */}
+        <div className="flex flex-col gap-6 max-md:items-center max-md:text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 shadow-sm w-fit">
+            <BarChart3 size={11} className="text-emerald-500" />
+            <span>Detaylı Analiz</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
-            {[
-              { step: '01', title: t('step1Title'), desc: t('step1Desc'), icon: <MousePointer2 size={22} />, gradient: 'from-rose-500 to-pink-500', glow: 'shadow-rose-500/20' },
-              { step: '02', title: t('step2Title'), desc: t('step2Desc'), icon: <Palette size={22} />, gradient: 'from-violet-500 to-indigo-500', glow: 'shadow-violet-500/20' },
-              { step: '03', title: t('step3Title'), desc: t('step3Desc'), icon: <Share2 size={22} />, gradient: 'from-cyan-500 to-teal-500', glow: 'shadow-cyan-500/20' }
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="relative group"
-              >
-                {/* Step circle on timeline */}
-                <div className="flex justify-center mb-8">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    className={`w-[56px] h-[56px] rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-xl ${item.glow} relative z-10 rotate-3 group-hover:rotate-0 transition-transform duration-500`}
-                  >
-                    {item.icon}
-                  </motion.div>
-                </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-[1.1] tracking-tight text-balance">
+            Kitlenizi analiz edin ve etkileşimde tutun
+          </h2>
 
-                {/* Card */}
-                <div className="relative bg-white/40 backdrop-blur-3xl rounded-[40px] p-10 md:p-12 border border-white/50 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.05)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] group-hover:bg-white/60 transition-all duration-700 group-hover:-translate-y-2">
-                  {/* Step number: Vertical floating label */}
-                  <div className="absolute -left-4 top-12 -rotate-90 origin-center opacity-20 group-hover:opacity-100 transition-opacity">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.4em] bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
-                      {t('step')} {item.step}
+          <p className="text-slate-550 text-base md:text-lg max-w-[55ch] leading-relaxed font-semibold">
+            Profilinizi kimlerin ziyaret ettiğini, hangi butonlara tıklandığını ve hangi şehirlerden giriş yapıldığını canlı olarak izleyin. Kitlenizi daha yakından tanıyıp etkileşimi artırın.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 max-md:justify-center">
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl px-8 py-4 text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-emerald-500/10"
+            >
+              Ücretsiz Başla
+            </Link>
+          </div>
+        </div>
+
+        {/* Visual Column: Analytics Dashboard Mockup */}
+        <div className="w-full">
+          <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 p-6 md:p-8 shadow-xl">
+            {/* Mock Header */}
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+              </div>
+              <span className="text-[10px] text-slate-400 font-mono">Performans Özeti</span>
+            </div>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {[
+                { label: "Ziyaretçi", value: "1.2K", change: "+12%" },
+                { label: "Tıklamalar", value: "348", change: "+8%" },
+                { label: "Kayıtlar", value: "94", change: "+20%" },
+              ].map((stat, i) => (
+                <div key={i} className="bg-slate-50/50 border border-slate-100/60 rounded-xl p-3">
+                  <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</div>
+                  <div className="text-lg font-black text-slate-800 mt-1">{stat.value}</div>
+                  <div className="text-[9px] font-bold text-emerald-500 mt-0.5">{stat.change}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Simple Bar Chart */}
+            <div className="mb-6">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Günlük Dağılım</div>
+              <div className="flex items-end gap-2.5 h-20">
+                {[30, 50, 40, 75, 55, 90, 65].map((h, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div
+                      className={`w-full rounded-t-md transition-all ${i === 5 ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                      style={{ height: `${h}%` }}
+                    />
+                    <span className="text-[7px] text-slate-400 font-bold uppercase">
+                      {["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"][i]}
                     </span>
                   </div>
-                  
-                  <h3 className="text-2xl font-black text-slate-950 mb-4 tracking-tighter leading-tight italic">{item.title}</h3>
-                  <p className="text-slate-500 text-[14px] leading-relaxed font-medium">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Simple Line Chart */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Haftalık Trend</span>
+                <span className="text-[9px] font-black text-emerald-500">↑ %18.4</span>
+              </div>
+              <svg viewBox="0 0 200 35" className="w-full text-emerald-500">
+                <path d="M0,30 Q25,25 40,22 T80,14 T120,18 T160,8 T200,4 V35 H0 Z" fill="rgba(16,185,129,0.05)" />
+                <polyline
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  points="0,30 40,22 80,14 120,18 160,8 200,4"
+                />
+              </svg>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   )

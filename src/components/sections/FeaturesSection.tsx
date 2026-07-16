@@ -1,19 +1,8 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { 
-  ArrowRight, 
-  Briefcase, 
-  CheckCircle2, 
-  FileText, 
-  CreditCard, 
-  Calendar, 
-  BarChart3, 
-  Palette, 
-  QrCode, 
-  Shield 
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+import { ArrowRight, Sparkles } from "lucide-react"
+import Link from "next/link"
+import { useTranslation } from "@/context/LanguageContext"
 
 interface FeaturesSectionProps {
   t: any
@@ -21,108 +10,93 @@ interface FeaturesSectionProps {
 
 export function FeaturesSection({ t }: FeaturesSectionProps) {
   return (
-    <section id="features" className="py-20 md:py-28 px-6 relative z-10">
-      {/* Animated Background Effects */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
-        <motion.div
-          animate={{ x: [0, 60, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-rose-100 blur-[100px] rounded-full opacity-80"
-        />
-        <motion.div
-          animate={{ x: [0, -50, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-10%] right-[-5%] w-[55%] h-[55%] bg-indigo-100/80 blur-[100px] rounded-full opacity-70"
-        />
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(#94a3b8 1px, transparent 1px), linear-gradient(90deg, #94a3b8 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
-      </div>
-      
-      <div className="max-w-5xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 px-4">
-          <div className="max-w-xl text-left">
-            <motion.div
-              initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
-              className="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] mb-4 flex items-center gap-2"
+    <section className="relative py-20 md:py-32 bg-gradient-to-br from-violet-50/50 via-white to-rose-50/50 text-slate-900 overflow-hidden">
+      {/* Light subtle gradients */}
+      <div className="absolute top-1/2 left-1/4 w-[35vw] h-[35vw] bg-[radial-gradient(circle,rgba(244,63,94,0.03),transparent_70%)] pointer-events-none" />
+
+      <div className="mx-auto w-[90vw] max-w-[1504px] grid items-center gap-10 md:gap-12 lg:gap-16 md:grid-cols-2 md:[&>div:first-child]:order-2">
+        
+        {/* Text Column */}
+        <div className="flex flex-col gap-6 max-md:items-center max-md:text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-100 text-[10px] font-black uppercase tracking-[0.2em] text-rose-600 shadow-sm w-fit">
+            <Sparkles size={11} className="text-rose-500" />
+            <span>Kolay Özelleştirme</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-[1.1] tracking-tight text-balance">
+            Profilinizi dakikalar içinde oluşturun ve özelleştirin
+          </h2>
+
+          <p className="text-slate-550 text-base md:text-lg max-w-[55ch] leading-relaxed font-semibold">
+            Tüm sosyal medya hesaplarınızı, web sitelerinizi, portfolyonuzu ve iletişim kanallarınızı tek bir adreste toplayın. Kardly'nin hazır şablonlarıyla tarzınızı yansıtın.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 max-md:justify-center">
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl px-8 py-4 text-xs font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-rose-500/10"
             >
-              <div className="w-8 h-px bg-rose-500" /> {t('features')}
-            </motion.div>
-            <h2 className="text-4xl md:text-[5rem] font-black text-slate-950 tracking-[-0.05em] leading-[0.9] mb-6 italic">
-              {t('featuresTitle').split(' ').map((w: string, i: number) => (
-                <span key={i} className={i % 2 === 0 ? "text-slate-950" : "text-slate-400 font-light"}>{w} </span>
-              ))}
-            </h2>
-            <p className="text-slate-500 text-base font-medium leading-relaxed max-w-sm">
-              {t('featuresDesc')}
-            </p>
+              Ücretsiz Başla
+              <ArrowRight size={13} />
+            </Link>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 relative">
-          {[
-            { icon: <Briefcase size={22} />, title: t('f1Title'), color: 'rose', delay: 0 },
-            { icon: <CheckCircle2 size={22} />, title: t('f2Title'), color: 'amber', delay: 0.1 },
-            { icon: <FileText size={22} />, title: t('f3Title'), color: 'blue', delay: 0.2 },
-            { icon: <CreditCard size={22} />, title: t('f4Title'), color: 'emerald', delay: 0.3 },
-            { icon: <Calendar size={22} />, title: t('f5Title'), color: 'indigo', delay: 0.4 },
-            { icon: <BarChart3 size={22} />, title: t('f6Title'), color: 'purple', delay: 0.5 },
-            { icon: <Palette size={22} />, title: t('f7Title'), color: 'pink', delay: 0.6 },
-            { icon: <QrCode size={22} />, title: t('f8Title'), color: 'sky', delay: 0.7 },
-            { icon: <Shield size={22} />, title: t('f9Title'), color: 'teal', delay: 0.8 },
-          ].map((f, i) => {
-            const themeMap = {
-              rose: { bg: 'from-rose-500/10 to-rose-500/5', icon: 'bg-rose-500', glow: 'shadow-rose-500/20', text: 'text-rose-950', shape: 'bg-rose-500/5' },
-              amber: { bg: 'from-amber-500/10 to-amber-500/5', icon: 'bg-amber-500', glow: 'shadow-amber-500/20', text: 'text-amber-950', shape: 'bg-amber-500/5' },
-              blue: { bg: 'from-blue-500/10 to-blue-500/5', icon: 'bg-blue-500', glow: 'shadow-blue-500/20', text: 'text-blue-950', shape: 'bg-blue-500/5' },
-              emerald: { bg: 'from-emerald-500/10 to-emerald-500/5', icon: 'bg-emerald-500', glow: 'shadow-emerald-500/20', text: 'text-emerald-950', shape: 'bg-emerald-500/5' },
-              indigo: { bg: 'from-indigo-500/10 to-indigo-500/5', icon: 'bg-indigo-500', glow: 'shadow-indigo-500/20', text: 'text-indigo-950', shape: 'bg-indigo-500/5' },
-              purple: { bg: 'from-purple-500/10 to-purple-500/5', icon: 'bg-purple-500', glow: 'shadow-purple-500/20', text: 'text-purple-950', shape: 'bg-purple-500/5' },
-              pink: { bg: 'from-pink-500/10 to-pink-500/5', icon: 'bg-pink-500', glow: 'shadow-pink-500/20', text: 'text-pink-950', shape: 'bg-pink-500/5' },
-              sky: { bg: 'from-sky-500/10 to-sky-500/5', icon: 'bg-sky-500', glow: 'shadow-sky-500/20', text: 'text-sky-950', shape: 'bg-sky-500/5' },
-              teal: { bg: 'from-teal-500/10 to-teal-500/5', icon: 'bg-teal-500', glow: 'shadow-teal-500/20', text: 'text-teal-950', shape: 'bg-teal-500/5' }
-            };
-            
-            const theme = themeMap[f.color as keyof typeof themeMap] || { bg: 'bg-slate-50', icon: 'bg-slate-500', glow: 'shadow-slate-500/20', text: 'text-slate-950', shape: 'bg-slate-500/5' };
+        {/* Visual Column: Profile Customization Mockup */}
+        <div className="w-full">
+          <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 p-6 md:p-8 shadow-xl">
+            {/* Mock Header */}
+            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+              <span className="ml-3 text-[10px] text-slate-400 font-mono">kardly.site/admin</span>
+            </div>
 
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: f.delay, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className={cn(
-                  "group relative min-h-[140px] p-8 rounded-[40px] overflow-hidden transition-all duration-700",
-                  i % 3 === 1 ? "lg:translate-y-12" : "",
-                  i % 3 === 2 ? "lg:translate-y-24" : ""
-                )}
-              >
-                <div className={cn(
-                  "absolute inset-0 bg-gradient-to-br backdrop-blur-2xl border border-white/40 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.02]",
-                  theme.bg
-                )} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Left: Settings Panel */}
+              <div className="space-y-4">
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Özellikler</div>
                 
-                <div className="relative z-10 flex flex-col items-start gap-5">
-                  <div className={cn(
-                    "w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg transition-all duration-700 group-hover:rotate-[15deg] group-hover:scale-110",
-                    theme.icon, theme.glow
-                  )}>
-                    {f.icon}
-                  </div>
-                  
-                  <div className="space-y-1.5">
-                    <h3 className={cn("text-lg font-black tracking-tighter leading-none italic", theme.text)}>
-                      {f.title}
-                    </h3>
-                    <div className="flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-                       <div className={cn("h-1 w-8 rounded-full", theme.icon)} />
-                       <ArrowRight size={12} className={theme.text} />
+                {/* Toggle Rows */}
+                {[
+                  { label: "AI Asistan", active: true },
+                  { label: "Randevu Sistemi", active: true },
+                  { label: "QR Kod Paylaşımı", active: false },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between bg-slate-50/50 border border-slate-100 rounded-xl px-3 py-2">
+                    <span className="text-xs font-bold text-slate-650">{item.label}</span>
+                    <div className={`w-8 h-4.5 rounded-full relative transition-colors ${item.active ? 'bg-rose-500' : 'bg-slate-200'}`}>
+                      <div className={`absolute top-0.5 w-3.5 h-3.5 rounded-full bg-white shadow transition-all ${item.active ? 'left-[16px]' : 'left-0.5'}`} />
                     </div>
                   </div>
+                ))}
+
+                {/* Color Palette */}
+                <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Tema Paleti</div>
+                <div className="flex gap-1.5 flex-wrap">
+                  {["bg-rose-500", "bg-indigo-500", "bg-emerald-500", "bg-amber-500"].map((c, i) => (
+                    <div key={i} className={`w-6 h-6 rounded-lg ${c} ${i === 0 ? 'ring-2 ring-slate-900 ring-offset-2 ring-offset-white' : ''} cursor-pointer`} />
+                  ))}
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+
+              {/* Right: Preview Card */}
+              <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 flex flex-col items-center justify-center text-center">
+                <div className="w-11 h-11 rounded-xl bg-rose-500 text-white flex items-center justify-center text-sm font-black mb-2.5">
+                  LY
+                </div>
+                <div className="text-xs font-black text-slate-800">Lara Yıldız</div>
+                <div className="text-[8px] text-slate-400 font-bold mb-3">UI/UX Designer</div>
+                <div className="space-y-1.5 w-full">
+                  <div className="bg-white border border-slate-100 rounded-lg py-1.5 text-[8px] font-bold text-slate-600 shadow-sm">Web Sitem</div>
+                  <div className="bg-white border border-slate-100 rounded-lg py-1.5 text-[8px] font-bold text-slate-600 shadow-sm">LinkedIn</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </section>
   )
