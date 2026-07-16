@@ -276,32 +276,32 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                 <div className="p-4 sm:p-6 lg:p-10 max-w-[1360px] mx-auto w-full pb-24 lg:pb-12">
                     
                     {/* Welcome Banner Card */}
-                    <div className="relative rounded-[2.5rem] bg-gradient-to-br from-rose-500 to-indigo-650 p-8 sm:p-12 mb-10 overflow-hidden shadow-xl shadow-rose-500/10">
+                    <div className="relative rounded-[1.8rem] sm:rounded-[2.5rem] bg-gradient-to-br from-rose-500 to-indigo-650 p-6 sm:p-12 mb-6 sm:mb-10 overflow-hidden shadow-xl shadow-rose-500/10">
                         {/* Shimmer background design */}
                         <div className="absolute top-[-20%] right-[-10%] w-[350px] h-[350px] rounded-full bg-white/10 blur-3xl pointer-events-none" />
                         <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] rounded-full bg-black/10 blur-3xl pointer-events-none" />
                         
                         <div className="max-w-xl relative z-10 text-white">
-                            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6 text-[9px] font-black uppercase tracking-widest">
-                                <Sparkles size={11} className="text-pink-300 animate-pulse" />
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4 sm:mb-6 text-[8px] sm:text-[9px] font-black uppercase tracking-widest">
+                                <Sparkles size={10} className="text-pink-300 animate-pulse" />
                                 <span>Kardly Business Hub</span>
                             </div>
-                            <h2 className="text-3xl sm:text-5xl font-black leading-[1.1] mb-4 tracking-tight">
+                            <h2 className="text-xl sm:text-5xl font-black leading-[1.15] mb-3 sm:mb-4 tracking-tight">
                                 Profesyonel dünyayı <br />keşfet, ağını büyüt.
                             </h2>
-                            <p className="text-white/80 text-xs sm:text-sm font-semibold mb-8 max-w-md leading-relaxed">
+                            <p className="text-white/80 text-[11px] sm:text-sm font-semibold mb-6 sm:mb-8 max-w-md leading-relaxed">
                                 Uzmanlarla doğrudan iletişime geçin, iş birlikleri kurun ve projelerinize en uygun profesyoneli bulun.
                             </p>
-                            <div className="flex flex-wrap items-center gap-4">
+                            <div className="flex flex-wrap items-center gap-3">
                                 <button 
                                     onClick={() => router.push('/register')}
-                                    className="px-8 py-3.5 bg-white text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md hover:bg-slate-50 transition-all active:scale-95"
+                                    className="px-5 py-2.5 sm:px-8 sm:py-3.5 bg-white text-slate-950 rounded-xl font-black text-[8px] sm:text-[9px] uppercase tracking-widest shadow-md hover:bg-slate-50 transition-all active:scale-95"
                                 >
                                     Profilini Ekle
                                 </button>
                                 <button 
                                     onClick={() => router.push('/register')}
-                                    className="px-8 py-3.5 bg-black/35 hover:bg-black/50 text-white border border-white/25 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all active:scale-95"
+                                    className="px-5 py-2.5 sm:px-8 sm:py-3.5 bg-black/35 hover:bg-black/50 text-white border border-white/25 rounded-xl font-black text-[8px] sm:text-[9px] uppercase tracking-widest transition-all active:scale-95"
                                 >
                                     İş İlanı Ver
                                 </button>
