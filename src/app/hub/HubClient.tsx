@@ -27,6 +27,9 @@ import {
     Layout,
     Plus,
     Bookmark,
+    Eye,
+    ChevronRight,
+    CheckCircle2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/context/LanguageContext"
@@ -43,9 +46,8 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     const [networkSearch, setNetworkSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("all")
     const [isNetworkLoading, setIsNetworkLoading] = useState(initialUsers.length === 0)
+    const [activeFeedTab, setActiveFeedTab] = useState<"people" | "projects">("people")
     
-    const [activeNav, setActiveNav] = useState('ana-sayfa')
-
     useEffect(() => {
         if (initialUsers.length === 0) {
             fetchNetwork()
@@ -79,10 +81,11 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     }
 
     const categories = [
-        { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={20} className="text-sky-500" />, bg: "bg-sky-50" },
-        { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={20} className="text-purple-500" />, bg: "bg-purple-50" },
-        { id: "consulting", name: "Danışmanlık", icon: <Briefcase size={20} className="text-amber-500" />, bg: "bg-amber-50" },
-        { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={20} className="text-rose-500" />, bg: "bg-rose-50" },
+        { id: "all", name: "Tümü", icon: <LayoutGrid size={18} />, color: "text-slate-500", bg: "bg-slate-100" },
+        { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={18} />, color: "text-sky-500", bg: "bg-sky-50" },
+        { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={18} />, color: "text-rose-500", bg: "bg-rose-50" },
+        { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={18} />, color: "text-emerald-500", bg: "bg-emerald-50" },
+        { id: "consulting", name: "Danışmanlık", icon: <Briefcase size={18} />, color: "text-amber-500", bg: "bg-amber-50" },
     ]
 
     const filteredUsers = useMemo(() => {
@@ -90,6 +93,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             const searchLower = networkSearch.toLowerCase()
             const matchesSearch = (
                 u.name?.toLowerCase().includes(searchLower) ||
+                u.profile?.displayName?.toLowerCase().includes(searchLower) ||
                 u.profile?.occupation?.toLowerCase().includes(searchLower) ||
                 u.profile?.username?.toLowerCase().includes(searchLower)
             )
@@ -97,7 +101,8 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                 u.profile?.occupation?.toLowerCase().includes(selectedCategory.toLowerCase()) ||
                 (selectedCategory === "software" && u.profile?.occupation?.toLowerCase().includes("yazılım")) ||
                 (selectedCategory === "design" && u.profile?.occupation?.toLowerCase().includes("tasarım")) ||
-                (selectedCategory === "marketing" && u.profile?.occupation?.toLowerCase().includes("pazarlama"))
+                (selectedCategory === "marketing" && u.profile?.occupation?.toLowerCase().includes("pazarlama")) ||
+                (selectedCategory === "consulting" && u.profile?.occupation?.toLowerCase().includes("danışmanlık"))
             
             return matchesSearch && matchesCategory
         })
@@ -118,11 +123,11 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
 
     const getAdIcon = (category: string) => {
         switch(category) {
-            case 'software': return { icon: <Monitor size={28} className="text-sky-500" />, bg: "bg-sky-100" };
-            case 'design': return { icon: <PenTool size={28} className="text-purple-500" />, bg: "bg-purple-100" };
-            case 'marketing': return { icon: <Megaphone size={28} className="text-rose-500" />, bg: "bg-rose-100" };
-            case 'consulting': return { icon: <Briefcase size={28} className="text-amber-500" />, bg: "bg-amber-100" };
-            default: return { icon: <ShoppingBag size={28} className="text-slate-500" />, bg: "bg-slate-100" };
+            case 'software': return { icon: <Monitor size={22} className="text-sky-500" />, bg: "bg-sky-50" };
+            case 'design': return { icon: <PenTool size={22} className="text-purple-500" />, bg: "bg-purple-50" };
+            case 'marketing': return { icon: <Megaphone size={22} className="text-rose-500" />, bg: "bg-rose-50" };
+            case 'consulting': return { icon: <Briefcase size={22} className="text-amber-500" />, bg: "bg-amber-50" };
+            default: return { icon: <ShoppingBag size={22} className="text-slate-500" />, bg: "bg-slate-50" };
         }
     }
 
@@ -144,70 +149,73 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
     }, [networkUsers])
 
     return (
-        <div className="min-h-screen bg-[#F8F9FB] flex flex-col lg:flex-row">
+        <div className="min-h-screen bg-[#fcfbfc] flex flex-col lg:flex-row relative z-10 font-sans antialiased">
+            
+            {/* ─── MESH GRADIENTS FOR HUB ─── */}
+            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.06),transparent_65%)] blur-[80px] pointer-events-none z-0" />
+            <div className="absolute top-[20%] left-0 w-[45vw] h-[45vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.04),transparent_65%)] blur-[75px] pointer-events-none z-0" />
+
             {/* Left Sidebar */}
-            <aside className="w-72 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-8">
-                {/* Brand Logo - Updated to match image 2 */}
-                <Link href="/" className="flex items-center gap-3 mb-12 group">
-                    <div className="w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-rose-200 transition-transform group-hover:scale-110">
-                        <Layout size={24} />
+            <aside className="w-76 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-8 shrink-0 z-20">
+                {/* Brand Logo */}
+                <Link href="/" className="flex items-center gap-3 mb-10 group">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-550 flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition-all">
+                        <Layout className="w-5 h-5" />
                     </div>
                     <div>
                         <div className="flex items-baseline gap-0.5">
-                            <span className="font-black text-slate-900 text-2xl tracking-tighter">Kardly</span>
-                            <span className="font-black text-rose-500 text-2xl tracking-tighter">.site</span>
+                            <span className="font-black text-slate-800 text-lg tracking-tighter">Kardly</span>
+                            <span className="font-black text-rose-500 text-lg tracking-tighter">.site</span>
                         </div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest -mt-1">link to success</p>
+                        <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.3em] -mt-0.5">link to success</p>
                     </div>
                 </Link>
 
+                {/* Sidebar Navigation */}
                 <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-5 opacity-60">Kategoriler</p>
-                    <nav className="space-y-2">
-                        {[
-                            { id: "all", name: "Tümü", icon: <LayoutGrid size={18} />, color: "text-slate-400", bg: "bg-slate-50" },
-                            { id: "software", name: "Yazılım & Teknoloji", icon: <Monitor size={18} />, color: "text-sky-500", bg: "bg-sky-50" },
-                            { id: "design", name: "Tasarım & Kreatif", icon: <PenTool size={18} />, color: "text-rose-500", bg: "bg-rose-50" },
-                            { id: "marketing", name: "Pazarlama & Satış", icon: <Megaphone size={18} />, color: "text-emerald-500", bg: "bg-emerald-50" },
-                            { id: "writing", name: "Yazı & Çeviri", icon: <FileText size={18} />, color: "text-amber-500", bg: "bg-amber-50" },
-                            { id: "consulting", name: "Danışmanlık", icon: <Briefcase size={18} />, color: "text-indigo-500", bg: "bg-indigo-50" },
-                        ].map((cat) => (
-                            <button 
-                                key={cat.id} 
-                                onClick={() => setSelectedCategory(cat.id === "all" ? "" : cat.id)}
-                                className={cn(
-                                    "w-full flex items-center gap-4 px-5 py-4 rounded-[1.5rem] text-[14px] font-bold transition-all group",
-                                    (cat.id === "all" && !selectedCategory) || selectedCategory === cat.id
-                                        ? "bg-rose-500 text-white shadow-lg shadow-rose-200"
-                                        : "text-slate-500 hover:bg-white hover:shadow-md border border-transparent hover:border-slate-100"
-                                )}
-                            >
-                                <div className={cn(
-                                    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors shrink-0",
-                                    (cat.id === "all" && !selectedCategory) || selectedCategory === cat.id
-                                        ? "bg-white/20"
-                                        : cat.bg + " " + cat.color
-                                )}>
-                                    {cat.icon}
-                                </div>
-                                <span className="truncate">{cat.name}</span>
-                                {((cat.id === "all" && !selectedCategory) || selectedCategory === cat.id) && (
-                                    <div className="ml-auto w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_8px_white]" />
-                                )}
-                            </button>
-                        ))}
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-4 opacity-70">
+                        Kategoriler
+                    </p>
+                    <nav className="space-y-1">
+                        {categories.map((cat) => {
+                            const isActive = selectedCategory === cat.id
+                            return (
+                                <button 
+                                    key={cat.id} 
+                                    onClick={() => setSelectedCategory(cat.id)}
+                                    className={cn(
+                                        "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all relative group",
+                                        isActive
+                                            ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
+                                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0",
+                                        isActive ? "bg-white/10" : cat.bg + " " + cat.color
+                                    )}>
+                                        {cat.icon}
+                                    </div>
+                                    <span className="truncate">{cat.name}</span>
+                                    {isActive && (
+                                        <div className="ml-auto w-1.5 h-1.5 bg-rose-500 rounded-full shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+                                    )}
+                                </button>
+                            )
+                        })}
                     </nav>
                 </div>
 
-                <div>
-                    <div className="bg-slate-950 p-7 rounded-3xl text-white relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
-                        <Sparkles className="text-rose-500 mb-5" size={28} />
-                        <h4 className="text-[14px] font-black mb-2 uppercase leading-tight">Burada yer almak ister misin?</h4>
-                        <p className="text-[11px] text-slate-400 font-medium mb-6 leading-relaxed">Yeteneğini sergile, fırsatları yakala ve büyümeye başla.</p>
+                {/* Sidebar Banner */}
+                <div className="mt-auto">
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-6 rounded-[2rem] text-white relative overflow-hidden group shadow-lg shadow-slate-950/15">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+                        <Sparkles className="text-rose-500 mb-4" size={24} />
+                        <h4 className="text-xs font-black mb-1.5 uppercase leading-tight tracking-wider">Burada yer al</h4>
+                        <p className="text-[10px] text-slate-400 font-semibold mb-5 leading-relaxed">Yeteneğini sergile, iş teklifleri al ve ağını büyüt.</p>
                         <button 
                             onClick={() => router.push('/register')}
-                            className="w-full h-11 bg-white text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all shadow-xl active:scale-95"
+                            className="w-full py-3 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white rounded-xl font-black text-[9px] uppercase tracking-widest transition-all shadow-md active:scale-95"
                         >
                             Profil Oluştur
                         </button>
@@ -216,34 +224,36 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto no-scrollbar">
-                {/* Header */}
-                <header className="h-16 lg:h-20 bg-white border-b border-slate-100 flex items-center justify-between px-4 sm:px-6 lg:px-10 sticky top-0 z-50 gap-3">
-                    <div className="flex-1 max-w-xl w-full relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+            <main className="flex-1 flex flex-col relative z-10 min-w-0">
+                {/* Header Navbar */}
+                <header className="h-16 lg:h-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex items-center justify-between px-4 sm:px-6 lg:px-10 sticky top-0 z-30 gap-4">
+                    {/* Search Input */}
+                    <div className="flex-1 max-w-lg w-full relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                         <input 
                             type="text" 
-                            placeholder="Kişi, yetenek veya hizmet ara..." 
+                            placeholder="İsim, yetenek veya uzmanlık ara..." 
                             value={networkSearch}
                             onChange={(e) => setNetworkSearch(e.target.value)}
-                            className="w-full h-10 sm:h-12 pl-10 sm:pl-12 pr-4 bg-slate-50 rounded-xl sm:rounded-2xl text-[13px] sm:text-[14px] font-medium border-none outline-none focus:ring-2 focus:ring-rose-500/10 transition-all placeholder:text-slate-300"
+                            className="w-full h-11 pl-11 pr-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:bg-white focus:border-rose-450/40 focus:ring-4 focus:ring-rose-50 transition-all placeholder:text-slate-300"
                         />
                     </div>
-                    <div className="flex items-center gap-3 sm:gap-10 shrink-0">
-                        <div className="hidden xl:flex items-center gap-10 text-[13px] font-black text-slate-500 uppercase tracking-widest">
-                            <Link href="/hub" className="hover:text-rose-500 transition-colors">Keşfet</Link>
+
+                    <div className="flex items-center gap-4 sm:gap-8 shrink-0">
+                        {/* Navigation Links */}
+                        <div className="hidden md:flex items-center gap-8 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                            <Link href="/hub" className="text-slate-900 border-b-2 border-rose-500 pb-1">Keşfet</Link>
                             <Link href="/register" className="hover:text-rose-500 transition-colors">Proje Talebi</Link>
                         </div>
-                        <div className="flex items-center gap-2 sm:gap-4 sm:border-l border-slate-100 sm:pl-10">
+
+                        {/* User Profile / Login */}
+                        <div className="flex items-center gap-4 border-l border-slate-100 pl-4 sm:pl-8">
                             {status === 'loading' ? (
-                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 animate-pulse" />
+                                <div className="w-9 h-9 rounded-xl bg-slate-100 animate-pulse" />
                             ) : status === 'authenticated' ? (
-                                <Link 
-                                    href="/dashboard"
-                                    className="flex items-center gap-3 group"
-                                >
-                                    <span className="hidden sm:block text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-rose-500 transition-colors">Hesabım</span>
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-rose-50 transition-all">
+                                <Link href="/dashboard" className="flex items-center gap-2.5 group">
+                                    <span className="hidden sm:inline-block text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-rose-500 transition-colors">YÖNETİM</span>
+                                    <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden cursor-pointer shadow-sm hover:ring-4 hover:ring-rose-50 transition-all">
                                         <img 
                                             src={session?.user?.image || `https://ui-avatars.com/api/?name=${session?.user?.name || 'User'}&background=random`} 
                                             alt="User" 
@@ -254,7 +264,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                             ) : (
                                 <button 
                                     onClick={() => router.push('/login')}
-                                    className="px-5 sm:px-8 h-10 sm:h-12 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
+                                    className="px-6 h-11 bg-slate-950 hover:bg-rose-500 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md transition-all active:scale-95"
                                 >
                                     Giriş Yap
                                 </button>
@@ -263,282 +273,347 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </div>
                 </header>
 
-                <div className="p-4 sm:p-6 lg:p-12 max-w-7xl mx-auto pb-24 lg:pb-12">
-                    {/* Hero Section */}
-                    <section className="mb-8 sm:mb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-                        <div className="lg:col-span-7">
-                            <div className="flex items-center gap-2 text-sky-600 bg-sky-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full w-fit mb-6 sm:mb-10 border border-sky-100 shadow-sm">
-                                <Plus size={14} strokeWidth={3} className="shrink-0" />
-                                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest">Profesyoneller için doğru yerdesin</span>
-                            </div>
-                            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-5 sm:mb-10">
-                                Profesyonel dünyayı keşfet, <br /><span className="text-rose-500">fırsatları yakala.</span>
-                            </h2>
-                            <p className="text-sm sm:text-base lg:text-xl text-slate-500 font-medium leading-relaxed mb-6 sm:mb-12 max-w-xl">
-                                Kardly Business Hub, iş birlikleri kurmak, projeler bulmak ve profesyonel ağını büyütmek için tasarlandı.
-                            </p>
-                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
-                                <button 
-                                    onClick={() => router.push('/register')}
-                                    className="px-8 sm:px-12 h-12 sm:h-16 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] shadow-2xl shadow-slate-950/20 hover:bg-rose-500 transition-all active:scale-95"
-                                >
-                                    Ücretsiz Katıl
-                                </button>
-                                <button 
-                                    onClick={() => router.push('/register')}
-                                    className="px-8 sm:px-12 h-12 sm:h-16 bg-white text-slate-900 border-2 border-slate-100 rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
-                                >
-                                    Proje Talebi
-                                </button>
-                            </div>
-                        </div>
+                <div className="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full pb-24 lg:pb-12">
+                    
+                    {/* Welcome Banner Card */}
+                    <div className="relative rounded-[2.5rem] bg-gradient-to-br from-rose-500 to-indigo-650 p-8 sm:p-12 mb-10 overflow-hidden shadow-xl shadow-rose-500/10">
+                        {/* Shimmer background design */}
+                        <div className="absolute top-[-20%] right-[-10%] w-[350px] h-[350px] rounded-full bg-white/10 blur-3xl pointer-events-none" />
+                        <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] rounded-full bg-black/10 blur-3xl pointer-events-none" />
                         
-                        <div className="lg:col-span-5 relative hidden lg:block">
-                            <div className="relative w-full aspect-square">
-                                {/* Network Visualization */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-rose-500/[0.03] via-transparent to-sky-500/[0.03] rounded-full blur-[100px] animate-pulse" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-72 h-72 border-2 border-slate-100 rounded-full flex items-center justify-center relative animate-spin-slow">
-                                        <div className="w-5 h-5 bg-rose-500 rounded-full shadow-[0_0_30px_rgba(244,63,94,0.6)]" />
-                                        {popularPros.slice(0, 3).map((u, i) => {
-                                            const angles = [0, 120, 240]
-                                            return (
-                                                <div key={i} className="absolute w-14 h-14 bg-white rounded-2xl shadow-2xl border border-slate-100 p-1.5" style={{ 
-                                                    transform: `rotate(${angles[i]}deg) translate(144px) rotate(-${angles[i]}deg)`
-                                                }}>
-                                                    <img src={u.image || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full rounded-[10px] object-cover" alt="" />
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                                {/* Floating Updates */}
-                                <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute top-0 right-0 bg-white p-4 rounded-3xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-[240px]">
-                                    <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
-                                        <ShoppingBag size={24} className="text-rose-500" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Yeni Proje</p>
-                                        <p className="text-[10px] text-slate-400 font-medium mt-1.5 line-clamp-2">E-ticaret sitesi geliştiricisi aranıyor.</p>
-                                    </div>
-                                </motion.div>
-                                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 5 }} className="absolute bottom-10 left-0 bg-white p-4 rounded-3xl shadow-2xl border border-slate-100 flex items-center gap-4 max-w-[220px]">
-                                    <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
-                                        <Users size={24} className="text-emerald-500" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Yeni Üye</p>
-                                        <p className="text-[10px] text-slate-400 font-medium mt-1.5">Selin Yılmaz katıldı.</p>
-                                    </div>
-                                </motion.div>
+                        <div className="max-w-xl relative z-10 text-white">
+                            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6 text-[9px] font-black uppercase tracking-widest">
+                                <Sparkles size={11} className="text-pink-300 animate-pulse" />
+                                <span>Kardly Business Hub</span>
+                            </div>
+                            <h2 className="text-3xl sm:text-5xl font-black leading-[1.1] mb-4 tracking-tight">
+                                Profesyonel dünyayı <br />keşfet, ağını büyüt.
+                            </h2>
+                            <p className="text-white/80 text-xs sm:text-sm font-semibold mb-8 max-w-md leading-relaxed">
+                                Uzmanlarla doğrudan iletişime geçin, iş birlikleri kurun ve projelerinize en uygun profesyoneli bulun.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-4">
+                                <button 
+                                    onClick={() => router.push('/register')}
+                                    className="px-8 py-3.5 bg-white text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md hover:bg-slate-50 transition-all active:scale-95"
+                                >
+                                    Profilini Ekle
+                                </button>
+                                <button 
+                                    onClick={() => router.push('/register')}
+                                    className="px-8 py-3.5 bg-black/35 hover:bg-black/50 text-white border border-white/25 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all active:scale-95"
+                                >
+                                    İş İlanı Ver
+                                </button>
                             </div>
                         </div>
-                    </section>
-
-                    {/* Categories Bar */}
-                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5 mb-10 sm:mb-20">
-                        {categories.map((cat) => (
-                            <button 
-                                key={cat.id} 
-                                onClick={() => setSelectedCategory(cat.id)}
-                                className={cn(
-                                    "flex items-center gap-3 sm:gap-5 p-3 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border transition-all group",
-                                    selectedCategory === cat.id ? "border-rose-500 shadow-xl shadow-rose-500/5 ring-4 ring-rose-50" : "border-slate-100 hover:border-rose-200 hover:shadow-xl hover:shadow-slate-200/30"
-                                )}
-                            >
-                                <div className={cn("w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-all group-hover:scale-110 group-hover:rotate-6", cat.bg)}>
-                                    {cat.icon}
-                                </div>
-                                <span className="text-[11px] sm:text-[14px] font-black text-slate-800 uppercase tracking-tight">{cat.name}</span>
-                            </button>
-                        ))}
-                        <button 
-                            onClick={() => setSelectedCategory("all")}
-                            className="flex items-center justify-center p-3 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 hover:border-rose-500 transition-all group"
-                        >
-                            <span className="text-[14px] font-black text-slate-500 flex items-center gap-3 group-hover:text-rose-500">Tümü <ArrowUpRight size={18} /></span>
-                        </button>
                     </div>
 
-                    {/* Content Feed */}
-                    <section className="mb-10 sm:mb-20">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-10 gap-2">
-                            <div>
-                                <h3 className="text-lg sm:text-2xl font-black text-slate-900 uppercase tracking-tighter italic">Öne Çıkan Projeler</h3>
-                                <p className="text-[10px] sm:text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Sizin için seçilen en yeni iş ilanları</p>
-                            </div>
-                            <button className="text-[10px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 hover:text-rose-500 transition-all">
-                                Tüm Projeleri Gör <ArrowUpRight size={16} />
-                            </button>
-                        </div>
-                        
-                        <div className="space-y-5">
-                            {filteredAds.length === 0 && !isNetworkLoading && (
-                                <div className="bg-white p-20 rounded-[3rem] border border-slate-100 text-center">
-                                    <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
-                                        <Briefcase size={40} />
-                                    </div>
-                                    <h4 className="text-xl font-black text-slate-900 uppercase italic">Henüz İlan Bulunmuyor</h4>
-                                    <p className="text-slate-400 font-medium mt-2">Bu kategoride henüz bir iş ilanı yayınlanmamış.</p>
-                                </div>
-                            )}
-                            {filteredAds.map((proj) => {
-                                const { icon, bg } = getAdIcon(proj.category)
+                    {/* Navigation Filter / Switcher Bar */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 mb-8 gap-4">
+                        {/* Feed Tab Swapping */}
+                        <div className="flex bg-slate-50 p-1.5 rounded-2xl w-fit border border-slate-100 shrink-0">
+                            {[
+                                { id: "people", label: "Uzmanlar", icon: <Users size={14} /> },
+                                { id: "projects", label: "Proje İlanları", icon: <Briefcase size={14} /> },
+                            ].map((tab) => {
+                                const isCurrent = activeFeedTab === tab.id
                                 return (
-                                    <div key={proj.id} className="bg-white p-5 sm:p-10 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 hover:border-rose-500/20 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all group cursor-pointer">
-                                        <div className="flex flex-col xl:flex-row gap-4 sm:gap-10 items-start xl:items-center">
-                                            <div className={cn("w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform", bg)}>
-                                                {icon}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-3 mb-3">
-                                                    <h4 className="text-base sm:text-xl font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic">{proj.title}</h4>
-                                                    {new Date(proj.createdAt).getTime() > Date.now() - 86400000 * 3 && (
-                                                        <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase rounded-full border border-emerald-100 shrink-0">Yeni</span>
-                                                    )}
-                                                </div>
-                                                <p className="text-[13px] sm:text-[15px] text-slate-500 font-medium leading-relaxed mb-4 sm:mb-6 max-w-3xl line-clamp-2">{proj.description}</p>
-                                                <div className="flex flex-wrap items-center gap-3">
-                                                    {(proj.tags || "İlan, İş Birliği").split(',').map((tag: string) => (
-                                                        <span key={tag} className="px-4 py-1.5 bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest rounded-xl border border-slate-100">
-                                                            {tag.trim()}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-row xl:flex-col items-center xl:items-end gap-4 sm:gap-10 xl:gap-3 shrink-0">
-                                                <div className="text-left xl:text-right">
-                                                    <div className="text-base sm:text-2xl font-black text-slate-900 tracking-tighter">
-                                                        {proj.budget ? (proj.budget.includes('₺') || proj.budget.includes('$') ? proj.budget : `₺${proj.budget}`) : "Görüşülür"}
-                                                    </div>
-                                                    <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tahmini Bütçe</div>
-                                                </div>
-                                                <div className="text-left xl:text-right">
-                                                    <div className="text-[13px] sm:text-[15px] font-black text-slate-900 tracking-tight">{getTimeAgo(proj.createdAt)}</div>
-                                                    <div className="text-[9px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1">İlan Tarihi</div>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-3 sm:gap-4 shrink-0 w-full xl:w-auto">
-                                                <button 
-                                                    onClick={() => {
-                                                        if (status === 'unauthenticated') {
-                                                            router.push(`/login?callbackUrl=/dashboard?tab=network&adId=${proj.id}`)
-                                                        } else {
-                                                            router.push(`/dashboard?tab=network&adId=${proj.id}`)
-                                                        }
-                                                    }}
-                                                    className="flex-1 xl:flex-none h-11 sm:h-14 px-6 sm:px-10 bg-slate-950 text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[11px] uppercase tracking-widest shadow-xl hover:bg-rose-500 transition-all active:scale-95"
-                                                >
-                                                    Teklif Ver
-                                                </button>
-                                                <button className="w-11 h-11 sm:w-14 sm:h-14 bg-slate-50 text-slate-400 rounded-xl sm:rounded-2xl flex items-center justify-center hover:bg-rose-50 hover:text-rose-500 transition-all border border-slate-100 shrink-0">
-                                                    <Bookmark size={18} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveFeedTab(tab.id as any)}
+                                        className={cn(
+                                            "flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all",
+                                            isCurrent 
+                                                ? "bg-white text-slate-900 shadow-sm border border-slate-200/50" 
+                                                : "text-slate-400 hover:text-slate-600"
+                                        )}
+                                    >
+                                        {tab.icon}
+                                        <span>{tab.label}</span>
+                                    </button>
                                 )
                             })}
                         </div>
-                        
-                        <div className="mt-12 text-center">
-                            <button className="px-10 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3 mx-auto hover:text-rose-500 transition-all bg-white rounded-2xl border border-slate-100 hover:shadow-xl shadow-slate-100">
-                                Daha Fazla Proje Yükle <ArrowUpRight size={16} />
-                            </button>
+
+                        {/* Search result stats */}
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:text-right">
+                            {activeFeedTab === "people" 
+                                ? `${filteredUsers.length} uzman listeleniyor` 
+                                : `${filteredAds.length} aktif proje listeleniyor`
+                            }
                         </div>
-                    </section>
+                    </div>
+
+                    {/* DUAL FEED RENDER */}
+                    {activeFeedTab === "people" ? (
+                        /* ─── FEED 1: PROFESSIONALS GRID ─── */
+                        <div>
+                            {filteredUsers.length === 0 ? (
+                                <div className="bg-white p-16 rounded-[2rem] border border-slate-100 text-center shadow-sm">
+                                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-5 text-slate-300">
+                                        <Users size={32} />
+                                    </div>
+                                    <h4 className="text-base font-black text-slate-800 uppercase tracking-tight">Kullanıcı Bulunamadı</h4>
+                                    <p className="text-slate-400 text-xs font-semibold mt-1">Arama kriterlerinize uygun uzman bulunamadı.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredUsers.map((user) => (
+                                        <div 
+                                            key={user.id} 
+                                            className="bg-white rounded-[2rem] border border-slate-100 hover:border-rose-200 hover:shadow-xl hover:shadow-slate-200/25 transition-all duration-300 overflow-hidden flex flex-col group"
+                                        >
+                                            {/* Cover header area with soft gradient mesh */}
+                                            <div className="h-20 bg-gradient-to-r from-slate-50 to-slate-100 relative group-hover:from-rose-50 group-hover:to-indigo-50 transition-colors">
+                                                <div className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-slate-100/50 backdrop-blur-md text-[9px] font-black text-amber-500 shadow-sm">
+                                                    <Star size={10} fill="currentColor" />
+                                                    <span>{user.profile?.avgRating || "5.0"}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Profile contents wrapper */}
+                                            <div className="px-6 pb-6 relative flex-1 flex flex-col">
+                                                {/* Centered avatar overlapping the cover header */}
+                                                <div className="w-18 h-18 rounded-2xl border-4 border-white bg-slate-100 shadow-md overflow-hidden -mt-9 mb-4 mx-auto relative group-hover:scale-105 transition-transform duration-300">
+                                                    <img 
+                                                        src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
+                                                        alt={user.name} 
+                                                        className="w-full h-full object-cover" 
+                                                    />
+                                                    <div className="absolute bottom-1 right-1 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
+                                                </div>
+
+                                                {/* Name & Title */}
+                                                <div className="text-center mb-4">
+                                                    <h3 className="text-sm font-black text-slate-800 uppercase tracking-tight group-hover:text-rose-500 transition-colors truncate">
+                                                        {user.profile?.displayName || user.name}
+                                                    </h3>
+                                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate mt-0.5">
+                                                        {user.profile?.occupation || "Profesyonel Üye"}
+                                                    </p>
+                                                </div>
+
+                                                {/* Bio / Description */}
+                                                <p className="text-xs text-slate-500 text-center font-medium leading-relaxed mb-6 line-clamp-2 px-2 flex-1">
+                                                    {user.profile?.bio || "Kardly üyesi profesyonel dijital kartvizit sahibi."}
+                                                </p>
+
+                                                {/* Skill / Specialty Pills */}
+                                                <div className="flex flex-wrap justify-center gap-1.5 mb-6">
+                                                    {(user.profile?.occupation?.split(' ') || ["Uzman"]).slice(0, 3).map((tag: string) => (
+                                                        <span 
+                                                            key={tag} 
+                                                            className="px-3 py-1 bg-slate-50 text-slate-400 border border-slate-100 rounded-lg text-[9px] font-black uppercase tracking-wider"
+                                                        >
+                                                            {tag.replace(/[^a-zA-Z0-9ığüşöçİĞÜŞÖÇ]/g, "")}
+                                                        </span>
+                                                    ))}
+                                                </div>
+
+                                                {/* Actions */}
+                                                <div className="grid grid-cols-5 gap-2 mt-auto pt-4 border-t border-slate-50">
+                                                    <button 
+                                                        onClick={() => window.open(`/${user.profile?.username || user.name}`, '_blank')}
+                                                        className="col-span-4 py-3 bg-slate-900 hover:bg-rose-500 text-white rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-sm"
+                                                    >
+                                                        Profili İncele
+                                                        <ArrowUpRight size={12} />
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (status === 'unauthenticated') {
+                                                                router.push(`/login?callbackUrl=/dashboard?tab=messages&userId=${user.id}`)
+                                                            } else {
+                                                                router.push(`/dashboard?tab=messages&userId=${user.id}`)
+                                                            }
+                                                        }}
+                                                        className="col-span-1 py-3 bg-slate-50 hover:bg-rose-50 hover:text-rose-500 text-slate-400 rounded-xl flex items-center justify-center border border-slate-100 transition-all"
+                                                        title="Mesaj Gönder"
+                                                    >
+                                                        <MessageSquare size={13} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        /* ─── FEED 2: PROJECTS/JOBS LIST ─── */
+                        <div className="space-y-4">
+                            {filteredAds.length === 0 ? (
+                                <div className="bg-white p-16 rounded-[2rem] border border-slate-100 text-center shadow-sm">
+                                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-5 text-slate-300">
+                                        <Briefcase size={32} />
+                                    </div>
+                                    <h4 className="text-base font-black text-slate-800 uppercase tracking-tight">İlan Bulunamadı</h4>
+                                    <p className="text-slate-400 text-xs font-semibold mt-1">Seçili kategoriye uygun aktif proje ilanı bulunmuyor.</p>
+                                </div>
+                            ) : (
+                                filteredAds.map((proj) => {
+                                    const { icon, bg } = getAdIcon(proj.category)
+                                    return (
+                                        <div 
+                                            key={proj.id} 
+                                            className="bg-white p-6 sm:p-8 rounded-[2rem] border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:shadow-slate-200/25 transition-all group"
+                                        >
+                                            <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+                                                {/* Icon badge */}
+                                                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform", bg)}>
+                                                    {icon}
+                                                </div>
+
+                                                {/* Mid: Title, Description, Tags */}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                                        <h4 className="text-sm sm:text-base font-black text-slate-800 group-hover:text-rose-500 transition-colors uppercase tracking-tight">
+                                                            {proj.title}
+                                                        </h4>
+                                                        {new Date(proj.createdAt).getTime() > Date.now() - 86400000 * 3 && (
+                                                            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase rounded-md border border-emerald-100/50">Yeni</span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs text-slate-500 font-medium leading-relaxed mb-4 line-clamp-2">
+                                                        {proj.description}
+                                                    </p>
+                                                    <div className="flex flex-wrap items-center gap-1.5">
+                                                        {(proj.tags || "İlan, İş Birliği").split(',').map((tag: string) => (
+                                                            <span key={tag} className="px-3 py-1 bg-slate-50 text-slate-400 text-[9px] font-black uppercase tracking-wider rounded-lg border border-slate-100">
+                                                                {tag.trim()}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Right Info: Budget, Time, Actions */}
+                                                <div className="flex flex-row lg:flex-col lg:items-end justify-between lg:justify-center border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-6 gap-4 shrink-0">
+                                                    <div className="lg:text-right">
+                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Bütçe</span>
+                                                        <span className="text-sm font-black text-slate-800">
+                                                            {proj.budget ? (proj.budget.includes('₺') || proj.budget.includes('$') ? proj.budget : `₺${proj.budget}`) : "Görüşülür"}
+                                                        </span>
+                                                    </div>
+                                                    <div className="lg:text-right">
+                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Tarih</span>
+                                                        <span className="text-xs font-bold text-slate-700">{getTimeAgo(proj.createdAt)}</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Proposal button */}
+                                                <div className="shrink-0 w-full lg:w-auto">
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (status === 'unauthenticated') {
+                                                                router.push(`/login?callbackUrl=/dashboard?tab=network&adId=${proj.id}`)
+                                                            } else {
+                                                                router.push(`/dashboard?tab=network&adId=${proj.id}`)
+                                                            }
+                                                        }}
+                                                        className="w-full lg:w-auto px-6 py-3 bg-slate-900 hover:bg-rose-500 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md transition-all active:scale-95"
+                                                    >
+                                                        Teklif Ver
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            )}
+                        </div>
+                    )}
                 </div>
             </main>
 
             {/* Right Sidebar */}
-            <aside className="w-96 bg-[#F8F9FB] border-l border-slate-100 hidden 2xl:flex flex-col sticky top-0 h-screen p-10 space-y-10 overflow-y-auto no-scrollbar">
-                {/* Popular Pros */}
-                <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-10">
-                        <h3 className="text-[14px] font-black text-slate-900 uppercase tracking-tight italic">Popüler Profesyoneller</h3>
-                        <button className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-all">Tümü <ArrowUpRight size={12} /></button>
+            <aside className="w-80 bg-slate-50/50 border-l border-slate-100 hidden xl:flex flex-col sticky top-0 h-screen p-8 space-y-8 shrink-0 z-20 overflow-y-auto no-scrollbar">
+                
+                {/* Popular Pros Widget */}
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Popüler Uzmanlar</h3>
+                        <Users size={16} className="text-slate-300" />
                     </div>
-                    <div className="space-y-8">
+                    <div className="space-y-5">
                         {popularPros.map((pro, i) => (
                             <div 
                                 key={i} 
-                                onClick={() => window.open(`https://${pro.profile?.username || pro.name}.kardly.site`, '_blank')}
-                                className="flex items-center gap-5 group cursor-pointer"
+                                onClick={() => window.open(`/${pro.profile?.username || pro.name}`, '_blank')}
+                                className="flex items-center gap-3.5 group cursor-pointer"
                             >
-                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-100 shadow-sm group-hover:border-rose-500 transition-all relative">
+                                <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-100 shadow-sm group-hover:border-rose-500 transition-all relative shrink-0">
                                     <img src={pro.image || `https://ui-avatars.com/api/?name=${pro.name}&background=random`} alt="" className="w-full h-full object-cover" />
                                     <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="text-[13px] font-black text-slate-900 truncate group-hover:text-rose-500 transition-colors uppercase italic tracking-tight">{pro.profile?.displayName || pro.name}</h4>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate mt-0.5">{pro.profile?.occupation}</p>
+                                    <h4 className="text-xs font-black text-slate-855 truncate group-hover:text-rose-500 transition-colors uppercase tracking-tight">
+                                        {pro.profile?.displayName || pro.name}
+                                    </h4>
+                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest truncate mt-0.5">
+                                        {pro.profile?.occupation || "Üye"}
+                                    </p>
                                 </div>
-                                <div className="flex items-center gap-1 text-[10px] font-black text-amber-500 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
-                                    <Star size={11} fill="currentColor" />
-                                    {pro.profile?.avgRating || "5.0"}
+                                <div className="flex items-center gap-0.5 text-[9px] font-black text-amber-500 shrink-0">
+                                    <Star size={10} fill="currentColor" />
+                                    <span>{pro.profile?.avgRating || "5.0"}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <button 
-                        onClick={() => setSelectedCategory("all")}
-                        className="w-full h-14 border-2 border-slate-50 rounded-2xl text-[11px] font-black text-slate-400 uppercase tracking-widest mt-10 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-100 transition-all active:scale-95"
-                    >
-                        Tüm Profesyonelleri Keşfet
-                    </button>
                 </div>
 
                 {/* Live Activity Feed */}
-                <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
-                    <div className="flex items-center gap-3 mb-10">
-                        <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                        <h3 className="text-[14px] font-black text-slate-900 uppercase tracking-tight italic">Yeni Aktiviteler</h3>
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-6">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Yeni Aktiviteler</h3>
                     </div>
-                    <div className="space-y-8">
-                        {networkUsers.slice(0, 5).map((act, i) => {
-                            const actions = ["yeni bir proje yayınladı", "projeye teklif verdi", "profilini güncelledi", "yeni üye olarak katıldı", "yeni bir makale paylaştı"]
+                    <div className="space-y-5">
+                        {networkUsers.slice(0, 4).map((act, i) => {
+                            const actions = ["proje yayınladı", "teklif verdi", "profilini güncelledi", "aramıza katıldı"]
                             return (
-                                <div key={i} className="flex items-start gap-5 group cursor-pointer">
-                                    <div className="w-11 h-11 rounded-2xl overflow-hidden border border-slate-50 shrink-0 group-hover:ring-4 group-hover:ring-slate-50 transition-all">
+                                <div key={i} className="flex items-start gap-3 group cursor-pointer">
+                                    <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-100 shrink-0 group-hover:ring-4 group-hover:ring-slate-50 transition-all">
                                         <img src={act.image || `https://ui-avatars.com/api/?name=${act.name}&background=random`} alt="" className="w-full h-full object-cover" />
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="text-[13px] font-medium leading-[1.4]">
-                                            <span className="font-black text-slate-900 group-hover:text-rose-500 transition-colors uppercase italic text-[11px]">{act.profile?.displayName || act.name}</span> <span className="text-slate-500">{actions[i % actions.length]}</span>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[11px] font-medium leading-[1.3] text-slate-600">
+                                            <span className="font-black text-slate-800 group-hover:text-rose-500 transition-colors uppercase text-[10px]">
+                                                {act.profile?.displayName || act.name}
+                                            </span>{" "}
+                                            {actions[i % actions.length]}
                                         </p>
-                                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-2">
-                                            <Globe size={10} />
-                                            {i + 2} dakika önce
+                                        <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
+                                            <Globe size={9} />
+                                            {i + 1}dk önce
                                         </p>
                                     </div>
                                 </div>
                             )
                         })}
                     </div>
-                    <button className="w-full h-14 border-2 border-slate-50 rounded-2xl text-[11px] font-black text-slate-400 uppercase tracking-widest mt-10 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-100 transition-all active:scale-95">
-                        Tüm Aktiviteleri Gör
-                    </button>
                 </div>
             </aside>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 px-2 pb-[env(safe-area-inset-bottom)]">
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-40 px-2 pb-[env(safe-area-inset-bottom)]">
                 <div className="flex items-center justify-around h-16">
-                    <button onClick={() => setSelectedCategory("")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", !selectedCategory ? "text-rose-500" : "text-slate-400")}>
-                        <LayoutGrid size={20} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Keşfet</span>
+                    <button onClick={() => setSelectedCategory("all")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", selectedCategory === "all" ? "text-rose-500" : "text-slate-400")}>
+                        <LayoutGrid size={18} />
+                        <span className="text-[8px] font-black uppercase tracking-wider">Tümü</span>
                     </button>
                     <button onClick={() => setSelectedCategory("software")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", selectedCategory === "software" ? "text-rose-500" : "text-slate-400")}>
-                        <Monitor size={20} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Yazılım</span>
+                        <Monitor size={18} />
+                        <span className="text-[8px] font-black uppercase tracking-wider">Yazılım</span>
                     </button>
                     <button onClick={() => setSelectedCategory("design")} className={cn("flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all", selectedCategory === "design" ? "text-rose-500" : "text-slate-400")}>
-                        <PenTool size={20} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Tasarım</span>
+                        <PenTool size={18} />
+                        <span className="text-[8px] font-black uppercase tracking-wider">Tasarım</span>
                     </button>
                     <button onClick={() => router.push('/register')} className="flex flex-col items-center gap-1 px-3 py-2 rounded-2xl text-slate-400 transition-all">
-                        <Plus size={20} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Katıl</span>
+                        <Plus size={18} />
+                        <span className="text-[8px] font-black uppercase tracking-wider">Katıl</span>
                     </button>
                 </div>
             </nav>
