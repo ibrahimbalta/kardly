@@ -820,6 +820,7 @@ END:VCARD`
 function MeshBackground({ activeAccent }: { activeAccent: string }) {
     return (
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+            {/* Desktop: Animated Mesh Blobs */}
             <motion.div
                 animate={{
                     x: [0, 100, 0],
@@ -831,7 +832,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[40px]"
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[40px] hidden md:block"
                 style={{ backgroundColor: `${activeAccent}33` }}
             />
             <motion.div
@@ -845,7 +846,7 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[40px]"
+                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[40px] hidden md:block"
                 style={{ backgroundColor: `${activeAccent}22` }}
             />
             <motion.div
@@ -859,7 +860,21 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[40px]"
+                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[40px] hidden md:block"
+                style={{ backgroundColor: `${activeAccent}11` }}
+            />
+
+            {/* Mobile: High-Performance Static Mesh Blobs (No Frame Calculations) */}
+            <div 
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full blur-[40px] md:hidden"
+                style={{ backgroundColor: `${activeAccent}33` }}
+            />
+            <div 
+                className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full blur-[40px] md:hidden"
+                style={{ backgroundColor: `${activeAccent}22` }}
+            />
+            <div 
+                className="absolute -bottom-[10%] left-[20%] w-[55%] h-[55%] rounded-full blur-[40px] md:hidden"
                 style={{ backgroundColor: `${activeAccent}11` }}
             />
         </div>
@@ -867,6 +882,15 @@ function MeshBackground({ activeAccent }: { activeAccent: string }) {
 }
 
 function MotionWrapper({ children, style, activeAccent }: { children: React.ReactNode, style: string, activeAccent?: string }) {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
@@ -882,6 +906,7 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
     const glossY = useTransform(y, [-100, 100], ["-20%", "120%"]);
 
     function handleMouseMove(event: any) {
+        if (isMobile) return;
         const rect = event.currentTarget.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -890,8 +915,13 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
     }
 
     function handleMouseLeave() {
+        if (isMobile) return;
         x.set(0);
         y.set(0);
+    }
+
+    if (isMobile) {
+        return <div className="w-full h-full relative">{children}</div>;
     }
 
     if (style === "3d-manual") {
@@ -4377,7 +4407,6 @@ if(true) {
                                             <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white" />
                                             <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white" />
                                         </div>
-                                    )}
                                     {theme.special === 'lawyer' && (
                                         <div className="absolute inset-0 border-2 border-amber-500/20 rounded-full scale-90" />
                                     )}
@@ -4393,7 +4422,8 @@ if(true) {
                                     {/* 3D Glowing Ring Effects */}
                                     {theme.special === '3d_frost' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #93c5fd, #dbeafe, #38bdf8)', animationDuration: '4s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #93c5fd, #dbeafe, #38bdf8)', animationDuration: '4s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #38bdf8, #dbeafe, #38bdf8)', opacity: 0.6, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#0a1628]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4406,7 +4436,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_magma' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #d946ef, #f97316, #ec4899, #8b5cf6, #d946ef)', animationDuration: '3s', opacity: 0.7, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #d946ef, #f97316, #ec4899, #8b5cf6, #d946ef)', animationDuration: '3s', opacity: 0.7, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #d946ef, #f97316, #8b5cf6, #d946ef)', opacity: 0.7, filter: 'blur(5px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#1a0a1e]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4419,7 +4450,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_cyber' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #06b6d4, #8b5cf6, #22d3ee, #06b6d4)', animationDuration: '5s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #06b6d4, #8b5cf6, #22d3ee, #06b6d4)', animationDuration: '5s', opacity: 0.6, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #06b6d4, #8b5cf6, #06b6d4)', opacity: 0.6, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#020a14]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4432,7 +4464,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_aurora' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #34d399, #8b5cf6, #3b82f6, #34d399)', animationDuration: '6s', opacity: 0.6, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #34d399, #8b5cf6, #3b82f6, #34d399)', animationDuration: '6s', opacity: 0.6, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #34d399, #8b5cf6, #34d399)', opacity: 0.6, filter: 'blur(5px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#020818]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4445,7 +4478,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_neoncity' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #ff2d95, #00c8ff, #ff2d95)', animationDuration: '4s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #ff2d95, #00c8ff, #ff2d95)', animationDuration: '4s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #ff2d95, #00c8ff, #ff2d95)', opacity: 0.7, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#0a0012]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4458,7 +4492,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_galaxy' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #a855f7, #6366f1, #d946ef, #a855f7)', animationDuration: '8s', opacity: 0.6, filter: 'blur(6px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #a855f7, #6366f1, #d946ef, #a855f7)', animationDuration: '8s', opacity: 0.6, filter: 'blur(6px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #a855f7, #6366f1, #a855f7)', opacity: 0.6, filter: 'blur(6px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#030108]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4471,7 +4506,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_luxegold' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #fbbf24, #d4a017, #fef3c7, #fbbf24)', animationDuration: '5s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #fbbf24, #d4a017, #fef3c7, #fbbf24)', animationDuration: '5s', opacity: 0.7, filter: 'blur(4px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #fbbf24, #d4a017, #fbbf24)', opacity: 0.7, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#080604]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4484,7 +4520,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_hologram' && (
                                         <>
-                                            <div className="absolute -inset-2 rounded-full animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #ec4899, #a855f7, #34d399, #38bdf8)', animationDuration: '7s', opacity: 0.5, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full hidden md:block md:animate-spin" style={{ background: 'conic-gradient(from 0deg, #38bdf8, #ec4899, #a855f7, #34d399, #38bdf8)', animationDuration: '7s', opacity: 0.5, filter: 'blur(5px)' }} />
+                                            <div className="absolute -inset-2 rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #38bdf8, #a855f7, #38bdf8)', opacity: 0.5, filter: 'blur(5px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#050510]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
                                                 {profile.showVideoAsProfile && profile.youtubeVideoUrl ? (
@@ -4497,7 +4534,8 @@ if(true) {
                                     )}
                                     {theme.special === '3d_quantum' && (
                                         <>
-                                            <div className="absolute -inset-[12px] rounded-full animate-spin-slow" style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #6366f1)', opacity: 0.8, filter: 'blur(8px)' }} />
+                                            <div className="absolute -inset-[12px] rounded-full hidden md:block md:animate-spin-slow" style={{ background: 'conic-gradient(from 0deg, #6366f1, #a855f7, #6366f1)', opacity: 0.8, filter: 'blur(8px)' }} />
+                                            <div className="absolute -inset-[12px] rounded-full md:hidden" style={{ background: 'linear-gradient(45deg, #6366f1, #a855f7, #6366f1)', opacity: 0.8, filter: 'blur(8px)' }} />
                                             <div className="absolute -inset-[6px] rounded-full animate-pulse" style={{ background: 'linear-gradient(45deg, #6366f1, #a855f7)', opacity: 0.4, filter: 'blur(4px)' }} />
                                             <div className="absolute -inset-1 rounded-full bg-[#020205]" />
                                             <div className="absolute inset-0 rounded-full overflow-hidden">
