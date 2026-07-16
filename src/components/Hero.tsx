@@ -53,13 +53,13 @@ export function Hero({ onHowItWorksClick }: HeroProps) {
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-5xl md:text-6xl xl:text-7.5xl font-extrabold tracking-tight mb-6 leading-[1.05] text-slate-900">
-                            {t('heroTitle1') || "Profesyonel"}{" "}
+                        <h1 className="text-5xl md:text-6xl xl:text-7.5xl font-black tracking-tight mb-6 leading-[1.05] text-slate-900">
+                            {t('heroTitle1') || "Dijital kimliğinizi"}{" "}
                             <br className="hidden sm:inline" />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-550 via-purple-600 to-indigo-650 italic font-serif tracking-normal">
-                                {t('heroTitle3') || "tek linkte"}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 via-purple-650 to-indigo-600 tracking-tight font-black">
+                                {t('heroTitle3') || "tek bir linkte"}
                             </span>{" "}
-                            {t('heroTitle4') || "buluşturun."}
+                            {t('heroTitle4') || "birleştirin."}
                         </h1>
 
                         {/* Subtitle */}
