@@ -156,24 +156,24 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
             <div className="absolute top-[20%] left-0 w-[45vw] h-[45vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.04),transparent_65%)] blur-[75px] pointer-events-none z-0" />
 
             {/* Left Sidebar */}
-            <aside className="w-76 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-8 shrink-0 z-20">
+            <aside className="w-60 bg-white border-r border-slate-100 hidden lg:flex flex-col sticky top-0 h-screen p-5 shrink-0 z-20">
                 {/* Brand Logo */}
-                <Link href="/" className="flex items-center gap-3 mb-10 group">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-550 flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition-all">
-                        <Layout className="w-5 h-5" />
+                <Link href="/" className="flex items-center gap-2 mb-8 group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-550 flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition-all">
+                        <Layout className="w-4.5 h-4.5" />
                     </div>
                     <div>
                         <div className="flex items-baseline gap-0.5">
-                            <span className="font-black text-slate-800 text-lg tracking-tighter">Kardly</span>
-                            <span className="font-black text-rose-500 text-lg tracking-tighter">.site</span>
+                            <span className="font-black text-slate-800 text-base tracking-tighter">Kardly</span>
+                            <span className="font-black text-rose-500 text-base tracking-tighter">.site</span>
                         </div>
-                        <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.3em] -mt-0.5">link to success</p>
+                        <p className="text-[7.5px] font-bold text-slate-400 uppercase tracking-[0.25em] -mt-0.5">link to success</p>
                     </div>
                 </Link>
 
                 {/* Sidebar Navigation */}
-                <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 px-4 opacity-70">
+                <div className="flex-1 overflow-y-auto no-scrollbar -mx-1 px-1">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-3 opacity-70">
                         Kategoriler
                     </p>
                     <nav className="space-y-1">
@@ -184,14 +184,14 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                                     key={cat.id} 
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={cn(
-                                        "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all relative group",
+                                        "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[11px] font-bold transition-all relative group",
                                         isActive
                                             ? "bg-slate-900 text-white shadow-md shadow-slate-900/10"
                                             : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                                     )}
                                 >
                                     <div className={cn(
-                                        "w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0",
+                                        "w-7.5 h-7.5 rounded-lg flex items-center justify-center transition-colors shrink-0",
                                         isActive ? "bg-white/10" : cat.bg + " " + cat.color
                                     )}>
                                         {cat.icon}
@@ -208,14 +208,14 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
 
                 {/* Sidebar Banner */}
                 <div className="mt-auto">
-                    <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-6 rounded-[2rem] text-white relative overflow-hidden group shadow-lg shadow-slate-950/15">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
-                        <Sparkles className="text-rose-500 mb-4" size={24} />
-                        <h4 className="text-xs font-black mb-1.5 uppercase leading-tight tracking-wider">Burada yer al</h4>
-                        <p className="text-[10px] text-slate-400 font-semibold mb-5 leading-relaxed">Yeteneğini sergile, iş teklifleri al ve ağını büyüt.</p>
+                    <div className="bg-gradient-to-br from-slate-900 to-slate-950 p-5 rounded-[1.5rem] text-white relative overflow-hidden group shadow-lg shadow-slate-950/15">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-rose-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+                        <Sparkles className="text-rose-500 mb-3" size={20} />
+                        <h4 className="text-[10px] font-black mb-1 uppercase leading-tight tracking-wider">Burada yer al</h4>
+                        <p className="text-[9px] text-slate-400 font-semibold mb-4 leading-relaxed">Yeteneğini sergile, iş teklifleri al ve ağını büyüt.</p>
                         <button 
                             onClick={() => router.push('/register')}
-                            className="w-full py-3 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white rounded-xl font-black text-[9px] uppercase tracking-widest transition-all shadow-md active:scale-95"
+                            className="w-full py-2.5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white rounded-lg font-black text-[8px] uppercase tracking-widest transition-all shadow-md active:scale-95"
                         >
                             Profil Oluştur
                         </button>
@@ -273,7 +273,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                     </div>
                 </header>
 
-                <div className="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full pb-24 lg:pb-12">
+                <div className="p-4 sm:p-6 lg:p-10 max-w-[1360px] mx-auto w-full pb-24 lg:pb-12">
                     
                     {/* Welcome Banner Card */}
                     <div className="relative rounded-[2.5rem] bg-gradient-to-br from-rose-500 to-indigo-650 p-8 sm:p-12 mb-10 overflow-hidden shadow-xl shadow-rose-500/10">
@@ -526,8 +526,7 @@ export default function HubClient({ initialUsers = [] }: { initialUsers: any[] }
                 </div>
             </main>
 
-            {/* Right Sidebar */}
-            <aside className="w-80 bg-slate-50/50 border-l border-slate-100 hidden xl:flex flex-col sticky top-0 h-screen p-8 space-y-8 shrink-0 z-20 overflow-y-auto no-scrollbar">
+            <aside className="w-72 bg-slate-50/50 border-l border-slate-100 hidden xl:flex flex-col sticky top-0 h-screen p-5 space-y-6 shrink-0 z-20 overflow-y-auto no-scrollbar">
                 
                 {/* Popular Pros Widget */}
                 <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
