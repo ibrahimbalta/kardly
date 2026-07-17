@@ -7161,6 +7161,11 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
     const avatarUrl = profile?.user?.image || profile.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`;
 
+    const hasAIAssistant = profile.blocks?.some((b: any) => b.isActive && b.type === 'ai_assistant');
+    const aiAssistantBlock = profile.blocks?.find((b: any) => b.isActive && b.type === 'ai_assistant');
+
+    const gridBlocks = profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map' && b.type !== 'external_widget' && b.type !== 'ai_assistant').sort((a: any, b: any) => a.order - b.order) || [];
+
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden pb-32 font-sans", theme.bg, toneStyle.font)}>
             {/* Background ambient glows */}
@@ -7171,8 +7176,8 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
             <div className="relative z-10 max-w-6xl mx-auto px-4 pt-8 md:pt-16 space-y-6">
                 
-                {/* Bento Grid Header / Top Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Bento Grid Container */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     {/* Widget 1: Profile Main Card (Takes 2 cols on lg) */}
                     <div className={cn("lg:col-span-2 flex flex-col md:flex-row items-center md:items-start gap-6 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative overflow-hidden", theme.card)}>
@@ -7275,12 +7280,34 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         </button>
                     </div>
 
-                </div>
+                    {/* Widget 3: AI Assistant Widget Card (Takes 1 col on lg) */}
+                    {hasAIAssistant && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between relative overflow-hidden", theme.card)}>
+                            <div className="absolute top-0 inset-x-0 h-[2px] opacity-70" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
+                            <div>
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">YAPAY ZEKA ASİSTANI</h2>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white" style={{ color: theme.accent }}>
+                                        <Bot size={20} />
+                                    </div>
+                                    <h3 className="text-sm font-black text-white">{aiAssistantBlock?.content?.assistantName || "Kardly AI"}</h3>
+                                </div>
+                                <p className="text-xs text-white/60 leading-relaxed font-normal mb-6">
+                                    {aiAssistantBlock?.content?.greeting || "Merhaba! Sorularınızı yanıtlamak için buradayım."}
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => setIsAIChatOpen(true)}
+                                className="w-full py-3.5 px-4 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                                style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, color: '#000' }}
+                            >
+                                <Bot size={16} />
+                                SOHBETİ BAŞLAT
+                            </button>
+                        </div>
+                    )}
 
-                {/* Second Bento Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    {/* Widget 3: Social Links Icons Grid Box */}
+                    {/* Widget 4: Social Links Icons Grid Box */}
                     {socialLinks.length > 0 && (
                         <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div>
@@ -7319,7 +7346,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         </div>
                     )}
 
-                    {/* Widget 4: CV and Quick Documents / Locations Box */}
+                    {/* Widget 5: CV and Quick Documents / Locations Box */}
                     <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                         <div>
                             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">BELGELER & KONUM</h2>
@@ -7347,30 +7374,6 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             )}
                         </div>
                     </div>
-
-                    {/* Widget 5: Reviews testimonial Box */}
-                    {reviews && reviews.length > 0 && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40">YORUMLAR</h2>
-                                <div className="flex text-amber-500 gap-0.5"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
-                            </div>
-                            <div className="flex-1 flex flex-col justify-center">
-                                <p className="text-xs text-white/80 italic leading-relaxed mb-4">
-                                    "{reviews[0]?.comment || reviews[0]?.text || "Harika ve profesyonel bir iş ortağı."}"
-                                </p>
-                                <p className="text-[10px] font-black uppercase tracking-wider text-right" style={{ color: theme.accent }}>
-                                    - {reviews[0]?.reviewerName || reviews[0]?.name || "Ziyaretçi"}
-                                </p>
-                            </div>
-                            <button 
-                                onClick={() => setIsReviewModalOpen(true)}
-                                className="mt-4 w-full py-2.5 px-4 rounded-xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors text-[10px] font-black uppercase tracking-widest"
-                            >
-                                DEĞERLENDİR
-                            </button>
-                        </div>
-                    )}
 
                     {/* Widget 6: Payment / Support Box */}
                     {profile.paymentLink && (
@@ -7415,72 +7418,88 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         </div>
                     )}
 
-                </div>
+                    {/* Widget 7: Reviews testimonial Box */}
+                    {reviews && reviews.length > 0 && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40">YORUMLAR</h2>
+                                <div className="flex text-amber-500 gap-0.5"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
+                            </div>
+                            <div className="flex-1 flex flex-col justify-center">
+                                <p className="text-xs text-white/80 italic leading-relaxed mb-4">
+                                    "{reviews[0]?.comment || reviews[0]?.text || "Harika ve profesyonel bir iş ortağı."}"
+                                </p>
+                                <p className="text-[10px] font-black uppercase tracking-wider text-right" style={{ color: theme.accent }}>
+                                    - {reviews[0]?.reviewerName || reviews[0]?.name || "Ziyaretçi"}
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => setIsReviewModalOpen(true)}
+                                className="mt-4 w-full py-2.5 px-4 rounded-xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors text-[10px] font-black uppercase tracking-widest"
+                            >
+                                DEĞERLENDİR
+                            </button>
+                        </div>
+                    )}
 
-                {/* Third Bento Row: Portfolio and custom blocks */}
-                <div className="space-y-6">
-                    {profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map' && b.type !== 'external_widget').sort((a: any, b: any) => a.order - b.order).map((block: any) => (
-                        <div key={block.id} className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
+                    {/* Custom Blocks rendered inline as Bento boxes */}
+                    {gridBlocks.map((block: any) => {
+                        const isLargeBlock = block.type === 'portfolio' || block.type === 'expertise' || block.type === 'text';
+                        return (
+                            <div 
+                                key={block.id} 
+                                className={cn(
+                                    "border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative",
+                                    isLargeBlock ? "lg:col-span-2 p-6 rounded-3xl" : "p-6 rounded-3xl",
+                                    theme.card
+                                )}
+                            >
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{block.title || block.type}</h3>
+                                    <div className="flex-1 h-[1px] bg-white/10" />
+                                </div>
+                                <div className="overflow-hidden">
+                                    {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
+                                    {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
+                                    {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
+                                    {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/70 leading-relaxed font-medium antialiased" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
+                                    {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5 shadow-2xl" alt="" />}
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                    {/* Services Box (Takes full width 3 cols) */}
+                    {profile.services && profile.services.length > 0 && (
+                        <div className={cn("lg:col-span-3 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
-                                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{block.title || block.type}</h3>
+                                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
                                 <div className="flex-1 h-[1px] bg-white/10" />
                             </div>
-                            <div className="overflow-hidden">
-                                {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
-                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/70 leading-relaxed font-medium antialiased" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
-                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5 shadow-2xl" alt="" />}
-                                {block.type === 'ai_assistant' && (
-                                    <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
-                                        <div className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white" style={{ color: theme.accent }}>
-                                            <Bot size={24} />
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {profile.services.map((service: any, i: number) => (
+                                    <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all space-y-3">
+                                        <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/5 flex items-center justify-center text-white" style={{ color: theme.accent }}>
+                                            <Briefcase size={20} />
                                         </div>
-                                        <div className="space-y-1">
-                                            <h4 className="text-sm font-black text-white">{block.content?.assistantName || "Yapay Zeka Asistanı"}</h4>
-                                            <p className="text-xs text-white/50 max-w-sm">
-                                                {block.content?.greeting || "Merhaba! Sorularınızı yanıtlamak için buradayım."}
-                                            </p>
-                                        </div>
-                                        <button 
-                                            onClick={() => setIsAIChatOpen(true)}
-                                            className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
-                                            style={{ backgroundColor: theme.accent, color: '#000' }}
-                                        >
-                                            SOHBET BAŞLAT
-                                        </button>
+                                        <h4 className="text-sm font-black text-white">{service.title}</h4>
+                                        <p className="text-xs text-white/60 leading-relaxed font-normal">{service.description}</p>
                                     </div>
-                                )}
+                                ))}
                             </div>
                         </div>
-                    ))}
+                    )}
+
+                    {/* Articles Box (Takes full width 3 cols) */}
+                    {profile?.articles && profile.articles.length > 0 && (
+                        <div className="lg:col-span-3">
+                            <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
+                        </div>
+                    )}
+
                 </div>
-
-                {/* Services Grid Section */}
-                {profile.services && profile.services.length > 0 && (
-                    <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
-                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
-                            <div className="flex-1 h-[1px] bg-white/10" />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {profile.services.map((service: any, i: number) => (
-                                <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all space-y-3">
-                                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/5 flex items-center justify-center text-white" style={{ color: theme.accent }}>
-                                        <Briefcase size={20} />
-                                    </div>
-                                    <h4 className="text-sm font-black text-white">{service.title}</h4>
-                                    <p className="text-xs text-white/60 leading-relaxed font-normal">{service.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Articles Section */}
-                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
             </div>
 
@@ -7538,6 +7557,28 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                 theme={theme} 
                 toneStyle={toneStyle} 
             />
+
+            {/* Floating AI Assistant Trigger (Bottom-Right corner) */}
+            {hasAIAssistant && (
+                <motion.button
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setIsAIChatOpen(true)}
+                    className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all border group"
+                    style={{
+                        background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentDark})`,
+                        borderColor: `${theme.accent}60`,
+                        boxShadow: `0 12px 24px -6px ${theme.accent}70`
+                    }}
+                >
+                    <Bot size={26} className="text-slate-950 group-hover:rotate-12 transition-transform duration-300" />
+                    {/* Pulsing indicator */}
+                    <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-950 animate-ping" />
+                    <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-950" />
+                </motion.button>
+            )}
 
             {/* Status toasts */}
             <AnimatePresence>
