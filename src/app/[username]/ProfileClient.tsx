@@ -280,6 +280,8 @@ const checkIfBgIsLight = (bgClass: string) => {
 
 
 export default function ProfileClient({ profile }: { profile: any }) {
+    const plan = profile.user?.subscription?.plan || "free"
+    const isPremium = profile.user?.subscription?.status === "active" && plan !== "free"
     const [isAppointmentOpen, setIsAppointmentOpen] = useState(false)
     const [lang, setLang] = useState("tr")
     const [mounted, setMounted] = useState(false)
@@ -5646,12 +5648,14 @@ function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, 
                     </motion.button>
                 )}
 
-                <footer className="py-24 flex justify-center opacity-20 hover:opacity-100 transition-all duration-1000 grayscale hover:grayscale-0">
-                    <Link href="/" className="flex items-center gap-3">
-                        <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center rotate-45 border border-white/10"><Layout className="text-white w-2.5 h-2.5 -rotate-45" /></div>
-                        <span className="text-[11px] font-black tracking-[0.6em] text-white uppercase">Kardly<span className="text-white/20">.site_v2</span></span>
-                    </Link>
-                </footer>
+                {(!isPremium || plan !== "enterprise") && (
+                    <footer className="py-24 flex justify-center opacity-20 hover:opacity-100 transition-all duration-1000 grayscale hover:grayscale-0">
+                        <Link href="/" className="flex items-center gap-3">
+                            <div className="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center rotate-45 border border-white/10"><Layout className="text-white w-2.5 h-2.5 -rotate-45" /></div>
+                            <span className="text-[11px] font-black tracking-[0.6em] text-white uppercase">Kardly<span className="text-white/20">.site_v2</span></span>
+                        </Link>
+                    </footer>
+                )}
             </main>
             
             <ProjectDetailModal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} project={selectedProject} theme={theme} t={t} lang={lang} translateText={translateText} formatUrl={formatUrl} />
@@ -7173,8 +7177,6 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
     const avatarUrl = profile?.user?.image || profile.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`;
 
-    const plan = profile.user?.subscription?.plan || "free"
-    const isPremium = profile.user?.subscription?.status === "active" && plan !== "free"
     const hasAIAssistant = isPremium && profile.blocks?.some((b: any) => b.isActive && b.type === 'ai_assistant');
     const aiAssistantBlock = isPremium ? profile.blocks?.find((b: any) => b.isActive && b.type === 'ai_assistant') : null;
 
