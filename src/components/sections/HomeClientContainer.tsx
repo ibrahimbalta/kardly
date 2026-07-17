@@ -11,6 +11,8 @@ import { ShowcaseSection } from "./ShowcaseSection"
 import { HowItWorksSection } from "./HowItWorksSection"
 import { NfcSection } from "./NfcSection"
 import { HomeFooter } from "./HomeFooter"
+import { AboutSection } from "./AboutSection"
+import { TemplateGallery } from "@/components/TemplateGallery"
 
 import { useTranslation } from "@/context/LanguageContext"
 
@@ -38,7 +40,13 @@ export function HomeClientContainer() {
 
       <AdvertisementSlot position="home_templates_bottom" />
 
-      {/* Section 5: Social Proof Carousel */}
+      {/* Section 5: Template Gallery */}
+      <TemplateGallery />
+
+      {/* Section 6: About Us */}
+      <AboutSection t={t} />
+
+      {/* Section 7: Social Proof Carousel */}
       <NfcSection t={t} />
 
       {/* CTA Band + Footer */}
