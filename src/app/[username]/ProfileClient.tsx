@@ -7096,14 +7096,53 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
         return `https://${url}`
     }
 
+    const bentoThemes: Record<string, any> = {
+        bento_dark: {
+            bg: "bg-[#070b13]",
+            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            accent: profile.themeColor || "#e2b857",
+            glow: "shadow-[0_0_30px_rgba(226,184,87,0.1)]",
+            text: "text-white",
+            subtext: "text-white/60",
+        },
+        bento_ocean: {
+            bg: "bg-[#07131b]",
+            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            accent: profile.themeColor || "#0ea5e9",
+            glow: "shadow-[0_0_30px_rgba(14,165,233,0.1)]",
+            text: "text-white",
+            subtext: "text-white/60",
+        },
+        bento_sunset: {
+            bg: "bg-[#180a0a]",
+            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            accent: profile.themeColor || "#f97316",
+            glow: "shadow-[0_0_30px_rgba(249,115,22,0.1)]",
+            text: "text-white",
+            subtext: "text-white/60",
+        },
+        bento_emerald: {
+            bg: "bg-[#05110d]",
+            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            accent: profile.themeColor || "#10b981",
+            glow: "shadow-[0_0_30px_rgba(16,185,129,0.1)]",
+            text: "text-white",
+            subtext: "text-white/60",
+        },
+        bento_royal: {
+            bg: "bg-[#0a0713]",
+            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            accent: profile.themeColor || "#a855f7",
+            glow: "shadow-[0_0_30px_rgba(168,85,247,0.1)]",
+            text: "text-white",
+            subtext: "text-white/60",
+        }
+    }
+
+    const activeTheme = bentoThemes[colorScheme] || bentoThemes.bento_dark;
     const theme = {
-        bg: "bg-[#070b13]",
-        card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
-        border: "border-white/10",
-        text: "text-white",
-        subtext: "text-white/60",
-        accent: profile.themeColor || "#e2b857",
-        accentDark: profile.themeColor ? `${profile.themeColor}dd` : "#cda343",
+        ...activeTheme,
+        accentDark: activeTheme.accent ? `${activeTheme.accent}dd` : "#cda343",
     }
 
     const socialLinks = profile.socialLinks || [];
@@ -7119,6 +7158,8 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
             href: formatUrl(l.url),
             active: true
         }));
+
+    const avatarUrl = profile?.user?.image || profile.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`;
 
     return (
         <div className={cn("min-h-screen relative overflow-x-hidden pb-32 font-sans", theme.bg, toneStyle.font)}>
@@ -7141,13 +7182,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         {/* Avatar container */}
                         <div className="relative flex-shrink-0">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl relative z-10">
-                                {profile.profileImage ? (
-                                    <img src={profile.profileImage} alt={profile.user?.name} className="w-full h-full object-cover" />
-                                ) : (
-                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white text-3xl font-black">
-                                        {profile.user?.name?.charAt(0)}
-                                    </div>
-                                )}
+                                <img src={avatarUrl} alt={profile.user?.name} className="w-full h-full object-cover" />
                             </div>
                             {/* Avatar back glow */}
                             <div className="absolute inset-0 rounded-full blur-[20px] opacity-30 z-0 scale-95" style={{ background: theme.accent }} />
@@ -7197,7 +7232,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         <div className="space-y-3 flex-1 flex flex-col justify-center">
                             {/* Primary Button: Message Me */}
                             <button 
-                                onClick={() => setIsMessageModalOpen(true)}
+                                onClick={() => setIsLeadModalOpen(true)}
                                 className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                                 style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, color: '#000' }}
                             >
@@ -7384,6 +7419,44 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                 )}
 
             </div>
+
+            {/* Modals integrated for bento grid actions */}
+            <LeadModal 
+                isOpen={isLeadModalOpen} 
+                onClose={() => setIsLeadModalOpen(false)} 
+                onSubmit={() => setIsLeadModalOpen(false)} 
+                theme={theme} 
+                t={t} 
+                lang={lang} 
+                toneStyle={toneStyle} 
+                profileName={profile?.user?.name || ""} 
+            />
+
+            <AppointmentModal 
+                isOpen={isAppointmentOpen} 
+                onClose={() => setIsAppointmentOpen(false)} 
+                profile={profile} 
+                t={t} 
+                lang={lang} 
+            />
+
+            <QrModal 
+                isOpen={isQrOpen} 
+                onClose={() => setIsQrOpen(false)} 
+                theme={theme} 
+                profile={profile} 
+                t={t} 
+            />
+
+            <WalletModal 
+                isOpen={isWalletModalOpen} 
+                onClose={() => setIsWalletModalOpen(false)} 
+                profile={profile} 
+                t={t} 
+                handleAddToContacts={handleAddToContacts} 
+                theme={theme} 
+                toneStyle={toneStyle} 
+            />
         </div>
     )
 }

@@ -1164,7 +1164,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "tour_winter", category: "tourism", name: "❄️ Kayak & Kış Turizmi", description: "Buz mavisi ve kristal beyaz tonlarında kış sporları estetiği.", isNew: true },
 
         // Bento Izgara
-        { id: "bento_grid", category: "bento", name: "🍱 Bento Grid Klasik", description: "Bento kutuları şeklinde modern, göz alıcı ve dengeli ızgara yerleşim tasarımı.", isNew: true }
+        { id: "bento_dark", category: "bento", name: "🍱 Bento Dark (Klasik)", description: "Bento kutuları şeklinde modern, koyu tonlarda ve dengeli ızgara yerleşimi.", isNew: true },
+        { id: "bento_ocean", category: "bento", name: "🌊 Bento Ocean Blue", description: "Derin okyanus mavisi tonlarında modern Bento ızgara yerleşimi.", isNew: true },
+        { id: "bento_sunset", category: "bento", name: "🧡 Bento Sunset Amber", description: "Sıcak gün batımı kehribar tonlarında Bento ızgara yerleşimi.", isNew: true },
+        { id: "bento_emerald", category: "bento", name: "💚 Bento Emerald Mint", description: "Zümrüt yeşili ve nane tonlarında taze Bento ızgara yerleşimi.", isNew: true },
+        { id: "bento_royal", category: "bento", name: "💜 Bento Royal Amethyst", description: "Asil mor ve ametist tonlarında Bento ızgara yerleşimi.", isNew: true }
     ]
 
     // Working Hours Management
