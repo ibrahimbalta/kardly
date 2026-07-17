@@ -7159,6 +7159,9 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
             active: true
         }));
 
+    const customLinksEntry = (socialLinks || []).find((l: any) => l.platform === 'customLinks');
+    const customLinks = customLinksEntry?.links || [];
+
     const avatarUrl = profile?.user?.image || profile.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`;
 
     const hasAIAssistant = profile.blocks?.some((b: any) => b.isActive && b.type === 'ai_assistant');
@@ -7245,6 +7248,22 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                                 {t.messageMe || "MESAJ GÖNDER"}
                             </button>
 
+                            {/* Appointment Button */}
+                            {profile.showAppointmentBtn && (
+                                <button 
+                                    onClick={() => setIsAppointmentOpen(true)}
+                                    className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 border transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                                    style={{ 
+                                        borderColor: `${theme.accent}30`, 
+                                        backgroundColor: `${theme.accent}15`, 
+                                        color: theme.accent 
+                                    }}
+                                >
+                                    <Calendar size={16} />
+                                    {t.appointmentBtn || "RANDEVU AL"}
+                                </button>
+                            )}
+
                             {/* WhatsApp Button */}
                             {whatsappNumber && (
                                 <a 
@@ -7279,33 +7298,6 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             {t.contactBtn || "REHBERE EKLE"}
                         </button>
                     </div>
-
-                    {/* Widget 3: AI Assistant Widget Card (Takes 1 col on lg) */}
-                    {hasAIAssistant && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between relative overflow-hidden", theme.card)}>
-                            <div className="absolute top-0 inset-x-0 h-[2px] opacity-70" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
-                            <div>
-                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">YAPAY ZEKA ASİSTANI</h2>
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white" style={{ color: theme.accent }}>
-                                        <Bot size={20} />
-                                    </div>
-                                    <h3 className="text-sm font-black text-white">{aiAssistantBlock?.content?.assistantName || "Kardly AI"}</h3>
-                                </div>
-                                <p className="text-xs text-white/60 leading-relaxed font-normal mb-6">
-                                    {aiAssistantBlock?.content?.greeting || "Merhaba! Sorularınızı yanıtlamak için buradayım."}
-                                </p>
-                            </div>
-                            <button 
-                                onClick={() => setIsAIChatOpen(true)}
-                                className="w-full py-3.5 px-4 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-                                style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, color: '#000' }}
-                            >
-                                <Bot size={16} />
-                                SOHBETİ BAŞLAT
-                            </button>
-                        </div>
-                    )}
 
                     {/* Widget 4: Social Links Icons Grid Box */}
                     {socialLinks.length > 0 && (
@@ -7439,6 +7431,34 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             >
                                 DEĞERLENDİR
                             </button>
+                        </div>
+                    )}
+
+                    {/* Widget 8: Custom Links Box */}
+                    {customLinks.length > 0 && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div>
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">BAĞLANTILAR</h2>
+                                <p className="text-xs text-white/50 mb-6">Önemli bağlantıları ve linkleri inceleyin.</p>
+                            </div>
+                            <div className="space-y-3">
+                                {customLinks.map((link: any, idx: number) => (
+                                    <motion.a 
+                                        key={idx}
+                                        href={formatUrl(link.url)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        whileHover={{ x: 4 }}
+                                        className="w-full py-3 px-4 rounded-2xl bg-white/[0.04] border border-white/5 text-white hover:bg-white/[0.08] hover:border-white/20 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-between"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <Link2 size={14} style={{ color: theme.accent }} />
+                                            <span>{link.title || "Bağlantı"}</span>
+                                        </div>
+                                        <ExternalLink size={12} className="opacity-50" />
+                                    </motion.a>
+                                ))}
+                            </div>
                         </div>
                     )}
 
