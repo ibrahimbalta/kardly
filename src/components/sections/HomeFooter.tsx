@@ -140,7 +140,7 @@ export function HomeFooter({ t }: HomeFooterProps) {
               <ul className="space-y-3 font-bold text-xs text-slate-550">
                 <li><a href="#features" className="hover:text-rose-500 transition-colors">{t('features') || "Özellikler"}</a></li>
                 <li><a href="#templates" className="hover:text-rose-500 transition-colors">{t('templates') || "Şablonlar"}</a></li>
-                <li><a href="#" className="hover:text-rose-500 transition-colors">Fiyatlandırma</a></li>
+                <li><Link href="/fiyatlandirma" className="hover:text-rose-500 transition-colors">Fiyatlandırma</Link></li>
               </ul>
             </div>
 
@@ -150,7 +150,7 @@ export function HomeFooter({ t }: HomeFooterProps) {
               <ul className="space-y-3 font-bold text-xs text-slate-550">
                 <li><Link href="/blog" className="hover:text-indigo-500 transition-colors">{t('blog') || "Blog"}</Link></li>
                 <li><Link href="/iletisim" className="hover:text-indigo-500 transition-colors">{t('contact') || "İletişim"}</Link></li>
-                <li><a href="#" className="hover:text-indigo-500 transition-colors">SSS</a></li>
+                <li><Link href="/sss" className="hover:text-indigo-500 transition-colors">SSS</Link></li>
               </ul>
             </div>
 
@@ -194,13 +194,13 @@ export function HomeFooter({ t }: HomeFooterProps) {
             <p className="text-[11px] font-bold text-slate-500">© 2026 Kardly.site — Tüm hakları saklıdır.</p>
             <div className="flex gap-6 font-bold text-[11px] text-slate-500">
               {[
-                { label: "Kullanım Koşulları", href: "#" },
-                { label: "Gizlilik Politikası", href: "#" },
-                { label: "KVKK", href: "#" },
+                { label: "Kullanım Koşulları", href: "/kullanim-sartlari" },
+                { label: "Gizlilik Politikası", href: "/gizlilik" },
+                { label: "KVKK", href: "/kvkk" },
               ].map((link, i) => (
-                <a key={i} href={link.href} className="hover:text-slate-700 transition-colors">
+                <Link key={i} href={link.href} className="hover:text-slate-700 transition-colors">
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
