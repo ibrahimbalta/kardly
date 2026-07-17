@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import prisma from "@/lib/prisma"
 
 export async function POST(req: Request) {
     try {
@@ -11,6 +12,27 @@ export async function POST(req: Request) {
 
         if (!profile) {
             return NextResponse.json({ error: "Profile context is required" }, { status: 400 })
+        }
+
+        // Fetch user subscription from database to enforce plan limits
+        const dbProfile = await prisma.profile.findUnique({
+            where: { id: profile.id },
+            include: {
+                user: {
+                    include: {
+                        subscription: true
+                    }
+                }
+            }
+        })
+
+        const plan = dbProfile?.user?.subscription?.plan || "free"
+        const isPremium = dbProfile?.user?.subscription?.status === "active" && plan !== "free"
+
+        if (!isPremium) {
+            return NextResponse.json({
+                error: "Yapay Zeka Asistanı Pro & İşletme planlarına özeldir. Lütfen planınızı yükseltin. ⚡"
+            }, { status: 403 })
         }
 
         const aiBlock = profile.blocks?.find((b: any) => b.type === 'ai_assistant')

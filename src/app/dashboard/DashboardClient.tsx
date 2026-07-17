@@ -213,6 +213,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const router = useRouter()
     const searchParams = useSearchParams()
     const [showToast, setShowToast] = useState<string | null>(null)
+    const isPremium = subscription && subscription.plan !== "free" && subscription.status === "active";
+    const userPlan = subscription?.plan || "free";
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
     const [isArticlesLoading, setIsArticlesLoading] = useState(false)
@@ -1608,7 +1611,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <span className="text-xl font-black tracking-tighter text-slate-950 flex items-center">
                                 Kardly<span className="text-rose-500">.site</span>
                             </span>
-                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.1em] mt-0.5 block">Dashboard PRO</span>
+                            {isPremium ? (
+                                <span className={cn(
+                                    "text-[9px] font-black uppercase tracking-[0.1em] mt-0.5 block",
+                                    userPlan === "enterprise" ? "text-violet-600" : "text-rose-500"
+                                )}>
+                                    Dashboard {userPlan === "enterprise" ? "İşletme 💎" : "Pro 👑"}
+                                </span>
+                            ) : (
+                                <span className="text-[9px] text-slate-400 font-black uppercase tracking-[0.1em] mt-0.5 block">
+                                    Dashboard Ücretsiz ⚡
+                                </span>
+                            )}
                         </div>
                     </Link>
                     <button className="lg:hidden p-2 text-slate-300 hover:text-slate-600" onClick={() => setIsSidebarOpen(false)}>
@@ -1772,6 +1786,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             setIsSidebarOpen(false)
                         }}
                     />
+                    {!isPremium && (
+                        <div className="mx-2 mt-6 p-5 rounded-3xl bg-gradient-to-br from-rose-500/10 to-violet-600/10 border border-rose-500/15 text-center space-y-3 shadow-sm">
+                            <p className="text-[11px] font-black text-slate-800 uppercase tracking-wider leading-snug">Pro Özellikleri Açın ⚡</p>
+                            <p className="text-[9px] text-slate-500 font-medium leading-relaxed">AI Asistanı, Özel Tasarımlar ve Gelişmiş İstatistikler sizi bekliyor.</p>
+                            <Link href="/fiyatlandirma" className="block w-full py-2.5 bg-gradient-to-r from-rose-500 to-violet-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-md shadow-rose-500/10">
+                                Planı Yükselt
+                            </Link>
+                        </div>
+                    )}
                     <div className="mt-auto pt-4 border-t border-white/5 uppercase tracking-widest">
                         <button
                             onClick={() => signOut({ callbackUrl: "/" })}
@@ -4224,7 +4247,33 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             <p className="text-sm text-slate-500 font-medium tracking-wide">{t('aiAssistantSub')}</p>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                        {!isPremium ? (
+                            <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 text-white p-10 md:p-16 border border-slate-800 shadow-2xl text-center space-y-8">
+                                <div className="absolute -top-24 -left-24 w-80 h-80 bg-primary/25 blur-[120px] rounded-full pointer-events-none animate-pulse" />
+                                <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-violet-600/30 blur-[120px] rounded-full pointer-events-none animate-pulse" />
+
+                                <div className="w-20 h-20 bg-gradient-to-tr from-rose-500 to-violet-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl shadow-rose-500/20 relative z-10">
+                                    <Sparkles size={40} className="text-white" />
+                                </div>
+
+                                <div className="max-w-xl mx-auto space-y-4 relative z-10">
+                                    <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">Kişisel Yapay Zeka Asistanı</h3>
+                                    <p className="text-sm text-slate-400 font-medium leading-relaxed">
+                                        Ziyaretçilerinizle sizin adınıza konuşan, hizmetlerinizi anlatan ve randevu almaya yönlendiren kişiselleştirilmiş bir yapay zeka asistanını aktif edin. Bu özellik Pro & İşletme planlarına özeldir.
+                                    </p>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-xs mx-auto relative z-10">
+                                    <Link
+                                        href="/fiyatlandirma"
+                                        className="flex-1 py-4 bg-gradient-to-r from-rose-500 to-violet-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-rose-500/25 text-center"
+                                    >
+                                        Planı Yükselt 👑
+                                    </Link>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                             <div className="lg:col-span-7 space-y-8">
                                 <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm space-y-8">
                                     <div className="flex items-center justify-between pb-6 border-b border-slate-50">
@@ -4425,10 +4474,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
                             </div>
                         </div>
                     </div>
+                )}
+            </div>
 
 
                 ) : activeTab === "qrcode" ? (
@@ -4601,7 +4651,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         type="text"
                                                         value={profileData.username || ""}
                                                         onChange={(e) => setProfileData({ ...profileData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
-                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm font-bold text-slate-900"
+                                                        disabled={!isPremium}
+                                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm font-bold text-slate-900 disabled:opacity-60 disabled:cursor-not-allowed"
                                                         placeholder="kullanici-adi"
                                                     />
                                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest pointer-events-none">
@@ -4609,9 +4660,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] text-foreground/40 mt-2 italic px-1">
-                                                {t('usernameHint') || 'Bu senin profil adresini belirler. Örn: username.kardly.site'}
-                                            </p>
+                                            {!isPremium ? (
+                                                <p className="text-[10px] text-rose-500 mt-2 font-semibold flex items-center gap-1">
+                                                    <Lock size={10} /> Alt alan adınızı değiştirmek için Pro planına geçin.
+                                                </p>
+                                            ) : (
+                                                <p className="text-[10px] text-slate-400 mt-2 italic px-1">
+                                                    {t('usernameHint') || 'Bu senin profil adresini belirler. Örn: username.kardly.site'}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 
@@ -4642,12 +4699,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
 
                                 <button
-                                    onClick={() => handleSave()}
+                                    onClick={() => {
+                                        if (!isPremium) {
+                                            setShowUpgradeModal(true);
+                                            return;
+                                        }
+                                        handleSave();
+                                    }}
                                     disabled={isSaving}
                                     className="w-full py-4 bg-primary/10 border border-primary/20 text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
                                 >
-                                    {isSaving ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : <CheckCircle2 size={14} />}
-                                    {t('updateSubdomain') || 'ALAN ADINI GÜNCELLE'}
+                                    {isSaving ? <div className="w-4 h-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> : (!isPremium ? <Lock size={12} /> : <CheckCircle2 size={14} />)}
+                                    {isPremium ? (t('updateSubdomain') || 'ALAN ADINI GÜNCELLE') : 'PRO İLE ALAN ADINI GÜNCELLE ⚡'}
                                 </button>
                             </div>
 
@@ -5072,28 +5135,98 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     <div className="space-y-8">
                         <div>
                             <h2 className="text-xl font-bold">{t('statsTitle')}</h2>
-                            <p className="text-sm text-foreground/50">{t('statsSub')}</p>
+                            <p className="text-sm text-slate-500 font-medium">{t('statsSub')}</p>
                         </div>
+
+                        {!isPremium && (
+                            <div className="p-6 rounded-[2rem] bg-gradient-to-r from-rose-500/10 to-violet-600/10 border border-rose-500/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                                <div className="space-y-1">
+                                    <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                                        <Lock className="w-4 h-4 text-rose-500" /> Gelişmiş Analizler ve İstatistikler Kilitli
+                                    </h3>
+                                    <p className="text-xs text-slate-500 font-medium">
+                                        Tıklama detayları, tıklama oranları ve yapay zeka destekli performans analizi Pro & İşletme planlarına özeldir.
+                                    </p>
+                                </div>
+                                <Link href="/fiyatlandirma" className="px-5 py-2.5 bg-gradient-to-r from-rose-500 to-violet-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-md shadow-rose-500/10 shrink-0 text-center">
+                                    Hemen Pro'ya Yükselt 👑
+                                </Link>
+                            </div>
+                        )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <StatCard icon={<Eye className="w-5 h-5 text-blue-400" />} label={t('totalViewsLabel')} value={stats.totalViews.toString()} trend={t('general')} />
-                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value={stats.clickRate} trend={t('average')} />
-                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value={stats.cvClicks.toString()} trend={t('file')} />
-                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value={stats.projectClicks.toString()} trend={t('portfolio')} />
+                            {isPremium ? (
+                                <>
+                                    <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value={stats.clickRate} trend={t('average')} />
+                                    <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value={stats.cvClicks.toString()} trend={t('file')} />
+                                    <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value={stats.projectClicks.toString()} trend={t('portfolio')} />
+                                </>
+                            ) : (
+                                <>
+                                    <div className="relative group cursor-not-allowed" onClick={() => setShowUpgradeModal(true)}>
+                                        <div className="blur-[3px] select-none pointer-events-none opacity-40">
+                                            <StatCard icon={<MousePointer2 className="w-5 h-5 text-emerald-400" />} label={t('clickRateLabel')} value="5.2%" trend={t('average')} />
+                                        </div>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-white/20 rounded-[2.5rem]">
+                                            <span className="px-2 py-0.5 bg-slate-900 text-white text-[7px] font-black rounded-lg uppercase tracking-wider flex items-center gap-1 shadow-md"><Lock size={8} /> PRO</span>
+                                        </div>
+                                    </div>
+                                    <div className="relative group cursor-not-allowed" onClick={() => setShowUpgradeModal(true)}>
+                                        <div className="blur-[3px] select-none pointer-events-none opacity-40">
+                                            <StatCard icon={<FileText className="w-5 h-5 text-amber-400" />} label={t('cvViewsLabel')} value="12" trend={t('file')} />
+                                        </div>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-white/20 rounded-[2.5rem]">
+                                            <span className="px-2 py-0.5 bg-slate-900 text-white text-[7px] font-black rounded-lg uppercase tracking-wider flex items-center gap-1 shadow-md"><Lock size={8} /> PRO</span>
+                                        </div>
+                                    </div>
+                                    <div className="relative group cursor-not-allowed" onClick={() => setShowUpgradeModal(true)}>
+                                        <div className="blur-[3px] select-none pointer-events-none opacity-40">
+                                            <StatCard icon={<Briefcase className="w-5 h-5 text-rose-400" />} label={t('projectClicksLabel')} value="8" trend={t('portfolio')} />
+                                        </div>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-white/20 rounded-[2.5rem]">
+                                            <span className="px-2 py-0.5 bg-slate-900 text-white text-[7px] font-black rounded-lg uppercase tracking-wider flex items-center gap-1 shadow-md"><Lock size={8} /> PRO</span>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label={t('phoneCallsBtn')} count={stats.phoneClicks} color="indigo" />
-                            <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label={t('waMessagesBtn')} count={stats.waClicks} color="emerald" />
-                            <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label={t('email')/* reused key */} count={stats.emailClicks} color="blue" />
-                            <ActionStatCard icon={<Calendar className="w-5 h-5 text-purple-400" />} label={t('bookAppointment')/* reused key */} count={stats.appointmentClicks} color="purple" />
-                            <ActionStatCard icon={<Globe className="w-5 h-5 text-cyan-400" />} label={t('liveSite')/* reused key */} count={stats.websiteClicks} color="cyan" />
-                            <ActionStatCard icon={<MapPin className="w-5 h-5 text-rose-400" />} label={t('locationsBtn')} count={stats.locationClicks} color="rose" />
-                            <ActionStatCard icon={<Share2 className="w-5 h-5 text-orange-400" />} label={t('sharesBtn')} count={stats.shareClicks} color="orange" />
-                            <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label={t('reviews')/* reused key */} count={stats.reviewCount} color="amber" />
+                        <div className="relative">
+                            {!isPremium && (
+                                <div className="absolute inset-0 bg-slate-50/10 backdrop-blur-[2px] z-10 flex items-center justify-center rounded-3xl border border-slate-200/20 cursor-not-allowed" onClick={() => setShowUpgradeModal(true)}>
+                                    <button className="px-4 py-2 bg-slate-900 text-white text-[9px] font-black rounded-xl uppercase tracking-widest flex items-center gap-1.5 shadow-xl hover:scale-105 transition-all">
+                                        <Lock size={10} strokeWidth={2.5} /> Detaylı Tıklama İstatistikleri Pro'da 👑
+                                    </button>
+                                </div>
+                            )}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                                <ActionStatCard icon={<Phone className="w-5 h-5 text-indigo-400" />} label={t('phoneCallsBtn')} count={stats.phoneClicks} color="indigo" />
+                                <ActionStatCard icon={<MessageCircle className="w-5 h-5 text-emerald-400" />} label={t('waMessagesBtn')} count={stats.waClicks} color="emerald" />
+                                <ActionStatCard icon={<Mail className="w-5 h-5 text-blue-400" />} label={t('email')/* reused key */} count={stats.emailClicks} color="blue" />
+                                <ActionStatCard icon={<Calendar className="w-5 h-5 text-purple-400" />} label={t('bookAppointment')/* reused key */} count={stats.appointmentClicks} color="purple" />
+                                <ActionStatCard icon={<Globe className="w-5 h-5 text-cyan-400" />} label={t('liveSite')/* reused key */} count={stats.websiteClicks} color="cyan" />
+                                <ActionStatCard icon={<MapPin className="w-5 h-5 text-rose-400" />} label={t('locationsBtn')} count={stats.locationClicks} color="rose" />
+                                <ActionStatCard icon={<Share2 className="w-5 h-5 text-orange-400" />} label={t('sharesBtn')} count={stats.shareClicks} color="orange" />
+                                <ActionStatCard icon={<MessageSquare className="w-5 h-5 text-amber-400" />} label={t('reviews')/* reused key */} count={stats.reviewCount} color="amber" />
+                            </div>
                         </div>
 
-                        <div className="lg:col-span-4 mt-8">
+                        <div className="lg:col-span-4 mt-8 relative">
+                            {!isPremium && (
+                                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center rounded-[2.5rem] border border-white/5 cursor-not-allowed text-center p-8 gap-4" onClick={() => setShowUpgradeModal(true)}>
+                                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white">
+                                        <Lock size={20} />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-white font-extrabold text-sm uppercase tracking-wider">Performans Önerileri Kilitli</p>
+                                        <p className="text-slate-400 text-xs max-w-xs leading-relaxed">Profilinizin etkileşim oranını artıracak yapay zeka destekli öneriler Pro ve İşletme planlarına özeldir.</p>
+                                    </div>
+                                    <button className="px-5 py-2.5 bg-white text-slate-900 text-[10px] font-black rounded-xl uppercase tracking-widest hover:scale-105 transition-all">
+                                        PLANINI YÜKSELT 👑
+                                    </button>
+                                </div>
+                            )}
                             <div className="relative overflow-hidden rounded-[2.5rem] bg-[#0f172a] shadow-2xl border border-white/5">
                                 {/* Ambient Background Glow */}
                                 <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -5265,6 +5398,11 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                             profileData.templateId === tpl.id ? "ring-2 ring-primary border-primary shadow-xl shadow-primary/10" : "border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-slate-200/50"
                                         )}
                                         onClick={() => {
+                                            const freeTemplates = ["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"];
+                                            if (!freeTemplates.includes(tpl.id) && !isPremium) {
+                                                setShowUpgradeModal(true);
+                                                return;
+                                            }
                                             setProfileData({ ...profileData, templateId: tpl.id });
                                             handleSave({ templateId: tpl.id });
                                         }}
@@ -5272,7 +5410,12 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         <div className="p-8">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="flex flex-col gap-2">
-                                                    <h3 className="font-black text-slate-900 leading-tight">{tpl.name}</h3>
+                                                    <h3 className="font-black text-slate-900 leading-tight flex items-center gap-1.5 flex-wrap">
+                                                        {tpl.name}
+                                                        {!["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"].includes(tpl.id) && (
+                                                            <span className="px-1.5 py-0.5 bg-gradient-to-r from-rose-500 to-amber-500 text-white text-[7px] font-black rounded uppercase tracking-wider shrink-0 shadow-sm">PRO</span>
+                                                        )}
+                                                    </h3>
                                                     {tpl.isNew && (
                                                         <span className="w-fit px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg uppercase tracking-[0.15em] border border-emerald-100 shadow-sm animate-pulse">{t('new')}</span>
                                                     )}
@@ -7268,6 +7411,80 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     )}
                 </AnimatePresence>
+            </AnimatePresence>
+            {/* Premium Upgrade Modal */}
+            <AnimatePresence>
+                {showUpgradeModal && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowUpgradeModal(false)}
+                            className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-lg bg-white rounded-[2.5rem] border border-slate-100 shadow-2xl overflow-hidden z-10"
+                        >
+                            {/* Colorful Header Strip */}
+                            <div className="h-2 bg-gradient-to-r from-rose-500 via-amber-500 to-violet-600" />
+                            
+                            <button
+                                onClick={() => setShowUpgradeModal(false)}
+                                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all"
+                            >
+                                <X size={18} />
+                            </button>
+
+                            <div className="p-8 sm:p-10 space-y-8">
+                                <div className="text-center space-y-3">
+                                    <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-violet-600 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl shadow-rose-500/20">
+                                        <Zap size={28} className="fill-current" />
+                                    </div>
+                                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Kardly Pro ile Sınırları Kaldırın ⚡</h3>
+                                    <p className="text-xs text-slate-500 font-semibold uppercase tracking-widest">Premium Özelliklere Erişim Sağlayın</p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {[
+                                        { title: "Yapay Zeka Asistanı", desc: "Ziyaretçilerinizle sizin adınıza etkileşime girer ve randevuya yönlendirir." },
+                                        { title: "Premium Şablonlar", desc: "Bento, 3D, neon ve mesleki şablonlar ile göz alıcı bir profile sahip olun." },
+                                        { title: "Gelişmiş İstatistikler", desc: "Hangi bağlantıya ne zaman tıklandığını görün, akıllı öneriler alın." },
+                                        { title: "Özel Alt Alan Adı", desc: "Profilinizi istediğiniz kullanıcı adıyla özelleştirip güncelleyin." }
+                                    ].map((item, index) => (
+                                        <div key={index} className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-200 transition-all text-left">
+                                            <div className="shrink-0 w-8 h-8 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
+                                                <CheckCircle2 size={16} />
+                                            </div>
+                                            <div className="space-y-0.5">
+                                                <h4 className="text-xs font-black text-slate-900 uppercase tracking-tight">{item.title}</h4>
+                                                <p className="text-[11px] text-slate-500 font-medium leading-normal">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <button
+                                        onClick={() => setShowUpgradeModal(false)}
+                                        className="h-14 bg-slate-50 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all border border-slate-100"
+                                    >
+                                        Daha Sonra
+                                    </button>
+                                    <Link
+                                        href="/fiyatlandirma"
+                                        className="h-14 bg-gradient-to-r from-rose-500 to-violet-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-rose-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        Planları Gör 👑
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
             </AnimatePresence>
         </>
     );

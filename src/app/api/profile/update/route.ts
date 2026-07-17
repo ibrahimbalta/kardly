@@ -19,6 +19,30 @@ export async function POST(req: Request) {
 
         const { username, slogan, bio, phone, socialLinks, themeColor, bioColor, bioFontFamily, bioFontSize, sloganColor, sloganFontFamily, sloganFontSize, templateId, tone, services, workingHours, occupation, displayName, image, cvUrl, showAppointmentBtn, youtubeVideoUrl, showVideoAsProfile, isCatalog, paymentLink, paymentType, animationStyle, profileBgImage, businessCardTemplateId, businessCardOrientation, qrColorDark, qrColorLight, hasAcceptedTerms, showInHub, timezone, buttonLayout, buttonColor, buttonShape } = body
 
+        // Check user subscription to enforce plan limits
+        const userWithSub = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            include: { subscription: true, profile: true }
+        })
+        const plan = userWithSub?.subscription?.plan || "free"
+        const isPremium = userWithSub?.subscription?.status === "active" && plan !== "free"
+
+        // 1. Enforce username (subdomain) change limit
+        const oldUsername = userWithSub?.profile?.username
+        if (username && oldUsername && username.toLowerCase() !== oldUsername.toLowerCase() && !isPremium) {
+            return NextResponse.json({
+                error: "Alan adı güncelleme Pro & İşletme planlarına özeldir. Lütfen planınızı yükseltin. ⚡"
+            }, { status: 403 })
+        }
+
+        // 2. Enforce premium templates limit
+        const freeTemplates = ["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"]
+        if (templateId && !freeTemplates.includes(templateId) && !isPremium) {
+            return NextResponse.json({
+                error: "Seçtiğiniz şablon Pro & İşletme planlarına özeldir. Lütfen planınızı yükseltin. ⚡"
+            }, { status: 403 })
+        }
+
         // Update User name & image if provided
         if (displayName || image) {
             await prisma.user.update({

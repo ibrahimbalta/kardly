@@ -705,7 +705,16 @@ END:VCARD`
     // Template Selector Logic
     const renderTemplate = () => {
         const tone = profile.tone?.toLowerCase() || "profesyonel"
-        const templateId = profile.templateId || "black"
+        let templateId = profile.templateId || "neon_black"
+
+        // Enforce template limits based on profile owner's subscription status
+        const plan = profile.user?.subscription?.plan || "free"
+        const isPremium = profile.user?.subscription?.status === "active" && plan !== "free"
+        const freeTemplates = ["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"]
+
+        if (!isPremium && !freeTemplates.includes(templateId)) {
+            templateId = "neon_black"
+        }
 
         if (templateId.startsWith('elite_')) {
             return <EliteModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
@@ -7164,8 +7173,10 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
     const avatarUrl = profile?.user?.image || profile.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.user?.name || "User")}&background=1a1a2e&color=fff&bold=true&size=128`;
 
-    const hasAIAssistant = profile.blocks?.some((b: any) => b.isActive && b.type === 'ai_assistant');
-    const aiAssistantBlock = profile.blocks?.find((b: any) => b.isActive && b.type === 'ai_assistant');
+    const plan = profile.user?.subscription?.plan || "free"
+    const isPremium = profile.user?.subscription?.status === "active" && plan !== "free"
+    const hasAIAssistant = isPremium && profile.blocks?.some((b: any) => b.isActive && b.type === 'ai_assistant');
+    const aiAssistantBlock = isPremium ? profile.blocks?.find((b: any) => b.isActive && b.type === 'ai_assistant') : null;
 
     const gridBlocks = profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map' && b.type !== 'external_widget' && b.type !== 'ai_assistant').sort((a: any, b: any) => a.order - b.order) || [];
 

@@ -67,6 +67,21 @@ export async function POST(req: Request) {
 
         if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 })
 
+        // Check user subscription to enforce plan limits
+        const userWithSub = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            include: { subscription: true }
+        })
+        const plan = userWithSub?.subscription?.plan || "free"
+        const isPremium = userWithSub?.subscription?.status === "active" && plan !== "free"
+
+        const hasAiBlock = blocks.some((b: any) => b.type === 'ai_assistant' && b.isActive !== false)
+        if (hasAiBlock && !isPremium) {
+            return NextResponse.json({
+                error: "Yapay Zeka Asistanı Pro & İşletme planlarına özeldir. Lütfen planınızı yükseltin. ⚡"
+            }, { status: 403 })
+        }
+
         // Simple sync strategy: Delete all and recreate
         await prisma.block.deleteMany({
             where: { profileId: profile.id }
