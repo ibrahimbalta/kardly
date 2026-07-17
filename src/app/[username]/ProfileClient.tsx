@@ -7098,44 +7098,44 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
     const bentoThemes: Record<string, any> = {
         bento_dark: {
-            bg: "bg-[#070b13]",
-            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+            bg: "bg-[#0a0b0e] bg-gradient-to-tr from-[#08090c] to-[#0d0e12]",
+            card: "bg-white/[0.03] border-white/[0.06] backdrop-blur-2xl rounded-3xl p-6 hover:border-amber-500/20",
             accent: profile.themeColor || "#e2b857",
-            glow: "shadow-[0_0_30px_rgba(226,184,87,0.1)]",
+            glow: "shadow-[0_0_30px_rgba(226,184,87,0.08)]",
             text: "text-white",
             subtext: "text-white/60",
         },
         bento_ocean: {
-            bg: "bg-[#07131b]",
-            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
-            accent: profile.themeColor || "#0ea5e9",
-            glow: "shadow-[0_0_30px_rgba(14,165,233,0.1)]",
+            bg: "bg-[#040d1a] bg-gradient-to-tr from-[#020914] to-[#071324]",
+            card: "bg-blue-950/15 border-blue-500/[0.08] backdrop-blur-2xl rounded-3xl p-6 hover:border-blue-400/30",
+            accent: profile.themeColor || "#38bdf8",
+            glow: "shadow-[0_0_30px_rgba(56,189,248,0.08)]",
             text: "text-white",
-            subtext: "text-white/60",
+            subtext: "text-blue-100/60",
         },
         bento_sunset: {
-            bg: "bg-[#180a0a]",
-            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
-            accent: profile.themeColor || "#f97316",
-            glow: "shadow-[0_0_30px_rgba(249,115,22,0.1)]",
+            bg: "bg-[#140606] bg-gradient-to-tr from-[#0d0303] to-[#1a0909]",
+            card: "bg-red-950/10 border-orange-500/[0.08] backdrop-blur-2xl rounded-3xl p-6 hover:border-orange-400/30",
+            accent: profile.themeColor || "#ff6b35",
+            glow: "shadow-[0_0_30px_rgba(255,107,53,0.08)]",
             text: "text-white",
-            subtext: "text-white/60",
+            subtext: "text-orange-100/60",
         },
         bento_emerald: {
-            bg: "bg-[#05110d]",
-            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
-            accent: profile.themeColor || "#10b981",
-            glow: "shadow-[0_0_30px_rgba(16,185,129,0.1)]",
+            bg: "bg-[#020c08] bg-gradient-to-tr from-[#010805] to-[#04140d]",
+            card: "bg-emerald-950/10 border-emerald-500/[0.08] backdrop-blur-2xl rounded-3xl p-6 hover:border-emerald-400/30",
+            accent: profile.themeColor || "#00ff87",
+            glow: "shadow-[0_0_30px_rgba(0,255,135,0.08)]",
             text: "text-white",
-            subtext: "text-white/60",
+            subtext: "text-emerald-100/60",
         },
         bento_royal: {
-            bg: "bg-[#0a0713]",
-            card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
-            accent: profile.themeColor || "#a855f7",
-            glow: "shadow-[0_0_30px_rgba(168,85,247,0.1)]",
+            bg: "bg-[#090314] bg-gradient-to-tr from-[#05010d] to-[#0f0620]",
+            card: "bg-purple-950/10 border-purple-500/[0.08] backdrop-blur-2xl rounded-3xl p-6 hover:border-purple-400/30",
+            accent: profile.themeColor || "#d946ef",
+            glow: "shadow-[0_0_30px_rgba(217,70,255,0.08)]",
             text: "text-white",
-            subtext: "text-white/60",
+            subtext: "text-purple-100/60",
         }
     }
 
@@ -7183,7 +7183,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     {/* Widget 1: Profile Main Card (Takes 2 cols on lg) */}
-                    <div className={cn("lg:col-span-2 flex flex-col md:flex-row items-center md:items-start gap-6 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative overflow-hidden", theme.card)}>
+                    <div className={cn("lg:col-span-2 flex flex-col md:flex-row items-center md:items-start gap-6 border transition-all duration-300 shadow-2xl relative overflow-hidden", theme.card)}>
                         {/* Accent glow on top card border */}
                         <div className="absolute top-0 inset-x-0 h-[2px] opacity-70" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
                         
@@ -7234,7 +7234,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                     </div>
 
                     {/* Widget 2: Quick Connect & Call-to-Actions (Takes 1 col on lg) */}
-                    <div className={cn("flex flex-col justify-between gap-4 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative", theme.card)}>
+                    <div className={cn("flex flex-col justify-between gap-4 border transition-all duration-300 shadow-2xl relative", theme.card)}>
                         <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-2">HIZLI İLETİŞİM</h2>
                         
                         <div className="space-y-3 flex-1 flex flex-col justify-center">
@@ -7301,7 +7301,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
                     {/* Widget 4: Social Links Icons Grid Box */}
                     {socialLinks.length > 0 && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div>
                                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">SOSYAL MEDYA</h2>
                                 <p className="text-xs text-white/50 mb-6">Beni diğer platformlarda takip edin.</p>
@@ -7339,7 +7339,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                     )}
 
                     {/* Widget 5: CV and Quick Documents / Locations Box */}
-                    <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                    <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                         <div>
                             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">BELGELER & KONUM</h2>
                             <p className="text-xs text-white/50 mb-6">Özgeçmişimi indirin veya konumumu görün.</p>
@@ -7369,7 +7369,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
                     {/* Widget 6: Payment / Support Box */}
                     {profile.paymentLink && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div>
                                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">DESTEK & ÖDEME</h2>
                                 <p className="text-xs text-white/50 mb-6">
@@ -7412,7 +7412,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
                     {/* Widget 7: Reviews testimonial Box */}
                     {reviews && reviews.length > 0 && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40">YORUMLAR</h2>
                                 <div className="flex text-amber-500 gap-0.5"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
@@ -7436,7 +7436,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
                     {/* Widget 8: Custom Links Box */}
                     {customLinks.length > 0 && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div>
                                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">BAĞLANTILAR</h2>
                                 <p className="text-xs text-white/50 mb-6">Önemli bağlantıları ve linkleri inceleyin.</p>
@@ -7464,7 +7464,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
  
                     {/* Widget 9: Articles Bento Box */}
                     {profile?.articles && profile.articles.length > 0 && (
-                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div className={cn("border transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
                             <div>
                                 <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">YAZILARIM</h2>
                                 <p className="text-xs text-white/50 mb-6">Son yayınlanan makale ve yazılarımı okuyun.</p>
@@ -7502,7 +7502,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             <div 
                                 key={block.id} 
                                 className={cn(
-                                    "border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative",
+                                    "border transition-all duration-300 shadow-2xl relative",
                                     isLargeBlock ? "lg:col-span-2 p-6 rounded-3xl" : "p-6 rounded-3xl",
                                     theme.card
                                 )}
@@ -7525,7 +7525,7 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
 
                     {/* Services Box (Takes full width 3 cols) */}
                     {profile.services && profile.services.length > 0 && (
-                        <div className={cn("lg:col-span-3 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
+                        <div className={cn("lg:col-span-3 border transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
                                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
