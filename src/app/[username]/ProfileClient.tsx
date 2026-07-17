@@ -313,8 +313,14 @@ export default function ProfileClient({ profile }: { profile: any }) {
     const [isSendingMessage, setIsSendingMessage] = useState(false);
     const [messageStatus, setMessageStatus] = useState<string | null>(null);
 
+    const [isMobile, setIsMobile] = useState(false);
+
     useEffect(() => {
         setMounted(true);
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     useEffect(() => {
@@ -588,7 +594,7 @@ END:VCARD`
 
     if (!mounted) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-sans"><div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" /></div>
 
-    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }
+    const props = { profile, t, lang, setLang, setIsAppointmentOpen, isAppointmentOpen, handleShare, handleCVView, handleAddToContacts, reviews, setIsReviewModalOpen, isReviewModalOpen, trackEvent, setReviewStatus, reviewStatus, setIsQrOpen, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen, isMobile }
 
     // Get active accent color for review modal
     const getActiveAccent = (scheme?: any): string => {
@@ -1004,7 +1010,7 @@ function MotionWrapper({ children, style, activeAccent }: { children: React.Reac
 
 
 
-function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
+function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen, isMobile }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
     const [layoutMode, setLayoutMode] = useState<'marquee' | 'grid'>('grid') // Default to grid for demo visibility
 
@@ -3114,28 +3120,28 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(255,255,255,0.08)_100%)]" />
                 {theme.special === "cyber" && (
                     <>
-                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}22 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${theme.accent}22 0%, transparent 50%)` }} />
+                        <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}22 0%, transparent 50%), radial-gradient(circle at 80% 70%, ${theme.accent}22 0%, transparent 50%)` }} />
                         <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,#000_25%,#111_25%,#111_50%,#000_50%,#000_75%,#111_75%)] bg-[length:20px_20px] opacity-[0.03]" />
                     </>
                 )}
                 {theme.special === "galaxy" && (
                     <>
-                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 70%)` }} />
+                        <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 70%)` }} />
                         <div className="absolute top-0 left-0 w-full h-full opacity-20" style={{ background: `radial-gradient(2px 2px at 20px 30px, ${theme.accent}, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, white, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, ${theme.accent}, rgba(0,0,0,0))`, backgroundSize: '100px 100px' }} />
                     </>
                 )}
                 {theme.special === "acid" && (
-                    <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 30% 20%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 70% 80%, ${theme.accent}11 0%, transparent 60%)` }} />
+                    <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 30% 20%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 70% 80%, ${theme.accent}11 0%, transparent 60%)` }} />
                 )}
                 {theme.special === "candy" && (
-                    <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 20% 80%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 80% 20%, ${theme.accent}22 0%, transparent 60%)` }} />
+                    <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 20% 80%, ${theme.accent}22 0%, transparent 60%), radial-gradient(circle at 80% 20%, ${theme.accent}22 0%, transparent 60%)` }} />
                 )}
                 {theme.special === "aurora" && (
-                    <div className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] animate-spin-slow opacity-50" />
+                    <div className={cn("absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,#2dd4bf11,#6366f111,#2dd4bf11)] opacity-50", !isMobile && "animate-spin-slow")} />
                 )}
                 {theme.special === "neon_modern" && (
                     <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}11 0%, transparent 70%)` }} />
+                        <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}11 0%, transparent 70%)` }} />
                         <div className="absolute inset-x-0 top-0 h-[2px] opacity-50" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
                         <div className="absolute inset-x-0 bottom-0 h-[2px] opacity-50" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
                     </div>
@@ -3148,14 +3154,14 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "neon_purple" && (
                     <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 animate-pulse" style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 80%)` }} />
+                        <div className={cn("absolute inset-0", !isMobile && "animate-pulse")} style={{ background: `radial-gradient(circle at 50% 50%, ${theme.accent}22 0%, transparent 80%)` }} />
                         <div className="absolute top-0 left-0 w-full h-full" style={{ background: `radial-gradient(circle at 20% 30%, ${theme.accent}11 0%, transparent 40%), radial-gradient(circle at 80% 70%, ${theme.accent}11 0%, transparent 40%)` }} />
                     </div>
                 )}
                 {/* Masters & Services Background Decorations */}
                 {theme.special === "master_plumber" && (
                     <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
-                        {[...Array(6)].map((_, i) => (
+                        {!isMobile && [...Array(6)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ y: -20, opacity: 0 }}
@@ -3171,7 +3177,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "master_electrician" && (
                     <div className="absolute inset-0 pointer-events-none opacity-20 overflow-hidden">
-                        {[...Array(5)].map((_, i) => (
+                        {!isMobile && [...Array(5)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 animate={{ 
@@ -3201,25 +3207,34 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 )}
                 {theme.special === "master_carpenter" && (
                     <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden" 
-                         style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24 0px, #fbbf24 2px, transparent 2px, transparent 40px)' }} 
+                          style={{ backgroundImage: 'repeating-linear-gradient(45deg, #fbbf24 0px, #fbbf24 2px, transparent 2px, transparent 40px)' }} 
                     />
                 )}
                 {theme.special === "master_auto" && (
                     <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden">
-                        <motion.div 
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute -top-20 -right-20 text-zinc-600"
-                        >
-                            <Settings size={200} />
-                        </motion.div>
-                        <motion.div 
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-40 -left-20 text-zinc-600"
-                        >
-                            <Settings size={120} />
-                        </motion.div>
+                        {!isMobile ? (
+                            <>
+                                <motion.div 
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                    className="absolute -top-20 -right-20 text-zinc-600"
+                                >
+                                    <Settings size={200} />
+                                </motion.div>
+                                <motion.div 
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                                    className="absolute top-40 -left-20 text-zinc-600"
+                                >
+                                    <Settings size={120} />
+                                </motion.div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="absolute -top-20 -right-20 text-zinc-600/30"><Settings size={200} /></div>
+                                <div className="absolute top-40 -left-20 text-zinc-600/30"><Settings size={120} /></div>
+                            </>
+                        )}
                     </div>
                 )}
                 {theme.special === "master_renovation" && (
@@ -3230,11 +3245,15 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "nature_dawn" && (
                     <div className="absolute inset-0 z-0 overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_0%_0%,#fef3c7_0%,transparent_50%),radial-gradient(circle_at_100%_0%,#d1fae5_0%,transparent_50%)] opacity-40" />
-                        <motion.div
-                            animate={{ opacity: [0.2, 0.4, 0.2] }}
-                            transition={{ duration: 8, repeat: Infinity }}
-                            className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-yellow-400/20 blur-[100px] rounded-full"
-                        />
+                        {isMobile ? (
+                            <div className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-yellow-400/10 blur-[80px] rounded-full" />
+                        ) : (
+                            <motion.div
+                                animate={{ opacity: [0.2, 0.4, 0.2] }}
+                                transition={{ duration: 8, repeat: Infinity }}
+                                className="absolute top-[10%] right-[10%] w-[300px] h-[300px] bg-yellow-400/20 blur-[100px] rounded-full"
+                            />
+                        )}
                     </div>
                 )}
                 {theme.special === "minimal_glass" && (
@@ -3249,29 +3268,37 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "dream_mist" && (
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        {[...Array(3)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                animate={{
-                                    x: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
-                                    y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
-                                    scale: [1, 1.5, 1],
-                                    rotate: [0, 180, 360]
-                                }}
-                                transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
-                                className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-20"
-                                style={{
-                                    background: i === 0 ? '#f472b6' : i === 1 ? '#a855f7' : '#38bdf8',
-                                }}
-                            />
-                        ))}
+                        {isMobile ? (
+                            <>
+                                <div className="absolute w-[300px] h-[300px] rounded-full blur-[80px] opacity-20 top-[10%] left-[5%]" style={{ background: '#f472b6' }} />
+                                <div className="absolute w-[350px] h-[350px] rounded-full blur-[80px] opacity-25 top-[40%] right-[5%]" style={{ background: '#a855f7' }} />
+                                <div className="absolute w-[300px] h-[300px] rounded-full blur-[80px] opacity-20 bottom-[10%] left-[20%]" style={{ background: '#38bdf8' }} />
+                            </>
+                        ) : (
+                            [...Array(3)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{
+                                        x: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                        y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                        scale: [1, 1.5, 1],
+                                        rotate: [0, 180, 360]
+                                    }}
+                                    transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
+                                    className="absolute w-[400px] h-[400px] rounded-full blur-[100px] opacity-20"
+                                    style={{
+                                        background: i === 0 ? '#f472b6' : i === 1 ? '#a855f7' : '#38bdf8',
+                                    }}
+                                />
+                            ))
+                        )}
                     </div>
                 )}
 
                 {theme.special === "dream_nebula" && (
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#4c1d9533_0%,transparent_70%)]" />
-                        {[...Array(50)].map((_, i) => (
+                        {!isMobile && [...Array(50)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: Math.random() }}
@@ -3291,12 +3318,16 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "dark_stealth" && (
                     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
-                        <motion.div
-                            animate={{ y: ['-100%', '100%'] }}
-                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-x-0 h-[20%] z-10"
-                            style={{ background: `linear-gradient(to bottom, transparent, ${theme.accent}15, transparent)` }}
-                        />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{ y: ['-100%', '100%'] }}
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-x-0 h-[20%] z-10"
+                                style={{ background: `linear-gradient(to bottom, transparent, ${theme.accent}15, transparent)` }}
+                            />
+                        ) : (
+                            <div className="absolute inset-x-0 h-[20%] top-[40%] z-10" style={{ background: `linear-gradient(to bottom, transparent, ${theme.accent}08, transparent)` }} />
+                        )}
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
                     </div>
                 )}
@@ -3311,21 +3342,29 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "light_prism" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                            className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,#38bdf811,#f472b611,#fbbf2411,#38bdf811)] blur-[80px]"
-                        />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{ rotate: [0, 360] }}
+                                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                                className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,#38bdf811,#f472b611,#fbbf2411,#38bdf811)] blur-[80px]"
+                            />
+                        ) : (
+                            <div className="absolute -inset-[100%] bg-[conic-gradient(from_0deg,#38bdf808,#f472b608,#fbbf2408,#38bdf808)] blur-[80px]" />
+                        )}
                     </div>
                 )}
 
                 {theme.special === "light_solar" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <motion.div
-                            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-[radial-gradient(circle,#fbbf2433_0%,transparent_70%)] blur-[40px]"
-                        />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-[radial-gradient(circle,#fbbf2433_0%,transparent_70%)] blur-[40px]"
+                            />
+                        ) : (
+                            <div className="absolute top-[-20%] right-[-20%] w-[80%] h-[80%] bg-[radial-gradient(circle,#fbbf2415_0%,transparent_70%)] blur-[40px]" />
+                        )}
                     </div>
                 )}
 
@@ -3334,22 +3373,28 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "cyber_glitch" && (
                     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(0,255,255,0.05),rgba(255,0,0,0.03),rgba(0,255,0,0.05))] bg-[length:100%_2px,3px_100%] opacity-20" />
-                        <motion.div
-                            animate={{ x: ['-2px', '2px', '-1px', '3px', '0px'] }}
-                            transition={{ duration: 0.1, repeat: Infinity }}
-                            className="absolute inset-0 opacity-10 mix-blend-screen bg-cyan-500/10"
-                        />
+                        {!isMobile && (
+                            <motion.div
+                                animate={{ x: ['-2px', '2px', '-1px', '3px', '0px'] }}
+                                transition={{ duration: 0.1, repeat: Infinity }}
+                                className="absolute inset-0 opacity-10 mix-blend-screen bg-cyan-500/10"
+                            />
+                        )}
                     </div>
                 )}
 
                 {theme.special === "cyber_vapor" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden bg-gradient-to-b from-[#0b0b1a] via-[#1a0b1a] to-[#0b0b1a]">
                         <div className="absolute bottom-0 left-0 w-full h-[300px] bg-[linear-gradient(transparent,#ff71ce33)]" />
-                        <motion.div
-                            animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.4, 0.2] }}
-                            transition={{ duration: 5, repeat: Infinity }}
-                            className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#01cdfe22] blur-[120px] rounded-full"
-                        />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.4, 0.2] }}
+                                transition={{ duration: 5, repeat: Infinity }}
+                                className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#01cdfe22] blur-[120px] rounded-full"
+                            />
+                        ) : (
+                            <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#01cdfe11] blur-[120px] rounded-full" />
+                        )}
                         <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(#ff71ce 1px, transparent 1px), linear-gradient(90deg, #ff71ce 1px, transparent 1px)`, backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) translateY(-50px)' }} />
                     </div>
                 )}
@@ -3363,18 +3408,25 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "liquid_lava" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        {[...Array(5)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                animate={{
-                                    x: [Math.random() * 100, Math.random() * 500, Math.random() * 100],
-                                    y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
-                                    scale: [1.5, 2.5, 1.5]
-                                }}
-                                transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute w-[300px] h-[300px] bg-red-600/10 blur-[80px] rounded-full"
-                            />
-                        ))}
+                        {isMobile ? (
+                            <>
+                                <div className="absolute w-[300px] h-[300px] bg-red-600/10 blur-[80px] rounded-full top-[20%] left-[10%]" />
+                                <div className="absolute w-[250px] h-[250px] bg-red-600/10 blur-[80px] rounded-full bottom-[20%] right-[10%]" />
+                            </>
+                        ) : (
+                            [...Array(5)].map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    animate={{
+                                        x: [Math.random() * 100, Math.random() * 500, Math.random() * 100],
+                                        y: [Math.random() * 100, Math.random() * 800, Math.random() * 100],
+                                        scale: [1.5, 2.5, 1.5]
+                                    }}
+                                    transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute w-[300px] h-[300px] bg-red-600/10 blur-[80px] rounded-full"
+                                />
+                            ))
+                        )}
                         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
                     </div>
                 )}
@@ -3399,7 +3451,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "celestial_star" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        {[...Array(100)].map((_, i) => (
+                        {!isMobile && [...Array(100)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ opacity: Math.random() }}
@@ -3414,11 +3466,15 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "celestial_sun" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden bg-[radial-gradient(circle_at_50%_0%,#713f12_0%,transparent_100%)]">
-                        <motion.div
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
-                            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute top-[-50%] left-[-25%] w-[150%] h-[150%] bg-[radial-gradient(circle,#FACC15_0%,transparent_70%)] blur-[100px]"
-                        />
+                        {isMobile ? (
+                            <div className="absolute top-[-50%] left-[-25%] w-[150%] h-[150%] bg-[radial-gradient(circle,#FACC15_0%,transparent_70%)] blur-[80px] opacity-[0.15]" />
+                        ) : (
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
+                                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute top-[-50%] left-[-25%] w-[150%] h-[150%] bg-[radial-gradient(circle,#FACC15_0%,transparent_70%)] blur-[100px]"
+                            />
+                        )}
                     </div>
                 )}
 
@@ -3428,27 +3484,33 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
 
                 {theme.special === "vibe_bolt" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <motion.div
-                            animate={{ x: ['-100%', '100%'] }}
-                            transition={{ duration: 0.15, repeat: Infinity, repeatDelay: 5 }}
-                            className="absolute inset-0 bg-white/30 z-50 mix-blend-overlay"
-                        />
+                        {!isMobile && (
+                            <motion.div
+                                animate={{ x: ['-100%', '100%'] }}
+                                transition={{ duration: 0.15, repeat: Infinity, repeatDelay: 5 }}
+                                className="absolute inset-0 bg-white/30 z-50 mix-blend-overlay"
+                            />
+                        )}
                     </div>
                 )}
 
                 {theme.special === "vibe_pulse" && (
                     <div className="absolute inset-0 pointer-events-none">
-                        <motion.div
-                            animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
-                            transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute inset-0 bg-red-600 blur-[60px]"
-                        />
+                        {isMobile ? (
+                            <div className="absolute inset-0 bg-red-600/10 blur-[40px]" />
+                        ) : (
+                            <motion.div
+                                animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
+                                transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute inset-0 bg-red-600 blur-[60px]"
+                            />
+                        )}
                     </div>
                 )}
 
                 {theme.special === "tech_core" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        {[...Array(5)].map((_, i) => (
+                        {!isMobile && [...Array(5)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 animate={{
@@ -3470,27 +3532,38 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                 {theme.special === "tech_atom" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `radial-gradient(#6366f1 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border rounded-full"
-                            style={{ borderColor: `${theme.accent}15` }}
-                        />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border rounded-full"
+                                style={{ borderColor: `${theme.accent}15` }}
+                            />
+                        ) : (
+                            <div
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border rounded-full"
+                                style={{ borderColor: `${theme.accent}08` }}
+                            />
+                        )}
                     </div>
                 )}
 
                 {theme.special === "meta_portal" && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden bg-black">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.5, 1],
-                                opacity: [0.3, 0.6, 0.3],
-                                rotate: [0, 180, 360]
-                            }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[conic-gradient(from_0deg,#ec489911,#0ea5e911,#ec489911)] rounded-full blur-[60px]"
-                        />
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-pink-500/10 rounded-full animate-pulse" />
+                        {!isMobile ? (
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.5, 1],
+                                    opacity: [0.3, 0.6, 0.3],
+                                    rotate: [0, 180, 360]
+                                }}
+                                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[conic-gradient(from_0deg,#ec489911,#0ea5e911,#ec489911)] rounded-full blur-[60px]"
+                            />
+                        ) : (
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[conic-gradient(from_0deg,#ec489908,#0ea5e908,#ec489908)] rounded-full blur-[60px]" />
+                        )}
+                        <div className={cn("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-pink-500/10 rounded-full", !isMobile && "animate-pulse")} />
                     </div>
                 )}
 
@@ -3521,7 +3594,7 @@ function NeonModernTemplate({ profile, colorScheme, handleShare, handleCVView, h
                     <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%23d97706' fill='none' stroke-width='1'/%3E%3Cpath d='M50 10 V 90 M 10 50 H 90' stroke='%23d97706' stroke-width='0.5'/%3E%3C/svg%3E")`, backgroundSize: '120px 120px' }} />
                 )}
                 {theme.special === "future_holo" && (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)] animate-pulse" />
+                    <div className={cn("absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0ef11_0%,transparent_70%)]", !isMobile && "animate-pulse")} />
                 )}
                 {theme.special === "future_glass" && (
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#38bdf811_0%,transparent_40%),radial-gradient(circle_at_80%_80%,#f472b611_0%,transparent_40%)]" />
@@ -6869,8 +6942,18 @@ function SocialProof({ t, theme }: { t: any, theme: any }) {
 
 function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'bubbles' | 'finance', color: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
+        setIsMobile(window.innerWidth < 768)
+        const handleResize = () => setIsMobile(window.innerWidth < 768)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    useEffect(() => {
+        if (isMobile) return
+
         const canvas = canvasRef.current
         if (!canvas) return
         const ctx = canvas.getContext('2d')
@@ -6994,7 +7077,9 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
         }
 
         return () => cancelAnimationFrame(animationFrameId)
-    }, [type, color])
+    }, [type, color, isMobile])
+
+    if (isMobile) return null
 
     return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20 hidden md:block" />
 }
@@ -8263,7 +8348,7 @@ function CVPreviewModal({ url, isOpen, onClose, t, theme, toneStyle, profile }: 
 
 
 
-function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
+function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen, isMobile }: any) {
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
     useEffect(() => {
@@ -8711,7 +8796,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-b from-blue-950/30 to-transparent" />
-                        {[...Array(8)].map((_, i) => (
+                        {!isMobile && [...Array(8)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 initial={{ y: -30, opacity: 0 }}
@@ -8730,7 +8815,7 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: `linear-gradient(${theme.accent}60 1px, transparent 1px), linear-gradient(90deg, ${theme.accent}60 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
-                        {[...Array(6)].map((_, i) => (
+                        {!isMobile && [...Array(6)].map((_, i) => (
                             <motion.div
                                 key={i}
                                 animate={{ opacity: [0, 0.6, 0], scale: [0.5, 1.3, 0.5] }}
@@ -8746,10 +8831,20 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             case "splash":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }} transition={{ duration: 8, repeat: Infinity }} className="absolute -top-20 -left-20 w-96 h-96 rounded-full blur-[120px] bg-pink-500" />
-                        <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.06, 0.12, 0.06] }} transition={{ duration: 10, repeat: Infinity, delay: 2 }} className="absolute top-1/2 -right-20 w-80 h-80 rounded-full blur-[100px] bg-cyan-400" />
-                        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }} transition={{ duration: 12, repeat: Infinity, delay: 4 }} className="absolute -bottom-20 left-1/4 w-96 h-96 rounded-full blur-[120px] bg-yellow-400" />
-                        <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.08, 0.04] }} transition={{ duration: 9, repeat: Infinity, delay: 1 }} className="absolute top-1/4 left-1/3 w-60 h-60 rounded-full blur-[80px] bg-purple-500" />
+                        {isMobile ? (
+                            <>
+                                <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full blur-[80px] bg-pink-500 opacity-[0.08]" />
+                                <div className="absolute top-1/2 -right-20 w-64 h-64 rounded-full blur-[80px] bg-cyan-400 opacity-[0.06]" />
+                                <div className="absolute -bottom-20 left-1/4 w-80 h-80 rounded-full blur-[80px] bg-yellow-400 opacity-[0.05]" />
+                            </>
+                        ) : (
+                            <>
+                                <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }} transition={{ duration: 8, repeat: Infinity }} className="absolute -top-20 -left-20 w-96 h-96 rounded-full blur-[120px] bg-pink-500" />
+                                <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.06, 0.12, 0.06] }} transition={{ duration: 10, repeat: Infinity, delay: 2 }} className="absolute top-1/2 -right-20 w-80 h-80 rounded-full blur-[100px] bg-cyan-400" />
+                                <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.1, 0.05] }} transition={{ duration: 12, repeat: Infinity, delay: 4 }} className="absolute -bottom-20 left-1/4 w-96 h-96 rounded-full blur-[120px] bg-yellow-400" />
+                                <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.08, 0.04] }} transition={{ duration: 9, repeat: Infinity, delay: 1 }} className="absolute top-1/4 left-1/3 w-60 h-60 rounded-full blur-[80px] bg-purple-500" />
+                            </>
+                        )}
                     </div>
                 );
             case "wood":
@@ -8762,15 +8857,25 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
             case "gear":
                 return (
                     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-32 -right-32 opacity-[0.06]" style={{ color: theme.accent }}>
-                            <Settings size={280} />
-                        </motion.div>
-                        <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 -left-24 opacity-[0.04]" style={{ color: theme.accent }}>
-                            <Settings size={180} />
-                        </motion.div>
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -bottom-20 right-10 opacity-[0.03]" style={{ color: theme.accent }}>
-                            <Settings size={120} />
-                        </motion.div>
+                        {!isMobile ? (
+                            <>
+                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-32 -right-32 opacity-[0.06]" style={{ color: theme.accent }}>
+                                    <Settings size={280} />
+                                </motion.div>
+                                <motion.div animate={{ rotate: -360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute top-1/2 -left-24 opacity-[0.04]" style={{ color: theme.accent }}>
+                                    <Settings size={180} />
+                                </motion.div>
+                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -bottom-20 right-10 opacity-[0.03]" style={{ color: theme.accent }}>
+                                    <Settings size={120} />
+                                </motion.div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="absolute -top-32 -right-32 opacity-[0.02]" style={{ color: theme.accent }}><Settings size={280} /></div>
+                                <div className="absolute top-1/2 -left-24 opacity-[0.02]" style={{ color: theme.accent }}><Settings size={180} /></div>
+                                <div className="absolute -bottom-20 right-10 opacity-[0.01]" style={{ color: theme.accent }}><Settings size={120} /></div>
+                            </>
+                        )}
                         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `radial-gradient(circle, ${theme.accent}30 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
                     </div>
                 );
@@ -8801,11 +8906,13 @@ function MastersCraftTemplate({ profile, colorScheme, handleShare, handleCVView,
                             backgroundImage: `radial-gradient(${theme.accent} 1px, transparent 1px)`,
                             backgroundSize: '24px 24px' 
                         }} />
-                        <motion.div 
-                            animate={{ opacity: [0.02, 0.05, 0.02] }} 
-                            transition={{ duration: 5, repeat: Infinity }} 
-                            className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" 
-                        />
+                        {!isMobile && (
+                            <motion.div 
+                                animate={{ opacity: [0.02, 0.05, 0.02] }} 
+                                transition={{ duration: 5, repeat: Infinity }} 
+                                className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent" 
+                            />
+                        )}
                     </div>
                 );
             default: return null;
