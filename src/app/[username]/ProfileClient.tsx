@@ -723,6 +723,10 @@ END:VCARD`
             return <MastersCraftTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
         }
 
+        if (templateId.startsWith('bento_')) {
+            return <BentoGridTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
+        }
+
         return <NeonModernTemplate {...props} colorScheme={templateId} tone={tone} toneStyle={toneStyle} translateText={translateText} />;
     }
 
@@ -7082,6 +7086,306 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
     if (isMobile) return null
 
     return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-20 hidden md:block" />
+}
+
+function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen, isMobile }: any) {
+    
+    const formatUrl = (url?: string) => {
+        if (!url) return ""
+        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('mailto:') || url.startsWith('tel:')) return url
+        return `https://${url}`
+    }
+
+    const theme = {
+        bg: "bg-[#070b13]",
+        card: "bg-white/[0.04] border-white/10 backdrop-blur-xl rounded-3xl p-6",
+        border: "border-white/10",
+        text: "text-white",
+        subtext: "text-white/60",
+        accent: profile.themeColor || "#e2b857",
+        accentDark: profile.themeColor ? `${profile.themeColor}dd` : "#cda343",
+    }
+
+    const socialLinks = profile.socialLinks || [];
+    const phoneNumber = socialLinks.find((l: any) => l.platform === 'phone')?.url || profile.phone;
+    const whatsappNumber = (socialLinks.find((l: any) => l.platform === 'whatsapp')?.url || phoneNumber || "").replace(/\D/g, '');
+    const emailAddress = socialLinks.find((l: any) => l.platform === 'email')?.url || "";
+
+    const platformButtons = (socialLinks || [])
+        .filter((l: any) => l.url && l.platform && l.platform !== 'customLinks' && !['phone', 'whatsapp', 'website', 'location', 'email'].includes(l.platform.toLowerCase()))
+        .map((l: any) => ({
+            label: l.platform.toUpperCase(),
+            icon: getHeroIcon(l.platform, 20, l.url),
+            href: formatUrl(l.url),
+            active: true
+        }));
+
+    return (
+        <div className={cn("min-h-screen relative overflow-x-hidden pb-32 font-sans", theme.bg, toneStyle.font)}>
+            {/* Background ambient glows */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-[0.15]" style={{ background: theme.accent }} />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-[0.1]" style={{ background: theme.accent }} />
+            </div>
+
+            <div className="relative z-10 max-w-6xl mx-auto px-4 pt-8 md:pt-16 space-y-6">
+                
+                {/* Bento Grid Header / Top Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    {/* Widget 1: Profile Main Card (Takes 2 cols on lg) */}
+                    <div className={cn("lg:col-span-2 flex flex-col md:flex-row items-center md:items-start gap-6 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative overflow-hidden", theme.card)}>
+                        {/* Accent glow on top card border */}
+                        <div className="absolute top-0 inset-x-0 h-[2px] opacity-70" style={{ background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)` }} />
+                        
+                        {/* Avatar container */}
+                        <div className="relative flex-shrink-0">
+                            <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl relative z-10">
+                                {profile.profileImage ? (
+                                    <img src={profile.profileImage} alt={profile.user?.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white text-3xl font-black">
+                                        {profile.user?.name?.charAt(0)}
+                                    </div>
+                                )}
+                            </div>
+                            {/* Avatar back glow */}
+                            <div className="absolute inset-0 rounded-full blur-[20px] opacity-30 z-0 scale-95" style={{ background: theme.accent }} />
+                        </div>
+
+                        {/* Name and titles */}
+                        <div className="flex-1 text-center md:text-left space-y-4">
+                            <div>
+                                <h1 className="text-3xl font-black tracking-tight text-white">{profile.user?.name}</h1>
+                                {profile.occupation && (
+                                    <p className="text-[12px] font-black uppercase tracking-[0.25em] mt-1" style={{ color: theme.accent }}>
+                                        {profile.occupation}
+                                    </p>
+                                )}
+                            </div>
+
+                            {profile.slogan && (
+                                <p className="text-sm font-medium text-white/80 italic leading-relaxed">
+                                    "{profile.slogan}"
+                                </p>
+                            )}
+
+                            {profile.bio && (
+                                <p className="text-sm text-white/60 leading-relaxed font-normal">
+                                    {profile.bio}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Top corner actions */}
+                        <div className="absolute top-4 right-4 flex gap-2">
+                            {qrDataUrl && (
+                                <button onClick={() => setIsQrOpen(true)} className="p-3 rounded-2xl bg-white/[0.04] border border-white/5 text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors" title={t.qrCode}>
+                                    <QrCode size={18} />
+                                </button>
+                            )}
+                            <button onClick={handleShare} className="p-3 rounded-2xl bg-white/[0.04] border border-white/5 text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors" title={t.shareBtn}>
+                                <Share2 size={18} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Widget 2: Quick Connect & Call-to-Actions (Takes 1 col on lg) */}
+                    <div className={cn("flex flex-col justify-between gap-4 border hover:border-amber-500/20 transition-all duration-300 shadow-2xl relative", theme.card)}>
+                        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-2">HIZLI İLETİŞİM</h2>
+                        
+                        <div className="space-y-3 flex-1 flex flex-col justify-center">
+                            {/* Primary Button: Message Me */}
+                            <button 
+                                onClick={() => setIsMessageModalOpen(true)}
+                                className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                                style={{ background: `linear-gradient(135deg, ${theme.accentDark}, ${theme.accent})`, color: '#000' }}
+                            >
+                                <MessageSquare size={16} />
+                                {t.messageMe || "MESAJ GÖNDER"}
+                            </button>
+
+                            {/* WhatsApp Button */}
+                            {whatsappNumber && (
+                                <a 
+                                    href={`https://wa.me/${whatsappNumber}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 transition-all hover:bg-emerald-500/20 hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                    <MessageCircle size={16} />
+                                    WHATSAPP
+                                </a>
+                            )}
+
+                            {/* Call Button */}
+                            {phoneNumber && (
+                                <a 
+                                    href={`tel:${phoneNumber}`}
+                                    className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 border border-sky-500/30 bg-sky-500/10 text-sky-400 transition-all hover:bg-sky-500/20 hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                    <Phone size={16} />
+                                    {t.phoneCallsBtn || "HEMEN ARA"}
+                                </a>
+                            )}
+                        </div>
+
+                        {/* Add to Contacts Button at bottom */}
+                        <button 
+                            onClick={handleAddToContacts}
+                            className="mt-4 w-full py-3 px-4 rounded-xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                        >
+                            <UserPlus size={14} />
+                            {t.contactBtn || "REHBERE EKLE"}
+                        </button>
+                    </div>
+
+                </div>
+
+                {/* Second Bento Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    {/* Widget 3: Social Links Icons Grid Box */}
+                    {socialLinks.length > 0 && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div>
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">SOSYAL MEDYA</h2>
+                                <p className="text-xs text-white/50 mb-6">Beni diğer platformlarda takip edin.</p>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {platformButtons.map((btn: any, i: number) => (
+                                    <motion.a 
+                                        key={i}
+                                        href={btn.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => trackEvent("social_button", btn.label)}
+                                        className="p-3 rounded-2xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:border-white/20 transition-all flex items-center justify-center"
+                                        title={btn.label}
+                                    >
+                                        {btn.icon}
+                                    </motion.a>
+                                ))}
+                                {emailAddress && (
+                                    <motion.a 
+                                        href={`mailto:${emailAddress}`}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => trackEvent("social_button", "email")}
+                                        className="p-3 rounded-2xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:border-white/20 transition-all flex items-center justify-center"
+                                        title="E-POSTA"
+                                    >
+                                        <Mail size={20} />
+                                    </motion.a>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Widget 4: CV and Quick Documents / Locations Box */}
+                    <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                        <div>
+                            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">BELGELER & KONUM</h2>
+                            <p className="text-xs text-white/50 mb-6">Özgeçmişimi indirin veya konumumu görün.</p>
+                        </div>
+                        <div className="space-y-3">
+                            {profile.cvUrl && (
+                                <button 
+                                    onClick={handleCVView}
+                                    className="w-full py-3.5 px-4 rounded-2xl bg-white/[0.04] border border-white/5 text-white hover:bg-white/[0.08] hover:border-white/20 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
+                                >
+                                    <Download size={14} />
+                                    {t.cvBtn || "ÖZGEÇMİŞİ İNDİR"}
+                                </button>
+                            )}
+                            
+                            {socialLinks.find((l: any) => l.platform === 'location')?.url && (
+                                <a 
+                                    href={formatUrl(socialLinks.find((l: any) => l.platform === 'location')?.url)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-full py-3.5 px-4 rounded-2xl bg-white/[0.04] border border-white/5 text-white hover:bg-white/[0.08] hover:border-white/20 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
+                                >
+                                    <MapPin size={14} />
+                                    {t.locationsBtn || "HARİTADA GÖSTER"}
+                                </a>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Widget 5: Reviews testimonial Box */}
+                    {reviews && reviews.length > 0 && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40">YORUMLAR</h2>
+                                <div className="flex text-amber-500 gap-0.5"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
+                            </div>
+                            <div className="flex-1 flex flex-col justify-center">
+                                <p className="text-xs text-white/80 italic leading-relaxed mb-4">
+                                    "{reviews[0]?.comment || reviews[0]?.text || "Harika ve profesyonel bir iş ortağı."}"
+                                </p>
+                                <p className="text-[10px] font-black uppercase tracking-wider text-right" style={{ color: theme.accent }}>
+                                    - {reviews[0]?.reviewerName || reviews[0]?.name || "Ziyaretçi"}
+                                </p>
+                            </div>
+                            <button 
+                                onClick={() => setIsReviewModalOpen(true)}
+                                className="mt-4 w-full py-2.5 px-4 rounded-xl bg-white/[0.04] border border-white/5 text-white/80 hover:text-white hover:bg-white/[0.08] transition-colors text-[10px] font-black uppercase tracking-widest"
+                            >
+                                DEĞERLENDİR
+                            </button>
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Third Bento Row: Portfolio and custom blocks */}
+                <div className="space-y-6">
+                    {profile.blocks?.filter((b: any) => b.isActive && b.type !== 'map' && b.type !== 'external_widget').sort((a: any, b: any) => a.order - b.order).map((block: any) => (
+                        <div key={block.id} className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{block.title || block.type}</h3>
+                                <div className="flex-1 h-[1px] bg-white/10" />
+                            </div>
+                            <div className="overflow-hidden">
+                                {block.type === 'expertise' && <SkillsWidget skills={block.content?.skills || []} theme={{ ...theme, accent: theme.accent }} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'portfolio' && <PortfolioWidget images={block.content?.images || []} githubUrl={block.content?.githubUrl} theme={theme} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
+                                {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/70 leading-relaxed font-medium antialiased" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
+                                {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5 shadow-2xl" alt="" />}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Services Grid Section */}
+                {profile.services && profile.services.length > 0 && (
+                    <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl p-6 rounded-3xl", theme.card)}>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="w-1.5 h-6 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)]" style={{ backgroundColor: theme.accent }} />
+                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40 italic">{t.servicesTitle || "UZMANLIK ALANLARI"}</h3>
+                            <div className="flex-1 h-[1px] bg-white/10" />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {profile.services.map((service: any, i: number) => (
+                                <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all space-y-3">
+                                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/5 flex items-center justify-center text-white" style={{ color: theme.accent }}>
+                                        <Briefcase size={20} />
+                                    </div>
+                                    <h4 className="text-sm font-black text-white">{service.title}</h4>
+                                    <p className="text-xs text-white/60 leading-relaxed font-normal">{service.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+            </div>
+        </div>
+    )
 }
 
 function WalletModal({ isOpen, onClose, profile, t, handleAddToContacts, theme, toneStyle }: any) {

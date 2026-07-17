@@ -207,7 +207,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "3d", name: t('cat3D'), icon: <Layers size={14} /> },
         { id: "elite", name: "Elite Modern", icon: <Sparkles size={14} /> },
         { id: "athletic", name: "Sporcu / Pro", icon: <Activity size={14} /> },
-        { id: "tourism", name: "Turizm & Seyahat", icon: <Map size={14} /> }
+        { id: "tourism", name: "Turizm & Seyahat", icon: <Map size={14} /> },
+        { id: "bento", name: "Bento Izgara", icon: <LayoutGrid size={14} /> }
     ]
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -1161,6 +1162,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
         { id: "tour_guide", category: "tourism", name: "🎒 Rehber / Gezgin", description: "Kişisel gezi notları tadında, harita detaylı ve dinamik bir yapı.", isNew: true },
         { id: "tour_agency", category: "tourism", name: "✈️ Tatil Acentesi", description: "Dünya turu odaklı, güven veren kurumsal ve renkli bir atmosfer.", isNew: true },
         { id: "tour_winter", category: "tourism", name: "❄️ Kayak & Kış Turizmi", description: "Buz mavisi ve kristal beyaz tonlarında kış sporları estetiği.", isNew: true },
+
+        // Bento Izgara
+        { id: "bento_grid", category: "bento", name: "🍱 Bento Grid Klasik", description: "Bento kutuları şeklinde modern, göz alıcı ve dengeli ızgara yerleşim tasarımı.", isNew: true }
     ]
 
     // Working Hours Management
