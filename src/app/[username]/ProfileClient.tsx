@@ -7461,6 +7461,39 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             </div>
                         </div>
                     )}
+ 
+                    {/* Widget 9: Articles Bento Box */}
+                    {profile?.articles && profile.articles.length > 0 && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div>
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">YAZILARIM</h2>
+                                <p className="text-xs text-white/50 mb-6">Son yayınlanan makale ve yazılarımı okuyun.</p>
+                            </div>
+                            <div className="space-y-3">
+                                {profile.articles.slice(0, 3).map((article: any, idx: number) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => {
+                                            trackEvent("article_click", article.title);
+                                            setCurrentArticle(article);
+                                            setIsArticleOpen(true);
+                                        }}
+                                        className="w-full text-left p-3.5 rounded-2xl bg-white/[0.04] border border-white/5 hover:bg-white/[0.08] hover:border-white/20 transition-all flex items-center gap-3 group"
+                                    >
+                                        {article.image && (
+                                            <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10">
+                                                <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="text-xs font-black text-white/90 group-hover:text-white line-clamp-1 leading-snug">{article.title}</h4>
+                                            <span className="text-[9px] font-black uppercase tracking-wider text-white/30 block mt-0.5">{article.category || "MAKALE"}</span>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Custom Blocks rendered inline as Bento boxes */}
                     {gridBlocks.map((block: any) => {
@@ -7509,13 +7542,6 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                                     </div>
                                 ))}
                             </div>
-                        </div>
-                    )}
-
-                    {/* Articles Box (Takes full width 3 cols) */}
-                    {profile?.articles && profile.articles.length > 0 && (
-                        <div className="lg:col-span-3">
-                            <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
                         </div>
                     )}
 
