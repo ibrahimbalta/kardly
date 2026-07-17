@@ -7326,15 +7326,13 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                             <p className="text-xs text-white/50 mb-6">Özgeçmişimi indirin veya konumumu görün.</p>
                         </div>
                         <div className="space-y-3">
-                            {profile.cvUrl && (
-                                <button 
-                                    onClick={handleCVView}
-                                    className="w-full py-3.5 px-4 rounded-2xl bg-white/[0.04] border border-white/5 text-white hover:bg-white/[0.08] hover:border-white/20 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
-                                >
-                                    <Download size={14} />
-                                    {t.cvBtn || "ÖZGEÇMİŞİ İNDİR"}
-                                </button>
-                            )}
+                            <button 
+                                onClick={handleCVView}
+                                className="w-full py-3.5 px-4 rounded-2xl bg-white/[0.04] border border-white/5 text-white hover:bg-white/[0.08] hover:border-white/20 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
+                            >
+                                <Download size={14} />
+                                {profile.isCatalog ? (t.viewCatalog || "KATALOĞU İNCELE") : (t.cvBtn || "ÖZGEÇMİŞİ İNDİR")}
+                            </button>
                             
                             {socialLinks.find((l: any) => l.platform === 'location')?.url && (
                                 <a 
@@ -7391,6 +7389,26 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                                 {block.type === 'video' && <VideoWidget url={block.content?.url} theme={theme} t={t} toneStyle={toneStyle} />}
                                 {block.type === 'text' && <div className="prose prose-invert max-w-none text-sm text-white/70 leading-relaxed font-medium antialiased" dangerouslySetInnerHTML={{ __html: block.content?.text }} />}
                                 {block.type === 'image' && <img src={block.content?.url} className="w-full rounded-2xl border border-white/5 shadow-2xl" alt="" />}
+                                {block.type === 'ai_assistant' && (
+                                    <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
+                                        <div className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white" style={{ color: theme.accent }}>
+                                            <Bot size={24} />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <h4 className="text-sm font-black text-white">{block.content?.assistantName || "Yapay Zeka Asistanı"}</h4>
+                                            <p className="text-xs text-white/50 max-w-sm">
+                                                {block.content?.greeting || "Merhaba! Sorularınızı yanıtlamak için buradayım."}
+                                            </p>
+                                        </div>
+                                        <button 
+                                            onClick={() => setIsAIChatOpen(true)}
+                                            className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:scale-105 active:scale-95"
+                                            style={{ backgroundColor: theme.accent, color: '#000' }}
+                                        >
+                                            SOHBET BAŞLAT
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -7421,15 +7439,16 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
             </div>
 
             {/* Modals integrated for bento grid actions */}
-            <LeadModal 
-                isOpen={isLeadModalOpen} 
-                onClose={() => setIsLeadModalOpen(false)} 
-                onSubmit={() => setIsLeadModalOpen(false)} 
-                theme={theme} 
-                t={t} 
-                lang={lang} 
-                toneStyle={toneStyle} 
-                profileName={profile?.user?.name || ""} 
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                onSubmit={async (newReview: any) => {
+                    try {
+                        const res = await fetch("/api/review/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...newReview, profileId: profile.id }) });
+                        if (res.ok) { setReviewStatus(t.reviewSuccessMsg); setTimeout(() => setReviewStatus(null), 5000); }
+                    } catch (err) { console.error(err); }
+                }}
+                theme={theme} t={t} toneStyle={toneStyle}
             />
 
             <AppointmentModal 
@@ -7439,6 +7458,22 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                 t={t} 
                 lang={lang} 
             />
+
+            <LeadModal
+                isOpen={isLeadModalOpen}
+                onClose={() => setIsLeadModalOpen(false)}
+                onSubmit={async (leadData: any) => {
+                    try {
+                        const res = await fetch("/api/leads/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...leadData, profileId: profile.id }) });
+                        if (res.ok) { setLeadStatus(t.leadSuccessMsg); setTimeout(() => setLeadStatus(null), 5000); handleAddToContacts(); }
+                    } catch (err) { console.error(err); }
+                }}
+                theme={theme} t={t} lang={lang} toneStyle={toneStyle} profileName={profile?.user?.name || ""}
+            />
+
+            <CVPreviewModal isOpen={isCVModalOpen} onClose={() => setIsCVModalOpen(false)} url={cvViewUrl} theme={theme} t={t} toneStyle={toneStyle} profile={profile} />
+
+            <AIChatAssistant isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} profile={profile} t={t} theme={theme} toneStyle={toneStyle} messages={chatMessages} setMessages={setChatMessages} aiConfig={aiConfig} />
 
             <QrModal 
                 isOpen={isQrOpen} 
@@ -7457,6 +7492,20 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                 theme={theme} 
                 toneStyle={toneStyle} 
             />
+
+            {/* Status toasts */}
+            <AnimatePresence>
+                {reviewStatus && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+                        <CheckCircle2 size={14} /> {reviewStatus}
+                    </motion.div>
+                )}
+                {leadStatus && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] backdrop-blur-2xl px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl flex items-center gap-2 border" style={{ borderColor: `${theme.accent}30`, backgroundColor: `${theme.accent}15`, color: theme.accent }}>
+                        <CheckCircle2 size={14} /> {leadStatus}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
