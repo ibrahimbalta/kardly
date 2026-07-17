@@ -7372,6 +7372,49 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         </div>
                     )}
 
+                    {/* Widget 6: Payment / Support Box */}
+                    {profile.paymentLink && (
+                        <div className={cn("border hover:border-amber-500/20 transition-all duration-300 shadow-2xl flex flex-col justify-between", theme.card)}>
+                            <div>
+                                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 mb-4">DESTEK & ÖDEME</h2>
+                                <p className="text-xs text-white/50 mb-6">
+                                    {profile.paymentType === 'consulting' ? "Danışmanlık hizmeti satın almak için tıklayın." :
+                                     profile.paymentType === 'support' ? "Destek olmak ve katkıda bulunmak için tıklayın." :
+                                     profile.paymentType === 'pay' ? "Ödeme yapmak için tıklayın." :
+                                     "Bana bir kahve ısmarlayarak destek olabilirsiniz."}
+                                </p>
+                            </div>
+                            <motion.a
+                                href={formatUrl(profile.paymentLink)}
+                                target="_blank"
+                                rel="noreferrer"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => trackEvent("payment_click")}
+                                className="w-full py-4 px-6 rounded-2xl font-black uppercase tracking-wider text-xs flex items-center justify-between transition-all shadow-lg border"
+                                style={{ 
+                                    backgroundColor: `${theme.accent}15`, 
+                                    borderColor: `${theme.accent}30`, 
+                                    color: theme.accent 
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    {profile.paymentType === 'consulting' ? <Briefcase size={16} /> :
+                                     profile.paymentType === 'support' ? <Heart size={16} /> :
+                                     profile.paymentType === 'pay' ? <CreditCard size={16} /> :
+                                     <Coffee size={16} />}
+                                    <span>
+                                        {profile.paymentType === 'consulting' ? t.consultingBtn :
+                                         profile.paymentType === 'support' ? t.supportBtn :
+                                         profile.paymentType === 'pay' ? t.payBtn :
+                                         t.coffeeBtn}
+                                    </span>
+                                </div>
+                                <Zap size={14} fill={theme.accent} />
+                            </motion.a>
+                        </div>
+                    )}
+
                 </div>
 
                 {/* Third Bento Row: Portfolio and custom blocks */}
@@ -7435,6 +7478,9 @@ function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, ha
                         </div>
                     </div>
                 )}
+
+                {/* Articles Section */}
+                <ArticlesSection articles={profile?.articles || []} t={t} theme={theme} setCurrentArticle={setCurrentArticle} setIsArticleOpen={setIsArticleOpen} trackEvent={trackEvent} toneStyle={toneStyle} lang={lang} />
 
             </div>
 
