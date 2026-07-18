@@ -1,4 +1,4 @@
-"use client" // Build Trigger: Clean State 1.2
+﻿"use client" // Build Trigger: Clean State 1.2
 
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -49,6 +49,7 @@ import {
     List,
     Sparkles,
     Shield,
+    Lock,
     MapPin,
     ArrowRight,
     Award,
