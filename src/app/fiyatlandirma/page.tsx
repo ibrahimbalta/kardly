@@ -201,10 +201,10 @@ export default function FiyatlandirmaPage() {
                             </div>
 
                             <Link
-                                href="/register"
+                                href="/iletisim?plan=pro"
                                 className="block w-full py-3.5 rounded-2xl bg-white text-rose-600 text-sm font-bold text-center hover:bg-white/90 transition-colors shadow-lg"
                             >
-                                Pro&apos;ya Geç
+                                İletişime Geç
                             </Link>
 
                             <div className="space-y-3 pt-4 border-t border-white/20">
