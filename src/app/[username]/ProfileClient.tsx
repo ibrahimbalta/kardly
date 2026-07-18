@@ -1,4 +1,4 @@
-// Vercel Deployment Trigger: 2026-04-21-Elite-Layout-Reorder
+﻿// Vercel Deployment Trigger: 2026-04-21-Elite-Layout-Reorder
 "use client"
 
 import React, { useState, useEffect, useRef, useMemo, ReactElement, cloneElement } from "react"
@@ -5469,6 +5469,8 @@ const MatrixBackground = ({ color = "#00ff00", opacity = 0.1 }: { color?: string
 };
 
 function EliteModernTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen }: any) {
+    const plan = profile?.user?.subscription?.plan || "free"
+    const isPremium = profile?.user?.subscription?.status === "active" && plan !== "free"
     const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
 
     const themes: Record<string, any> = {
@@ -7102,6 +7104,8 @@ function ParticleBackground({ type, color }: { type: 'matrix' | 'starfield' | 'b
 }
 
 function BentoGridTemplate({ profile, colorScheme, handleShare, handleCVView, handleAddToContacts, reviews, isReviewModalOpen, setIsReviewModalOpen, setIsAppointmentOpen, isAppointmentOpen, t, trackEvent, tone, setReviewStatus, reviewStatus, setIsQrOpen, lang, setLang, isWalletModalOpen, setIsWalletModalOpen, qrDataUrl, isQrOpen, toneStyle, copied, setIsLeadModalOpen, isLeadModalOpen, setLeadStatus, leadStatus, isAIChatOpen, setIsAIChatOpen, chatMessages, setChatMessages, aiConfig, isEmbedMode, translateText, isCVModalOpen, setIsCVModalOpen, cvViewUrl, selectedProject, setSelectedProject, setCurrentArticle, isArticleOpen, setIsArticleOpen, networkingStatus, handleFollowToggle, setIsMessageModalOpen, isMobile }: any) {
+    const plan = profile?.user?.subscription?.plan || "free"
+    const isPremium = profile?.user?.subscription?.status === "active" && plan !== "free"
     
     const formatUrl = (url?: string) => {
         if (!url) return ""
