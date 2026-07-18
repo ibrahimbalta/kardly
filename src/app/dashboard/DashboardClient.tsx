@@ -5413,7 +5413,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 <div className="flex flex-col gap-2">
                                                     <h3 className="font-black text-slate-900 leading-tight flex items-center gap-1.5 flex-wrap">
                                                         {tpl.name}
-                                                        {!["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"].includes(tpl.id) && (
+                                                        {["neon_black", "neon_blue", "neon_purple", "minimal_pure", "minimal_graphite", "minimal_glass"].includes(tpl.id) ? (
+                                                            <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-[7px] font-black rounded uppercase tracking-wider shrink-0 shadow-sm">ÜCRETSİZ</span>
+                                                        ) : (
                                                             <span className="px-1.5 py-0.5 bg-gradient-to-r from-rose-500 to-amber-500 text-white text-[7px] font-black rounded uppercase tracking-wider shrink-0 shadow-sm">PRO</span>
                                                         )}
                                                     </h3>
