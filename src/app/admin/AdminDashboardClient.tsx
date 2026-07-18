@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import {
@@ -18,6 +18,7 @@ import {
     X,
     Activity,
     ChevronRight,
+    ChevronDown,
     ArrowUpRight,
     MessageSquare,
     FileText,
@@ -132,6 +133,33 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
         u.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         u.name?.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+    const handlePlanChange = async (userId: string, newPlan: string) => {
+        setLoadingUserId(userId)
+        try {
+            const response = await fetch('/api/admin/users/plan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, plan: newPlan })
+            })
+            if (response.ok) {
+                setLocalUsers(localUsers.map((u: any) =>
+                    u.id === userId ? {
+                        ...u,
+                        subscription: {
+                            ...(u.subscription || {}),
+                            plan: newPlan,
+                            status: "active"
+                        }
+                    } : u
+                ))
+            }
+        } catch (error) {
+            console.error("Plan update error:", error)
+        } finally {
+            setLoadingUserId(null)
+        }
+    }
 
     const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
         setLoadingUserId(userId)
@@ -680,12 +708,28 @@ export default function AdminDashboardClient({ users, payments, orders, stats, i
                                                         )}
                                                     </td>
                                                     <td className="px-8 py-6">
-                                                        <span className={cn(
-                                                            "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-sm",
-                                                            u.subscription?.plan === 'pro' ? 'bg-purple-50 text-purple-600 border border-purple-100' : 'bg-slate-100 border border-slate-200 text-slate-500'
-                                                        )}>
-                                                            {u.subscription?.plan || 'free'}
-                                                        </span>
+                                                        <div className="relative inline-block">
+                                                            <select
+                                                                value={u.subscription?.plan?.toLowerCase() || 'free'}
+                                                                onChange={(e) => handlePlanChange(u.id, e.target.value)}
+                                                                disabled={loadingUserId === u.id}
+                                                                className={cn(
+                                                                    "px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.15em] border appearance-none pr-6 cursor-pointer transition-all outline-none shadow-sm",
+                                                                    (u.subscription?.plan?.toLowerCase() || 'free') === 'enterprise'
+                                                                        ? "bg-slate-900 text-amber-400 border-slate-800 font-extrabold"
+                                                                        : (u.subscription?.plan?.toLowerCase() || 'free') === 'pro'
+                                                                        ? "bg-purple-100 text-purple-700 border-purple-200 font-extrabold"
+                                                                        : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+                                                                )}
+                                                            >
+                                                                <option value="free" className="bg-white text-slate-800 font-bold">FREE</option>
+                                                                <option value="pro" className="bg-white text-purple-700 font-bold">PRO</option>
+                                                                <option value="enterprise" className="bg-white text-amber-600 font-bold">İŞLETME</option>
+                                                            </select>
+                                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-current opacity-60">
+                                                                <ChevronDown size={10} />
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                     <td className="px-8 py-6">
                                                         <button
