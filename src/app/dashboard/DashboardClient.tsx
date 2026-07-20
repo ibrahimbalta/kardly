@@ -5121,8 +5121,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <p className="text-sm text-slate-500 font-bold max-w-lg mx-auto">{t('businessCardSub')}</p>
                                 </div>
 
-                                {/* Enterprise Staff Selector — only visible to enterprise plan users */}
-                                {isEnterprise && enterpriseEmployees && enterpriseEmployees.length > 0 && (
+                                {/* Enterprise Staff Selector — visible to ALL enterprise plan users */}
+                                {isEnterprise && (
                                     <div className="bg-gradient-to-r from-violet-900 via-indigo-900 to-slate-900 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-2xl text-left space-y-4 border border-violet-500/30">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                             <div>
@@ -5134,30 +5134,47 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                         Sınırsız Personel Kartı
                                                     </span>
                                                 </div>
-                                                <h3 className="text-xl font-black text-white uppercase tracking-tight mt-2 flex items-center gap-2">
+                                                <h3 className="text-xl font-black text-white uppercase tracking-tight mt-2">
                                                     🏢 Personel Kartviziti Seçin & Dizayn Edin
                                                 </h3>
                                                 <p className="text-xs text-slate-300 font-medium">Seçtiğiniz çalışanın bilgileriyle kartvizit anında oluşturulur. Şirket logonuzu, renklerinizi ve şablonunuzu belirleyin.</p>
                                             </div>
 
-                                            {/* Employee Selector Dropdown */}
-                                            <div className="w-full sm:w-auto">
-                                                <select
-                                                    value={selectedEmpCardId}
-                                                    onChange={(e) => setSelectedEmpCardId(e.target.value)}
-                                                    className="w-full sm:w-72 px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+                                            {/* Dropdown: only shown when there are employees */}
+                                            {enterpriseEmployees.length > 0 ? (
+                                                <div className="w-full sm:w-auto">
+                                                    <select
+                                                        value={selectedEmpCardId}
+                                                        onChange={(e) => setSelectedEmpCardId(e.target.value)}
+                                                        className="w-full sm:w-72 px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+                                                    >
+                                                        <option value="self" className="bg-slate-900 text-white">👤 Kendi Profil Kartvizitim ({profileData.name || "Yönetici"})</option>
+                                                        <optgroup label="🏢 Kurumsal Kadro Personelleri" className="bg-slate-900 text-amber-300 font-bold">
+                                                            {enterpriseEmployees.map((emp) => (
+                                                                <option key={emp.id} value={emp.id} className="bg-slate-900 text-white">
+                                                                    👤 {emp.name} ({emp.role})
+                                                                </option>
+                                                            ))}
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => setActiveTab("enterprise")}
+                                                    className="flex-shrink-0 px-5 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-lg cursor-pointer"
                                                 >
-                                                    <option value="self" className="bg-slate-900 text-white">👤 Kendi Profil Kartvizitim ({profileData.name || "Yönetici"})</option>
-                                                    <optgroup label="🏢 Kurumsal Kadro Personelleri" className="bg-slate-900 text-amber-300 font-bold">
-                                                        {enterpriseEmployees.map((emp) => (
-                                                            <option key={emp.id} value={emp.id} className="bg-slate-900 text-white">
-                                                                👤 {emp.name} ({emp.role})
-                                                            </option>
-                                                        ))}
-                                                    </optgroup>
-                                                </select>
-                                            </div>
+                                                    ➕ Personel Ekle
+                                                </button>
+                                            )}
                                         </div>
+
+                                        {/* No employees yet — info row */}
+                                        {enterpriseEmployees.length === 0 && (
+                                            <div className="pt-3 border-t border-white/10 text-xs font-bold text-slate-400 flex items-center gap-2">
+                                                <span>⚠️</span>
+                                                <span>Henüz personel eklenmemiş. <button onClick={() => setActiveTab("enterprise")} className="text-amber-300 underline cursor-pointer">İşletme Paneli</button>{'\''}nden çalışanlarınızı ekleyin, ardından buradan kartlarını tasarlayın.</span>
+                                            </div>
+                                        )}
 
                                         {selectedEmp && (
                                             <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-slate-300">
