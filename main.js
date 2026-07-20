@@ -230,6 +230,7 @@ function initViewSwitchers() {
     const btnGoHomeLogo = document.getElementById('btnGoHomeLogo');
     const btnGoHomeText = document.getElementById('btnGoHomeText');
     const btnDashboardIsletmeBadge = document.getElementById('btnDashboardIsletmeBadge');
+    const btnOpenEnterpriseDashboardTop = document.getElementById('btnOpenEnterpriseDashboardTop');
 
     const handleGoHome = (e) => {
         if (e) e.preventDefault();
@@ -258,6 +259,7 @@ function initViewSwitchers() {
 
     if (btnAdmin) btnAdmin.addEventListener('click', handleOpenAdmin);
     if (btnDashboardIsletmeBadge) btnDashboardIsletmeBadge.addEventListener('click', handleOpenAdmin);
+    if (btnOpenEnterpriseDashboardTop) btnOpenEnterpriseDashboardTop.addEventListener('click', handleOpenAdmin);
 
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', (e) => {

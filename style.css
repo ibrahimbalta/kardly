@@ -160,6 +160,27 @@ body.enterprise-app {
     color: #0f172a;
 }
 
+.btn-isletme-highlight {
+    background: linear-gradient(135deg, #8b5cf6, #d97706);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+    transition: var(--transition-fast);
+}
+
+.btn-isletme-highlight:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(217, 119, 6, 0.45);
+}
+
 /* View Mode Switcher Toggle */
 .view-mode-toggle {
     display: flex;
