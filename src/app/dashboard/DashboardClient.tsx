@@ -221,8 +221,26 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     // Enterprise Management Dashboard State
-    // Enterprise employees — starts empty; populated only from this user's own DB records
+    // Enterprise employees — fetched from DB on mount (only for enterprise plan users)
     const [enterpriseEmployees, setEnterpriseEmployees] = useState<any[]>([]);
+    const [empLoading, setEmpLoading] = useState(false);
+
+    // Fetch employees from DB when enterprise plan is confirmed
+    React.useEffect(() => {
+        if (!isEnterprise) return;
+        setEmpLoading(true);
+        fetch("/api/enterprise/employees")
+            .then(r => r.json())
+            .then(data => {
+                if (Array.isArray(data)) setEnterpriseEmployees(data);
+            })
+            .catch(console.error)
+            .finally(() => setEmpLoading(false));
+    }, [isEnterprise]);
+
+    // Enterprise Card Selection State
+    const [selectedEmpCardId, setSelectedEmpCardId] = useState<string>("self");
+
     const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>([
         { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
         { id: "2", client: "Selin Kaya - Mimarlık", date: "Dün 16:15", note: "Toplu NFC yaka kartı fiyat teklifi talep ediyoruz.", staff: "Ayşe Yılmaz", status: "Görüşüldü", email: "selin@mimarlik.com", phone: "+90 533 888 7766" },
@@ -3044,10 +3062,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
                                                             {/* Delete Employee */}
                                                             <button
-                                                                onClick={() => {
+                                                                onClick={async () => {
                                                                     if (confirm(`${emp.name} isimli personeli silmek istediğinize emin misiniz?`)) {
-                                                                        setEnterpriseEmployees(prev => prev.filter(item => item.id !== emp.id));
-                                                                        setShowToast(`🗑️ ${emp.name} kaydı silindi.`);
+                                                                        try {
+                                                                            const res = await fetch(`/api/enterprise/employees/${emp.id}`, { method: 'DELETE' });
+                                                                            if (res.ok) {
+                                                                                setEnterpriseEmployees(prev => prev.filter(item => item.id !== emp.id));
+                                                                                setShowToast(`🗑️ ${emp.name} kaydı silindi.`);
+                                                                            } else {
+                                                                                setShowToast('Silme işlemi başarısız!');
+                                                                            }
+                                                                        } catch {
+                                                                            setShowToast('Bağlantı hatası!');
+                                                                        }
                                                                         setTimeout(() => setShowToast(null), 3000);
                                                                     }
                                                                 }}
@@ -8121,20 +8148,60 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </button>
                             </div>
                             <form
-                                onSubmit={(e) => {
+                                onSubmit={async (e) => {
                                     e.preventDefault();
-                                    if (!newEmpForm.name || !newEmpForm.email) return;
+                                    if (!newEmpForm.name) return;
+
+                                    // If photo is base64 (not yet uploaded), upload to Cloudinary first
+                                    let finalPhoto = newEmpForm.photo;
+                                    if (finalPhoto && finalPhoto.startsWith('data:')) {
+                                        try {
+                                            const blob = await fetch(finalPhoto).then(r => r.blob());
+                                            const fd = new FormData();
+                                            fd.append('file', blob, 'employee-photo.jpg');
+                                            const upRes = await fetch('/api/upload', { method: 'POST', body: fd });
+                                            const upData = await upRes.json();
+                                            if (upData.url) finalPhoto = upData.url;
+                                        } catch (err) {
+                                            console.error('Photo upload failed:', err);
+                                        }
+                                    }
+
+                                    const payload = { ...newEmpForm, photo: finalPhoto };
+
                                     if (editingEmployee) {
-                                        setEnterpriseEmployees(prev => prev.map(emp => emp.id === editingEmployee.id ? { ...emp, ...newEmpForm } : emp));
-                                        setShowToast(`⚡ ${newEmpForm.name} bilgileri güncellendi!`);
+                                        // PATCH existing
+                                        try {
+                                            const res = await fetch(`/api/enterprise/employees/${editingEmployee.id}`, {
+                                                method: 'PATCH',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify(payload)
+                                            });
+                                            if (res.ok) {
+                                                const updated = await res.json();
+                                                setEnterpriseEmployees(prev => prev.map(emp => emp.id === editingEmployee.id ? updated : emp));
+                                                setShowToast(`⚡ ${newEmpForm.name} bilgileri güncellendi!`);
+                                            } else {
+                                                setShowToast('Güncelleme başarısız!');
+                                            }
+                                        } catch { setShowToast('Bağlantı hatası!'); }
                                     } else {
-                                        const newEmp = {
-                                            id: Date.now().toString(),
-                                            ...newEmpForm,
-                                            reads: 0,
-                                        };
-                                        setEnterpriseEmployees(prev => [newEmp, ...prev]);
-                                        setShowToast(`🎉 ${newEmpForm.name} kurumsal kadroya eklendi!`);
+                                        // POST new
+                                        try {
+                                            const res = await fetch('/api/enterprise/employees', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify(payload)
+                                            });
+                                            if (res.ok) {
+                                                const created = await res.json();
+                                                setEnterpriseEmployees(prev => [created, ...prev]);
+                                                setShowToast(`🎉 ${newEmpForm.name} kurumsal kadroya eklendi!`);
+                                            } else {
+                                                const err = await res.json().catch(() => ({}));
+                                                setShowToast(err.error || 'Kayıt başarısız!');
+                                            }
+                                        } catch { setShowToast('Bağlantı hatası!'); }
                                     }
                                     setShowAddEmployeeModal(false);
                                     setTimeout(() => setShowToast(null), 3000);
@@ -8161,12 +8228,13 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                 type="file"
                                                 accept="image/*"
                                                 className="hidden"
-                                                onChange={(e) => {
+                                                onChange={async (e) => {
                                                     const file = e.target.files?.[0];
                                                     if (!file) return;
+                                                    // Show preview immediately as base64
                                                     const reader = new FileReader();
                                                     reader.onload = (ev) => {
-                                                        setNewEmpForm({ ...newEmpForm, photo: ev.target?.result as string });
+                                                        setNewEmpForm(prev => ({ ...prev, photo: ev.target?.result as string }));
                                                     };
                                                     reader.readAsDataURL(file);
                                                 }}

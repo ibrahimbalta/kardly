@@ -131,6 +131,24 @@ model Profile {
   hubAds         HubAd[]
   statusUpdates  StatusUpdate[]
   user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enterpriseEmployees EnterpriseEmployee[]
+}
+
+model EnterpriseEmployee {
+  id          String   @id @default(cuid())
+  profileId   String
+  name        String
+  email       String?
+  phone       String?
+  role        String?
+  department  String?
+  nfcTag      String?
+  photo       String?  // Cloudinary URL
+  active      Boolean  @default(true)
+  reads       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model HubAd {
