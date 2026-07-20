@@ -230,7 +230,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     ]);
     const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState<any | null>(null);
-    const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true });
+    const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true, photo: "" });
     const [empSearchQuery, setEmpSearchQuery] = useState("");
     const [empFilterDept, setEmpFilterDept] = useState("all");
     const [activeDeptTheme, setActiveDeptTheme] = useState("exec");
@@ -5105,7 +5105,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             username: selectedEmp.nfcTag || profile?.username || "demo",
                             occupation: `${selectedEmp.role} - ${selectedEmp.department}`,
                             phone: selectedEmp.phone || profileData.phone,
-                            email: selectedEmp.email || session?.user?.email
+                            email: selectedEmp.email || session?.user?.email,
+                            image: selectedEmp.photo || undefined
                         } : {
                             name: profileData.name || session?.user?.name || "Kullanıcı",
                             username: profile?.username || "demo",
@@ -8140,6 +8141,50 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 }}
                                 className="space-y-4 text-xs font-bold text-slate-700"
                             >
+                                {/* Profile Photo Upload */}
+                                <div className="flex items-center gap-5 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                    <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-br from-violet-100 to-indigo-100 flex-shrink-0 border-2 border-violet-200">
+                                        {newEmpForm.photo ? (
+                                            <img src={newEmpForm.photo} alt="Personel" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center text-violet-400">
+                                                <span className="text-2xl">👤</span>
+                                                <span className="text-[9px] font-black mt-1">FOTOĞRAF</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-2">Personel Fotoğrafı</label>
+                                        <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-[11px] font-black uppercase tracking-wider cursor-pointer transition-colors">
+                                            📸 Fotoğraf Yükle
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (!file) return;
+                                                    const reader = new FileReader();
+                                                    reader.onload = (ev) => {
+                                                        setNewEmpForm({ ...newEmpForm, photo: ev.target?.result as string });
+                                                    };
+                                                    reader.readAsDataURL(file);
+                                                }}
+                                            />
+                                        </label>
+                                        {newEmpForm.photo && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setNewEmpForm({ ...newEmpForm, photo: "" })}
+                                                className="ml-2 text-[11px] text-red-500 font-black underline cursor-pointer"
+                                            >
+                                                Kaldır
+                                            </button>
+                                        )}
+                                        <p className="text-[9px] text-slate-400 mt-1.5 font-medium">Yüklenen fotoğraf kartvizit üzerinde görünür.</p>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Ad Soyad</label>
                                     <input
