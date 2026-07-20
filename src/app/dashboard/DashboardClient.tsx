@@ -248,7 +248,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     ]);
     const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState<any | null>(null);
-    const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true, photo: "" });
+    const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true, photo: "", profileUrl: "" });
     const [empSearchQuery, setEmpSearchQuery] = useState("");
     const [empFilterDept, setEmpFilterDept] = useState("all");
     const [activeDeptTheme, setActiveDeptTheme] = useState("exec");
@@ -2838,7 +2838,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <button
                                         onClick={() => {
                                             setEditingEmployee(null);
-                                            setNewEmpForm({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: `NFC-EREN-${Math.floor(100 + Math.random() * 900)}`, phone: "", active: true, photo: "" });
+                                            setNewEmpForm({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: `NFC-EREN-${Math.floor(100 + Math.random() * 900)}`, phone: "", active: true, photo: "", profileUrl: "" });
                                             setShowAddEmployeeModal(true);
                                         }}
                                         className="px-6 py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-violet-500/25 flex items-center gap-2 cursor-pointer hover:scale-105"
@@ -5133,13 +5133,15 @@ export default function DashboardClient({ session, profile, subscription, appoin
                             occupation: `${selectedEmp.role} - ${selectedEmp.department}`,
                             phone: selectedEmp.phone || profileData.phone,
                             email: selectedEmp.email || session?.user?.email,
-                            image: selectedEmp.photo || undefined
+                            image: selectedEmp.photo || undefined,
+                            profileUrl: selectedEmp.profileUrl || (selectedEmp.nfcTag ? `https://kardly.site/p/${selectedEmp.nfcTag}` : undefined)
                         } : {
                             name: profileData.name || session?.user?.name || "Kullanıcı",
                             username: profile?.username || "demo",
                             occupation: profileData.occupation,
                             phone: profileData.phone,
-                            email: session?.user?.email
+                            email: session?.user?.email,
+                            profileUrl: profile?.username ? `https://kardly.site/${profile.username}` : undefined
                         };
 
                         return (
@@ -8323,6 +8325,17 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                         onChange={(e) => setNewEmpForm({ ...newEmpForm, nfcTag: e.target.value })}
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:outline-none focus:border-violet-500"
                                     />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Kartvizit Linki / Yönlendirme URL (QR Kodu)</label>
+                                    <input
+                                        type="url"
+                                        placeholder={newEmpForm.nfcTag ? `https://kardly.site/p/${newEmpForm.nfcTag}` : "https://kardly.site/p/NFC-EREN-105"}
+                                        value={newEmpForm.profileUrl || ""}
+                                        onChange={(e) => setNewEmpForm({ ...newEmpForm, profileUrl: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-violet-500"
+                                    />
+                                    <p className="text-[10px] text-slate-400 mt-1 font-medium">QR koduna tıklandığında veya okutulduğunda yönlendirilecek web adresi (Boş bırakılırsa varsayılan profil linki kullanılır).</p>
                                 </div>
                                 <div className="pt-4 flex justify-end gap-3">
                                     <button

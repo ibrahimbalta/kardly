@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 })
 
         const body = await req.json()
-        const { name, email, phone, role, department, nfcTag, photo, active } = body
+        const { name, email, phone, role, department, nfcTag, photo, profileUrl, active } = body
 
         if (!name) return NextResponse.json({ error: "İsim zorunludur" }, { status: 400 })
 
@@ -61,6 +61,7 @@ export async function POST(req: Request) {
                 department: department || null,
                 nfcTag: nfcTag || null,
                 photo: photo || null,
+                profileUrl: profileUrl || null,
                 active: active ?? true,
                 reads: 0
             }

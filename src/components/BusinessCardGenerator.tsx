@@ -17,6 +17,7 @@ interface BusinessCardGeneratorProps {
         image?: string
         phone?: string
         email?: string
+        profileUrl?: string
     }
     profileData: any
     mode?: 'full' | 'selector' | 'preview' | 'modal'
@@ -180,7 +181,7 @@ export default function BusinessCardGenerator({
     }, [])
 
     const tp = TEMPLATES.find(t => t.id === internalSelectedTplId) || TEMPLATES[0]
-    const profileUrl = typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : ''
+    const profileUrl = user.profileUrl || (typeof window !== 'undefined' ? `${window.location.origin}/${user.username}` : '')
 
     useEffect(() => {
         const generateQr = async () => {
@@ -811,7 +812,11 @@ export default function BusinessCardGenerator({
                         }}
                     >
                         <div className="absolute inset-0 bg-white/20 blur-xl rounded-xl scale-110 animate-pulse" />
-                        <div className="w-full h-full p-1.5 bg-white shadow-xl relative z-10 border border-white/50 rounded-xl flex items-center justify-center">
+                        <div 
+                            onClick={() => profileUrl && window.open(profileUrl, '_blank')}
+                            title="Profil Linkini Aç"
+                            className="w-full h-full p-1.5 bg-white shadow-xl relative z-10 border border-white/50 rounded-xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                        >
                             {qrDataUrl ? (
                                 <img src={qrDataUrl} alt="QR Code" className="image-render-crisp w-full h-full object-contain" />
                             ) : (
@@ -879,7 +884,7 @@ export default function BusinessCardGenerator({
                             {[
                                 { icon: Phone, value: user.phone || profileData?.phone, label: 'TELEFON' },
                                 { icon: Mail, value: user.email || profileData?.email, label: 'E-POSTA' },
-                                { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
+                                { icon: Globe, value: user.profileUrl ? user.profileUrl.replace(/^https?:\/\//, '') : `kardly.site/${user.username}`, label: 'WEB PROFİL' }
                             ].filter(item => item.value).map((item, idx) => (
                                 <div key={idx} className={cn(
                                     "flex items-center gap-3 px-3 py-2 rounded-xl border transition-all",
@@ -916,7 +921,11 @@ export default function BusinessCardGenerator({
                             }}
                         >
                             <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 animate-pulse" />
-                            <div className="w-full h-full p-2 bg-white shadow-2xl relative z-10 border border-white/50 flex items-center justify-center rounded-2xl">
+                            <div 
+                                onClick={() => profileUrl && window.open(profileUrl, '_blank')}
+                                title="Profil Linkini Aç"
+                                className="w-full h-full p-2 bg-white shadow-2xl relative z-10 border border-white/50 flex items-center justify-center rounded-2xl cursor-pointer hover:scale-105 transition-transform"
+                            >
                                 {qrDataUrl ? (
                                     <img src={qrDataUrl} alt="QR Code" className="image-render-crisp w-full h-full object-contain transition-all" />
                                 ) : (
@@ -980,7 +989,7 @@ export default function BusinessCardGenerator({
                             {[
                                 { icon: Phone, value: user.phone || profileData?.phone, label: 'TELEFON' },
                                 { icon: Mail, value: user.email || profileData?.email, label: 'E-POSTA' },
-                                { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
+                                { icon: Globe, value: user.profileUrl ? user.profileUrl.replace(/^https?:\/\//, '') : `kardly.site/${user.username}`, label: 'WEB PROFİL' }
                             ].filter(item => item.value).map((item, idx) => (
                                 <div key={idx} className={cn(
                                     "flex items-center gap-3 px-3.5 py-2.5 rounded-xl border transition-all",

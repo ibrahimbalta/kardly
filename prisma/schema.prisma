@@ -144,6 +144,7 @@ model EnterpriseEmployee {
   department  String?
   nfcTag      String?
   photo       String?  // Cloudinary URL
+  profileUrl  String?  // QR Code / Mini Site URL
   active      Boolean  @default(true)
   reads       Int      @default(0)
   createdAt   DateTime @default(now())

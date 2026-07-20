@@ -22,7 +22,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         if (!existing) return NextResponse.json({ error: "Employee not found" }, { status: 404 })
 
         const body = await req.json()
-        const { name, email, phone, role, department, nfcTag, photo, active, reads } = body
+        const { name, email, phone, role, department, nfcTag, photo, profileUrl, active, reads } = body
 
         const updated = await prisma.enterpriseEmployee.update({
             where: { id },
@@ -34,6 +34,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
                 ...(department !== undefined && { department: department || null }),
                 ...(nfcTag !== undefined && { nfcTag: nfcTag || null }),
                 ...(photo !== undefined && { photo: photo || null }),
+                ...(profileUrl !== undefined && { profileUrl: profileUrl || null }),
                 ...(active !== undefined && { active }),
                 ...(reads !== undefined && { reads }),
             }
