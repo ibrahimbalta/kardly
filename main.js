@@ -227,29 +227,34 @@ function initViewSwitchers() {
 
     let isAdminAuthenticated = false;
 
-    const brandEnterpriseTrigger = document.getElementById('brandEnterpriseTrigger');
+    const btnGoHomeLogo = document.getElementById('btnGoHomeLogo');
+    const btnGoHomeText = document.getElementById('btnGoHomeText');
+    const btnDashboardIsletmeBadge = document.getElementById('btnDashboardIsletmeBadge');
 
-    if (btnPublic && btnAdmin) {
-        btnPublic.addEventListener('click', () => {
-            btnPublic.classList.add('active');
-            btnAdmin.classList.remove('active');
-            publicView.classList.add('active-view');
-            adminView.classList.remove('active-view');
-            renderPublicCard();
-        });
+    const handleGoHome = (e) => {
+        if (e) e.preventDefault();
+        btnPublic.classList.add('active');
+        btnAdmin.classList.remove('active');
+        publicView.classList.add('active-view');
+        adminView.classList.remove('active-view');
+        renderPublicCard();
+    };
 
-        const handleAdminOpen = () => {
-            if (!isAdminAuthenticated) {
-                // Prompt for Enterprise License Password
-                if (adminLoginModal) adminLoginModal.style.display = 'flex';
-            } else {
-                switchToAdminView();
-            }
-        };
+    const handleOpenAdmin = (e) => {
+        if (e) e.preventDefault();
+        if (!isAdminAuthenticated) {
+            if (adminLoginModal) adminLoginModal.style.display = 'flex';
+        } else {
+            switchToAdminView();
+        }
+    };
 
-        btnAdmin.addEventListener('click', handleAdminOpen);
-        if (brandEnterpriseTrigger) brandEnterpriseTrigger.addEventListener('click', handleAdminOpen);
-    }
+    if (btnPublic) btnPublic.addEventListener('click', handleGoHome);
+    if (btnGoHomeLogo) btnGoHomeLogo.addEventListener('click', handleGoHome);
+    if (btnGoHomeText) btnGoHomeText.addEventListener('click', handleGoHome);
+
+    if (btnAdmin) btnAdmin.addEventListener('click', handleOpenAdmin);
+    if (btnDashboardIsletmeBadge) btnDashboardIsletmeBadge.addEventListener('click', handleOpenAdmin);
 
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', (e) => {
