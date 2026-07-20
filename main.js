@@ -227,6 +227,8 @@ function initViewSwitchers() {
 
     let isAdminAuthenticated = false;
 
+    const brandEnterpriseTrigger = document.getElementById('brandEnterpriseTrigger');
+
     if (btnPublic && btnAdmin) {
         btnPublic.addEventListener('click', () => {
             btnPublic.classList.add('active');
@@ -236,14 +238,17 @@ function initViewSwitchers() {
             renderPublicCard();
         });
 
-        btnAdmin.addEventListener('click', () => {
+        const handleAdminOpen = () => {
             if (!isAdminAuthenticated) {
                 // Prompt for Enterprise License Password
                 if (adminLoginModal) adminLoginModal.style.display = 'flex';
             } else {
                 switchToAdminView();
             }
-        });
+        };
+
+        btnAdmin.addEventListener('click', handleAdminOpen);
+        if (brandEnterpriseTrigger) brandEnterpriseTrigger.addEventListener('click', handleAdminOpen);
     }
 
     if (adminLoginForm) {
