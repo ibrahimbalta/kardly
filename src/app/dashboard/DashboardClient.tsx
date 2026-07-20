@@ -242,17 +242,36 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [selectedEmpCardId, setSelectedEmpCardId] = useState<string>("self");
 
     const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>(() => {
-        if (leads && Array.isArray(leads) && leads.length > 0) {
-            return leads.map((l: any) => ({
-                id: l.id,
-                client: l.name,
-                date: new Date(l.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }),
-                note: l.message || l.subject || "Not yok",
-                staff: l.message?.match(/\[İlgili Personel: (.*?)\]/)?.[1] || "Kurumsal Temsilci",
-                status: l.status === 'new' || l.status === 'Yeni' ? 'Yeni' : l.status === 'Görüşüldü' ? 'Görüşüldü' : l.status === 'Satışa Dönüştü' ? 'Satışa Dönüştü' : 'Yeni',
-                email: l.email || "-",
-                phone: l.phone || "-"
-            }))
+        try {
+            if (leads && Array.isArray(leads) && leads.length > 0) {
+                return leads.map((l: any) => {
+                    let formattedDate = "Tarih yok"
+                    try {
+                        if (l?.createdAt) {
+                            formattedDate = new Date(l.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
+                        }
+                    } catch (e) {}
+
+                    let staffName = "Kurumsal Temsilci"
+                    if (l?.message && typeof l.message === 'string') {
+                        const match = l.message.match(/\[İlgili Personel: (.*?)\]/)
+                        if (match && match[1]) staffName = match[1]
+                    }
+
+                    return {
+                        id: l?.id || String(Math.random()),
+                        client: l?.name || "Aday Müşteri",
+                        date: formattedDate,
+                        note: l?.message || l?.subject || "Not yok",
+                        staff: staffName,
+                        status: l?.status === 'new' || l?.status === 'Yeni' ? 'Yeni' : l?.status === 'Görüşüldü' ? 'Görüşüldü' : l?.status === 'Satışa Dönüştü' ? 'Satışa Dönüştü' : 'Yeni',
+                        email: l?.email || "-",
+                        phone: l?.phone || "-"
+                    }
+                })
+            }
+        } catch (err) {
+            console.error("Leads mapping error:", err)
         }
         return [
             { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
