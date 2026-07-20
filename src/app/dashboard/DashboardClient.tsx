@@ -3769,7 +3769,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                                     const data = await res.json()
                                                                     if (res.ok && data.url) {
                                                                         setProfileData((prev: any) => ({ ...prev, image: data.url }))
-                                                                        setShowToast("Profil resmi yüklendi! ✨")
+                                                                        await handleSave({ image: data.url })
+                                                                        setShowToast("Profil resmi yüklendi ve kaydedildi! ✨")
                                                                     } else {
                                                                         setShowToast(data.error || "Yükleme hatası")
                                                                     }

@@ -34,7 +34,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             redirect("/login?error=account_disabled")
         }
 
-        const profile = user.profile
+        const profile = user.profile ? {
+            ...user.profile,
+            user: {
+                name: user.name,
+                image: user.image,
+                email: user.email
+            }
+        } : null
         const subscription = user.subscription
 
         // If no profile, handle redirects (Admin goes to /admin, others to /onboarding)
