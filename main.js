@@ -241,7 +241,10 @@ function initViewSwitchers() {
     };
 
     const handleOpenAdmin = (e) => {
-        if (e) e.preventDefault();
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         if (!isAdminAuthenticated) {
             if (adminLoginModal) adminLoginModal.style.display = 'flex';
         } else {
