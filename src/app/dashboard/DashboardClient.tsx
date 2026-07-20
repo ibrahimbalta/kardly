@@ -221,12 +221,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     // Enterprise Management Dashboard State
-    const [enterpriseEmployees, setEnterpriseEmployees] = useState<any[]>([
-        { id: "1", name: "Kadir Gül", email: "kadir@kardly.site", role: "Yazılım & Kurucu", department: "Yazılım & Ar-Ge", nfcTag: "NFC-EREN-101", reads: 420, active: true, phone: "+90 532 100 2030" },
-        { id: "2", name: "Ayşe Yılmaz", email: "ayse@kardly.site", role: "Satış Yöneticisi", department: "Satış Departmanı", nfcTag: "NFC-EREN-102", reads: 310, active: true, phone: "+90 533 200 3040" },
-        { id: "3", name: "Mehmet Demir", email: "mehmet@kardly.site", role: "Eski Personel", department: "Saha Operasyon", nfcTag: "NFC-EREN-103", reads: 95, active: false, phone: "+90 534 300 4050" },
-        { id: "4", name: "Zeynep Kaya", email: "zeynep@kardly.site", role: "IK Uzmanı", department: "İnsan Kaynakları", nfcTag: "NFC-EREN-104", reads: 180, active: true, phone: "+90 535 400 5060" },
-    ]);
+    // Enterprise employees — starts empty; populated only from this user's own DB records
+    const [enterpriseEmployees, setEnterpriseEmployees] = useState<any[]>([]);
     const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>([
         { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
         { id: "2", client: "Selin Kaya - Mimarlık", date: "Dün 16:15", note: "Toplu NFC yaka kartı fiyat teklifi talep ediyoruz.", staff: "Ayşe Yılmaz", status: "Görüşüldü", email: "selin@mimarlik.com", phone: "+90 533 888 7766" },
@@ -5125,8 +5121,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <p className="text-sm text-slate-500 font-bold max-w-lg mx-auto">{t('businessCardSub')}</p>
                                 </div>
 
-                                {/* Enterprise Staff Selector */}
-                                {enterpriseEmployees && enterpriseEmployees.length > 0 && (
+                                {/* Enterprise Staff Selector — only visible to enterprise plan users */}
+                                {isEnterprise && enterpriseEmployees && enterpriseEmployees.length > 0 && (
                                     <div className="bg-gradient-to-r from-violet-900 via-indigo-900 to-slate-900 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-2xl text-left space-y-4 border border-violet-500/30">
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                             <div>
