@@ -823,11 +823,11 @@ export default function BusinessCardGenerator({
                     </div>
 
                     {/* ── Top Section: Employee Photo + Company Logo ── */}
-                    <div className="flex flex-col items-center pt-8 pb-3">
+                    <div className="flex flex-col items-center pt-6 pb-2 relative">
 
                         {/* Employee/Person Photo — large, prominent */}
                         <div className={cn(
-                            "w-24 h-24 rounded-full overflow-hidden shadow-2xl border-[3px] ring-4 ring-white/10 relative group transition-all mb-2",
+                            "w-20 h-20 rounded-full overflow-hidden shadow-2xl border-[3px] ring-4 ring-white/10 relative group transition-all",
                             tp.hex === '#ffffff' ? "border-slate-200" : "border-white/40"
                         )}>
                             <img
@@ -840,10 +840,10 @@ export default function BusinessCardGenerator({
                             />
                         </div>
 
-                        {/* Company Logo — smaller badge overlapping below */}
+                        {/* Company Logo — smaller badge below with clean spacing */}
                         {(profileData?.profileImage || profileData?.image) && (
                             <div className={cn(
-                                "w-11 h-11 rounded-full overflow-hidden shadow-xl border-2 bg-white -mt-3 relative z-10",
+                                "w-10 h-10 rounded-full overflow-hidden shadow-xl border-2 bg-white mt-1.5 relative z-10",
                                 tp.hex === '#ffffff' ? "border-slate-200" : "border-white/60"
                             )}>
                                 <img
@@ -903,12 +903,12 @@ export default function BusinessCardGenerator({
                     </div>
                 </div>
             ) : (
-                /* ===================== LANDSCAPE LAYOUT (unchanged) ===================== */
+                /* ===================== LANDSCAPE LAYOUT ===================== */
                 <div className="flex flex-1 p-6 relative z-20 items-center justify-between flex-row text-left gap-8">
                     {/* QR & Profile Side (Left) */}
                     <div className="flex flex-col items-center w-1/3 shrink-0">
                         <div
-                            className="relative mb-6 transition-all duration-300 ease-out"
+                            className="relative mb-4 transition-all duration-300 ease-out"
                             style={{
                                 transform: `translate(${qrX}px, ${qrY}px)`,
                                 width: `${qrSize}px`,
@@ -926,18 +926,35 @@ export default function BusinessCardGenerator({
                                 )}
                             </div>
                         </div>
-                        <div className={cn(
-                            "rounded-full overflow-hidden shadow-2xl border-[3px] ring-[10px] ring-white/5 relative group transition-all w-16 h-16",
-                            tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30"
-                        )}>
-                            <img
-                                src={user.image || profileData?.profileImage || profileData?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                alt="Profile"
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
-                                }}
-                            />
+
+                        {/* Employee Photo + Company Logo Badge */}
+                        <div className="relative flex items-center justify-center">
+                            <div className={cn(
+                                "rounded-full overflow-hidden shadow-2xl border-[3px] ring-4 ring-white/5 relative group transition-all w-14 h-14",
+                                tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30"
+                            )}>
+                                <img
+                                    src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    alt="Profile"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
+                                    }}
+                                />
+                            </div>
+                            {(profileData?.profileImage || profileData?.image) && (
+                                <div className={cn(
+                                    "w-7 h-7 rounded-full overflow-hidden shadow-lg border bg-white absolute -bottom-1 -right-1 z-10",
+                                    tp.hex === '#ffffff' ? "border-slate-200" : "border-white/60"
+                                )}>
+                                    <img
+                                        src={profileData?.profileImage || profileData?.image}
+                                        className="w-full h-full object-cover"
+                                        alt="Şirket Logosu"
+                                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
 
