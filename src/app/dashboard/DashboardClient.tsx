@@ -243,8 +243,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
 
     const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>(() => {
         try {
-            if (leads && Array.isArray(leads) && leads.length > 0) {
-                return leads.map((l: any) => {
+            if (initialLeads && Array.isArray(initialLeads) && initialLeads.length > 0) {
+                return initialLeads.map((l: any) => {
                     let formattedDate = "Tarih yok"
                     try {
                         if (l?.createdAt) {
@@ -258,15 +258,20 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         if (match && match[1]) staffName = match[1]
                     }
 
+                    let displayStatus = 'Yeni'
+                    if (l?.status === 'contacted' || l?.status === 'Görüşüldü') displayStatus = 'Görüşüldü'
+                    else if (l?.status === 'completed' || l?.status === 'converted' || l?.status === 'Satışa Dönüştü') displayStatus = 'Satışa Dönüştü'
+
                     return {
                         id: l?.id || String(Math.random()),
                         client: l?.name || "Aday Müşteri",
                         date: formattedDate,
                         note: l?.message || l?.subject || "Not yok",
                         staff: staffName,
-                        status: l?.status === 'new' || l?.status === 'Yeni' ? 'Yeni' : l?.status === 'Görüşüldü' ? 'Görüşüldü' : l?.status === 'Satışa Dönüştü' ? 'Satışa Dönüştü' : 'Yeni',
+                        status: displayStatus,
                         email: l?.email || "-",
-                        phone: l?.phone || "-"
+                        phone: l?.phone || "-",
+                        rawStatus: l?.status
                     }
                 })
             }
@@ -811,7 +816,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     }
 
     useEffect(() => {
-        if (activeTab === "leads") {
+        if (activeTab === "leads" || activeTab === "businesscard") {
             fetchLeads()
         }
         if (activeTab === "articles") {
@@ -824,7 +829,41 @@ export default function DashboardClient({ session, profile, subscription, appoin
         try {
             const res = await fetch("/api/leads/list")
             const data = await res.json()
-            setLeads(data)
+            if (Array.isArray(data)) {
+                setLeads(data)
+                if (data.length > 0) {
+                    setEnterpriseLeads(data.map((l: any) => {
+                        let formattedDate = "Tarih yok"
+                        try {
+                            if (l?.createdAt) {
+                                formattedDate = new Date(l.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
+                            }
+                        } catch (e) {}
+
+                        let staffName = "Kurumsal Temsilci"
+                        if (l?.message && typeof l.message === 'string') {
+                            const match = l.message.match(/\[İlgili Personel: (.*?)\]/)
+                            if (match && match[1]) staffName = match[1]
+                        }
+
+                        let displayStatus = 'Yeni'
+                        if (l?.status === 'contacted' || l?.status === 'Görüşüldü') displayStatus = 'Görüşüldü'
+                        else if (l?.status === 'completed' || l?.status === 'converted' || l?.status === 'Satışa Dönüştü') displayStatus = 'Satışa Dönüştü'
+
+                        return {
+                            id: l?.id || String(Math.random()),
+                            client: l?.name || "Aday Müşteri",
+                            date: formattedDate,
+                            note: l?.message || l?.subject || "Not yok",
+                            staff: staffName,
+                            status: displayStatus,
+                            email: l?.email || "-",
+                            phone: l?.phone || "-",
+                            rawStatus: l?.status
+                        }
+                    }))
+                }
+            }
         } catch (err) {
             console.error(err)
         } finally {
