@@ -4,8 +4,9 @@ import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 
 // PATCH /api/enterprise/employees/[id] — update employee
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params
         const session = await getServerSession(authOptions)
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -15,9 +16,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         })
         if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 })
 
-        // Verify the employee belongs to this profile
         const existing = await prisma.enterpriseEmployee.findFirst({
-            where: { id: params.id, profileId: profile.id }
+            where: { id, profileId: profile.id }
         })
         if (!existing) return NextResponse.json({ error: "Employee not found" }, { status: 404 })
 
@@ -25,7 +25,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         const { name, email, phone, role, department, nfcTag, photo, active, reads } = body
 
         const updated = await prisma.enterpriseEmployee.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 ...(name !== undefined && { name }),
                 ...(email !== undefined && { email: email || null }),
@@ -47,8 +47,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 // DELETE /api/enterprise/employees/[id] — delete employee
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params
         const session = await getServerSession(authOptions)
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -59,11 +60,11 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
         if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 })
 
         const existing = await prisma.enterpriseEmployee.findFirst({
-            where: { id: params.id, profileId: profile.id }
+            where: { id, profileId: profile.id }
         })
         if (!existing) return NextResponse.json({ error: "Employee not found" }, { status: 404 })
 
-        await prisma.enterpriseEmployee.delete({ where: { id: params.id } })
+        await prisma.enterpriseEmployee.delete({ where: { id } })
 
         return NextResponse.json({ success: true })
     } catch (error) {
