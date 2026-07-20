@@ -242,10 +242,8 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showAddLeadModal, setShowAddLeadModal] = useState(false);
     const [newLeadForm, setNewLeadForm] = useState({ client: "", email: "", phone: "", note: "", staff: "Kadir Gül", status: "Yeni" });
 
-    // Digital Card & Mini Site Studio State
-    const [selectedEmployeeCard, setSelectedEmployeeCard] = useState<any | null>(null);
-    const [showEmployeeCardStudioModal, setShowEmployeeCardStudioModal] = useState(false);
-    const [employeeCardTheme, setEmployeeCardTheme] = useState("exec");
+    // Enterprise Card Selection State
+    const [selectedEmpCardId, setSelectedEmpCardId] = useState<string>("self");
 
     const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
@@ -2997,16 +2995,19 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                                     </td>
                                                     <td className="py-4 px-4 text-right">
                                                         <div className="flex items-center justify-end gap-2">
-                                                            {/* Digital Card & Mini Site Studio Button */}
+                                                            {/* Digital Business Card Design Button */}
                                                             <button
                                                                 onClick={() => {
-                                                                    setSelectedEmployeeCard(emp);
-                                                                    setShowEmployeeCardStudioModal(true);
+                                                                    setSelectedEmpCardId(emp.id);
+                                                                    setActiveTab("businesscard");
+                                                                    setShowToast(`🎴 ${emp.name} kartviziti Kartvizit Şablonları alanına yüklendi!`);
+                                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                                    setTimeout(() => setShowToast(null), 3500);
                                                                 }}
                                                                 className="px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-md shadow-violet-500/20 flex items-center gap-1.5 cursor-pointer"
-                                                                title="Personel Mini Site & Dijital Kartvizit Stüdyosu"
+                                                                title="Personel Kartvizit Tasarımına Git"
                                                             >
-                                                                <Sparkles className="w-3 h-3 text-amber-300" /> Mini Site & Kartvizit
+                                                                <CreditCard className="w-3 h-3 text-amber-300" /> Kartviziti Tasarla
                                                             </button>
 
                                                             {/* 1-Click Offboarding Toggle Button */}
@@ -5101,63 +5102,122 @@ export default function DashboardClient({ session, profile, subscription, appoin
                     </div>
 
                 ) : activeTab === "businesscard" ? (
-                    <div className="space-y-8 max-w-4xl mx-auto text-center py-12">
-                        <div className="mb-12">
-                            <h2 className="text-3xl font-bold mb-2 uppercase tracking-tighter">{t('businessCardTitle')}</h2>
-                            <p className="text-sm text-foreground/50 max-w-sm mx-auto">{t('businessCardSub')}</p>
-                        </div>
+                    (() => {
+                        const selectedEmp = selectedEmpCardId !== "self" ? enterpriseEmployees.find(e => e.id === selectedEmpCardId) : null;
+                        const cardUserData = selectedEmp ? {
+                            name: selectedEmp.name,
+                            username: selectedEmp.nfcTag || profile?.username || "demo",
+                            occupation: `${selectedEmp.role} - ${selectedEmp.department}`,
+                            phone: selectedEmp.phone || profileData.phone,
+                            email: selectedEmp.email || session?.user?.email
+                        } : {
+                            name: profileData.name || session?.user?.name || "Kullanıcı",
+                            username: profile?.username || "demo",
+                            occupation: profileData.occupation,
+                            phone: profileData.phone,
+                            email: session?.user?.email
+                        };
 
-                        <div className="glass p-4 sm:p-10 rounded-[2rem] sm:rounded-[3.5rem] bg-white/5 border-white/5 mb-10 overflow-hidden">
-                            <BusinessCardGenerator
-                                mode="selector"
-                                selectedTemplateId={profileData.businessCardTemplateId}
-                                orientation={profileData.businessCardOrientation as any}
-                                onSelect={(id) => setProfileData({ ...profileData, businessCardTemplateId: id })}
-                                onOrientationChange={(o) => setProfileData({ ...profileData, businessCardOrientation: o })}
-                                user={{
-                                    name: profileData.name || session?.user?.name || "Kullanıcı",
-                                    username: profile?.username || "demo",
-                                    occupation: profileData.occupation,
-                                    phone: profileData.phone,
-                                    email: session?.user?.email
-                                }}
-                                profileData={profileData}
-                            />
-                        </div>
+                        return (
+                            <div className="space-y-8 max-w-4xl mx-auto text-center py-6 sm:py-12">
+                                <div className="mb-8">
+                                    <h2 className="text-3xl font-black mb-2 uppercase tracking-tighter text-slate-900">{t('businessCardTitle')}</h2>
+                                    <p className="text-sm text-slate-500 font-bold max-w-lg mx-auto">{t('businessCardSub')}</p>
+                                </div>
 
-                        <div className="flex justify-center mt-12 pb-12">
-                            <button
-                                onClick={() => handleSave()}
-                                disabled={isSaving}
-                                className="relative group px-12 py-5"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary via-rose-500 to-primary rounded-[2rem] blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                <div className="relative h-16 px-10 bg-primary rounded-[2rem] flex items-center justify-center gap-4 overflow-hidden border border-white/20 shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95 group">
-                                    {/* Shimmer Effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                                    
-                                    {isSaving ? (
-                                        <RefreshCw className="w-5 h-5 animate-spin text-white" />
-                                    ) : (
-                                        <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                            <CheckCircle2 size={16} className="text-primary" />
+                                {/* Enterprise Staff Selector */}
+                                {enterpriseEmployees && enterpriseEmployees.length > 0 && (
+                                    <div className="bg-gradient-to-r from-violet-900 via-indigo-900 to-slate-900 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-2xl text-left space-y-4 border border-violet-500/30">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="px-3 py-1 bg-amber-400 text-slate-950 text-[10px] font-black rounded-full uppercase tracking-wider">
+                                                        👑 Kurumsal İşletme Modu
+                                                    </span>
+                                                    <span className="px-3 py-1 bg-violet-500/30 text-violet-200 border border-violet-400/30 text-[10px] font-black rounded-full uppercase tracking-wider">
+                                                        Sınırsız Personel Kartı
+                                                    </span>
+                                                </div>
+                                                <h3 className="text-xl font-black text-white uppercase tracking-tight mt-2 flex items-center gap-2">
+                                                    🏢 Personel Kartviziti Seçin & Dizayn Edin
+                                                </h3>
+                                                <p className="text-xs text-slate-300 font-medium">Seçtiğiniz çalışanın bilgileriyle kartvizit anında oluşturulur. Şirket logonuzu, renklerinizi ve şablonunuzu belirleyin.</p>
+                                            </div>
+
+                                            {/* Employee Selector Dropdown */}
+                                            <div className="w-full sm:w-auto">
+                                                <select
+                                                    value={selectedEmpCardId}
+                                                    onChange={(e) => setSelectedEmpCardId(e.target.value)}
+                                                    className="w-full sm:w-72 px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
+                                                >
+                                                    <option value="self" className="bg-slate-900 text-white">👤 Kendi Profil Kartvizitim ({profileData.name || "Yönetici"})</option>
+                                                    <optgroup label="🏢 Kurumsal Kadro Personelleri" className="bg-slate-900 text-amber-300 font-bold">
+                                                        {enterpriseEmployees.map((emp) => (
+                                                            <option key={emp.id} value={emp.id} className="bg-slate-900 text-white">
+                                                                👤 {emp.name} ({emp.role})
+                                                            </option>
+                                                        ))}
+                                                    </optgroup>
+                                                </select>
+                                            </div>
                                         </div>
-                                    )}
-                                    
-                                    <div className="flex flex-col items-start leading-none">
-                                        <span className="text-white font-black text-xs uppercase tracking-[0.25em]">
-                                            {isSaving ? t('saving') || 'GÜNCELLENİYOR...' : t('saveChanges') || 'DEĞİŞİKLİKLERİ YAYINLA'}
-                                        </span>
-                                        {!isSaving && (
-                                            <span className="text-white/40 text-[8px] uppercase tracking-widest mt-1 font-bold group-hover:text-white/60 transition-colors">
-                                                Anında Sitede Güncellenir
-                                            </span>
+
+                                        {selectedEmp && (
+                                            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-slate-300">
+                                                <span>Aktif Tasarlanan Personel: <strong className="text-amber-300">{selectedEmp.name}</strong> ({selectedEmp.role})</span>
+                                                <span className="font-mono text-[11px] bg-white/10 px-3 py-1 rounded-lg">NFC: {selectedEmp.nfcTag}</span>
+                                            </div>
                                         )}
                                     </div>
+                                )}
+
+                                <div className="glass p-4 sm:p-10 rounded-[2rem] sm:rounded-[3.5rem] bg-white/5 border-white/5 mb-10 overflow-hidden shadow-xl">
+                                    <BusinessCardGenerator
+                                        mode="selector"
+                                        selectedTemplateId={profileData.businessCardTemplateId}
+                                        orientation={profileData.businessCardOrientation as any}
+                                        onSelect={(id) => setProfileData({ ...profileData, businessCardTemplateId: id })}
+                                        onOrientationChange={(o) => setProfileData({ ...profileData, businessCardOrientation: o })}
+                                        user={cardUserData}
+                                        profileData={profileData}
+                                    />
                                 </div>
-                            </button>
-                        </div>
-                    </div>
+
+                                <div className="flex justify-center mt-12 pb-12">
+                                    <button
+                                        onClick={() => handleSave()}
+                                        disabled={isSaving}
+                                        className="relative group px-12 py-5"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary via-rose-500 to-primary rounded-[2rem] blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                                        <div className="relative h-16 px-10 bg-primary rounded-[2rem] flex items-center justify-center gap-4 overflow-hidden border border-white/20 shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95 group">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                                            
+                                            {isSaving ? (
+                                                <RefreshCw className="w-5 h-5 animate-spin text-white" />
+                                            ) : (
+                                                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                                    <CheckCircle2 size={16} className="text-primary" />
+                                                </div>
+                                            )}
+                                            
+                                            <div className="flex flex-col items-start leading-none">
+                                                <span className="text-white font-black text-xs uppercase tracking-[0.25em]">
+                                                    {isSaving ? t('saving') || 'GÜNCELLENİYOR...' : t('saveChanges') || 'DEĞİŞİKLİKLERİ YAYINLA'}
+                                                </span>
+                                                {!isSaving && (
+                                                    <span className="text-white/40 text-[8px] uppercase tracking-widest mt-1 font-bold group-hover:text-white/60 transition-colors">
+                                                        Anında Sitede Güncellenir
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })()
 
                 ) : activeTab === "settings" ? (
                     <div className="max-w-4xl space-y-8">
@@ -8334,211 +8394,6 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     </button>
                                 </div>
                             </form>
-                        </motion.div>
-                    </div>
-                )}
-                {/* Enterprise Employee Card & Mini Site Studio Modal */}
-                {showEmployeeCardStudioModal && selectedEmployeeCard && (
-                    <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowEmployeeCardStudioModal(false)}
-                            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-5xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden z-10 border border-slate-100 max-h-[92vh] flex flex-col"
-                        >
-                            {/* Modal Header */}
-                            <div className="p-6 md:p-8 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 shrink-0">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-violet-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-lg">
-                                        🎴
-                                    </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-400/30 text-[9px] font-black uppercase tracking-widest">
-                                                ♾️ Sınırsız İşletme Lisansı
-                                            </span>
-                                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-black uppercase tracking-widest">
-                                                Canlı Yayımlı
-                                            </span>
-                                        </div>
-                                        <h3 className="text-xl md:text-2xl font-black tracking-tight text-white mt-1">
-                                            {selectedEmployeeCard.name} - Mini Site & Dijital Kartvizit Stüdyosu
-                                        </h3>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setShowEmployeeCardStudioModal(false)}
-                                    className="p-2.5 rounded-2xl bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white transition-all cursor-pointer"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-
-                            {/* Modal Body: 2 Columns */}
-                            <div className="flex-1 overflow-y-auto p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                                {/* Left Column: Controls & Settings */}
-                                <div className="lg:col-span-7 space-y-6">
-                                    {/* Employee Info Quick Summary */}
-                                    <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Personel Bilgileri</span>
-                                                <h4 className="text-lg font-black text-slate-900">{selectedEmployeeCard.name}</h4>
-                                                <span className="text-xs font-bold text-violet-600 block">{selectedEmployeeCard.role} • {selectedEmployeeCard.department}</span>
-                                            </div>
-                                            <div className="text-right">
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">NFC UID Tag</span>
-                                                <span className="font-mono text-xs font-bold bg-slate-200 px-3 py-1 rounded-lg text-slate-800 block mt-1">
-                                                    {selectedEmployeeCard.nfcTag}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Corporate Template Selector */}
-                                    <div className="space-y-3">
-                                        <label className="block text-xs font-black uppercase text-slate-800 tracking-wider">🎨 Şirket & Departman Mini Site Teması Seçin</label>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {[
-                                                { id: "exec", name: "Executive Dark & Gold", desc: "Yönetim & C-Level Premium", bg: "bg-slate-950 text-amber-400 border-amber-400" },
-                                                { id: "bento", name: "Modern Bento Grid", desc: "Çoklu Bağlantı & Sosyal Medya", bg: "bg-indigo-900 text-white border-indigo-400" },
-                                                { id: "tech", name: "Tech Emerald", desc: "Yazılım & Mühendislik", bg: "bg-emerald-950 text-emerald-400 border-emerald-400" },
-                                                { id: "sales", name: "Vibrant Gold", desc: "Satış & Müşteri CRM", bg: "bg-amber-500 text-slate-950 border-amber-300" },
-                                            ].map(t => (
-                                                <div
-                                                    key={t.id}
-                                                    onClick={() => {
-                                                        setEmployeeCardTheme(t.id);
-                                                        setShowToast(`🎨 ${t.name} şablonu uygulandı!`);
-                                                        setTimeout(() => setShowToast(null), 2500);
-                                                    }}
-                                                    className={cn(
-                                                        "p-4 rounded-2xl border-2 cursor-pointer transition-all space-y-1 relative shadow-sm",
-                                                        t.bg,
-                                                        employeeCardTheme === t.id ? "ring-4 ring-violet-500/50 scale-[1.02]" : "opacity-80 hover:opacity-100"
-                                                    )}
-                                                >
-                                                    {employeeCardTheme === t.id && <CheckCircle2 className="w-4 h-4 text-emerald-400 absolute top-3 right-3" />}
-                                                    <span className="text-xs font-black block">{t.name}</span>
-                                                    <span className="text-[9px] opacity-80 block">{t.desc}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Live URL Link & NFC Writing Instructions */}
-                                    <div className="p-5 bg-violet-50 rounded-2xl border border-violet-200/80 space-y-4">
-                                        <div>
-                                            <span className="text-[10px] font-black uppercase text-violet-700 tracking-wider block mb-1">🔗 Personel Canlı Dijital Kartvizit Linki</span>
-                                            <div className="flex items-center gap-2">
-                                                <input
-                                                    type="text"
-                                                    readOnly
-                                                    value={`https://kardly.site/p/${selectedEmployeeCard.nfcTag}`}
-                                                    className="flex-1 px-4 py-2.5 bg-white border border-violet-200 rounded-xl text-xs font-mono font-bold text-violet-950"
-                                                />
-                                                <button
-                                                    onClick={() => {
-                                                        navigator.clipboard.writeText(`https://kardly.site/p/${selectedEmployeeCard.nfcTag}`);
-                                                        setShowToast("📋 Dijital kartvizit linki kopyalandı!");
-                                                        setTimeout(() => setShowToast(null), 3000);
-                                                    }}
-                                                    className="px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer"
-                                                >
-                                                    Kopyala
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="pt-2 border-t border-violet-200/60 flex flex-wrap items-center justify-between gap-3">
-                                            <button
-                                                onClick={() => {
-                                                    setShowToast("📱 Canlı önizleme sekmesi açılıyor...");
-                                                    window.open(`https://kardly.site/p/${selectedEmployeeCard.nfcTag}`, '_blank');
-                                                    setTimeout(() => setShowToast(null), 3000);
-                                                }}
-                                                className="px-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
-                                            >
-                                                <ExternalLink className="w-3.5 h-3.5" /> Canlı Mini Siteyi Gör
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    const vcardData = `BEGIN:VCARD\nVERSION:3.0\nN:${selectedEmployeeCard.name};;;;\nFN:${selectedEmployeeCard.name}\nTITLE:${selectedEmployeeCard.role}\nORG:Kurumsal Şirket\nEMAIL:${selectedEmployeeCard.email}\nTEL:${selectedEmployeeCard.phone}\nURL:https://kardly.site/p/${selectedEmployeeCard.nfcTag}\nEND:VCARD`;
-                                                    const blob = new Blob([vcardData], { type: "text/vcard" });
-                                                    const url = URL.createObjectURL(blob);
-                                                    const a = document.createElement("a");
-                                                    a.href = url;
-                                                    a.download = `${selectedEmployeeCard.name.replace(/\s+/g, "_")}_vcard.vcf`;
-                                                    a.click();
-                                                    setShowToast("📇 vCard dosyası indirildi!");
-                                                    setTimeout(() => setShowToast(null), 3000);
-                                                }}
-                                                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
-                                            >
-                                                <Download className="w-3.5 h-3.5" /> vCard İndir
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Right Column: Live Phone Mockup Preview */}
-                                <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-100 p-6 rounded-3xl border border-slate-200 relative overflow-hidden">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 block">📱 Canlı Mobil Mini Site Önizlemesi</span>
-
-                                    {/* Smartphone Container Mockup */}
-                                    <div className="w-full max-w-[280px] bg-slate-950 p-3 rounded-[3rem] shadow-2xl border-4 border-slate-800 relative">
-                                        <div className="w-24 h-4 bg-slate-900 rounded-full mx-auto mb-3" />
-                                        
-                                        {/* Phone Display Screen */}
-                                        <div className={cn(
-                                            "w-full rounded-[2rem] p-5 space-y-4 text-center transition-all min-h-[420px] flex flex-col justify-between shadow-inner",
-                                            employeeCardTheme === "exec" ? "bg-slate-950 text-white" :
-                                            employeeCardTheme === "bento" ? "bg-indigo-950 text-white" :
-                                            employeeCardTheme === "tech" ? "bg-emerald-950 text-white" :
-                                            "bg-gradient-to-b from-amber-500 to-amber-600 text-slate-950"
-                                        )}>
-                                            <div className="space-y-3 pt-2">
-                                                {/* Avatar */}
-                                                <div className="w-16 h-16 rounded-2xl bg-white/20 mx-auto flex items-center justify-center font-black text-xl border border-white/20 shadow-md">
-                                                    {selectedEmployeeCard.name.split(" ").map((n: string) => n[0]).join("")}
-                                                </div>
-                                                <div>
-                                                    <h5 className="font-black text-base tracking-tight">{selectedEmployeeCard.name}</h5>
-                                                    <span className="text-[10px] font-bold opacity-80 block">{selectedEmployeeCard.role}</span>
-                                                    <span className="text-[9px] opacity-60 block mt-0.5">{selectedEmployeeCard.department}</span>
-                                                </div>
-                                                <div className="inline-block px-3 py-1 bg-white/10 rounded-full text-[9px] font-mono">
-                                                    {selectedEmployeeCard.nfcTag}
-                                                </div>
-                                            </div>
-
-                                            {/* Action Buttons Mockup */}
-                                            <div className="space-y-2">
-                                                <button className="w-full py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
-                                                    📞 Hemen Ara ({selectedEmployeeCard.phone || "+90 5xx"})
-                                                </button>
-                                                <button className="w-full py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
-                                                    ✉️ E-Posta Gönder
-                                                </button>
-                                                <button className="w-full py-2.5 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-wider shadow-lg">
-                                                    📇 REHBERE KAYDET (vCard)
-                                                </button>
-                                            </div>
-
-                                            <div className="pt-2 text-[8px] opacity-50 uppercase tracking-widest font-black">
-                                                KARDLY ENTERPRISE • CANLI PROFİL
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </motion.div>
                     </div>
                 )}
