@@ -796,113 +796,192 @@ export default function BusinessCardGenerator({
             </div>
 
             {/* Card Inner Content (Dynamic Orientation) */}
-            <div className={cn(
-                "flex flex-1 p-6 relative z-20 items-center justify-between",
-                orientation === 'portrait' ? "flex-col text-center" : "flex-row text-left gap-8"
-            )}>
-                {/* QR & Profile Side (Left in Landscape, Top in Portrait) */}
-                <div className={cn(
-                    "flex flex-col items-center",
-                    orientation === 'portrait' ? "mb-4" : "w-1/3 shrink-0"
-                )}>
-                    {/* QR Code */}
-                    <div 
-                        className="relative mb-6 transition-all duration-300 ease-out" 
-                        style={{ 
-                            transform: `translate(${qrX}px, ${qrY}px)`,
-                            width: `${qrSize}px`,
-                            height: `${qrSize}px`
+            {orientation === 'portrait' ? (
+                /* ===================== PORTRAIT LAYOUT ===================== */
+                <div className="flex flex-col flex-1 relative z-20">
+
+                    {/* ── Small QR: top-right corner ── */}
+                    <div
+                        className="absolute z-30 transition-all duration-300 ease-out"
+                        style={{
+                            top: `${16 + qrY}px`,
+                            right: `${16 + Math.abs(qrX)}px`,
+                            width: `${Math.max(52, qrSize * 0.6)}px`,
+                            height: `${Math.max(52, qrSize * 0.6)}px`,
                         }}
                     >
-                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 animate-pulse" />
-                        <div className={cn(
-                            "w-full h-full p-2 bg-white shadow-2xl relative z-10 border border-white/50 flex items-center justify-center",
-                            orientation === 'portrait' ? "rounded-[1.2rem]" : "rounded-2xl"
-                        )}>
+                        <div className="absolute inset-0 bg-white/20 blur-xl rounded-xl scale-110 animate-pulse" />
+                        <div className="w-full h-full p-1.5 bg-white shadow-xl relative z-10 border border-white/50 rounded-xl flex items-center justify-center">
                             {qrDataUrl ? (
-                                <img src={qrDataUrl} alt="QR Code" className={cn(
-                                    "image-render-crisp w-full h-full object-contain transition-all"
-                                )} />
+                                <img src={qrDataUrl} alt="QR Code" className="image-render-crisp w-full h-full object-contain" />
                             ) : (
-                                <div className="w-full h-full animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
-                                    <RefreshCw className="animate-spin text-slate-200" />
+                                <div className="w-full h-full animate-pulse bg-slate-50 rounded-lg flex items-center justify-center">
+                                    <RefreshCw className="animate-spin text-slate-200 w-3 h-3" />
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Profile Photo */}
-                    <div className={cn(
-                        "rounded-full overflow-hidden shadow-2xl border-[3px] ring-[10px] ring-white/5 relative group transition-all",
-                        tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30",
-                        orientation === 'portrait' ? "w-24 h-24" : "w-16 h-16"
-                    )}>
-                        <img
-                            src={profileData?.profileImage || profileData?.image || user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileData?.displayName || user.name)}&background=6366f1&color=fff&size=256`}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            alt="Profile"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
-                            }}
-                        />
-                    </div>
-                </div>
+                    {/* ── Top Section: Employee Photo + Company Logo ── */}
+                    <div className="flex flex-col items-center pt-8 pb-3">
 
-                {/* Name & Details Section (Right in Landscape, Bottom in Portrait) */}
-                <div className={cn(
-                    "flex flex-col relative z-10",
-                    orientation === 'portrait' ? "items-center" : "flex-1 items-start justify-center py-4"
-                )}>
-                    <h1 className={cn(
-                        "font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors",
-                        tp.text,
-                        orientation === 'portrait' ? "text-2xl" : "text-xl",
-                        customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
-                    )} style={{ color: customTextColor || undefined }}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
-                    
-                    <div className={cn(
-                        "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors mb-6",
-                        customAccent || tp.accentText,
-                        customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
-                    )} style={{ color: customTextColor || undefined }}>
-                        <p className="text-[10px] font-black uppercase tracking-[0.25em]">
-                            {profileData?.occupation || user.occupation || "DİJİTAL UZMAN"}
-                        </p>
-                    </div>
+                        {/* Employee/Person Photo — large, prominent */}
+                        <div className={cn(
+                            "w-24 h-24 rounded-full overflow-hidden shadow-2xl border-[3px] ring-4 ring-white/10 relative group transition-all mb-2",
+                            tp.hex === '#ffffff' ? "border-slate-200" : "border-white/40"
+                        )}>
+                            <img
+                                src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Personel"
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
+                                }}
+                            />
+                        </div>
 
-                    {/* Contact Info Cards (Condensed in Landscape) */}
-                    <div className={cn(
-                        "w-full space-y-2 mt-auto",
-                        orientation === 'portrait' ? "max-w-[280px]" : "w-full"
-                    )}>
-                        {[
-                            { icon: Phone, value: profileData?.phone || user.phone, label: 'TELEFON' },
-                            { icon: Mail, value: profileData?.email || user.email, label: 'E-POSTA' },
-                            { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
-                        ].filter(item => item.value).map((item, idx) => (
-                            <div key={idx} className={cn(
-                                "flex items-center gap-3 px-3.5 py-2.5 rounded-xl border transition-all",
-                                tp.hex === '#ffffff'
-                                    ? "bg-slate-50 border-slate-100"
-                                    : "bg-white/[0.04] border-white/[0.06]"
+                        {/* Company Logo — smaller badge overlapping below */}
+                        {(profileData?.profileImage || profileData?.image) && (
+                            <div className={cn(
+                                "w-11 h-11 rounded-full overflow-hidden shadow-xl border-2 bg-white -mt-3 relative z-10",
+                                tp.hex === '#ffffff' ? "border-slate-200" : "border-white/60"
                             )}>
-                                <item.icon size={12} className={cn("shrink-0", customAccent || tp.accentText)} strokeWidth={2.5} />
-                                <div className="text-left min-w-0">
-                                    <span className={cn("block text-[6px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
-                                    <span className={cn("block text-[9px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
-                                </div>
+                                <img
+                                    src={profileData?.profileImage || profileData?.image}
+                                    className="w-full h-full object-cover"
+                                    alt="Şirket Logosu"
+                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                                />
                             </div>
-                        ))}
+                        )}
                     </div>
 
-                    {/* Footer Branding (Portrait Only for Space) */}
-                    {orientation === 'portrait' && (
-                        <div className="mt-6 opacity-20">
+                    {/* ── Name & Details Section ── */}
+                    <div className="flex flex-col items-center flex-1 px-5 pb-5">
+                        <h1 className={cn(
+                            "font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors text-2xl text-center",
+                            tp.text,
+                            customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
+                        )} style={{ color: customTextColor || undefined }}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+
+                        <div className={cn(
+                            "px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors mb-4",
+                            customAccent || tp.accentText,
+                            customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
+                        )} style={{ color: customTextColor || undefined }}>
+                            <p className="text-[9px] font-black uppercase tracking-[0.2em]">
+                                {user.occupation || profileData?.occupation || "DİJİTAL UZMAN"}
+                            </p>
+                        </div>
+
+                        {/* Contact Info Rows */}
+                        <div className="w-full space-y-1.5 max-w-[275px] mt-auto">
+                            {[
+                                { icon: Phone, value: user.phone || profileData?.phone, label: 'TELEFON' },
+                                { icon: Mail, value: user.email || profileData?.email, label: 'E-POSTA' },
+                                { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
+                            ].filter(item => item.value).map((item, idx) => (
+                                <div key={idx} className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-xl border transition-all",
+                                    tp.hex === '#ffffff'
+                                        ? "bg-slate-50 border-slate-100"
+                                        : "bg-white/[0.04] border-white/[0.06]"
+                                )}>
+                                    <item.icon size={11} className={cn("shrink-0", customAccent || tp.accentText)} strokeWidth={2.5} />
+                                    <div className="text-left min-w-0">
+                                        <span className={cn("block text-[6px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
+                                        <span className={cn("block text-[9px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Footer Branding */}
+                        <div className="mt-4 opacity-20">
                             <span className={cn("text-[6px] font-black tracking-[0.5em] uppercase", tp.text)}>KARDLY · PREMIUM</span>
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                /* ===================== LANDSCAPE LAYOUT (unchanged) ===================== */
+                <div className="flex flex-1 p-6 relative z-20 items-center justify-between flex-row text-left gap-8">
+                    {/* QR & Profile Side (Left) */}
+                    <div className="flex flex-col items-center w-1/3 shrink-0">
+                        <div
+                            className="relative mb-6 transition-all duration-300 ease-out"
+                            style={{
+                                transform: `translate(${qrX}px, ${qrY}px)`,
+                                width: `${qrSize}px`,
+                                height: `${qrSize}px`
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 animate-pulse" />
+                            <div className="w-full h-full p-2 bg-white shadow-2xl relative z-10 border border-white/50 flex items-center justify-center rounded-2xl">
+                                {qrDataUrl ? (
+                                    <img src={qrDataUrl} alt="QR Code" className="image-render-crisp w-full h-full object-contain transition-all" />
+                                ) : (
+                                    <div className="w-full h-full animate-pulse bg-slate-50 rounded-xl flex items-center justify-center">
+                                        <RefreshCw className="animate-spin text-slate-200" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className={cn(
+                            "rounded-full overflow-hidden shadow-2xl border-[3px] ring-[10px] ring-white/5 relative group transition-all w-16 h-16",
+                            tp.hex === '#ffffff' ? "border-slate-100" : "border-white/30"
+                        )}>
+                            <img
+                                src={user.image || profileData?.profileImage || profileData?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Profile"
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff&size=256`
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Name & Details (Right) */}
+                    <div className="flex flex-col flex-1 items-start justify-center py-4 relative z-10">
+                        <h1 className={cn(
+                            "font-black tracking-tighter leading-none uppercase mb-2 drop-shadow-sm transition-colors text-xl",
+                            tp.text,
+                            customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
+                        )} style={{ color: customTextColor || undefined }}>{profileData?.displayName || user.name || "KARDLY USER"}</h1>
+
+                        <div className={cn(
+                            "px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 transition-colors mb-6",
+                            customAccent || tp.accentText,
+                            customFont === 'mono' ? 'font-mono' : customFont === 'serif' ? 'font-serif' : 'font-sans'
+                        )} style={{ color: customTextColor || undefined }}>
+                            <p className="text-[10px] font-black uppercase tracking-[0.25em]">
+                                {user.occupation || profileData?.occupation || "DİJİTAL UZMAN"}
+                            </p>
+                        </div>
+
+                        <div className="w-full space-y-2 mt-auto">
+                            {[
+                                { icon: Phone, value: user.phone || profileData?.phone, label: 'TELEFON' },
+                                { icon: Mail, value: user.email || profileData?.email, label: 'E-POSTA' },
+                                { icon: Globe, value: `kardly.site/${user.username}`, label: 'WEB PROFİL' }
+                            ].filter(item => item.value).map((item, idx) => (
+                                <div key={idx} className={cn(
+                                    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl border transition-all",
+                                    tp.hex === '#ffffff'
+                                        ? "bg-slate-50 border-slate-100"
+                                        : "bg-white/[0.04] border-white/[0.06]"
+                                )}>
+                                    <item.icon size={12} className={cn("shrink-0", customAccent || tp.accentText)} strokeWidth={2.5} />
+                                    <div className="text-left min-w-0">
+                                        <span className={cn("block text-[6px] font-black uppercase tracking-widest opacity-40 mb-0.5", tp.text)} style={{ color: customTextColor || undefined }}>{item.label}</span>
+                                        <span className={cn("block text-[9px] font-bold tracking-tight truncate", tp.text)} style={{ color: customTextColor || undefined }}>{item.value}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 
