@@ -20,6 +20,7 @@ import {
     ShoppingBag,
     Plus,
     Trash2,
+    Power,
     EyeOff,
     Check,
     Star,
@@ -218,6 +219,29 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const userPlan = subscription?.plan || "free";
     const isEnterprise = userPlan === "enterprise";
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    // Enterprise Management Dashboard State
+    const [enterpriseEmployees, setEnterpriseEmployees] = useState<any[]>([
+        { id: "1", name: "Kadir Gül", email: "kadir@kardly.site", role: "Yazılım & Kurucu", department: "Yazılım & Ar-Ge", nfcTag: "NFC-EREN-101", reads: 420, active: true, phone: "+90 532 100 2030" },
+        { id: "2", name: "Ayşe Yılmaz", email: "ayse@kardly.site", role: "Satış Yöneticisi", department: "Satış Departmanı", nfcTag: "NFC-EREN-102", reads: 310, active: true, phone: "+90 533 200 3040" },
+        { id: "3", name: "Mehmet Demir", email: "mehmet@kardly.site", role: "Eski Personel", department: "Saha Operasyon", nfcTag: "NFC-EREN-103", reads: 95, active: false, phone: "+90 534 300 4050" },
+        { id: "4", name: "Zeynep Kaya", email: "zeynep@kardly.site", role: "IK Uzmanı", department: "İnsan Kaynakları", nfcTag: "NFC-EREN-104", reads: 180, active: true, phone: "+90 535 400 5060" },
+    ]);
+    const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>([
+        { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
+        { id: "2", client: "Selin Kaya - Mimarlık", date: "Dün 16:15", note: "Toplu NFC yaka kartı fiyat teklifi talep ediyoruz.", staff: "Ayşe Yılmaz", status: "Görüşüldü", email: "selin@mimarlik.com", phone: "+90 533 888 7766" },
+        { id: "3", client: "Burak Can - Teknoloji A.Ş.", date: "18 Temmuz", note: "20 adet kurumsal vCard paketi satın almak istiyorlar.", staff: "Zeynep Kaya", status: "Satışa Dönüştü", email: "burak@teknoloji.com", phone: "+90 535 777 6655" },
+    ]);
+    const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+    const [editingEmployee, setEditingEmployee] = useState<any | null>(null);
+    const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true });
+    const [empSearchQuery, setEmpSearchQuery] = useState("");
+    const [empFilterDept, setEmpFilterDept] = useState("all");
+    const [activeDeptTheme, setActiveDeptTheme] = useState("exec");
+    const [selectedLeadModal, setSelectedLeadModal] = useState<any | null>(null);
+    const [showAddLeadModal, setShowAddLeadModal] = useState(false);
+    const [newLeadForm, setNewLeadForm] = useState({ client: "", email: "", phone: "", note: "", staff: "Kadir Gül", status: "Yeni" });
+
     const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
     const [isArticlesLoading, setIsArticlesLoading] = useState(false)
@@ -2782,67 +2806,87 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         ) : (
                             <>
                         {/* Enterprise Header Banner */}
-                        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-violet-950 text-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-violet-500/20">
+                        <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-violet-950 text-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-violet-500/20">
                             <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
                             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
                                 <div>
                                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-[10px] font-black uppercase tracking-widest mb-3">
-                                        <Sparkles className="w-3.5 h-3.5" /> Kurumsal Şirket Paneli v2.5
+                                        <Sparkles className="w-3.5 h-3.5" /> Kurumsal Şirket Paneli v2.5 (Canlı & İnteraktif)
                                     </div>
                                     <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-2">İşletme Yönetim Merkezi 💎</h2>
                                     <p className="text-slate-300 text-sm font-medium max-w-2xl leading-relaxed">
-                                        Tüm personellerin dijital kartvizitlerini yönetin, işten ayrılanları tek tıkla pasife alın, toplu NFC kimlikleri tanımlayın ve kurumsal müşteri leads verilerini indirin.
+                                        Personelleri yönetin, ayrılanları 1 tıkla anında pasife alın, toplu vCard/QR baskı paketini indirin ve CRM müşteri adaylarını canlı yönetin.
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap gap-3">
                                     <button
                                         onClick={() => {
-                                            const csvContent = "data:text/csv;charset=utf-8,Personel,Departman,Durum,NFC ID,Okuma Sayisi\nKadir Gül,Yazılım,Aktif,NFC-101,420\nAyşe Yılmaz,Satış,Aktif,NFC-102,310\nMehmet Demir,İşten Ayrıldı,Pasif,NFC-103,95";
-                                            const encodedUri = encodeURI(csvContent);
+                                            setEditingEmployee(null);
+                                            setNewEmpForm({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: `NFC-EREN-${Math.floor(100 + Math.random() * 900)}`, phone: "", active: true });
+                                            setShowAddEmployeeModal(true);
+                                        }}
+                                        className="px-6 py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-violet-500/25 flex items-center gap-2 cursor-pointer hover:scale-105"
+                                    >
+                                        <Plus className="w-4 h-4" /> Yeni Personel Ekle
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const csvHeader = "Personel,E-posta,Unvan,Departman,NFC UID,Okunma,Durum,Telefon\n";
+                                            const csvRows = enterpriseEmployees.map(e => `"${e.name}","${e.email}","${e.role}","${e.department}","${e.nfcTag}",${e.reads},"${e.active ? "Aktif" : "Pasif"}","${e.phone}"`).join("\n");
+                                            const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvHeader + csvRows);
                                             const link = document.createElement("a");
                                             link.setAttribute("href", encodedUri);
-                                            link.setAttribute("download", "kurumsal_personel_raporu.csv");
+                                            link.setAttribute("download", `kurumsal_personel_raporu_${new Date().toISOString().slice(0, 10)}.csv`);
                                             document.body.appendChild(link);
                                             link.click();
                                             document.body.removeChild(link);
-                                            setShowToast("📊 Kurumsal Rapor CSV olarak indirildi!");
+                                            setShowToast("📊 Güncel Personel Raporu CSV olarak indirildi!");
                                             setTimeout(() => setShowToast(null), 3000);
                                         }}
-                                        className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all backdrop-blur-md border border-white/10 inline-flex items-center gap-2"
+                                        className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all backdrop-blur-md border border-white/10 flex items-center gap-2 cursor-pointer"
                                     >
-                                        <Download className="w-4 h-4" /> CSV İndir
+                                        <Download className="w-4 h-4" /> CSV Rapor İndir
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Enterprise Stats Cards */}
+                        {/* Enterprise Interactive Stats Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5">
-                                <div className="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center font-black text-xl shrink-0">
+                            <div
+                                onClick={() => { setEmpFilterDept("all"); setEmpSearchQuery(""); }}
+                                className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5 cursor-pointer hover:border-violet-300 hover:shadow-md transition-all group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center font-black text-xl shrink-0 group-hover:scale-110 transition-transform">
                                     <Users className="w-7 h-7" />
                                 </div>
                                 <div>
                                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">Toplam Personel</span>
-                                    <span className="text-2xl font-black text-slate-900">24 Çalışan</span>
+                                    <span className="text-2xl font-black text-slate-900">{enterpriseEmployees.length} Çalışan</span>
                                 </div>
                             </div>
-                            <div className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5">
-                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xl shrink-0">
+                            <div
+                                onClick={() => setEmpSearchQuery("Aktif")}
+                                className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5 cursor-pointer hover:border-emerald-300 hover:shadow-md transition-all group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xl shrink-0 group-hover:scale-110 transition-transform">
                                     <CheckCircle2 className="w-7 h-7" />
                                 </div>
                                 <div>
                                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">Aktif Kartvizitler</span>
-                                    <span className="text-2xl font-black text-slate-900">22 Aktif</span>
+                                    <span className="text-2xl font-black text-emerald-600">{enterpriseEmployees.filter(e => e.active).length} Aktif</span>
                                 </div>
                             </div>
-                            <div className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5">
-                                <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-black text-xl shrink-0">
+                            <div
+                                onClick={() => setEmpSearchQuery("Pasif")}
+                                className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5 cursor-pointer hover:border-rose-300 hover:shadow-md transition-all group"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-black text-xl shrink-0 group-hover:scale-110 transition-transform">
                                     <ShieldAlert className="w-7 h-7" />
                                 </div>
                                 <div>
                                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">İşten Ayrılan (Pasif)</span>
-                                    <span className="text-2xl font-black text-rose-600">2 Pasif</span>
+                                    <span className="text-2xl font-black text-rose-600">{enterpriseEmployees.filter(e => !e.active).length} Pasif</span>
                                 </div>
                             </div>
                             <div className="bg-white p-6 rounded-[2rem] border border-slate-200/80 shadow-sm flex items-center gap-5">
@@ -2851,20 +2895,43 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                                 <div>
                                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">Toplam NFC Okutma</span>
-                                    <span className="text-2xl font-black text-slate-900">1.840 Tık</span>
+                                    <span className="text-2xl font-black text-slate-900">{enterpriseEmployees.reduce((sum, e) => sum + e.reads, 0)} Tık</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Employee Management & 1-Click Offboarding Table */}
                         <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm p-8 space-y-6">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+                            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b border-slate-100 pb-6">
                                 <div>
-                                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">🏢 Personel Kartvizitleri & 1-Tıkla Pasifleştirme</h3>
-                                    <p className="text-xs text-slate-500 font-medium">İşten ayrılan çalışanların kartvizitini anahtar butonla anında kapatın.</p>
+                                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+                                        🏢 Personel Kartvizitleri & 1-Tıkla Pasifleştirme
+                                    </h3>
+                                    <p className="text-xs text-slate-500 font-medium mt-1">İşten ayrılan çalışanların kartvizitini anahtar butonla anında kapatıp şirket sayfasına yönlendirin.</p>
                                 </div>
-                                <div className="inline-flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl">
-                                    <span className="text-[10px] font-black text-slate-600 px-3 uppercase tracking-wider">Toplu NFC UID: KARDLY-2026-NFC</span>
+
+                                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                                    <div className="relative flex-1 lg:w-64">
+                                        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                        <input
+                                            type="text"
+                                            placeholder="Personel / NFC ara..."
+                                            value={empSearchQuery}
+                                            onChange={(e) => setEmpSearchQuery(e.target.value)}
+                                            className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                    <select
+                                        value={empFilterDept}
+                                        onChange={(e) => setEmpFilterDept(e.target.value)}
+                                        className="py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:outline-none focus:border-violet-500"
+                                    >
+                                        <option value="all">Tüm Departmanlar</option>
+                                        <option value="Yazılım & Ar-Ge">Yazılım & Ar-Ge</option>
+                                        <option value="Satış Departmanı">Satış Departmanı</option>
+                                        <option value="İnsan Kaynakları">İnsan Kaynakları</option>
+                                        <option value="Saha Operasyon">Saha Operasyon</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -2873,104 +2940,112 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <thead>
                                         <tr className="border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
                                             <th className="py-4 px-4">Çalışan</th>
-                                            <th className="py-4 px-4">Departman</th>
+                                            <th className="py-4 px-4">Departman & Unvan</th>
                                             <th className="py-4 px-4">NFC UID Tag</th>
                                             <th className="py-4 px-4">Okunma</th>
                                             <th className="py-4 px-4">Kartvizit Durumu</th>
-                                            <th className="py-4 px-4 text-right">İşlem</th>
+                                            <th className="py-4 px-4 text-right">İşlemler</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 text-xs font-bold text-slate-700">
-                                        <tr className="hover:bg-slate-50/80 transition-colors">
-                                            <td className="py-4 px-4 flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center font-black text-xs">KG</div>
-                                                <div>
-                                                    <span className="block font-black text-slate-900">Kadir Gül</span>
-                                                    <span className="text-[10px] text-slate-400 font-medium">kadir@kardly.site</span>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 px-4">
-                                                <span className="px-3 py-1 bg-violet-50 text-violet-700 rounded-full text-[10px] font-black">Yazılım & Kurucu</span>
-                                            </td>
-                                            <td className="py-4 px-4 text-slate-500 font-mono text-[11px]">NFC-EREN-101</td>
-                                            <td className="py-4 px-4 font-black text-slate-900">420 Tık</td>
-                                            <td className="py-4 px-4">
-                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black">
-                                                    🟢 Aktif
-                                                </span>
-                                            </td>
-                                            <td className="py-4 px-4 text-right">
-                                                <button
-                                                    onClick={() => {
-                                                        setShowToast("⚡ Personel kartviziti aktif durumda.");
-                                                        setTimeout(() => setShowToast(null), 3000);
-                                                    }}
-                                                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-[10px] font-black uppercase tracking-wider"
-                                                >
-                                                    Düzenle
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr className="hover:bg-slate-50/80 transition-colors">
-                                            <td className="py-4 px-4 flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xs">AY</div>
-                                                <div>
-                                                    <span className="block font-black text-slate-900">Ayşe Yılmaz</span>
-                                                    <td className="text-[10px] text-slate-400 font-medium">ayse@kardly.site</td>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 px-4">
-                                                <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black">Satış Yöneticisi</span>
-                                            </td>
-                                            <td className="py-4 px-4 text-slate-500 font-mono text-[11px]">NFC-EREN-102</td>
-                                            <td className="py-4 px-4 font-black text-slate-900">310 Tık</td>
-                                            <td className="py-4 px-4">
-                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black">
-                                                    🟢 Aktif
-                                                </span>
-                                            </td>
-                                            <td className="py-4 px-4 text-right">
-                                                <button
-                                                    onClick={() => {
-                                                        setShowToast("⚡ Ayşe Yılmaz kartviziti güncellendi.");
-                                                        setTimeout(() => setShowToast(null), 3000);
-                                                    }}
-                                                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-[10px] font-black uppercase tracking-wider"
-                                                >
-                                                    Düzenle
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr className="bg-rose-50/30 hover:bg-rose-50/60 transition-colors">
-                                            <td className="py-4 px-4 flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-black text-xs">MD</div>
-                                                <div>
-                                                    <span className="block font-black text-rose-950 line-through">Mehmet Demir</span>
-                                                    <span className="text-[10px] text-rose-400 font-medium">İşten Ayrıldı</span>
-                                                </div>
-                                            </td>
-                                            <td className="py-4 px-4">
-                                                <span className="px-3 py-1 bg-rose-100 text-rose-800 rounded-full text-[10px] font-black">Eski Personel</span>
-                                            </td>
-                                            <td className="py-4 px-4 text-rose-400 font-mono text-[11px]">NFC-EREN-103 (Kilitli)</td>
-                                            <td className="py-4 px-4 font-black text-rose-600">95 Tık</td>
-                                            <td className="py-4 px-4">
-                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-[10px] font-black">
-                                                    🔴 Pasif (Kapatıldı)
-                                                </span>
-                                            </td>
-                                            <td className="py-4 px-4 text-right">
-                                                <button
-                                                    onClick={() => {
-                                                        setShowToast("🔒 Smart Offboarding: Mehmet Demir'in kartviziti şirket ana sayfasına yönlendirildi!");
-                                                        setTimeout(() => setShowToast(null), 4000);
-                                                    }}
-                                                    className="px-4 py-2 bg-rose-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm"
-                                                >
-                                                    Tek Tıkla Pasifleştirildi
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        {enterpriseEmployees
+                                            .filter(emp => {
+                                                const q = empSearchQuery.toLowerCase();
+                                                const matchesQ = emp.name.toLowerCase().includes(q) || emp.email.toLowerCase().includes(q) || emp.nfcTag.toLowerCase().includes(q) || (q === "aktif" && emp.active) || (q === "pasif" && !emp.active);
+                                                const matchesDept = empFilterDept === "all" || emp.department === empFilterDept;
+                                                return matchesQ && matchesDept;
+                                            })
+                                            .map((emp) => (
+                                                <tr key={emp.id} className={cn("transition-colors", emp.active ? "hover:bg-slate-50/80" : "bg-rose-50/30 hover:bg-rose-50/60")}>
+                                                    <td className="py-4 px-4">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shrink-0", emp.active ? "bg-violet-100 text-violet-700" : "bg-rose-100 text-rose-700")}>
+                                                                {emp.name.split(" ").map((n: string) => n[0]).join("")}
+                                                            </div>
+                                                            <div>
+                                                                <span className={cn("block font-black text-slate-900", !emp.active && "line-through text-rose-950")}>{emp.name}</span>
+                                                                <span className="text-[10px] text-slate-400 font-medium block">{emp.email}</span>
+                                                                <span className="text-[10px] text-slate-400 font-medium block">{emp.phone}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="py-4 px-4">
+                                                        <span className={cn("px-3 py-1 rounded-full text-[10px] font-black inline-block", emp.active ? "bg-violet-50 text-violet-700" : "bg-rose-100 text-rose-800")}>
+                                                            {emp.role}
+                                                        </span>
+                                                        <span className="text-[10px] text-slate-400 block font-normal mt-0.5">{emp.department}</span>
+                                                    </td>
+                                                    <td className="py-4 px-4 font-mono text-[11px] text-slate-500">
+                                                        {emp.nfcTag} {!emp.active && <span className="text-rose-500 font-bold">(Yönlendirildi)</span>}
+                                                    </td>
+                                                    <td className="py-4 px-4 font-black text-slate-900">{emp.reads} Tık</td>
+                                                    <td className="py-4 px-4">
+                                                        {emp.active ? (
+                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black">
+                                                                🟢 Aktif Kartvizit
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-[10px] font-black">
+                                                                🔴 Pasif (Şirket Sayfasına Yönlendiriliyor)
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td className="py-4 px-4 text-right">
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            {/* 1-Click Offboarding Toggle Button */}
+                                                            <button
+                                                                onClick={() => {
+                                                                    const updatedActive = !emp.active;
+                                                                    setEnterpriseEmployees(prev => prev.map(item => item.id === emp.id ? { ...item, active: updatedActive } : item));
+                                                                    if (!updatedActive) {
+                                                                        setShowToast(`🔒 Smart Offboarding: ${emp.name} kartviziti anında pasifleştirildi ve şirket ana sayfasına yönlendirildi!`);
+                                                                    } else {
+                                                                        setShowToast(`⚡ ${emp.name} kartviziti tekrar aktif edildi!`);
+                                                                    }
+                                                                    setTimeout(() => setShowToast(null), 3500);
+                                                                }}
+                                                                className={cn(
+                                                                    "px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-sm flex items-center gap-1.5 cursor-pointer",
+                                                                    emp.active
+                                                                        ? "bg-rose-600 hover:bg-rose-700 text-white"
+                                                                        : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                                )}
+                                                                title={emp.active ? "İşten Ayrıldı Olarak İşaretle (1-Tık Pasifleştir)" : "Tekrar Aktifleştir"}
+                                                            >
+                                                                {emp.active ? <><Power className="w-3 h-3" /> Pasifleştir</> : <><CheckCircle2 className="w-3 h-3" /> Aktifleştir</>}
+                                                            </button>
+
+                                                            {/* Edit Employee */}
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEditingEmployee(emp);
+                                                                    setNewEmpForm({ ...emp });
+                                                                    setShowAddEmployeeModal(true);
+                                                                }}
+                                                                className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs cursor-pointer"
+                                                                title="Düzenle"
+                                                            >
+                                                                <Edit2 className="w-3.5 h-3.5" />
+                                                            </button>
+
+                                                            {/* Delete Employee */}
+                                                            <button
+                                                                onClick={() => {
+                                                                    if (confirm(`${emp.name} isimli personeli silmek istediğinize emin misiniz?`)) {
+                                                                        setEnterpriseEmployees(prev => prev.filter(item => item.id !== emp.id));
+                                                                        setShowToast(`🗑️ ${emp.name} kaydı silindi.`);
+                                                                        setTimeout(() => setShowToast(null), 3000);
+                                                                    }
+                                                                }}
+                                                                className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs cursor-pointer"
+                                                                title="Personeli Sil"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -2983,53 +3058,141 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                     <div>
                                         <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">📥 Gelen Müşteri Leads (CRM)</h3>
-                                        <p className="text-xs text-slate-500 font-medium">Personel kartvizitlerinden gelen müşteri kayıtları.</p>
+                                        <p className="text-xs text-slate-500 font-medium">Personel kartvizitlerinden toplanan müşteri adayları.</p>
                                     </div>
-                                    <span className="px-3 py-1 bg-violet-50 text-violet-700 text-[10px] font-black rounded-full">3 Yeni Mesaj</span>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => {
+                                                setNewLeadForm({ client: "", email: "", phone: "", note: "", staff: enterpriseEmployees[0]?.name || "Kadir Gül", status: "Yeni" });
+                                                setShowAddLeadModal(true);
+                                            }}
+                                            className="px-3 py-1.5 bg-violet-50 hover:bg-violet-100 text-violet-700 text-[10px] font-black rounded-xl border border-violet-200 transition-all flex items-center gap-1 cursor-pointer"
+                                        >
+                                            <Plus className="w-3 h-3" /> Lead Ekle
+                                        </button>
+                                        <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-full">
+                                            {enterpriseLeads.length} Kayıt
+                                        </span>
+                                    </div>
                                 </div>
+
                                 <div className="space-y-3">
-                                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-black text-slate-900 text-xs">Ahmet Yılmaz - İnşaat Ltd.</span>
-                                            <span className="text-[9px] text-slate-400 font-bold">Bugün 10:42</span>
+                                    {enterpriseLeads.map((lead) => (
+                                        <div key={lead.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2 hover:border-slate-200 transition-colors">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-black text-slate-900 text-xs">{lead.client}</span>
+                                                <span className="text-[9px] text-slate-400 font-bold">{lead.date}</span>
+                                            </div>
+                                            <p className="text-xs text-slate-600 font-medium">"{lead.note}"</p>
+                                            <div className="flex items-center justify-between pt-1">
+                                                <span className="text-[10px] text-violet-600 font-bold">İlgili Personel: {lead.staff}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            const statuses = ["Yeni", "Görüşüldü", "Satışa Dönüştü"];
+                                                            const nextIdx = (statuses.indexOf(lead.status) + 1) % statuses.length;
+                                                            const nextStatus = statuses[nextIdx];
+                                                            setEnterpriseLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: nextStatus } : l));
+                                                            setShowToast(`📋 Lead durumu '${nextStatus}' olarak güncellendi.`);
+                                                            setTimeout(() => setShowToast(null), 3000);
+                                                        }}
+                                                        className={cn(
+                                                            "px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider cursor-pointer",
+                                                            lead.status === "Yeni" ? "bg-amber-100 text-amber-800" :
+                                                            lead.status === "Görüşüldü" ? "bg-blue-100 text-blue-800" :
+                                                            "bg-emerald-100 text-emerald-800"
+                                                        )}
+                                                    >
+                                                        {lead.status} 🔄
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setSelectedLeadModal(lead)}
+                                                        className="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-[9px] font-black uppercase tracking-wider cursor-pointer"
+                                                    >
+                                                        Detay
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <p className="text-xs text-slate-600 font-medium">"Kadir Bey ile görüşme sağladık, teklif bekliyoruz."</p>
-                                        <span className="text-[10px] text-violet-600 font-bold block">İlgili Personel: Kadir Gül</span>
-                                    </div>
-                                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-black text-slate-900 text-xs">Selin Kaya - Mimarlık</span>
-                                            <span className="text-[9px] text-slate-400 font-bold">Dün 16:15</span>
-                                        </div>
-                                        <p className="text-xs text-slate-600 font-medium">"Toplu NFC yaka kartı fiyat teklifi talep ediyoruz."</p>
-                                        <span className="text-[10px] text-amber-600 font-bold block">İlgili Personel: Ayşe Yılmaz</span>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
 
                             {/* Department Themes Studio */}
                             <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm p-8 space-y-6">
-                                <div className="border-b border-slate-100 pb-4">
-                                    <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">🎨 Departman Tasarım Stüdyosu</h3>
-                                    <p className="text-xs text-slate-500 font-medium">Departmanlara özel renk paleti ve logosu tanımlayın.</p>
+                                <div className="border-b border-slate-100 pb-4 flex justify-between items-center">
+                                    <div>
+                                        <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">🎨 Departman Tasarım Stüdyosu</h3>
+                                        <p className="text-xs text-slate-500 font-medium">Departmanlara özel renk paleti seçimi yapın.</p>
+                                    </div>
+                                    <span className="px-3 py-1 bg-violet-50 text-violet-700 text-[10px] font-black rounded-full uppercase">
+                                        Aktif: {activeDeptTheme.toUpperCase()}
+                                    </span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 rounded-2xl border border-slate-200 bg-slate-950 text-white space-y-2">
+                                    <div
+                                        onClick={() => {
+                                            setActiveDeptTheme("exec");
+                                            setShowToast("🎨 Yönetim teması 'Executive Dark & Gold' aktif edildi!");
+                                            setTimeout(() => setShowToast(null), 3000);
+                                        }}
+                                        className={cn(
+                                            "p-4 rounded-2xl border space-y-2 cursor-pointer transition-all bg-slate-950 text-white relative",
+                                            activeDeptTheme === "exec" ? "ring-2 ring-amber-400 border-amber-400 shadow-lg" : "border-slate-800 hover:border-slate-700"
+                                        )}
+                                    >
+                                        {activeDeptTheme === "exec" && <CheckCircle2 className="w-4 h-4 text-amber-400 absolute top-3 right-3" />}
                                         <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block">Yönetim / Exec</span>
                                         <span className="text-xs font-bold block">Executive Dark & Gold</span>
                                         <span className="text-[9px] text-slate-400 block">Lacivert & Altın ışıltılı kurumsal kart</span>
                                     </div>
-                                    <div className="p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-950 space-y-2">
+
+                                    <div
+                                        onClick={() => {
+                                            setActiveDeptTheme("sales");
+                                            setShowToast("🎨 Satış departmanı teması 'Vibrant Gold' aktif edildi!");
+                                            setTimeout(() => setShowToast(null), 3000);
+                                        }}
+                                        className={cn(
+                                            "p-4 rounded-2xl border space-y-2 cursor-pointer transition-all bg-amber-50 text-amber-950 relative",
+                                            activeDeptTheme === "sales" ? "ring-2 ring-amber-500 border-amber-500 shadow-lg" : "border-amber-200 hover:border-amber-300"
+                                        )}
+                                    >
+                                        {activeDeptTheme === "sales" && <CheckCircle2 className="w-4 h-4 text-amber-600 absolute top-3 right-3" />}
                                         <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 block">Satış Departmanı</span>
                                         <span className="text-xs font-bold block">Vibrant Gold</span>
                                         <span className="text-[9px] text-amber-700 block">Yüksek etkileşimli canlı tasarım</span>
                                     </div>
-                                    <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-950 space-y-2">
+
+                                    <div
+                                        onClick={() => {
+                                            setActiveDeptTheme("tech");
+                                            setShowToast("🎨 Yazılım departmanı teması 'Tech Emerald' aktif edildi!");
+                                            setTimeout(() => setShowToast(null), 3000);
+                                        }}
+                                        className={cn(
+                                            "p-4 rounded-2xl border space-y-2 cursor-pointer transition-all bg-emerald-50 text-emerald-950 relative",
+                                            activeDeptTheme === "tech" ? "ring-2 ring-emerald-500 border-emerald-500 shadow-lg" : "border-emerald-200 hover:border-emerald-300"
+                                        )}
+                                    >
+                                        {activeDeptTheme === "tech" && <CheckCircle2 className="w-4 h-4 text-emerald-600 absolute top-3 right-3" />}
                                         <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 block">Yazılım & Ar-Ge</span>
                                         <span className="text-xs font-bold block">Tech Emerald</span>
                                         <span className="text-[9px] text-emerald-700 block">Minimalist yeşil teknoloji stili</span>
                                     </div>
-                                    <div className="p-4 rounded-2xl border border-violet-200 bg-violet-50 text-violet-950 space-y-2">
+
+                                    <div
+                                        onClick={() => {
+                                            setActiveDeptTheme("hr");
+                                            setShowToast("🎨 İnsan Kaynakları teması 'Warm Violet' aktif edildi!");
+                                            setTimeout(() => setShowToast(null), 3000);
+                                        }}
+                                        className={cn(
+                                            "p-4 rounded-2xl border space-y-2 cursor-pointer transition-all bg-violet-50 text-violet-950 relative",
+                                            activeDeptTheme === "hr" ? "ring-2 ring-violet-500 border-violet-500 shadow-lg" : "border-violet-200 hover:border-violet-300"
+                                        )}
+                                    >
+                                        {activeDeptTheme === "hr" && <CheckCircle2 className="w-4 h-4 text-violet-600 absolute top-3 right-3" />}
                                         <span className="text-[10px] font-black uppercase tracking-wider text-violet-700 block">İnsan Kaynakları</span>
                                         <span className="text-xs font-bold block">Warm Violet</span>
                                         <span className="text-[9px] text-violet-700 block">Kurumsal ve samimi mor stil</span>
