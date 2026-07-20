@@ -241,11 +241,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
     // Enterprise Card Selection State
     const [selectedEmpCardId, setSelectedEmpCardId] = useState<string>("self");
 
-    const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>([
-        { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
-        { id: "2", client: "Selin Kaya - Mimarlık", date: "Dün 16:15", note: "Toplu NFC yaka kartı fiyat teklifi talep ediyoruz.", staff: "Ayşe Yılmaz", status: "Görüşüldü", email: "selin@mimarlik.com", phone: "+90 533 888 7766" },
-        { id: "3", client: "Burak Can - Teknoloji A.Ş.", date: "18 Temmuz", note: "20 adet kurumsal vCard paketi satın almak istiyorlar.", staff: "Zeynep Kaya", status: "Satışa Dönüştü", email: "burak@teknoloji.com", phone: "+90 535 777 6655" },
-    ]);
+    const [enterpriseLeads, setEnterpriseLeads] = useState<any[]>(() => {
+        if (leads && Array.isArray(leads) && leads.length > 0) {
+            return leads.map((l: any) => ({
+                id: l.id,
+                client: l.name,
+                date: new Date(l.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }),
+                note: l.message || l.subject || "Not yok",
+                staff: l.message?.match(/\[İlgili Personel: (.*?)\]/)?.[1] || "Kurumsal Temsilci",
+                status: l.status === 'new' || l.status === 'Yeni' ? 'Yeni' : l.status === 'Görüşüldü' ? 'Görüşüldü' : l.status === 'Satışa Dönüştü' ? 'Satışa Dönüştü' : 'Yeni',
+                email: l.email || "-",
+                phone: l.phone || "-"
+            }))
+        }
+        return [
+            { id: "1", client: "Ahmet Yılmaz - İnşaat Ltd.", date: "Bugün 10:42", note: "Kadir Bey ile görüşme sağladık, teklif bekliyoruz.", staff: "Kadir Gül", status: "Yeni", email: "ahmet@insaat.com", phone: "+90 532 999 8877" },
+            { id: "2", client: "Selin Kaya - Mimarlık", date: "Dün 16:15", note: "Toplu NFC yaka kartı fiyat teklifi talep ediyoruz.", staff: "Ayşe Yılmaz", status: "Görüşüldü", email: "selin@mimarlik.com", phone: "+90 533 888 7766" },
+            { id: "3", client: "Burak Can - Teknoloji A.Ş.", date: "18 Temmuz", note: "20 adet kurumsal vCard paketi satın almak istiyorlar.", staff: "Zeynep Kaya", status: "Satışa Dönüştü", email: "burak@teknoloji.com", phone: "+90 535 777 6655" },
+        ]
+    });
     const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState<any | null>(null);
     const [newEmpForm, setNewEmpForm] = useState({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: "", phone: "", active: true, photo: "", profileUrl: "" });
