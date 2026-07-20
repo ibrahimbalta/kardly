@@ -256,8 +256,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showAddLeadModal, setShowAddLeadModal] = useState(false);
     const [newLeadForm, setNewLeadForm] = useState({ client: "", email: "", phone: "", note: "", staff: "Kadir Gül", status: "Yeni" });
 
-    // Enterprise Card Selection State
-    const [selectedEmpCardId, setSelectedEmpCardId] = useState<string>("self");
+
 
     const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
