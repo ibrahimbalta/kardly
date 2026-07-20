@@ -2821,7 +2821,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                     <button
                                         onClick={() => {
                                             setEditingEmployee(null);
-                                            setNewEmpForm({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: `NFC-EREN-${Math.floor(100 + Math.random() * 900)}`, phone: "", active: true });
+                                            setNewEmpForm({ name: "", email: "", role: "", department: "Yazılım & Ar-Ge", nfcTag: `NFC-EREN-${Math.floor(100 + Math.random() * 900)}`, phone: "", active: true, photo: "" });
                                             setShowAddEmployeeModal(true);
                                         }}
                                         className="px-6 py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-violet-500/25 flex items-center gap-2 cursor-pointer hover:scale-105"
