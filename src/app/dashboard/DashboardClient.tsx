@@ -8001,6 +8001,325 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </motion.div>
                     </div>
                 )}
+
+                {/* Enterprise Add / Edit Employee Modal */}
+                {showAddEmployeeModal && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowAddEmployeeModal(false)}
+                            className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-8 space-y-6 z-10 border border-slate-100"
+                        >
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                <div>
+                                    <span className="px-3 py-1 bg-violet-50 text-violet-700 text-[10px] font-black rounded-full uppercase">Kurumsal Kadro</span>
+                                    <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mt-1">
+                                        {editingEmployee ? "✏️ Personel Kartviziti Düzenle" : "👤 Yeni Çalışan Ekle"}
+                                    </h3>
+                                </div>
+                                <button onClick={() => setShowAddEmployeeModal(false)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    if (!newEmpForm.name || !newEmpForm.email) return;
+                                    if (editingEmployee) {
+                                        setEnterpriseEmployees(prev => prev.map(emp => emp.id === editingEmployee.id ? { ...emp, ...newEmpForm } : emp));
+                                        setShowToast(`⚡ ${newEmpForm.name} bilgileri güncellendi!`);
+                                    } else {
+                                        const newEmp = {
+                                            id: Date.now().toString(),
+                                            ...newEmpForm,
+                                            reads: 0,
+                                        };
+                                        setEnterpriseEmployees(prev => [newEmp, ...prev]);
+                                        setShowToast(`🎉 ${newEmpForm.name} kurumsal kadroya eklendi!`);
+                                    }
+                                    setShowAddEmployeeModal(false);
+                                    setTimeout(() => setShowToast(null), 3000);
+                                }}
+                                className="space-y-4 text-xs font-bold text-slate-700"
+                            >
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Ad Soyad</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Örn: Ahmet Yılmaz"
+                                        value={newEmpForm.name}
+                                        onChange={(e) => setNewEmpForm({ ...newEmpForm, name: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">E-Posta</label>
+                                        <input
+                                            type="email"
+                                            required
+                                            placeholder="ahmet@kardly.site"
+                                            value={newEmpForm.email}
+                                            onChange={(e) => setNewEmpForm({ ...newEmpForm, email: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Telefon</label>
+                                        <input
+                                            type="text"
+                                            placeholder="+90 532 000 0000"
+                                            value={newEmpForm.phone}
+                                            onChange={(e) => setNewEmpForm({ ...newEmpForm, phone: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Unvan</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="Örn: Kıdemli Yazılımcı"
+                                            value={newEmpForm.role}
+                                            onChange={(e) => setNewEmpForm({ ...newEmpForm, role: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Departman</label>
+                                        <select
+                                            value={newEmpForm.department}
+                                            onChange={(e) => setNewEmpForm({ ...newEmpForm, department: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        >
+                                            <option value="Yazılım & Ar-Ge">Yazılım & Ar-Ge</option>
+                                            <option value="Satış Departmanı">Satış Departmanı</option>
+                                            <option value="İnsan Kaynakları">İnsan Kaynakları</option>
+                                            <option value="Saha Operasyon">Saha Operasyon</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">NFC UID Tag Kodu</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="NFC-EREN-105"
+                                        value={newEmpForm.nfcTag}
+                                        onChange={(e) => setNewEmpForm({ ...newEmpForm, nfcTag: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:outline-none focus:border-violet-500"
+                                    />
+                                </div>
+                                <div className="pt-4 flex justify-end gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAddEmployeeModal(false)}
+                                        className="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer hover:bg-slate-200"
+                                    >
+                                        İptal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-violet-500/25 cursor-pointer"
+                                    >
+                                        {editingEmployee ? "Güncelle" : "Kaydet ve Ekle"}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Lead Details Modal */}
+                {selectedLeadModal && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedLeadModal(null)}
+                            className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-8 space-y-6 z-10 border border-slate-100"
+                        >
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                <div>
+                                    <span className="px-3 py-1 bg-violet-50 text-violet-700 text-[10px] font-black rounded-full uppercase">CRM Müşteri Adayı</span>
+                                    <h3 className="text-xl font-black text-slate-900 mt-2">{selectedLeadModal.client}</h3>
+                                </div>
+                                <button onClick={() => setSelectedLeadModal(null)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="space-y-3 text-xs">
+                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                                    <p className="font-bold text-slate-800">Müşteri Notu / Talebi:</p>
+                                    <p className="text-slate-600 italic">"{selectedLeadModal.note}"</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 text-[11px] font-bold">
+                                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-400 block text-[9px] uppercase">E-Posta</span>
+                                        <span className="text-slate-900">{selectedLeadModal.email || "Belirtilmedi"}</span>
+                                    </div>
+                                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                        <span className="text-slate-400 block text-[9px] uppercase">Telefon</span>
+                                        <span className="text-slate-900">{selectedLeadModal.phone || "Belirtilmedi"}</span>
+                                    </div>
+                                </div>
+                                <div className="p-3 bg-violet-50 rounded-xl border border-violet-100 text-violet-900 text-[11px] font-bold">
+                                    Sorumlu Personel: {selectedLeadModal.staff}
+                                </div>
+                            </div>
+                            <div className="flex justify-end gap-3 pt-2">
+                                <button
+                                    onClick={() => {
+                                        setEnterpriseLeads(prev => prev.filter(l => l.id !== selectedLeadModal.id));
+                                        setSelectedLeadModal(null);
+                                        setShowToast("🗑️ Müşteri kaydı silindi.");
+                                        setTimeout(() => setShowToast(null), 3000);
+                                    }}
+                                    className="px-4 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-rose-100 cursor-pointer"
+                                >
+                                    Kaydı Sil
+                                </button>
+                                <button
+                                    onClick={() => setSelectedLeadModal(null)}
+                                    className="px-6 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer"
+                                >
+                                    Kapat
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+
+                {/* Add Lead Modal */}
+                {showAddLeadModal && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowAddLeadModal(false)}
+                            className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-8 space-y-6 z-10 border border-slate-100"
+                        >
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">📥 Manuel Lead Kaydı Ekle</h3>
+                                <button onClick={() => setShowAddLeadModal(false)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer">
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    if (!newLeadForm.client) return;
+                                    const newLead = {
+                                        id: Date.now().toString(),
+                                        date: "Bugün",
+                                        ...newLeadForm,
+                                    };
+                                    setEnterpriseLeads(prev => [newLead, ...prev]);
+                                    setShowAddLeadModal(false);
+                                    setShowToast("📥 Yeni CRM Müşteri Adayı kaydedildi!");
+                                    setTimeout(() => setShowToast(null), 3000);
+                                }}
+                                className="space-y-4 text-xs font-bold text-slate-700"
+                            >
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Müşteri / Şirket Adı</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Örn: Mehmet Can - Tekstil Ltd."
+                                        value={newLeadForm.client}
+                                        onChange={(e) => setNewLeadForm({ ...newLeadForm, client: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">E-Posta</label>
+                                        <input
+                                            type="email"
+                                            placeholder="mehmet@tekstil.com"
+                                            value={newLeadForm.email}
+                                            onChange={(e) => setNewLeadForm({ ...newLeadForm, email: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Telefon</label>
+                                        <input
+                                            type="text"
+                                            placeholder="+90 532 111 2233"
+                                            value={newLeadForm.phone}
+                                            onChange={(e) => setNewLeadForm({ ...newLeadForm, phone: e.target.value })}
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">Müşteri Notu / Talep Özet</label>
+                                    <textarea
+                                        rows={3}
+                                        placeholder="Görüşme detayları..."
+                                        value={newLeadForm.note}
+                                        onChange={(e) => setNewLeadForm({ ...newLeadForm, note: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black uppercase text-slate-400 mb-1">İlgili Şirket Çalışanı</label>
+                                    <select
+                                        value={newLeadForm.staff}
+                                        onChange={(e) => setNewLeadForm({ ...newLeadForm, staff: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-violet-500"
+                                    >
+                                        {enterpriseEmployees.map(e => (
+                                            <option key={e.id} value={e.name}>{e.name} ({e.department})</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="pt-2 flex justify-end gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAddLeadModal(false)}
+                                        className="px-5 py-3 bg-slate-100 text-slate-700 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer"
+                                    >
+                                        İptal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-violet-500/25 cursor-pointer"
+                                    >
+                                        Lead Kaydet
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
             </AnimatePresence>
         </>
     );
