@@ -216,6 +216,7 @@ export default function DashboardClient({ session, profile, subscription, appoin
     const [showToast, setShowToast] = useState<string | null>(null)
     const isPremium = subscription && subscription.plan !== "free" && subscription.status === "active";
     const userPlan = subscription?.plan || "free";
+    const isEnterprise = userPlan === "enterprise";
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [activeTab, setActiveTab] = useState("overview") // overview, edit, products, articles, services, network, messages, templates, appointments, statistics, settings, leads, reviews, ai, widgets
     const [articleList, setArticleList] = useState<any[]>([])
@@ -1617,15 +1618,21 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    setActiveTab("enterprise");
+                                    if (!isEnterprise) {
+                                        setShowToast("🔒 Bu alana erişebilmek için İşletme Paketine yükseltmelisiniz.");
+                                        setTimeout(() => setShowToast(null), 3500);
+                                        setShowUpgradeModal(true);
+                                    } else {
+                                        setActiveTab("enterprise");
+                                    }
                                 }}
                                 className={cn(
                                     "text-[9px] font-black uppercase tracking-[0.1em] mt-0.5 block hover:underline text-left cursor-pointer",
-                                    userPlan === "enterprise" ? "text-violet-600" : "text-rose-500"
+                                    isEnterprise ? "text-violet-600" : "text-rose-500"
                                 )}
-                                title="İşletme Yönetim Paneline Geç"
+                                title={isEnterprise ? "İşletme Yönetim Paneline Geç" : "İşletme Paketine Yükselt"}
                             >
-                                Dashboard {userPlan === "enterprise" ? "İşletme 💎" : "Pro 👑"}
+                                Dashboard {isEnterprise ? "İşletme 💎" : "Pro 👑 (İşletme Yükselt 🔒)"}
                             </button>
                         </div>
                     </div>
@@ -1641,12 +1648,18 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         <LanguageSwitcher />
                     </div>
                     <NavItem
-                        icon={<Briefcase className="w-5 h-5 text-violet-600" />}
-                        label="İşletme Dashboard 💎"
+                        icon={isEnterprise ? <Briefcase className="w-5 h-5 text-violet-600" /> : <Lock className="w-5 h-5 text-amber-500" />}
+                        label={isEnterprise ? "İşletme Dashboard 💎" : "İşletme Dashboard 🔒"}
                         active={activeTab === "enterprise"}
                         onClick={() => {
-                            setActiveTab("enterprise")
-                            setIsSidebarOpen(false)
+                            if (!isEnterprise) {
+                                setShowToast("🔒 Bu alana erişebilmek için İşletme Paketine yükseltmelisiniz.");
+                                setTimeout(() => setShowToast(null), 3500);
+                                setShowUpgradeModal(true);
+                            } else {
+                                setActiveTab("enterprise");
+                                setIsSidebarOpen(false);
+                            }
                         }}
                     />
                     <NavItem
@@ -1847,11 +1860,25 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 animate={{ opacity: 1, scale: 1 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => setActiveTab("enterprise")}
-                                className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-violet-600 to-amber-500 text-white rounded-2xl shadow-xl shadow-violet-500/25 hover:from-violet-700 hover:to-amber-600 transition-all font-black text-[10px] uppercase tracking-widest cursor-pointer"
-                                title="İşletme Yönetim Paneline Geç"
+                                onClick={() => {
+                                    if (!isEnterprise) {
+                                        setShowToast("🔒 Bu alana erişebilmek için İşletme Paketine yükseltmelisiniz.");
+                                        setTimeout(() => setShowToast(null), 3500);
+                                        setShowUpgradeModal(true);
+                                    } else {
+                                        setActiveTab("enterprise");
+                                    }
+                                }}
+                                className={cn(
+                                    "flex items-center justify-center gap-2.5 px-6 py-4 text-white rounded-2xl shadow-xl transition-all font-black text-[10px] uppercase tracking-widest cursor-pointer",
+                                    isEnterprise
+                                        ? "bg-gradient-to-r from-violet-600 to-amber-500 shadow-violet-500/25 hover:from-violet-700 hover:to-amber-600"
+                                        : "bg-slate-900 border border-amber-500/30 text-amber-300 hover:bg-slate-800"
+                                )}
+                                title={isEnterprise ? "İşletme Yönetim Paneline Geç" : "İşletme Paketine Yükselt"}
                             >
-                                <Briefcase className="w-4 h-4" /> 🏢 İşletme Paneli 💎
+                                {isEnterprise ? <Briefcase className="w-4 h-4" /> : <Lock className="w-4 h-4 text-amber-400" />}
+                                {isEnterprise ? "🏢 İşletme Paneli 💎" : "🏢 İşletme Paneli (Yükselt 🔒)"}
                             </motion.button>
                             <motion.a
                                 initial={{ opacity: 0, scale: 0.9 }}
@@ -2713,7 +2740,47 @@ export default function DashboardClient({ session, profile, subscription, appoin
                         </div>
                     </div>
                 ) : activeTab === "enterprise" ? (
-                    <div className="space-y-10 animate-in fade-in duration-500">
+                    !isEnterprise ? (
+                            <div className="bg-white rounded-[2.5rem] border border-slate-200 p-8 md:p-12 text-center space-y-8 max-w-4xl mx-auto shadow-xl animate-in zoom-in-95 duration-500">
+                                <div className="w-20 h-20 bg-amber-50 text-amber-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-amber-100">
+                                    <Lock size={40} />
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-black uppercase tracking-widest">
+                                        🔒 KİLİTLİ ALAN - İŞLETME PAKETİ GEREKLİ
+                                    </div>
+                                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">İşletme Yönetim Paneline Erişim Kısıtlı</h2>
+                                    <p className="text-slate-500 text-sm font-medium max-w-xl mx-auto leading-relaxed">
+                                        Bu özellik yalnızca <strong className="text-slate-900">İşletme Paketi (Enterprise Plan)</strong> aboneleri için aktiftir. Şirket çalışanlarınızı tek panelden yönetmek için paketinizi yükseltin.
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                                        <span className="text-xs font-bold text-slate-700">Toplu Çalışan & Kartvizit Yönetimi</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                                        <span className="text-xs font-bold text-slate-700">⚡ 1-Tıkla Pasifleştirme (Smart Offboarding)</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                                        <span className="text-xs font-bold text-slate-700">🎨 Departman Özel Şablon Stüdyosu</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                                        <span className="text-xs font-bold text-slate-700">📥 Müşteri Leads (CRM) Excel İndirme</span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowUpgradeModal(true)}
+                                    className="px-10 py-5 bg-gradient-to-r from-violet-600 to-amber-500 hover:from-violet-700 hover:to-amber-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-violet-500/25 transition-all transform hover:scale-105"
+                                >
+                                    🚀 ŞİMDİ İŞLETME PAKETİNE YÜKSELT
+                                </button>
+                            </div>
+                        ) : (
+                            <>
                         {/* Enterprise Header Banner */}
                         <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-violet-950 text-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-violet-500/20">
                             <div className="absolute -right-10 -bottom-10 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
@@ -2970,8 +3037,9 @@ export default function DashboardClient({ session, profile, subscription, appoin
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ) : activeTab === "overview" ? (
+                    </>
+                )
+            ) : activeTab === "overview" ? (
                     <div className="space-y-10">
                         {/* Mandatory Terms Banner */}
                         {!isTermsAccepted && (
